@@ -1,0 +1,13 @@
+syntax = "proto3";
+package jackaldao.canine.jklmint;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/jackal-dao/canine/x/jklmint/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+  string mintDenom = 1 [(gogoproto.moretags) = "yaml:\"mint_denom\""];
+}

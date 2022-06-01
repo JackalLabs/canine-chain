@@ -77,9 +77,6 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
-	"github.com/jackal-dao/canine/x/mint"
-	mintkeeper "github.com/jackal-dao/canine/x/mint/keeper"
-	minttypes "github.com/jackal-dao/canine/x/mint/types"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -91,6 +88,9 @@ import (
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 
 	"github.com/jackal-dao/canine/docs"
+	mint "github.com/jackal-dao/canine/x/jklmint"
+	mintkeeper "github.com/jackal-dao/canine/x/jklmint/keeper"
+	minttypes "github.com/jackal-dao/canine/x/jklmint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -211,7 +211,6 @@ type App struct {
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
-
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
