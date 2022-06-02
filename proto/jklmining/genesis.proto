@@ -1,0 +1,14 @@
+syntax = "proto3";
+package jackaldao.canine.jklmining;
+
+import "gogoproto/gogo.proto";
+import "jklmining/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
+
+// GenesisState defines the jklmining module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
