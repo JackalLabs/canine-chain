@@ -12,6 +12,9 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateSaveRequests{}, "jklmining/CreateSaveRequests", nil)
 	cdc.RegisterConcrete(&MsgUpdateSaveRequests{}, "jklmining/UpdateSaveRequests", nil)
 	cdc.RegisterConcrete(&MsgDeleteSaveRequests{}, "jklmining/DeleteSaveRequests", nil)
+	cdc.RegisterConcrete(&MsgCreateMiners{}, "jklmining/CreateMiners", nil)
+	cdc.RegisterConcrete(&MsgUpdateMiners{}, "jklmining/UpdateMiners", nil)
+	cdc.RegisterConcrete(&MsgDeleteMiners{}, "jklmining/DeleteMiners", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -23,6 +26,11 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgCreateSaveRequests{},
 		&MsgUpdateSaveRequests{},
 		&MsgDeleteSaveRequests{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCreateMiners{},
+		&MsgUpdateMiners{},
+		&MsgDeleteMiners{},
 	)
 	// this line is used by starport scaffolding # 3
 

@@ -1,12 +1,14 @@
 import { Params } from "../jklmining/params";
 import { SaveRequests } from "../jklmining/save_requests";
+import { Miners } from "../jklmining/miners";
 import { Writer, Reader } from "protobufjs/minimal";
 export declare const protobufPackage = "jackaldao.canine.jklmining";
 /** GenesisState defines the jklmining module's genesis state. */
 export interface GenesisState {
     params: Params | undefined;
-    /** this line is used by starport scaffolding # genesis/proto/state */
     saveRequestsList: SaveRequests[];
+    /** this line is used by starport scaffolding # genesis/proto/state */
+    minersList: Miners[];
 }
 export declare const GenesisState: {
     encode(message: GenesisState, writer?: Writer): Writer;

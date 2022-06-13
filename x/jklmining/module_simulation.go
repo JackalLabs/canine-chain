@@ -40,6 +40,18 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteSaveRequests int = 100
 
+	opWeightMsgCreateMiners = "op_weight_msg_miners"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateMiners int = 100
+
+	opWeightMsgUpdateMiners = "op_weight_msg_miners"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateMiners int = 100
+
+	opWeightMsgDeleteMiners = "op_weight_msg_miners"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteMiners int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -58,6 +70,16 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 			{
 				Creator: sample.AccAddress(),
 				Index:   "1",
+			},
+		},
+		MinersList: []types.Miners{
+			{
+				Creator: sample.AccAddress(),
+				Address: "0",
+			},
+			{
+				Creator: sample.AccAddress(),
+				Address: "1",
 			},
 		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
@@ -92,6 +114,39 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgAllowSave,
 		jklminingsimulation.SimulateMsgAllowSave(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgCreateMiners int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateMiners, &weightMsgCreateMiners, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateMiners = defaultWeightMsgCreateMiners
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateMiners,
+		jklminingsimulation.SimulateMsgCreateMiners(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateMiners int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateMiners, &weightMsgUpdateMiners, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateMiners = defaultWeightMsgUpdateMiners
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateMiners,
+		jklminingsimulation.SimulateMsgUpdateMiners(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteMiners int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteMiners, &weightMsgDeleteMiners, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteMiners = defaultWeightMsgDeleteMiners
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteMiners,
+		jklminingsimulation.SimulateMsgDeleteMiners(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

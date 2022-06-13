@@ -6,6 +6,7 @@ import {
   PageRequest,
   PageResponse,
 } from "../cosmos/base/query/v1beta1/pagination";
+import { Miners } from "../jklmining/miners";
 
 export const protobufPackage = "jackaldao.canine.jklmining";
 
@@ -32,6 +33,23 @@ export interface QueryAllSaveRequestsRequest {
 
 export interface QueryAllSaveRequestsResponse {
   saveRequests: SaveRequests[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetMinersRequest {
+  address: string;
+}
+
+export interface QueryGetMinersResponse {
+  miners: Miners | undefined;
+}
+
+export interface QueryAllMinersRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllMinersResponse {
+  miners: Miners[];
   pagination: PageResponse | undefined;
 }
 
@@ -451,6 +469,282 @@ export const QueryAllSaveRequestsResponse = {
   },
 };
 
+const baseQueryGetMinersRequest: object = { address: "" };
+
+export const QueryGetMinersRequest = {
+  encode(
+    message: QueryGetMinersRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetMinersRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetMinersRequest } as QueryGetMinersRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMinersRequest {
+    const message = { ...baseQueryGetMinersRequest } as QueryGetMinersRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetMinersRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetMinersRequest>
+  ): QueryGetMinersRequest {
+    const message = { ...baseQueryGetMinersRequest } as QueryGetMinersRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetMinersResponse: object = {};
+
+export const QueryGetMinersResponse = {
+  encode(
+    message: QueryGetMinersResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.miners !== undefined) {
+      Miners.encode(message.miners, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetMinersResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetMinersResponse } as QueryGetMinersResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.miners = Miners.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMinersResponse {
+    const message = { ...baseQueryGetMinersResponse } as QueryGetMinersResponse;
+    if (object.miners !== undefined && object.miners !== null) {
+      message.miners = Miners.fromJSON(object.miners);
+    } else {
+      message.miners = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetMinersResponse): unknown {
+    const obj: any = {};
+    message.miners !== undefined &&
+      (obj.miners = message.miners ? Miners.toJSON(message.miners) : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetMinersResponse>
+  ): QueryGetMinersResponse {
+    const message = { ...baseQueryGetMinersResponse } as QueryGetMinersResponse;
+    if (object.miners !== undefined && object.miners !== null) {
+      message.miners = Miners.fromPartial(object.miners);
+    } else {
+      message.miners = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllMinersRequest: object = {};
+
+export const QueryAllMinersRequest = {
+  encode(
+    message: QueryAllMinersRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllMinersRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllMinersRequest } as QueryAllMinersRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllMinersRequest {
+    const message = { ...baseQueryAllMinersRequest } as QueryAllMinersRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllMinersRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllMinersRequest>
+  ): QueryAllMinersRequest {
+    const message = { ...baseQueryAllMinersRequest } as QueryAllMinersRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllMinersResponse: object = {};
+
+export const QueryAllMinersResponse = {
+  encode(
+    message: QueryAllMinersResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.miners) {
+      Miners.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllMinersResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllMinersResponse } as QueryAllMinersResponse;
+    message.miners = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.miners.push(Miners.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllMinersResponse {
+    const message = { ...baseQueryAllMinersResponse } as QueryAllMinersResponse;
+    message.miners = [];
+    if (object.miners !== undefined && object.miners !== null) {
+      for (const e of object.miners) {
+        message.miners.push(Miners.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllMinersResponse): unknown {
+    const obj: any = {};
+    if (message.miners) {
+      obj.miners = message.miners.map((e) =>
+        e ? Miners.toJSON(e) : undefined
+      );
+    } else {
+      obj.miners = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllMinersResponse>
+  ): QueryAllMinersResponse {
+    const message = { ...baseQueryAllMinersResponse } as QueryAllMinersResponse;
+    message.miners = [];
+    if (object.miners !== undefined && object.miners !== null) {
+      for (const e of object.miners) {
+        message.miners.push(Miners.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -463,6 +757,10 @@ export interface Query {
   SaveRequestsAll(
     request: QueryAllSaveRequestsRequest
   ): Promise<QueryAllSaveRequestsResponse>;
+  /** Queries a Miners by index. */
+  Miners(request: QueryGetMinersRequest): Promise<QueryGetMinersResponse>;
+  /** Queries a list of Miners items. */
+  MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -505,6 +803,30 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllSaveRequestsResponse.decode(new Reader(data))
+    );
+  }
+
+  Miners(request: QueryGetMinersRequest): Promise<QueryGetMinersResponse> {
+    const data = QueryGetMinersRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Query",
+      "Miners",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetMinersResponse.decode(new Reader(data))
+    );
+  }
+
+  MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse> {
+    const data = QueryAllMinersRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Query",
+      "MinersAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllMinersResponse.decode(new Reader(data))
     );
   }
 }

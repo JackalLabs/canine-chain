@@ -13,6 +13,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.SaveRequestsList {
 		k.SetSaveRequests(ctx, elem)
 	}
+	// Set all the miners
+	for _, elem := range genState.MinersList {
+		k.SetMiners(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -23,6 +27,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.SaveRequestsList = k.GetAllSaveRequests(ctx)
+	genesis.MinersList = k.GetAllMiners(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

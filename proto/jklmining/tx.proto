@@ -2,6 +2,7 @@ syntax = "proto3";
 package jackaldao.canine.jklmining;
 
 import "jklmining/save_requests.proto";
+import "jklmining/miners.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
@@ -12,6 +13,9 @@ service Msg {
   rpc CreateSaveRequests(MsgCreateSaveRequests) returns (MsgCreateSaveRequestsResponse);
   rpc UpdateSaveRequests(MsgUpdateSaveRequests) returns (MsgUpdateSaveRequestsResponse);
   rpc DeleteSaveRequests(MsgDeleteSaveRequests) returns (MsgDeleteSaveRequestsResponse);
+  rpc CreateMiners(MsgCreateMiners) returns (MsgCreateMinersResponse);
+  rpc UpdateMiners(MsgUpdateMiners) returns (MsgUpdateMinersResponse);
+  rpc DeleteMiners(MsgDeleteMiners) returns (MsgDeleteMinersResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -47,5 +51,27 @@ message MsgDeleteSaveRequests {
   string index = 2;
 }
 message MsgDeleteSaveRequestsResponse {}
+
+message MsgCreateMiners {
+  string creator = 1;
+  string address = 2;
+
+  string ip = 3;
+}
+message MsgCreateMinersResponse {}
+
+message MsgUpdateMiners {
+  string creator = 1;
+  string address = 2;
+
+  string ip = 3;
+}
+message MsgUpdateMinersResponse {}
+
+message MsgDeleteMiners {
+  string creator = 1;
+  string address = 2;
+}
+message MsgDeleteMinersResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

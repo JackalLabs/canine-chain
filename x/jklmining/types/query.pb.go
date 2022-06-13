@@ -297,6 +297,190 @@ func (m *QueryAllSaveRequestsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryGetMinersRequest struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryGetMinersRequest) Reset()         { *m = QueryGetMinersRequest{} }
+func (m *QueryGetMinersRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetMinersRequest) ProtoMessage()    {}
+func (*QueryGetMinersRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69f21909369093a, []int{6}
+}
+func (m *QueryGetMinersRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetMinersRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetMinersRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetMinersRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetMinersRequest.Merge(m, src)
+}
+func (m *QueryGetMinersRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetMinersRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetMinersRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetMinersRequest proto.InternalMessageInfo
+
+func (m *QueryGetMinersRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryGetMinersResponse struct {
+	Miners Miners `protobuf:"bytes,1,opt,name=miners,proto3" json:"miners"`
+}
+
+func (m *QueryGetMinersResponse) Reset()         { *m = QueryGetMinersResponse{} }
+func (m *QueryGetMinersResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetMinersResponse) ProtoMessage()    {}
+func (*QueryGetMinersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69f21909369093a, []int{7}
+}
+func (m *QueryGetMinersResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetMinersResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetMinersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetMinersResponse.Merge(m, src)
+}
+func (m *QueryGetMinersResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetMinersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetMinersResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetMinersResponse proto.InternalMessageInfo
+
+func (m *QueryGetMinersResponse) GetMiners() Miners {
+	if m != nil {
+		return m.Miners
+	}
+	return Miners{}
+}
+
+type QueryAllMinersRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllMinersRequest) Reset()         { *m = QueryAllMinersRequest{} }
+func (m *QueryAllMinersRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllMinersRequest) ProtoMessage()    {}
+func (*QueryAllMinersRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69f21909369093a, []int{8}
+}
+func (m *QueryAllMinersRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllMinersRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllMinersRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllMinersRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllMinersRequest.Merge(m, src)
+}
+func (m *QueryAllMinersRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllMinersRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllMinersRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllMinersRequest proto.InternalMessageInfo
+
+func (m *QueryAllMinersRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllMinersResponse struct {
+	Miners     []Miners            `protobuf:"bytes,1,rep,name=miners,proto3" json:"miners"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllMinersResponse) Reset()         { *m = QueryAllMinersResponse{} }
+func (m *QueryAllMinersResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllMinersResponse) ProtoMessage()    {}
+func (*QueryAllMinersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69f21909369093a, []int{9}
+}
+func (m *QueryAllMinersResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllMinersResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllMinersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllMinersResponse.Merge(m, src)
+}
+func (m *QueryAllMinersResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllMinersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllMinersResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllMinersResponse proto.InternalMessageInfo
+
+func (m *QueryAllMinersResponse) GetMiners() []Miners {
+	if m != nil {
+		return m.Miners
+	}
+	return nil
+}
+
+func (m *QueryAllMinersResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "jackaldao.canine.jklmining.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "jackaldao.canine.jklmining.QueryParamsResponse")
@@ -304,45 +488,57 @@ func init() {
 	proto.RegisterType((*QueryGetSaveRequestsResponse)(nil), "jackaldao.canine.jklmining.QueryGetSaveRequestsResponse")
 	proto.RegisterType((*QueryAllSaveRequestsRequest)(nil), "jackaldao.canine.jklmining.QueryAllSaveRequestsRequest")
 	proto.RegisterType((*QueryAllSaveRequestsResponse)(nil), "jackaldao.canine.jklmining.QueryAllSaveRequestsResponse")
+	proto.RegisterType((*QueryGetMinersRequest)(nil), "jackaldao.canine.jklmining.QueryGetMinersRequest")
+	proto.RegisterType((*QueryGetMinersResponse)(nil), "jackaldao.canine.jklmining.QueryGetMinersResponse")
+	proto.RegisterType((*QueryAllMinersRequest)(nil), "jackaldao.canine.jklmining.QueryAllMinersRequest")
+	proto.RegisterType((*QueryAllMinersResponse)(nil), "jackaldao.canine.jklmining.QueryAllMinersResponse")
 }
 
 func init() { proto.RegisterFile("jklmining/query.proto", fileDescriptor_f69f21909369093a) }
 
 var fileDescriptor_f69f21909369093a = []byte{
-	// 514 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x94, 0xc1, 0x6b, 0x53, 0x31,
-	0x1c, 0xc7, 0x9b, 0xb9, 0x15, 0x8c, 0x03, 0x21, 0x56, 0x91, 0xe7, 0x7c, 0x4a, 0x10, 0x1d, 0x45,
-	0x13, 0xd6, 0x09, 0x8a, 0x27, 0xb7, 0x83, 0xf3, 0x38, 0x9f, 0x07, 0xc1, 0x8b, 0xa4, 0x5d, 0x88,
-	0xd9, 0x5e, 0x93, 0xb7, 0x97, 0xb4, 0x6c, 0x88, 0x17, 0xff, 0x02, 0x41, 0xbc, 0xf8, 0x97, 0x08,
-	0xe2, 0x7d, 0xc7, 0x81, 0x17, 0x4f, 0x22, 0xad, 0x7f, 0x88, 0x34, 0x49, 0xd7, 0x57, 0xf7, 0xba,
-	0x3e, 0xd9, 0xad, 0x4d, 0x7e, 0xdf, 0xef, 0xef, 0xf3, 0xed, 0xef, 0x97, 0xc2, 0xab, 0xbb, 0x7b,
-	0x69, 0x57, 0x2a, 0xa9, 0x04, 0xdd, 0xef, 0xf1, 0xfc, 0x90, 0x64, 0xb9, 0xb6, 0x1a, 0x45, 0xbb,
-	0xac, 0xb3, 0xc7, 0xd2, 0x1d, 0xa6, 0x49, 0x87, 0x29, 0xa9, 0x38, 0x39, 0xa9, 0x8b, 0x1a, 0x42,
-	0x0b, 0xed, 0xca, 0xe8, 0xe8, 0x93, 0x57, 0x44, 0x2b, 0x42, 0x6b, 0x91, 0x72, 0xca, 0x32, 0x49,
-	0x99, 0x52, 0xda, 0x32, 0x2b, 0xb5, 0x32, 0xe1, 0xb6, 0xd9, 0xd1, 0xa6, 0xab, 0x0d, 0x6d, 0x33,
-	0xc3, 0x7d, 0x23, 0xda, 0x5f, 0x6b, 0x73, 0xcb, 0xd6, 0x68, 0xc6, 0x84, 0x54, 0xae, 0x38, 0xd4,
-	0x5e, 0x9b, 0x20, 0x65, 0x2c, 0x67, 0xdd, 0xb1, 0xc7, 0xcd, 0xc9, 0xb9, 0x61, 0x7d, 0xfe, 0x26,
-	0xe7, 0xfb, 0x3d, 0x6e, 0x6c, 0xb8, 0xc6, 0x0d, 0x88, 0x5e, 0x8c, 0x8c, 0xb7, 0x9d, 0x26, 0xf1,
-	0x97, 0xf8, 0x15, 0xbc, 0x32, 0x75, 0x6a, 0x32, 0xad, 0x0c, 0x47, 0x4f, 0x61, 0xdd, 0x7b, 0x5f,
-	0x07, 0xb7, 0xc1, 0xea, 0xa5, 0x16, 0x26, 0xb3, 0x03, 0x13, 0xaf, 0xdd, 0x5c, 0x3c, 0xfa, 0x75,
-	0xab, 0x96, 0x04, 0x1d, 0x5e, 0x87, 0x37, 0x9c, 0xf1, 0x16, 0xb7, 0x2f, 0x59, 0x9f, 0x87, 0x7e,
-	0xe3, 0xbe, 0xa8, 0x01, 0x97, 0xa4, 0xda, 0xe1, 0x07, 0xce, 0xff, 0x62, 0xe2, 0xbf, 0xe0, 0x1c,
-	0xae, 0x94, 0x8b, 0x02, 0x56, 0x02, 0x97, 0x4d, 0xe1, 0x3c, 0xc0, 0xad, 0x9e, 0x05, 0x57, 0xf4,
-	0x09, 0x88, 0x53, 0x1e, 0x98, 0x07, 0xd0, 0x8d, 0x34, 0x2d, 0x03, 0x7d, 0x06, 0xe1, 0x64, 0x02,
-	0xa1, 0xe1, 0x5d, 0xe2, 0xc7, 0x45, 0x46, 0xe3, 0x22, 0x7e, 0x2f, 0xc2, 0xb8, 0xc8, 0x36, 0x13,
-	0x63, 0x8f, 0xa4, 0xa0, 0xc4, 0xdf, 0x40, 0xc8, 0x76, 0xaa, 0xcf, 0xcc, 0x6c, 0x17, 0xce, 0x9b,
-	0x0d, 0x6d, 0x4d, 0xc1, 0x2f, 0x38, 0xf8, 0x7b, 0x73, 0xe1, 0x3d, 0x50, 0x91, 0xbe, 0xf5, 0x65,
-	0x11, 0x2e, 0x39, 0x7a, 0xf4, 0x19, 0xc0, 0xba, 0x1f, 0x38, 0x22, 0x67, 0xb1, 0x9d, 0xde, 0xb5,
-	0x88, 0x56, 0xae, 0xf7, 0x04, 0xb8, 0xf9, 0xe1, 0xc7, 0x9f, 0x4f, 0x0b, 0x77, 0x10, 0xa6, 0x27,
-	0x42, 0xea, 0x85, 0xf4, 0xdf, 0x37, 0x80, 0xbe, 0x03, 0xb8, 0x5c, 0xfc, 0x3d, 0xd0, 0xa3, 0xb9,
-	0xdd, 0xca, 0x57, 0x33, 0x7a, 0xfc, 0xff, 0xc2, 0xc0, 0xfb, 0xc4, 0xf1, 0x3e, 0x44, 0xad, 0xc0,
-	0xfb, 0xa0, 0x14, 0x78, 0xea, 0x71, 0xd2, 0x77, 0x6e, 0xf3, 0xdf, 0xa3, 0xaf, 0x00, 0x5e, 0x2e,
-	0x9a, 0x6e, 0xa4, 0x69, 0x85, 0x08, 0xe5, 0x4b, 0x5b, 0x21, 0xc2, 0x8c, 0x2d, 0xc4, 0x2d, 0x17,
-	0xe1, 0x3e, 0x6a, 0x56, 0x8f, 0xb0, 0xf9, 0xfc, 0x68, 0x10, 0x83, 0xe3, 0x41, 0x0c, 0x7e, 0x0f,
-	0x62, 0xf0, 0x71, 0x18, 0xd7, 0x8e, 0x87, 0x71, 0xed, 0xe7, 0x30, 0xae, 0xbd, 0x26, 0x42, 0xda,
-	0xb7, 0xbd, 0x36, 0xe9, 0xe8, 0x6e, 0x89, 0xdf, 0x41, 0xc1, 0xd1, 0x1e, 0x66, 0xdc, 0xb4, 0xeb,
-	0xee, 0xaf, 0x6a, 0xfd, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3d, 0x57, 0x6c, 0x13, 0x76, 0x05,
-	0x00, 0x00,
+	// 650 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0x4d, 0x4f, 0x13, 0x41,
+	0x18, 0xc7, 0x3b, 0x20, 0x35, 0x8c, 0x24, 0x26, 0x23, 0x10, 0xb2, 0xe2, 0x6a, 0xc6, 0x37, 0x82,
+	0x32, 0x93, 0x16, 0x8d, 0xc6, 0x93, 0xe5, 0x20, 0x5e, 0x4c, 0xb0, 0x1e, 0x4c, 0xb8, 0x90, 0x69,
+	0x3b, 0x59, 0x17, 0xb6, 0x3b, 0xcb, 0xce, 0xb6, 0x81, 0x10, 0x2e, 0x7e, 0x02, 0x13, 0xe3, 0xd9,
+	0x83, 0x89, 0x9f, 0xc1, 0xc4, 0x78, 0xe7, 0x48, 0xe2, 0xc5, 0x93, 0x31, 0xad, 0x7e, 0x0f, 0xd3,
+	0x99, 0x59, 0xba, 0x4b, 0xb7, 0x65, 0xab, 0xdc, 0xd8, 0x61, 0xfe, 0xff, 0xe7, 0xf7, 0xbc, 0xcc,
+	0x53, 0x38, 0xb7, 0xbd, 0xe3, 0x35, 0x5d, 0xdf, 0xf5, 0x1d, 0xba, 0xdb, 0xe2, 0xe1, 0x3e, 0x09,
+	0x42, 0x11, 0x09, 0x64, 0x6d, 0xb3, 0xfa, 0x0e, 0xf3, 0x1a, 0x4c, 0x90, 0x3a, 0xf3, 0x5d, 0x9f,
+	0x93, 0x93, 0x7b, 0xd6, 0xac, 0x23, 0x1c, 0xa1, 0xae, 0xd1, 0xde, 0x5f, 0x5a, 0x61, 0x2d, 0x3a,
+	0x42, 0x38, 0x1e, 0xa7, 0x2c, 0x70, 0x29, 0xf3, 0x7d, 0x11, 0xb1, 0xc8, 0x15, 0xbe, 0x34, 0xff,
+	0x5d, 0xae, 0x0b, 0xd9, 0x14, 0x92, 0xd6, 0x98, 0xe4, 0x3a, 0x10, 0x6d, 0x97, 0x6a, 0x3c, 0x62,
+	0x25, 0x1a, 0x30, 0xc7, 0xf5, 0xd5, 0x65, 0x73, 0x77, 0xbe, 0x8f, 0x14, 0xb0, 0x90, 0x35, 0x63,
+	0x8f, 0x6b, 0xfd, 0x73, 0xc9, 0xda, 0x7c, 0x2b, 0xe4, 0xbb, 0x2d, 0x2e, 0x23, 0x39, 0x28, 0x6b,
+	0xba, 0x3e, 0x0f, 0xcd, 0x39, 0x9e, 0x85, 0xe8, 0x65, 0x2f, 0xe0, 0x86, 0xf2, 0xaa, 0x6a, 0x11,
+	0x7e, 0x0d, 0xaf, 0xa4, 0x4e, 0x65, 0x20, 0x7c, 0xc9, 0xd1, 0x53, 0x58, 0xd4, 0x31, 0x17, 0xc0,
+	0x0d, 0xb0, 0x74, 0xa9, 0x8c, 0xc9, 0xf0, 0x42, 0x10, 0xad, 0x5d, 0xbb, 0x70, 0xf4, 0xf3, 0x7a,
+	0xa1, 0x6a, 0x74, 0x78, 0x15, 0x5e, 0x55, 0xc6, 0xeb, 0x3c, 0x7a, 0xc5, 0xda, 0xdc, 0xc4, 0x8b,
+	0xe3, 0xa2, 0x59, 0x38, 0xe5, 0xfa, 0x0d, 0xbe, 0xa7, 0xfc, 0xa7, 0xab, 0xfa, 0x03, 0x87, 0x70,
+	0x31, 0x5b, 0x64, 0xb0, 0xaa, 0x70, 0x46, 0x26, 0xce, 0x0d, 0xdc, 0xd2, 0x28, 0xb8, 0xa4, 0x8f,
+	0x41, 0x4c, 0x79, 0x60, 0x6e, 0x40, 0x2b, 0x9e, 0x97, 0x05, 0xfa, 0x0c, 0xc2, 0x7e, 0x67, 0x4c,
+	0xc0, 0x3b, 0x44, 0xb7, 0x91, 0xf4, 0xda, 0x48, 0xf4, 0xbc, 0x98, 0x36, 0x92, 0x0d, 0xe6, 0xc4,
+	0x1e, 0xd5, 0x84, 0x12, 0x7f, 0x05, 0x26, 0xb7, 0x81, 0x38, 0x43, 0x73, 0x9b, 0xfc, 0xdf, 0xdc,
+	0xd0, 0x7a, 0x0a, 0x7e, 0x42, 0xc1, 0xdf, 0x3d, 0x13, 0x5e, 0x03, 0xa5, 0xe8, 0x4b, 0x70, 0x2e,
+	0x6e, 0xcc, 0x0b, 0x35, 0x54, 0x71, 0x79, 0x16, 0xe0, 0x45, 0xd6, 0x68, 0x84, 0x5c, 0x4a, 0xd3,
+	0xc9, 0xf8, 0x13, 0x6f, 0xc2, 0xf9, 0xd3, 0x92, 0xfe, 0x70, 0xe9, 0xc9, 0xcc, 0x33, 0x5c, 0x5a,
+	0x1b, 0x0f, 0x97, 0xd6, 0xe1, 0x2d, 0x83, 0x53, 0xf1, 0xbc, 0x34, 0xce, 0x79, 0x75, 0xeb, 0x13,
+	0x30, 0xf4, 0x89, 0x08, 0x19, 0xf4, 0x93, 0xff, 0x42, 0x7f, 0x6e, 0x5d, 0x29, 0xff, 0x29, 0xc2,
+	0x29, 0x45, 0x89, 0x3e, 0x00, 0x58, 0xd4, 0xcf, 0x10, 0x91, 0x51, 0x3c, 0x83, 0x1b, 0xc0, 0xa2,
+	0xb9, 0xef, 0x6b, 0x02, 0xbc, 0xfc, 0xf6, 0xfb, 0xef, 0xf7, 0x13, 0xb7, 0x10, 0xa6, 0x27, 0x42,
+	0xaa, 0x85, 0xf4, 0xf4, 0xc6, 0x42, 0xdf, 0x00, 0x9c, 0x49, 0x4e, 0x29, 0x7a, 0x74, 0x66, 0xb4,
+	0xec, 0x85, 0x61, 0x3d, 0x1e, 0x5f, 0x68, 0x78, 0x9f, 0x28, 0xde, 0x07, 0xa8, 0x6c, 0x78, 0x57,
+	0x32, 0x81, 0x53, 0xab, 0x94, 0x1e, 0xa8, 0x7d, 0x74, 0x88, 0xbe, 0x00, 0x78, 0x39, 0x69, 0x5a,
+	0xf1, 0xbc, 0x1c, 0x29, 0x64, 0xaf, 0x92, 0x1c, 0x29, 0x0c, 0xd9, 0x0d, 0xb8, 0xac, 0x52, 0xb8,
+	0x8f, 0x96, 0xf3, 0xa7, 0x80, 0x3e, 0x03, 0x58, 0xd4, 0xe3, 0x87, 0x4a, 0x79, 0x6a, 0x97, 0x7a,
+	0x48, 0x56, 0x79, 0x1c, 0x89, 0xa1, 0x7c, 0xa8, 0x28, 0x29, 0x5a, 0x19, 0x49, 0xa9, 0x1f, 0x01,
+	0x3d, 0x30, 0x7b, 0xe2, 0x10, 0x7d, 0x04, 0x70, 0x5a, 0x3b, 0xf5, 0xaa, 0x5b, 0xca, 0x53, 0xa4,
+	0x71, 0x59, 0x07, 0x5e, 0x31, 0xbe, 0xa7, 0x58, 0x6f, 0xa3, 0x9b, 0x39, 0x58, 0xd7, 0x9e, 0x1f,
+	0x75, 0x6c, 0x70, 0xdc, 0xb1, 0xc1, 0xaf, 0x8e, 0x0d, 0xde, 0x75, 0xed, 0xc2, 0x71, 0xd7, 0x2e,
+	0xfc, 0xe8, 0xda, 0x85, 0x4d, 0xe2, 0xb8, 0xd1, 0x9b, 0x56, 0x8d, 0xd4, 0x45, 0x33, 0xc3, 0x68,
+	0x2f, 0x61, 0x15, 0xed, 0x07, 0x5c, 0xd6, 0x8a, 0xea, 0xb7, 0x78, 0xf5, 0x6f, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0x78, 0x96, 0x73, 0x0b, 0x6f, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -363,6 +559,10 @@ type QueryClient interface {
 	SaveRequests(ctx context.Context, in *QueryGetSaveRequestsRequest, opts ...grpc.CallOption) (*QueryGetSaveRequestsResponse, error)
 	// Queries a list of SaveRequests items.
 	SaveRequestsAll(ctx context.Context, in *QueryAllSaveRequestsRequest, opts ...grpc.CallOption) (*QueryAllSaveRequestsResponse, error)
+	// Queries a Miners by index.
+	Miners(ctx context.Context, in *QueryGetMinersRequest, opts ...grpc.CallOption) (*QueryGetMinersResponse, error)
+	// Queries a list of Miners items.
+	MinersAll(ctx context.Context, in *QueryAllMinersRequest, opts ...grpc.CallOption) (*QueryAllMinersResponse, error)
 }
 
 type queryClient struct {
@@ -400,6 +600,24 @@ func (c *queryClient) SaveRequestsAll(ctx context.Context, in *QueryAllSaveReque
 	return out, nil
 }
 
+func (c *queryClient) Miners(ctx context.Context, in *QueryGetMinersRequest, opts ...grpc.CallOption) (*QueryGetMinersResponse, error) {
+	out := new(QueryGetMinersResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Query/Miners", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) MinersAll(ctx context.Context, in *QueryAllMinersRequest, opts ...grpc.CallOption) (*QueryAllMinersResponse, error) {
+	out := new(QueryAllMinersResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Query/MinersAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
@@ -408,6 +626,10 @@ type QueryServer interface {
 	SaveRequests(context.Context, *QueryGetSaveRequestsRequest) (*QueryGetSaveRequestsResponse, error)
 	// Queries a list of SaveRequests items.
 	SaveRequestsAll(context.Context, *QueryAllSaveRequestsRequest) (*QueryAllSaveRequestsResponse, error)
+	// Queries a Miners by index.
+	Miners(context.Context, *QueryGetMinersRequest) (*QueryGetMinersResponse, error)
+	// Queries a list of Miners items.
+	MinersAll(context.Context, *QueryAllMinersRequest) (*QueryAllMinersResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -422,6 +644,12 @@ func (*UnimplementedQueryServer) SaveRequests(ctx context.Context, req *QueryGet
 }
 func (*UnimplementedQueryServer) SaveRequestsAll(ctx context.Context, req *QueryAllSaveRequestsRequest) (*QueryAllSaveRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveRequestsAll not implemented")
+}
+func (*UnimplementedQueryServer) Miners(ctx context.Context, req *QueryGetMinersRequest) (*QueryGetMinersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Miners not implemented")
+}
+func (*UnimplementedQueryServer) MinersAll(ctx context.Context, req *QueryAllMinersRequest) (*QueryAllMinersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MinersAll not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -482,6 +710,42 @@ func _Query_SaveRequestsAll_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Miners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetMinersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Miners(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Query/Miners",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Miners(ctx, req.(*QueryGetMinersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_MinersAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllMinersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).MinersAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Query/MinersAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).MinersAll(ctx, req.(*QueryAllMinersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "jackaldao.canine.jklmining.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -497,6 +761,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SaveRequestsAll",
 			Handler:    _Query_SaveRequestsAll_Handler,
+		},
+		{
+			MethodName: "Miners",
+			Handler:    _Query_Miners_Handler,
+		},
+		{
+			MethodName: "MinersAll",
+			Handler:    _Query_MinersAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -706,6 +978,153 @@ func (m *QueryAllSaveRequestsResponse) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryGetMinersRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetMinersRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetMinersRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetMinersResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetMinersResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Miners.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllMinersRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllMinersRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllMinersRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllMinersResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllMinersResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Miners) > 0 {
+		for iNdEx := len(m.Miners) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Miners[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -782,6 +1201,62 @@ func (m *QueryAllSaveRequestsResponse) Size() (n int) {
 	_ = l
 	if len(m.SaveRequests) > 0 {
 		for _, e := range m.SaveRequests {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetMinersRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetMinersResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Miners.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryAllMinersRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllMinersResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Miners) > 0 {
+		for _, e := range m.Miners {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1243,6 +1718,377 @@ func (m *QueryAllSaveRequestsResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.SaveRequests = append(m.SaveRequests, SaveRequests{})
 			if err := m.SaveRequests[len(m.SaveRequests)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetMinersRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetMinersRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetMinersRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetMinersResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetMinersResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetMinersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Miners", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Miners.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllMinersRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllMinersRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllMinersRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllMinersResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllMinersResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllMinersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Miners", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Miners = append(m.Miners, Miners{})
+			if err := m.Miners[len(m.Miners)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

@@ -29,6 +29,26 @@ export interface MsgDeleteSaveRequests {
 }
 export interface MsgDeleteSaveRequestsResponse {
 }
+export interface MsgCreateMiners {
+    creator: string;
+    address: string;
+    ip: string;
+}
+export interface MsgCreateMinersResponse {
+}
+export interface MsgUpdateMiners {
+    creator: string;
+    address: string;
+    ip: string;
+}
+export interface MsgUpdateMinersResponse {
+}
+export interface MsgDeleteMiners {
+    creator: string;
+    address: string;
+}
+export interface MsgDeleteMinersResponse {
+}
 export declare const MsgAllowSave: {
     encode(message: MsgAllowSave, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgAllowSave;
@@ -85,13 +105,58 @@ export declare const MsgDeleteSaveRequestsResponse: {
     toJSON(_: MsgDeleteSaveRequestsResponse): unknown;
     fromPartial(_: DeepPartial<MsgDeleteSaveRequestsResponse>): MsgDeleteSaveRequestsResponse;
 };
+export declare const MsgCreateMiners: {
+    encode(message: MsgCreateMiners, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateMiners;
+    fromJSON(object: any): MsgCreateMiners;
+    toJSON(message: MsgCreateMiners): unknown;
+    fromPartial(object: DeepPartial<MsgCreateMiners>): MsgCreateMiners;
+};
+export declare const MsgCreateMinersResponse: {
+    encode(_: MsgCreateMinersResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateMinersResponse;
+    fromJSON(_: any): MsgCreateMinersResponse;
+    toJSON(_: MsgCreateMinersResponse): unknown;
+    fromPartial(_: DeepPartial<MsgCreateMinersResponse>): MsgCreateMinersResponse;
+};
+export declare const MsgUpdateMiners: {
+    encode(message: MsgUpdateMiners, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateMiners;
+    fromJSON(object: any): MsgUpdateMiners;
+    toJSON(message: MsgUpdateMiners): unknown;
+    fromPartial(object: DeepPartial<MsgUpdateMiners>): MsgUpdateMiners;
+};
+export declare const MsgUpdateMinersResponse: {
+    encode(_: MsgUpdateMinersResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateMinersResponse;
+    fromJSON(_: any): MsgUpdateMinersResponse;
+    toJSON(_: MsgUpdateMinersResponse): unknown;
+    fromPartial(_: DeepPartial<MsgUpdateMinersResponse>): MsgUpdateMinersResponse;
+};
+export declare const MsgDeleteMiners: {
+    encode(message: MsgDeleteMiners, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteMiners;
+    fromJSON(object: any): MsgDeleteMiners;
+    toJSON(message: MsgDeleteMiners): unknown;
+    fromPartial(object: DeepPartial<MsgDeleteMiners>): MsgDeleteMiners;
+};
+export declare const MsgDeleteMinersResponse: {
+    encode(_: MsgDeleteMinersResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteMinersResponse;
+    fromJSON(_: any): MsgDeleteMinersResponse;
+    toJSON(_: MsgDeleteMinersResponse): unknown;
+    fromPartial(_: DeepPartial<MsgDeleteMinersResponse>): MsgDeleteMinersResponse;
+};
 /** Msg defines the Msg service. */
 export interface Msg {
     AllowSave(request: MsgAllowSave): Promise<MsgAllowSaveResponse>;
     CreateSaveRequests(request: MsgCreateSaveRequests): Promise<MsgCreateSaveRequestsResponse>;
     UpdateSaveRequests(request: MsgUpdateSaveRequests): Promise<MsgUpdateSaveRequestsResponse>;
-    /** this line is used by starport scaffolding # proto/tx/rpc */
     DeleteSaveRequests(request: MsgDeleteSaveRequests): Promise<MsgDeleteSaveRequestsResponse>;
+    CreateMiners(request: MsgCreateMiners): Promise<MsgCreateMinersResponse>;
+    UpdateMiners(request: MsgUpdateMiners): Promise<MsgUpdateMinersResponse>;
+    /** this line is used by starport scaffolding # proto/tx/rpc */
+    DeleteMiners(request: MsgDeleteMiners): Promise<MsgDeleteMinersResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
@@ -100,6 +165,9 @@ export declare class MsgClientImpl implements Msg {
     CreateSaveRequests(request: MsgCreateSaveRequests): Promise<MsgCreateSaveRequestsResponse>;
     UpdateSaveRequests(request: MsgUpdateSaveRequests): Promise<MsgUpdateSaveRequestsResponse>;
     DeleteSaveRequests(request: MsgDeleteSaveRequests): Promise<MsgDeleteSaveRequestsResponse>;
+    CreateMiners(request: MsgCreateMiners): Promise<MsgCreateMinersResponse>;
+    UpdateMiners(request: MsgUpdateMiners): Promise<MsgUpdateMinersResponse>;
+    DeleteMiners(request: MsgDeleteMiners): Promise<MsgDeleteMinersResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

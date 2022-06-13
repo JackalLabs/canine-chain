@@ -2,6 +2,7 @@ import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../jklmining/params";
 import { SaveRequests } from "../jklmining/save_requests";
 import { PageRequest, PageResponse } from "../cosmos/base/query/v1beta1/pagination";
+import { Miners } from "../jklmining/miners";
 export declare const protobufPackage = "jackaldao.canine.jklmining";
 /** QueryParamsRequest is request type for the Query/Params RPC method. */
 export interface QueryParamsRequest {
@@ -22,6 +23,19 @@ export interface QueryAllSaveRequestsRequest {
 }
 export interface QueryAllSaveRequestsResponse {
     saveRequests: SaveRequests[];
+    pagination: PageResponse | undefined;
+}
+export interface QueryGetMinersRequest {
+    address: string;
+}
+export interface QueryGetMinersResponse {
+    miners: Miners | undefined;
+}
+export interface QueryAllMinersRequest {
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllMinersResponse {
+    miners: Miners[];
     pagination: PageResponse | undefined;
 }
 export declare const QueryParamsRequest: {
@@ -66,6 +80,34 @@ export declare const QueryAllSaveRequestsResponse: {
     toJSON(message: QueryAllSaveRequestsResponse): unknown;
     fromPartial(object: DeepPartial<QueryAllSaveRequestsResponse>): QueryAllSaveRequestsResponse;
 };
+export declare const QueryGetMinersRequest: {
+    encode(message: QueryGetMinersRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinersRequest;
+    fromJSON(object: any): QueryGetMinersRequest;
+    toJSON(message: QueryGetMinersRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinersRequest>): QueryGetMinersRequest;
+};
+export declare const QueryGetMinersResponse: {
+    encode(message: QueryGetMinersResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinersResponse;
+    fromJSON(object: any): QueryGetMinersResponse;
+    toJSON(message: QueryGetMinersResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinersResponse>): QueryGetMinersResponse;
+};
+export declare const QueryAllMinersRequest: {
+    encode(message: QueryAllMinersRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllMinersRequest;
+    fromJSON(object: any): QueryAllMinersRequest;
+    toJSON(message: QueryAllMinersRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllMinersRequest>): QueryAllMinersRequest;
+};
+export declare const QueryAllMinersResponse: {
+    encode(message: QueryAllMinersResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllMinersResponse;
+    fromJSON(object: any): QueryAllMinersResponse;
+    toJSON(message: QueryAllMinersResponse): unknown;
+    fromPartial(object: DeepPartial<QueryAllMinersResponse>): QueryAllMinersResponse;
+};
 /** Query defines the gRPC querier service. */
 export interface Query {
     /** Parameters queries the parameters of the module. */
@@ -74,6 +116,10 @@ export interface Query {
     SaveRequests(request: QueryGetSaveRequestsRequest): Promise<QueryGetSaveRequestsResponse>;
     /** Queries a list of SaveRequests items. */
     SaveRequestsAll(request: QueryAllSaveRequestsRequest): Promise<QueryAllSaveRequestsResponse>;
+    /** Queries a Miners by index. */
+    Miners(request: QueryGetMinersRequest): Promise<QueryGetMinersResponse>;
+    /** Queries a list of Miners items. */
+    MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse>;
 }
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
@@ -81,6 +127,8 @@ export declare class QueryClientImpl implements Query {
     Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
     SaveRequests(request: QueryGetSaveRequestsRequest): Promise<QueryGetSaveRequestsResponse>;
     SaveRequestsAll(request: QueryAllSaveRequestsRequest): Promise<QueryAllSaveRequestsResponse>;
+    Miners(request: QueryGetMinersRequest): Promise<QueryGetMinersResponse>;
+    MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

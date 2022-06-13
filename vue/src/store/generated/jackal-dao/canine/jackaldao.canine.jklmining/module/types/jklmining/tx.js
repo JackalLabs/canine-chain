@@ -532,6 +532,368 @@ export const MsgDeleteSaveRequestsResponse = {
         return message;
     },
 };
+const baseMsgCreateMiners = { creator: "", address: "", ip: "" };
+export const MsgCreateMiners = {
+    encode(message, writer = Writer.create()) {
+        if (message.creator !== "") {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.address !== "") {
+            writer.uint32(18).string(message.address);
+        }
+        if (message.ip !== "") {
+            writer.uint32(26).string(message.ip);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseMsgCreateMiners };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.creator = reader.string();
+                    break;
+                case 2:
+                    message.address = reader.string();
+                    break;
+                case 3:
+                    message.ip = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseMsgCreateMiners };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.address !== undefined && object.address !== null) {
+            message.address = String(object.address);
+        }
+        else {
+            message.address = "";
+        }
+        if (object.ip !== undefined && object.ip !== null) {
+            message.ip = String(object.ip);
+        }
+        else {
+            message.ip = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.address !== undefined && (obj.address = message.address);
+        message.ip !== undefined && (obj.ip = message.ip);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseMsgCreateMiners };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.address !== undefined && object.address !== null) {
+            message.address = object.address;
+        }
+        else {
+            message.address = "";
+        }
+        if (object.ip !== undefined && object.ip !== null) {
+            message.ip = object.ip;
+        }
+        else {
+            message.ip = "";
+        }
+        return message;
+    },
+};
+const baseMsgCreateMinersResponse = {};
+export const MsgCreateMinersResponse = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseMsgCreateMinersResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseMsgCreateMinersResponse,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseMsgCreateMinersResponse,
+        };
+        return message;
+    },
+};
+const baseMsgUpdateMiners = { creator: "", address: "", ip: "" };
+export const MsgUpdateMiners = {
+    encode(message, writer = Writer.create()) {
+        if (message.creator !== "") {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.address !== "") {
+            writer.uint32(18).string(message.address);
+        }
+        if (message.ip !== "") {
+            writer.uint32(26).string(message.ip);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseMsgUpdateMiners };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.creator = reader.string();
+                    break;
+                case 2:
+                    message.address = reader.string();
+                    break;
+                case 3:
+                    message.ip = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseMsgUpdateMiners };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.address !== undefined && object.address !== null) {
+            message.address = String(object.address);
+        }
+        else {
+            message.address = "";
+        }
+        if (object.ip !== undefined && object.ip !== null) {
+            message.ip = String(object.ip);
+        }
+        else {
+            message.ip = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.address !== undefined && (obj.address = message.address);
+        message.ip !== undefined && (obj.ip = message.ip);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseMsgUpdateMiners };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.address !== undefined && object.address !== null) {
+            message.address = object.address;
+        }
+        else {
+            message.address = "";
+        }
+        if (object.ip !== undefined && object.ip !== null) {
+            message.ip = object.ip;
+        }
+        else {
+            message.ip = "";
+        }
+        return message;
+    },
+};
+const baseMsgUpdateMinersResponse = {};
+export const MsgUpdateMinersResponse = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseMsgUpdateMinersResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseMsgUpdateMinersResponse,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseMsgUpdateMinersResponse,
+        };
+        return message;
+    },
+};
+const baseMsgDeleteMiners = { creator: "", address: "" };
+export const MsgDeleteMiners = {
+    encode(message, writer = Writer.create()) {
+        if (message.creator !== "") {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.address !== "") {
+            writer.uint32(18).string(message.address);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseMsgDeleteMiners };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.creator = reader.string();
+                    break;
+                case 2:
+                    message.address = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseMsgDeleteMiners };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.address !== undefined && object.address !== null) {
+            message.address = String(object.address);
+        }
+        else {
+            message.address = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.address !== undefined && (obj.address = message.address);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseMsgDeleteMiners };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.address !== undefined && object.address !== null) {
+            message.address = object.address;
+        }
+        else {
+            message.address = "";
+        }
+        return message;
+    },
+};
+const baseMsgDeleteMinersResponse = {};
+export const MsgDeleteMinersResponse = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseMsgDeleteMinersResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseMsgDeleteMinersResponse,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseMsgDeleteMinersResponse,
+        };
+        return message;
+    },
+};
 export class MsgClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
@@ -555,5 +917,20 @@ export class MsgClientImpl {
         const data = MsgDeleteSaveRequests.encode(request).finish();
         const promise = this.rpc.request("jackaldao.canine.jklmining.Msg", "DeleteSaveRequests", data);
         return promise.then((data) => MsgDeleteSaveRequestsResponse.decode(new Reader(data)));
+    }
+    CreateMiners(request) {
+        const data = MsgCreateMiners.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Msg", "CreateMiners", data);
+        return promise.then((data) => MsgCreateMinersResponse.decode(new Reader(data)));
+    }
+    UpdateMiners(request) {
+        const data = MsgUpdateMiners.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Msg", "UpdateMiners", data);
+        return promise.then((data) => MsgUpdateMinersResponse.decode(new Reader(data)));
+    }
+    DeleteMiners(request) {
+        const data = MsgDeleteMiners.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Msg", "DeleteMiners", data);
+        return promise.then((data) => MsgDeleteMinersResponse.decode(new Reader(data)));
     }
 }
