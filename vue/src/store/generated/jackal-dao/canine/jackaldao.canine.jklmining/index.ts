@@ -1,9 +1,10 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
 
 import { Params } from "./module/types/jklmining/params"
+import { SaveRequests } from "./module/types/jklmining/save_requests"
 
 
-export { Params };
+export { Params, SaveRequests };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -42,9 +43,12 @@ function getStructure(template) {
 const getDefaultState = () => {
 	return {
 				Params: {},
+				SaveRequests: {},
+				SaveRequestsAll: {},
 				
 				_Structure: {
 						Params: getStructure(Params.fromPartial({})),
+						SaveRequests: getStructure(SaveRequests.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -78,6 +82,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Params[JSON.stringify(params)] ?? {}
+		},
+				getSaveRequests: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.SaveRequests[JSON.stringify(params)] ?? {}
+		},
+				getSaveRequestsAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.SaveRequestsAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -136,6 +152,83 @@ export default {
 		
 		
 		
+		
+		 		
+		
+		
+		async QuerySaveRequests({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.querySaveRequests( key.index)).data
+				
+					
+				commit('QUERY', { query: 'SaveRequests', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QuerySaveRequests', payload: { options: { all }, params: {...key},query }})
+				return getters['getSaveRequests']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QuerySaveRequests API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QuerySaveRequestsAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.querySaveRequestsAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.querySaveRequestsAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'SaveRequestsAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QuerySaveRequestsAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getSaveRequestsAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QuerySaveRequestsAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgAllowSave({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgAllowSave(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAllowSave:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgAllowSave:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		
+		async MsgAllowSave({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgAllowSave(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAllowSave:Init  Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgAllowSave:Create  Could not create message: ' + e.message)
+					
+				}
+			}
+		},
 		
 	}
 }

@@ -1,10 +1,12 @@
 import { Params } from "../jklmining/params";
+import { SaveRequests } from "../jklmining/save_requests";
 import { Writer, Reader } from "protobufjs/minimal";
 export declare const protobufPackage = "jackaldao.canine.jklmining";
 /** GenesisState defines the jklmining module's genesis state. */
 export interface GenesisState {
-    /** this line is used by starport scaffolding # genesis/proto/state */
     params: Params | undefined;
+    /** this line is used by starport scaffolding # genesis/proto/state */
+    saveRequestsList: SaveRequests[];
 }
 export declare const GenesisState: {
     encode(message: GenesisState, writer?: Writer): Writer;

@@ -1,13 +1,51 @@
 syntax = "proto3";
 package jackaldao.canine.jklmining;
 
+import "jklmining/save_requests.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc AllowSave(MsgAllowSave) returns (MsgAllowSaveResponse);
+  rpc CreateSaveRequests(MsgCreateSaveRequests) returns (MsgCreateSaveRequestsResponse);
+  rpc UpdateSaveRequests(MsgUpdateSaveRequests) returns (MsgUpdateSaveRequestsResponse);
+  rpc DeleteSaveRequests(MsgDeleteSaveRequests) returns (MsgDeleteSaveRequestsResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
 }
+
+message MsgAllowSave {
+  string creator = 1;
+  string passkey = 2;
+  string size = 3;
+}
+
+message MsgAllowSaveResponse {
+}
+
+message MsgCreateSaveRequests {
+  string creator = 1;
+  string index = 2;
+
+  string size = 3;
+  string approved = 4;
+}
+message MsgCreateSaveRequestsResponse {}
+
+message MsgUpdateSaveRequests {
+  string creator = 1;
+  string index = 2;
+
+  string size = 3;
+  string approved = 4;
+}
+message MsgUpdateSaveRequestsResponse {}
+
+message MsgDeleteSaveRequests {
+  string creator = 1;
+  string index = 2;
+}
+message MsgDeleteSaveRequestsResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

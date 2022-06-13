@@ -140,6 +140,35 @@ export class Api extends HttpClient {
          * No description
          *
          * @tags Query
+         * @name QuerySaveRequestsAll
+         * @summary Queries a list of SaveRequests items.
+         * @request GET:/jackal-dao/canine/jklmining/save_requests
+         */
+        this.querySaveRequestsAll = (query, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/save_requests`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QuerySaveRequests
+         * @summary Queries a SaveRequests by index.
+         * @request GET:/jackal-dao/canine/jklmining/save_requests/{index}
+         */
+        this.querySaveRequests = (index, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/save_requests/${index}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
          * @name QueryParams
          * @summary Parameters queries the parameters of the module.
          * @request GET:/jackaldao/canine/jklmining/params

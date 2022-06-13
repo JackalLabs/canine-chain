@@ -3,6 +3,7 @@ package jackaldao.canine.jklmining;
 
 import "gogoproto/gogo.proto";
 import "jklmining/params.proto";
+import "jklmining/save_requests.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
@@ -10,5 +11,6 @@ option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
 // GenesisState defines the jklmining module's genesis state.
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
+  repeated SaveRequests saveRequestsList = 2 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

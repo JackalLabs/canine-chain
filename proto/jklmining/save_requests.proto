@@ -1,0 +1,12 @@
+syntax = "proto3";
+package jackaldao.canine.jklmining;
+
+option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
+
+message SaveRequests {
+  string index = 1; 
+  string size = 2; 
+  string approved = 3; 
+  string creator = 4;
+}
+

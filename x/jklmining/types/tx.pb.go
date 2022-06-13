@@ -9,7 +9,11 @@ import (
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -23,19 +27,437 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type MsgAllowSave struct {
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Passkey string `protobuf:"bytes,2,opt,name=passkey,proto3" json:"passkey,omitempty"`
+	Size_   string `protobuf:"bytes,3,opt,name=size,proto3" json:"size,omitempty"`
+}
+
+func (m *MsgAllowSave) Reset()         { *m = MsgAllowSave{} }
+func (m *MsgAllowSave) String() string { return proto.CompactTextString(m) }
+func (*MsgAllowSave) ProtoMessage()    {}
+func (*MsgAllowSave) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{0}
+}
+func (m *MsgAllowSave) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAllowSave) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAllowSave.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAllowSave) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAllowSave.Merge(m, src)
+}
+func (m *MsgAllowSave) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAllowSave) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAllowSave.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAllowSave proto.InternalMessageInfo
+
+func (m *MsgAllowSave) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgAllowSave) GetPasskey() string {
+	if m != nil {
+		return m.Passkey
+	}
+	return ""
+}
+
+func (m *MsgAllowSave) GetSize_() string {
+	if m != nil {
+		return m.Size_
+	}
+	return ""
+}
+
+type MsgAllowSaveResponse struct {
+}
+
+func (m *MsgAllowSaveResponse) Reset()         { *m = MsgAllowSaveResponse{} }
+func (m *MsgAllowSaveResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAllowSaveResponse) ProtoMessage()    {}
+func (*MsgAllowSaveResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{1}
+}
+func (m *MsgAllowSaveResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAllowSaveResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAllowSaveResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAllowSaveResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAllowSaveResponse.Merge(m, src)
+}
+func (m *MsgAllowSaveResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAllowSaveResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAllowSaveResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAllowSaveResponse proto.InternalMessageInfo
+
+type MsgCreateSaveRequests struct {
+	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Index    string `protobuf:"bytes,2,opt,name=index,proto3" json:"index,omitempty"`
+	Size_    string `protobuf:"bytes,3,opt,name=size,proto3" json:"size,omitempty"`
+	Approved string `protobuf:"bytes,4,opt,name=approved,proto3" json:"approved,omitempty"`
+}
+
+func (m *MsgCreateSaveRequests) Reset()         { *m = MsgCreateSaveRequests{} }
+func (m *MsgCreateSaveRequests) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateSaveRequests) ProtoMessage()    {}
+func (*MsgCreateSaveRequests) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{2}
+}
+func (m *MsgCreateSaveRequests) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateSaveRequests) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateSaveRequests.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateSaveRequests) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateSaveRequests.Merge(m, src)
+}
+func (m *MsgCreateSaveRequests) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateSaveRequests) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateSaveRequests.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateSaveRequests proto.InternalMessageInfo
+
+func (m *MsgCreateSaveRequests) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgCreateSaveRequests) GetIndex() string {
+	if m != nil {
+		return m.Index
+	}
+	return ""
+}
+
+func (m *MsgCreateSaveRequests) GetSize_() string {
+	if m != nil {
+		return m.Size_
+	}
+	return ""
+}
+
+func (m *MsgCreateSaveRequests) GetApproved() string {
+	if m != nil {
+		return m.Approved
+	}
+	return ""
+}
+
+type MsgCreateSaveRequestsResponse struct {
+}
+
+func (m *MsgCreateSaveRequestsResponse) Reset()         { *m = MsgCreateSaveRequestsResponse{} }
+func (m *MsgCreateSaveRequestsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateSaveRequestsResponse) ProtoMessage()    {}
+func (*MsgCreateSaveRequestsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{3}
+}
+func (m *MsgCreateSaveRequestsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateSaveRequestsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateSaveRequestsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateSaveRequestsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateSaveRequestsResponse.Merge(m, src)
+}
+func (m *MsgCreateSaveRequestsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateSaveRequestsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateSaveRequestsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateSaveRequestsResponse proto.InternalMessageInfo
+
+type MsgUpdateSaveRequests struct {
+	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Index    string `protobuf:"bytes,2,opt,name=index,proto3" json:"index,omitempty"`
+	Size_    string `protobuf:"bytes,3,opt,name=size,proto3" json:"size,omitempty"`
+	Approved string `protobuf:"bytes,4,opt,name=approved,proto3" json:"approved,omitempty"`
+}
+
+func (m *MsgUpdateSaveRequests) Reset()         { *m = MsgUpdateSaveRequests{} }
+func (m *MsgUpdateSaveRequests) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateSaveRequests) ProtoMessage()    {}
+func (*MsgUpdateSaveRequests) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{4}
+}
+func (m *MsgUpdateSaveRequests) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateSaveRequests) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateSaveRequests.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateSaveRequests) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateSaveRequests.Merge(m, src)
+}
+func (m *MsgUpdateSaveRequests) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateSaveRequests) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateSaveRequests.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateSaveRequests proto.InternalMessageInfo
+
+func (m *MsgUpdateSaveRequests) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgUpdateSaveRequests) GetIndex() string {
+	if m != nil {
+		return m.Index
+	}
+	return ""
+}
+
+func (m *MsgUpdateSaveRequests) GetSize_() string {
+	if m != nil {
+		return m.Size_
+	}
+	return ""
+}
+
+func (m *MsgUpdateSaveRequests) GetApproved() string {
+	if m != nil {
+		return m.Approved
+	}
+	return ""
+}
+
+type MsgUpdateSaveRequestsResponse struct {
+}
+
+func (m *MsgUpdateSaveRequestsResponse) Reset()         { *m = MsgUpdateSaveRequestsResponse{} }
+func (m *MsgUpdateSaveRequestsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateSaveRequestsResponse) ProtoMessage()    {}
+func (*MsgUpdateSaveRequestsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{5}
+}
+func (m *MsgUpdateSaveRequestsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateSaveRequestsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateSaveRequestsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateSaveRequestsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateSaveRequestsResponse.Merge(m, src)
+}
+func (m *MsgUpdateSaveRequestsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateSaveRequestsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateSaveRequestsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateSaveRequestsResponse proto.InternalMessageInfo
+
+type MsgDeleteSaveRequests struct {
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Index   string `protobuf:"bytes,2,opt,name=index,proto3" json:"index,omitempty"`
+}
+
+func (m *MsgDeleteSaveRequests) Reset()         { *m = MsgDeleteSaveRequests{} }
+func (m *MsgDeleteSaveRequests) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteSaveRequests) ProtoMessage()    {}
+func (*MsgDeleteSaveRequests) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{6}
+}
+func (m *MsgDeleteSaveRequests) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDeleteSaveRequests) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDeleteSaveRequests.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDeleteSaveRequests) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteSaveRequests.Merge(m, src)
+}
+func (m *MsgDeleteSaveRequests) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDeleteSaveRequests) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteSaveRequests.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDeleteSaveRequests proto.InternalMessageInfo
+
+func (m *MsgDeleteSaveRequests) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgDeleteSaveRequests) GetIndex() string {
+	if m != nil {
+		return m.Index
+	}
+	return ""
+}
+
+type MsgDeleteSaveRequestsResponse struct {
+}
+
+func (m *MsgDeleteSaveRequestsResponse) Reset()         { *m = MsgDeleteSaveRequestsResponse{} }
+func (m *MsgDeleteSaveRequestsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteSaveRequestsResponse) ProtoMessage()    {}
+func (*MsgDeleteSaveRequestsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{7}
+}
+func (m *MsgDeleteSaveRequestsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDeleteSaveRequestsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDeleteSaveRequestsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDeleteSaveRequestsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteSaveRequestsResponse.Merge(m, src)
+}
+func (m *MsgDeleteSaveRequestsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDeleteSaveRequestsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteSaveRequestsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDeleteSaveRequestsResponse proto.InternalMessageInfo
+
+func init() {
+	proto.RegisterType((*MsgAllowSave)(nil), "jackaldao.canine.jklmining.MsgAllowSave")
+	proto.RegisterType((*MsgAllowSaveResponse)(nil), "jackaldao.canine.jklmining.MsgAllowSaveResponse")
+	proto.RegisterType((*MsgCreateSaveRequests)(nil), "jackaldao.canine.jklmining.MsgCreateSaveRequests")
+	proto.RegisterType((*MsgCreateSaveRequestsResponse)(nil), "jackaldao.canine.jklmining.MsgCreateSaveRequestsResponse")
+	proto.RegisterType((*MsgUpdateSaveRequests)(nil), "jackaldao.canine.jklmining.MsgUpdateSaveRequests")
+	proto.RegisterType((*MsgUpdateSaveRequestsResponse)(nil), "jackaldao.canine.jklmining.MsgUpdateSaveRequestsResponse")
+	proto.RegisterType((*MsgDeleteSaveRequests)(nil), "jackaldao.canine.jklmining.MsgDeleteSaveRequests")
+	proto.RegisterType((*MsgDeleteSaveRequestsResponse)(nil), "jackaldao.canine.jklmining.MsgDeleteSaveRequestsResponse")
+}
+
 func init() { proto.RegisterFile("jklmining/tx.proto", fileDescriptor_d5e577009bbe5c49) }
 
 var fileDescriptor_d5e577009bbe5c49 = []byte{
-	// 136 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0xca, 0xca, 0xce, 0xc9,
-	0xcd, 0xcc, 0xcb, 0xcc, 0x4b, 0xd7, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x92,
-	0xca, 0x4a, 0x4c, 0xce, 0x4e, 0xcc, 0x49, 0x49, 0xcc, 0xd7, 0x4b, 0x4e, 0xcc, 0xcb, 0xcc, 0x4b,
-	0xd5, 0x83, 0x2b, 0x32, 0x62, 0xe5, 0x62, 0xf6, 0x2d, 0x4e, 0x77, 0xf2, 0x38, 0xf1, 0x48, 0x8e,
-	0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xb8, 0xf0, 0x58,
-	0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x86, 0x28, 0xbd, 0xf4, 0xcc, 0x92, 0x8c, 0xd2, 0x24, 0xbd, 0xe4,
-	0xfc, 0x5c, 0x7d, 0x88, 0x39, 0xba, 0x29, 0x89, 0xf9, 0xfa, 0x10, 0x83, 0xf4, 0x2b, 0xf4, 0x91,
-	0xec, 0xab, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0xdb, 0x69, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff,
-	0x56, 0x4e, 0xa7, 0x66, 0x89, 0x00, 0x00, 0x00,
+	// 384 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x94, 0xb9, 0x4e, 0xc3, 0x40,
+	0x10, 0x86, 0x63, 0x12, 0x8e, 0xac, 0xa8, 0x56, 0x01, 0x59, 0x96, 0x62, 0x90, 0xab, 0x34, 0xac,
+	0x39, 0x2a, 0x4a, 0x0e, 0x09, 0x9a, 0x34, 0x41, 0x50, 0xd0, 0xa0, 0x8d, 0x3d, 0x32, 0x4e, 0x1c,
+	0xef, 0xe2, 0x75, 0x2e, 0x4a, 0x9e, 0x80, 0xc7, 0xa2, 0x4c, 0x49, 0x89, 0x92, 0xe7, 0x40, 0x42,
+	0xd9, 0xcd, 0x05, 0x76, 0x30, 0x88, 0x82, 0xce, 0xe3, 0x99, 0xf9, 0xff, 0x4f, 0xfa, 0x47, 0x8b,
+	0x70, 0xa3, 0x19, 0xb4, 0xfc, 0xd0, 0x0f, 0x3d, 0x3b, 0xee, 0x11, 0x1e, 0xb1, 0x98, 0x61, 0xa3,
+	0x41, 0x9d, 0x26, 0x0d, 0x5c, 0xca, 0x88, 0x43, 0x43, 0x3f, 0x04, 0x32, 0x1b, 0x32, 0xca, 0xf3,
+	0x79, 0x41, 0x3b, 0x70, 0x17, 0xc1, 0x43, 0x1b, 0x44, 0x2c, 0xd4, 0xaa, 0x75, 0x83, 0x36, 0xab,
+	0xc2, 0x3b, 0x09, 0x02, 0xd6, 0xbd, 0xa2, 0x1d, 0xc0, 0x3a, 0x5a, 0x77, 0x22, 0xa0, 0x31, 0x8b,
+	0x74, 0x6d, 0x57, 0xab, 0x14, 0x6b, 0xd3, 0x72, 0xdc, 0xe1, 0x54, 0x88, 0x26, 0xf4, 0xf5, 0x15,
+	0xd5, 0x99, 0x94, 0x18, 0xa3, 0x82, 0xf0, 0x1f, 0x41, 0xcf, 0xcb, 0xdf, 0xf2, 0xdb, 0xda, 0x46,
+	0xa5, 0x45, 0xdd, 0x1a, 0x08, 0xce, 0x42, 0x01, 0x56, 0x17, 0x6d, 0x55, 0x85, 0x77, 0x36, 0xd6,
+	0x04, 0xd5, 0x50, 0x38, 0xdf, 0x18, 0x97, 0xd0, 0xaa, 0x1f, 0xba, 0xd0, 0x9b, 0xd8, 0xaa, 0x22,
+	0xcd, 0x14, 0x1b, 0x68, 0x83, 0x72, 0x1e, 0xb1, 0x0e, 0xb8, 0x7a, 0x41, 0xfe, 0x9f, 0xd5, 0xd6,
+	0x0e, 0x2a, 0xa7, 0x1a, 0x7f, 0x21, 0xbb, 0xe6, 0xee, 0xff, 0x90, 0x25, 0x8d, 0x67, 0x64, 0x17,
+	0x92, 0xec, 0x1c, 0x02, 0xf8, 0x1b, 0xd9, 0xc4, 0x29, 0x29, 0x34, 0x75, 0x3a, 0x7c, 0xcf, 0xa3,
+	0x7c, 0x55, 0x78, 0xd8, 0x43, 0xc5, 0xf9, 0x49, 0x54, 0xc8, 0xf2, 0xf3, 0x22, 0x8b, 0x21, 0x1b,
+	0xfb, 0x3f, 0x9d, 0x9c, 0x1a, 0xe2, 0x27, 0x0d, 0xe1, 0x94, 0x63, 0x38, 0xc8, 0x10, 0x4a, 0xae,
+	0x18, 0xc7, 0xbf, 0x5e, 0xf9, 0x04, 0x91, 0x92, 0x7b, 0x16, 0x44, 0x72, 0x25, 0x13, 0x62, 0x79,
+	0xc8, 0x12, 0x22, 0x25, 0xe2, 0x2c, 0x88, 0xe4, 0x4a, 0x26, 0xc4, 0xf2, 0xfc, 0x4f, 0x2f, 0x5f,
+	0x86, 0xa6, 0x36, 0x18, 0x9a, 0xda, 0xdb, 0xd0, 0xd4, 0x9e, 0x47, 0x66, 0x6e, 0x30, 0x32, 0x73,
+	0xaf, 0x23, 0x33, 0x77, 0x4b, 0x3c, 0x3f, 0xbe, 0x6f, 0xd7, 0x89, 0xc3, 0x5a, 0xb6, 0x92, 0xdf,
+	0x73, 0x29, 0xb3, 0x95, 0xbe, 0xdd, 0xb3, 0x17, 0x5e, 0xa5, 0x3e, 0x07, 0x51, 0x5f, 0x93, 0xcf,
+	0xcb, 0xd1, 0x47, 0x00, 0x00, 0x00, 0xff, 0xff, 0x0b, 0x15, 0xc5, 0x11, 0xaf, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -50,6 +472,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	AllowSave(ctx context.Context, in *MsgAllowSave, opts ...grpc.CallOption) (*MsgAllowSaveResponse, error)
+	CreateSaveRequests(ctx context.Context, in *MsgCreateSaveRequests, opts ...grpc.CallOption) (*MsgCreateSaveRequestsResponse, error)
+	UpdateSaveRequests(ctx context.Context, in *MsgUpdateSaveRequests, opts ...grpc.CallOption) (*MsgUpdateSaveRequestsResponse, error)
+	DeleteSaveRequests(ctx context.Context, in *MsgDeleteSaveRequests, opts ...grpc.CallOption) (*MsgDeleteSaveRequestsResponse, error)
 }
 
 type msgClient struct {
@@ -60,22 +486,1481 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
+func (c *msgClient) AllowSave(ctx context.Context, in *MsgAllowSave, opts ...grpc.CallOption) (*MsgAllowSaveResponse, error) {
+	out := new(MsgAllowSaveResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Msg/AllowSave", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) CreateSaveRequests(ctx context.Context, in *MsgCreateSaveRequests, opts ...grpc.CallOption) (*MsgCreateSaveRequestsResponse, error) {
+	out := new(MsgCreateSaveRequestsResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Msg/CreateSaveRequests", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateSaveRequests(ctx context.Context, in *MsgUpdateSaveRequests, opts ...grpc.CallOption) (*MsgUpdateSaveRequestsResponse, error) {
+	out := new(MsgUpdateSaveRequestsResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Msg/UpdateSaveRequests", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) DeleteSaveRequests(ctx context.Context, in *MsgDeleteSaveRequests, opts ...grpc.CallOption) (*MsgDeleteSaveRequestsResponse, error) {
+	out := new(MsgDeleteSaveRequestsResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Msg/DeleteSaveRequests", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	AllowSave(context.Context, *MsgAllowSave) (*MsgAllowSaveResponse, error)
+	CreateSaveRequests(context.Context, *MsgCreateSaveRequests) (*MsgCreateSaveRequestsResponse, error)
+	UpdateSaveRequests(context.Context, *MsgUpdateSaveRequests) (*MsgUpdateSaveRequestsResponse, error)
+	DeleteSaveRequests(context.Context, *MsgDeleteSaveRequests) (*MsgDeleteSaveRequestsResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) AllowSave(ctx context.Context, req *MsgAllowSave) (*MsgAllowSaveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllowSave not implemented")
+}
+func (*UnimplementedMsgServer) CreateSaveRequests(ctx context.Context, req *MsgCreateSaveRequests) (*MsgCreateSaveRequestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSaveRequests not implemented")
+}
+func (*UnimplementedMsgServer) UpdateSaveRequests(ctx context.Context, req *MsgUpdateSaveRequests) (*MsgUpdateSaveRequestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSaveRequests not implemented")
+}
+func (*UnimplementedMsgServer) DeleteSaveRequests(ctx context.Context, req *MsgDeleteSaveRequests) (*MsgDeleteSaveRequestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSaveRequests not implemented")
+}
+
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_AllowSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAllowSave)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).AllowSave(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Msg/AllowSave",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).AllowSave(ctx, req.(*MsgAllowSave))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_CreateSaveRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateSaveRequests)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateSaveRequests(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Msg/CreateSaveRequests",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateSaveRequests(ctx, req.(*MsgCreateSaveRequests))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateSaveRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateSaveRequests)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateSaveRequests(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Msg/UpdateSaveRequests",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateSaveRequests(ctx, req.(*MsgUpdateSaveRequests))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DeleteSaveRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDeleteSaveRequests)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DeleteSaveRequests(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Msg/DeleteSaveRequests",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DeleteSaveRequests(ctx, req.(*MsgDeleteSaveRequests))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "jackaldao.canine.jklmining.Msg",
 	HandlerType: (*MsgServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "jklmining/tx.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AllowSave",
+			Handler:    _Msg_AllowSave_Handler,
+		},
+		{
+			MethodName: "CreateSaveRequests",
+			Handler:    _Msg_CreateSaveRequests_Handler,
+		},
+		{
+			MethodName: "UpdateSaveRequests",
+			Handler:    _Msg_UpdateSaveRequests_Handler,
+		},
+		{
+			MethodName: "DeleteSaveRequests",
+			Handler:    _Msg_DeleteSaveRequests_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "jklmining/tx.proto",
 }
+
+func (m *MsgAllowSave) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAllowSave) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAllowSave) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Size_) > 0 {
+		i -= len(m.Size_)
+		copy(dAtA[i:], m.Size_)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Size_)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Passkey) > 0 {
+		i -= len(m.Passkey)
+		copy(dAtA[i:], m.Passkey)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Passkey)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAllowSaveResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAllowSaveResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAllowSaveResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateSaveRequests) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateSaveRequests) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateSaveRequests) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Approved) > 0 {
+		i -= len(m.Approved)
+		copy(dAtA[i:], m.Approved)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Approved)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Size_) > 0 {
+		i -= len(m.Size_)
+		copy(dAtA[i:], m.Size_)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Size_)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Index) > 0 {
+		i -= len(m.Index)
+		copy(dAtA[i:], m.Index)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Index)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateSaveRequestsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateSaveRequestsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateSaveRequestsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateSaveRequests) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateSaveRequests) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateSaveRequests) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Approved) > 0 {
+		i -= len(m.Approved)
+		copy(dAtA[i:], m.Approved)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Approved)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Size_) > 0 {
+		i -= len(m.Size_)
+		copy(dAtA[i:], m.Size_)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Size_)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Index) > 0 {
+		i -= len(m.Index)
+		copy(dAtA[i:], m.Index)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Index)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateSaveRequestsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateSaveRequestsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateSaveRequestsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteSaveRequests) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteSaveRequests) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteSaveRequests) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Index) > 0 {
+		i -= len(m.Index)
+		copy(dAtA[i:], m.Index)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Index)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteSaveRequestsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteSaveRequestsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteSaveRequestsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
+	offset -= sovTx(v)
+	base := offset
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return base
+}
+func (m *MsgAllowSave) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Passkey)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Size_)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgAllowSaveResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgCreateSaveRequests) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Index)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Size_)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Approved)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgCreateSaveRequestsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgUpdateSaveRequests) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Index)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Size_)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Approved)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgUpdateSaveRequestsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgDeleteSaveRequests) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Index)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgDeleteSaveRequestsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func sovTx(x uint64) (n int) {
+	return (math_bits.Len64(x|1) + 6) / 7
+}
+func sozTx(x uint64) (n int) {
+	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgAllowSave) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAllowSave: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAllowSave: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Passkey", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Passkey = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Size_", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Size_ = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAllowSaveResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAllowSaveResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAllowSaveResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateSaveRequests) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateSaveRequests: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateSaveRequests: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Index = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Size_", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Size_ = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Approved", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Approved = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateSaveRequestsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateSaveRequestsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateSaveRequestsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateSaveRequests) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateSaveRequests: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateSaveRequests: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Index = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Size_", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Size_ = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Approved", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Approved = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateSaveRequestsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateSaveRequestsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateSaveRequestsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDeleteSaveRequests) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDeleteSaveRequests: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDeleteSaveRequests: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Index = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDeleteSaveRequestsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDeleteSaveRequestsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDeleteSaveRequestsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipTx(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	depth := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+		case 1:
+			iNdEx += 8
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if length < 0 {
+				return 0, ErrInvalidLengthTx
+			}
+			iNdEx += length
+		case 3:
+			depth++
+		case 4:
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupTx
+			}
+			depth--
+		case 5:
+			iNdEx += 4
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthTx
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
+	}
+	return 0, io.ErrUnexpectedEOF
+}
+
+var (
+	ErrInvalidLengthTx        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowTx          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupTx = fmt.Errorf("proto: unexpected end of group")
+)
