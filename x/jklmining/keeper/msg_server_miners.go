@@ -14,7 +14,7 @@ func (k msgServer) CreateMiners(goCtx context.Context, msg *types.MsgCreateMiner
 	// Check if the value already exists
 	_, isFound := k.GetMiners(
 		ctx,
-		msg.Address,
+		msg.Creator,
 	)
 	if isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
@@ -22,7 +22,7 @@ func (k msgServer) CreateMiners(goCtx context.Context, msg *types.MsgCreateMiner
 
 	var miners = types.Miners{
 		Creator: msg.Creator,
-		Address: msg.Address,
+		Address: msg.Creator,
 		Ip:      msg.Ip,
 	}
 
@@ -39,7 +39,7 @@ func (k msgServer) UpdateMiners(goCtx context.Context, msg *types.MsgUpdateMiner
 	// Check if the value exists
 	valFound, isFound := k.GetMiners(
 		ctx,
-		msg.Address,
+		msg.Creator,
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -52,7 +52,7 @@ func (k msgServer) UpdateMiners(goCtx context.Context, msg *types.MsgUpdateMiner
 
 	var miners = types.Miners{
 		Creator: msg.Creator,
-		Address: msg.Address,
+		Address: msg.Creator,
 		Ip:      msg.Ip,
 	}
 
@@ -67,7 +67,7 @@ func (k msgServer) DeleteMiners(goCtx context.Context, msg *types.MsgDeleteMiner
 	// Check if the value exists
 	valFound, isFound := k.GetMiners(
 		ctx,
-		msg.Address,
+		msg.Creator,
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -80,7 +80,7 @@ func (k msgServer) DeleteMiners(goCtx context.Context, msg *types.MsgDeleteMiner
 
 	k.RemoveMiners(
 		ctx,
-		msg.Address,
+		msg.Creator,
 	)
 
 	return &types.MsgDeleteMinersResponse{}, nil

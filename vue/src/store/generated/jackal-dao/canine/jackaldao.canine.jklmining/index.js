@@ -1,8 +1,9 @@
 import { txClient, queryClient, MissingWalletError, registry } from './module';
+import { Mined } from "./module/types/jklmining/mined";
 import { Miners } from "./module/types/jklmining/miners";
 import { Params } from "./module/types/jklmining/params";
 import { SaveRequests } from "./module/types/jklmining/save_requests";
-export { Miners, Params, SaveRequests };
+export { Mined, Miners, Params, SaveRequests };
 async function initTxClient(vuexGetters) {
     return await txClient(vuexGetters['common/wallet/signer'], {
         addr: vuexGetters['common/env/apiTendermint']
@@ -41,7 +42,10 @@ const getDefaultState = () => {
         SaveRequestsAll: {},
         Miners: {},
         MinersAll: {},
+        Mined: {},
+        MinedAll: {},
         _Structure: {
+            Mined: getStructure(Mined.fromPartial({})),
             Miners: getStructure(Miners.fromPartial({})),
             Params: getStructure(Params.fromPartial({})),
             SaveRequests: getStructure(SaveRequests.fromPartial({})),
@@ -99,6 +103,18 @@ export default {
                 params.query = null;
             }
             return state.MinersAll[JSON.stringify(params)] ?? {};
+        },
+        getMined: (state) => (params = { params: {} }) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.Mined[JSON.stringify(params)] ?? {};
+        },
+        getMinedAll: (state) => (params = { params: {} }) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.MinedAll[JSON.stringify(params)] ?? {};
         },
         getTypeStructure: (state) => (type) => {
             return state._Structure[type].fields;
@@ -211,21 +227,36 @@ export default {
                 throw new Error('QueryClient:QueryMinersAll API Node Unavailable. Could not perform query: ' + e.message);
             }
         },
-        async sendMsgAllowSave({ rootGetters }, { value, fee = [], memo = '' }) {
+        async QueryMined({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params, query = null }) {
             try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgAllowSave(value);
-                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
-                        gas: "200000" }, memo });
-                return result;
+                const key = params ?? {};
+                const queryClient = await initQueryClient(rootGetters);
+                let value = (await queryClient.queryMined(key.id)).data;
+                commit('QUERY', { query: 'Mined', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryMined', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getMined']({ params: { ...key }, query }) ?? {};
             }
             catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgAllowSave:Init Could not initialize signing client. Wallet is required.');
+                throw new Error('QueryClient:QueryMined API Node Unavailable. Could not perform query: ' + e.message);
+            }
+        },
+        async QueryMinedAll({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params, query = null }) {
+            try {
+                const key = params ?? {};
+                const queryClient = await initQueryClient(rootGetters);
+                let value = (await queryClient.queryMinedAll(query)).data;
+                while (all && value.pagination && value.pagination.next_key != null) {
+                    let next_values = (await queryClient.queryMinedAll({ ...query, 'pagination.key': value.pagination.next_key })).data;
+                    value = mergeResults(value, next_values);
                 }
-                else {
-                    throw new Error('TxClient:MsgAllowSave:Send Could not broadcast Tx: ' + e.message);
-                }
+                commit('QUERY', { query: 'MinedAll', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryMinedAll', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getMinedAll']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                throw new Error('QueryClient:QueryMinedAll API Node Unavailable. Could not perform query: ' + e.message);
             }
         },
         async sendMsgDeleteMiners({ rootGetters }, { value, fee = [], memo = '' }) {
@@ -242,6 +273,23 @@ export default {
                 }
                 else {
                     throw new Error('TxClient:MsgDeleteMiners:Send Could not broadcast Tx: ' + e.message);
+                }
+            }
+        },
+        async sendMsgClaimSave({ rootGetters }, { value, fee = [], memo = '' }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgClaimSave(value);
+                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgClaimSave:Init Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgClaimSave:Send Could not broadcast Tx: ' + e.message);
                 }
             }
         },
@@ -262,6 +310,23 @@ export default {
                 }
             }
         },
+        async sendMsgAllowSave({ rootGetters }, { value, fee = [], memo = '' }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgAllowSave(value);
+                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgAllowSave:Init Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgAllowSave:Send Could not broadcast Tx: ' + e.message);
+                }
+            }
+        },
         async sendMsgUpdateMiners({ rootGetters }, { value, fee = [], memo = '' }) {
             try {
                 const txClient = await initTxClient(rootGetters);
@@ -276,21 +341,6 @@ export default {
                 }
                 else {
                     throw new Error('TxClient:MsgUpdateMiners:Send Could not broadcast Tx: ' + e.message);
-                }
-            }
-        },
-        async MsgAllowSave({ rootGetters }, { value }) {
-            try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgAllowSave(value);
-                return msg;
-            }
-            catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgAllowSave:Init  Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new Error('TxClient:MsgAllowSave:Create  Could not create message: ' + e.message);
                 }
             }
         },
@@ -309,6 +359,21 @@ export default {
                 }
             }
         },
+        async MsgClaimSave({ rootGetters }, { value }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgClaimSave(value);
+                return msg;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgClaimSave:Init  Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgClaimSave:Create  Could not create message: ' + e.message);
+                }
+            }
+        },
         async MsgCreateMiners({ rootGetters }, { value }) {
             try {
                 const txClient = await initTxClient(rootGetters);
@@ -321,6 +386,21 @@ export default {
                 }
                 else {
                     throw new Error('TxClient:MsgCreateMiners:Create  Could not create message: ' + e.message);
+                }
+            }
+        },
+        async MsgAllowSave({ rootGetters }, { value }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgAllowSave(value);
+                return msg;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgAllowSave:Init  Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgAllowSave:Create  Could not create message: ' + e.message);
                 }
             }
         },

@@ -12,6 +12,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		SaveRequestsList: []SaveRequests{},
 		MinersList:       []Miners{},
+		MinedList:        []Mined{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -39,6 +40,18 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for miners")
 		}
 		minersIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated ID in mined
+	minedIdMap := make(map[uint64]bool)
+	minedCount := gs.GetMinedCount()
+	for _, elem := range gs.MinedList {
+		if _, ok := minedIdMap[elem.Id]; ok {
+			return fmt.Errorf("duplicated id for mined")
+		}
+		if elem.Id >= minedCount {
+			return fmt.Errorf("mined id should be lower or equal than the last id")
+		}
+		minedIdMap[elem.Id] = true
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

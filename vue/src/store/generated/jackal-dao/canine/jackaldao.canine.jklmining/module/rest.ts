@@ -9,6 +9,14 @@
  * ---------------------------------------------------------------
  */
 
+export interface JklminingMined {
+  /** @format uint64 */
+  id?: string;
+  datasize?: string;
+  hash?: string;
+  pcount?: string;
+}
+
 export interface JklminingMiners {
   address?: string;
   ip?: string;
@@ -16,6 +24,8 @@ export interface JklminingMiners {
 }
 
 export type JklminingMsgAllowSaveResponse = object;
+
+export type JklminingMsgClaimSaveResponse = object;
 
 export type JklminingMsgCreateMinersResponse = object;
 
@@ -33,6 +43,21 @@ export type JklminingMsgUpdateSaveRequestsResponse = object;
  * Params defines the parameters for the module.
  */
 export type JklminingParams = object;
+
+export interface JklminingQueryAllMinedResponse {
+  Mined?: JklminingMined[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
 
 export interface JklminingQueryAllMinersResponse {
   miners?: JklminingMiners[];
@@ -62,6 +87,10 @@ export interface JklminingQueryAllSaveRequestsResponse {
    *  }
    */
   pagination?: V1Beta1PageResponse;
+}
+
+export interface JklminingQueryGetMinedResponse {
+  Mined?: JklminingMined;
 }
 
 export interface JklminingQueryGetMinersResponse {
@@ -357,6 +386,48 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryMinedAll
+   * @summary Queries a list of Mined items.
+   * @request GET:/jackal-dao/canine/jklmining/mined
+   */
+  queryMinedAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<JklminingQueryAllMinedResponse, RpcStatus>({
+      path: `/jackal-dao/canine/jklmining/mined`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryMined
+   * @summary Queries a Mined by id.
+   * @request GET:/jackal-dao/canine/jklmining/mined/{id}
+   */
+  queryMined = (id: string, params: RequestParams = {}) =>
+    this.request<JklminingQueryGetMinedResponse, RpcStatus>({
+      path: `/jackal-dao/canine/jklmining/mined/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *

@@ -38,6 +38,15 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
+				MinedList: []types.Mined{
+					{
+						Id: 0,
+					},
+					{
+						Id: 1,
+					},
+				},
+				MinedCount: 2,
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -67,6 +76,32 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "0",
 					},
 				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated mined",
+			genState: &types.GenesisState{
+				MinedList: []types.Mined{
+					{
+						Id: 0,
+					},
+					{
+						Id: 0,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "invalid mined count",
+			genState: &types.GenesisState{
+				MinedList: []types.Mined{
+					{
+						Id: 1,
+					},
+				},
+				MinedCount: 0,
 			},
 			valid: false,
 		},

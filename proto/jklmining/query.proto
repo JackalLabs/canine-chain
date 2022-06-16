@@ -7,6 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "jklmining/params.proto";
 import "jklmining/save_requests.proto";
 import "jklmining/miners.proto";
+import "jklmining/mined.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
@@ -35,6 +36,16 @@ service Query {
 	// Queries a list of Miners items.
 	rpc MinersAll(QueryAllMinersRequest) returns (QueryAllMinersResponse) {
 		option (google.api.http).get = "/jackal-dao/canine/jklmining/miners";
+	}
+
+// Queries a Mined by id.
+	rpc Mined(QueryGetMinedRequest) returns (QueryGetMinedResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklmining/mined/{id}";
+	}
+
+	// Queries a list of Mined items.
+	rpc MinedAll(QueryAllMinedRequest) returns (QueryAllMinedResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklmining/mined";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -82,6 +93,23 @@ message QueryAllMinersRequest {
 
 message QueryAllMinersResponse {
 	repeated Miners miners = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMinedRequest {
+	uint64 id = 1;
+}
+
+message QueryGetMinedResponse {
+	Mined Mined = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMinedRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMinedResponse {
+	repeated Mined Mined = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

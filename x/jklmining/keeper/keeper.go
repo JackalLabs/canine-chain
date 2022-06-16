@@ -46,6 +46,15 @@ func NewKeeper(
 	}
 }
 
+func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
+	if newCoins.Empty() {
+		// skip as no coins need to be minted
+		return nil
+	}
+
+	return k.bankKeeper.MintCoins(ctx, types.ModuleName, newCoins)
+}
+
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }

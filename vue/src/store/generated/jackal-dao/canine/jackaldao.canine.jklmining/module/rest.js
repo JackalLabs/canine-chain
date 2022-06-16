@@ -140,6 +140,35 @@ export class Api extends HttpClient {
          * No description
          *
          * @tags Query
+         * @name QueryMinedAll
+         * @summary Queries a list of Mined items.
+         * @request GET:/jackal-dao/canine/jklmining/mined
+         */
+        this.queryMinedAll = (query, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/mined`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryMined
+         * @summary Queries a Mined by id.
+         * @request GET:/jackal-dao/canine/jklmining/mined/{id}
+         */
+        this.queryMined = (id, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/mined/${id}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
          * @name QueryMinersAll
          * @summary Queries a list of Miners items.
          * @request GET:/jackal-dao/canine/jklmining/miners

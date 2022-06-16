@@ -16,6 +16,7 @@ service Msg {
   rpc CreateMiners(MsgCreateMiners) returns (MsgCreateMinersResponse);
   rpc UpdateMiners(MsgUpdateMiners) returns (MsgUpdateMinersResponse);
   rpc DeleteMiners(MsgDeleteMiners) returns (MsgDeleteMinersResponse);
+  rpc ClaimSave(MsgClaimSave) returns (MsgClaimSaveResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -73,5 +74,14 @@ message MsgDeleteMiners {
   string address = 2;
 }
 message MsgDeleteMinersResponse {}
+
+message MsgClaimSave {
+  string creator = 1;
+  string saveindex = 2;
+  string key = 3;
+}
+
+message MsgClaimSaveResponse {
+}
 
 // this line is used by starport scaffolding # proto/tx/message

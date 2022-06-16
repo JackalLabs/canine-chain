@@ -1,14 +1,17 @@
+import { Writer, Reader } from "protobufjs/minimal";
 import { Params } from "../jklmining/params";
 import { SaveRequests } from "../jklmining/save_requests";
 import { Miners } from "../jklmining/miners";
-import { Writer, Reader } from "protobufjs/minimal";
+import { Mined } from "../jklmining/mined";
 export declare const protobufPackage = "jackaldao.canine.jklmining";
 /** GenesisState defines the jklmining module's genesis state. */
 export interface GenesisState {
     params: Params | undefined;
     saveRequestsList: SaveRequests[];
-    /** this line is used by starport scaffolding # genesis/proto/state */
     minersList: Miners[];
+    minedList: Mined[];
+    /** this line is used by starport scaffolding # genesis/proto/state */
+    minedCount: number;
 }
 export declare const GenesisState: {
     encode(message: GenesisState, writer?: Writer): Writer;

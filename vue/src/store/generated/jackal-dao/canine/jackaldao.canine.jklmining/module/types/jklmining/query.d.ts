@@ -3,6 +3,7 @@ import { Params } from "../jklmining/params";
 import { SaveRequests } from "../jklmining/save_requests";
 import { PageRequest, PageResponse } from "../cosmos/base/query/v1beta1/pagination";
 import { Miners } from "../jklmining/miners";
+import { Mined } from "../jklmining/mined";
 export declare const protobufPackage = "jackaldao.canine.jklmining";
 /** QueryParamsRequest is request type for the Query/Params RPC method. */
 export interface QueryParamsRequest {
@@ -36,6 +37,19 @@ export interface QueryAllMinersRequest {
 }
 export interface QueryAllMinersResponse {
     miners: Miners[];
+    pagination: PageResponse | undefined;
+}
+export interface QueryGetMinedRequest {
+    id: number;
+}
+export interface QueryGetMinedResponse {
+    Mined: Mined | undefined;
+}
+export interface QueryAllMinedRequest {
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllMinedResponse {
+    Mined: Mined[];
     pagination: PageResponse | undefined;
 }
 export declare const QueryParamsRequest: {
@@ -108,6 +122,34 @@ export declare const QueryAllMinersResponse: {
     toJSON(message: QueryAllMinersResponse): unknown;
     fromPartial(object: DeepPartial<QueryAllMinersResponse>): QueryAllMinersResponse;
 };
+export declare const QueryGetMinedRequest: {
+    encode(message: QueryGetMinedRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinedRequest;
+    fromJSON(object: any): QueryGetMinedRequest;
+    toJSON(message: QueryGetMinedRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinedRequest>): QueryGetMinedRequest;
+};
+export declare const QueryGetMinedResponse: {
+    encode(message: QueryGetMinedResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinedResponse;
+    fromJSON(object: any): QueryGetMinedResponse;
+    toJSON(message: QueryGetMinedResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinedResponse>): QueryGetMinedResponse;
+};
+export declare const QueryAllMinedRequest: {
+    encode(message: QueryAllMinedRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllMinedRequest;
+    fromJSON(object: any): QueryAllMinedRequest;
+    toJSON(message: QueryAllMinedRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllMinedRequest>): QueryAllMinedRequest;
+};
+export declare const QueryAllMinedResponse: {
+    encode(message: QueryAllMinedResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllMinedResponse;
+    fromJSON(object: any): QueryAllMinedResponse;
+    toJSON(message: QueryAllMinedResponse): unknown;
+    fromPartial(object: DeepPartial<QueryAllMinedResponse>): QueryAllMinedResponse;
+};
 /** Query defines the gRPC querier service. */
 export interface Query {
     /** Parameters queries the parameters of the module. */
@@ -120,6 +162,10 @@ export interface Query {
     Miners(request: QueryGetMinersRequest): Promise<QueryGetMinersResponse>;
     /** Queries a list of Miners items. */
     MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse>;
+    /** Queries a Mined by id. */
+    Mined(request: QueryGetMinedRequest): Promise<QueryGetMinedResponse>;
+    /** Queries a list of Mined items. */
+    MinedAll(request: QueryAllMinedRequest): Promise<QueryAllMinedResponse>;
 }
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
@@ -129,6 +175,8 @@ export declare class QueryClientImpl implements Query {
     SaveRequestsAll(request: QueryAllSaveRequestsRequest): Promise<QueryAllSaveRequestsResponse>;
     Miners(request: QueryGetMinersRequest): Promise<QueryGetMinersResponse>;
     MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse>;
+    Mined(request: QueryGetMinedRequest): Promise<QueryGetMinedResponse>;
+    MinedAll(request: QueryAllMinedRequest): Promise<QueryAllMinedResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

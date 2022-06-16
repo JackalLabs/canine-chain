@@ -14,6 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/jackal-dao/canine/x/jklmining/client/cli"
@@ -166,7 +167,28 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
-func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
+func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
+	//STARTBLOCK
+	mintedCoin := sdk.NewCoin("ujkl", sdk.NewInt(10000000))
+	mintedCoins := sdk.NewCoins(mintedCoin)
+
+	err := am.keeper.MintCoins(ctx, mintedCoins)
+	if err != nil {
+		panic(err)
+	}
+
+	if mintedCoin.Amount.IsInt64() {
+		defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedCoin.Amount.Int64()), "minted_tokens")
+	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.ModuleName,
+			sdk.NewAttribute(sdk.AttributeKeyAmount, mintedCoin.Amount.String()),
+		),
+	)
+
+}
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
 // returns no validator updates.

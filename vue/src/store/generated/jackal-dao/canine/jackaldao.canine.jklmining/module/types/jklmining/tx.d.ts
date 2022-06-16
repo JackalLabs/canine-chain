@@ -49,6 +49,13 @@ export interface MsgDeleteMiners {
 }
 export interface MsgDeleteMinersResponse {
 }
+export interface MsgClaimSave {
+    creator: string;
+    saveindex: string;
+    key: string;
+}
+export interface MsgClaimSaveResponse {
+}
 export declare const MsgAllowSave: {
     encode(message: MsgAllowSave, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgAllowSave;
@@ -147,6 +154,20 @@ export declare const MsgDeleteMinersResponse: {
     toJSON(_: MsgDeleteMinersResponse): unknown;
     fromPartial(_: DeepPartial<MsgDeleteMinersResponse>): MsgDeleteMinersResponse;
 };
+export declare const MsgClaimSave: {
+    encode(message: MsgClaimSave, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgClaimSave;
+    fromJSON(object: any): MsgClaimSave;
+    toJSON(message: MsgClaimSave): unknown;
+    fromPartial(object: DeepPartial<MsgClaimSave>): MsgClaimSave;
+};
+export declare const MsgClaimSaveResponse: {
+    encode(_: MsgClaimSaveResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgClaimSaveResponse;
+    fromJSON(_: any): MsgClaimSaveResponse;
+    toJSON(_: MsgClaimSaveResponse): unknown;
+    fromPartial(_: DeepPartial<MsgClaimSaveResponse>): MsgClaimSaveResponse;
+};
 /** Msg defines the Msg service. */
 export interface Msg {
     AllowSave(request: MsgAllowSave): Promise<MsgAllowSaveResponse>;
@@ -155,8 +176,9 @@ export interface Msg {
     DeleteSaveRequests(request: MsgDeleteSaveRequests): Promise<MsgDeleteSaveRequestsResponse>;
     CreateMiners(request: MsgCreateMiners): Promise<MsgCreateMinersResponse>;
     UpdateMiners(request: MsgUpdateMiners): Promise<MsgUpdateMinersResponse>;
-    /** this line is used by starport scaffolding # proto/tx/rpc */
     DeleteMiners(request: MsgDeleteMiners): Promise<MsgDeleteMinersResponse>;
+    /** this line is used by starport scaffolding # proto/tx/rpc */
+    ClaimSave(request: MsgClaimSave): Promise<MsgClaimSaveResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
@@ -168,6 +190,7 @@ export declare class MsgClientImpl implements Msg {
     CreateMiners(request: MsgCreateMiners): Promise<MsgCreateMinersResponse>;
     UpdateMiners(request: MsgUpdateMiners): Promise<MsgUpdateMinersResponse>;
     DeleteMiners(request: MsgDeleteMiners): Promise<MsgDeleteMinersResponse>;
+    ClaimSave(request: MsgClaimSave): Promise<MsgClaimSaveResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

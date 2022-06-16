@@ -1,0 +1,12 @@
+syntax = "proto3";
+package jackaldao.canine.jklmining;
+
+option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
+
+message Mined {
+  uint64 id = 1;
+  string datasize = 2; 
+  string hash = 3; 
+  string pcount = 4; 
+  
+}

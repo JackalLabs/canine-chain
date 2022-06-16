@@ -1,9 +1,11 @@
 /* eslint-disable */
-import { Reader, Writer } from "protobufjs/minimal";
+import { Reader, util, configure, Writer } from "protobufjs/minimal";
+import * as Long from "long";
 import { Params } from "../jklmining/params";
 import { SaveRequests } from "../jklmining/save_requests";
 import { PageRequest, PageResponse, } from "../cosmos/base/query/v1beta1/pagination";
 import { Miners } from "../jklmining/miners";
+import { Mined } from "../jklmining/mined";
 export const protobufPackage = "jackaldao.canine.jklmining";
 const baseQueryParamsRequest = {};
 export const QueryParamsRequest = {
@@ -587,6 +589,242 @@ export const QueryAllMinersResponse = {
         return message;
     },
 };
+const baseQueryGetMinedRequest = { id: 0 };
+export const QueryGetMinedRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.id !== 0) {
+            writer.uint32(8).uint64(message.id);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetMinedRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.id = longToNumber(reader.uint64());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetMinedRequest };
+        if (object.id !== undefined && object.id !== null) {
+            message.id = Number(object.id);
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.id !== undefined && (obj.id = message.id);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetMinedRequest };
+        if (object.id !== undefined && object.id !== null) {
+            message.id = object.id;
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+};
+const baseQueryGetMinedResponse = {};
+export const QueryGetMinedResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.Mined !== undefined) {
+            Mined.encode(message.Mined, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetMinedResponse };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.Mined = Mined.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetMinedResponse };
+        if (object.Mined !== undefined && object.Mined !== null) {
+            message.Mined = Mined.fromJSON(object.Mined);
+        }
+        else {
+            message.Mined = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.Mined !== undefined &&
+            (obj.Mined = message.Mined ? Mined.toJSON(message.Mined) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetMinedResponse };
+        if (object.Mined !== undefined && object.Mined !== null) {
+            message.Mined = Mined.fromPartial(object.Mined);
+        }
+        else {
+            message.Mined = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllMinedRequest = {};
+export const QueryAllMinedRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllMinedRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllMinedRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageRequest.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllMinedRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllMinedResponse = {};
+export const QueryAllMinedResponse = {
+    encode(message, writer = Writer.create()) {
+        for (const v of message.Mined) {
+            Mined.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        if (message.pagination !== undefined) {
+            PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllMinedResponse };
+        message.Mined = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.Mined.push(Mined.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.pagination = PageResponse.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllMinedResponse };
+        message.Mined = [];
+        if (object.Mined !== undefined && object.Mined !== null) {
+            for (const e of object.Mined) {
+                message.Mined.push(Mined.fromJSON(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.Mined) {
+            obj.Mined = message.Mined.map((e) => (e ? Mined.toJSON(e) : undefined));
+        }
+        else {
+            obj.Mined = [];
+        }
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageResponse.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllMinedResponse };
+        message.Mined = [];
+        if (object.Mined !== undefined && object.Mined !== null) {
+            for (const e of object.Mined) {
+                message.Mined.push(Mined.fromPartial(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
 export class QueryClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
@@ -616,4 +854,35 @@ export class QueryClientImpl {
         const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "MinersAll", data);
         return promise.then((data) => QueryAllMinersResponse.decode(new Reader(data)));
     }
+    Mined(request) {
+        const data = QueryGetMinedRequest.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "Mined", data);
+        return promise.then((data) => QueryGetMinedResponse.decode(new Reader(data)));
+    }
+    MinedAll(request) {
+        const data = QueryAllMinedRequest.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "MinedAll", data);
+        return promise.then((data) => QueryAllMinedResponse.decode(new Reader(data)));
+    }
+}
+var globalThis = (() => {
+    if (typeof globalThis !== "undefined")
+        return globalThis;
+    if (typeof self !== "undefined")
+        return self;
+    if (typeof window !== "undefined")
+        return window;
+    if (typeof global !== "undefined")
+        return global;
+    throw "Unable to locate global object";
+})();
+function longToNumber(long) {
+    if (long.gt(Number.MAX_SAFE_INTEGER)) {
+        throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    }
+    return long.toNumber();
+}
+if (util.Long !== Long) {
+    util.Long = Long;
+    configure();
 }
