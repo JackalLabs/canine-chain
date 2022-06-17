@@ -4,8 +4,9 @@ title: Jackal Mining Overview
 parent:
   title: "jklmining"
 -->
+[◀ modules](/x/README.md)
 
-# `jklmint`
+# `jklmining`
 
 ## Contents
 1. [Concept](#concept)
