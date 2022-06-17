@@ -20,6 +20,11 @@ parent:
         + [show-save-requests](#show-save-requests)
         + [params](#params)
     + [Transactions](#transactions)
+        + [allow-save](#allow-save)
+        + [claim-save](#claim-save)
+        + [create-miners](#create-miners)
+        + [delete-miners](#delete-miners)
+        + [update-miners](#update-miners)
 
 
 ## Concept
