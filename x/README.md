@@ -4,7 +4,7 @@ title: Canine Chain Overview
 parent:
   title: "x"
 -->
-[◀ readme](readme.md)
+[◀ readme](/readme.md)
 
 # Canine Chain Modules
 
