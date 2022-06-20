@@ -2,23 +2,23 @@
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgCreateMiners } from "./types/jklmining/tx";
-import { MsgDeleteMiners } from "./types/jklmining/tx";
 import { MsgAllowSave } from "./types/jklmining/tx";
-import { MsgCreateMinerClaims } from "./types/jklmining/tx";
-import { MsgDeleteMinerClaims } from "./types/jklmining/tx";
-import { MsgUpdateMiners } from "./types/jklmining/tx";
-import { MsgClaimSave } from "./types/jklmining/tx";
 import { MsgUpdateMinerClaims } from "./types/jklmining/tx";
+import { MsgClaimSave } from "./types/jklmining/tx";
+import { MsgUpdateMiners } from "./types/jklmining/tx";
+import { MsgCreateMinerClaims } from "./types/jklmining/tx";
+import { MsgCreateMiners } from "./types/jklmining/tx";
+import { MsgDeleteMinerClaims } from "./types/jklmining/tx";
+import { MsgDeleteMiners } from "./types/jklmining/tx";
 const types = [
-    ["/jackaldao.canine.jklmining.MsgCreateMiners", MsgCreateMiners],
-    ["/jackaldao.canine.jklmining.MsgDeleteMiners", MsgDeleteMiners],
     ["/jackaldao.canine.jklmining.MsgAllowSave", MsgAllowSave],
-    ["/jackaldao.canine.jklmining.MsgCreateMinerClaims", MsgCreateMinerClaims],
-    ["/jackaldao.canine.jklmining.MsgDeleteMinerClaims", MsgDeleteMinerClaims],
-    ["/jackaldao.canine.jklmining.MsgUpdateMiners", MsgUpdateMiners],
-    ["/jackaldao.canine.jklmining.MsgClaimSave", MsgClaimSave],
     ["/jackaldao.canine.jklmining.MsgUpdateMinerClaims", MsgUpdateMinerClaims],
+    ["/jackaldao.canine.jklmining.MsgClaimSave", MsgClaimSave],
+    ["/jackaldao.canine.jklmining.MsgUpdateMiners", MsgUpdateMiners],
+    ["/jackaldao.canine.jklmining.MsgCreateMinerClaims", MsgCreateMinerClaims],
+    ["/jackaldao.canine.jklmining.MsgCreateMiners", MsgCreateMiners],
+    ["/jackaldao.canine.jklmining.MsgDeleteMinerClaims", MsgDeleteMinerClaims],
+    ["/jackaldao.canine.jklmining.MsgDeleteMiners", MsgDeleteMiners],
 ];
 export const MissingWalletError = new Error("wallet is required");
 export const registry = new Registry(types);
@@ -39,14 +39,14 @@ const txClient = async (wallet, { addr: addr } = { addr: "http://localhost:26657
     const { address } = (await wallet.getAccounts())[0];
     return {
         signAndBroadcast: (msgs, { fee, memo } = { fee: defaultFee, memo: "" }) => client.signAndBroadcast(address, msgs, fee, memo),
-        msgCreateMiners: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgCreateMiners", value: MsgCreateMiners.fromPartial(data) }),
-        msgDeleteMiners: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgDeleteMiners", value: MsgDeleteMiners.fromPartial(data) }),
         msgAllowSave: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgAllowSave", value: MsgAllowSave.fromPartial(data) }),
-        msgCreateMinerClaims: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgCreateMinerClaims", value: MsgCreateMinerClaims.fromPartial(data) }),
-        msgDeleteMinerClaims: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgDeleteMinerClaims", value: MsgDeleteMinerClaims.fromPartial(data) }),
-        msgUpdateMiners: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgUpdateMiners", value: MsgUpdateMiners.fromPartial(data) }),
-        msgClaimSave: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgClaimSave", value: MsgClaimSave.fromPartial(data) }),
         msgUpdateMinerClaims: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgUpdateMinerClaims", value: MsgUpdateMinerClaims.fromPartial(data) }),
+        msgClaimSave: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgClaimSave", value: MsgClaimSave.fromPartial(data) }),
+        msgUpdateMiners: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgUpdateMiners", value: MsgUpdateMiners.fromPartial(data) }),
+        msgCreateMinerClaims: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgCreateMinerClaims", value: MsgCreateMinerClaims.fromPartial(data) }),
+        msgCreateMiners: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgCreateMiners", value: MsgCreateMiners.fromPartial(data) }),
+        msgDeleteMinerClaims: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgDeleteMinerClaims", value: MsgDeleteMinerClaims.fromPartial(data) }),
+        msgDeleteMiners: (data) => ({ typeUrl: "/jackaldao.canine.jklmining.MsgDeleteMiners", value: MsgDeleteMiners.fromPartial(data) }),
     };
 };
 const queryClient = async ({ addr: addr } = { addr: "http://localhost:1317" }) => {

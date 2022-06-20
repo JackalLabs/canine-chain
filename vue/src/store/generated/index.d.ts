@@ -10,6 +10,7 @@ declare const _default: {
     CosmosCosmosSdkCosmosStakingV1Beta1: (store: any) => void;
     CosmosCosmosSdkCosmosVestingV1Beta1: (store: any) => void;
     CosmosIbcGoIbcApplicationsTransferV1: (store: any) => void;
+    JackalDaoCanineJackaldaoCanineJklaccounts: (store: any) => void;
     JackalDaoCanineJackaldaoCanineJklmining: (store: any) => void;
     JackalDaoCanineJackaldaoCanineJklmint: (store: any) => void;
 };

@@ -88,6 +88,9 @@ import (
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 
 	"github.com/jackal-dao/canine/docs"
+	jklaccountsmodule "github.com/jackal-dao/canine/x/jklaccounts"
+	jklaccountsmodulekeeper "github.com/jackal-dao/canine/x/jklaccounts/keeper"
+	jklaccountsmoduletypes "github.com/jackal-dao/canine/x/jklaccounts/types"
 	jklminingmodule "github.com/jackal-dao/canine/x/jklmining"
 	jklminingmodulekeeper "github.com/jackal-dao/canine/x/jklmining/keeper"
 	jklminingmoduletypes "github.com/jackal-dao/canine/x/jklmining/types"
@@ -147,19 +150,21 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		jklminingmodule.AppModuleBasic{},
+		jklaccountsmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:      nil,
-		distrtypes.ModuleName:           nil,
-		minttypes.ModuleName:            {authtypes.Minter},
-		stakingtypes.BondedPoolName:     {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:  {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:             {authtypes.Burner},
-		ibctransfertypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
-		jklminingmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		authtypes.FeeCollectorName:        nil,
+		distrtypes.ModuleName:             nil,
+		minttypes.ModuleName:              {authtypes.Minter},
+		stakingtypes.BondedPoolName:       {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:    {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:               {authtypes.Burner},
+		ibctransfertypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+		jklminingmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		jklaccountsmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -218,6 +223,8 @@ type App struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
 	JklminingKeeper jklminingmodulekeeper.Keeper
+
+	JklaccountsKeeper jklaccountsmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -255,6 +262,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		jklminingmoduletypes.StoreKey,
+		jklaccountsmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -364,6 +372,18 @@ func New(
 	)
 	jklminingModule := jklminingmodule.NewAppModule(appCodec, app.JklminingKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.JklaccountsKeeper = *jklaccountsmodulekeeper.NewKeeper(
+		appCodec,
+		keys[jklaccountsmoduletypes.StoreKey],
+		keys[jklaccountsmoduletypes.MemStoreKey],
+		app.GetSubspace(jklaccountsmoduletypes.ModuleName),
+
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.JklminingKeeper,
+	)
+	jklaccountsModule := jklaccountsmodule.NewAppModule(appCodec, app.JklaccountsKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -403,6 +423,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		jklminingModule,
+		jklaccountsModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -438,6 +459,7 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		jklminingmoduletypes.ModuleName,
+		jklaccountsmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -461,6 +483,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		jklminingModule,
+		jklaccountsModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -649,6 +672,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(jklminingmoduletypes.ModuleName)
+	paramsKeeper.Subspace(jklaccountsmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
