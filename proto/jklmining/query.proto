@@ -8,6 +8,7 @@ import "jklmining/params.proto";
 import "jklmining/save_requests.proto";
 import "jklmining/miners.proto";
 import "jklmining/mined.proto";
+import "jklmining/miner_claims.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
@@ -46,6 +47,31 @@ service Query {
 	// Queries a list of Mined items.
 	rpc MinedAll(QueryAllMinedRequest) returns (QueryAllMinedResponse) {
 		option (google.api.http).get = "/jackal-dao/canine/jklmining/mined";
+	}
+
+// Queries a list of CheckMinerIndex items.
+	rpc CheckMinerIndex(QueryCheckMinerIndexRequest) returns (QueryCheckMinerIndexResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklmining/check_miner_index";
+	}
+
+// Queries a list of GetMinerIndex items.
+	rpc GetMinerIndex(QueryGetMinerIndexRequest) returns (QueryGetMinerIndexResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklmining/get_miner_index/{index}";
+	}
+
+// Queries a list of GetMinerStart items.
+	rpc GetMinerStart(QueryGetMinerStartRequest) returns (QueryGetMinerStartResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklmining/get_miner_start";
+	}
+
+// Queries a MinerClaims by index.
+	rpc MinerClaims(QueryGetMinerClaimsRequest) returns (QueryGetMinerClaimsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklmining/miner_claims/{hash}";
+	}
+
+	// Queries a list of MinerClaims items.
+	rpc MinerClaimsAll(QueryAllMinerClaimsRequest) returns (QueryAllMinerClaimsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklmining/miner_claims";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -110,6 +136,44 @@ message QueryAllMinedRequest {
 
 message QueryAllMinedResponse {
 	repeated Mined Mined = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryCheckMinerIndexRequest {
+}
+
+message QueryCheckMinerIndexResponse {
+}
+
+message QueryGetMinerIndexRequest {
+  string index = 1;
+}
+
+message QueryGetMinerIndexResponse {
+}
+
+message QueryGetMinerStartRequest {
+}
+
+message QueryGetMinerStartResponse {
+  string index = 1;
+}
+
+message QueryGetMinerClaimsRequest {
+	  string hash = 1;
+
+}
+
+message QueryGetMinerClaimsResponse {
+	MinerClaims minerClaims = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMinerClaimsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMinerClaimsResponse {
+	repeated MinerClaims minerClaims = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

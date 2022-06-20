@@ -20,13 +20,14 @@ type (
 		stakingKeeper    types.StakingKeeper
 		bankKeeper       types.BankKeeper
 		feeCollectorName string
+		miningName       string
 	}
 )
 
 func NewKeeper(
 	cdc codec.BinaryCodec, key storetypes.StoreKey, paramSpace paramtypes.Subspace,
 	sk types.StakingKeeper, ak types.AccountKeeper, bk types.BankKeeper,
-	feeCollectorName string,
+	feeCollectorName string, miningName string,
 ) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -45,6 +46,7 @@ func NewKeeper(
 		stakingKeeper:    sk,
 		bankKeeper:       bk,
 		feeCollectorName: feeCollectorName,
+		miningName:       miningName,
 	}
 }
 
@@ -65,4 +67,8 @@ func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
 // AddCollectedFees to be used in BeginBlocker.
 func (k Keeper) AddCollectedFees(ctx sdk.Context, fees sdk.Coins) error {
 	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, fees)
+}
+
+func (k Keeper) SendToMiners(ctx sdk.Context, fees sdk.Coins) error {
+	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.miningName, fees)
 }

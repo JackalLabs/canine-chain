@@ -9,6 +9,7 @@ import {
 } from "../cosmos/base/query/v1beta1/pagination";
 import { Miners } from "../jklmining/miners";
 import { Mined } from "../jklmining/mined";
+import { MinerClaims } from "../jklmining/miner_claims";
 
 export const protobufPackage = "jackaldao.canine.jklmining";
 
@@ -69,6 +70,39 @@ export interface QueryAllMinedRequest {
 
 export interface QueryAllMinedResponse {
   Mined: Mined[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryCheckMinerIndexRequest {}
+
+export interface QueryCheckMinerIndexResponse {}
+
+export interface QueryGetMinerIndexRequest {
+  index: string;
+}
+
+export interface QueryGetMinerIndexResponse {}
+
+export interface QueryGetMinerStartRequest {}
+
+export interface QueryGetMinerStartResponse {
+  index: string;
+}
+
+export interface QueryGetMinerClaimsRequest {
+  hash: string;
+}
+
+export interface QueryGetMinerClaimsResponse {
+  minerClaims: MinerClaims | undefined;
+}
+
+export interface QueryAllMinerClaimsRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllMinerClaimsResponse {
+  minerClaims: MinerClaims[];
   pagination: PageResponse | undefined;
 }
 
@@ -1034,6 +1068,669 @@ export const QueryAllMinedResponse = {
   },
 };
 
+const baseQueryCheckMinerIndexRequest: object = {};
+
+export const QueryCheckMinerIndexRequest = {
+  encode(
+    _: QueryCheckMinerIndexRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryCheckMinerIndexRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryCheckMinerIndexRequest,
+    } as QueryCheckMinerIndexRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryCheckMinerIndexRequest {
+    const message = {
+      ...baseQueryCheckMinerIndexRequest,
+    } as QueryCheckMinerIndexRequest;
+    return message;
+  },
+
+  toJSON(_: QueryCheckMinerIndexRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<QueryCheckMinerIndexRequest>
+  ): QueryCheckMinerIndexRequest {
+    const message = {
+      ...baseQueryCheckMinerIndexRequest,
+    } as QueryCheckMinerIndexRequest;
+    return message;
+  },
+};
+
+const baseQueryCheckMinerIndexResponse: object = {};
+
+export const QueryCheckMinerIndexResponse = {
+  encode(
+    _: QueryCheckMinerIndexResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryCheckMinerIndexResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryCheckMinerIndexResponse,
+    } as QueryCheckMinerIndexResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryCheckMinerIndexResponse {
+    const message = {
+      ...baseQueryCheckMinerIndexResponse,
+    } as QueryCheckMinerIndexResponse;
+    return message;
+  },
+
+  toJSON(_: QueryCheckMinerIndexResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<QueryCheckMinerIndexResponse>
+  ): QueryCheckMinerIndexResponse {
+    const message = {
+      ...baseQueryCheckMinerIndexResponse,
+    } as QueryCheckMinerIndexResponse;
+    return message;
+  },
+};
+
+const baseQueryGetMinerIndexRequest: object = { index: "" };
+
+export const QueryGetMinerIndexRequest = {
+  encode(
+    message: QueryGetMinerIndexRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetMinerIndexRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetMinerIndexRequest,
+    } as QueryGetMinerIndexRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMinerIndexRequest {
+    const message = {
+      ...baseQueryGetMinerIndexRequest,
+    } as QueryGetMinerIndexRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetMinerIndexRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetMinerIndexRequest>
+  ): QueryGetMinerIndexRequest {
+    const message = {
+      ...baseQueryGetMinerIndexRequest,
+    } as QueryGetMinerIndexRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetMinerIndexResponse: object = {};
+
+export const QueryGetMinerIndexResponse = {
+  encode(
+    _: QueryGetMinerIndexResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetMinerIndexResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetMinerIndexResponse,
+    } as QueryGetMinerIndexResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryGetMinerIndexResponse {
+    const message = {
+      ...baseQueryGetMinerIndexResponse,
+    } as QueryGetMinerIndexResponse;
+    return message;
+  },
+
+  toJSON(_: QueryGetMinerIndexResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<QueryGetMinerIndexResponse>
+  ): QueryGetMinerIndexResponse {
+    const message = {
+      ...baseQueryGetMinerIndexResponse,
+    } as QueryGetMinerIndexResponse;
+    return message;
+  },
+};
+
+const baseQueryGetMinerStartRequest: object = {};
+
+export const QueryGetMinerStartRequest = {
+  encode(
+    _: QueryGetMinerStartRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetMinerStartRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetMinerStartRequest,
+    } as QueryGetMinerStartRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryGetMinerStartRequest {
+    const message = {
+      ...baseQueryGetMinerStartRequest,
+    } as QueryGetMinerStartRequest;
+    return message;
+  },
+
+  toJSON(_: QueryGetMinerStartRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<QueryGetMinerStartRequest>
+  ): QueryGetMinerStartRequest {
+    const message = {
+      ...baseQueryGetMinerStartRequest,
+    } as QueryGetMinerStartRequest;
+    return message;
+  },
+};
+
+const baseQueryGetMinerStartResponse: object = { index: "" };
+
+export const QueryGetMinerStartResponse = {
+  encode(
+    message: QueryGetMinerStartResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetMinerStartResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetMinerStartResponse,
+    } as QueryGetMinerStartResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMinerStartResponse {
+    const message = {
+      ...baseQueryGetMinerStartResponse,
+    } as QueryGetMinerStartResponse;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetMinerStartResponse): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetMinerStartResponse>
+  ): QueryGetMinerStartResponse {
+    const message = {
+      ...baseQueryGetMinerStartResponse,
+    } as QueryGetMinerStartResponse;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetMinerClaimsRequest: object = { hash: "" };
+
+export const QueryGetMinerClaimsRequest = {
+  encode(
+    message: QueryGetMinerClaimsRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.hash !== "") {
+      writer.uint32(10).string(message.hash);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetMinerClaimsRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetMinerClaimsRequest,
+    } as QueryGetMinerClaimsRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.hash = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMinerClaimsRequest {
+    const message = {
+      ...baseQueryGetMinerClaimsRequest,
+    } as QueryGetMinerClaimsRequest;
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = String(object.hash);
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetMinerClaimsRequest): unknown {
+    const obj: any = {};
+    message.hash !== undefined && (obj.hash = message.hash);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetMinerClaimsRequest>
+  ): QueryGetMinerClaimsRequest {
+    const message = {
+      ...baseQueryGetMinerClaimsRequest,
+    } as QueryGetMinerClaimsRequest;
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = object.hash;
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetMinerClaimsResponse: object = {};
+
+export const QueryGetMinerClaimsResponse = {
+  encode(
+    message: QueryGetMinerClaimsResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.minerClaims !== undefined) {
+      MinerClaims.encode(
+        message.minerClaims,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetMinerClaimsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetMinerClaimsResponse,
+    } as QueryGetMinerClaimsResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.minerClaims = MinerClaims.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMinerClaimsResponse {
+    const message = {
+      ...baseQueryGetMinerClaimsResponse,
+    } as QueryGetMinerClaimsResponse;
+    if (object.minerClaims !== undefined && object.minerClaims !== null) {
+      message.minerClaims = MinerClaims.fromJSON(object.minerClaims);
+    } else {
+      message.minerClaims = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetMinerClaimsResponse): unknown {
+    const obj: any = {};
+    message.minerClaims !== undefined &&
+      (obj.minerClaims = message.minerClaims
+        ? MinerClaims.toJSON(message.minerClaims)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetMinerClaimsResponse>
+  ): QueryGetMinerClaimsResponse {
+    const message = {
+      ...baseQueryGetMinerClaimsResponse,
+    } as QueryGetMinerClaimsResponse;
+    if (object.minerClaims !== undefined && object.minerClaims !== null) {
+      message.minerClaims = MinerClaims.fromPartial(object.minerClaims);
+    } else {
+      message.minerClaims = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllMinerClaimsRequest: object = {};
+
+export const QueryAllMinerClaimsRequest = {
+  encode(
+    message: QueryAllMinerClaimsRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllMinerClaimsRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllMinerClaimsRequest,
+    } as QueryAllMinerClaimsRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllMinerClaimsRequest {
+    const message = {
+      ...baseQueryAllMinerClaimsRequest,
+    } as QueryAllMinerClaimsRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllMinerClaimsRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllMinerClaimsRequest>
+  ): QueryAllMinerClaimsRequest {
+    const message = {
+      ...baseQueryAllMinerClaimsRequest,
+    } as QueryAllMinerClaimsRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllMinerClaimsResponse: object = {};
+
+export const QueryAllMinerClaimsResponse = {
+  encode(
+    message: QueryAllMinerClaimsResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.minerClaims) {
+      MinerClaims.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllMinerClaimsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllMinerClaimsResponse,
+    } as QueryAllMinerClaimsResponse;
+    message.minerClaims = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.minerClaims.push(MinerClaims.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllMinerClaimsResponse {
+    const message = {
+      ...baseQueryAllMinerClaimsResponse,
+    } as QueryAllMinerClaimsResponse;
+    message.minerClaims = [];
+    if (object.minerClaims !== undefined && object.minerClaims !== null) {
+      for (const e of object.minerClaims) {
+        message.minerClaims.push(MinerClaims.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllMinerClaimsResponse): unknown {
+    const obj: any = {};
+    if (message.minerClaims) {
+      obj.minerClaims = message.minerClaims.map((e) =>
+        e ? MinerClaims.toJSON(e) : undefined
+      );
+    } else {
+      obj.minerClaims = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllMinerClaimsResponse>
+  ): QueryAllMinerClaimsResponse {
+    const message = {
+      ...baseQueryAllMinerClaimsResponse,
+    } as QueryAllMinerClaimsResponse;
+    message.minerClaims = [];
+    if (object.minerClaims !== undefined && object.minerClaims !== null) {
+      for (const e of object.minerClaims) {
+        message.minerClaims.push(MinerClaims.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1054,6 +1751,26 @@ export interface Query {
   Mined(request: QueryGetMinedRequest): Promise<QueryGetMinedResponse>;
   /** Queries a list of Mined items. */
   MinedAll(request: QueryAllMinedRequest): Promise<QueryAllMinedResponse>;
+  /** Queries a list of CheckMinerIndex items. */
+  CheckMinerIndex(
+    request: QueryCheckMinerIndexRequest
+  ): Promise<QueryCheckMinerIndexResponse>;
+  /** Queries a list of GetMinerIndex items. */
+  GetMinerIndex(
+    request: QueryGetMinerIndexRequest
+  ): Promise<QueryGetMinerIndexResponse>;
+  /** Queries a list of GetMinerStart items. */
+  GetMinerStart(
+    request: QueryGetMinerStartRequest
+  ): Promise<QueryGetMinerStartResponse>;
+  /** Queries a MinerClaims by index. */
+  MinerClaims(
+    request: QueryGetMinerClaimsRequest
+  ): Promise<QueryGetMinerClaimsResponse>;
+  /** Queries a list of MinerClaims items. */
+  MinerClaimsAll(
+    request: QueryAllMinerClaimsRequest
+  ): Promise<QueryAllMinerClaimsResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1144,6 +1861,76 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllMinedResponse.decode(new Reader(data))
+    );
+  }
+
+  CheckMinerIndex(
+    request: QueryCheckMinerIndexRequest
+  ): Promise<QueryCheckMinerIndexResponse> {
+    const data = QueryCheckMinerIndexRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Query",
+      "CheckMinerIndex",
+      data
+    );
+    return promise.then((data) =>
+      QueryCheckMinerIndexResponse.decode(new Reader(data))
+    );
+  }
+
+  GetMinerIndex(
+    request: QueryGetMinerIndexRequest
+  ): Promise<QueryGetMinerIndexResponse> {
+    const data = QueryGetMinerIndexRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Query",
+      "GetMinerIndex",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetMinerIndexResponse.decode(new Reader(data))
+    );
+  }
+
+  GetMinerStart(
+    request: QueryGetMinerStartRequest
+  ): Promise<QueryGetMinerStartResponse> {
+    const data = QueryGetMinerStartRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Query",
+      "GetMinerStart",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetMinerStartResponse.decode(new Reader(data))
+    );
+  }
+
+  MinerClaims(
+    request: QueryGetMinerClaimsRequest
+  ): Promise<QueryGetMinerClaimsResponse> {
+    const data = QueryGetMinerClaimsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Query",
+      "MinerClaims",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetMinerClaimsResponse.decode(new Reader(data))
+    );
+  }
+
+  MinerClaimsAll(
+    request: QueryAllMinerClaimsRequest
+  ): Promise<QueryAllMinerClaimsResponse> {
+    const data = QueryAllMinerClaimsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Query",
+      "MinerClaimsAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllMinerClaimsResponse.decode(new Reader(data))
     );
   }
 }

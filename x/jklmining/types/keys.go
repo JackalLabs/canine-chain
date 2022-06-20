@@ -24,4 +24,5 @@ func KeyPrefix(p string) []byte {
 const (
 	MinedKey      = "Mined-value-"
 	MinedCountKey = "Mined-count-"
+	MinedStartKey = "Mined-start-"
 )

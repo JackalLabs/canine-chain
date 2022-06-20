@@ -140,6 +140,48 @@ export class Api extends HttpClient {
          * No description
          *
          * @tags Query
+         * @name QueryCheckMinerIndex
+         * @summary Queries a list of CheckMinerIndex items.
+         * @request GET:/jackal-dao/canine/jklmining/check_miner_index
+         */
+        this.queryCheckMinerIndex = (params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/check_miner_index`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryGetMinerIndex
+         * @summary Queries a list of GetMinerIndex items.
+         * @request GET:/jackal-dao/canine/jklmining/get_miner_index/{index}
+         */
+        this.queryGetMinerIndex = (index, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/get_miner_index/${index}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryGetMinerStart
+         * @summary Queries a list of GetMinerStart items.
+         * @request GET:/jackal-dao/canine/jklmining/get_miner_start
+         */
+        this.queryGetMinerStart = (params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/get_miner_start`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
          * @name QueryMinedAll
          * @summary Queries a list of Mined items.
          * @request GET:/jackal-dao/canine/jklmining/mined
@@ -161,6 +203,35 @@ export class Api extends HttpClient {
          */
         this.queryMined = (id, params = {}) => this.request({
             path: `/jackal-dao/canine/jklmining/mined/${id}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryMinerClaimsAll
+         * @summary Queries a list of MinerClaims items.
+         * @request GET:/jackal-dao/canine/jklmining/miner_claims
+         */
+        this.queryMinerClaimsAll = (query, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/miner_claims`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryMinerClaims
+         * @summary Queries a MinerClaims by index.
+         * @request GET:/jackal-dao/canine/jklmining/miner_claims/{hash}
+         */
+        this.queryMinerClaims = (hash, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklmining/miner_claims/${hash}`,
             method: "GET",
             format: "json",
             ...params,

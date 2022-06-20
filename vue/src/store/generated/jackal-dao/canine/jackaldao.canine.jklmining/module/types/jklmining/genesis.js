@@ -5,6 +5,7 @@ import { Params } from "../jklmining/params";
 import { SaveRequests } from "../jklmining/save_requests";
 import { Miners } from "../jklmining/miners";
 import { Mined } from "../jklmining/mined";
+import { MinerClaims } from "../jklmining/miner_claims";
 export const protobufPackage = "jackaldao.canine.jklmining";
 const baseGenesisState = { minedCount: 0 };
 export const GenesisState = {
@@ -24,6 +25,9 @@ export const GenesisState = {
         if (message.minedCount !== 0) {
             writer.uint32(40).uint64(message.minedCount);
         }
+        for (const v of message.minerClaimsList) {
+            MinerClaims.encode(v, writer.uint32(50).fork()).ldelim();
+        }
         return writer;
     },
     decode(input, length) {
@@ -33,6 +37,7 @@ export const GenesisState = {
         message.saveRequestsList = [];
         message.minersList = [];
         message.minedList = [];
+        message.minerClaimsList = [];
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -51,6 +56,9 @@ export const GenesisState = {
                 case 5:
                     message.minedCount = longToNumber(reader.uint64());
                     break;
+                case 6:
+                    message.minerClaimsList.push(MinerClaims.decode(reader, reader.uint32()));
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -63,6 +71,7 @@ export const GenesisState = {
         message.saveRequestsList = [];
         message.minersList = [];
         message.minedList = [];
+        message.minerClaimsList = [];
         if (object.params !== undefined && object.params !== null) {
             message.params = Params.fromJSON(object.params);
         }
@@ -91,6 +100,12 @@ export const GenesisState = {
         else {
             message.minedCount = 0;
         }
+        if (object.minerClaimsList !== undefined &&
+            object.minerClaimsList !== null) {
+            for (const e of object.minerClaimsList) {
+                message.minerClaimsList.push(MinerClaims.fromJSON(e));
+            }
+        }
         return message;
     },
     toJSON(message) {
@@ -116,6 +131,12 @@ export const GenesisState = {
             obj.minedList = [];
         }
         message.minedCount !== undefined && (obj.minedCount = message.minedCount);
+        if (message.minerClaimsList) {
+            obj.minerClaimsList = message.minerClaimsList.map((e) => e ? MinerClaims.toJSON(e) : undefined);
+        }
+        else {
+            obj.minerClaimsList = [];
+        }
         return obj;
     },
     fromPartial(object) {
@@ -123,6 +144,7 @@ export const GenesisState = {
         message.saveRequestsList = [];
         message.minersList = [];
         message.minedList = [];
+        message.minerClaimsList = [];
         if (object.params !== undefined && object.params !== null) {
             message.params = Params.fromPartial(object.params);
         }
@@ -150,6 +172,12 @@ export const GenesisState = {
         }
         else {
             message.minedCount = 0;
+        }
+        if (object.minerClaimsList !== undefined &&
+            object.minerClaimsList !== null) {
+            for (const e of object.minerClaimsList) {
+                message.minerClaimsList.push(MinerClaims.fromPartial(e));
+            }
         }
         return message;
     },

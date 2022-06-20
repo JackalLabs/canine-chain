@@ -4,6 +4,7 @@ import { SaveRequests } from "../jklmining/save_requests";
 import { PageRequest, PageResponse } from "../cosmos/base/query/v1beta1/pagination";
 import { Miners } from "../jklmining/miners";
 import { Mined } from "../jklmining/mined";
+import { MinerClaims } from "../jklmining/miner_claims";
 export declare const protobufPackage = "jackaldao.canine.jklmining";
 /** QueryParamsRequest is request type for the Query/Params RPC method. */
 export interface QueryParamsRequest {
@@ -50,6 +51,33 @@ export interface QueryAllMinedRequest {
 }
 export interface QueryAllMinedResponse {
     Mined: Mined[];
+    pagination: PageResponse | undefined;
+}
+export interface QueryCheckMinerIndexRequest {
+}
+export interface QueryCheckMinerIndexResponse {
+}
+export interface QueryGetMinerIndexRequest {
+    index: string;
+}
+export interface QueryGetMinerIndexResponse {
+}
+export interface QueryGetMinerStartRequest {
+}
+export interface QueryGetMinerStartResponse {
+    index: string;
+}
+export interface QueryGetMinerClaimsRequest {
+    hash: string;
+}
+export interface QueryGetMinerClaimsResponse {
+    minerClaims: MinerClaims | undefined;
+}
+export interface QueryAllMinerClaimsRequest {
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllMinerClaimsResponse {
+    minerClaims: MinerClaims[];
     pagination: PageResponse | undefined;
 }
 export declare const QueryParamsRequest: {
@@ -150,6 +178,76 @@ export declare const QueryAllMinedResponse: {
     toJSON(message: QueryAllMinedResponse): unknown;
     fromPartial(object: DeepPartial<QueryAllMinedResponse>): QueryAllMinedResponse;
 };
+export declare const QueryCheckMinerIndexRequest: {
+    encode(_: QueryCheckMinerIndexRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryCheckMinerIndexRequest;
+    fromJSON(_: any): QueryCheckMinerIndexRequest;
+    toJSON(_: QueryCheckMinerIndexRequest): unknown;
+    fromPartial(_: DeepPartial<QueryCheckMinerIndexRequest>): QueryCheckMinerIndexRequest;
+};
+export declare const QueryCheckMinerIndexResponse: {
+    encode(_: QueryCheckMinerIndexResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryCheckMinerIndexResponse;
+    fromJSON(_: any): QueryCheckMinerIndexResponse;
+    toJSON(_: QueryCheckMinerIndexResponse): unknown;
+    fromPartial(_: DeepPartial<QueryCheckMinerIndexResponse>): QueryCheckMinerIndexResponse;
+};
+export declare const QueryGetMinerIndexRequest: {
+    encode(message: QueryGetMinerIndexRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinerIndexRequest;
+    fromJSON(object: any): QueryGetMinerIndexRequest;
+    toJSON(message: QueryGetMinerIndexRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinerIndexRequest>): QueryGetMinerIndexRequest;
+};
+export declare const QueryGetMinerIndexResponse: {
+    encode(_: QueryGetMinerIndexResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinerIndexResponse;
+    fromJSON(_: any): QueryGetMinerIndexResponse;
+    toJSON(_: QueryGetMinerIndexResponse): unknown;
+    fromPartial(_: DeepPartial<QueryGetMinerIndexResponse>): QueryGetMinerIndexResponse;
+};
+export declare const QueryGetMinerStartRequest: {
+    encode(_: QueryGetMinerStartRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinerStartRequest;
+    fromJSON(_: any): QueryGetMinerStartRequest;
+    toJSON(_: QueryGetMinerStartRequest): unknown;
+    fromPartial(_: DeepPartial<QueryGetMinerStartRequest>): QueryGetMinerStartRequest;
+};
+export declare const QueryGetMinerStartResponse: {
+    encode(message: QueryGetMinerStartResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinerStartResponse;
+    fromJSON(object: any): QueryGetMinerStartResponse;
+    toJSON(message: QueryGetMinerStartResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinerStartResponse>): QueryGetMinerStartResponse;
+};
+export declare const QueryGetMinerClaimsRequest: {
+    encode(message: QueryGetMinerClaimsRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinerClaimsRequest;
+    fromJSON(object: any): QueryGetMinerClaimsRequest;
+    toJSON(message: QueryGetMinerClaimsRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinerClaimsRequest>): QueryGetMinerClaimsRequest;
+};
+export declare const QueryGetMinerClaimsResponse: {
+    encode(message: QueryGetMinerClaimsResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetMinerClaimsResponse;
+    fromJSON(object: any): QueryGetMinerClaimsResponse;
+    toJSON(message: QueryGetMinerClaimsResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetMinerClaimsResponse>): QueryGetMinerClaimsResponse;
+};
+export declare const QueryAllMinerClaimsRequest: {
+    encode(message: QueryAllMinerClaimsRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllMinerClaimsRequest;
+    fromJSON(object: any): QueryAllMinerClaimsRequest;
+    toJSON(message: QueryAllMinerClaimsRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllMinerClaimsRequest>): QueryAllMinerClaimsRequest;
+};
+export declare const QueryAllMinerClaimsResponse: {
+    encode(message: QueryAllMinerClaimsResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllMinerClaimsResponse;
+    fromJSON(object: any): QueryAllMinerClaimsResponse;
+    toJSON(message: QueryAllMinerClaimsResponse): unknown;
+    fromPartial(object: DeepPartial<QueryAllMinerClaimsResponse>): QueryAllMinerClaimsResponse;
+};
 /** Query defines the gRPC querier service. */
 export interface Query {
     /** Parameters queries the parameters of the module. */
@@ -166,6 +264,16 @@ export interface Query {
     Mined(request: QueryGetMinedRequest): Promise<QueryGetMinedResponse>;
     /** Queries a list of Mined items. */
     MinedAll(request: QueryAllMinedRequest): Promise<QueryAllMinedResponse>;
+    /** Queries a list of CheckMinerIndex items. */
+    CheckMinerIndex(request: QueryCheckMinerIndexRequest): Promise<QueryCheckMinerIndexResponse>;
+    /** Queries a list of GetMinerIndex items. */
+    GetMinerIndex(request: QueryGetMinerIndexRequest): Promise<QueryGetMinerIndexResponse>;
+    /** Queries a list of GetMinerStart items. */
+    GetMinerStart(request: QueryGetMinerStartRequest): Promise<QueryGetMinerStartResponse>;
+    /** Queries a MinerClaims by index. */
+    MinerClaims(request: QueryGetMinerClaimsRequest): Promise<QueryGetMinerClaimsResponse>;
+    /** Queries a list of MinerClaims items. */
+    MinerClaimsAll(request: QueryAllMinerClaimsRequest): Promise<QueryAllMinerClaimsResponse>;
 }
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
@@ -177,6 +285,11 @@ export declare class QueryClientImpl implements Query {
     MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse>;
     Mined(request: QueryGetMinedRequest): Promise<QueryGetMinedResponse>;
     MinedAll(request: QueryAllMinedRequest): Promise<QueryAllMinedResponse>;
+    CheckMinerIndex(request: QueryCheckMinerIndexRequest): Promise<QueryCheckMinerIndexResponse>;
+    GetMinerIndex(request: QueryGetMinerIndexRequest): Promise<QueryGetMinerIndexResponse>;
+    GetMinerStart(request: QueryGetMinerStartRequest): Promise<QueryGetMinerStartResponse>;
+    MinerClaims(request: QueryGetMinerClaimsRequest): Promise<QueryGetMinerClaimsResponse>;
+    MinerClaimsAll(request: QueryAllMinerClaimsRequest): Promise<QueryAllMinerClaimsResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

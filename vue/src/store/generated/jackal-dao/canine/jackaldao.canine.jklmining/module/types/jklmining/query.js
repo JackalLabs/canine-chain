@@ -6,6 +6,7 @@ import { SaveRequests } from "../jklmining/save_requests";
 import { PageRequest, PageResponse, } from "../cosmos/base/query/v1beta1/pagination";
 import { Miners } from "../jklmining/miners";
 import { Mined } from "../jklmining/mined";
+import { MinerClaims } from "../jklmining/miner_claims";
 export const protobufPackage = "jackaldao.canine.jklmining";
 const baseQueryParamsRequest = {};
 export const QueryParamsRequest = {
@@ -825,6 +826,534 @@ export const QueryAllMinedResponse = {
         return message;
     },
 };
+const baseQueryCheckMinerIndexRequest = {};
+export const QueryCheckMinerIndexRequest = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryCheckMinerIndexRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseQueryCheckMinerIndexRequest,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseQueryCheckMinerIndexRequest,
+        };
+        return message;
+    },
+};
+const baseQueryCheckMinerIndexResponse = {};
+export const QueryCheckMinerIndexResponse = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryCheckMinerIndexResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseQueryCheckMinerIndexResponse,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseQueryCheckMinerIndexResponse,
+        };
+        return message;
+    },
+};
+const baseQueryGetMinerIndexRequest = { index: "" };
+export const QueryGetMinerIndexRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.index !== "") {
+            writer.uint32(10).string(message.index);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryGetMinerIndexRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.index = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryGetMinerIndexRequest,
+        };
+        if (object.index !== undefined && object.index !== null) {
+            message.index = String(object.index);
+        }
+        else {
+            message.index = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.index !== undefined && (obj.index = message.index);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryGetMinerIndexRequest,
+        };
+        if (object.index !== undefined && object.index !== null) {
+            message.index = object.index;
+        }
+        else {
+            message.index = "";
+        }
+        return message;
+    },
+};
+const baseQueryGetMinerIndexResponse = {};
+export const QueryGetMinerIndexResponse = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryGetMinerIndexResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseQueryGetMinerIndexResponse,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseQueryGetMinerIndexResponse,
+        };
+        return message;
+    },
+};
+const baseQueryGetMinerStartRequest = {};
+export const QueryGetMinerStartRequest = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryGetMinerStartRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseQueryGetMinerStartRequest,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseQueryGetMinerStartRequest,
+        };
+        return message;
+    },
+};
+const baseQueryGetMinerStartResponse = { index: "" };
+export const QueryGetMinerStartResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.index !== "") {
+            writer.uint32(10).string(message.index);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryGetMinerStartResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.index = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryGetMinerStartResponse,
+        };
+        if (object.index !== undefined && object.index !== null) {
+            message.index = String(object.index);
+        }
+        else {
+            message.index = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.index !== undefined && (obj.index = message.index);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryGetMinerStartResponse,
+        };
+        if (object.index !== undefined && object.index !== null) {
+            message.index = object.index;
+        }
+        else {
+            message.index = "";
+        }
+        return message;
+    },
+};
+const baseQueryGetMinerClaimsRequest = { hash: "" };
+export const QueryGetMinerClaimsRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.hash !== "") {
+            writer.uint32(10).string(message.hash);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryGetMinerClaimsRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.hash = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryGetMinerClaimsRequest,
+        };
+        if (object.hash !== undefined && object.hash !== null) {
+            message.hash = String(object.hash);
+        }
+        else {
+            message.hash = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.hash !== undefined && (obj.hash = message.hash);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryGetMinerClaimsRequest,
+        };
+        if (object.hash !== undefined && object.hash !== null) {
+            message.hash = object.hash;
+        }
+        else {
+            message.hash = "";
+        }
+        return message;
+    },
+};
+const baseQueryGetMinerClaimsResponse = {};
+export const QueryGetMinerClaimsResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.minerClaims !== undefined) {
+            MinerClaims.encode(message.minerClaims, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryGetMinerClaimsResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.minerClaims = MinerClaims.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryGetMinerClaimsResponse,
+        };
+        if (object.minerClaims !== undefined && object.minerClaims !== null) {
+            message.minerClaims = MinerClaims.fromJSON(object.minerClaims);
+        }
+        else {
+            message.minerClaims = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.minerClaims !== undefined &&
+            (obj.minerClaims = message.minerClaims
+                ? MinerClaims.toJSON(message.minerClaims)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryGetMinerClaimsResponse,
+        };
+        if (object.minerClaims !== undefined && object.minerClaims !== null) {
+            message.minerClaims = MinerClaims.fromPartial(object.minerClaims);
+        }
+        else {
+            message.minerClaims = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllMinerClaimsRequest = {};
+export const QueryAllMinerClaimsRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryAllMinerClaimsRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryAllMinerClaimsRequest,
+        };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageRequest.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryAllMinerClaimsRequest,
+        };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllMinerClaimsResponse = {};
+export const QueryAllMinerClaimsResponse = {
+    encode(message, writer = Writer.create()) {
+        for (const v of message.minerClaims) {
+            MinerClaims.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        if (message.pagination !== undefined) {
+            PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryAllMinerClaimsResponse,
+        };
+        message.minerClaims = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.minerClaims.push(MinerClaims.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.pagination = PageResponse.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryAllMinerClaimsResponse,
+        };
+        message.minerClaims = [];
+        if (object.minerClaims !== undefined && object.minerClaims !== null) {
+            for (const e of object.minerClaims) {
+                message.minerClaims.push(MinerClaims.fromJSON(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.minerClaims) {
+            obj.minerClaims = message.minerClaims.map((e) => e ? MinerClaims.toJSON(e) : undefined);
+        }
+        else {
+            obj.minerClaims = [];
+        }
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageResponse.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryAllMinerClaimsResponse,
+        };
+        message.minerClaims = [];
+        if (object.minerClaims !== undefined && object.minerClaims !== null) {
+            for (const e of object.minerClaims) {
+                message.minerClaims.push(MinerClaims.fromPartial(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
 export class QueryClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
@@ -863,6 +1392,31 @@ export class QueryClientImpl {
         const data = QueryAllMinedRequest.encode(request).finish();
         const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "MinedAll", data);
         return promise.then((data) => QueryAllMinedResponse.decode(new Reader(data)));
+    }
+    CheckMinerIndex(request) {
+        const data = QueryCheckMinerIndexRequest.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "CheckMinerIndex", data);
+        return promise.then((data) => QueryCheckMinerIndexResponse.decode(new Reader(data)));
+    }
+    GetMinerIndex(request) {
+        const data = QueryGetMinerIndexRequest.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "GetMinerIndex", data);
+        return promise.then((data) => QueryGetMinerIndexResponse.decode(new Reader(data)));
+    }
+    GetMinerStart(request) {
+        const data = QueryGetMinerStartRequest.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "GetMinerStart", data);
+        return promise.then((data) => QueryGetMinerStartResponse.decode(new Reader(data)));
+    }
+    MinerClaims(request) {
+        const data = QueryGetMinerClaimsRequest.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "MinerClaims", data);
+        return promise.then((data) => QueryGetMinerClaimsResponse.decode(new Reader(data)));
+    }
+    MinerClaimsAll(request) {
+        const data = QueryAllMinerClaimsRequest.encode(request).finish();
+        const promise = this.rpc.request("jackaldao.canine.jklmining.Query", "MinerClaimsAll", data);
+        return promise.then((data) => QueryAllMinerClaimsResponse.decode(new Reader(data)));
     }
 }
 var globalThis = (() => {

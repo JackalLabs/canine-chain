@@ -5,6 +5,10 @@ export interface JklminingMined {
     hash?: string;
     pcount?: string;
 }
+export interface JklminingMinerClaims {
+    hash?: string;
+    creator?: string;
+}
 export interface JklminingMiners {
     address?: string;
     ip?: string;
@@ -12,10 +16,13 @@ export interface JklminingMiners {
 }
 export declare type JklminingMsgAllowSaveResponse = object;
 export declare type JklminingMsgClaimSaveResponse = object;
+export declare type JklminingMsgCreateMinerClaimsResponse = object;
 export declare type JklminingMsgCreateMinersResponse = object;
 export declare type JklminingMsgCreateSaveRequestsResponse = object;
+export declare type JklminingMsgDeleteMinerClaimsResponse = object;
 export declare type JklminingMsgDeleteMinersResponse = object;
 export declare type JklminingMsgDeleteSaveRequestsResponse = object;
+export declare type JklminingMsgUpdateMinerClaimsResponse = object;
 export declare type JklminingMsgUpdateMinersResponse = object;
 export declare type JklminingMsgUpdateSaveRequestsResponse = object;
 /**
@@ -24,6 +31,19 @@ export declare type JklminingMsgUpdateSaveRequestsResponse = object;
 export declare type JklminingParams = object;
 export interface JklminingQueryAllMinedResponse {
     Mined?: JklminingMined[];
+    /**
+     * PageResponse is to be embedded in gRPC response messages where the
+     * corresponding request message has used PageRequest.
+     *
+     *  message SomeResponse {
+     *          repeated Bar results = 1;
+     *          PageResponse page = 2;
+     *  }
+     */
+    pagination?: V1Beta1PageResponse;
+}
+export interface JklminingQueryAllMinerClaimsResponse {
+    minerClaims?: JklminingMinerClaims[];
     /**
      * PageResponse is to be embedded in gRPC response messages where the
      * corresponding request message has used PageRequest.
@@ -61,8 +81,16 @@ export interface JklminingQueryAllSaveRequestsResponse {
      */
     pagination?: V1Beta1PageResponse;
 }
+export declare type JklminingQueryCheckMinerIndexResponse = object;
 export interface JklminingQueryGetMinedResponse {
     Mined?: JklminingMined;
+}
+export interface JklminingQueryGetMinerClaimsResponse {
+    minerClaims?: JklminingMinerClaims;
+}
+export declare type JklminingQueryGetMinerIndexResponse = object;
+export interface JklminingQueryGetMinerStartResponse {
+    index?: string;
 }
 export interface JklminingQueryGetMinersResponse {
     miners?: JklminingMiners;
@@ -210,6 +238,33 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * No description
      *
      * @tags Query
+     * @name QueryCheckMinerIndex
+     * @summary Queries a list of CheckMinerIndex items.
+     * @request GET:/jackal-dao/canine/jklmining/check_miner_index
+     */
+    queryCheckMinerIndex: (params?: RequestParams) => Promise<HttpResponse<object, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryGetMinerIndex
+     * @summary Queries a list of GetMinerIndex items.
+     * @request GET:/jackal-dao/canine/jklmining/get_miner_index/{index}
+     */
+    queryGetMinerIndex: (index: string, params?: RequestParams) => Promise<HttpResponse<object, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryGetMinerStart
+     * @summary Queries a list of GetMinerStart items.
+     * @request GET:/jackal-dao/canine/jklmining/get_miner_start
+     */
+    queryGetMinerStart: (params?: RequestParams) => Promise<HttpResponse<JklminingQueryGetMinerStartResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
      * @name QueryMinedAll
      * @summary Queries a list of Mined items.
      * @request GET:/jackal-dao/canine/jklmining/mined
@@ -230,6 +285,30 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @request GET:/jackal-dao/canine/jklmining/mined/{id}
      */
     queryMined: (id: string, params?: RequestParams) => Promise<HttpResponse<JklminingQueryGetMinedResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryMinerClaimsAll
+     * @summary Queries a list of MinerClaims items.
+     * @request GET:/jackal-dao/canine/jklmining/miner_claims
+     */
+    queryMinerClaimsAll: (query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.count_total"?: boolean;
+        "pagination.reverse"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<JklminingQueryAllMinerClaimsResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryMinerClaims
+     * @summary Queries a MinerClaims by index.
+     * @request GET:/jackal-dao/canine/jklmining/miner_claims/{hash}
+     */
+    queryMinerClaims: (hash: string, params?: RequestParams) => Promise<HttpResponse<JklminingQueryGetMinerClaimsResponse, RpcStatus>>;
     /**
      * No description
      *

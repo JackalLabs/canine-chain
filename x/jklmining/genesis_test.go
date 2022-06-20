@@ -39,6 +39,14 @@ func TestGenesis(t *testing.T) {
 			},
 		},
 		MinedCount: 2,
+		MinerClaimsList: []types.MinerClaims{
+			{
+				Hash: "0",
+			},
+			{
+				Hash: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -54,5 +62,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.MinersList, got.MinersList)
 	require.ElementsMatch(t, genesisState.MinedList, got.MinedList)
 	require.Equal(t, genesisState.MinedCount, got.MinedCount)
+	require.ElementsMatch(t, genesisState.MinerClaimsList, got.MinerClaimsList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

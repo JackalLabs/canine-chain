@@ -33,6 +33,14 @@ func (k msgServer) ClaimSave(goCtx context.Context, msg *types.MsgClaimSave) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("%s is not %s", s, i))
 	}
 
+	m := types.Mined{}
+
+	m.Datasize = savefile.Size_
+	m.Hash = savefile.Index
+	m.Pcount = fmt.Sprintf("%d", ctx.BlockHeight())
+
+	k.AppendMined(ctx, m)
+
 	var saveRequests = types.SaveRequests{
 		Creator:  savefile.Creator,
 		Index:    savefile.Index,
@@ -44,6 +52,12 @@ func (k msgServer) ClaimSave(goCtx context.Context, msg *types.MsgClaimSave) (*t
 		ctx,
 		saveRequests,
 	)
+
+	clm := types.MinerClaims{}
+	clm.Creator = msg.Creator
+	clm.Hash = savefile.Index
+
+	k.SetMinerClaims(ctx, clm)
 
 	return &types.MsgClaimSaveResponse{}, nil
 }

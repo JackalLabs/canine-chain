@@ -47,6 +47,14 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				MinedCount: 2,
+				MinerClaimsList: []types.MinerClaims{
+					{
+						Hash: "0",
+					},
+					{
+						Hash: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -102,6 +110,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				MinedCount: 0,
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated minerClaims",
+			genState: &types.GenesisState{
+				MinerClaimsList: []types.MinerClaims{
+					{
+						Hash: "0",
+					},
+					{
+						Hash: "0",
+					},
+				},
 			},
 			valid: false,
 		},

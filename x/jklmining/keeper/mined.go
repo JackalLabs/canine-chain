@@ -9,6 +9,34 @@ import (
 )
 
 // GetMinedCount get the total number of mined
+func (k Keeper) GetMinedStarting(ctx sdk.Context) uint64 {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
+	byteKey := types.KeyPrefix(types.MinedStartKey)
+	bz := store.Get(byteKey)
+
+	// Count doesn't exist: no element
+	if bz == nil {
+		return 0
+	}
+
+	// Parse bytes
+	return binary.BigEndian.Uint64(bz)
+}
+
+// GetMinedCount get the total number of mined
+func (k Keeper) PushMinedStarting(ctx sdk.Context, amount uint64) {
+
+	current := k.GetMinedStarting(ctx)
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
+	byteKey := types.KeyPrefix(types.MinedStartKey)
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, current+amount)
+	store.Set(byteKey, bz)
+
+}
+
+// GetMinedCount get the total number of mined
 func (k Keeper) GetMinedCount(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
 	byteKey := types.KeyPrefix(types.MinedCountKey)

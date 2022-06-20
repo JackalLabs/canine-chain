@@ -6,6 +6,7 @@ import "jklmining/params.proto";
 import "jklmining/save_requests.proto";
 import "jklmining/miners.proto";
 import "jklmining/mined.proto";
+import "jklmining/miner_claims.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/jackal-dao/canine/x/jklmining/types";
@@ -17,5 +18,6 @@ message GenesisState {
   repeated Miners minersList = 3 [(gogoproto.nullable) = false];
   repeated Mined minedList = 4 [(gogoproto.nullable) = false];
   uint64 minedCount = 5;
+  repeated MinerClaims minerClaimsList = 6 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

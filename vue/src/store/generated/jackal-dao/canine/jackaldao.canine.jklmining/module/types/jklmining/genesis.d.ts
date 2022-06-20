@@ -3,6 +3,7 @@ import { Params } from "../jklmining/params";
 import { SaveRequests } from "../jklmining/save_requests";
 import { Miners } from "../jklmining/miners";
 import { Mined } from "../jklmining/mined";
+import { MinerClaims } from "../jklmining/miner_claims";
 export declare const protobufPackage = "jackaldao.canine.jklmining";
 /** GenesisState defines the jklmining module's genesis state. */
 export interface GenesisState {
@@ -10,8 +11,9 @@ export interface GenesisState {
     saveRequestsList: SaveRequests[];
     minersList: Miners[];
     minedList: Mined[];
-    /** this line is used by starport scaffolding # genesis/proto/state */
     minedCount: number;
+    /** this line is used by starport scaffolding # genesis/proto/state */
+    minerClaimsList: MinerClaims[];
 }
 export declare const GenesisState: {
     encode(message: GenesisState, writer?: Writer): Writer;

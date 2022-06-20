@@ -795,6 +795,270 @@ func (m *MsgClaimSaveResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgClaimSaveResponse proto.InternalMessageInfo
 
+type MsgCreateMinerClaims struct {
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Hash    string `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+}
+
+func (m *MsgCreateMinerClaims) Reset()         { *m = MsgCreateMinerClaims{} }
+func (m *MsgCreateMinerClaims) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateMinerClaims) ProtoMessage()    {}
+func (*MsgCreateMinerClaims) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{16}
+}
+func (m *MsgCreateMinerClaims) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateMinerClaims) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateMinerClaims.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateMinerClaims) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateMinerClaims.Merge(m, src)
+}
+func (m *MsgCreateMinerClaims) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateMinerClaims) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateMinerClaims.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateMinerClaims proto.InternalMessageInfo
+
+func (m *MsgCreateMinerClaims) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgCreateMinerClaims) GetHash() string {
+	if m != nil {
+		return m.Hash
+	}
+	return ""
+}
+
+type MsgCreateMinerClaimsResponse struct {
+}
+
+func (m *MsgCreateMinerClaimsResponse) Reset()         { *m = MsgCreateMinerClaimsResponse{} }
+func (m *MsgCreateMinerClaimsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateMinerClaimsResponse) ProtoMessage()    {}
+func (*MsgCreateMinerClaimsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{17}
+}
+func (m *MsgCreateMinerClaimsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateMinerClaimsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateMinerClaimsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateMinerClaimsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateMinerClaimsResponse.Merge(m, src)
+}
+func (m *MsgCreateMinerClaimsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateMinerClaimsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateMinerClaimsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateMinerClaimsResponse proto.InternalMessageInfo
+
+type MsgUpdateMinerClaims struct {
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Hash    string `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+}
+
+func (m *MsgUpdateMinerClaims) Reset()         { *m = MsgUpdateMinerClaims{} }
+func (m *MsgUpdateMinerClaims) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateMinerClaims) ProtoMessage()    {}
+func (*MsgUpdateMinerClaims) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{18}
+}
+func (m *MsgUpdateMinerClaims) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateMinerClaims) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateMinerClaims.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateMinerClaims) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateMinerClaims.Merge(m, src)
+}
+func (m *MsgUpdateMinerClaims) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateMinerClaims) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateMinerClaims.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateMinerClaims proto.InternalMessageInfo
+
+func (m *MsgUpdateMinerClaims) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgUpdateMinerClaims) GetHash() string {
+	if m != nil {
+		return m.Hash
+	}
+	return ""
+}
+
+type MsgUpdateMinerClaimsResponse struct {
+}
+
+func (m *MsgUpdateMinerClaimsResponse) Reset()         { *m = MsgUpdateMinerClaimsResponse{} }
+func (m *MsgUpdateMinerClaimsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateMinerClaimsResponse) ProtoMessage()    {}
+func (*MsgUpdateMinerClaimsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{19}
+}
+func (m *MsgUpdateMinerClaimsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateMinerClaimsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateMinerClaimsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateMinerClaimsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateMinerClaimsResponse.Merge(m, src)
+}
+func (m *MsgUpdateMinerClaimsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateMinerClaimsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateMinerClaimsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateMinerClaimsResponse proto.InternalMessageInfo
+
+type MsgDeleteMinerClaims struct {
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Hash    string `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+}
+
+func (m *MsgDeleteMinerClaims) Reset()         { *m = MsgDeleteMinerClaims{} }
+func (m *MsgDeleteMinerClaims) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteMinerClaims) ProtoMessage()    {}
+func (*MsgDeleteMinerClaims) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{20}
+}
+func (m *MsgDeleteMinerClaims) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDeleteMinerClaims) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDeleteMinerClaims.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDeleteMinerClaims) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteMinerClaims.Merge(m, src)
+}
+func (m *MsgDeleteMinerClaims) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDeleteMinerClaims) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteMinerClaims.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDeleteMinerClaims proto.InternalMessageInfo
+
+func (m *MsgDeleteMinerClaims) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgDeleteMinerClaims) GetHash() string {
+	if m != nil {
+		return m.Hash
+	}
+	return ""
+}
+
+type MsgDeleteMinerClaimsResponse struct {
+}
+
+func (m *MsgDeleteMinerClaimsResponse) Reset()         { *m = MsgDeleteMinerClaimsResponse{} }
+func (m *MsgDeleteMinerClaimsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteMinerClaimsResponse) ProtoMessage()    {}
+func (*MsgDeleteMinerClaimsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d5e577009bbe5c49, []int{21}
+}
+func (m *MsgDeleteMinerClaimsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDeleteMinerClaimsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDeleteMinerClaimsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDeleteMinerClaimsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteMinerClaimsResponse.Merge(m, src)
+}
+func (m *MsgDeleteMinerClaimsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDeleteMinerClaimsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteMinerClaimsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDeleteMinerClaimsResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgAllowSave)(nil), "jackaldao.canine.jklmining.MsgAllowSave")
 	proto.RegisterType((*MsgAllowSaveResponse)(nil), "jackaldao.canine.jklmining.MsgAllowSaveResponse")
@@ -812,46 +1076,58 @@ func init() {
 	proto.RegisterType((*MsgDeleteMinersResponse)(nil), "jackaldao.canine.jklmining.MsgDeleteMinersResponse")
 	proto.RegisterType((*MsgClaimSave)(nil), "jackaldao.canine.jklmining.MsgClaimSave")
 	proto.RegisterType((*MsgClaimSaveResponse)(nil), "jackaldao.canine.jklmining.MsgClaimSaveResponse")
+	proto.RegisterType((*MsgCreateMinerClaims)(nil), "jackaldao.canine.jklmining.MsgCreateMinerClaims")
+	proto.RegisterType((*MsgCreateMinerClaimsResponse)(nil), "jackaldao.canine.jklmining.MsgCreateMinerClaimsResponse")
+	proto.RegisterType((*MsgUpdateMinerClaims)(nil), "jackaldao.canine.jklmining.MsgUpdateMinerClaims")
+	proto.RegisterType((*MsgUpdateMinerClaimsResponse)(nil), "jackaldao.canine.jklmining.MsgUpdateMinerClaimsResponse")
+	proto.RegisterType((*MsgDeleteMinerClaims)(nil), "jackaldao.canine.jklmining.MsgDeleteMinerClaims")
+	proto.RegisterType((*MsgDeleteMinerClaimsResponse)(nil), "jackaldao.canine.jklmining.MsgDeleteMinerClaimsResponse")
 }
 
 func init() { proto.RegisterFile("jklmining/tx.proto", fileDescriptor_d5e577009bbe5c49) }
 
 var fileDescriptor_d5e577009bbe5c49 = []byte{
-	// 546 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x96, 0xc1, 0x6e, 0xd3, 0x30,
-	0x18, 0xc7, 0x9b, 0x76, 0x30, 0xfa, 0x69, 0x02, 0x64, 0x8d, 0x51, 0x22, 0x16, 0x50, 0x4e, 0x93,
-	0x2a, 0x12, 0x60, 0x27, 0x8e, 0x30, 0x10, 0x5c, 0x7a, 0x19, 0x1a, 0x42, 0x5c, 0x90, 0xd7, 0x7c,
-	0x0a, 0x5e, 0xd3, 0xc4, 0xc4, 0x59, 0xd7, 0x71, 0xe4, 0x09, 0x78, 0x20, 0x1e, 0x80, 0xe3, 0x8e,
-	0x1c, 0x51, 0xfb, 0x22, 0x28, 0x76, 0xea, 0xa4, 0x4d, 0xba, 0x64, 0x80, 0xc4, 0x2d, 0xb6, 0x3f,
-	0x7f, 0xbf, 0x7f, 0x5c, 0xff, 0xda, 0x02, 0x39, 0x19, 0x05, 0x63, 0x16, 0xb2, 0xd0, 0x77, 0x93,
-	0xa9, 0xc3, 0xe3, 0x28, 0x89, 0x88, 0x79, 0x42, 0x87, 0x23, 0x1a, 0x78, 0x34, 0x72, 0x86, 0x34,
-	0x64, 0x21, 0x3a, 0xba, 0xc8, 0xdc, 0xcd, 0xeb, 0x05, 0x9d, 0xe0, 0xc7, 0x18, 0x3f, 0x9f, 0xa2,
-	0x48, 0x84, 0xda, 0x6a, 0xee, 0xe4, 0xcb, 0x63, 0x16, 0x62, 0x9c, 0xcd, 0xdb, 0xef, 0x60, 0x6b,
-	0x20, 0xfc, 0xe7, 0x41, 0x10, 0x9d, 0xbd, 0xa5, 0x13, 0x24, 0x3d, 0xd8, 0x1c, 0xc6, 0x48, 0x93,
-	0x28, 0xee, 0x19, 0x0f, 0x8d, 0xbd, 0xee, 0xe1, 0x62, 0x98, 0xae, 0x70, 0x2a, 0xc4, 0x08, 0xcf,
-	0x7b, 0x6d, 0xb5, 0x92, 0x0d, 0x09, 0x81, 0x0d, 0xc1, 0xbe, 0x60, 0xaf, 0x23, 0xa7, 0xe5, 0xb3,
-	0xbd, 0x03, 0xdb, 0xc5, 0xbe, 0x87, 0x28, 0x78, 0x14, 0x0a, 0xb4, 0xcf, 0xe0, 0xce, 0x40, 0xf8,
-	0x07, 0x69, 0x4f, 0x54, 0x0b, 0x2a, 0xe6, 0x25, 0xe0, 0x6d, 0xb8, 0xc6, 0x42, 0x0f, 0xa7, 0x19,
-	0x56, 0x0d, 0xaa, 0xa0, 0xc4, 0x84, 0x1b, 0x94, 0xf3, 0x38, 0x9a, 0xa0, 0xd7, 0xdb, 0x90, 0xf3,
-	0x7a, 0x6c, 0x3f, 0x80, 0xdd, 0x4a, 0xf0, 0x4a, 0xb2, 0x23, 0xee, 0xfd, 0x9f, 0x64, 0x65, 0xb0,
-	0x4e, 0xf6, 0x5a, 0x26, 0x7b, 0x89, 0x01, 0xfe, 0x5d, 0xb2, 0x8c, 0x54, 0x6e, 0xa4, 0x49, 0x47,
-	0x70, 0x4b, 0x1f, 0xd2, 0x40, 0x5e, 0x93, 0xcb, 0x2f, 0x04, 0xf5, 0xbc, 0x18, 0x85, 0x58, 0x5c,
-	0x88, 0x6c, 0x48, 0x6e, 0x42, 0x9b, 0xf1, 0xec, 0xfd, 0xdb, 0x8c, 0xdb, 0xf7, 0xe0, 0xee, 0x4a,
-	0xdb, 0x15, 0xa2, 0x7a, 0xf9, 0x7f, 0x4e, 0x2c, 0xb6, 0xd5, 0xc4, 0x57, 0x92, 0xa8, 0x0e, 0xe1,
-	0xcf, 0x89, 0x19, 0xa1, 0xd8, 0x46, 0x13, 0xde, 0x4b, 0xa7, 0x0e, 0x02, 0xca, 0xc6, 0x35, 0x4e,
-	0xdd, 0x87, 0x6e, 0x2a, 0x6b, 0xf1, 0xa3, 0xca, 0x27, 0xc8, 0x6d, 0xe8, 0xa4, 0xb6, 0xa9, 0xb7,
-	0x4a, 0x1f, 0x33, 0xab, 0x74, 0xe7, 0x05, 0xf1, 0xe9, 0xf7, 0x4d, 0xe8, 0x0c, 0x84, 0x4f, 0x7c,
-	0xe8, 0xe6, 0x2a, 0xef, 0x39, 0xeb, 0xbf, 0x2e, 0x9c, 0xa2, 0x9c, 0xe6, 0xe3, 0xa6, 0x95, 0x0b,
-	0x20, 0xf9, 0x6a, 0x00, 0xa9, 0x90, 0xf8, 0x49, 0x4d, 0xa3, 0xf2, 0x16, 0xf3, 0xd9, 0x95, 0xb7,
-	0x2c, 0x85, 0xa8, 0xf0, 0xb5, 0x2e, 0x44, 0x79, 0x4b, 0x6d, 0x88, 0xf5, 0x72, 0xca, 0x10, 0x15,
-	0x6a, 0xd6, 0x85, 0x28, 0x6f, 0xa9, 0x0d, 0xb1, 0xde, 0x5b, 0xc2, 0x61, 0x6b, 0x49, 0xda, 0x7e,
-	0xa3, 0x43, 0x55, 0xc5, 0xe6, 0xfe, 0x15, 0x8a, 0x8b, 0xc4, 0x25, 0x69, 0xfb, 0x8d, 0x4e, 0xb0,
-	0x21, 0xb1, 0xca, 0xdb, 0x94, 0xb8, 0x24, 0x6d, 0xbf, 0xd1, 0x71, 0x35, 0x24, 0x56, 0x79, 0x9c,
-	0xda, 0x94, 0x4b, 0x5c, 0x67, 0x93, 0xae, 0xac, 0xb5, 0xa9, 0xa4, 0xef, 0x8b, 0x37, 0x3f, 0x66,
-	0x96, 0x71, 0x31, 0xb3, 0x8c, 0x5f, 0x33, 0xcb, 0xf8, 0x36, 0xb7, 0x5a, 0x17, 0x73, 0xab, 0xf5,
-	0x73, 0x6e, 0xb5, 0x3e, 0x38, 0x3e, 0x4b, 0x3e, 0x9d, 0x1e, 0x3b, 0xc3, 0x68, 0xec, 0xaa, 0xae,
-	0x8f, 0x3c, 0x1a, 0xb9, 0xaa, 0xad, 0x3b, 0x75, 0x0b, 0x7f, 0x12, 0xce, 0x39, 0x8a, 0xe3, 0xeb,
-	0xf2, 0x57, 0x7d, 0xff, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0xb0, 0xb4, 0xb5, 0x5b, 0x3e, 0x08,
+	// 642 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x96, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0xc7, 0xeb, 0x24, 0x7c, 0x64, 0x54, 0xf1, 0xb1, 0x2a, 0x25, 0x58, 0xa9, 0x41, 0x3e, 0x55,
+	0x8a, 0x70, 0x02, 0xbd, 0xc0, 0x11, 0x5a, 0x04, 0x97, 0x5c, 0x8a, 0x8a, 0x10, 0x97, 0x6a, 0x1b,
+	0xaf, 0x1c, 0x37, 0x8e, 0x6d, 0xbc, 0x69, 0x9a, 0x72, 0x41, 0xe2, 0x09, 0x78, 0x23, 0xae, 0x1c,
+	0x7b, 0xe4, 0x88, 0x92, 0x17, 0x41, 0xde, 0x75, 0xec, 0x8d, 0xd7, 0x89, 0x37, 0x04, 0x89, 0x9b,
+	0x77, 0x77, 0x66, 0x7e, 0xff, 0x1d, 0x7b, 0xfe, 0x32, 0xa0, 0xf3, 0x81, 0x37, 0x74, 0x7d, 0xd7,
+	0x77, 0xda, 0xa3, 0x89, 0x15, 0x46, 0xc1, 0x28, 0x40, 0xfa, 0x39, 0xee, 0x0d, 0xb0, 0x67, 0xe3,
+	0xc0, 0xea, 0x61, 0xdf, 0xf5, 0x89, 0x95, 0x06, 0xe9, 0x7b, 0x59, 0x3c, 0xc5, 0x63, 0x72, 0x1a,
+	0x91, 0xcf, 0x17, 0x84, 0x8e, 0x28, 0x4f, 0xd5, 0x77, 0xb3, 0xe3, 0xa1, 0xeb, 0x93, 0x68, 0xbe,
+	0xdf, 0xcc, 0xed, 0x9f, 0xf6, 0x3c, 0xec, 0x0e, 0x93, 0x53, 0xf3, 0x03, 0x6c, 0x77, 0xa9, 0xf3,
+	0xca, 0xf3, 0x82, 0xcb, 0xf7, 0x78, 0x4c, 0x50, 0x03, 0x6e, 0xf5, 0x22, 0x82, 0x47, 0x41, 0xd4,
+	0xd0, 0x9e, 0x68, 0xfb, 0xf5, 0xe3, 0xf9, 0x32, 0x3e, 0x09, 0x31, 0xa5, 0x03, 0x72, 0xd5, 0xa8,
+	0xf0, 0x93, 0x64, 0x89, 0x10, 0xd4, 0xa8, 0xfb, 0x85, 0x34, 0xaa, 0x6c, 0x9b, 0x3d, 0x9b, 0xbb,
+	0xb0, 0x23, 0xd6, 0x3d, 0x26, 0x34, 0x0c, 0x7c, 0x4a, 0xcc, 0x4b, 0x78, 0xd0, 0xa5, 0xce, 0x61,
+	0x5c, 0x93, 0xf0, 0x03, 0x7e, 0x89, 0x15, 0xe0, 0x1d, 0xb8, 0xe1, 0xfa, 0x36, 0x99, 0x24, 0x58,
+	0xbe, 0x28, 0x82, 0x22, 0x1d, 0x6e, 0xe3, 0x30, 0x8c, 0x82, 0x31, 0xb1, 0x1b, 0x35, 0xb6, 0x9f,
+	0xae, 0xcd, 0xc7, 0xb0, 0x57, 0x08, 0xce, 0x29, 0x3b, 0x09, 0xed, 0xff, 0xa3, 0x4c, 0x06, 0xa7,
+	0xca, 0xde, 0x32, 0x65, 0x47, 0xc4, 0x23, 0x9b, 0x29, 0x4b, 0x48, 0x72, 0xa1, 0x94, 0x74, 0x02,
+	0x77, 0xd3, 0x26, 0x75, 0xd9, 0x47, 0xb4, 0xfa, 0x83, 0xc0, 0xb6, 0x1d, 0x11, 0x4a, 0xe7, 0x1f,
+	0x44, 0xb2, 0x44, 0x77, 0xa0, 0xe2, 0x86, 0xc9, 0xfd, 0x2b, 0x6e, 0x68, 0x3e, 0x82, 0x87, 0xb9,
+	0xb2, 0x39, 0x22, 0xbf, 0xfc, 0x3f, 0x27, 0x8a, 0x65, 0x53, 0xe2, 0x1b, 0x46, 0xe4, 0x4d, 0xf8,
+	0x7b, 0x62, 0x42, 0x10, 0xcb, 0xa4, 0x84, 0x8f, 0x6c, 0xa6, 0x0e, 0xe3, 0x31, 0x2b, 0x99, 0xa9,
+	0x26, 0xd4, 0xe3, 0x51, 0x16, 0x5f, 0x55, 0xb6, 0x81, 0xee, 0x41, 0x35, 0x9e, 0x36, 0x7e, 0xab,
+	0xf8, 0x31, 0x99, 0xaa, 0xb4, 0x72, 0x4a, 0x3c, 0xe2, 0xfb, 0x59, 0x83, 0x59, 0xc8, 0xaa, 0x8b,
+	0x21, 0xa8, 0xf5, 0x31, 0xed, 0x27, 0x50, 0xf6, 0x6c, 0x1a, 0xd0, 0x2c, 0xaa, 0x92, 0xa3, 0x08,
+	0x4d, 0xdd, 0x80, 0x22, 0x55, 0xc9, 0x51, 0x84, 0xc6, 0x6e, 0x40, 0x91, 0xaa, 0xcc, 0x29, 0xcf,
+	0x7f, 0x00, 0x54, 0xbb, 0xd4, 0x41, 0x0e, 0xd4, 0x33, 0xf3, 0xdb, 0xb7, 0x96, 0xdb, 0xaf, 0x25,
+	0xda, 0x99, 0xde, 0x51, 0x8d, 0x9c, 0x03, 0xd1, 0x37, 0x0d, 0x50, 0x81, 0xed, 0x3d, 0x2b, 0x29,
+	0x24, 0xa7, 0xe8, 0x2f, 0xd7, 0x4e, 0x59, 0x10, 0x51, 0xe0, 0x70, 0x65, 0x22, 0xe4, 0x94, 0x52,
+	0x11, 0xcb, 0xed, 0x8c, 0x89, 0x28, 0x30, 0xb3, 0x32, 0x11, 0x72, 0x4a, 0xa9, 0x88, 0xe5, 0x4e,
+	0x87, 0x42, 0xd8, 0x5e, 0xb0, 0xb9, 0x96, 0x52, 0x53, 0x79, 0xb0, 0x7e, 0xb0, 0x46, 0xb0, 0x48,
+	0x5c, 0xb0, 0xb9, 0x96, 0x52, 0x07, 0x15, 0x89, 0x45, 0x4e, 0x17, 0x13, 0x17, 0x6c, 0xae, 0xa5,
+	0xd4, 0x2e, 0x45, 0x62, 0x91, 0xf3, 0xc5, 0xd3, 0x94, 0xd9, 0x5e, 0xd9, 0x34, 0xa5, 0x91, 0xa5,
+	0xd3, 0x24, 0x19, 0x1e, 0xfa, 0x0a, 0xf7, 0x65, 0xb7, 0xeb, 0xa8, 0xbf, 0x16, 0x9e, 0xa1, 0xbf,
+	0x58, 0x37, 0x43, 0x14, 0x20, 0x1b, 0x61, 0x47, 0xfd, 0x2d, 0x29, 0x0a, 0x58, 0x6a, 0x93, 0xb1,
+	0x00, 0xd9, 0x23, 0x3b, 0xea, 0x2f, 0x4d, 0x51, 0xc0, 0x52, 0x07, 0x7d, 0xfd, 0xee, 0xe7, 0xd4,
+	0xd0, 0xae, 0xa7, 0x86, 0xf6, 0x7b, 0x6a, 0x68, 0xdf, 0x67, 0xc6, 0xd6, 0xf5, 0xcc, 0xd8, 0xfa,
+	0x35, 0x33, 0xb6, 0x3e, 0x59, 0x8e, 0x3b, 0xea, 0x5f, 0x9c, 0x59, 0xbd, 0x60, 0xd8, 0xe6, 0xd5,
+	0x9f, 0xda, 0x38, 0x68, 0xf3, 0xf2, 0xed, 0x49, 0x5b, 0xf8, 0xef, 0xbd, 0x0a, 0x09, 0x3d, 0xbb,
+	0xc9, 0x7e, 0x45, 0x0f, 0xfe, 0x04, 0x00, 0x00, 0xff, 0xff, 0x6f, 0x9e, 0xdd, 0xf9, 0x11, 0x0b,
 	0x00, 0x00,
 }
 
@@ -875,6 +1151,9 @@ type MsgClient interface {
 	UpdateMiners(ctx context.Context, in *MsgUpdateMiners, opts ...grpc.CallOption) (*MsgUpdateMinersResponse, error)
 	DeleteMiners(ctx context.Context, in *MsgDeleteMiners, opts ...grpc.CallOption) (*MsgDeleteMinersResponse, error)
 	ClaimSave(ctx context.Context, in *MsgClaimSave, opts ...grpc.CallOption) (*MsgClaimSaveResponse, error)
+	CreateMinerClaims(ctx context.Context, in *MsgCreateMinerClaims, opts ...grpc.CallOption) (*MsgCreateMinerClaimsResponse, error)
+	UpdateMinerClaims(ctx context.Context, in *MsgUpdateMinerClaims, opts ...grpc.CallOption) (*MsgUpdateMinerClaimsResponse, error)
+	DeleteMinerClaims(ctx context.Context, in *MsgDeleteMinerClaims, opts ...grpc.CallOption) (*MsgDeleteMinerClaimsResponse, error)
 }
 
 type msgClient struct {
@@ -957,6 +1236,33 @@ func (c *msgClient) ClaimSave(ctx context.Context, in *MsgClaimSave, opts ...grp
 	return out, nil
 }
 
+func (c *msgClient) CreateMinerClaims(ctx context.Context, in *MsgCreateMinerClaims, opts ...grpc.CallOption) (*MsgCreateMinerClaimsResponse, error) {
+	out := new(MsgCreateMinerClaimsResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Msg/CreateMinerClaims", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateMinerClaims(ctx context.Context, in *MsgUpdateMinerClaims, opts ...grpc.CallOption) (*MsgUpdateMinerClaimsResponse, error) {
+	out := new(MsgUpdateMinerClaimsResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Msg/UpdateMinerClaims", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) DeleteMinerClaims(ctx context.Context, in *MsgDeleteMinerClaims, opts ...grpc.CallOption) (*MsgDeleteMinerClaimsResponse, error) {
+	out := new(MsgDeleteMinerClaimsResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.jklmining.Msg/DeleteMinerClaims", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	AllowSave(context.Context, *MsgAllowSave) (*MsgAllowSaveResponse, error)
@@ -967,6 +1273,9 @@ type MsgServer interface {
 	UpdateMiners(context.Context, *MsgUpdateMiners) (*MsgUpdateMinersResponse, error)
 	DeleteMiners(context.Context, *MsgDeleteMiners) (*MsgDeleteMinersResponse, error)
 	ClaimSave(context.Context, *MsgClaimSave) (*MsgClaimSaveResponse, error)
+	CreateMinerClaims(context.Context, *MsgCreateMinerClaims) (*MsgCreateMinerClaimsResponse, error)
+	UpdateMinerClaims(context.Context, *MsgUpdateMinerClaims) (*MsgUpdateMinerClaimsResponse, error)
+	DeleteMinerClaims(context.Context, *MsgDeleteMinerClaims) (*MsgDeleteMinerClaimsResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -996,6 +1305,15 @@ func (*UnimplementedMsgServer) DeleteMiners(ctx context.Context, req *MsgDeleteM
 }
 func (*UnimplementedMsgServer) ClaimSave(ctx context.Context, req *MsgClaimSave) (*MsgClaimSaveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClaimSave not implemented")
+}
+func (*UnimplementedMsgServer) CreateMinerClaims(ctx context.Context, req *MsgCreateMinerClaims) (*MsgCreateMinerClaimsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMinerClaims not implemented")
+}
+func (*UnimplementedMsgServer) UpdateMinerClaims(ctx context.Context, req *MsgUpdateMinerClaims) (*MsgUpdateMinerClaimsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMinerClaims not implemented")
+}
+func (*UnimplementedMsgServer) DeleteMinerClaims(ctx context.Context, req *MsgDeleteMinerClaims) (*MsgDeleteMinerClaimsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMinerClaims not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -1146,6 +1464,60 @@ func _Msg_ClaimSave_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_CreateMinerClaims_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateMinerClaims)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateMinerClaims(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Msg/CreateMinerClaims",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateMinerClaims(ctx, req.(*MsgCreateMinerClaims))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateMinerClaims_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateMinerClaims)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateMinerClaims(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Msg/UpdateMinerClaims",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateMinerClaims(ctx, req.(*MsgUpdateMinerClaims))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DeleteMinerClaims_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDeleteMinerClaims)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DeleteMinerClaims(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.jklmining.Msg/DeleteMinerClaims",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DeleteMinerClaims(ctx, req.(*MsgDeleteMinerClaims))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "jackaldao.canine.jklmining.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -1181,6 +1553,18 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ClaimSave",
 			Handler:    _Msg_ClaimSave_Handler,
+		},
+		{
+			MethodName: "CreateMinerClaims",
+			Handler:    _Msg_CreateMinerClaims_Handler,
+		},
+		{
+			MethodName: "UpdateMinerClaims",
+			Handler:    _Msg_UpdateMinerClaims_Handler,
+		},
+		{
+			MethodName: "DeleteMinerClaims",
+			Handler:    _Msg_DeleteMinerClaims_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1723,6 +2107,186 @@ func (m *MsgClaimSaveResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgCreateMinerClaims) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateMinerClaims) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateMinerClaims) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Hash) > 0 {
+		i -= len(m.Hash)
+		copy(dAtA[i:], m.Hash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Hash)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateMinerClaimsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateMinerClaimsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateMinerClaimsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateMinerClaims) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateMinerClaims) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateMinerClaims) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Hash) > 0 {
+		i -= len(m.Hash)
+		copy(dAtA[i:], m.Hash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Hash)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateMinerClaimsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateMinerClaimsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateMinerClaimsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteMinerClaims) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteMinerClaims) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteMinerClaims) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Hash) > 0 {
+		i -= len(m.Hash)
+		copy(dAtA[i:], m.Hash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Hash)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteMinerClaimsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteMinerClaimsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteMinerClaimsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -1966,6 +2530,84 @@ func (m *MsgClaimSave) Size() (n int) {
 }
 
 func (m *MsgClaimSaveResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgCreateMinerClaims) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Hash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgCreateMinerClaimsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgUpdateMinerClaims) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Hash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgUpdateMinerClaimsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgDeleteMinerClaims) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Hash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgDeleteMinerClaimsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -3525,6 +4167,498 @@ func (m *MsgClaimSaveResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgClaimSaveResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateMinerClaims) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateMinerClaims: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateMinerClaims: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Hash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateMinerClaimsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateMinerClaimsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateMinerClaimsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateMinerClaims) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateMinerClaims: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateMinerClaims: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Hash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateMinerClaimsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateMinerClaimsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateMinerClaimsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDeleteMinerClaims) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDeleteMinerClaims: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDeleteMinerClaims: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Hash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDeleteMinerClaimsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDeleteMinerClaimsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDeleteMinerClaimsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

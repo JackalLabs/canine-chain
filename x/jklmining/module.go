@@ -14,7 +14,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/jackal-dao/canine/x/jklmining/client/cli"
@@ -169,24 +168,60 @@ func (AppModule) ConsensusVersion() uint64 { return 2 }
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 	//STARTBLOCK
-	mintedCoin := sdk.NewCoin("ujkl", sdk.NewInt(10000000))
-	mintedCoins := sdk.NewCoins(mintedCoin)
 
-	err := am.keeper.MintCoins(ctx, mintedCoins)
+	bheight := ctx.BlockHeight()
+
+	index := am.keeper.GetMinedStarting(ctx)
+	ctx.Logger().Info(fmt.Sprintf("Loading index from storage makes it: %d", index))
+
+	var f uint64 = 0
+	j, found := am.keeper.GetMined(ctx, index)
+	if found {
+
+		k, _ := sdk.NewIntFromString(j.Pcount)
+		for k.Int64()+20 < bheight {
+			f += 1
+			j, found = am.keeper.GetMined(ctx, index+f)
+			if !found {
+				ctx.Logger().Error(fmt.Sprintf("Mined block not found at index: %d", index+f))
+				break
+			}
+			k, _ = sdk.NewIntFromString(j.Pcount)
+		}
+		ctx.Logger().Info(fmt.Sprintf("Moving the index up from %d to %d", index, index+f))
+		am.keeper.PushMinedStarting(ctx, f)
+
+		toburn := am.bankKeeper.GetBalance(ctx, am.accountKeeper.GetModuleAddress(am.Name()), "ujkl")
+
+		dex := index + f
+		total := am.keeper.GetMinedCount(ctx) - dex
+
+		if total > 0 {
+			coinValue := toburn.Amount.Uint64() / total
+
+			m, _ := sdk.NewIntFromString(fmt.Sprintf("%d", coinValue))
+
+			var l uint64 = 0
+			for l < total {
+				block, _ := am.keeper.GetMined(ctx, l+index)
+				claim, _ := am.keeper.GetMinerClaims(ctx, block.Hash)
+				address, _ := sdk.AccAddressFromBech32(claim.Creator)
+				am.bankKeeper.SendCoinsFromModuleToAccount(ctx, am.Name(), address, sdk.NewCoins(sdk.NewCoin("ujkl", m)))
+
+				l++
+			}
+		}
+
+	} else {
+		ctx.Logger().Error(fmt.Sprintf("Mined block not found at index: %d", index))
+	}
+
+	toburn := am.bankKeeper.GetBalance(ctx, am.accountKeeper.GetModuleAddress(am.Name()), "ujkl")
+	toburns := sdk.NewCoins(toburn)
+	err := am.bankKeeper.BurnCoins(ctx, am.Name(), toburns)
 	if err != nil {
-		panic(err)
+		ctx.Logger().Error(fmt.Sprintf("%s", err.Error()))
 	}
-
-	if mintedCoin.Amount.IsInt64() {
-		defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedCoin.Amount.Int64()), "minted_tokens")
-	}
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			types.ModuleName,
-			sdk.NewAttribute(sdk.AttributeKeyAmount, mintedCoin.Amount.String()),
-		),
-	)
 
 }
 

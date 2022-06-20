@@ -67,6 +67,27 @@ export interface MsgClaimSave {
 
 export interface MsgClaimSaveResponse {}
 
+export interface MsgCreateMinerClaims {
+  creator: string;
+  hash: string;
+}
+
+export interface MsgCreateMinerClaimsResponse {}
+
+export interface MsgUpdateMinerClaims {
+  creator: string;
+  hash: string;
+}
+
+export interface MsgUpdateMinerClaimsResponse {}
+
+export interface MsgDeleteMinerClaims {
+  creator: string;
+  hash: string;
+}
+
+export interface MsgDeleteMinerClaimsResponse {}
+
 const baseMsgAllowSave: object = { creator: "", passkey: "", size: "" };
 
 export const MsgAllowSave = {
@@ -1174,6 +1195,387 @@ export const MsgClaimSaveResponse = {
   },
 };
 
+const baseMsgCreateMinerClaims: object = { creator: "", hash: "" };
+
+export const MsgCreateMinerClaims = {
+  encode(
+    message: MsgCreateMinerClaims,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.hash !== "") {
+      writer.uint32(18).string(message.hash);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgCreateMinerClaims {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgCreateMinerClaims } as MsgCreateMinerClaims;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.hash = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreateMinerClaims {
+    const message = { ...baseMsgCreateMinerClaims } as MsgCreateMinerClaims;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = String(object.hash);
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgCreateMinerClaims): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.hash !== undefined && (obj.hash = message.hash);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgCreateMinerClaims>): MsgCreateMinerClaims {
+    const message = { ...baseMsgCreateMinerClaims } as MsgCreateMinerClaims;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = object.hash;
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgCreateMinerClaimsResponse: object = {};
+
+export const MsgCreateMinerClaimsResponse = {
+  encode(
+    _: MsgCreateMinerClaimsResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgCreateMinerClaimsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgCreateMinerClaimsResponse,
+    } as MsgCreateMinerClaimsResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgCreateMinerClaimsResponse {
+    const message = {
+      ...baseMsgCreateMinerClaimsResponse,
+    } as MsgCreateMinerClaimsResponse;
+    return message;
+  },
+
+  toJSON(_: MsgCreateMinerClaimsResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgCreateMinerClaimsResponse>
+  ): MsgCreateMinerClaimsResponse {
+    const message = {
+      ...baseMsgCreateMinerClaimsResponse,
+    } as MsgCreateMinerClaimsResponse;
+    return message;
+  },
+};
+
+const baseMsgUpdateMinerClaims: object = { creator: "", hash: "" };
+
+export const MsgUpdateMinerClaims = {
+  encode(
+    message: MsgUpdateMinerClaims,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.hash !== "") {
+      writer.uint32(18).string(message.hash);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgUpdateMinerClaims {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgUpdateMinerClaims } as MsgUpdateMinerClaims;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.hash = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUpdateMinerClaims {
+    const message = { ...baseMsgUpdateMinerClaims } as MsgUpdateMinerClaims;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = String(object.hash);
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgUpdateMinerClaims): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.hash !== undefined && (obj.hash = message.hash);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgUpdateMinerClaims>): MsgUpdateMinerClaims {
+    const message = { ...baseMsgUpdateMinerClaims } as MsgUpdateMinerClaims;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = object.hash;
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgUpdateMinerClaimsResponse: object = {};
+
+export const MsgUpdateMinerClaimsResponse = {
+  encode(
+    _: MsgUpdateMinerClaimsResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgUpdateMinerClaimsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgUpdateMinerClaimsResponse,
+    } as MsgUpdateMinerClaimsResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUpdateMinerClaimsResponse {
+    const message = {
+      ...baseMsgUpdateMinerClaimsResponse,
+    } as MsgUpdateMinerClaimsResponse;
+    return message;
+  },
+
+  toJSON(_: MsgUpdateMinerClaimsResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgUpdateMinerClaimsResponse>
+  ): MsgUpdateMinerClaimsResponse {
+    const message = {
+      ...baseMsgUpdateMinerClaimsResponse,
+    } as MsgUpdateMinerClaimsResponse;
+    return message;
+  },
+};
+
+const baseMsgDeleteMinerClaims: object = { creator: "", hash: "" };
+
+export const MsgDeleteMinerClaims = {
+  encode(
+    message: MsgDeleteMinerClaims,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.hash !== "") {
+      writer.uint32(18).string(message.hash);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgDeleteMinerClaims {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgDeleteMinerClaims } as MsgDeleteMinerClaims;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.hash = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgDeleteMinerClaims {
+    const message = { ...baseMsgDeleteMinerClaims } as MsgDeleteMinerClaims;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = String(object.hash);
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgDeleteMinerClaims): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.hash !== undefined && (obj.hash = message.hash);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgDeleteMinerClaims>): MsgDeleteMinerClaims {
+    const message = { ...baseMsgDeleteMinerClaims } as MsgDeleteMinerClaims;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = object.hash;
+    } else {
+      message.hash = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgDeleteMinerClaimsResponse: object = {};
+
+export const MsgDeleteMinerClaimsResponse = {
+  encode(
+    _: MsgDeleteMinerClaimsResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgDeleteMinerClaimsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgDeleteMinerClaimsResponse,
+    } as MsgDeleteMinerClaimsResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgDeleteMinerClaimsResponse {
+    const message = {
+      ...baseMsgDeleteMinerClaimsResponse,
+    } as MsgDeleteMinerClaimsResponse;
+    return message;
+  },
+
+  toJSON(_: MsgDeleteMinerClaimsResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgDeleteMinerClaimsResponse>
+  ): MsgDeleteMinerClaimsResponse {
+    const message = {
+      ...baseMsgDeleteMinerClaimsResponse,
+    } as MsgDeleteMinerClaimsResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   AllowSave(request: MsgAllowSave): Promise<MsgAllowSaveResponse>;
@@ -1189,8 +1591,17 @@ export interface Msg {
   CreateMiners(request: MsgCreateMiners): Promise<MsgCreateMinersResponse>;
   UpdateMiners(request: MsgUpdateMiners): Promise<MsgUpdateMinersResponse>;
   DeleteMiners(request: MsgDeleteMiners): Promise<MsgDeleteMinersResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   ClaimSave(request: MsgClaimSave): Promise<MsgClaimSaveResponse>;
+  CreateMinerClaims(
+    request: MsgCreateMinerClaims
+  ): Promise<MsgCreateMinerClaimsResponse>;
+  UpdateMinerClaims(
+    request: MsgUpdateMinerClaims
+  ): Promise<MsgUpdateMinerClaimsResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  DeleteMinerClaims(
+    request: MsgDeleteMinerClaims
+  ): Promise<MsgDeleteMinerClaimsResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1297,6 +1708,48 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgClaimSaveResponse.decode(new Reader(data))
+    );
+  }
+
+  CreateMinerClaims(
+    request: MsgCreateMinerClaims
+  ): Promise<MsgCreateMinerClaimsResponse> {
+    const data = MsgCreateMinerClaims.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Msg",
+      "CreateMinerClaims",
+      data
+    );
+    return promise.then((data) =>
+      MsgCreateMinerClaimsResponse.decode(new Reader(data))
+    );
+  }
+
+  UpdateMinerClaims(
+    request: MsgUpdateMinerClaims
+  ): Promise<MsgUpdateMinerClaimsResponse> {
+    const data = MsgUpdateMinerClaims.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Msg",
+      "UpdateMinerClaims",
+      data
+    );
+    return promise.then((data) =>
+      MsgUpdateMinerClaimsResponse.decode(new Reader(data))
+    );
+  }
+
+  DeleteMinerClaims(
+    request: MsgDeleteMinerClaims
+  ): Promise<MsgDeleteMinerClaimsResponse> {
+    const data = MsgDeleteMinerClaims.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.jklmining.Msg",
+      "DeleteMinerClaims",
+      data
+    );
+    return promise.then((data) =>
+      MsgDeleteMinerClaimsResponse.decode(new Reader(data))
     );
   }
 }
