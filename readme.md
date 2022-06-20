@@ -9,8 +9,4 @@
 
 
 ## Installing the Canine CLI
-To install `canined` on your Linux/MacOs machine, please use the following command.
-
-```sh
-curl https://get.starport.com/jackal-dao/canine@latest! | sudo bash
-```
+To install `canined` on your Linux/MacOs machine, please go to [Releases](https://github.com/JACKAL-DAO/canine-chain/releases) and download the latest release. Extract the zipped executable to use it. You might have to run `sudo chmod +x canined` to allow it to run. 
