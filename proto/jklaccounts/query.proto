@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "jklaccounts/params.proto";
+import "jklaccounts/accounts.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/jklaccounts/types";
@@ -15,7 +16,17 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackaldao/canine/jklaccounts/params";
   }
-  // this line is used by starport scaffolding # 2
+  // Queries a Accounts by index.
+	rpc Accounts(QueryGetAccountsRequest) returns (QueryGetAccountsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklaccounts/accounts/{address}";
+	}
+
+	// Queries a list of Accounts items.
+	rpc AccountsAll(QueryAllAccountsRequest) returns (QueryAllAccountsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/jklaccounts/accounts";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,6 +36,24 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetAccountsRequest {
+	  string address = 1;
+
+}
+
+message QueryGetAccountsResponse {
+	Accounts accounts = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllAccountsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAccountsResponse {
+	repeated Accounts accounts = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

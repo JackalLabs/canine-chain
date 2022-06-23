@@ -130,12 +130,41 @@ export class HttpClient {
     }
 }
 /**
- * @title jklaccounts/genesis.proto
+ * @title jklaccounts/accounts.proto
  * @version version not set
  */
 export class Api extends HttpClient {
     constructor() {
         super(...arguments);
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryAccountsAll
+         * @summary Queries a list of Accounts items.
+         * @request GET:/jackal-dao/canine/jklaccounts/accounts
+         */
+        this.queryAccountsAll = (query, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklaccounts/accounts`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryAccounts
+         * @summary Queries a Accounts by index.
+         * @request GET:/jackal-dao/canine/jklaccounts/accounts/{address}
+         */
+        this.queryAccounts = (address, params = {}) => this.request({
+            path: `/jackal-dao/canine/jklaccounts/accounts/${address}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
         /**
          * No description
          *

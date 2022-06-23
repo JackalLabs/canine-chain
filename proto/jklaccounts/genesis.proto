@@ -3,6 +3,7 @@ package jackaldao.canine.jklaccounts;
 
 import "gogoproto/gogo.proto";
 import "jklaccounts/params.proto";
+import "jklaccounts/accounts.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/jackal-dao/canine/x/jklaccounts/types";
@@ -10,5 +11,6 @@ option go_package = "github.com/jackal-dao/canine/x/jklaccounts/types";
 // GenesisState defines the jklaccounts module's genesis state.
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
+  repeated Accounts accountsList = 2 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

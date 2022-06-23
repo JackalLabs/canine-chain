@@ -6,23 +6,23 @@ import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "
 import { Api } from "./rest";
 import { MsgAllowSave } from "./types/jklmining/tx";
 import { MsgUpdateMinerClaims } from "./types/jklmining/tx";
-import { MsgClaimSave } from "./types/jklmining/tx";
-import { MsgUpdateMiners } from "./types/jklmining/tx";
-import { MsgCreateMinerClaims } from "./types/jklmining/tx";
 import { MsgCreateMiners } from "./types/jklmining/tx";
-import { MsgDeleteMinerClaims } from "./types/jklmining/tx";
+import { MsgClaimSave } from "./types/jklmining/tx";
 import { MsgDeleteMiners } from "./types/jklmining/tx";
+import { MsgCreateMinerClaims } from "./types/jklmining/tx";
+import { MsgUpdateMiners } from "./types/jklmining/tx";
+import { MsgDeleteMinerClaims } from "./types/jklmining/tx";
 
 
 const types = [
   ["/jackaldao.canine.jklmining.MsgAllowSave", MsgAllowSave],
   ["/jackaldao.canine.jklmining.MsgUpdateMinerClaims", MsgUpdateMinerClaims],
-  ["/jackaldao.canine.jklmining.MsgClaimSave", MsgClaimSave],
-  ["/jackaldao.canine.jklmining.MsgUpdateMiners", MsgUpdateMiners],
-  ["/jackaldao.canine.jklmining.MsgCreateMinerClaims", MsgCreateMinerClaims],
   ["/jackaldao.canine.jklmining.MsgCreateMiners", MsgCreateMiners],
-  ["/jackaldao.canine.jklmining.MsgDeleteMinerClaims", MsgDeleteMinerClaims],
+  ["/jackaldao.canine.jklmining.MsgClaimSave", MsgClaimSave],
   ["/jackaldao.canine.jklmining.MsgDeleteMiners", MsgDeleteMiners],
+  ["/jackaldao.canine.jklmining.MsgCreateMinerClaims", MsgCreateMinerClaims],
+  ["/jackaldao.canine.jklmining.MsgUpdateMiners", MsgUpdateMiners],
+  ["/jackaldao.canine.jklmining.MsgDeleteMinerClaims", MsgDeleteMinerClaims],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -57,12 +57,12 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgAllowSave: (data: MsgAllowSave): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgAllowSave", value: MsgAllowSave.fromPartial( data ) }),
     msgUpdateMinerClaims: (data: MsgUpdateMinerClaims): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgUpdateMinerClaims", value: MsgUpdateMinerClaims.fromPartial( data ) }),
-    msgClaimSave: (data: MsgClaimSave): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgClaimSave", value: MsgClaimSave.fromPartial( data ) }),
-    msgUpdateMiners: (data: MsgUpdateMiners): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgUpdateMiners", value: MsgUpdateMiners.fromPartial( data ) }),
-    msgCreateMinerClaims: (data: MsgCreateMinerClaims): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgCreateMinerClaims", value: MsgCreateMinerClaims.fromPartial( data ) }),
     msgCreateMiners: (data: MsgCreateMiners): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgCreateMiners", value: MsgCreateMiners.fromPartial( data ) }),
-    msgDeleteMinerClaims: (data: MsgDeleteMinerClaims): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgDeleteMinerClaims", value: MsgDeleteMinerClaims.fromPartial( data ) }),
+    msgClaimSave: (data: MsgClaimSave): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgClaimSave", value: MsgClaimSave.fromPartial( data ) }),
     msgDeleteMiners: (data: MsgDeleteMiners): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgDeleteMiners", value: MsgDeleteMiners.fromPartial( data ) }),
+    msgCreateMinerClaims: (data: MsgCreateMinerClaims): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgCreateMinerClaims", value: MsgCreateMinerClaims.fromPartial( data ) }),
+    msgUpdateMiners: (data: MsgUpdateMiners): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgUpdateMiners", value: MsgUpdateMiners.fromPartial( data ) }),
+    msgDeleteMinerClaims: (data: MsgDeleteMinerClaims): EncodeObject => ({ typeUrl: "/jackaldao.canine.jklmining.MsgDeleteMinerClaims", value: MsgDeleteMinerClaims.fromPartial( data ) }),
     
   };
 };

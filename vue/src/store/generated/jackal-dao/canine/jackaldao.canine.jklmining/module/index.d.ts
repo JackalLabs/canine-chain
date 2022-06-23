@@ -3,12 +3,12 @@ import { Registry, OfflineSigner, EncodeObject } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
 import { MsgAllowSave } from "./types/jklmining/tx";
 import { MsgUpdateMinerClaims } from "./types/jklmining/tx";
-import { MsgClaimSave } from "./types/jklmining/tx";
-import { MsgUpdateMiners } from "./types/jklmining/tx";
-import { MsgCreateMinerClaims } from "./types/jklmining/tx";
 import { MsgCreateMiners } from "./types/jklmining/tx";
-import { MsgDeleteMinerClaims } from "./types/jklmining/tx";
+import { MsgClaimSave } from "./types/jklmining/tx";
 import { MsgDeleteMiners } from "./types/jklmining/tx";
+import { MsgCreateMinerClaims } from "./types/jklmining/tx";
+import { MsgUpdateMiners } from "./types/jklmining/tx";
+import { MsgDeleteMinerClaims } from "./types/jklmining/tx";
 export declare const MissingWalletError: Error;
 export declare const registry: Registry;
 interface TxClientOptions {
@@ -22,12 +22,12 @@ declare const txClient: (wallet: OfflineSigner, { addr: addr }?: TxClientOptions
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }?: SignAndBroadcastOptions) => any;
     msgAllowSave: (data: MsgAllowSave) => EncodeObject;
     msgUpdateMinerClaims: (data: MsgUpdateMinerClaims) => EncodeObject;
-    msgClaimSave: (data: MsgClaimSave) => EncodeObject;
-    msgUpdateMiners: (data: MsgUpdateMiners) => EncodeObject;
-    msgCreateMinerClaims: (data: MsgCreateMinerClaims) => EncodeObject;
     msgCreateMiners: (data: MsgCreateMiners) => EncodeObject;
-    msgDeleteMinerClaims: (data: MsgDeleteMinerClaims) => EncodeObject;
+    msgClaimSave: (data: MsgClaimSave) => EncodeObject;
     msgDeleteMiners: (data: MsgDeleteMiners) => EncodeObject;
+    msgCreateMinerClaims: (data: MsgCreateMinerClaims) => EncodeObject;
+    msgUpdateMiners: (data: MsgUpdateMiners) => EncodeObject;
+    msgDeleteMinerClaims: (data: MsgDeleteMinerClaims) => EncodeObject;
 }>;
 interface QueryClientOptions {
     addr: string;

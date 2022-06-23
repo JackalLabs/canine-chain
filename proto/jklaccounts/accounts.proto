@@ -1,0 +1,13 @@
+syntax = "proto3";
+package jackaldao.canine.jklaccounts;
+
+option go_package = "github.com/jackal-dao/canine/x/jklaccounts/types";
+
+message Accounts {
+  string address = 1; 
+  string available = 2; 
+  string used = 3; 
+  string expireBlock = 4; 
+  
+}
+

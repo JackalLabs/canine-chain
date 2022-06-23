@@ -369,8 +369,9 @@ func New(
 
 		app.AccountKeeper,
 		app.BankKeeper,
+		app.JklaccountsKeeper,
 	)
-	jklminingModule := jklminingmodule.NewAppModule(appCodec, app.JklminingKeeper, app.AccountKeeper, app.BankKeeper)
+	jklminingModule := jklminingmodule.NewAppModule(appCodec, app.JklminingKeeper, app.AccountKeeper, app.BankKeeper, app.JklaccountsKeeper)
 
 	app.JklaccountsKeeper = *jklaccountsmodulekeeper.NewKeeper(
 		appCodec,

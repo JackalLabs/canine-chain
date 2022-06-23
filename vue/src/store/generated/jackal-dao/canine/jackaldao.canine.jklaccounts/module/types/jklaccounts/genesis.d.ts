@@ -1,10 +1,12 @@
 import { Params } from "../jklaccounts/params";
+import { Accounts } from "../jklaccounts/accounts";
 import { Writer, Reader } from "protobufjs/minimal";
 export declare const protobufPackage = "jackaldao.canine.jklaccounts";
 /** GenesisState defines the jklaccounts module's genesis state. */
 export interface GenesisState {
-    /** this line is used by starport scaffolding # genesis/proto/state */
     params: Params | undefined;
+    /** this line is used by starport scaffolding # genesis/proto/state */
+    accountsList: Accounts[];
 }
 export declare const GenesisState: {
     encode(message: GenesisState, writer?: Writer): Writer;

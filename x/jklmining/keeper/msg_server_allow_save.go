@@ -13,6 +13,22 @@ func (k msgServer) AllowSave(goCtx context.Context, msg *types.MsgAllowSave) (*t
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	jak := k.Keeper.jklAccountsKeeper
+
+	jaccount, found := jak.GetAccounts(ctx, msg.Creator)
+
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "account not set up")
+	}
+
+	av, _ := sdk.NewIntFromString(jaccount.Available)
+	us, _ := sdk.NewIntFromString(jaccount.Used)
+	sz, _ := sdk.NewIntFromString(msg.Size_)
+
+	if av.Int64()-us.Int64() < sz.Int64() {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "not enough space on account")
+	}
+
 	// Check if the value already exists
 	_, isFound := k.GetSaveRequests(
 		ctx,

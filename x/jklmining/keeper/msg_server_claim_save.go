@@ -33,6 +33,28 @@ func (k msgServer) ClaimSave(goCtx context.Context, msg *types.MsgClaimSave) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("%s is not %s", s, i))
 	}
 
+	jak := k.Keeper.jklAccountsKeeper
+
+	jaccount, found := jak.GetAccounts(ctx, msg.Creator)
+
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "account not set up")
+	}
+
+	av, _ := sdk.NewIntFromString(jaccount.Available)
+	us, _ := sdk.NewIntFromString(jaccount.Used)
+	sz, _ := sdk.NewIntFromString(savefile.Size_)
+
+	if av.Int64()-us.Int64() < sz.Int64() {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "not enough space on account")
+	}
+	fsz, _ := sdk.NewIntFromString(savefile.Size_)
+	fus := us.Int64() + fsz.Int64()
+
+	jaccount.Used = fmt.Sprintf("%d", fus)
+
+	jak.SetAccounts(ctx, jaccount)
+
 	m := types.Mined{}
 
 	m.Datasize = savefile.Size_

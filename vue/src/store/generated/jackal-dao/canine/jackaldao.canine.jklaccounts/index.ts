@@ -1,9 +1,10 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
 
+import { Accounts } from "./module/types/jklaccounts/accounts"
 import { Params } from "./module/types/jklaccounts/params"
 
 
-export { Params };
+export { Accounts, Params };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -42,8 +43,11 @@ function getStructure(template) {
 const getDefaultState = () => {
 	return {
 				Params: {},
+				Accounts: {},
+				AccountsAll: {},
 				
 				_Structure: {
+						Accounts: getStructure(Accounts.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
 		},
@@ -78,6 +82,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Params[JSON.stringify(params)] ?? {}
+		},
+				getAccounts: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Accounts[JSON.stringify(params)] ?? {}
+		},
+				getAccountsAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.AccountsAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -130,6 +146,54 @@ export default {
 				return getters['getParams']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryParams API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryAccounts({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryAccounts( key.address)).data
+				
+					
+				commit('QUERY', { query: 'Accounts', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryAccounts', payload: { options: { all }, params: {...key},query }})
+				return getters['getAccounts']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryAccounts API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryAccountsAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryAccountsAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryAccountsAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'AccountsAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryAccountsAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getAccountsAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryAccountsAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
