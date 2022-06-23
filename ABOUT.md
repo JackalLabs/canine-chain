@@ -11,4 +11,4 @@
 [https://github.com/JACKAL-DAO/canine-chain/issues](https://github.com/JACKAL-DAO/canine-chain/issues)
 
 ## Homepage
-[https://github.com/JACKAL-DAO/canine-chain/#README](https://github.com/JACKAL-DAO/canine-chain/#README)
+[https://github.com/JACKAL-DAO/canine-chain/#readme](https://github.com/JACKAL-DAO/canine-chain/#readme)
