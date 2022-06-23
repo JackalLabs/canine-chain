@@ -3,7 +3,7 @@
 ## Contributors
 + Jackal Labs
     + [devadmin@jackallabs.io](mailto:devadmin@jackallabs.io)
-    + [jackallabs.io](jackallabs.io)
+    + [jackallabs.io](https://jackallabs.io)
 + Marston Connell
     + [marston@jackallabs.io](mailto:marston@jackallabs.io)
 
