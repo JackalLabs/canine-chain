@@ -14,7 +14,7 @@ var _ = strconv.Itoa(0)
 func CmdCheckMinerIndex() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "check-miner-index",
-		Short: "Query check_miner_index",
+		Short: "Returns the starting index of the miner queue.",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
