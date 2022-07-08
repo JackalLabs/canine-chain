@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	testkeeper "github.com/jackal-dao/canine/testutil/keeper"
+	"github.com/jackal-dao/canine/x/telescope/types"
 	"github.com/stretchr/testify/require"
-	testkeeper "github.com/themarstonconnell/telescope/testutil/keeper"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
 )
 
 func TestParamsQuery(t *testing.T) {
