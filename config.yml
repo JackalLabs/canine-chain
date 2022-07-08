@@ -17,8 +17,14 @@ faucet:
 init:
   app:
     minimum-gas-prices: "0.02ujkl"
+    swagger: "true"
+  client:
+    chain-id: "canine-1"
 genesis:
   app_state:
     staking:
       params:
         bond_denom: "ujkl"
+  chain_id: "canine-1"
+build:
+  main: "cmd/canined"
