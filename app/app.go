@@ -98,9 +98,9 @@ import (
 	mintkeeper "github.com/jackal-dao/canine/x/jklmint/keeper"
 	minttypes "github.com/jackal-dao/canine/x/jklmint/types"
 
-	telescopemodule "github.com/jackal-dao/canine/x/telescope"
-	telescopemodulekeeper "github.com/jackal-dao/canine/x/telescope/keeper"
-	telescopemoduletypes "github.com/jackal-dao/canine/x/telescope/types"
+	rnsmodule "github.com/jackal-dao/canine/x/rns"
+	rnsmodulekeeper "github.com/jackal-dao/canine/x/rns/keeper"
+	rnsmoduletypes "github.com/jackal-dao/canine/x/rns/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -155,7 +155,7 @@ var (
 		vesting.AppModuleBasic{},
 		jklminingmodule.AppModuleBasic{},
 		jklaccountsmodule.AppModuleBasic{},
-		telescopemodule.AppModuleBasic{},
+		rnsmodule.AppModuleBasic{},
 
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
@@ -171,7 +171,7 @@ var (
 		ibctransfertypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		jklminingmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		jklaccountsmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		telescopemoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		rnsmoduletypes.ModuleName:         {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
@@ -234,7 +234,7 @@ type App struct {
 
 	JklaccountsKeeper jklaccountsmodulekeeper.Keeper
 
-	TelescopeKeeper telescopemodulekeeper.Keeper
+	RnsKeeper rnsmodulekeeper.Keeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
@@ -274,7 +274,7 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		jklminingmoduletypes.StoreKey,
 		jklaccountsmoduletypes.StoreKey,
-		telescopemoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey,
 
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
@@ -374,15 +374,15 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
-	app.TelescopeKeeper = *telescopemodulekeeper.NewKeeper(
+	app.RnsKeeper = *rnsmodulekeeper.NewKeeper(
 		appCodec,
-		keys[telescopemoduletypes.StoreKey],
-		keys[telescopemoduletypes.MemStoreKey],
-		app.GetSubspace(telescopemoduletypes.ModuleName),
+		keys[rnsmoduletypes.StoreKey],
+		keys[rnsmoduletypes.MemStoreKey],
+		app.GetSubspace(rnsmoduletypes.ModuleName),
 
 		app.BankKeeper,
 	)
-	telescopeModule := telescopemodule.NewAppModule(appCodec, app.TelescopeKeeper, app.AccountKeeper, app.BankKeeper)
+	rnsModule := rnsmodule.NewAppModule(appCodec, app.RnsKeeper, app.AccountKeeper, app.BankKeeper)
 
 	app.JklminingKeeper = *jklminingmodulekeeper.NewKeeper(
 		appCodec,
@@ -448,7 +448,7 @@ func New(
 		transferModule,
 		jklminingModule,
 		jklaccountsModule,
-		telescopeModule,
+		rnsModule,
 
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -486,7 +486,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		jklminingmoduletypes.ModuleName,
 		jklaccountsmoduletypes.ModuleName,
-		telescopemoduletypes.ModuleName,
+		rnsmoduletypes.ModuleName,
 
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
@@ -512,7 +512,7 @@ func New(
 		transferModule,
 		jklminingModule,
 		jklaccountsModule,
-		telescopeModule,
+		rnsModule,
 
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -703,7 +703,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(jklminingmoduletypes.ModuleName)
 	paramsKeeper.Subspace(jklaccountsmoduletypes.ModuleName)
-	paramsKeeper.Subspace(telescopemoduletypes.ModuleName)
+	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
 
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
