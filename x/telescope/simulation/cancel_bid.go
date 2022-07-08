@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/themarstonconnell/telescope/x/telescope/keeper"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/keeper"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 func SimulateMsgCancelBid(

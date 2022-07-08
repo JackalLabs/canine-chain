@@ -3,11 +3,11 @@ package telescope_test
 import (
 	"testing"
 
+	keepertest "github.com/jackal-dao/canine/testutil/keeper"
+	"github.com/jackal-dao/canine/testutil/nullify"
+	"github.com/jackal-dao/canine/x/telescope"
+	"github.com/jackal-dao/canine/x/telescope/types"
 	"github.com/stretchr/testify/require"
-	keepertest "github.com/themarstonconnell/telescope/testutil/keeper"
-	"github.com/themarstonconnell/telescope/testutil/nullify"
-	"github.com/themarstonconnell/telescope/x/telescope"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
 )
 
 func TestGenesis(t *testing.T) {

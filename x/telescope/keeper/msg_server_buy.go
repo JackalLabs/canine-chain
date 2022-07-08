@@ -7,7 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyResponse, error) {
@@ -45,7 +45,7 @@ func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyR
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Price is not a valid number.")
 	}
 
-	coin := sdk.NewCoin("token", price)
+	coin := sdk.NewCoin("ujkl", price)
 	coins := sdk.NewCoins(coin)
 
 	ctx.Logger().Error(fmt.Sprintf("%s %s", "coins available: ", k.bankKeeper.SpendableCoins(ctx, buyer).String()))

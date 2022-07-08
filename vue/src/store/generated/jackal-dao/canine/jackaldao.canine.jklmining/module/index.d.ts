@@ -1,14 +1,14 @@
 import { StdFee } from "@cosmjs/launchpad";
 import { Registry, OfflineSigner, EncodeObject } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgUpdateMiners } from "./types/jklmining/tx";
-import { MsgCreateMinerClaims } from "./types/jklmining/tx";
-import { MsgDeleteMiners } from "./types/jklmining/tx";
 import { MsgDeleteMinerClaims } from "./types/jklmining/tx";
-import { MsgAllowSave } from "./types/jklmining/tx";
 import { MsgUpdateMinerClaims } from "./types/jklmining/tx";
-import { MsgCreateMiners } from "./types/jklmining/tx";
+import { MsgCreateMinerClaims } from "./types/jklmining/tx";
+import { MsgAllowSave } from "./types/jklmining/tx";
+import { MsgUpdateMiners } from "./types/jklmining/tx";
 import { MsgClaimSave } from "./types/jklmining/tx";
+import { MsgCreateMiners } from "./types/jklmining/tx";
+import { MsgDeleteMiners } from "./types/jklmining/tx";
 export declare const MissingWalletError: Error;
 export declare const registry: Registry;
 interface TxClientOptions {
@@ -20,14 +20,14 @@ interface SignAndBroadcastOptions {
 }
 declare const txClient: (wallet: OfflineSigner, { addr: addr }?: TxClientOptions) => Promise<{
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }?: SignAndBroadcastOptions) => any;
-    msgUpdateMiners: (data: MsgUpdateMiners) => EncodeObject;
-    msgCreateMinerClaims: (data: MsgCreateMinerClaims) => EncodeObject;
-    msgDeleteMiners: (data: MsgDeleteMiners) => EncodeObject;
     msgDeleteMinerClaims: (data: MsgDeleteMinerClaims) => EncodeObject;
-    msgAllowSave: (data: MsgAllowSave) => EncodeObject;
     msgUpdateMinerClaims: (data: MsgUpdateMinerClaims) => EncodeObject;
-    msgCreateMiners: (data: MsgCreateMiners) => EncodeObject;
+    msgCreateMinerClaims: (data: MsgCreateMinerClaims) => EncodeObject;
+    msgAllowSave: (data: MsgAllowSave) => EncodeObject;
+    msgUpdateMiners: (data: MsgUpdateMiners) => EncodeObject;
     msgClaimSave: (data: MsgClaimSave) => EncodeObject;
+    msgCreateMiners: (data: MsgCreateMiners) => EncodeObject;
+    msgDeleteMiners: (data: MsgDeleteMiners) => EncodeObject;
 }>;
 interface QueryClientOptions {
     addr: string;

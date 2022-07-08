@@ -6,7 +6,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*types.MsgAcceptBidResponse, error) {
@@ -33,7 +33,7 @@ func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*t
 
 		if bidFound {
 			cost, _ := sdk.NewIntFromString(bid.Price)
-			price := sdk.Coins{sdk.NewInt64Coin("token", cost.Int64())}
+			price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
 			k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, owner, price)
 
 			k.RemoveBids(ctx, msg.From+msg.Name)

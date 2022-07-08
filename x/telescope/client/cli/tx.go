@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 var (

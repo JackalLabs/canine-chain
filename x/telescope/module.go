@@ -16,9 +16,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/themarstonconnell/telescope/x/telescope/client/cli"
-	"github.com/themarstonconnell/telescope/x/telescope/keeper"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/client/cli"
+	"github.com/jackal-dao/canine/x/telescope/keeper"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 var (

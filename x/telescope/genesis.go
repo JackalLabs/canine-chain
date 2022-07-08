@@ -2,8 +2,8 @@ package telescope
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/themarstonconnell/telescope/x/telescope/keeper"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/keeper"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

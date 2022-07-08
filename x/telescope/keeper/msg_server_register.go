@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*types.MsgRegisterResponse, error) {
@@ -44,7 +44,7 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 		break
 	}
 
-	price := sdk.Coins{sdk.NewInt64Coin("token", int64(cost))}
+	price := sdk.Coins{sdk.NewInt64Coin("ujkl", int64(cost))}
 
 	num_years, _ := sdk.NewIntFromString(msg.Years)
 

@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/jackal-dao/canine/x/telescope/types"
 	"github.com/spf13/cobra"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
 )
 
 var _ = strconv.Itoa(0)

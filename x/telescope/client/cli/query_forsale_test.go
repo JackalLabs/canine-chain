@@ -12,10 +12,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/themarstonconnell/telescope/testutil/network"
-	"github.com/themarstonconnell/telescope/testutil/nullify"
-	"github.com/themarstonconnell/telescope/x/telescope/client/cli"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/testutil/network"
+	"github.com/jackal-dao/canine/testutil/nullify"
+	"github.com/jackal-dao/canine/x/telescope/client/cli"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 // Prevent strconv unused error

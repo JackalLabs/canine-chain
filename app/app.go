@@ -97,6 +97,10 @@ import (
 	mint "github.com/jackal-dao/canine/x/jklmint"
 	mintkeeper "github.com/jackal-dao/canine/x/jklmint/keeper"
 	minttypes "github.com/jackal-dao/canine/x/jklmint/types"
+
+	telescopemodule "github.com/jackal-dao/canine/x/telescope"
+	telescopemodulekeeper "github.com/jackal-dao/canine/x/telescope/keeper"
+	telescopemoduletypes "github.com/jackal-dao/canine/x/telescope/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -151,6 +155,8 @@ var (
 		vesting.AppModuleBasic{},
 		jklminingmodule.AppModuleBasic{},
 		jklaccountsmodule.AppModuleBasic{},
+		telescopemodule.AppModuleBasic{},
+
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -165,6 +171,8 @@ var (
 		ibctransfertypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		jklminingmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		jklaccountsmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		telescopemoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -225,6 +233,9 @@ type App struct {
 	JklminingKeeper jklminingmodulekeeper.Keeper
 
 	JklaccountsKeeper jklaccountsmodulekeeper.Keeper
+
+	TelescopeKeeper telescopemodulekeeper.Keeper
+
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -263,6 +274,8 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		jklminingmoduletypes.StoreKey,
 		jklaccountsmoduletypes.StoreKey,
+		telescopemoduletypes.StoreKey,
+
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -361,6 +374,16 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
+	app.TelescopeKeeper = *telescopemodulekeeper.NewKeeper(
+		appCodec,
+		keys[telescopemoduletypes.StoreKey],
+		keys[telescopemoduletypes.MemStoreKey],
+		app.GetSubspace(telescopemoduletypes.ModuleName),
+
+		app.BankKeeper,
+	)
+	telescopeModule := telescopemodule.NewAppModule(appCodec, app.TelescopeKeeper, app.AccountKeeper, app.BankKeeper)
+
 	app.JklminingKeeper = *jklminingmodulekeeper.NewKeeper(
 		appCodec,
 		keys[jklminingmoduletypes.StoreKey],
@@ -425,6 +448,8 @@ func New(
 		transferModule,
 		jklminingModule,
 		jklaccountsModule,
+		telescopeModule,
+
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -461,6 +486,8 @@ func New(
 		ibctransfertypes.ModuleName,
 		jklminingmoduletypes.ModuleName,
 		jklaccountsmoduletypes.ModuleName,
+		telescopemoduletypes.ModuleName,
+
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -485,6 +512,8 @@ func New(
 		transferModule,
 		jklminingModule,
 		jklaccountsModule,
+		telescopeModule,
+
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -674,6 +703,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(jklminingmoduletypes.ModuleName)
 	paramsKeeper.Subspace(jklaccountsmoduletypes.ModuleName)
+	paramsKeeper.Subspace(telescopemoduletypes.ModuleName)
+
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 type msgServer struct {

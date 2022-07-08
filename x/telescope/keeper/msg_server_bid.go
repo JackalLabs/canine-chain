@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 func (k msgServer) Bid(goCtx context.Context, msg *types.MsgBid) (*types.MsgBidResponse, error) {
@@ -13,7 +13,7 @@ func (k msgServer) Bid(goCtx context.Context, msg *types.MsgBid) (*types.MsgBidR
 	bidder, _ := sdk.AccAddressFromBech32(msg.Creator)
 
 	cost, _ := sdk.NewIntFromString(msg.Bid)
-	price := sdk.Coins{sdk.NewInt64Coin("token", cost.Int64())}
+	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
 	k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidder, types.ModuleName, price)
 
 	newBid := types.Bids{

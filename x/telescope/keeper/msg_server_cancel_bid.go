@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 func (k msgServer) CancelBid(goCtx context.Context, msg *types.MsgCancelBid) (*types.MsgCancelBidResponse, error) {
@@ -18,7 +18,7 @@ func (k msgServer) CancelBid(goCtx context.Context, msg *types.MsgCancelBid) (*t
 	if bidFound {
 
 		cost, _ := sdk.NewIntFromString(bid.Price)
-		price := sdk.Coins{sdk.NewInt64Coin("token", cost.Int64())}
+		price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
 		k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidder, price)
 		k.RemoveBids(ctx, msg.Creator+msg.Name)
 	} else {

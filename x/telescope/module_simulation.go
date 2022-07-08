@@ -9,9 +9,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/themarstonconnell/telescope/testutil/sample"
-	telescopesimulation "github.com/themarstonconnell/telescope/x/telescope/simulation"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
+	"github.com/jackal-dao/canine/testutil/sample"
+	telescopesimulation "github.com/jackal-dao/canine/x/telescope/simulation"
+	"github.com/jackal-dao/canine/x/telescope/types"
 )
 
 // avoid unused import issue

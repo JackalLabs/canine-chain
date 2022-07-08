@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	keepertest "github.com/jackal-dao/canine/testutil/keeper"
+	"github.com/jackal-dao/canine/testutil/nullify"
+	"github.com/jackal-dao/canine/x/telescope/keeper"
+	"github.com/jackal-dao/canine/x/telescope/types"
 	"github.com/stretchr/testify/require"
-	keepertest "github.com/themarstonconnell/telescope/testutil/keeper"
-	"github.com/themarstonconnell/telescope/testutil/nullify"
-	"github.com/themarstonconnell/telescope/x/telescope/keeper"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
 )
 
 // Prevent strconv unused error

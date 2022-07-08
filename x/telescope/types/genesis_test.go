@@ -3,8 +3,8 @@ package types_test
 import (
 	"testing"
 
+	"github.com/jackal-dao/canine/x/telescope/types"
 	"github.com/stretchr/testify/require"
-	"github.com/themarstonconnell/telescope/x/telescope/types"
 )
 
 func TestGenesisState_Validate(t *testing.T) {
