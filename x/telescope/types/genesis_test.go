@@ -1,0 +1,128 @@
+package types_test
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+	"github.com/themarstonconnell/telescope/x/telescope/types"
+)
+
+func TestGenesisState_Validate(t *testing.T) {
+	for _, tc := range []struct {
+		desc     string
+		genState *types.GenesisState
+		valid    bool
+	}{
+		{
+			desc:     "default is valid",
+			genState: types.DefaultGenesis(),
+			valid:    true,
+		},
+		{
+			desc: "valid genesis state",
+			genState: &types.GenesisState{
+
+				WhoisList: []types.Whois{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
+				NamesList: []types.Names{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
+				BidsList: []types.Bids{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
+				ForsaleList: []types.Forsale{
+					{
+						Name: "0",
+					},
+					{
+						Name: "1",
+					},
+				},
+				// this line is used by starport scaffolding # types/genesis/validField
+			},
+			valid: true,
+		},
+		{
+			desc: "duplicated whois",
+			genState: &types.GenesisState{
+				WhoisList: []types.Whois{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated names",
+			genState: &types.GenesisState{
+				NamesList: []types.Names{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated bids",
+			genState: &types.GenesisState{
+				BidsList: []types.Bids{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated forsale",
+			genState: &types.GenesisState{
+				ForsaleList: []types.Forsale{
+					{
+						Name: "0",
+					},
+					{
+						Name: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		// this line is used by starport scaffolding # types/genesis/testcase
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			err := tc.genState.Validate()
+			if tc.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
+}
