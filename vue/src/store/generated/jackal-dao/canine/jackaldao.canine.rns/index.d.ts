@@ -1,3 +1,12 @@
-export {};
+import { Bids } from "./module/types/rns/bids";
+import { Forsale } from "./module/types/rns/forsale";
+import { Names } from "./module/types/rns/names";
+import { Params } from "./module/types/rns/params";
+import { QueryGetWhoisRequest } from "./module/types/rns/query";
+import { QueryGetWhoisResponse } from "./module/types/rns/query";
+import { QueryAllWhoisRequest } from "./module/types/rns/query";
+import { QueryAllWhoisResponse } from "./module/types/rns/query";
+import { Whois } from "./module/types/rns/whois";
+export { Bids, Forsale, Names, Params, QueryGetWhoisRequest, QueryGetWhoisResponse, QueryAllWhoisRequest, QueryAllWhoisResponse, Whois };
 declare const _default;
 export default _default;

@@ -130,8 +130,112 @@ export class HttpClient {
     }
 }
 /**
- * @title rns/tx.proto
+ * @title rns/bids.proto
  * @version version not set
  */
 export class Api extends HttpClient {
+    constructor() {
+        super(...arguments);
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryBidsAll
+         * @summary Queries a list of Bids.
+         * @request GET:/jackal-dao/canine/rnsbids
+         */
+        this.queryBidsAll = (query, params = {}) => this.request({
+            path: `/jackal-dao/canine/rnsbids`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryBids
+         * @summary Queries a Bid by index.
+         * @request GET:/jackal-dao/canine/rnsbids/{index}
+         */
+        this.queryBids = (index, params = {}) => this.request({
+            path: `/jackal-dao/canine/rnsbids/${index}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryForsaleAll
+         * @summary Queries all Listings.
+         * @request GET:/jackal-dao/canine/rnsforsale
+         */
+        this.queryForsaleAll = (query, params = {}) => this.request({
+            path: `/jackal-dao/canine/rnsforsale`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryForsale
+         * @summary Queries a Listing by index.
+         * @request GET:/jackal-dao/canine/rnsforsale/{name}
+         */
+        this.queryForsale = (name, params = {}) => this.request({
+            path: `/jackal-dao/canine/rnsforsale/${name}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryNamesAll
+         * @summary Queries a list of Names.
+         * @request GET:/jackal-dao/canine/rnsnames
+         */
+        this.queryNamesAll = (query, params = {}) => this.request({
+            path: `/jackal-dao/canine/rnsnames`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryNames
+         * @summary Queries a Name by index.
+         * @request GET:/jackal-dao/canine/rnsnames/{index}
+         */
+        this.queryNames = (index, params = {}) => this.request({
+            path: `/jackal-dao/canine/rnsnames/${index}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryParams
+         * @summary Parameters queries the parameters of the module.
+         * @request GET:/jackal-dao/canine/rnsparams
+         */
+        this.queryParams = (params = {}) => this.request({
+            path: `/jackal-dao/canine/rnsparams`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+    }
 }

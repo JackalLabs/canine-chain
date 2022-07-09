@@ -13,13 +13,130 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
+export interface RnsBids {
+  index?: string;
+  name?: string;
+  bidder?: string;
+  price?: string;
+}
+
+export interface RnsForsale {
+  name?: string;
+  price?: string;
+  owner?: string;
+}
+
+export type RnsMsgAcceptBidResponse = object;
+
+export type RnsMsgBidResponse = object;
+
+export type RnsMsgBuyResponse = object;
+
+export type RnsMsgCancelBidResponse = object;
+
+export type RnsMsgDelistResponse = object;
+
+export type RnsMsgListResponse = object;
+
+export type RnsMsgRegisterResponse = object;
+
 export type RnsMsgTransferResponse = object;
+
+export interface RnsNames {
+  index?: string;
+  name?: string;
+  expires?: string;
+  value?: string;
+  data?: string;
+}
+
+/**
+ * Params defines the parameters for the module.
+ */
+export type RnsParams = object;
+
+export interface RnsQueryAllBidsResponse {
+  bids?: RnsBids[];
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface RnsQueryAllForsaleResponse {
+  forsale?: RnsForsale[];
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface RnsQueryAllNamesResponse {
+  names?: RnsNames[];
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface RnsQueryGetBidsResponse {
+  bids?: RnsBids;
+}
+
+export interface RnsQueryGetForsaleResponse {
+  forsale?: RnsForsale;
+}
+
+export interface RnsQueryGetNamesResponse {
+  names?: RnsNames;
+}
+
+/**
+ * QueryParamsResponse is response type for the Query/Params RPC method.
+ */
+export interface RnsQueryParamsResponse {
+  /** params holds all the parameters of this module. */
+  params?: RnsParams;
+}
 
 export interface RpcStatus {
   /** @format int32 */
   code?: number;
   message?: string;
   details?: ProtobufAny[];
+}
+
+export interface V1Beta1PageRequest {
+  /**
+   * key is a value returned in PageResponse.next_key to begin
+   * querying the next page most efficiently. Only one of offset or key
+   * should be set.
+   * @format byte
+   */
+  key?: string;
+
+  /**
+   * offset is a numeric offset that can be used when key is unavailable.
+   * It is less efficient than using key. Only one of offset or key should
+   * be set.
+   * @format uint64
+   */
+  offset?: string;
+
+  /**
+   * limit is the total number of results to be returned in the result page.
+   * If left empty it will default to a value to be set by each app.
+   * @format uint64
+   */
+  limit?: string;
+
+  /**
+   * count_total is set to true  to indicate that the result set should include
+   * a count of the total number of items available for pagination in UIs.
+   * count_total is only respected when offset is used. It is ignored when key
+   * is set.
+   */
+  count_total?: boolean;
+  reverse?: boolean;
+}
+
+export interface V1Beta1PageResponse {
+  /** @format byte */
+  next_key?: string;
+
+  /** @format uint64 */
+  total?: string;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -214,7 +331,149 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title rns/tx.proto
+ * @title rns/bids.proto
  * @version version not set
  */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryBidsAll
+   * @summary Queries a list of Bids.
+   * @request GET:/jackal-dao/canine/rnsbids
+   */
+  queryBidsAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<RnsQueryAllBidsResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rnsbids`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryBids
+   * @summary Queries a Bid by index.
+   * @request GET:/jackal-dao/canine/rnsbids/{index}
+   */
+  queryBids = (index: string, params: RequestParams = {}) =>
+    this.request<RnsQueryGetBidsResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rnsbids/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryForsaleAll
+   * @summary Queries all Listings.
+   * @request GET:/jackal-dao/canine/rnsforsale
+   */
+  queryForsaleAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<RnsQueryAllForsaleResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rnsforsale`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryForsale
+   * @summary Queries a Listing by index.
+   * @request GET:/jackal-dao/canine/rnsforsale/{name}
+   */
+  queryForsale = (name: string, params: RequestParams = {}) =>
+    this.request<RnsQueryGetForsaleResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rnsforsale/${name}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryNamesAll
+   * @summary Queries a list of Names.
+   * @request GET:/jackal-dao/canine/rnsnames
+   */
+  queryNamesAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<RnsQueryAllNamesResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rnsnames`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryNames
+   * @summary Queries a Name by index.
+   * @request GET:/jackal-dao/canine/rnsnames/{index}
+   */
+  queryNames = (index: string, params: RequestParams = {}) =>
+    this.request<RnsQueryGetNamesResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rnsnames/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryParams
+   * @summary Parameters queries the parameters of the module.
+   * @request GET:/jackal-dao/canine/rnsparams
+   */
+  queryParams = (params: RequestParams = {}) =>
+    this.request<RnsQueryParamsResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rnsparams`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+}

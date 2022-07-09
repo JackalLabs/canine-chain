@@ -29984,6 +29984,432 @@ paths:
           format: uint64
       tags:
         - Query
+  /jackal-dao/canine/rnsbids:
+    get:
+      summary: Queries a list of Bids.
+      operationId: JackaldaoCanineRnsBidsAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              bids:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: string
+                    name:
+                      type: string
+                    bidder:
+                      type: string
+                    price:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+                  total:
+                    type: string
+                    format: uint64
+                    title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+                title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: "key is a value returned in PageResponse.next_key to begin\r\nquerying the next page most efficiently. Only one of offset or key\r\nshould be set."
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: "offset is a numeric offset that can be used when key is unavailable.\r\nIt is less efficient than using key. Only one of offset or key should\r\nbe set."
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: "limit is the total number of results to be returned in the result page.\r\nIf left empty it will default to a value to be set by each app."
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: "count_total is set to true  to indicate that the result set should include\r\na count of the total number of items available for pagination in UIs.\r\ncount_total is only respected when offset is used. It is ignored when key\r\nis set."
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: "reverse is set to true if results are to be returned in the descending order.\r\n\r\nSince: cosmos-sdk 0.43"
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/jackal-dao/canine/rnsbids/{index}':
+    get:
+      summary: Queries a Bid by index.
+      operationId: JackaldaoCanineRnsBids
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              bids:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  name:
+                    type: string
+                  bidder:
+                    type: string
+                  price:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /jackal-dao/canine/rnsforsale:
+    get:
+      summary: Queries all Listings.
+      operationId: JackaldaoCanineRnsForsaleAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              forsale:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    price:
+                      type: string
+                    owner:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+                  total:
+                    type: string
+                    format: uint64
+                    title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+                title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: "key is a value returned in PageResponse.next_key to begin\r\nquerying the next page most efficiently. Only one of offset or key\r\nshould be set."
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: "offset is a numeric offset that can be used when key is unavailable.\r\nIt is less efficient than using key. Only one of offset or key should\r\nbe set."
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: "limit is the total number of results to be returned in the result page.\r\nIf left empty it will default to a value to be set by each app."
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: "count_total is set to true  to indicate that the result set should include\r\na count of the total number of items available for pagination in UIs.\r\ncount_total is only respected when offset is used. It is ignored when key\r\nis set."
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: "reverse is set to true if results are to be returned in the descending order.\r\n\r\nSince: cosmos-sdk 0.43"
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/jackal-dao/canine/rnsforsale/{name}':
+    get:
+      summary: Queries a Listing by index.
+      operationId: JackaldaoCanineRnsForsale
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              forsale:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  price:
+                    type: string
+                  owner:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /jackal-dao/canine/rnsnames:
+    get:
+      summary: Queries a list of Names.
+      operationId: JackaldaoCanineRnsNamesAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              names:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: string
+                    name:
+                      type: string
+                    expires:
+                      type: string
+                    value:
+                      type: string
+                    data:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+                  total:
+                    type: string
+                    format: uint64
+                    title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+                title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: "key is a value returned in PageResponse.next_key to begin\r\nquerying the next page most efficiently. Only one of offset or key\r\nshould be set."
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: "offset is a numeric offset that can be used when key is unavailable.\r\nIt is less efficient than using key. Only one of offset or key should\r\nbe set."
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: "limit is the total number of results to be returned in the result page.\r\nIf left empty it will default to a value to be set by each app."
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: "count_total is set to true  to indicate that the result set should include\r\na count of the total number of items available for pagination in UIs.\r\ncount_total is only respected when offset is used. It is ignored when key\r\nis set."
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: "reverse is set to true if results are to be returned in the descending order.\r\n\r\nSince: cosmos-sdk 0.43"
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/jackal-dao/canine/rnsnames/{index}':
+    get:
+      summary: Queries a Name by index.
+      operationId: JackaldaoCanineRnsNames
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              names:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  name:
+                    type: string
+                  expires:
+                    type: string
+                  value:
+                    type: string
+                  data:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /jackal-dao/canine/rnsparams:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: JackaldaoCanineRnsParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
 definitions:
   cosmos.auth.v1beta1.Params:
     type: object
@@ -50593,5 +51019,188 @@ definitions:
     title: >-
       QueryInterchainAccountFromAddressResponse the response type for the
       Query/InterchainAccountAddress RPC
+  jackaldao.canine.rns.Bids:
+    type: object
+    properties:
+      index:
+        type: string
+      name:
+        type: string
+      bidder:
+        type: string
+      price:
+        type: string
+  jackaldao.canine.rns.Forsale:
+    type: object
+    properties:
+      name:
+        type: string
+      price:
+        type: string
+      owner:
+        type: string
+  jackaldao.canine.rns.MsgAcceptBidResponse:
+    type: object
+  jackaldao.canine.rns.MsgBidResponse:
+    type: object
+  jackaldao.canine.rns.MsgBuyResponse:
+    type: object
+  jackaldao.canine.rns.MsgCancelBidResponse:
+    type: object
+  jackaldao.canine.rns.MsgDelistResponse:
+    type: object
+  jackaldao.canine.rns.MsgListResponse:
+    type: object
+  jackaldao.canine.rns.MsgRegisterResponse:
+    type: object
   jackaldao.canine.rns.MsgTransferResponse:
     type: object
+  jackaldao.canine.rns.Names:
+    type: object
+    properties:
+      index:
+        type: string
+      name:
+        type: string
+      expires:
+        type: string
+      value:
+        type: string
+      data:
+        type: string
+  jackaldao.canine.rns.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  jackaldao.canine.rns.QueryAllBidsResponse:
+    type: object
+    properties:
+      bids:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            name:
+              type: string
+            bidder:
+              type: string
+            price:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+          total:
+            type: string
+            format: uint64
+            title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+        title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+  jackaldao.canine.rns.QueryAllForsaleResponse:
+    type: object
+    properties:
+      forsale:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            price:
+              type: string
+            owner:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+          total:
+            type: string
+            format: uint64
+            title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+        title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+  jackaldao.canine.rns.QueryAllNamesResponse:
+    type: object
+    properties:
+      names:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            name:
+              type: string
+            expires:
+              type: string
+            value:
+              type: string
+            data:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: "next_key is the key to be passed to PageRequest.key to\r\nquery the next page most efficiently"
+          total:
+            type: string
+            format: uint64
+            title: "total is total number of results available if PageRequest.count_total\r\nwas set, its value is undefined otherwise"
+        title: "PageResponse is to be embedded in gRPC response messages where the\r\ncorresponding request message has used PageRequest.\r\n\r\n message SomeResponse {\r\n         repeated Bar results = 1;\r\n         PageResponse page = 2;\r\n }"
+  jackaldao.canine.rns.QueryGetBidsResponse:
+    type: object
+    properties:
+      bids:
+        type: object
+        properties:
+          index:
+            type: string
+          name:
+            type: string
+          bidder:
+            type: string
+          price:
+            type: string
+  jackaldao.canine.rns.QueryGetForsaleResponse:
+    type: object
+    properties:
+      forsale:
+        type: object
+        properties:
+          name:
+            type: string
+          price:
+            type: string
+          owner:
+            type: string
+  jackaldao.canine.rns.QueryGetNamesResponse:
+    type: object
+    properties:
+      names:
+        type: object
+        properties:
+          index:
+            type: string
+          name:
+            type: string
+          expires:
+            type: string
+          value:
+            type: string
+          data:
+            type: string
+  jackaldao.canine.rns.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+    description: QueryParamsResponse is response type for the Query/Params RPC method.

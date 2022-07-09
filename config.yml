@@ -17,7 +17,8 @@ faucet:
 init:
   app:
     minimum-gas-prices: "0.02ujkl"
-    swagger: "true"
+    api:
+      swagger: "true"
   client:
     chain-id: "canine-1"
 genesis:
