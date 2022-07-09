@@ -1,0 +1,137 @@
+syntax = "proto3";
+package jackaldao.canine.rns;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "rns/params.proto";
+import "rns/whois.proto";
+import "rns/names.proto";
+import "rns/bids.proto";
+import "rns/forsale.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/jackal-dao/canine/x/rns/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine/rnsparams";
+  }
+
+// Queries a Name by index.
+	rpc Names(QueryGetNamesRequest) returns (QueryGetNamesResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rnsnames/{index}";
+	}
+
+	// Queries a list of Names.
+	rpc NamesAll(QueryAllNamesRequest) returns (QueryAllNamesResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rnsnames";
+	}
+
+// Queries a Bid by index.
+	rpc Bids(QueryGetBidsRequest) returns (QueryGetBidsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rnsbids/{index}";
+	}
+
+	// Queries a list of Bids.
+	rpc BidsAll(QueryAllBidsRequest) returns (QueryAllBidsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rnsbids";
+	}
+
+// Queries a Listing by index.
+	rpc Forsale(QueryGetForsaleRequest) returns (QueryGetForsaleResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rnsforsale/{name}";
+	}
+
+	// Queries all Listings.
+	rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryAllForsaleResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rnsforsale";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetWhoisRequest {
+	  string index = 1;
+
+}
+
+message QueryGetWhoisResponse {
+	Whois whois = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllWhoisRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllWhoisResponse {
+	repeated Whois whois = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetNamesRequest {
+	  string index = 1;
+
+}
+
+message QueryGetNamesResponse {
+	Names names = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllNamesRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllNamesResponse {
+	repeated Names names = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetBidsRequest {
+	  string index = 1;
+
+}
+
+message QueryGetBidsResponse {
+	Bids bids = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllBidsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllBidsResponse {
+	repeated Bids bids = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetForsaleRequest {
+	  string name = 1;
+
+}
+
+message QueryGetForsaleResponse {
+	Forsale forsale = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllForsaleRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllForsaleResponse {
+	repeated Forsale forsale = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

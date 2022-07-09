@@ -1,17 +1,5 @@
 declare const _default: {
-    CosmosCosmosSdkCosmosAuthzV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosBankV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosCrisisV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosDistributionV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosEvidenceV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosFeegrantV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosGovV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosSlashingV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosStakingV1Beta1: (store: any) => void;
-    CosmosCosmosSdkCosmosVestingV1Beta1: (store: any) => void;
-    CosmosIbcGoIbcApplicationsTransferV1: (store: any) => void;
-    JackalDaoCanineJackaldaoCanineJklaccounts: (store: any) => void;
-    JackalDaoCanineJackaldaoCanineJklmining: (store: any) => void;
-    JackalDaoCanineJackaldaoCanineJklmint: (store: any) => void;
+    JackalDaoCanineCosmwasmWasmV1: (store: any) => void;
+    JackalDaoCanineJackaldaoCanineRns: (store: any) => void;
 };
 export default _default;

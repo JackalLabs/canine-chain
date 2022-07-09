@@ -1,0 +1,13 @@
+syntax = "proto3";
+package jackaldao.canine.rns;
+
+option go_package = "github.com/jackal-dao/canine/x/rns/types";
+
+message Whois {
+  string index = 1; 
+  string name = 2; 
+  string value = 3; 
+  string data = 4; 
+  
+}
+
