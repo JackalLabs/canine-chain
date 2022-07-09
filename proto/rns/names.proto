@@ -1,0 +1,14 @@
+syntax = "proto3";
+package jackaldao.canine.rns;
+
+option go_package = "github.com/jackal-dao/canine/x/rns/types";
+
+message Names {
+  string index = 1; 
+  string name = 2; 
+  string expires = 3; 
+  string value = 4; 
+  string data = 5; 
+  
+}
+

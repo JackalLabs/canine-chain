@@ -15,6 +15,7 @@ parent:
 4. [`jklmarket`](jklmarket/README.md)
 5. [`jklaccounts`](jklaccounts/README.md)
 6. [`rns`](rns/README.md)
+7. [`wasm`](wasm/README.md)
 
 
 

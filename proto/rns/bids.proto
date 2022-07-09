@@ -1,0 +1,13 @@
+syntax = "proto3";
+package jackaldao.canine.rns;
+
+option go_package = "github.com/jackal-dao/canine/x/rns/types";
+
+message Bids {
+  string index = 1; 
+  string name = 2; 
+  string bidder = 3; 
+  string price = 4; 
+  
+}
+

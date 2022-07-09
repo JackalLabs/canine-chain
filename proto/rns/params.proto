@@ -1,0 +1,12 @@
+syntax = "proto3";
+package jackaldao.canine.rns;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/jackal-dao/canine/x/rns/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}
