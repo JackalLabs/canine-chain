@@ -50593,3 +50593,5 @@ definitions:
     title: >-
       QueryInterchainAccountFromAddressResponse the response type for the
       Query/InterchainAccountAddress RPC
+  jackaldao.canine.rns.MsgTransferResponse:
+    type: object

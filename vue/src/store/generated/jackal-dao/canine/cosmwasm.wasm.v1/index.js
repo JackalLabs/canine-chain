@@ -349,23 +349,6 @@ export default {
                 throw new Error('QueryClient:QueryPinnedCodes API Node Unavailable. Could not perform query: ' + e.message);
             }
         },
-        async sendMsgIBCSend({ rootGetters }, { value, fee = [], memo = '' }) {
-            try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgIBCSend(value);
-                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
-                        gas: "200000" }, memo });
-                return result;
-            }
-            catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgIBCSend:Init Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new Error('TxClient:MsgIBCSend:Send Could not broadcast Tx: ' + e.message);
-                }
-            }
-        },
         async sendMsgUpdateAdmin({ rootGetters }, { value, fee = [], memo = '' }) {
             try {
                 const txClient = await initTxClient(rootGetters);
@@ -380,40 +363,6 @@ export default {
                 }
                 else {
                     throw new Error('TxClient:MsgUpdateAdmin:Send Could not broadcast Tx: ' + e.message);
-                }
-            }
-        },
-        async sendMsgInstantiateContract({ rootGetters }, { value, fee = [], memo = '' }) {
-            try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgInstantiateContract(value);
-                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
-                        gas: "200000" }, memo });
-                return result;
-            }
-            catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgInstantiateContract:Init Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new Error('TxClient:MsgInstantiateContract:Send Could not broadcast Tx: ' + e.message);
-                }
-            }
-        },
-        async sendMsgExecuteContract({ rootGetters }, { value, fee = [], memo = '' }) {
-            try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgExecuteContract(value);
-                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
-                        gas: "200000" }, memo });
-                return result;
-            }
-            catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgExecuteContract:Init Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new Error('TxClient:MsgExecuteContract:Send Could not broadcast Tx: ' + e.message);
                 }
             }
         },
@@ -434,6 +383,40 @@ export default {
                 }
             }
         },
+        async sendMsgClearAdmin({ rootGetters }, { value, fee = [], memo = '' }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgClearAdmin(value);
+                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgClearAdmin:Init Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgClearAdmin:Send Could not broadcast Tx: ' + e.message);
+                }
+            }
+        },
+        async sendMsgInstantiateContract({ rootGetters }, { value, fee = [], memo = '' }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgInstantiateContract(value);
+                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgInstantiateContract:Init Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgInstantiateContract:Send Could not broadcast Tx: ' + e.message);
+                }
+            }
+        },
         async sendMsgMigrateContract({ rootGetters }, { value, fee = [], memo = '' }) {
             try {
                 const txClient = await initTxClient(rootGetters);
@@ -451,20 +434,37 @@ export default {
                 }
             }
         },
-        async sendMsgClearAdmin({ rootGetters }, { value, fee = [], memo = '' }) {
+        async sendMsgIBCSend({ rootGetters }, { value, fee = [], memo = '' }) {
             try {
                 const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgClearAdmin(value);
+                const msg = await txClient.msgIBCSend(value);
                 const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
                         gas: "200000" }, memo });
                 return result;
             }
             catch (e) {
                 if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgClearAdmin:Init Could not initialize signing client. Wallet is required.');
+                    throw new Error('TxClient:MsgIBCSend:Init Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new Error('TxClient:MsgClearAdmin:Send Could not broadcast Tx: ' + e.message);
+                    throw new Error('TxClient:MsgIBCSend:Send Could not broadcast Tx: ' + e.message);
+                }
+            }
+        },
+        async sendMsgExecuteContract({ rootGetters }, { value, fee = [], memo = '' }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgExecuteContract(value);
+                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgExecuteContract:Init Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgExecuteContract:Send Could not broadcast Tx: ' + e.message);
                 }
             }
         },
@@ -485,21 +485,6 @@ export default {
                 }
             }
         },
-        async MsgIBCSend({ rootGetters }, { value }) {
-            try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgIBCSend(value);
-                return msg;
-            }
-            catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgIBCSend:Init  Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new Error('TxClient:MsgIBCSend:Create  Could not create message: ' + e.message);
-                }
-            }
-        },
         async MsgUpdateAdmin({ rootGetters }, { value }) {
             try {
                 const txClient = await initTxClient(rootGetters);
@@ -512,36 +497,6 @@ export default {
                 }
                 else {
                     throw new Error('TxClient:MsgUpdateAdmin:Create  Could not create message: ' + e.message);
-                }
-            }
-        },
-        async MsgInstantiateContract({ rootGetters }, { value }) {
-            try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgInstantiateContract(value);
-                return msg;
-            }
-            catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgInstantiateContract:Init  Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new Error('TxClient:MsgInstantiateContract:Create  Could not create message: ' + e.message);
-                }
-            }
-        },
-        async MsgExecuteContract({ rootGetters }, { value }) {
-            try {
-                const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgExecuteContract(value);
-                return msg;
-            }
-            catch (e) {
-                if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgExecuteContract:Init  Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new Error('TxClient:MsgExecuteContract:Create  Could not create message: ' + e.message);
                 }
             }
         },
@@ -560,6 +515,36 @@ export default {
                 }
             }
         },
+        async MsgClearAdmin({ rootGetters }, { value }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgClearAdmin(value);
+                return msg;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgClearAdmin:Init  Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgClearAdmin:Create  Could not create message: ' + e.message);
+                }
+            }
+        },
+        async MsgInstantiateContract({ rootGetters }, { value }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgInstantiateContract(value);
+                return msg;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgInstantiateContract:Init  Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgInstantiateContract:Create  Could not create message: ' + e.message);
+                }
+            }
+        },
         async MsgMigrateContract({ rootGetters }, { value }) {
             try {
                 const txClient = await initTxClient(rootGetters);
@@ -575,18 +560,33 @@ export default {
                 }
             }
         },
-        async MsgClearAdmin({ rootGetters }, { value }) {
+        async MsgIBCSend({ rootGetters }, { value }) {
             try {
                 const txClient = await initTxClient(rootGetters);
-                const msg = await txClient.msgClearAdmin(value);
+                const msg = await txClient.msgIBCSend(value);
                 return msg;
             }
             catch (e) {
                 if (e == MissingWalletError) {
-                    throw new Error('TxClient:MsgClearAdmin:Init  Could not initialize signing client. Wallet is required.');
+                    throw new Error('TxClient:MsgIBCSend:Init  Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new Error('TxClient:MsgClearAdmin:Create  Could not create message: ' + e.message);
+                    throw new Error('TxClient:MsgIBCSend:Create  Could not create message: ' + e.message);
+                }
+            }
+        },
+        async MsgExecuteContract({ rootGetters }, { value }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgExecuteContract(value);
+                return msg;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new Error('TxClient:MsgExecuteContract:Init  Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new Error('TxClient:MsgExecuteContract:Create  Could not create message: ' + e.message);
                 }
             }
         },
