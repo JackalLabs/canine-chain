@@ -10,7 +10,7 @@ parent:
 
 ## Modules
 1. [`jklmint`](jklmint/README.md)
-2. [`jklmining`](jklmining/README.md)
+2. [`storage`](storage/README.md)
 3. [`jklpayment`](jklpayment/README.md)
 4. [`jklmarket`](jklmarket/README.md)
 5. [`jklaccounts`](jklaccounts/README.md)
