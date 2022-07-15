@@ -57,16 +57,46 @@ export type RnsParams = object;
 
 export interface RnsQueryAllBidsResponse {
   bids?: RnsBids[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
   pagination?: V1Beta1PageResponse;
 }
 
 export interface RnsQueryAllForsaleResponse {
   forsale?: RnsForsale[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
   pagination?: V1Beta1PageResponse;
 }
 
 export interface RnsQueryAllNamesResponse {
   names?: RnsNames[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
   pagination?: V1Beta1PageResponse;
 }
 
@@ -97,6 +127,12 @@ export interface RpcStatus {
   details?: ProtobufAny[];
 }
 
+/**
+* message SomeRequest {
+         Foo some_parameter = 1;
+         PageRequest pagination = 2;
+ }
+*/
 export interface V1Beta1PageRequest {
   /**
    * key is a value returned in PageResponse.next_key to begin
@@ -128,9 +164,24 @@ export interface V1Beta1PageRequest {
    * is set.
    */
   count_total?: boolean;
+
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   *
+   * Since: cosmos-sdk 0.43
+   */
   reverse?: boolean;
 }
 
+/**
+* PageResponse is to be embedded in gRPC response messages where the
+corresponding request message has used PageRequest.
+
+ message SomeResponse {
+         repeated Bar results = 1;
+         PageResponse page = 2;
+ }
+*/
 export interface V1Beta1PageResponse {
   /** @format byte */
   next_key?: string;

@@ -1,8 +1,10 @@
 accounts:
   - name: alice
     coins: ["200000000ujkl", "100000000ujwl"]
+    mnemonic: "across business friend enact find light myself pistol stick place oil anchor deny orient sudden educate flame proud crash panel right aisle found connect"
   - name: bob
     coins: ["100000000ujkl"]
+    mnemonic: "ripple doctor enforce review soldier rebuild video blanket vehicle market media forward hover thought fitness cover effort uniform club fence reveal slam spoon wasp"
 validator:
   name: alice
   staked: "100000000ujkl"
@@ -16,7 +18,7 @@ faucet:
   coins: ["1000000ujkl"]
 init:
   app:
-    minimum-gas-prices: "0.02ujkl"
+    minimum-gas-prices: "0.002ujkl"
     api:
       swagger: "true"
   client:

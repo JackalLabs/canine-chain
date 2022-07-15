@@ -2,11 +2,13 @@
 
 import JackalDaoCanineCosmwasmWasmV1 from './jackal-dao/canine/cosmwasm.wasm.v1'
 import JackalDaoCanineJackaldaoCanineRns from './jackal-dao/canine/jackaldao.canine.rns'
+import JackalDaoCanineJackaldaoCanineStorage from './jackal-dao/canine/jackaldao.canine.storage'
 
 
 export default { 
   JackalDaoCanineCosmwasmWasmV1: load(JackalDaoCanineCosmwasmWasmV1, 'cosmwasm.wasm.v1'),
   JackalDaoCanineJackaldaoCanineRns: load(JackalDaoCanineJackaldaoCanineRns, 'jackaldao.canine.rns'),
+  JackalDaoCanineJackaldaoCanineStorage: load(JackalDaoCanineJackaldaoCanineStorage, 'jackaldao.canine.storage'),
   
 }
 

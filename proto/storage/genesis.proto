@@ -1,0 +1,22 @@
+syntax = "proto3";
+package jackaldao.canine.storage;
+
+import "gogoproto/gogo.proto";
+import "storage/params.proto";
+import "storage/contracts.proto";
+import "storage/proofs.proto";
+import "storage/active_deals.proto";
+import "storage/miners.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/jackal-dao/canine/x/storage/types";
+
+// GenesisState defines the storage module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated Contracts contractsList = 2 [(gogoproto.nullable) = false];
+  repeated Proofs proofsList = 3 [(gogoproto.nullable) = false];
+  repeated ActiveDeals activeDealsList = 4 [(gogoproto.nullable) = false];
+  repeated Miners minersList = 5 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

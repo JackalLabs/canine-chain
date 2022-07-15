@@ -1,0 +1,159 @@
+syntax = "proto3";
+package jackaldao.canine.storage;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "storage/params.proto";
+import "storage/contracts.proto";
+import "storage/proofs.proto";
+import "storage/active_deals.proto";
+import "storage/miners.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/jackal-dao/canine/x/storage/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine/storage/params";
+  }
+  // Queries a Contracts by index.
+	rpc Contracts(QueryGetContractsRequest) returns (QueryGetContractsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/contracts/{cid}";
+	}
+
+	// Queries a list of Contracts items.
+	rpc ContractsAll(QueryAllContractsRequest) returns (QueryAllContractsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/contracts";
+	}
+
+// Queries a Proofs by index.
+	rpc Proofs(QueryGetProofsRequest) returns (QueryGetProofsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/proofs/{cid}";
+	}
+
+	// Queries a list of Proofs items.
+	rpc ProofsAll(QueryAllProofsRequest) returns (QueryAllProofsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/proofs";
+	}
+
+// Queries a ActiveDeals by index.
+	rpc ActiveDeals(QueryGetActiveDealsRequest) returns (QueryGetActiveDealsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/active_deals/{cid}";
+	}
+
+	// Queries a list of ActiveDeals items.
+	rpc ActiveDealsAll(QueryAllActiveDealsRequest) returns (QueryAllActiveDealsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/active_deals";
+	}
+
+// Queries a Miners by index.
+	rpc Miners(QueryGetMinersRequest) returns (QueryGetMinersResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/miners/{address}";
+	}
+
+	// Queries a list of Miners items.
+	rpc MinersAll(QueryAllMinersRequest) returns (QueryAllMinersResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/miners";
+	}
+
+// Queries a list of Freespace items.
+	rpc Freespace(QueryFreespaceRequest) returns (QueryFreespaceResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/freespace/{address}";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetContractsRequest {
+	  string cid = 1;
+
+}
+
+message QueryGetContractsResponse {
+	Contracts contracts = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllContractsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllContractsResponse {
+	repeated Contracts contracts = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetProofsRequest {
+	  string cid = 1;
+
+}
+
+message QueryGetProofsResponse {
+	Proofs proofs = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllProofsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllProofsResponse {
+	repeated Proofs proofs = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetActiveDealsRequest {
+	  string cid = 1;
+
+}
+
+message QueryGetActiveDealsResponse {
+	ActiveDeals activeDeals = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllActiveDealsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllActiveDealsResponse {
+	repeated ActiveDeals activeDeals = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMinersRequest {
+	  string address = 1;
+
+}
+
+message QueryGetMinersResponse {
+	Miners miners = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMinersRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMinersResponse {
+	repeated Miners miners = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryFreespaceRequest {
+  string address = 1;
+}
+
+message QueryFreespaceResponse {
+  string space = 1;
+}
+
+// this line is used by starport scaffolding # 3

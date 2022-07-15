@@ -1,0 +1,220 @@
+syntax = "proto3";
+package jackaldao.canine.storage;
+
+import "storage/contracts.proto";
+import "storage/proofs.proto";
+import "storage/active_deals.proto";
+import "storage/miners.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/jackal-dao/canine/x/storage/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
+  rpc CreateContracts(MsgCreateContracts) returns (MsgCreateContractsResponse);
+  rpc UpdateContracts(MsgUpdateContracts) returns (MsgUpdateContractsResponse);
+  rpc DeleteContracts(MsgDeleteContracts) returns (MsgDeleteContractsResponse);
+  rpc CreateProofs(MsgCreateProofs) returns (MsgCreateProofsResponse);
+  rpc UpdateProofs(MsgUpdateProofs) returns (MsgUpdateProofsResponse);
+  rpc DeleteProofs(MsgDeleteProofs) returns (MsgDeleteProofsResponse);
+  rpc Item(MsgItem) returns (MsgItemResponse);
+  rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
+  rpc CreateActiveDeals(MsgCreateActiveDeals) returns (MsgCreateActiveDealsResponse);
+  rpc UpdateActiveDeals(MsgUpdateActiveDeals) returns (MsgUpdateActiveDealsResponse);
+  rpc DeleteActiveDeals(MsgDeleteActiveDeals) returns (MsgDeleteActiveDealsResponse);
+  rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
+  rpc CreateMiners(MsgCreateMiners) returns (MsgCreateMinersResponse);
+  rpc UpdateMiners(MsgUpdateMiners) returns (MsgUpdateMinersResponse);
+  rpc DeleteMiners(MsgDeleteMiners) returns (MsgDeleteMinersResponse);
+  rpc SetMinerIp(MsgSetMinerIp) returns (MsgSetMinerIpResponse);
+  rpc SetMinerTotalspace(MsgSetMinerTotalspace) returns (MsgSetMinerTotalspaceResponse);
+  rpc InitMiner(MsgInitMiner) returns (MsgInitMinerResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgPostContract {
+  string creator = 1;
+  string priceamt = 2;
+  string pricedenom = 3;
+  string merkle = 4;
+  string signee = 5;
+  string duration = 6;
+  string filesize = 7;
+  string fid = 8;
+}
+
+message MsgPostContractResponse {
+}
+
+message MsgCreateContracts {
+  string creator = 1;
+  string cid = 2;
+
+  string priceamt = 3;
+  string pricedenom = 4;
+  string chunks = 5;
+  string merkle = 6;
+  string signee = 7;
+  string duration = 8;
+  string filesize = 9;
+  string fid = 10;
+}
+message MsgCreateContractsResponse {}
+
+message MsgUpdateContracts {
+  string creator = 1;
+  string cid = 2;
+
+  string chunks = 5;
+  string merkle = 6;
+  string signee = 7;
+  string duration = 8;
+  string filesize = 4;
+  string fid = 3;
+}
+message MsgUpdateContractsResponse {}
+
+message MsgDeleteContracts {
+  string creator = 1;
+  string cid = 2;
+}
+message MsgDeleteContractsResponse {}
+
+message MsgCreateProofs {
+  string creator = 1;
+  string cid = 2;
+
+  string item = 3;
+  string hashes = 4;
+}
+message MsgCreateProofsResponse {}
+
+message MsgUpdateProofs {
+  string creator = 1;
+  string cid = 2;
+
+  string item = 3;
+  string hashes = 4;
+}
+message MsgUpdateProofsResponse {}
+
+message MsgDeleteProofs {
+  string creator = 1;
+  string cid = 2;
+}
+message MsgDeleteProofsResponse {}
+
+message MsgItem {
+  string creator = 1;
+  string hashlist = 2;
+}
+
+message MsgItemResponse {
+}
+
+message MsgPostproof {
+  string creator = 1;
+  string item = 2;
+  string hashlist = 3;
+  string cid = 4;
+}
+
+message MsgPostproofResponse {
+  string merkle = 1;
+}
+
+message MsgCreateActiveDeals {
+  string creator = 1;
+  string cid = 2;
+
+  string signee = 3;
+  string miner = 4;
+  string startblock = 5;
+  string endblock = 6;
+  string filesize = 7;
+  string proofverified = 8;
+  string proofsmissed = 9;
+  string blocktoprove = 10;
+}
+message MsgCreateActiveDealsResponse {}
+
+message MsgUpdateActiveDeals {
+  string creator = 1;
+  string cid = 2;
+
+  string signee = 3;
+  string miner = 4;
+  string startblock = 5;
+  string endblock = 6;
+  string filesize = 7;
+  string proofverified = 8;
+  string proofsmissed = 9;
+  string blocktoprove = 10;
+}
+message MsgUpdateActiveDealsResponse {}
+
+message MsgDeleteActiveDeals {
+  string creator = 1;
+  string cid = 2;
+}
+message MsgDeleteActiveDealsResponse {}
+
+message MsgSignContract {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgSignContractResponse {
+}
+
+message MsgCreateMiners {
+  string creator = 1;
+  string address = 2;
+
+  string ip = 3;
+  string totalspace = 4;
+}
+message MsgCreateMinersResponse {}
+
+message MsgUpdateMiners {
+  string creator = 1;
+  string address = 2;
+
+  string ip = 3;
+  string totalspace = 4;
+}
+message MsgUpdateMinersResponse {}
+
+message MsgDeleteMiners {
+  string creator = 1;
+  string address = 2;
+}
+message MsgDeleteMinersResponse {}
+
+message MsgSetMinerIp {
+  string creator = 1;
+  string ip = 2;
+}
+
+message MsgSetMinerIpResponse {
+}
+
+message MsgSetMinerTotalspace {
+  string creator = 1;
+  string space = 2;
+}
+
+message MsgSetMinerTotalspaceResponse {
+}
+
+message MsgInitMiner {
+  string creator = 1;
+  string ip = 2;
+  string totalspace = 3;
+}
+
+message MsgInitMinerResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message

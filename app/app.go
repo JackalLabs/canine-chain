@@ -124,6 +124,10 @@ import (
 	rnsmodulekeeper "github.com/jackal-dao/canine/x/rns/keeper"
 	rnsmoduletypes "github.com/jackal-dao/canine/x/rns/types"
 
+	storagemodule "github.com/jackal-dao/canine/x/storage"
+	storagemodulekeeper "github.com/jackal-dao/canine/x/storage/keeper"
+	storagemoduletypes "github.com/jackal-dao/canine/x/storage/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -221,6 +225,7 @@ var (
 		jklminingmodule.AppModuleBasic{},
 		jklaccountsmodule.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
+		storagemodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -237,6 +242,7 @@ var (
 		jklminingmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		jklaccountsmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		rnsmoduletypes.ModuleName:         {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		storagemoduletypes.ModuleName:     {authtypes.Minter},
 	}
 )
 
@@ -294,6 +300,8 @@ type WasmApp struct {
 
 	RnsKeeper rnsmodulekeeper.Keeper
 
+	StorageKeeper storagemodulekeeper.Keeper
+
 	// the module manager
 	mm *module.Manager
 
@@ -334,7 +342,7 @@ func NewWasmApp(
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
 		jklminingmoduletypes.StoreKey,
 		jklaccountsmoduletypes.StoreKey,
-		rnsmoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -589,6 +597,14 @@ func NewWasmApp(
 	)
 	jklaccountsModule := jklaccountsmodule.NewAppModule(appCodec, app.JklaccountsKeeper, app.accountKeeper, app.bankKeeper)
 
+	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
+		appCodec,
+		keys[storagemoduletypes.StoreKey],
+		keys[storagemoduletypes.MemStoreKey],
+		app.getSubspace(storagemoduletypes.ModuleName),
+	)
+	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.accountKeeper, app.bankKeeper)
+
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 
@@ -651,6 +667,7 @@ func NewWasmApp(
 		jklminingModule,
 		jklaccountsModule,
 		rnsModule,
+		storageModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -683,6 +700,7 @@ func NewWasmApp(
 		jklminingmoduletypes.ModuleName,
 		jklaccountsmoduletypes.ModuleName,
 		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -711,6 +729,7 @@ func NewWasmApp(
 		jklminingmoduletypes.ModuleName,
 		jklaccountsmoduletypes.ModuleName,
 		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -747,6 +766,7 @@ func NewWasmApp(
 		jklminingmoduletypes.ModuleName,
 		jklaccountsmoduletypes.ModuleName,
 		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -781,6 +801,7 @@ func NewWasmApp(
 		jklminingModule,
 		jklaccountsModule,
 		rnsModule,
+		storageModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
