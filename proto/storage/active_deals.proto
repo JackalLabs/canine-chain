@@ -15,5 +15,6 @@ message ActiveDeals {
   string blocktoprove = 9; 
   string creator = 10;
   string merkle = 11;
+  string fid = 12;
 }
 

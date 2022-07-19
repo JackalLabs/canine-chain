@@ -32,6 +32,7 @@ export interface StorageActiveDeals {
   blocktoprove?: string;
   creator?: string;
   merkle?: string;
+  fid?: string;
 }
 
 export interface StorageContracts {
@@ -50,8 +51,11 @@ export interface StorageMiners {
   address?: string;
   ip?: string;
   totalspace?: string;
+  burned_contracts?: string;
   creator?: string;
 }
+
+export type StorageMsgCancelContractResponse = object;
 
 export type StorageMsgCreateActiveDealsResponse = object;
 
@@ -163,6 +167,10 @@ export interface StorageQueryAllProofsResponse {
    *  }
    */
   pagination?: V1Beta1PageResponse;
+}
+
+export interface StorageQueryFindFileResponse {
+  minerIps?: string;
 }
 
 export interface StorageQueryFreespaceResponse {
@@ -531,6 +539,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryContracts = (cid: string, params: RequestParams = {}) =>
     this.request<StorageQueryGetContractsResponse, RpcStatus>({
       path: `/jackal-dao/canine/storage/contracts/${cid}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryFindFile
+   * @summary Queries a list of FindFile items.
+   * @request GET:/jackal-dao/canine/storage/find_file/{fid}
+   */
+  queryFindFile = (fid: string, params: RequestParams = {}) =>
+    this.request<StorageQueryFindFileResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/find_file/${fid}`,
       method: "GET",
       format: "json",
       ...params,

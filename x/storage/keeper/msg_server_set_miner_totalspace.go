@@ -14,10 +14,11 @@ func (k msgServer) SetMinerTotalspace(goCtx context.Context, msg *types.MsgSetMi
 
 	if !found {
 		miner = types.Miners{
-			Address:    msg.Creator,
-			Ip:         "",
-			Totalspace: "0",
-			Creator:    msg.Creator,
+			Address:         msg.Creator,
+			Ip:              "",
+			Totalspace:      "0",
+			Creator:         msg.Creator,
+			BurnedContracts: "0",
 		}
 	}
 

@@ -185,6 +185,13 @@ export interface MsgInitMiner {
 
 export interface MsgInitMinerResponse {}
 
+export interface MsgCancelContract {
+  creator: string;
+  cid: string;
+}
+
+export interface MsgCancelContractResponse {}
+
 const baseMsgPostContract: object = {
   creator: "",
   priceamt: "",
@@ -3361,6 +3368,130 @@ export const MsgInitMinerResponse = {
   },
 };
 
+const baseMsgCancelContract: object = { creator: "", cid: "" };
+
+export const MsgCancelContract = {
+  encode(message: MsgCancelContract, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.cid !== "") {
+      writer.uint32(18).string(message.cid);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgCancelContract {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgCancelContract } as MsgCancelContract;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.cid = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCancelContract {
+    const message = { ...baseMsgCancelContract } as MsgCancelContract;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.cid !== undefined && object.cid !== null) {
+      message.cid = String(object.cid);
+    } else {
+      message.cid = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgCancelContract): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.cid !== undefined && (obj.cid = message.cid);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgCancelContract>): MsgCancelContract {
+    const message = { ...baseMsgCancelContract } as MsgCancelContract;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.cid !== undefined && object.cid !== null) {
+      message.cid = object.cid;
+    } else {
+      message.cid = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgCancelContractResponse: object = {};
+
+export const MsgCancelContractResponse = {
+  encode(
+    _: MsgCancelContractResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgCancelContractResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgCancelContractResponse,
+    } as MsgCancelContractResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgCancelContractResponse {
+    const message = {
+      ...baseMsgCancelContractResponse,
+    } as MsgCancelContractResponse;
+    return message;
+  },
+
+  toJSON(_: MsgCancelContractResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgCancelContractResponse>
+  ): MsgCancelContractResponse {
+    const message = {
+      ...baseMsgCancelContractResponse,
+    } as MsgCancelContractResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostContract(request: MsgPostContract): Promise<MsgPostContractResponse>;
@@ -3395,8 +3526,11 @@ export interface Msg {
   SetMinerTotalspace(
     request: MsgSetMinerTotalspace
   ): Promise<MsgSetMinerTotalspaceResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   InitMiner(request: MsgInitMiner): Promise<MsgInitMinerResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  CancelContract(
+    request: MsgCancelContract
+  ): Promise<MsgCancelContractResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -3641,6 +3775,20 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgInitMinerResponse.decode(new Reader(data))
+    );
+  }
+
+  CancelContract(
+    request: MsgCancelContract
+  ): Promise<MsgCancelContractResponse> {
+    const data = MsgCancelContract.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.storage.Msg",
+      "CancelContract",
+      data
+    );
+    return promise.then((data) =>
+      MsgCancelContractResponse.decode(new Reader(data))
     );
   }
 }

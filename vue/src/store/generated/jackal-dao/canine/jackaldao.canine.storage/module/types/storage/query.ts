@@ -97,6 +97,14 @@ export interface QueryFreespaceResponse {
   space: string;
 }
 
+export interface QueryFindFileRequest {
+  fid: string;
+}
+
+export interface QueryFindFileResponse {
+  minerIps: string;
+}
+
 const baseQueryParamsRequest: object = {};
 
 export const QueryParamsRequest = {
@@ -1497,6 +1505,124 @@ export const QueryFreespaceResponse = {
   },
 };
 
+const baseQueryFindFileRequest: object = { fid: "" };
+
+export const QueryFindFileRequest = {
+  encode(
+    message: QueryFindFileRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.fid !== "") {
+      writer.uint32(10).string(message.fid);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryFindFileRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryFindFileRequest } as QueryFindFileRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.fid = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryFindFileRequest {
+    const message = { ...baseQueryFindFileRequest } as QueryFindFileRequest;
+    if (object.fid !== undefined && object.fid !== null) {
+      message.fid = String(object.fid);
+    } else {
+      message.fid = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryFindFileRequest): unknown {
+    const obj: any = {};
+    message.fid !== undefined && (obj.fid = message.fid);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryFindFileRequest>): QueryFindFileRequest {
+    const message = { ...baseQueryFindFileRequest } as QueryFindFileRequest;
+    if (object.fid !== undefined && object.fid !== null) {
+      message.fid = object.fid;
+    } else {
+      message.fid = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryFindFileResponse: object = { minerIps: "" };
+
+export const QueryFindFileResponse = {
+  encode(
+    message: QueryFindFileResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.minerIps !== "") {
+      writer.uint32(10).string(message.minerIps);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryFindFileResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryFindFileResponse } as QueryFindFileResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.minerIps = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryFindFileResponse {
+    const message = { ...baseQueryFindFileResponse } as QueryFindFileResponse;
+    if (object.minerIps !== undefined && object.minerIps !== null) {
+      message.minerIps = String(object.minerIps);
+    } else {
+      message.minerIps = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryFindFileResponse): unknown {
+    const obj: any = {};
+    message.minerIps !== undefined && (obj.minerIps = message.minerIps);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryFindFileResponse>
+  ): QueryFindFileResponse {
+    const message = { ...baseQueryFindFileResponse } as QueryFindFileResponse;
+    if (object.minerIps !== undefined && object.minerIps !== null) {
+      message.minerIps = object.minerIps;
+    } else {
+      message.minerIps = "";
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1527,6 +1653,8 @@ export interface Query {
   MinersAll(request: QueryAllMinersRequest): Promise<QueryAllMinersResponse>;
   /** Queries a list of Freespace items. */
   Freespace(request: QueryFreespaceRequest): Promise<QueryFreespaceResponse>;
+  /** Queries a list of FindFile items. */
+  FindFile(request: QueryFindFileRequest): Promise<QueryFindFileResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1657,6 +1785,18 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryFreespaceResponse.decode(new Reader(data))
+    );
+  }
+
+  FindFile(request: QueryFindFileRequest): Promise<QueryFindFileResponse> {
+    const data = QueryFindFileRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.storage.Query",
+      "FindFile",
+      data
+    );
+    return promise.then((data) =>
+      QueryFindFileResponse.decode(new Reader(data))
     );
   }
 }

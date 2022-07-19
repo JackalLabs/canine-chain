@@ -249,7 +249,27 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 					continue
 				}
 
-				deal.Proofsmissed = fmt.Sprintf("%d", intt.Int64()+1)
+				misses := intt.Int64() + 1
+				const misses_to_burn int64 = 3
+
+				if misses > misses_to_burn {
+					miner, ok := am.keeper.GetMiners(ctx, deal.Miner)
+					if !ok {
+						continue
+					}
+
+					curburn, ok := sdk.NewIntFromString(miner.BurnedContracts)
+					if !ok {
+						continue
+					}
+					miner.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
+					am.keeper.SetMiners(ctx, miner)
+
+					am.keeper.RemoveActiveDeals(ctx, deal.Cid)
+					continue
+				}
+
+				deal.Proofsmissed = fmt.Sprintf("%d", misses)
 				am.keeper.SetActiveDeals(ctx, deal)
 				continue
 			}

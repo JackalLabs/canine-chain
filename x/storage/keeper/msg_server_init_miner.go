@@ -11,10 +11,11 @@ func (k msgServer) InitMiner(goCtx context.Context, msg *types.MsgInitMiner) (*t
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	miner := types.Miners{
-		Address:    msg.Creator,
-		Ip:         msg.Ip,
-		Totalspace: msg.Totalspace,
-		Creator:    msg.Creator,
+		Address:         msg.Creator,
+		Ip:              msg.Ip,
+		Totalspace:      msg.Totalspace,
+		Creator:         msg.Creator,
+		BurnedContracts: "0",
 	}
 
 	k.SetMiners(ctx, miner)

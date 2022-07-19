@@ -64,6 +64,11 @@ service Query {
 		option (google.api.http).get = "/jackal-dao/canine/storage/freespace/{address}";
 	}
 
+// Queries a list of FindFile items.
+	rpc FindFile(QueryFindFileRequest) returns (QueryFindFileResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/find_file/{fid}";
+	}
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -154,6 +159,14 @@ message QueryFreespaceRequest {
 
 message QueryFreespaceResponse {
   string space = 1;
+}
+
+message QueryFindFileRequest {
+  string fid = 1;
+}
+
+message QueryFindFileResponse {
+  string minerIps = 1;
 }
 
 // this line is used by starport scaffolding # 3

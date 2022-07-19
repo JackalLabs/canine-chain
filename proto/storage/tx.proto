@@ -30,6 +30,7 @@ service Msg {
   rpc SetMinerIp(MsgSetMinerIp) returns (MsgSetMinerIpResponse);
   rpc SetMinerTotalspace(MsgSetMinerTotalspace) returns (MsgSetMinerTotalspaceResponse);
   rpc InitMiner(MsgInitMiner) returns (MsgInitMinerResponse);
+  rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -215,6 +216,14 @@ message MsgInitMiner {
 }
 
 message MsgInitMinerResponse {
+}
+
+message MsgCancelContract {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgCancelContractResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

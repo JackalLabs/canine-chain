@@ -14,10 +14,11 @@ func (k msgServer) SetMinerIp(goCtx context.Context, msg *types.MsgSetMinerIp) (
 
 	if !found {
 		miner = types.Miners{
-			Address:    msg.Creator,
-			Ip:         "",
-			Totalspace: "0",
-			Creator:    msg.Creator,
+			Address:         msg.Creator,
+			Ip:              "",
+			Totalspace:      "0",
+			Creator:         msg.Creator,
+			BurnedContracts: "0",
 		}
 	}
 

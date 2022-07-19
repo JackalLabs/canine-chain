@@ -30,7 +30,7 @@ import (
 
 // This function returns the filename(to save in database) of the saved file
 // or an error if it occurs
-func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB) {
+func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 	// ParseMultipartForm parses a request body as multipart/form-data
 	r.ParseMultipartForm(32 << 20)
 
@@ -116,6 +116,11 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 
 	strcid := fmt.Sprintf("%x", cid)
 
+	err = datedb.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(fmt.Sprintf("%d", 0)), nil)
+	if err != nil {
+		fmt.Printf("Database Error: %v\n", err)
+		return
+	}
 	derr := db.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(strcid), nil)
 	if derr != nil {
 		fmt.Printf("Database Error: %v\n", derr)
@@ -129,7 +134,16 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		fmt.Printf("ERROR: %s\n", cerr.Error())
 	}
 
-	io.WriteString(w, fmt.Sprintf("Contract ID: %s\n", strcid))
+	type uploadResponse struct {
+		CID string
+		FID string
+	}
+
+	v := uploadResponse{
+		CID: strcid,
+		FID: fmt.Sprintf("%x", hashName),
+	}
+	json.NewEncoder(w).Encode(v)
 }
 
 func StartServer() *cobra.Command {
@@ -144,16 +158,26 @@ func StartServer() *cobra.Command {
 			return nil
 		},
 	}
+
+	cmd.SetOut(io.Discard)
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
 
-func indexres(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	io.WriteString(w, "Hello, HTTP!\n")
-}
+func indexres(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-func printProof(proof merkletree.Proof) {
-	fmt.Printf("Hashes: %v\nIndex: %d\n", proof.Hashes, proof.Index)
+	clientCtx := client.GetClientContextFromCmd(cmd)
+
+	type indexResponse struct {
+		Status  string
+		Address string
+	}
+
+	v := indexResponse{
+		Status:  "online",
+		Address: clientCtx.GetFromAddress().String(),
+	}
+	json.NewEncoder(w).Encode(v)
 }
 
 func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (string, string) {
@@ -380,7 +404,7 @@ func checkVerified(cmd *cobra.Command, cid string) (bool, error) {
 	return ver, nil
 }
 
-func postProofs(cmd *cobra.Command, db *leveldb.DB) {
+func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 	if qerr != nil {
 		return
@@ -402,6 +426,33 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB) {
 			ver, verr := checkVerified(cmd, string(cid))
 			if verr != nil {
 				fmt.Printf("ERROR: %v\n", verr)
+				val, err := datedb.Get([]byte(nm), nil)
+				newval := 0
+				if err == nil {
+					newval, err = strconv.Atoi(string(val))
+					if err != nil {
+						continue
+					}
+				}
+				fmt.Printf("filemissdex: %d\n", newval)
+				newval += 1
+
+				if newval > 8 {
+					os.RemoveAll(fmt.Sprintf("%s/networkfiles/%s", clientCtx.HomeDir, nm))
+					err = db.Delete([]byte(nm), nil)
+					if err != nil {
+						continue
+					}
+					err = datedb.Delete([]byte(nm), nil)
+					if err != nil {
+						continue
+					}
+				}
+
+				err = datedb.Put([]byte(nm), []byte(fmt.Sprintf("%d", newval)), nil)
+				if err != nil {
+					continue
+				}
 				continue
 			}
 
@@ -452,6 +503,17 @@ func downfil(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps http
 	w.Write(data)
 }
 
+func checkVersion(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	type versionResponse struct {
+		Version string
+	}
+
+	v := versionResponse{
+		Version: "1.0.0",
+	}
+	json.NewEncoder(w).Encode(v)
+}
+
 func StartFileServer(cmd *cobra.Command) {
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 	if qerr != nil {
@@ -462,20 +524,32 @@ func StartFileServer(cmd *cobra.Command) {
 	if dberr != nil {
 		fmt.Println(dberr)
 	}
+	datedb, dberr := leveldb.OpenFile(fmt.Sprintf("%s/contracts/datesdb", clientCtx.HomeDir), nil)
+	if dberr != nil {
+		fmt.Println(dberr)
+	}
 	router := httprouter.New()
 	upfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		FileUpload(w, r, ps, cmd, db)
+		FileUpload(w, r, ps, cmd, db, datedb)
 	}
 
 	dfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		downfil(cmd, w, r, ps)
 	}
 
-	router.POST("/file", upfil)
-	router.GET("/download/:file", dfil)
-	router.GET("/", indexres)
+	ires := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		indexres(cmd, w, r, ps)
+	}
 
-	go postProofs(cmd, db)
+	router.GET("/version", checkVersion)
+	router.GET("/v", checkVersion)
+	router.POST("/upload", upfil)
+	router.POST("/u", upfil)
+	router.GET("/download/:file", dfil)
+	router.GET("/d/:file", dfil)
+	router.GET("/", ires)
+
+	go postProofs(cmd, db, datedb)
 
 	fmt.Printf("now listening!\n")
 	err := http.ListenAndServe("0.0.0.0:3333", router)

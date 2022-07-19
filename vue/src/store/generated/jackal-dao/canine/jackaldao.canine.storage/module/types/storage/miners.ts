@@ -7,10 +7,17 @@ export interface Miners {
   address: string;
   ip: string;
   totalspace: string;
+  burned_contracts: string;
   creator: string;
 }
 
-const baseMiners: object = { address: "", ip: "", totalspace: "", creator: "" };
+const baseMiners: object = {
+  address: "",
+  ip: "",
+  totalspace: "",
+  burned_contracts: "",
+  creator: "",
+};
 
 export const Miners = {
   encode(message: Miners, writer: Writer = Writer.create()): Writer {
@@ -23,8 +30,11 @@ export const Miners = {
     if (message.totalspace !== "") {
       writer.uint32(26).string(message.totalspace);
     }
+    if (message.burned_contracts !== "") {
+      writer.uint32(34).string(message.burned_contracts);
+    }
     if (message.creator !== "") {
-      writer.uint32(34).string(message.creator);
+      writer.uint32(42).string(message.creator);
     }
     return writer;
   },
@@ -46,6 +56,9 @@ export const Miners = {
           message.totalspace = reader.string();
           break;
         case 4:
+          message.burned_contracts = reader.string();
+          break;
+        case 5:
           message.creator = reader.string();
           break;
         default:
@@ -73,6 +86,14 @@ export const Miners = {
     } else {
       message.totalspace = "";
     }
+    if (
+      object.burned_contracts !== undefined &&
+      object.burned_contracts !== null
+    ) {
+      message.burned_contracts = String(object.burned_contracts);
+    } else {
+      message.burned_contracts = "";
+    }
     if (object.creator !== undefined && object.creator !== null) {
       message.creator = String(object.creator);
     } else {
@@ -86,6 +107,8 @@ export const Miners = {
     message.address !== undefined && (obj.address = message.address);
     message.ip !== undefined && (obj.ip = message.ip);
     message.totalspace !== undefined && (obj.totalspace = message.totalspace);
+    message.burned_contracts !== undefined &&
+      (obj.burned_contracts = message.burned_contracts);
     message.creator !== undefined && (obj.creator = message.creator);
     return obj;
   },
@@ -106,6 +129,14 @@ export const Miners = {
       message.totalspace = object.totalspace;
     } else {
       message.totalspace = "";
+    }
+    if (
+      object.burned_contracts !== undefined &&
+      object.burned_contracts !== null
+    ) {
+      message.burned_contracts = object.burned_contracts;
+    } else {
+      message.burned_contracts = "";
     }
     if (object.creator !== undefined && object.creator !== null) {
       message.creator = object.creator;

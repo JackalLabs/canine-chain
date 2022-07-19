@@ -15,6 +15,7 @@ export interface ActiveDeals {
   blocktoprove: string;
   creator: string;
   merkle: string;
+  fid: string;
 }
 
 const baseActiveDeals: object = {
@@ -29,6 +30,7 @@ const baseActiveDeals: object = {
   blocktoprove: "",
   creator: "",
   merkle: "",
+  fid: "",
 };
 
 export const ActiveDeals = {
@@ -65,6 +67,9 @@ export const ActiveDeals = {
     }
     if (message.merkle !== "") {
       writer.uint32(90).string(message.merkle);
+    }
+    if (message.fid !== "") {
+      writer.uint32(98).string(message.fid);
     }
     return writer;
   },
@@ -108,6 +113,9 @@ export const ActiveDeals = {
           break;
         case 11:
           message.merkle = reader.string();
+          break;
+        case 12:
+          message.fid = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -174,6 +182,11 @@ export const ActiveDeals = {
     } else {
       message.merkle = "";
     }
+    if (object.fid !== undefined && object.fid !== null) {
+      message.fid = String(object.fid);
+    } else {
+      message.fid = "";
+    }
     return message;
   },
 
@@ -193,6 +206,7 @@ export const ActiveDeals = {
       (obj.blocktoprove = message.blocktoprove);
     message.creator !== undefined && (obj.creator = message.creator);
     message.merkle !== undefined && (obj.merkle = message.merkle);
+    message.fid !== undefined && (obj.fid = message.fid);
     return obj;
   },
 
@@ -252,6 +266,11 @@ export const ActiveDeals = {
       message.merkle = object.merkle;
     } else {
       message.merkle = "";
+    }
+    if (object.fid !== undefined && object.fid !== null) {
+      message.fid = object.fid;
+    } else {
+      message.fid = "";
     }
     return message;
   },
