@@ -17587,6 +17587,9 @@ paths:
                         }
       parameters:
         - name: body
+          description: |-
+            SimulateRequest is the request type for the Service.Simulate
+            RPC method.
           in: body
           required: true
           schema:
@@ -18386,6 +18389,11 @@ paths:
                         }
       parameters:
         - name: body
+          description: >-
+            BroadcastTxRequest is the request type for the
+            Service.BroadcastTxRequest
+
+            RPC method.
           in: body
           required: true
           schema:
@@ -56083,6 +56091,10 @@ definitions:
     title: >-
       QueryInterchainAccountFromAddressResponse the response type for the
       Query/InterchainAccountAddress RPC
+  jackaldao.canine.jklaccounts.MsgChoosePlanResponse:
+    type: object
+  jackaldao.canine.jklaccounts.MsgPayMonthsResponse:
+    type: object
   jackaldao.canine.rns.Bids:
     type: object
     properties:

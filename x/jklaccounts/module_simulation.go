@@ -24,7 +24,15 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgChoosePlan = "op_weight_msg_choose_plan"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgChoosePlan int = 100
+
+	opWeightMsgPayMonths = "op_weight_msg_pay_months"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgPayMonths int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -56,6 +64,28 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgChoosePlan int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgChoosePlan, &weightMsgChoosePlan, nil,
+		func(_ *rand.Rand) {
+			weightMsgChoosePlan = defaultWeightMsgChoosePlan
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgChoosePlan,
+		jklaccountssimulation.SimulateMsgChoosePlan(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgPayMonths int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPayMonths, &weightMsgPayMonths, nil,
+		func(_ *rand.Rand) {
+			weightMsgPayMonths = defaultWeightMsgPayMonths
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgPayMonths,
+		jklaccountssimulation.SimulateMsgPayMonths(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
