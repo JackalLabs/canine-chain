@@ -12,7 +12,7 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 var (
 	KeyMintDenom = []byte("MintDenom")
 	// TODO: Determine the default value
-	DefaultMintDenom string = "mint_denom"
+	DefaultMintDenom string = "ujkl"
 )
 
 // ParamKeyTable the param key table for launch module

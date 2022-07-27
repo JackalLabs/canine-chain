@@ -28,6 +28,9 @@ genesis:
     staking:
       params:
         bond_denom: "ujkl"
+    mint:
+      params:
+        mint_denom: "ujkl"
   chain_id: "canine-1"
 build:
   main: "cmd/canined"

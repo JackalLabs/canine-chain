@@ -178,10 +178,6 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 	var dayBlocks int64 = 14400
 	dayBlocks = 100
 
-	var jklperblock int64 = 6000000
-
-	totalmint := jklperblock * dayBlocks
-
 	fmt.Printf("blockdiff : %d\n", height%dayBlocks)
 	if height%dayBlocks == 0 {
 		fmt.Printf("%s\n", "checking blocks")
@@ -196,10 +192,8 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 			networkSize += ss.Int64()
 		}
 
-		coin := sdk.NewInt64Coin("ujkl", totalmint)
-		coins := sdk.NewCoins(coin)
-
-		am.bankKeeper.MintCoins(ctx, types.ModuleName, coins)
+		address := am.accountKeeper.GetModuleAddress(types.ModuleName)
+		balance := am.bankKeeper.GetBalance(ctx, address, "ujkl")
 
 		for i := 0; i < len(allDeals); i++ {
 			deal := allDeals[i]
@@ -301,7 +295,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 
 			fmt.Printf("Ratio: %f\n", ratio)
 
-			ff, err := sdk.NewDec(totalmint).Float64()
+			ff, err := sdk.NewDec(balance.Amount.Int64()).Float64()
 			if err != nil {
 				ctx.Logger().Error(err.Error())
 				continue

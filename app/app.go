@@ -422,7 +422,7 @@ func NewWasmApp(
 		app.accountKeeper,
 		app.bankKeeper,
 		authtypes.FeeCollectorName,
-		app.JklminingKeeper.GetName(),
+		storagemoduletypes.ModuleName,
 	)
 	app.distrKeeper = distrkeeper.NewKeeper(
 		appCodec,

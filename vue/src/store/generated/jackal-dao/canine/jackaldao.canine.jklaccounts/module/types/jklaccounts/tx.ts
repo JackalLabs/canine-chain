@@ -6,6 +6,7 @@ export const protobufPackage = "jackaldao.canine.jklaccounts";
 export interface MsgChoosePlan {
   creator: string;
   tbCount: string;
+  paymentDenom: string;
 }
 
 export interface MsgChoosePlanResponse {}
@@ -19,7 +20,11 @@ export interface MsgPayMonths {
 
 export interface MsgPayMonthsResponse {}
 
-const baseMsgChoosePlan: object = { creator: "", tbCount: "" };
+const baseMsgChoosePlan: object = {
+  creator: "",
+  tbCount: "",
+  paymentDenom: "",
+};
 
 export const MsgChoosePlan = {
   encode(message: MsgChoosePlan, writer: Writer = Writer.create()): Writer {
@@ -28,6 +33,9 @@ export const MsgChoosePlan = {
     }
     if (message.tbCount !== "") {
       writer.uint32(18).string(message.tbCount);
+    }
+    if (message.paymentDenom !== "") {
+      writer.uint32(26).string(message.paymentDenom);
     }
     return writer;
   },
@@ -44,6 +52,9 @@ export const MsgChoosePlan = {
           break;
         case 2:
           message.tbCount = reader.string();
+          break;
+        case 3:
+          message.paymentDenom = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -65,6 +76,11 @@ export const MsgChoosePlan = {
     } else {
       message.tbCount = "";
     }
+    if (object.paymentDenom !== undefined && object.paymentDenom !== null) {
+      message.paymentDenom = String(object.paymentDenom);
+    } else {
+      message.paymentDenom = "";
+    }
     return message;
   },
 
@@ -72,6 +88,8 @@ export const MsgChoosePlan = {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.tbCount !== undefined && (obj.tbCount = message.tbCount);
+    message.paymentDenom !== undefined &&
+      (obj.paymentDenom = message.paymentDenom);
     return obj;
   },
 
@@ -86,6 +104,11 @@ export const MsgChoosePlan = {
       message.tbCount = object.tbCount;
     } else {
       message.tbCount = "";
+    }
+    if (object.paymentDenom !== undefined && object.paymentDenom !== null) {
+      message.paymentDenom = object.paymentDenom;
+    } else {
+      message.paymentDenom = "";
     }
     return message;
   },

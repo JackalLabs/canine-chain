@@ -15,6 +15,7 @@ service Msg {
 message MsgChoosePlan {
   string creator = 1;
   string tbCount = 2;
+  string paymentDenom = 3;
 }
 
 message MsgChoosePlanResponse {

@@ -31,12 +31,12 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	if !found {
 		fmt.Printf("%s, %s\n", "Contract not found", msg.Cid)
 
-		return nil, fmt.Errorf("Contract not found")
+		return nil, fmt.Errorf("contract not found")
 	}
 
 	nn, ok := sdk.NewIntFromString(contract.Blocktoprove)
 	if !ok {
-		return nil, fmt.Errorf("Failed to parse block")
+		return nil, fmt.Errorf("failed to parse block")
 	}
 	num := nn.Int64()
 
@@ -64,18 +64,21 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	if err != nil {
 		fmt.Printf("%v\n", err)
 
-		return nil, fmt.Errorf("Could not build merkle tree")
+		return nil, fmt.Errorf("could not build merkle tree")
 	}
 
 	if !verified {
 		fmt.Printf("%s\n", "Cannot verify")
 
-		return nil, fmt.Errorf("File chunk was not verified")
+		return nil, fmt.Errorf("file chunk was not verified")
 	}
 
 	deal, found := k.GetActiveDeals(ctx, msg.Cid)
 	if !found {
-		return nil, fmt.Errorf("Deal not found")
+		return nil, fmt.Errorf("deal not found")
+	}
+	if deal.Proofverified == "false" {
+		ctx.GasMeter().RefundGas(ctx.GasMeter().GasConsumed(), "successful proof refund.")
 	}
 	deal.Proofverified = "true"
 	k.SetActiveDeals(ctx, deal)

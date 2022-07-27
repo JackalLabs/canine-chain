@@ -14,11 +14,12 @@ var _ = strconv.Itoa(0)
 
 func CmdChoosePlan() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "choose-plan [tb-count]",
-		Short: "Broadcast message choose-plan",
-		Args:  cobra.ExactArgs(1),
+		Use:   "choose-plan [tb-count] [payment-denom]",
+		Short: "Choose a payment plan for Jackal Storage",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argTbCount := args[0]
+			argdenom := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -28,6 +29,7 @@ func CmdChoosePlan() *cobra.Command {
 			msg := types.NewMsgChoosePlan(
 				clientCtx.GetFromAddress().String(),
 				argTbCount,
+				argdenom,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

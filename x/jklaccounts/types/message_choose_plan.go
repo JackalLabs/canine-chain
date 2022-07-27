@@ -9,10 +9,11 @@ const TypeMsgChoosePlan = "choose_plan"
 
 var _ sdk.Msg = &MsgChoosePlan{}
 
-func NewMsgChoosePlan(creator string, tbCount string) *MsgChoosePlan {
+func NewMsgChoosePlan(creator string, tbCount string, denom string) *MsgChoosePlan {
 	return &MsgChoosePlan{
-		Creator: creator,
-		TbCount: tbCount,
+		Creator:      creator,
+		TbCount:      tbCount,
+		PaymentDenom: denom,
 	}
 }
 

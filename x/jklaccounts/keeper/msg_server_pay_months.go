@@ -8,6 +8,11 @@ import (
 	"github.com/jackal-dao/canine/x/jklaccounts/types"
 )
 
+const (
+	blocksPerMonth int64 = 100
+	pricePerMonth  int64 = 8000000
+)
+
 func (k msgServer) PayMonths(goCtx context.Context, msg *types.MsgPayMonths) (*types.MsgPayMonthsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -19,9 +24,6 @@ func (k msgServer) PayMonths(goCtx context.Context, msg *types.MsgPayMonths) (*t
 	}
 
 	monthcount := months.Int64()
-
-	const blocksPerMonth int64 = 100
-	const pricePerMonth int64 = 8000000
 
 	blocksToAdd := blocksPerMonth * monthcount
 

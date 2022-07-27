@@ -88,6 +88,8 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	}
 
 	initRootCmd(rootCmd, encodingConfig)
+	rootCmd.Flags().Set("gas-adjustment", "1.5")
+	rootCmd.Flags().Set("gas-prices", "0.002ujkl")
 
 	return rootCmd, encodingConfig
 }

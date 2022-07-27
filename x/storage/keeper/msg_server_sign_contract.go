@@ -17,7 +17,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 	}
 
 	if contract.Signee != msg.Creator {
-		return nil, fmt.Errorf("you do not have permission to approve this contract.")
+		return nil, fmt.Errorf("you do not have permission to approve this contract")
 	}
 
 	eblock, ok := sdk.NewIntFromString(contract.Duration)
@@ -33,7 +33,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Endblock:      fmt.Sprintf("%d", ctx.BlockHeight()+eblock.Int64()),
 		Filesize:      contract.Filesize,
 		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", ctx.BlockHeight()+3),
+		Blocktoprove:  fmt.Sprintf("%d", ctx.BlockHeight()/1024),
 		Creator:       msg.Creator,
 		Proofsmissed:  "0",
 		Merkle:        contract.Merkle,
