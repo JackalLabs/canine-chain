@@ -81,7 +81,9 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int
 	return bytes.Int64()
 }
 
-func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, startBlock int64, length int64, bytes int64) error {
+func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, bytes int64) error {
+
+	startBlock := ctx.BlockHeight()
 
 	endBlock := startBlock + length
 

@@ -56429,10 +56429,6 @@ definitions:
     title: >-
       QueryInterchainAccountFromAddressResponse the response type for the
       Query/InterchainAccountAddress RPC
-  jackaldao.canine.jklaccounts.MsgChoosePlanResponse:
-    type: object
-  jackaldao.canine.jklaccounts.MsgPayMonthsResponse:
-    type: object
   jackaldao.canine.rns.Bids:
     type: object
     properties:

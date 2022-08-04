@@ -110,12 +110,6 @@ import (
 	wasmclient "github.com/jackal-dao/canine/x/wasm/client"
 	wasmkeeper "github.com/jackal-dao/canine/x/wasm/keeper"
 
-	jklaccountsmodule "github.com/jackal-dao/canine/x/jklaccounts"
-	jklaccountsmodulekeeper "github.com/jackal-dao/canine/x/jklaccounts/keeper"
-	jklaccountsmoduletypes "github.com/jackal-dao/canine/x/jklaccounts/types"
-	jklminingmodule "github.com/jackal-dao/canine/x/jklmining"
-	jklminingmodulekeeper "github.com/jackal-dao/canine/x/jklmining/keeper"
-	jklminingmoduletypes "github.com/jackal-dao/canine/x/jklmining/types"
 	mint "github.com/jackal-dao/canine/x/jklmint"
 	mintkeeper "github.com/jackal-dao/canine/x/jklmint/keeper"
 	minttypes "github.com/jackal-dao/canine/x/jklmint/types"
@@ -222,27 +216,23 @@ var (
 		wasm.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		intertx.AppModuleBasic{},
-		jklminingmodule.AppModuleBasic{},
-		jklaccountsmodule.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
 		storagemodule.AppModuleBasic{},
 	)
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:        nil,
-		distrtypes.ModuleName:             nil,
-		minttypes.ModuleName:              {authtypes.Minter},
-		stakingtypes.BondedPoolName:       {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:    {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:               {authtypes.Burner},
-		ibctransfertypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
-		icatypes.ModuleName:               nil,
-		wasm.ModuleName:                   {authtypes.Burner},
-		jklminingmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		jklaccountsmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		rnsmoduletypes.ModuleName:         {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		storagemoduletypes.ModuleName:     {authtypes.Minter},
+		authtypes.FeeCollectorName:     nil,
+		distrtypes.ModuleName:          nil,
+		minttypes.ModuleName:           {authtypes.Minter},
+		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:            {authtypes.Burner},
+		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		icatypes.ModuleName:            nil,
+		wasm.ModuleName:                {authtypes.Burner},
+		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		storagemoduletypes.ModuleName:  {authtypes.Minter},
 	}
 )
 
@@ -294,10 +284,6 @@ type WasmApp struct {
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
-	JklminingKeeper jklminingmodulekeeper.Keeper
-
-	JklaccountsKeeper jklaccountsmodulekeeper.Keeper
-
 	RnsKeeper rnsmodulekeeper.Keeper
 
 	StorageKeeper storagemodulekeeper.Keeper
@@ -340,8 +326,6 @@ func NewWasmApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		jklminingmoduletypes.StoreKey,
-		jklaccountsmoduletypes.StoreKey,
 		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -573,30 +557,6 @@ func NewWasmApp(
 	)
 	rnsModule := rnsmodule.NewAppModule(appCodec, app.RnsKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.JklminingKeeper = *jklminingmodulekeeper.NewKeeper(
-		appCodec,
-		keys[jklminingmoduletypes.StoreKey],
-		keys[jklminingmoduletypes.MemStoreKey],
-		app.getSubspace(jklminingmoduletypes.ModuleName),
-
-		app.accountKeeper,
-		app.bankKeeper,
-		app.JklaccountsKeeper,
-	)
-	jklminingModule := jklminingmodule.NewAppModule(appCodec, app.JklminingKeeper, app.accountKeeper, app.bankKeeper, app.JklaccountsKeeper)
-
-	app.JklaccountsKeeper = *jklaccountsmodulekeeper.NewKeeper(
-		appCodec,
-		keys[jklaccountsmoduletypes.StoreKey],
-		keys[jklaccountsmoduletypes.MemStoreKey],
-		app.getSubspace(jklaccountsmoduletypes.ModuleName),
-
-		app.accountKeeper,
-		app.bankKeeper,
-		app.JklminingKeeper,
-	)
-	jklaccountsModule := jklaccountsmodule.NewAppModule(appCodec, app.JklaccountsKeeper, app.accountKeeper, app.bankKeeper)
-
 	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
 		appCodec,
 		keys[storagemoduletypes.StoreKey],
@@ -665,8 +625,6 @@ func NewWasmApp(
 		icaModule,
 		interTxModule,
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
-		jklminingModule,
-		jklaccountsModule,
 		rnsModule,
 		storageModule,
 	)
@@ -698,8 +656,6 @@ func NewWasmApp(
 		icatypes.ModuleName,
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
-		jklminingmoduletypes.ModuleName,
-		jklaccountsmoduletypes.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 	)
@@ -727,8 +683,6 @@ func NewWasmApp(
 		icatypes.ModuleName,
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
-		jklminingmoduletypes.ModuleName,
-		jklaccountsmoduletypes.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 	)
@@ -764,8 +718,6 @@ func NewWasmApp(
 		intertxtypes.ModuleName,
 		// wasm after ibc transfer
 		wasm.ModuleName,
-		jklminingmoduletypes.ModuleName,
-		jklaccountsmoduletypes.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 	)
@@ -799,8 +751,6 @@ func NewWasmApp(
 		wasm.NewAppModule(appCodec, &app.wasmKeeper, app.stakingKeeper, app.accountKeeper, app.bankKeeper),
 		ibc.NewAppModule(app.ibcKeeper),
 		transferModule,
-		jklminingModule,
-		jklaccountsModule,
 		rnsModule,
 		storageModule,
 	)
@@ -1002,8 +952,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
-	paramsKeeper.Subspace(jklminingmoduletypes.ModuleName)
-	paramsKeeper.Subspace(jklaccountsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
 
 	return paramsKeeper
