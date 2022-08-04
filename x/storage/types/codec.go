@@ -28,6 +28,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgSetMinerTotalspace{}, "storage/SetMinerTotalspace", nil)
 	cdc.RegisterConcrete(&MsgInitMiner{}, "storage/InitMiner", nil)
 	cdc.RegisterConcrete(&MsgCancelContract{}, "storage/CancelContract", nil)
+	cdc.RegisterConcrete(&MsgBuyStorage{}, "storage/BuyStorage", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -75,6 +76,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCancelContract{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgBuyStorage{},
 	)
 	// this line is used by starport scaffolding # 3
 

@@ -54,6 +54,22 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
+				PayBlocksList: []types.PayBlocks{
+					{
+						Blockid: "0",
+					},
+					{
+						Blockid: "1",
+					},
+				},
+				ClientUsageList: []types.ClientUsage{
+					{
+						Address: "0",
+					},
+					{
+						Address: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -104,6 +120,34 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated miners",
 			genState: &types.GenesisState{
 				MinersList: []types.Miners{
+					{
+						Address: "0",
+					},
+					{
+						Address: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated payBlocks",
+			genState: &types.GenesisState{
+				PayBlocksList: []types.PayBlocks{
+					{
+						Blockid: "0",
+					},
+					{
+						Blockid: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated clientUsage",
+			genState: &types.GenesisState{
+				ClientUsageList: []types.ClientUsage{
 					{
 						Address: "0",
 					},

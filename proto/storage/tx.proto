@@ -31,6 +31,7 @@ service Msg {
   rpc SetMinerTotalspace(MsgSetMinerTotalspace) returns (MsgSetMinerTotalspaceResponse);
   rpc InitMiner(MsgInitMiner) returns (MsgInitMinerResponse);
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
+  rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -224,6 +225,18 @@ message MsgCancelContract {
 }
 
 message MsgCancelContractResponse {
+}
+
+message MsgBuyStorage {
+  string creator = 1;
+  string forAddress = 2;
+  string startBlock = 3;
+  string duration = 4;
+  string bytes = 5;
+  string paymentDenom = 6;
+}
+
+message MsgBuyStorageResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

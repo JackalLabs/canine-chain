@@ -30,7 +30,7 @@ require (
 	github.com/tendermint/tendermint v0.34.19
 	github.com/tendermint/tm-db v0.6.7
 	github.com/wealdtech/go-merkletree v1.0.0
-	google.golang.org/genproto v0.0.0-20220719170305-83ca9fad585f
+	google.golang.org/genproto v0.0.0-20220728213248-dd149ef739b9
 	google.golang.org/grpc v1.48.0
 	gopkg.in/yaml.v2 v2.4.0
 )
@@ -122,7 +122,7 @@ require (
 	golang.org/x/sys v0.0.0-20220610221304-9f5ed59c137d // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.6 // indirect
@@ -131,6 +131,7 @@ require (
 replace (
 	// Use the cosmos-flavored keyring library
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
+	// github.com/cosmos/cosmos-sdk v0.45.5 => github.com/TheMarstonConnell/cosmos-sdk v0.45.5-rotating-0.0.1
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
 	// TODO Remove it: https://github.com/cosmos/cosmos-sdk/issues/10409
 	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.7.0

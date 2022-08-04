@@ -167,7 +167,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
-func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
+func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Every x blocks we check for prooved deals
 
 	allDeals := am.keeper.GetAllActiveDeals(ctx)
 
@@ -325,6 +325,10 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 				ctx.Logger().Error(errorr.Error())
 				continue
 			}
+
+			balance := am.bankKeeper.GetBalance(ctx, am.accountKeeper.GetModuleAddress(types.ModuleName), "ujkl")
+
+			am.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(balance))
 
 			fmt.Printf("%s\n", deal.Cid)
 

@@ -50,6 +50,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdSetMinerTotalspace())
 	cmd.AddCommand(CmdInitMiner())
 	cmd.AddCommand(CmdCancelContract())
+	cmd.AddCommand(CmdBuyStorage())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

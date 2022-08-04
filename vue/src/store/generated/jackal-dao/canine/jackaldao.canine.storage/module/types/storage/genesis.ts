@@ -4,6 +4,8 @@ import { Contracts } from "../storage/contracts";
 import { Proofs } from "../storage/proofs";
 import { ActiveDeals } from "../storage/active_deals";
 import { Miners } from "../storage/miners";
+import { PayBlocks } from "../storage/pay_blocks";
+import { ClientUsage } from "../storage/client_usage";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "jackaldao.canine.storage";
@@ -14,8 +16,10 @@ export interface GenesisState {
   contractsList: Contracts[];
   proofsList: Proofs[];
   activeDealsList: ActiveDeals[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   minersList: Miners[];
+  payBlocksList: PayBlocks[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  clientUsageList: ClientUsage[];
 }
 
 const baseGenesisState: object = {};
@@ -37,6 +41,12 @@ export const GenesisState = {
     for (const v of message.minersList) {
       Miners.encode(v!, writer.uint32(42).fork()).ldelim();
     }
+    for (const v of message.payBlocksList) {
+      PayBlocks.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    for (const v of message.clientUsageList) {
+      ClientUsage.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -48,6 +58,8 @@ export const GenesisState = {
     message.proofsList = [];
     message.activeDealsList = [];
     message.minersList = [];
+    message.payBlocksList = [];
+    message.clientUsageList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -68,6 +80,14 @@ export const GenesisState = {
         case 5:
           message.minersList.push(Miners.decode(reader, reader.uint32()));
           break;
+        case 6:
+          message.payBlocksList.push(PayBlocks.decode(reader, reader.uint32()));
+          break;
+        case 7:
+          message.clientUsageList.push(
+            ClientUsage.decode(reader, reader.uint32())
+          );
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -82,6 +102,8 @@ export const GenesisState = {
     message.proofsList = [];
     message.activeDealsList = [];
     message.minersList = [];
+    message.payBlocksList = [];
+    message.clientUsageList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -108,6 +130,19 @@ export const GenesisState = {
     if (object.minersList !== undefined && object.minersList !== null) {
       for (const e of object.minersList) {
         message.minersList.push(Miners.fromJSON(e));
+      }
+    }
+    if (object.payBlocksList !== undefined && object.payBlocksList !== null) {
+      for (const e of object.payBlocksList) {
+        message.payBlocksList.push(PayBlocks.fromJSON(e));
+      }
+    }
+    if (
+      object.clientUsageList !== undefined &&
+      object.clientUsageList !== null
+    ) {
+      for (const e of object.clientUsageList) {
+        message.clientUsageList.push(ClientUsage.fromJSON(e));
       }
     }
     return message;
@@ -145,6 +180,20 @@ export const GenesisState = {
     } else {
       obj.minersList = [];
     }
+    if (message.payBlocksList) {
+      obj.payBlocksList = message.payBlocksList.map((e) =>
+        e ? PayBlocks.toJSON(e) : undefined
+      );
+    } else {
+      obj.payBlocksList = [];
+    }
+    if (message.clientUsageList) {
+      obj.clientUsageList = message.clientUsageList.map((e) =>
+        e ? ClientUsage.toJSON(e) : undefined
+      );
+    } else {
+      obj.clientUsageList = [];
+    }
     return obj;
   },
 
@@ -154,6 +203,8 @@ export const GenesisState = {
     message.proofsList = [];
     message.activeDealsList = [];
     message.minersList = [];
+    message.payBlocksList = [];
+    message.clientUsageList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -180,6 +231,19 @@ export const GenesisState = {
     if (object.minersList !== undefined && object.minersList !== null) {
       for (const e of object.minersList) {
         message.minersList.push(Miners.fromPartial(e));
+      }
+    }
+    if (object.payBlocksList !== undefined && object.payBlocksList !== null) {
+      for (const e of object.payBlocksList) {
+        message.payBlocksList.push(PayBlocks.fromPartial(e));
+      }
+    }
+    if (
+      object.clientUsageList !== undefined &&
+      object.clientUsageList !== null
+    ) {
+      for (const e of object.clientUsageList) {
+        message.clientUsageList.push(ClientUsage.fromPartial(e));
       }
     }
     return message;

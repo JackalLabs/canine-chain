@@ -602,6 +602,7 @@ func NewWasmApp(
 		keys[storagemoduletypes.StoreKey],
 		keys[storagemoduletypes.MemStoreKey],
 		app.getSubspace(storagemoduletypes.ModuleName),
+		app.bankKeeper,
 	)
 	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.accountKeeper, app.bankKeeper)
 

@@ -35,6 +35,11 @@ export interface StorageActiveDeals {
   fid?: string;
 }
 
+export interface StorageClientUsage {
+  address?: string;
+  usage?: string;
+}
+
 export interface StorageContracts {
   cid?: string;
   priceamt?: string;
@@ -54,6 +59,8 @@ export interface StorageMiners {
   burned_contracts?: string;
   creator?: string;
 }
+
+export type StorageMsgBuyStorageResponse = object;
 
 export type StorageMsgCancelContractResponse = object;
 
@@ -102,6 +109,13 @@ export type StorageMsgUpdateProofsResponse = object;
  */
 export type StorageParams = object;
 
+export interface StoragePayBlocks {
+  blockid?: string;
+  bytes?: string;
+  blocktype?: string;
+  blocknum?: string;
+}
+
 export interface StorageProofs {
   cid?: string;
   item?: string;
@@ -111,6 +125,21 @@ export interface StorageProofs {
 
 export interface StorageQueryAllActiveDealsResponse {
   activeDeals?: StorageActiveDeals[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface StorageQueryAllClientUsageResponse {
+  clientUsage?: StorageClientUsage[];
 
   /**
    * PageResponse is to be embedded in gRPC response messages where the
@@ -154,6 +183,21 @@ export interface StorageQueryAllMinersResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface StorageQueryAllPayBlocksResponse {
+  payBlocks?: StoragePayBlocks[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface StorageQueryAllProofsResponse {
   proofs?: StorageProofs[];
 
@@ -181,12 +225,20 @@ export interface StorageQueryGetActiveDealsResponse {
   activeDeals?: StorageActiveDeals;
 }
 
+export interface StorageQueryGetClientUsageResponse {
+  clientUsage?: StorageClientUsage;
+}
+
 export interface StorageQueryGetContractsResponse {
   contracts?: StorageContracts;
 }
 
 export interface StorageQueryGetMinersResponse {
   miners?: StorageMiners;
+}
+
+export interface StorageQueryGetPayBlocksResponse {
+  payBlocks?: StoragePayBlocks;
 }
 
 export interface StorageQueryGetProofsResponse {
@@ -506,6 +558,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
+   * @name QueryClientUsageAll
+   * @summary Queries a list of ClientUsage items.
+   * @request GET:/jackal-dao/canine/storage/client_usage
+   */
+  queryClientUsageAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<StorageQueryAllClientUsageResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/client_usage`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryClientUsage
+   * @summary Queries a ClientUsage by index.
+   * @request GET:/jackal-dao/canine/storage/client_usage/{address}
+   */
+  queryClientUsage = (address: string, params: RequestParams = {}) =>
+    this.request<StorageQueryGetClientUsageResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/client_usage/${address}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
    * @name QueryContractsAll
    * @summary Queries a list of Contracts items.
    * @request GET:/jackal-dao/canine/storage/contracts
@@ -629,6 +723,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<StorageQueryParamsResponse, RpcStatus>({
       path: `/jackal-dao/canine/storage/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPayBlocksAll
+   * @summary Queries a list of PayBlocks items.
+   * @request GET:/jackal-dao/canine/storage/pay_blocks
+   */
+  queryPayBlocksAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<StorageQueryAllPayBlocksResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/pay_blocks`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPayBlocks
+   * @summary Queries a PayBlocks by index.
+   * @request GET:/jackal-dao/canine/storage/pay_blocks/{blockid}
+   */
+  queryPayBlocks = (blockid: string, params: RequestParams = {}) =>
+    this.request<StorageQueryGetPayBlocksResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/pay_blocks/${blockid}`,
       method: "GET",
       format: "json",
       ...params,

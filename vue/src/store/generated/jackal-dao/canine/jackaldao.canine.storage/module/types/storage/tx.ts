@@ -192,6 +192,17 @@ export interface MsgCancelContract {
 
 export interface MsgCancelContractResponse {}
 
+export interface MsgBuyStorage {
+  creator: string;
+  forAddress: string;
+  startBlock: string;
+  duration: string;
+  bytes: string;
+  paymentDenom: string;
+}
+
+export interface MsgBuyStorageResponse {}
+
 const baseMsgPostContract: object = {
   creator: "",
   priceamt: "",
@@ -3492,6 +3503,192 @@ export const MsgCancelContractResponse = {
   },
 };
 
+const baseMsgBuyStorage: object = {
+  creator: "",
+  forAddress: "",
+  startBlock: "",
+  duration: "",
+  bytes: "",
+  paymentDenom: "",
+};
+
+export const MsgBuyStorage = {
+  encode(message: MsgBuyStorage, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.forAddress !== "") {
+      writer.uint32(18).string(message.forAddress);
+    }
+    if (message.startBlock !== "") {
+      writer.uint32(26).string(message.startBlock);
+    }
+    if (message.duration !== "") {
+      writer.uint32(34).string(message.duration);
+    }
+    if (message.bytes !== "") {
+      writer.uint32(42).string(message.bytes);
+    }
+    if (message.paymentDenom !== "") {
+      writer.uint32(50).string(message.paymentDenom);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBuyStorage {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBuyStorage } as MsgBuyStorage;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.forAddress = reader.string();
+          break;
+        case 3:
+          message.startBlock = reader.string();
+          break;
+        case 4:
+          message.duration = reader.string();
+          break;
+        case 5:
+          message.bytes = reader.string();
+          break;
+        case 6:
+          message.paymentDenom = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgBuyStorage {
+    const message = { ...baseMsgBuyStorage } as MsgBuyStorage;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.forAddress !== undefined && object.forAddress !== null) {
+      message.forAddress = String(object.forAddress);
+    } else {
+      message.forAddress = "";
+    }
+    if (object.startBlock !== undefined && object.startBlock !== null) {
+      message.startBlock = String(object.startBlock);
+    } else {
+      message.startBlock = "";
+    }
+    if (object.duration !== undefined && object.duration !== null) {
+      message.duration = String(object.duration);
+    } else {
+      message.duration = "";
+    }
+    if (object.bytes !== undefined && object.bytes !== null) {
+      message.bytes = String(object.bytes);
+    } else {
+      message.bytes = "";
+    }
+    if (object.paymentDenom !== undefined && object.paymentDenom !== null) {
+      message.paymentDenom = String(object.paymentDenom);
+    } else {
+      message.paymentDenom = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgBuyStorage): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.forAddress !== undefined && (obj.forAddress = message.forAddress);
+    message.startBlock !== undefined && (obj.startBlock = message.startBlock);
+    message.duration !== undefined && (obj.duration = message.duration);
+    message.bytes !== undefined && (obj.bytes = message.bytes);
+    message.paymentDenom !== undefined &&
+      (obj.paymentDenom = message.paymentDenom);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgBuyStorage>): MsgBuyStorage {
+    const message = { ...baseMsgBuyStorage } as MsgBuyStorage;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.forAddress !== undefined && object.forAddress !== null) {
+      message.forAddress = object.forAddress;
+    } else {
+      message.forAddress = "";
+    }
+    if (object.startBlock !== undefined && object.startBlock !== null) {
+      message.startBlock = object.startBlock;
+    } else {
+      message.startBlock = "";
+    }
+    if (object.duration !== undefined && object.duration !== null) {
+      message.duration = object.duration;
+    } else {
+      message.duration = "";
+    }
+    if (object.bytes !== undefined && object.bytes !== null) {
+      message.bytes = object.bytes;
+    } else {
+      message.bytes = "";
+    }
+    if (object.paymentDenom !== undefined && object.paymentDenom !== null) {
+      message.paymentDenom = object.paymentDenom;
+    } else {
+      message.paymentDenom = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgBuyStorageResponse: object = {};
+
+export const MsgBuyStorageResponse = {
+  encode(_: MsgBuyStorageResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBuyStorageResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBuyStorageResponse } as MsgBuyStorageResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgBuyStorageResponse {
+    const message = { ...baseMsgBuyStorageResponse } as MsgBuyStorageResponse;
+    return message;
+  },
+
+  toJSON(_: MsgBuyStorageResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgBuyStorageResponse>): MsgBuyStorageResponse {
+    const message = { ...baseMsgBuyStorageResponse } as MsgBuyStorageResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostContract(request: MsgPostContract): Promise<MsgPostContractResponse>;
@@ -3527,10 +3724,11 @@ export interface Msg {
     request: MsgSetMinerTotalspace
   ): Promise<MsgSetMinerTotalspaceResponse>;
   InitMiner(request: MsgInitMiner): Promise<MsgInitMinerResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   CancelContract(
     request: MsgCancelContract
   ): Promise<MsgCancelContractResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  BuyStorage(request: MsgBuyStorage): Promise<MsgBuyStorageResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -3789,6 +3987,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgCancelContractResponse.decode(new Reader(data))
+    );
+  }
+
+  BuyStorage(request: MsgBuyStorage): Promise<MsgBuyStorageResponse> {
+    const data = MsgBuyStorage.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.storage.Msg",
+      "BuyStorage",
+      data
+    );
+    return promise.then((data) =>
+      MsgBuyStorageResponse.decode(new Reader(data))
     );
   }
 }

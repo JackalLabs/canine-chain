@@ -25,6 +25,14 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.MinersList {
 		k.SetMiners(ctx, elem)
 	}
+	// Set all the payBlocks
+	for _, elem := range genState.PayBlocksList {
+		k.SetPayBlocks(ctx, elem)
+	}
+	// Set all the clientUsage
+	for _, elem := range genState.ClientUsageList {
+		k.SetClientUsage(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -38,6 +46,8 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.ProofsList = k.GetAllProofs(ctx)
 	genesis.ActiveDealsList = k.GetAllActiveDeals(ctx)
 	genesis.MinersList = k.GetAllMiners(ctx)
+	genesis.PayBlocksList = k.GetAllPayBlocks(ctx)
+	genesis.ClientUsageList = k.GetAllClientUsage(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis
