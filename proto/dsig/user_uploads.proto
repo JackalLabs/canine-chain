@@ -1,0 +1,12 @@
+syntax = "proto3";
+package jackaldao.canine.dsig;
+
+option go_package = "github.com/jackal-dao/canine/x/dsig/types";
+
+message UserUploads {
+  string fid = 1; 
+  string cid = 2; 
+  int64 createdAt = 3; 
+  
+}
+
