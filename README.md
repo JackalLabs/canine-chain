@@ -6,6 +6,7 @@
 
 1. [Modules](x/README.md)
 2. [Tokens](TOKENS.md)
+3. [Storage Providers](/cmd/canined/README.md)
 
 
 ## Installing the Canine CLI

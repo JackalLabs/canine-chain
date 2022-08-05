@@ -213,6 +213,21 @@ export interface StorageQueryAllProofsResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface StorageQueryAllStraysResponse {
+  strays?: StorageStrays[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface StorageQueryFindFileResponse {
   minerIps?: string;
 }
@@ -223,6 +238,10 @@ export interface StorageQueryFreespaceResponse {
 
 export interface StorageQueryGetActiveDealsResponse {
   activeDeals?: StorageActiveDeals;
+}
+
+export interface StorageQueryGetClientFreeSpaceResponse {
+  bytesfree?: string;
 }
 
 export interface StorageQueryGetClientUsageResponse {
@@ -245,12 +264,24 @@ export interface StorageQueryGetProofsResponse {
   proofs?: StorageProofs;
 }
 
+export interface StorageQueryGetStraysResponse {
+  strays?: StorageStrays;
+}
+
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  */
 export interface StorageQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: StorageParams;
+}
+
+export interface StorageStrays {
+  cid?: string;
+  fid?: string;
+  signee?: string;
+  filesize?: string;
+  merkle?: string;
 }
 
 /**
@@ -674,6 +705,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
+   * @name QueryGetClientFreeSpace
+   * @summary Queries a list of GetClientFreeSpace items.
+   * @request GET:/jackal-dao/canine/storage/get_client_free_space/{address}
+   */
+  queryGetClientFreeSpace = (address: string, params: RequestParams = {}) =>
+    this.request<StorageQueryGetClientFreeSpaceResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/get_client_free_space/${address}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
    * @name QueryMinersAll
    * @summary Queries a list of Miners items.
    * @request GET:/jackal-dao/canine/storage/miners
@@ -807,6 +854,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryProofs = (cid: string, params: RequestParams = {}) =>
     this.request<StorageQueryGetProofsResponse, RpcStatus>({
       path: `/jackal-dao/canine/storage/proofs/${cid}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryStraysAll
+   * @summary Queries a list of Strays items.
+   * @request GET:/jackal-dao/canine/storage/strays
+   */
+  queryStraysAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<StorageQueryAllStraysResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/strays`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryStrays
+   * @summary Queries a Strays by index.
+   * @request GET:/jackal-dao/canine/storage/strays/{cid}
+   */
+  queryStrays = (cid: string, params: RequestParams = {}) =>
+    this.request<StorageQueryGetStraysResponse, RpcStatus>({
+      path: `/jackal-dao/canine/storage/strays/${cid}`,
       method: "GET",
       format: "json",
       ...params,

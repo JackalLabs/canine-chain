@@ -40,6 +40,28 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		return nil, fmt.Errorf("user has not paid for any storage")
 	}
 
+	usage, found := k.GetClientUsage(ctx, msg.Signee)
+	if !found {
+		usage = types.ClientUsage{
+			Usage:   "0",
+			Address: msg.Signee,
+		}
+	}
+
+	bytesUsed, ok := sdk.NewIntFromString(usage.Usage)
+	if !ok {
+		return nil, fmt.Errorf("failed to parse usage")
+	}
+
+	filesize, ok := sdk.NewIntFromString(msg.Filesize)
+	if !ok {
+		return nil, fmt.Errorf("cannot parse filesize")
+	}
+
+	if bytesUsed.Int64()+filesize.Int64() > paidAMT {
+		return nil, fmt.Errorf("not enough storage on the users account")
+	}
+
 	h := sha256.New()
 	io.WriteString(h, msg.Creator+msg.Fid)
 	hashName := h.Sum(nil)

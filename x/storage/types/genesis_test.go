@@ -70,6 +70,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
+				StraysList: []types.Strays{
+					{
+						Cid: "0",
+					},
+					{
+						Cid: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -153,6 +161,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						Address: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated strays",
+			genState: &types.GenesisState{
+				StraysList: []types.Strays{
+					{
+						Cid: "0",
+					},
+					{
+						Cid: "0",
 					},
 				},
 			},

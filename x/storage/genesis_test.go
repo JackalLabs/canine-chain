@@ -62,6 +62,14 @@ func TestGenesis(t *testing.T) {
 				Address: "1",
 			},
 		},
+		StraysList: []types.Strays{
+			{
+				Cid: "0",
+			},
+			{
+				Cid: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -79,5 +87,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.MinersList, got.MinersList)
 	require.ElementsMatch(t, genesisState.PayBlocksList, got.PayBlocksList)
 	require.ElementsMatch(t, genesisState.ClientUsageList, got.ClientUsageList)
+	require.ElementsMatch(t, genesisState.StraysList, got.StraysList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

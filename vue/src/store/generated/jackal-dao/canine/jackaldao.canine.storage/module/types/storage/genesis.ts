@@ -6,6 +6,7 @@ import { ActiveDeals } from "../storage/active_deals";
 import { Miners } from "../storage/miners";
 import { PayBlocks } from "../storage/pay_blocks";
 import { ClientUsage } from "../storage/client_usage";
+import { Strays } from "../storage/strays";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "jackaldao.canine.storage";
@@ -18,8 +19,9 @@ export interface GenesisState {
   activeDealsList: ActiveDeals[];
   minersList: Miners[];
   payBlocksList: PayBlocks[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   clientUsageList: ClientUsage[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  straysList: Strays[];
 }
 
 const baseGenesisState: object = {};
@@ -47,6 +49,9 @@ export const GenesisState = {
     for (const v of message.clientUsageList) {
       ClientUsage.encode(v!, writer.uint32(58).fork()).ldelim();
     }
+    for (const v of message.straysList) {
+      Strays.encode(v!, writer.uint32(66).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -60,6 +65,7 @@ export const GenesisState = {
     message.minersList = [];
     message.payBlocksList = [];
     message.clientUsageList = [];
+    message.straysList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -88,6 +94,9 @@ export const GenesisState = {
             ClientUsage.decode(reader, reader.uint32())
           );
           break;
+        case 8:
+          message.straysList.push(Strays.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -104,6 +113,7 @@ export const GenesisState = {
     message.minersList = [];
     message.payBlocksList = [];
     message.clientUsageList = [];
+    message.straysList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -143,6 +153,11 @@ export const GenesisState = {
     ) {
       for (const e of object.clientUsageList) {
         message.clientUsageList.push(ClientUsage.fromJSON(e));
+      }
+    }
+    if (object.straysList !== undefined && object.straysList !== null) {
+      for (const e of object.straysList) {
+        message.straysList.push(Strays.fromJSON(e));
       }
     }
     return message;
@@ -194,6 +209,13 @@ export const GenesisState = {
     } else {
       obj.clientUsageList = [];
     }
+    if (message.straysList) {
+      obj.straysList = message.straysList.map((e) =>
+        e ? Strays.toJSON(e) : undefined
+      );
+    } else {
+      obj.straysList = [];
+    }
     return obj;
   },
 
@@ -205,6 +227,7 @@ export const GenesisState = {
     message.minersList = [];
     message.payBlocksList = [];
     message.clientUsageList = [];
+    message.straysList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -244,6 +267,11 @@ export const GenesisState = {
     ) {
       for (const e of object.clientUsageList) {
         message.clientUsageList.push(ClientUsage.fromPartial(e));
+      }
+    }
+    if (object.straysList !== undefined && object.straysList !== null) {
+      for (const e of object.straysList) {
+        message.straysList.push(Strays.fromPartial(e));
       }
     }
     return message;

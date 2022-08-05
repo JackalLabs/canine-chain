@@ -232,7 +232,7 @@ var (
 		icatypes.ModuleName:            nil,
 		wasm.ModuleName:                {authtypes.Burner},
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		storagemoduletypes.ModuleName:  {authtypes.Minter},
+		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
 	}
 )
 

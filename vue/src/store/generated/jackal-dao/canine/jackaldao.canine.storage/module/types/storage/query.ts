@@ -11,6 +11,7 @@ import { ActiveDeals } from "../storage/active_deals";
 import { Miners } from "../storage/miners";
 import { PayBlocks } from "../storage/pay_blocks";
 import { ClientUsage } from "../storage/client_usage";
+import { Strays } from "../storage/strays";
 
 export const protobufPackage = "jackaldao.canine.storage";
 
@@ -139,6 +140,31 @@ export interface QueryAllClientUsageRequest {
 export interface QueryAllClientUsageResponse {
   clientUsage: ClientUsage[];
   pagination: PageResponse | undefined;
+}
+
+export interface QueryGetStraysRequest {
+  cid: string;
+}
+
+export interface QueryGetStraysResponse {
+  strays: Strays | undefined;
+}
+
+export interface QueryAllStraysRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllStraysResponse {
+  strays: Strays[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetClientFreeSpaceRequest {
+  address: string;
+}
+
+export interface QueryGetClientFreeSpaceResponse {
+  bytesfree: string;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -2290,6 +2316,420 @@ export const QueryAllClientUsageResponse = {
   },
 };
 
+const baseQueryGetStraysRequest: object = { cid: "" };
+
+export const QueryGetStraysRequest = {
+  encode(
+    message: QueryGetStraysRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.cid !== "") {
+      writer.uint32(10).string(message.cid);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetStraysRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetStraysRequest } as QueryGetStraysRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.cid = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetStraysRequest {
+    const message = { ...baseQueryGetStraysRequest } as QueryGetStraysRequest;
+    if (object.cid !== undefined && object.cid !== null) {
+      message.cid = String(object.cid);
+    } else {
+      message.cid = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetStraysRequest): unknown {
+    const obj: any = {};
+    message.cid !== undefined && (obj.cid = message.cid);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetStraysRequest>
+  ): QueryGetStraysRequest {
+    const message = { ...baseQueryGetStraysRequest } as QueryGetStraysRequest;
+    if (object.cid !== undefined && object.cid !== null) {
+      message.cid = object.cid;
+    } else {
+      message.cid = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetStraysResponse: object = {};
+
+export const QueryGetStraysResponse = {
+  encode(
+    message: QueryGetStraysResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.strays !== undefined) {
+      Strays.encode(message.strays, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetStraysResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetStraysResponse } as QueryGetStraysResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.strays = Strays.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetStraysResponse {
+    const message = { ...baseQueryGetStraysResponse } as QueryGetStraysResponse;
+    if (object.strays !== undefined && object.strays !== null) {
+      message.strays = Strays.fromJSON(object.strays);
+    } else {
+      message.strays = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetStraysResponse): unknown {
+    const obj: any = {};
+    message.strays !== undefined &&
+      (obj.strays = message.strays ? Strays.toJSON(message.strays) : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetStraysResponse>
+  ): QueryGetStraysResponse {
+    const message = { ...baseQueryGetStraysResponse } as QueryGetStraysResponse;
+    if (object.strays !== undefined && object.strays !== null) {
+      message.strays = Strays.fromPartial(object.strays);
+    } else {
+      message.strays = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllStraysRequest: object = {};
+
+export const QueryAllStraysRequest = {
+  encode(
+    message: QueryAllStraysRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllStraysRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllStraysRequest } as QueryAllStraysRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllStraysRequest {
+    const message = { ...baseQueryAllStraysRequest } as QueryAllStraysRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllStraysRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllStraysRequest>
+  ): QueryAllStraysRequest {
+    const message = { ...baseQueryAllStraysRequest } as QueryAllStraysRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllStraysResponse: object = {};
+
+export const QueryAllStraysResponse = {
+  encode(
+    message: QueryAllStraysResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.strays) {
+      Strays.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllStraysResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllStraysResponse } as QueryAllStraysResponse;
+    message.strays = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.strays.push(Strays.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllStraysResponse {
+    const message = { ...baseQueryAllStraysResponse } as QueryAllStraysResponse;
+    message.strays = [];
+    if (object.strays !== undefined && object.strays !== null) {
+      for (const e of object.strays) {
+        message.strays.push(Strays.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllStraysResponse): unknown {
+    const obj: any = {};
+    if (message.strays) {
+      obj.strays = message.strays.map((e) =>
+        e ? Strays.toJSON(e) : undefined
+      );
+    } else {
+      obj.strays = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllStraysResponse>
+  ): QueryAllStraysResponse {
+    const message = { ...baseQueryAllStraysResponse } as QueryAllStraysResponse;
+    message.strays = [];
+    if (object.strays !== undefined && object.strays !== null) {
+      for (const e of object.strays) {
+        message.strays.push(Strays.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryGetClientFreeSpaceRequest: object = { address: "" };
+
+export const QueryGetClientFreeSpaceRequest = {
+  encode(
+    message: QueryGetClientFreeSpaceRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetClientFreeSpaceRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetClientFreeSpaceRequest,
+    } as QueryGetClientFreeSpaceRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetClientFreeSpaceRequest {
+    const message = {
+      ...baseQueryGetClientFreeSpaceRequest,
+    } as QueryGetClientFreeSpaceRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetClientFreeSpaceRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetClientFreeSpaceRequest>
+  ): QueryGetClientFreeSpaceRequest {
+    const message = {
+      ...baseQueryGetClientFreeSpaceRequest,
+    } as QueryGetClientFreeSpaceRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetClientFreeSpaceResponse: object = { bytesfree: "" };
+
+export const QueryGetClientFreeSpaceResponse = {
+  encode(
+    message: QueryGetClientFreeSpaceResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.bytesfree !== "") {
+      writer.uint32(10).string(message.bytesfree);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetClientFreeSpaceResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetClientFreeSpaceResponse,
+    } as QueryGetClientFreeSpaceResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.bytesfree = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetClientFreeSpaceResponse {
+    const message = {
+      ...baseQueryGetClientFreeSpaceResponse,
+    } as QueryGetClientFreeSpaceResponse;
+    if (object.bytesfree !== undefined && object.bytesfree !== null) {
+      message.bytesfree = String(object.bytesfree);
+    } else {
+      message.bytesfree = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetClientFreeSpaceResponse): unknown {
+    const obj: any = {};
+    message.bytesfree !== undefined && (obj.bytesfree = message.bytesfree);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetClientFreeSpaceResponse>
+  ): QueryGetClientFreeSpaceResponse {
+    const message = {
+      ...baseQueryGetClientFreeSpaceResponse,
+    } as QueryGetClientFreeSpaceResponse;
+    if (object.bytesfree !== undefined && object.bytesfree !== null) {
+      message.bytesfree = object.bytesfree;
+    } else {
+      message.bytesfree = "";
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -2338,6 +2778,14 @@ export interface Query {
   ClientUsageAll(
     request: QueryAllClientUsageRequest
   ): Promise<QueryAllClientUsageResponse>;
+  /** Queries a Strays by index. */
+  Strays(request: QueryGetStraysRequest): Promise<QueryGetStraysResponse>;
+  /** Queries a list of Strays items. */
+  StraysAll(request: QueryAllStraysRequest): Promise<QueryAllStraysResponse>;
+  /** Queries a list of GetClientFreeSpace items. */
+  GetClientFreeSpace(
+    request: QueryGetClientFreeSpaceRequest
+  ): Promise<QueryGetClientFreeSpaceResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -2536,6 +2984,44 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllClientUsageResponse.decode(new Reader(data))
+    );
+  }
+
+  Strays(request: QueryGetStraysRequest): Promise<QueryGetStraysResponse> {
+    const data = QueryGetStraysRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.storage.Query",
+      "Strays",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetStraysResponse.decode(new Reader(data))
+    );
+  }
+
+  StraysAll(request: QueryAllStraysRequest): Promise<QueryAllStraysResponse> {
+    const data = QueryAllStraysRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.storage.Query",
+      "StraysAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllStraysResponse.decode(new Reader(data))
+    );
+  }
+
+  GetClientFreeSpace(
+    request: QueryGetClientFreeSpaceRequest
+  ): Promise<QueryGetClientFreeSpaceResponse> {
+    const data = QueryGetClientFreeSpaceRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.storage.Query",
+      "GetClientFreeSpace",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetClientFreeSpaceResponse.decode(new Reader(data))
     );
   }
 }

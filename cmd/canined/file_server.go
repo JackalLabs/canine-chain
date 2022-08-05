@@ -476,7 +476,7 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 			}
 		}
 
-		time.Sleep(60 * time.Second)
+		time.Sleep(10 * time.Second)
 	}
 }
 

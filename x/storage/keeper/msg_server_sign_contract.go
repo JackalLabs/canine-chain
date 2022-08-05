@@ -2,7 +2,9 @@ package keeper
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
+	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/storage/types"
@@ -40,8 +42,46 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Fid:           contract.Fid,
 	}
 
+	usage, found := k.GetClientUsage(ctx, msg.Creator)
+	if !found {
+		usage = types.ClientUsage{
+			Address: msg.Creator,
+			Usage:   "0",
+		}
+	}
+
+	size, ok := sdk.NewIntFromString(contract.Filesize)
+	if !ok {
+		return nil, fmt.Errorf("cannot parse filesize")
+	}
+
+	used, ok := sdk.NewIntFromString(usage.Usage)
+	if !ok {
+		return nil, fmt.Errorf("cannot parse usage")
+	}
+
+	usage.Usage = fmt.Sprintf("%d", used.Int64()+size.Int64())
+
+	k.SetClientUsage(ctx, usage)
 	k.SetActiveDeals(ctx, deal)
 	k.RemoveContracts(ctx, contract.Cid)
+
+	for i := 0; i < 2; i++ {
+		h := sha256.New()
+		io.WriteString(h, fmt.Sprintf("%s%s%d", contract.Creator, contract.Fid, i))
+		hashName := h.Sum(nil)
+
+		newContract := types.Strays{
+			Cid:      fmt.Sprintf("%x", hashName),
+			Signee:   contract.Signee,
+			Fid:      contract.Fid,
+			Filesize: contract.Filesize,
+			Merkle:   contract.Merkle,
+		}
+
+		k.SetStrays(ctx, newContract)
+
+	}
 
 	return &types.MsgSignContractResponse{}, nil
 }
