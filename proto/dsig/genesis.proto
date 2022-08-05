@@ -1,0 +1,18 @@
+syntax = "proto3";
+package jackaldao.canine.dsig;
+
+import "gogoproto/gogo.proto";
+import "dsig/params.proto";
+import "dsig/user_uploads.proto";
+import "dsig/form.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/jackal-dao/canine/x/dsig/types";
+
+// GenesisState defines the dsig module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated UserUploads userUploadsList = 2 [(gogoproto.nullable) = false];
+  repeated Form formList = 3 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

@@ -1,0 +1,43 @@
+syntax = "proto3";
+package jackaldao.canine.dsig;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/jackal-dao/canine/x/dsig/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc Uploadfile(MsgUploadfile) returns (MsgUploadfileResponse);
+  rpc Createform(MsgCreateform) returns (MsgCreateformResponse);
+  rpc Signform(MsgSignform) returns (MsgSignformResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgUploadfile {
+  string creator = 1;
+  string fid = 2;
+}
+
+message MsgUploadfileResponse {
+}
+
+message MsgCreateform {
+  string creator = 1;
+  string fid = 2;
+  string signees = 3;
+}
+
+message MsgCreateformResponse {
+  string ffid = 1;
+}
+
+message MsgSignform {
+  string creator = 1;
+  string ffid = 2;
+  int32 vote = 3;
+}
+
+message MsgSignformResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message

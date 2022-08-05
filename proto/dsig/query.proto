@@ -1,0 +1,88 @@
+syntax = "proto3";
+package jackaldao.canine.dsig;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "dsig/params.proto";
+import "dsig/user_uploads.proto";
+import "dsig/form.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/jackal-dao/canine/x/dsig/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/dsig/dsig/params";
+  }
+  // Queries a UserUploads by index.
+	rpc UserUploads(QueryGetUserUploadsRequest) returns (QueryGetUserUploadsResponse) {
+		option (google.api.http).get = "/dsig/dsig/user_uploads/{fid}";
+	}
+
+	// Queries a list of UserUploads items.
+	rpc UserUploadsAll(QueryAllUserUploadsRequest) returns (QueryAllUserUploadsResponse) {
+		option (google.api.http).get = "/dsig/dsig/user_uploads";
+	}
+
+// Queries a Form by index.
+	rpc Form(QueryGetFormRequest) returns (QueryGetFormResponse) {
+		option (google.api.http).get = "/dsig/dsig/form/{ffid}";
+	}
+
+	// Queries a list of Form items.
+	rpc FormAll(QueryAllFormRequest) returns (QueryAllFormResponse) {
+		option (google.api.http).get = "/dsig/dsig/form";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetUserUploadsRequest {
+	  string fid = 1;
+
+}
+
+message QueryGetUserUploadsResponse {
+	UserUploads userUploads = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllUserUploadsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllUserUploadsResponse {
+	repeated UserUploads userUploads = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetFormRequest {
+	  string ffid = 1;
+
+}
+
+message QueryGetFormResponse {
+	Form form = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllFormRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllFormResponse {
+	repeated Form form = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

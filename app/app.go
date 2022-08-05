@@ -122,6 +122,10 @@ import (
 	storagemodulekeeper "github.com/jackal-dao/canine/x/storage/keeper"
 	storagemoduletypes "github.com/jackal-dao/canine/x/storage/types"
 
+	dsigmodule "github.com/jackal-dao/canine/x/dsig"
+	dsigmodulekeeper "github.com/jackal-dao/canine/x/dsig/keeper"
+	dsigmoduletypes "github.com/jackal-dao/canine/x/dsig/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -218,6 +222,7 @@ var (
 		intertx.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
 		storagemodule.AppModuleBasic{},
+		dsigmodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -233,6 +238,7 @@ var (
 		wasm.ModuleName:                {authtypes.Burner},
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
+		dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 	}
 )
 
@@ -288,6 +294,8 @@ type WasmApp struct {
 
 	StorageKeeper storagemodulekeeper.Keeper
 
+	DsigKeeper dsigmodulekeeper.Keeper
+
 	// the module manager
 	mm *module.Manager
 
@@ -326,7 +334,7 @@ func NewWasmApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -566,6 +574,16 @@ func NewWasmApp(
 	)
 	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.accountKeeper, app.bankKeeper)
 
+	app.DsigKeeper = *dsigmodulekeeper.NewKeeper(
+		appCodec,
+		keys[dsigmoduletypes.StoreKey],
+		keys[dsigmoduletypes.MemStoreKey],
+		app.getSubspace(dsigmoduletypes.ModuleName),
+
+		app.accountKeeper,
+	)
+	dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.accountKeeper, app.bankKeeper)
+
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 
@@ -627,6 +645,7 @@ func NewWasmApp(
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 		rnsModule,
 		storageModule,
+		dsigModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -658,6 +677,7 @@ func NewWasmApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		dsigmoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -685,6 +705,7 @@ func NewWasmApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		dsigmoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -720,6 +741,7 @@ func NewWasmApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		dsigmoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
