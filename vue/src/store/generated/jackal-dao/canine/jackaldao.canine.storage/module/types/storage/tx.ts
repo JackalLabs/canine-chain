@@ -195,7 +195,6 @@ export interface MsgCancelContractResponse {}
 export interface MsgBuyStorage {
   creator: string;
   forAddress: string;
-  startBlock: string;
   duration: string;
   bytes: string;
   paymentDenom: string;
@@ -3506,7 +3505,6 @@ export const MsgCancelContractResponse = {
 const baseMsgBuyStorage: object = {
   creator: "",
   forAddress: "",
-  startBlock: "",
   duration: "",
   bytes: "",
   paymentDenom: "",
@@ -3520,17 +3518,14 @@ export const MsgBuyStorage = {
     if (message.forAddress !== "") {
       writer.uint32(18).string(message.forAddress);
     }
-    if (message.startBlock !== "") {
-      writer.uint32(26).string(message.startBlock);
-    }
     if (message.duration !== "") {
-      writer.uint32(34).string(message.duration);
+      writer.uint32(26).string(message.duration);
     }
     if (message.bytes !== "") {
-      writer.uint32(42).string(message.bytes);
+      writer.uint32(34).string(message.bytes);
     }
     if (message.paymentDenom !== "") {
-      writer.uint32(50).string(message.paymentDenom);
+      writer.uint32(42).string(message.paymentDenom);
     }
     return writer;
   },
@@ -3549,15 +3544,12 @@ export const MsgBuyStorage = {
           message.forAddress = reader.string();
           break;
         case 3:
-          message.startBlock = reader.string();
-          break;
-        case 4:
           message.duration = reader.string();
           break;
-        case 5:
+        case 4:
           message.bytes = reader.string();
           break;
-        case 6:
+        case 5:
           message.paymentDenom = reader.string();
           break;
         default:
@@ -3579,11 +3571,6 @@ export const MsgBuyStorage = {
       message.forAddress = String(object.forAddress);
     } else {
       message.forAddress = "";
-    }
-    if (object.startBlock !== undefined && object.startBlock !== null) {
-      message.startBlock = String(object.startBlock);
-    } else {
-      message.startBlock = "";
     }
     if (object.duration !== undefined && object.duration !== null) {
       message.duration = String(object.duration);
@@ -3607,7 +3594,6 @@ export const MsgBuyStorage = {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.forAddress !== undefined && (obj.forAddress = message.forAddress);
-    message.startBlock !== undefined && (obj.startBlock = message.startBlock);
     message.duration !== undefined && (obj.duration = message.duration);
     message.bytes !== undefined && (obj.bytes = message.bytes);
     message.paymentDenom !== undefined &&
@@ -3626,11 +3612,6 @@ export const MsgBuyStorage = {
       message.forAddress = object.forAddress;
     } else {
       message.forAddress = "";
-    }
-    if (object.startBlock !== undefined && object.startBlock !== null) {
-      message.startBlock = object.startBlock;
-    } else {
-      message.startBlock = "";
     }
     if (object.duration !== undefined && object.duration !== null) {
       message.duration = object.duration;
@@ -3692,33 +3673,8 @@ export const MsgBuyStorageResponse = {
 /** Msg defines the Msg service. */
 export interface Msg {
   PostContract(request: MsgPostContract): Promise<MsgPostContractResponse>;
-  CreateContracts(
-    request: MsgCreateContracts
-  ): Promise<MsgCreateContractsResponse>;
-  UpdateContracts(
-    request: MsgUpdateContracts
-  ): Promise<MsgUpdateContractsResponse>;
-  DeleteContracts(
-    request: MsgDeleteContracts
-  ): Promise<MsgDeleteContractsResponse>;
-  CreateProofs(request: MsgCreateProofs): Promise<MsgCreateProofsResponse>;
-  UpdateProofs(request: MsgUpdateProofs): Promise<MsgUpdateProofsResponse>;
-  DeleteProofs(request: MsgDeleteProofs): Promise<MsgDeleteProofsResponse>;
-  Item(request: MsgItem): Promise<MsgItemResponse>;
   Postproof(request: MsgPostproof): Promise<MsgPostproofResponse>;
-  CreateActiveDeals(
-    request: MsgCreateActiveDeals
-  ): Promise<MsgCreateActiveDealsResponse>;
-  UpdateActiveDeals(
-    request: MsgUpdateActiveDeals
-  ): Promise<MsgUpdateActiveDealsResponse>;
-  DeleteActiveDeals(
-    request: MsgDeleteActiveDeals
-  ): Promise<MsgDeleteActiveDealsResponse>;
   SignContract(request: MsgSignContract): Promise<MsgSignContractResponse>;
-  CreateMiners(request: MsgCreateMiners): Promise<MsgCreateMinersResponse>;
-  UpdateMiners(request: MsgUpdateMiners): Promise<MsgUpdateMinersResponse>;
-  DeleteMiners(request: MsgDeleteMiners): Promise<MsgDeleteMinersResponse>;
   SetMinerIp(request: MsgSetMinerIp): Promise<MsgSetMinerIpResponse>;
   SetMinerTotalspace(
     request: MsgSetMinerTotalspace
@@ -3748,94 +3704,6 @@ export class MsgClientImpl implements Msg {
     );
   }
 
-  CreateContracts(
-    request: MsgCreateContracts
-  ): Promise<MsgCreateContractsResponse> {
-    const data = MsgCreateContracts.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "CreateContracts",
-      data
-    );
-    return promise.then((data) =>
-      MsgCreateContractsResponse.decode(new Reader(data))
-    );
-  }
-
-  UpdateContracts(
-    request: MsgUpdateContracts
-  ): Promise<MsgUpdateContractsResponse> {
-    const data = MsgUpdateContracts.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "UpdateContracts",
-      data
-    );
-    return promise.then((data) =>
-      MsgUpdateContractsResponse.decode(new Reader(data))
-    );
-  }
-
-  DeleteContracts(
-    request: MsgDeleteContracts
-  ): Promise<MsgDeleteContractsResponse> {
-    const data = MsgDeleteContracts.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "DeleteContracts",
-      data
-    );
-    return promise.then((data) =>
-      MsgDeleteContractsResponse.decode(new Reader(data))
-    );
-  }
-
-  CreateProofs(request: MsgCreateProofs): Promise<MsgCreateProofsResponse> {
-    const data = MsgCreateProofs.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "CreateProofs",
-      data
-    );
-    return promise.then((data) =>
-      MsgCreateProofsResponse.decode(new Reader(data))
-    );
-  }
-
-  UpdateProofs(request: MsgUpdateProofs): Promise<MsgUpdateProofsResponse> {
-    const data = MsgUpdateProofs.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "UpdateProofs",
-      data
-    );
-    return promise.then((data) =>
-      MsgUpdateProofsResponse.decode(new Reader(data))
-    );
-  }
-
-  DeleteProofs(request: MsgDeleteProofs): Promise<MsgDeleteProofsResponse> {
-    const data = MsgDeleteProofs.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "DeleteProofs",
-      data
-    );
-    return promise.then((data) =>
-      MsgDeleteProofsResponse.decode(new Reader(data))
-    );
-  }
-
-  Item(request: MsgItem): Promise<MsgItemResponse> {
-    const data = MsgItem.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "Item",
-      data
-    );
-    return promise.then((data) => MsgItemResponse.decode(new Reader(data)));
-  }
-
   Postproof(request: MsgPostproof): Promise<MsgPostproofResponse> {
     const data = MsgPostproof.encode(request).finish();
     const promise = this.rpc.request(
@@ -3848,48 +3716,6 @@ export class MsgClientImpl implements Msg {
     );
   }
 
-  CreateActiveDeals(
-    request: MsgCreateActiveDeals
-  ): Promise<MsgCreateActiveDealsResponse> {
-    const data = MsgCreateActiveDeals.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "CreateActiveDeals",
-      data
-    );
-    return promise.then((data) =>
-      MsgCreateActiveDealsResponse.decode(new Reader(data))
-    );
-  }
-
-  UpdateActiveDeals(
-    request: MsgUpdateActiveDeals
-  ): Promise<MsgUpdateActiveDealsResponse> {
-    const data = MsgUpdateActiveDeals.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "UpdateActiveDeals",
-      data
-    );
-    return promise.then((data) =>
-      MsgUpdateActiveDealsResponse.decode(new Reader(data))
-    );
-  }
-
-  DeleteActiveDeals(
-    request: MsgDeleteActiveDeals
-  ): Promise<MsgDeleteActiveDealsResponse> {
-    const data = MsgDeleteActiveDeals.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "DeleteActiveDeals",
-      data
-    );
-    return promise.then((data) =>
-      MsgDeleteActiveDealsResponse.decode(new Reader(data))
-    );
-  }
-
   SignContract(request: MsgSignContract): Promise<MsgSignContractResponse> {
     const data = MsgSignContract.encode(request).finish();
     const promise = this.rpc.request(
@@ -3899,42 +3725,6 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgSignContractResponse.decode(new Reader(data))
-    );
-  }
-
-  CreateMiners(request: MsgCreateMiners): Promise<MsgCreateMinersResponse> {
-    const data = MsgCreateMiners.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "CreateMiners",
-      data
-    );
-    return promise.then((data) =>
-      MsgCreateMinersResponse.decode(new Reader(data))
-    );
-  }
-
-  UpdateMiners(request: MsgUpdateMiners): Promise<MsgUpdateMinersResponse> {
-    const data = MsgUpdateMiners.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "UpdateMiners",
-      data
-    );
-    return promise.then((data) =>
-      MsgUpdateMinersResponse.decode(new Reader(data))
-    );
-  }
-
-  DeleteMiners(request: MsgDeleteMiners): Promise<MsgDeleteMinersResponse> {
-    const data = MsgDeleteMiners.encode(request).finish();
-    const promise = this.rpc.request(
-      "jackaldao.canine.storage.Msg",
-      "DeleteMiners",
-      data
-    );
-    return promise.then((data) =>
-      MsgDeleteMinersResponse.decode(new Reader(data))
     );
   }
 

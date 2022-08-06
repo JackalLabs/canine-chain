@@ -13,12 +13,21 @@ parent:
 2. [Interaction Outline](#interaction-outline)
 2. [Client](#client)
     + [Query](#query)
-        + [list-mined](#list-mined)
-        + [show-mined](#show-mined)
+        + [list-active-deals](#list-active-deals)
+        + [show-active-deals](#show-active-deals)
         + [list-miners](#list-miners)
         + [show-miners](#show-miners)
-        + [list-save-requests](#list-save-requests)
-        + [show-save-requests](#show-save-requests)
+        + [list-contracts](#list-contracts)
+        + [show-contracts](#show-contracts)
+        + [find-file](#find-file)
+        + [freespace](#freespace)
+        + [get-client-free-space](#get-client-free-space)
+        + [list-pay-blocks](#list-pay-blocks)
+        + [show-pay-blocks](#show-pay-blocks)
+        + [list-proofs](#list-proofs)
+        + [show-proofs](#show-proofs)
+        + [list-strays](#list-strays)
+        + [show-strays](#show-strays)
         + [params](#params)
     + [Transactions](#transactions)
         + [init-miner](#init-miner)
@@ -27,6 +36,8 @@ parent:
         + [sign-contract](#sign-contract)
         + [post-contract](#post-contract)
         + [postproof](#postproof)
+        + [buy-storage](#buy-storage)
+        + [cancel-contract](#cancel-contract)
 
 
 ## Jackal Proof-of-Persistence (JPOP)
@@ -43,15 +54,15 @@ The `query` commands allow users to query `storage` state.
 ```sh
 canined q storage --help
 ```
-#### list-contracts
-The `list-contracts` command allows users to see a list of currently alive contracts that are awaiting signatures.
+#### list-active-deals
+The `list-active-deals` command allows users to view a list of currently active contracts that have already been signed.
 ```sh
-canined q storage list-contracts
-``` 
-#### show-contracts
-The `show-contracts` command allows users to view information about a specific contract as the identifier.
+canined q storage list-active-deals
+```
+#### show-active-deals
+The `show-active-deals` command allows users to view information about a specific active deal by passing in the contract id.
 ```sh
-canined q storage show-contracts [cid]
+canined q storage show-active-deals [cid]
 ```
 #### list-miners
 The `list-miners` command allows users to view a list of currently registered mining nodes.
@@ -63,20 +74,50 @@ The `show-miners` command allows users to view information about a specific mine
 ```sh
 canined q storage show-miners [address]
 ```
-#### list-active-deals
-The `list-active-deals` command allows users to view a list of currently active contracts that have already been signed.
+#### list-contracts
+The `list-contracts` command allows users to see a list of currently alive contracts that are awaiting signatures.
 ```sh
-canined q storage list-active-deals
+canined q storage list-contracts
+``` 
+#### show-contracts
+The `show-contracts` command allows users to view information about a specific contract as the identifier.
+```sh
+canined q storage show-contracts [cid]
 ```
-#### show-active-deals
-The `show-active-deals` command allows users to view information about a specific active deal by passing in the contract id.
+#### find-file
+The `find-file` command lets a user enter a file id (fid) and return every storage provider currently storing that file.
 ```sh
-canined q storage show-active-deals [cid]
+canined q storage find-file [fid]
 ```
 #### freespace
 The `freespace` command returns the free space in bytes of the miner.
 ```sh
 canined q storage freespace [miner-address]
+```
+#### get-client-free-space
+The `get-client-free-space` command takes an address and returns the total data they have available to use in bytes.
+```sh
+canined q storage get-client-free-space [address]
+```
+#### list-pay-blocks
+The `list-pay-blocks` command lists all of the payblocks created by users.
+```sh
+canined q storage list-pay-blocks
+```
+### show-pay-blocks
+The `show-pay-blocks` command shows information about a single pay block.
+```sh
+canined q storage show-pay-blocks [blockid]
+```
+#### list-strays
+The `list-strays` command lists all of stray contracts.
+```sh
+canined q storage list-strays
+```
+### show-strays
+The `show-strays` command shows information about a single stray contract from a given contract id (cid).
+```sh
+canined q storage show-strays [cid]
 ```
 #### params
 The `params` command allows users to view the params of the module.
@@ -113,4 +154,19 @@ canined tx storage sign-contract [cid]
 The `post-contract` command posts a contract to the blockchain from a miner.
 ```sh
 canined tx storage post-contract [hashes] [signee] [duration] [filesize] [file-id]
+```
+### postproof
+The `postproof` command allows storage providers to post a proof claiming they have the file available.
+```sh
+canined tx storage postproof [chunk_data] [proof_data]
+```
+### buy-storage
+The `buy-storage` command allows users to pay for a specific amount of storage for a specified period of time.
+```sh
+canined tx storage buy-storage [address] [duration] [byte-amount] [payment-denom]
+```
+### cancel-contract
+The `cancel-contract` command allows users to cancel currently active contracts removing the data usage from their account.
+```sh
+canined tx storage cancel-contract [cid]
 ```

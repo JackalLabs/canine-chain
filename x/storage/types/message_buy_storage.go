@@ -9,11 +9,10 @@ const TypeMsgBuyStorage = "buy_storage"
 
 var _ sdk.Msg = &MsgBuyStorage{}
 
-func NewMsgBuyStorage(creator string, forAddress string, startBlock string, duration string, bytes string, paymentDenom string) *MsgBuyStorage {
+func NewMsgBuyStorage(creator string, forAddress string, duration string, bytes string, paymentDenom string) *MsgBuyStorage {
 	return &MsgBuyStorage{
 		Creator:      creator,
 		ForAddress:   forAddress,
-		StartBlock:   startBlock,
 		Duration:     duration,
 		Bytes:        bytes,
 		PaymentDenom: paymentDenom,

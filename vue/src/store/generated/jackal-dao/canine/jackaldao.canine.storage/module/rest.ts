@@ -64,25 +64,7 @@ export type StorageMsgBuyStorageResponse = object;
 
 export type StorageMsgCancelContractResponse = object;
 
-export type StorageMsgCreateActiveDealsResponse = object;
-
-export type StorageMsgCreateContractsResponse = object;
-
-export type StorageMsgCreateMinersResponse = object;
-
-export type StorageMsgCreateProofsResponse = object;
-
-export type StorageMsgDeleteActiveDealsResponse = object;
-
-export type StorageMsgDeleteContractsResponse = object;
-
-export type StorageMsgDeleteMinersResponse = object;
-
-export type StorageMsgDeleteProofsResponse = object;
-
 export type StorageMsgInitMinerResponse = object;
-
-export type StorageMsgItemResponse = object;
 
 export type StorageMsgPostContractResponse = object;
 
@@ -95,14 +77,6 @@ export type StorageMsgSetMinerIpResponse = object;
 export type StorageMsgSetMinerTotalspaceResponse = object;
 
 export type StorageMsgSignContractResponse = object;
-
-export type StorageMsgUpdateActiveDealsResponse = object;
-
-export type StorageMsgUpdateContractsResponse = object;
-
-export type StorageMsgUpdateMinersResponse = object;
-
-export type StorageMsgUpdateProofsResponse = object;
 
 /**
  * Params defines the parameters for the module.

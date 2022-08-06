@@ -12,21 +12,8 @@ option go_package = "github.com/jackal-dao/canine/x/storage/types";
 // Msg defines the Msg service.
 service Msg {
       rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
-  rpc CreateContracts(MsgCreateContracts) returns (MsgCreateContractsResponse);
-  rpc UpdateContracts(MsgUpdateContracts) returns (MsgUpdateContractsResponse);
-  rpc DeleteContracts(MsgDeleteContracts) returns (MsgDeleteContractsResponse);
-  rpc CreateProofs(MsgCreateProofs) returns (MsgCreateProofsResponse);
-  rpc UpdateProofs(MsgUpdateProofs) returns (MsgUpdateProofsResponse);
-  rpc DeleteProofs(MsgDeleteProofs) returns (MsgDeleteProofsResponse);
-  rpc Item(MsgItem) returns (MsgItemResponse);
   rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
-  rpc CreateActiveDeals(MsgCreateActiveDeals) returns (MsgCreateActiveDealsResponse);
-  rpc UpdateActiveDeals(MsgUpdateActiveDeals) returns (MsgUpdateActiveDealsResponse);
-  rpc DeleteActiveDeals(MsgDeleteActiveDeals) returns (MsgDeleteActiveDealsResponse);
   rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
-  rpc CreateMiners(MsgCreateMiners) returns (MsgCreateMinersResponse);
-  rpc UpdateMiners(MsgUpdateMiners) returns (MsgUpdateMinersResponse);
-  rpc DeleteMiners(MsgDeleteMiners) returns (MsgDeleteMinersResponse);
   rpc SetMinerIp(MsgSetMinerIp) returns (MsgSetMinerIpResponse);
   rpc SetMinerTotalspace(MsgSetMinerTotalspace) returns (MsgSetMinerTotalspaceResponse);
   rpc InitMiner(MsgInitMiner) returns (MsgInitMinerResponse);
@@ -230,10 +217,9 @@ message MsgCancelContractResponse {
 message MsgBuyStorage {
   string creator = 1;
   string forAddress = 2;
-  string startBlock = 3;
-  string duration = 4;
-  string bytes = 5;
-  string paymentDenom = 6;
+  string duration = 3;
+  string bytes = 4;
+  string paymentDenom = 5;
 }
 
 message MsgBuyStorageResponse {

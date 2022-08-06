@@ -57467,25 +57467,7 @@ definitions:
     type: object
   jackaldao.canine.storage.MsgCancelContractResponse:
     type: object
-  jackaldao.canine.storage.MsgCreateActiveDealsResponse:
-    type: object
-  jackaldao.canine.storage.MsgCreateContractsResponse:
-    type: object
-  jackaldao.canine.storage.MsgCreateMinersResponse:
-    type: object
-  jackaldao.canine.storage.MsgCreateProofsResponse:
-    type: object
-  jackaldao.canine.storage.MsgDeleteActiveDealsResponse:
-    type: object
-  jackaldao.canine.storage.MsgDeleteContractsResponse:
-    type: object
-  jackaldao.canine.storage.MsgDeleteMinersResponse:
-    type: object
-  jackaldao.canine.storage.MsgDeleteProofsResponse:
-    type: object
   jackaldao.canine.storage.MsgInitMinerResponse:
-    type: object
-  jackaldao.canine.storage.MsgItemResponse:
     type: object
   jackaldao.canine.storage.MsgPostContractResponse:
     type: object
@@ -57499,14 +57481,6 @@ definitions:
   jackaldao.canine.storage.MsgSetMinerTotalspaceResponse:
     type: object
   jackaldao.canine.storage.MsgSignContractResponse:
-    type: object
-  jackaldao.canine.storage.MsgUpdateActiveDealsResponse:
-    type: object
-  jackaldao.canine.storage.MsgUpdateContractsResponse:
-    type: object
-  jackaldao.canine.storage.MsgUpdateMinersResponse:
-    type: object
-  jackaldao.canine.storage.MsgUpdateProofsResponse:
     type: object
   jackaldao.canine.storage.Params:
     type: object

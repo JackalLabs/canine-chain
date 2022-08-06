@@ -21,4 +21,23 @@ $ canined tx storage init-miner {IP_ADDRESS} 100000000000 --from {KEY_NAME} --ga
 $ canined start-miner --from {KEY_NAME} --gas-prices=0.002ujkl --gas-adjustment=1.5 -y
 ```
 
+## Posting files
+Files can be uploaded through a POST request to `localhost:3333/upload` with form data.
+### Form Data
+|Key   |Data      |
+|------|----------|
+|file  |{filedata}|
+|sender|{address} |
+
+### Response
+The response will be a JSON response formatted as:
+```JSON
+{
+    "CID": "cid...",
+    "FID": "fid..."
+}
+```
+
+## Getting files
+Gettings files is as easy as running a GET request at `localhost:3333/download/{FID}`. This will return the file as a blob to the browser.
 
