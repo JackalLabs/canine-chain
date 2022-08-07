@@ -1,0 +1,16 @@
+syntax = "proto3";
+package jackaldao.canine.filetree;
+
+import "gogoproto/gogo.proto";
+import "filetree/params.proto";
+import "filetree/files.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/jackal-dao/canine/x/filetree/types";
+
+// GenesisState defines the filetree module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated Files filesList = 2 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

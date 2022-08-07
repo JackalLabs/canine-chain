@@ -1,0 +1,26 @@
+syntax = "proto3";
+package jackaldao.canine.filetree;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/jackal-dao/canine/x/filetree/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgPostFile {
+  string creator = 1;
+  string hashpath = 2;
+  string contents = 3;
+  string viewers = 4;
+  string editors = 5;
+}
+
+message MsgPostFileResponse {
+  string path = 1;
+}
+
+// this line is used by starport scaffolding # proto/tx/message

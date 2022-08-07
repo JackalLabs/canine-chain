@@ -24,6 +24,7 @@ import CosmosIbcGoIbcCoreConnectionV1 from './cosmos/ibc-go/ibc.core.connection.
 import CosmosInterchainAccountsIntertx from './cosmos/interchain-accounts/intertx'
 import JackalDaoCanineCosmwasmWasmV1 from './jackal-dao/canine/cosmwasm.wasm.v1'
 import JackalDaoCanineJackaldaoCanineDsig from './jackal-dao/canine/jackaldao.canine.dsig'
+import JackalDaoCanineJackaldaoCanineFiletree from './jackal-dao/canine/jackaldao.canine.filetree'
 import JackalDaoCanineJackaldaoCanineJklaccounts from './jackal-dao/canine/jackaldao.canine.jklaccounts'
 import JackalDaoCanineJackaldaoCanineRns from './jackal-dao/canine/jackaldao.canine.rns'
 import JackalDaoCanineJackaldaoCanineStorage from './jackal-dao/canine/jackaldao.canine.storage'
@@ -54,6 +55,7 @@ export default {
   CosmosInterchainAccountsIntertx: load(CosmosInterchainAccountsIntertx, 'intertx'),
   JackalDaoCanineCosmwasmWasmV1: load(JackalDaoCanineCosmwasmWasmV1, 'cosmwasm.wasm.v1'),
   JackalDaoCanineJackaldaoCanineDsig: load(JackalDaoCanineJackaldaoCanineDsig, 'jackaldao.canine.dsig'),
+  JackalDaoCanineJackaldaoCanineFiletree: load(JackalDaoCanineJackaldaoCanineFiletree, 'jackaldao.canine.filetree'),
   JackalDaoCanineJackaldaoCanineJklaccounts: load(JackalDaoCanineJackaldaoCanineJklaccounts, 'jackaldao.canine.jklaccounts'),
   JackalDaoCanineJackaldaoCanineRns: load(JackalDaoCanineJackaldaoCanineRns, 'jackaldao.canine.rns'),
   JackalDaoCanineJackaldaoCanineStorage: load(JackalDaoCanineJackaldaoCanineStorage, 'jackaldao.canine.storage'),
