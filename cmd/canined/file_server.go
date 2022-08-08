@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -13,11 +14,14 @@ import (
 	"strconv"
 	"time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/input"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	txns "github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 
 	"github.com/jackal-dao/canine/x/storage/types"
@@ -26,7 +30,97 @@ import (
 	merkletree "github.com/wealdtech/go-merkletree"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
+
+func prepareFactory(clientCtx client.Context, txf txns.Factory) (txns.Factory, error) {
+	from := clientCtx.GetFromAddress()
+
+	if err := txf.AccountRetriever().EnsureExists(clientCtx, from); err != nil {
+		return txf, err
+	}
+
+	initNum, initSeq := txf.AccountNumber(), txf.Sequence()
+	if initNum == 0 || initSeq == 0 {
+		num, seq, err := txf.AccountRetriever().GetAccountNumberSequence(clientCtx, from)
+		if err != nil {
+			return txf, err
+		}
+
+		if initNum == 0 {
+			txf = txf.WithAccountNumber(num)
+		}
+
+		if initSeq == 0 {
+			txf = txf.WithSequence(seq)
+		}
+	}
+
+	return txf, nil
+}
+
+func SendTx(clientCtx client.Context, flagSet *pflag.FlagSet, msgs ...sdk.Msg) (*sdk.TxResponse, error) {
+	txf := txns.NewFactoryCLI(clientCtx, flagSet)
+	txf, err := prepareFactory(clientCtx, txf)
+	if err != nil {
+		return nil, err
+	}
+
+	if txf.SimulateAndExecute() || clientCtx.Simulate {
+		_, adjusted, err := txns.CalculateGas(clientCtx, txf, msgs...)
+		if err != nil {
+			return nil, err
+		}
+
+		txf = txf.WithGas(adjusted)
+		_, _ = fmt.Fprintf(os.Stderr, "%s\n", tx.GasEstimateResponse{GasEstimate: txf.Gas()})
+	}
+
+	if clientCtx.Simulate {
+		return nil, nil
+	}
+
+	tx, err := txns.BuildUnsignedTx(txf, msgs...)
+	if err != nil {
+		return nil, err
+	}
+
+	if !clientCtx.SkipConfirm {
+		out, err := clientCtx.TxConfig.TxJSONEncoder()(tx.GetTx())
+		if err != nil {
+			return nil, err
+		}
+
+		_, _ = fmt.Fprintf(os.Stderr, "%s\n\n", out)
+
+		buf := bufio.NewReader(os.Stdin)
+		ok, err := input.GetConfirmation("confirm transaction before signing and broadcasting", buf, os.Stderr)
+
+		if err != nil || !ok {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "cancelled transaction")
+			return nil, err
+		}
+	}
+
+	tx.SetFeeGranter(clientCtx.GetFeeGranterAddress())
+	err = txns.Sign(txf, clientCtx.GetFromName(), tx, true)
+	if err != nil {
+		return nil, err
+	}
+
+	txBytes, err := clientCtx.TxConfig.TxEncoder()(tx.GetTx())
+	if err != nil {
+		return nil, err
+	}
+
+	// broadcast to a Tendermint node
+	res, err := clientCtx.BroadcastTx(txBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, err
+}
 
 // This function returns the filename(to save in database) of the saved file
 // or an error if it occurs
@@ -35,6 +129,11 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 	r.ParseMultipartForm(32 << 20)
 
 	clientCtx, qerr := client.GetClientTxContext(cmd)
+
+	if qerr != nil {
+		fmt.Printf("Client Context Error: %v\n", qerr)
+		return
+	}
 
 	file, handler, err := r.FormFile("file") // Retrieve the file from form data
 
@@ -67,12 +166,6 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 			return
 		}
 
-		file, handler, err = r.FormFile("file") // Retrieve the file from form data
-		if err != nil {
-			fmt.Printf("Error with form file!\n")
-			return
-		}
-
 		firstx := make([]byte, blocksize)
 		file.ReadAt(firstx, i)
 		file.Close()
@@ -84,18 +177,15 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		f.Close()
 	}
 
-	ctrerr := makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"})
+	res, ctrerr := makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"})
 	if ctrerr != nil {
 		fmt.Printf("CONTRACT ERROR: %v\n", ctrerr)
 		return
 	}
+
+	fmt.Printf("%v\n", res)
 	// cidhash := sha256.New()
 	// flags := cmd.Flag("from")
-
-	if qerr != nil {
-		fmt.Printf("Client Context Error: %v\n", qerr)
-		return
-	}
 
 	info, ierr := clientCtx.Keyring.Key(clientCtx.From)
 
@@ -262,14 +352,14 @@ func SubmitProof() *cobra.Command {
 	return cmd
 }
 
-func makeContract(cmd *cobra.Command, args []string) error {
+func makeContract(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
 	fmt.Printf("%s\n", args[0])
 
 	merkleroot, filesize, fid := HashData(cmd, args[0])
 
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	msg := types.NewMsgPostContract(
@@ -281,24 +371,9 @@ func makeContract(cmd *cobra.Command, args []string) error {
 		merkleroot,
 	)
 	if err := msg.ValidateBasic(); err != nil {
-		return err
+		return nil, err
 	}
-	return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-}
-
-func CreateTree() *cobra.Command {
-
-	cmd := &cobra.Command{
-		Use:   "create-contract [filename] [signee] [duration]",
-		Short: "Creates a contract",
-		Long:  `Creates a contract`,
-		Args:  cobra.ExactArgs(3),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return makeContract(cmd, args)
-		},
-	}
-	flags.AddTxFlagsToCmd(cmd)
-	return cmd
+	return SendTx(clientCtx, cmd.Flags(), msg)
 }
 
 func HashData(cmd *cobra.Command, filename string) (string, string, string) {
@@ -494,6 +569,7 @@ func downfil(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps http
 		f, err := os.ReadFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, ps.ByName("file"), i, ".jkl"))
 		if err != nil {
 			fmt.Printf("Error can't open file!\n")
+			w.Write([]byte("cannot find file"))
 			return
 		}
 
