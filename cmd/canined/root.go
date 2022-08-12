@@ -88,8 +88,6 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	}
 
 	initRootCmd(rootCmd, encodingConfig)
-	rootCmd.Flags().Set("gas-adjustment", "1.5")
-	rootCmd.Flags().Set("gas-prices", "0.002ujkl")
 
 	return rootCmd, encodingConfig
 }
@@ -174,6 +172,8 @@ func txCommand() *cobra.Command {
 
 	app.ModuleBasics.AddTxCommands(cmd)
 	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
+	cmd.Flags().String(flags.FlagGasPrices, "0.002ujkl", "Gas prices in decimal format to determine the transaction fee (e.g. 0.002ujkl)")
+	cmd.Flags().Float64(flags.FlagGasAdjustment, 1.5, "adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored ")
 
 	return cmd
 }

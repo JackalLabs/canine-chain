@@ -21,7 +21,20 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, fmt.Errorf("bytes can't be parsed")
 	}
 
-	err := k.CreatePayBlock(ctx, msg.ForAddress, duration.Int64(), bytes.Int64())
+	denom := msg.PaymentDenom
+	var gb int64 = 1000000000
+
+	gbs := bytes.Int64() / gb
+	if gbs == 0 {
+		return nil, fmt.Errorf("cannot buy less than a gb")
+	}
+	price := sdk.NewCoin(denom, sdk.NewInt(gbs*8000))
+	err := k.bankkeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(msg.Creator), types.ModuleName, sdk.NewCoins(price))
+	if err != nil {
+		return nil, err
+	}
+
+	err = k.CreatePayBlock(ctx, msg.ForAddress, duration.Int64(), bytes.Int64())
 
 	if err != nil {
 		return nil, err

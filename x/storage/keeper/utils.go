@@ -11,6 +11,7 @@ import (
 const (
 	START_BLOCK_TYPE = "start"
 	END_BLOCK_TYPE   = "end"
+	TWO_GIGS         = 2000000000
 )
 
 func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int64 {
@@ -25,16 +26,16 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int
 
 	eblock, found := k.GetPayBlocks(ctx, fmt.Sprintf(".%s", address))
 	if !found {
-		return 0
+		return TWO_GIGS
 	}
 
 	endblock, ok := sdk.NewIntFromString(eblock.Blocknum)
 	if !ok {
-		return 0
+		return TWO_GIGS
 	}
 
 	if endblock.Int64() <= blockh {
-		return 0
+		return TWO_GIGS
 	}
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -65,17 +66,17 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int
 	}
 
 	if highestBlock == 0 {
-		return 0
+		return TWO_GIGS
 	}
 
 	hblock, found := k.GetPayBlocks(ctx, fmt.Sprintf("%s%d", address, highestBlock))
 	if !found {
-		return 0
+		return TWO_GIGS
 	}
 
 	bytes, ok := sdk.NewIntFromString(hblock.Bytes)
 	if !ok {
-		return 0
+		return TWO_GIGS
 	}
 
 	return bytes.Int64()
