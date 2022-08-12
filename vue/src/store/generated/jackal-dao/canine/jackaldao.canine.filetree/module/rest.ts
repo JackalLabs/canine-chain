@@ -17,6 +17,8 @@ export interface FiletreeFiles {
   editAccess?: string;
 }
 
+export type FiletreeMsgAddViewersResponse = object;
+
 export interface FiletreeMsgPostFileResponse {
   path?: string;
 }

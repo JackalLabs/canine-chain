@@ -18,11 +18,12 @@ var _ = strconv.Itoa(0)
 
 func CmdGetKeys() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "get-keys [hashpath]",
+		Use:   "get-keys [file path] [file owner]",
 		Short: "get the encryption keys from a file tree entry",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqHashpath := args[0]
+			reqOwner := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -31,8 +32,18 @@ func CmdGetKeys() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			h := sha256.New()
+			h.Write([]byte(reqHashpath))
+			hash := h.Sum(nil)
+
+			h = sha256.New()
+			h.Write([]byte(fmt.Sprintf("%s%s", reqOwner, fmt.Sprintf("%x", hash))))
+			hash = h.Sum(nil)
+
+			pathString := fmt.Sprintf("%x", hash)
+
 			params := &types.QueryGetFilesRequest{
-				Address: reqHashpath,
+				Address: pathString,
 			}
 
 			res, err := queryClient.Files(context.Background(), params)
@@ -45,9 +56,9 @@ func CmdGetKeys() *cobra.Command {
 
 			json.Unmarshal([]byte(viewers), &m)
 
-			h := sha256.New()
-			h.Write([]byte(clientCtx.GetFromAddress().String()))
-			hash := h.Sum(nil)
+			h = sha256.New()
+			h.Write([]byte(fmt.Sprintf("v%s%s", reqHashpath, clientCtx.GetFromAddress().String())))
+			hash = h.Sum(nil)
 			addressString := fmt.Sprintf("%x", hash)
 
 			hexMessage, err := hex.DecodeString(m[addressString])

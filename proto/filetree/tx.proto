@@ -8,6 +8,7 @@ option go_package = "github.com/jackal-dao/canine/x/filetree/types";
 // Msg defines the Msg service.
 service Msg {
       rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
+  rpc AddViewers(MsgAddViewers) returns (MsgAddViewersResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -21,6 +22,17 @@ message MsgPostFile {
 
 message MsgPostFileResponse {
   string path = 1;
+}
+
+message MsgAddViewers {
+  string creator = 1;
+  string viewerIds = 2;
+  string viewerKeys = 3;
+  string address = 4;
+  string fileowner = 5;
+}
+
+message MsgAddViewersResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

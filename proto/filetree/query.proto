@@ -41,6 +41,7 @@ service Query {
 		option (google.api.http).get = "/jackal-dao/canine/filetree/get_keys/{hashpath}";
 	}
 
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -95,5 +96,12 @@ message QueryGetKeysRequest {
 message QueryGetKeysResponse {
   string keys = 1;
 }
+
+message QueryGetKeyRequest {
+  string filepath = 1;
+  string owner = 2;
+}
+
+
 
 // this line is used by starport scaffolding # 3

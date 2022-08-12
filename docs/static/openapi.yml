@@ -57044,6 +57044,8 @@ definitions:
         type: string
       editAccess:
         type: string
+  jackaldao.canine.filetree.MsgAddViewersResponse:
+    type: object
   jackaldao.canine.filetree.MsgPostFileResponse:
     type: object
     properties:

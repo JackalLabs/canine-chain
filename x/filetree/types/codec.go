@@ -9,12 +9,16 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPostFile{}, "filetree/PostFile", nil)
+	cdc.RegisterConcrete(&MsgAddViewers{}, "filetree/AddViewers", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostFile{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgAddViewers{},
 	)
 	// this line is used by starport scaffolding # 3
 

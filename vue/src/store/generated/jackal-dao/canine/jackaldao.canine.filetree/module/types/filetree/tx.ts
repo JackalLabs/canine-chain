@@ -15,6 +15,14 @@ export interface MsgPostFileResponse {
   path: string;
 }
 
+export interface MsgAddViewers {
+  creator: string;
+  viewerIds: string;
+  viewerKeys: string;
+}
+
+export interface MsgAddViewersResponse {}
+
 const baseMsgPostFile: object = {
   creator: "",
   hashpath: "",
@@ -202,10 +210,142 @@ export const MsgPostFileResponse = {
   },
 };
 
+const baseMsgAddViewers: object = {
+  creator: "",
+  viewerIds: "",
+  viewerKeys: "",
+};
+
+export const MsgAddViewers = {
+  encode(message: MsgAddViewers, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.viewerIds !== "") {
+      writer.uint32(18).string(message.viewerIds);
+    }
+    if (message.viewerKeys !== "") {
+      writer.uint32(26).string(message.viewerKeys);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgAddViewers {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgAddViewers } as MsgAddViewers;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.viewerIds = reader.string();
+          break;
+        case 3:
+          message.viewerKeys = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgAddViewers {
+    const message = { ...baseMsgAddViewers } as MsgAddViewers;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.viewerIds !== undefined && object.viewerIds !== null) {
+      message.viewerIds = String(object.viewerIds);
+    } else {
+      message.viewerIds = "";
+    }
+    if (object.viewerKeys !== undefined && object.viewerKeys !== null) {
+      message.viewerKeys = String(object.viewerKeys);
+    } else {
+      message.viewerKeys = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgAddViewers): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.viewerIds !== undefined && (obj.viewerIds = message.viewerIds);
+    message.viewerKeys !== undefined && (obj.viewerKeys = message.viewerKeys);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgAddViewers>): MsgAddViewers {
+    const message = { ...baseMsgAddViewers } as MsgAddViewers;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.viewerIds !== undefined && object.viewerIds !== null) {
+      message.viewerIds = object.viewerIds;
+    } else {
+      message.viewerIds = "";
+    }
+    if (object.viewerKeys !== undefined && object.viewerKeys !== null) {
+      message.viewerKeys = object.viewerKeys;
+    } else {
+      message.viewerKeys = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgAddViewersResponse: object = {};
+
+export const MsgAddViewersResponse = {
+  encode(_: MsgAddViewersResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgAddViewersResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgAddViewersResponse } as MsgAddViewersResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgAddViewersResponse {
+    const message = { ...baseMsgAddViewersResponse } as MsgAddViewersResponse;
+    return message;
+  },
+
+  toJSON(_: MsgAddViewersResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgAddViewersResponse>): MsgAddViewersResponse {
+    const message = { ...baseMsgAddViewersResponse } as MsgAddViewersResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  AddViewers(request: MsgAddViewers): Promise<MsgAddViewersResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -221,6 +361,18 @@ export class MsgClientImpl implements Msg {
       data
     );
     return promise.then((data) => MsgPostFileResponse.decode(new Reader(data)));
+  }
+
+  AddViewers(request: MsgAddViewers): Promise<MsgAddViewersResponse> {
+    const data = MsgAddViewers.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "AddViewers",
+      data
+    );
+    return promise.then((data) =>
+      MsgAddViewersResponse.decode(new Reader(data))
+    );
   }
 }
 

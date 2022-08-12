@@ -60,6 +60,11 @@ export interface QueryGetKeysResponse {
   keys: string;
 }
 
+export interface QueryGetKeyRequest {
+  filepath: string;
+  owner: string;
+}
+
 const baseQueryParamsRequest: object = {};
 
 export const QueryParamsRequest = {
@@ -788,6 +793,81 @@ export const QueryGetKeysResponse = {
       message.keys = object.keys;
     } else {
       message.keys = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetKeyRequest: object = { filepath: "", owner: "" };
+
+export const QueryGetKeyRequest = {
+  encode(
+    message: QueryGetKeyRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.filepath !== "") {
+      writer.uint32(10).string(message.filepath);
+    }
+    if (message.owner !== "") {
+      writer.uint32(18).string(message.owner);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetKeyRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetKeyRequest } as QueryGetKeyRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.filepath = reader.string();
+          break;
+        case 2:
+          message.owner = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetKeyRequest {
+    const message = { ...baseQueryGetKeyRequest } as QueryGetKeyRequest;
+    if (object.filepath !== undefined && object.filepath !== null) {
+      message.filepath = String(object.filepath);
+    } else {
+      message.filepath = "";
+    }
+    if (object.owner !== undefined && object.owner !== null) {
+      message.owner = String(object.owner);
+    } else {
+      message.owner = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetKeyRequest): unknown {
+    const obj: any = {};
+    message.filepath !== undefined && (obj.filepath = message.filepath);
+    message.owner !== undefined && (obj.owner = message.owner);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryGetKeyRequest>): QueryGetKeyRequest {
+    const message = { ...baseQueryGetKeyRequest } as QueryGetKeyRequest;
+    if (object.filepath !== undefined && object.filepath !== null) {
+      message.filepath = object.filepath;
+    } else {
+      message.filepath = "";
+    }
+    if (object.owner !== undefined && object.owner !== null) {
+      message.owner = object.owner;
+    } else {
+      message.owner = "";
     }
     return message;
   },
