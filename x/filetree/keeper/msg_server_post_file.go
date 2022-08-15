@@ -18,9 +18,15 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	pathString := fmt.Sprintf("%x", hash)
 
+	h = sha256.New()
+	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator)))
+	hash = h.Sum(nil)
+
+	ownerString := fmt.Sprintf("%x", hash)
+
 	file := types.Files{
 		Contents:      msg.Contents,
-		Owner:         msg.Creator,
+		Owner:         ownerString,
 		ViewingAccess: msg.Viewers,
 		EditAccess:    msg.Editors,
 		Address:       pathString,

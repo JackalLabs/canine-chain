@@ -1,7 +1,9 @@
 package cli
 
 import (
-	"crypto/sha256"
+	"context"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -12,6 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -20,30 +23,24 @@ var _ = strconv.Itoa(0)
 
 func CmdAddViewers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-viewers [viewer-ids] [key] [file path] [file owner]",
+		Use:   "add-viewers [viewer-ids] [file path] [file owner]",
 		Short: "add an address to the files viewing permisisons",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argViewerIds := args[0]
-			argViewerKeys := args[1]
-			argAddress := args[2]
-			argOwner := args[3]
+			argAddress := args[1]
+			argOwner := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
+			authQueryClient := authtypes.NewQueryClient(clientCtx)
+			fileQueryClient := types.NewQueryClient(clientCtx)
 
-			h := sha256.New()
-			h.Write([]byte(argAddress))
-			hash := h.Sum(nil)
+			pathString := keeper.MakeChainAddress(argAddress, argOwner)
 
-			pathString := fmt.Sprintf("%x", hash)
-
-			h = sha256.New()
-			h.Write([]byte(fmt.Sprintf("%s%s", argOwner, pathString)))
-			hash = h.Sum(nil)
-			pathString = fmt.Sprintf("%x", hash)
+			fmt.Println(pathString)
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
 
@@ -56,11 +53,11 @@ func CmdAddViewers() *cobra.Command {
 				}
 				key, err := sdk.AccAddressFromBech32(v)
 				if err != nil {
+					fmt.Printf("address: %s\n", v)
 					return err
 				}
 
-				queryClient := authtypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Account(cmd.Context(), &authtypes.QueryAccountRequest{Address: key.String()})
+				res, err := authQueryClient.Account(cmd.Context(), &authtypes.QueryAccountRequest{Address: key.String()})
 				if err != nil {
 					return err
 				}
@@ -78,18 +75,41 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Key, []byte(argViewerKeys))
+				params := &types.QueryGetFilesRequest{
+					Address: pathString,
+				}
+
+				file, err := fileQueryClient.Files(context.Background(), params)
 				if err != nil {
 					return err
 				}
 
-				h = sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%s%s", argAddress, v)))
-				hash = h.Sum(nil)
+				viewers := file.Files.ViewingAccess
+				var m map[string]string
 
-				addressString := fmt.Sprintf("%x", hash)
+				json.Unmarshal([]byte(viewers), &m)
 
-				viewerIds = append(viewerIds, addressString)
+				aString := keeper.MakeViewerAddress(argAddress, clientCtx.GetFromAddress().String())
+
+				hexMessage, err := hex.DecodeString(m[aString])
+				if err != nil {
+					return err
+				}
+
+				from := clientCtx.From
+
+				decrypt, _, err := clientCtx.Keyring.Decrypt(from, hexMessage)
+				if err != nil {
+					fmt.Println("cannot decrypt keys")
+					return err
+				}
+
+				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Key, []byte(decrypt))
+				if err != nil {
+					return err
+				}
+
+				viewerIds = append(viewerIds, aString)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 			}
 

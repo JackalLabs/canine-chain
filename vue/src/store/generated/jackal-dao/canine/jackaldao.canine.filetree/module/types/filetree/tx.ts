@@ -19,6 +19,8 @@ export interface MsgAddViewers {
   creator: string;
   viewerIds: string;
   viewerKeys: string;
+  address: string;
+  fileowner: string;
 }
 
 export interface MsgAddViewersResponse {}
@@ -214,6 +216,8 @@ const baseMsgAddViewers: object = {
   creator: "",
   viewerIds: "",
   viewerKeys: "",
+  address: "",
+  fileowner: "",
 };
 
 export const MsgAddViewers = {
@@ -226,6 +230,12 @@ export const MsgAddViewers = {
     }
     if (message.viewerKeys !== "") {
       writer.uint32(26).string(message.viewerKeys);
+    }
+    if (message.address !== "") {
+      writer.uint32(34).string(message.address);
+    }
+    if (message.fileowner !== "") {
+      writer.uint32(42).string(message.fileowner);
     }
     return writer;
   },
@@ -245,6 +255,12 @@ export const MsgAddViewers = {
           break;
         case 3:
           message.viewerKeys = reader.string();
+          break;
+        case 4:
+          message.address = reader.string();
+          break;
+        case 5:
+          message.fileowner = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -271,6 +287,16 @@ export const MsgAddViewers = {
     } else {
       message.viewerKeys = "";
     }
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    if (object.fileowner !== undefined && object.fileowner !== null) {
+      message.fileowner = String(object.fileowner);
+    } else {
+      message.fileowner = "";
+    }
     return message;
   },
 
@@ -279,6 +305,8 @@ export const MsgAddViewers = {
     message.creator !== undefined && (obj.creator = message.creator);
     message.viewerIds !== undefined && (obj.viewerIds = message.viewerIds);
     message.viewerKeys !== undefined && (obj.viewerKeys = message.viewerKeys);
+    message.address !== undefined && (obj.address = message.address);
+    message.fileowner !== undefined && (obj.fileowner = message.fileowner);
     return obj;
   },
 
@@ -298,6 +326,16 @@ export const MsgAddViewers = {
       message.viewerKeys = object.viewerKeys;
     } else {
       message.viewerKeys = "";
+    }
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    if (object.fileowner !== undefined && object.fileowner !== null) {
+      message.fileowner = object.fileowner;
+    } else {
+      message.fileowner = "";
     }
     return message;
   },

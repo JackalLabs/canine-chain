@@ -13,6 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -39,11 +40,7 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			h := sha256.New()
-			h.Write([]byte(argHashpath))
-			hash := h.Sum(nil)
-
-			pathString := fmt.Sprintf("%x", hash)
+			pathString := keeper.MakeAddress(argHashpath, clientCtx.FromAddress.String())
 
 			viewers := make(map[string]string)
 			editors := make(map[string]string)
@@ -74,6 +71,10 @@ func CmdPostFile() *cobra.Command {
 				}
 				var pkey secp256k1.PubKey
 
+				if acc.PubKey == nil {
+					return fmt.Errorf("pub key not found")
+				}
+
 				err = pkey.Unmarshal(acc.PubKey.Value)
 				if err != nil {
 					return err
@@ -84,9 +85,9 @@ func CmdPostFile() *cobra.Command {
 					return err
 				}
 
-				h = sha256.New()
+				h := sha256.New()
 				h.Write([]byte(fmt.Sprintf("v%s%s", argHashpath, v)))
-				hash = h.Sum(nil)
+				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
 
@@ -128,9 +129,9 @@ func CmdPostFile() *cobra.Command {
 					return err
 				}
 
-				h = sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", argHashpath, v)))
-				hash = h.Sum(nil)
+				h := sha256.New()
+				h.Write([]byte(fmt.Sprintf("e%s%s", pathString, v)))
+				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
 

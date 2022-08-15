@@ -8,5 +8,8 @@ import (
 
 // x/filetree module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrNoAccess       = sdkerrors.Register(ModuleName, 1101, "wrong permissions for file")
+	ErrFileNotFound   = sdkerrors.Register(ModuleName, 1102, "file not found")
+	ErrCantMarshall   = sdkerrors.Register(ModuleName, 1103, "cannot marshall data into json")
+	ErrCantUnmarshall = sdkerrors.Register(ModuleName, 1104, "cannot unmarshall data from json")
 )

@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -15,7 +14,12 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 
 	file, found := k.GetFiles(ctx, msg.Address)
 	if !found {
-		return nil, fmt.Errorf("cannot find file")
+		return nil, types.ErrFileNotFound
+	}
+
+	hasEdit := HasEditAccess(file, msg.Creator)
+	if !hasEdit {
+		return nil, types.ErrNoAccess
 	}
 
 	pvacc := file.ViewingAccess
@@ -32,7 +36,7 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 
 	vaccbytes, err := json.Marshal(jvacc)
 	if err != nil {
-		return nil, fmt.Errorf("cannot marshall new viewing accounts")
+		return nil, types.ErrCantMarshall
 	}
 	newviewers := string(vaccbytes)
 

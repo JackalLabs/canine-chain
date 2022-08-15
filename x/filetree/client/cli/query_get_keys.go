@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -32,15 +32,8 @@ func CmdGetKeys() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			h := sha256.New()
-			h.Write([]byte(reqHashpath))
-			hash := h.Sum(nil)
-
-			h = sha256.New()
-			h.Write([]byte(fmt.Sprintf("%s%s", reqOwner, fmt.Sprintf("%x", hash))))
-			hash = h.Sum(nil)
-
-			pathString := fmt.Sprintf("%x", hash)
+			pathString := keeper.MakeChainAddress(reqHashpath, reqOwner)
+			fmt.Println(pathString)
 
 			params := &types.QueryGetFilesRequest{
 				Address: pathString,
@@ -48,21 +41,27 @@ func CmdGetKeys() *cobra.Command {
 
 			res, err := queryClient.Files(context.Background(), params)
 			if err != nil {
+				fmt.Println("cannot find file")
 				return err
 			}
 
 			viewers := res.Files.ViewingAccess
 			var m map[string]string
 
-			json.Unmarshal([]byte(viewers), &m)
+			jerr := json.Unmarshal([]byte(viewers), &m)
+			if jerr != nil {
+				fmt.Println("cannot unmarshall viewers")
+				return jerr
+			}
 
-			h = sha256.New()
-			h.Write([]byte(fmt.Sprintf("v%s%s", reqHashpath, clientCtx.GetFromAddress().String())))
-			hash = h.Sum(nil)
-			addressString := fmt.Sprintf("%x", hash)
-
-			hexMessage, err := hex.DecodeString(m[addressString])
+			addressString := keeper.MakeViewerAddress(reqHashpath, clientCtx.GetFromAddress().String())
+			fmt.Println(addressString)
+			fmt.Println(m)
+			todec := m[addressString]
+			fmt.Printf("%v\n", todec)
+			hexMessage, err := hex.DecodeString(todec)
 			if err != nil {
+
 				return err
 			}
 
@@ -70,6 +69,8 @@ func CmdGetKeys() *cobra.Command {
 
 			decrypt, _, err := clientCtx.Keyring.Decrypt(from, hexMessage)
 			if err != nil {
+				fmt.Printf("%v\n", hexMessage)
+
 				return err
 			}
 
