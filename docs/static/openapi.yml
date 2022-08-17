@@ -33021,6 +33021,112 @@ paths:
           type: string
       tags:
         - Query
+  /cosmos/mint/v1beta1/inflation:
+    get:
+      summary: Inflation returns the current minting inflation value.
+      operationId: JackaldaoCanineJklmintInflation
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              inflation:
+                type: string
+                format: byte
+                description: inflation is the current minting inflation value.
+            description: "QueryInflationResponse is the response type for the Query/Inflation RPC\r\nmethod."
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /cosmos/mint/v1beta1/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: JackaldaoCanineJklmintParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+                properties:
+                  mintDenom:
+                    type: string
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /jackal-dao/canine/jklmint/get_inflation:
+    get:
+      summary: Queries a list of GetInflation items.
+      operationId: JackaldaoCanineJklmintGetInflation
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              inflation:
+                type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /jackal-dao/canine/rnsbids:
     get:
       summary: Queries a list of Bids.
@@ -57171,6 +57277,35 @@ definitions:
       createdAt:
         type: string
         format: int64
+  jackaldao.canine.jklmint.Params:
+    type: object
+    properties:
+      mintDenom:
+        type: string
+    description: Params defines the parameters for the module.
+  jackaldao.canine.jklmint.QueryGetInflationResponse:
+    type: object
+    properties:
+      inflation:
+        type: string
+  jackaldao.canine.jklmint.QueryInflationResponse:
+    type: object
+    properties:
+      inflation:
+        type: string
+        format: byte
+        description: inflation is the current minting inflation value.
+    description: "QueryInflationResponse is the response type for the Query/Inflation RPC\r\nmethod."
+  jackaldao.canine.jklmint.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+        properties:
+          mintDenom:
+            type: string
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
   jackaldao.canine.rns.Bids:
     type: object
     properties:

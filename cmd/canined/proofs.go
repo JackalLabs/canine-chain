@@ -22,11 +22,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (string, string) {
+func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (string, string, error) {
 
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 	if qerr != nil {
-		return "", qerr.Error()
+		return "", "", qerr
 	}
 	files, _ := os.ReadDir(fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, filename))
 
@@ -38,7 +38,7 @@ func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (strin
 		f, err := os.ReadFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, filename, i, ".jkl"))
 		if err != nil {
 			fmt.Printf("Error can't open file!\n")
-			return "", ""
+			return "", "", err
 		}
 
 		if i == index {
@@ -54,7 +54,7 @@ func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (strin
 
 	tree, err := merkletree.New(data)
 	if err != nil {
-		panic(err)
+		return "", "", err
 	}
 
 	h := sha256.New()
@@ -63,12 +63,12 @@ func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (strin
 
 	proof, err := tree.GenerateProof(ditem)
 	if err != nil {
-		panic(err)
+		return "", "", err
 	}
 
 	jproof, err := json.Marshal(*proof)
 	if err != nil {
-		panic(err)
+		return "", "", err
 	}
 
 	e := hex.EncodeToString(tree.Root())
@@ -84,7 +84,7 @@ func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (strin
 		fmt.Printf("%s\n", "Cannot verify")
 	}
 
-	return fmt.Sprintf("%x", item), string(jproof)
+	return fmt.Sprintf("%x", item), string(jproof), nil
 
 }
 
@@ -96,7 +96,10 @@ func postProof(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
 
 	dex, _ := strconv.Atoi(args[1])
 
-	item, hashlist := CreateMerkleForProof(cmd, args[0], dex)
+	item, hashlist, err := CreateMerkleForProof(cmd, args[0], dex)
+	if err != nil {
+		return nil, err
+	}
 
 	msg := types.NewMsgPostproof(
 		clientCtx.GetFromAddress().String(),
@@ -151,7 +154,10 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 
 			ver, verr := checkVerified(cmd, string(cid))
 			if verr != nil {
+				fmt.Println("Verification error")
 				fmt.Printf("ERROR: %v\n", verr)
+				fmt.Println(verr.Error())
+
 				val, err := datedb.Get([]byte(nm), nil)
 				newval := 0
 				if err == nil {
