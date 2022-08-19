@@ -12,6 +12,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/syndtr/goleveldb/leveldb"
 
@@ -39,6 +40,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: qerr.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -52,6 +54,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: err.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -69,6 +72,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: direrr.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -82,6 +86,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 			v := ErrorResponse{
 				Error: err.Error(),
 			}
+			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(v)
 			return
 		}
@@ -103,6 +108,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: ctrerr.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -112,6 +118,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: res.RawLog,
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -125,6 +132,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: ierr.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -135,6 +143,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: ierr.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -151,6 +160,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: err.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -160,6 +170,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: derr.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -172,6 +183,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: cerr.Error(),
 		}
+		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(v)
 		return
 	}
@@ -356,16 +368,21 @@ func postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB, d
 func StartFileServer(cmd *cobra.Command) {
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 	if qerr != nil {
+		fmt.Println(qerr)
 		return
 	}
+
+	fmt.Println(cmd.Flags().GetString(flags.FlagHome))
 
 	db, dberr := leveldb.OpenFile(fmt.Sprintf("%s/contracts/contractsdb", clientCtx.HomeDir), nil)
 	if dberr != nil {
 		fmt.Println(dberr)
+		return
 	}
 	datedb, dberr := leveldb.OpenFile(fmt.Sprintf("%s/contracts/datesdb", clientCtx.HomeDir), nil)
 	if dberr != nil {
 		fmt.Println(dberr)
+		return
 	}
 	router := httprouter.New()
 
@@ -378,10 +395,12 @@ func StartFileServer(cmd *cobra.Command) {
 	err := http.ListenAndServe("0.0.0.0:3333", router)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("Storage Provider Closed\n")
+		return
 	} else if err != nil {
 		fmt.Printf("error starting server: %s\n", err)
 		os.Exit(1)

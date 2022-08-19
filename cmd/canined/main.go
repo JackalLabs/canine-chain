@@ -12,9 +12,6 @@ import (
 func main() {
 	rootCmd, _ := NewRootCmd()
 
-	rootCmd.AddCommand(StartServer())
-	rootCmd.AddCommand(SubmitProof())
-
 	if err := svrcmd.Execute(rootCmd, app.DefaultNodeHome); err != nil {
 		switch e := err.(type) {
 		case server.ErrorCode:
