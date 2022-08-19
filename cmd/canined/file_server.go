@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -93,13 +94,16 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 
 		firstx := make([]byte, blocksize)
 		read, err := file.ReadAt(firstx, i)
+		fmt.Println(read)
 		if err != nil {
-			fmt.Printf("Error can't write to file!\n")
+			fmt.Println(err)
 		}
-		firstx = firstx[read:]
 		file.Close()
+		firstx = firstx[0:read]
 		// fmt.Printf(": %s :\n", string(firstx))
-		_, writeerr := f.Write(firstx)
+		firstx = bytes.Trim(firstx, "\x00")
+		read, writeerr := f.Write(firstx)
+		fmt.Println(read)
 		if writeerr != nil {
 			fmt.Printf("Error can't write to file!\n")
 		}
