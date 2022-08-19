@@ -92,7 +92,11 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		}
 
 		firstx := make([]byte, blocksize)
-		file.ReadAt(firstx, i)
+		read, err := file.ReadAt(firstx, i)
+		if err != nil {
+			fmt.Printf("Error can't write to file!\n")
+		}
+		firstx = firstx[read:]
 		file.Close()
 		// fmt.Printf(": %s :\n", string(firstx))
 		_, writeerr := f.Write(firstx)
