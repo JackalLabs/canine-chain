@@ -64,7 +64,6 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 	h := sha256.New()
 	io.Copy(h, file)
 	hashName := h.Sum(nil)
-	file.Close()
 
 	// This is path which we want to store the file
 	direrr := os.MkdirAll(fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, fmt.Sprintf("%x", hashName)), os.ModePerm)
@@ -98,8 +97,6 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		if err != nil {
 			fmt.Println(err)
 		}
-		file.Close()
-		firstx = firstx[0:read]
 		// fmt.Printf(": %s :\n", string(firstx))
 		firstx = bytes.Trim(firstx, "\x00")
 		read, writeerr := f.Write(firstx)
@@ -109,6 +106,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		}
 		f.Close()
 	}
+	file.Close()
 
 	res, ctrerr := makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"})
 	if ctrerr != nil {
