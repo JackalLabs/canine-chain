@@ -1,0 +1,25 @@
+# github.com/jackal-dao/canine/emrpc
+../../emrpc/apis.go:59:86: too many arguments in call to backend.NewBackend
+	have (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool, nil)
+	want (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool)
+../../emrpc/apis.go:64:46: not enough arguments in call to eth.NewPublicAPI
+	have ("github.com/tendermint/tendermint/libs/log".Logger, *backend.Backend)
+	want ("github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, backend.EVMBackend, *"github.com/evmos/ethermint/rpc/types".AddrLocker)
+../../emrpc/apis.go:96:86: too many arguments in call to backend.NewBackend
+	have (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool, nil)
+	want (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool)
+../../emrpc/apis.go:101:45: not enough arguments in call to personal.NewAPI
+	have ("github.com/tendermint/tendermint/libs/log".Logger, *backend.Backend)
+	want ("github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, backend.EVMBackend)
+../../emrpc/apis.go:117:86: too many arguments in call to backend.NewBackend
+	have (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool, nil)
+	want (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool)
+../../emrpc/apis.go:122:35: not enough arguments in call to debug.NewAPI
+	have (*server.Context, *backend.Backend)
+	want (*server.Context, backend.EVMBackend, "github.com/cosmos/cosmos-sdk/client".Context)
+../../emrpc/apis.go:128:86: too many arguments in call to backend.NewBackend
+	have (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool, nil)
+	want (*server.Context, "github.com/tendermint/tendermint/libs/log".Logger, "github.com/cosmos/cosmos-sdk/client".Context, bool)
+../../emrpc/apis.go:133:42: not enough arguments in call to miner.NewPrivateAPI
+	have (*server.Context, *backend.Backend)
+	want (*server.Context, "github.com/cosmos/cosmos-sdk/client".Context, backend.EVMBackend)
