@@ -20,8 +20,9 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 
-	"github.com/evmos/ethermint/rpc/types"
-	evmtypes "github.com/evmos/ethermint/x/evm/types"
+	"github.com/jackal-dao/canine/emrpc/types"
+	emrpctypes "github.com/jackal-dao/canine/emrpc/types"
+	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 )
 
 // ExceedBlockGasLimitError defines the error message when tx execution exceeds the block gas limit.
@@ -155,7 +156,7 @@ func (b *Backend) SetTxDefaults(args evmtypes.TransactionArgs) (evmtypes.Transac
 			AccessList:           args.AccessList,
 		}
 
-		blockNr := types.NewBlockNumber(big.NewInt(0))
+		blockNr := emrpctypes.NewBlockNumber(big.NewInt(0))
 		estimated, err := b.EstimateGas(callArgs, &blockNr)
 		if err != nil {
 			return args, err
@@ -229,7 +230,7 @@ func (b *Backend) processBlock(
 	ethBlock *map[string]interface{},
 	rewardPercentiles []float64,
 	tendermintBlockResult *tmrpctypes.ResultBlockResults,
-	targetOneFeeHistory *types.OneFeeHistory,
+	targetOneFeeHistory *emrpctypes.OneFeeHistory,
 ) error {
 	blockHeight := tendermintBlock.Block.Height
 	blockBaseFee, err := b.BaseFee(tendermintBlockResult)

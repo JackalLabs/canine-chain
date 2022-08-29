@@ -19,6 +19,7 @@ import (
 	"github.com/jackal-dao/canine/emrpc/namespaces/ethereum/personal"
 	"github.com/jackal-dao/canine/emrpc/namespaces/ethereum/txpool"
 	"github.com/jackal-dao/canine/emrpc/namespaces/ethereum/web3"
+	rpcethtypes "github.com/jackal-dao/canine/emrpc/types"
 
 	rpcclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
 )
@@ -53,16 +54,18 @@ type APICreator = func(
 // apiCreators defines the JSON-RPC API namespaces.
 var apiCreators map[string]APICreator
 
+// populating apiCreators
 func init() {
 	apiCreators = map[string]APICreator{
 		EthNamespace: func(ctx *server.Context, clientCtx client.Context, tmWSClient *rpcclient.WSClient, allowUnprotectedTxs bool) []rpc.API {
-			// nonceLock := new(types.AddrLocker) -- replaced with 'nil' in below argument
+			nonceLock := new(rpcethtypes.AddrLocker)
 			evmBackend := backend.NewBackend(ctx, ctx.Logger, clientCtx, allowUnprotectedTxs)
+
 			return []rpc.API{
 				{
 					Namespace: EthNamespace,
 					Version:   apiVersion,
-					Service:   eth.NewPublicAPI(ctx.Logger, clientCtx, evmBackend, nil),
+					Service:   eth.NewPublicAPI(ctx.Logger, clientCtx, evmBackend, nonceLock),
 					Public:    true,
 				},
 				{
@@ -142,7 +145,6 @@ func init() {
 // GetRPCAPIs returns the list of all APIs
 func GetRPCAPIs(ctx *server.Context, clientCtx client.Context, tmWSClient *rpcclient.WSClient, allowUnprotectedTxs bool, selectedAPIs []string) []rpc.API {
 	var apis []rpc.API
-
 	for _, ns := range selectedAPIs {
 		if creator, ok := apiCreators[ns]; ok {
 			apis = append(apis, creator(ctx, clientCtx, tmWSClient, allowUnprotectedTxs)...)

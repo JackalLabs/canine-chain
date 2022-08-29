@@ -434,7 +434,9 @@ func startInProcess(ctx *sdkserver.Context, clientCtx client.Context, appCreator
 			return err
 		}
 
-		clientCtx := clientCtx.WithChainID(genDoc.ChainID)
+		// swapping the clientctx
+		// clientCtx := clientCtx.WithChainID(genDoc.ChainID)
+		clientCtx := clientCtx.WithHomeDir(home).WithChainID(genDoc.ChainID)
 
 		tmEndpoint := "/websocket"
 		tmRPCAddr := cfg.RPC.ListenAddress

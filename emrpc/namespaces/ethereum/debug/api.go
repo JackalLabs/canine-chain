@@ -16,7 +16,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 
-	evmtypes "github.com/evmos/ethermint/x/evm/types"
+	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	stderrors "github.com/pkg/errors"
@@ -27,8 +27,8 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/consensus/ethash"
 	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/evmos/ethermint/rpc/backend"
-	rpctypes "github.com/evmos/ethermint/rpc/types"
+	"github.com/jackal-dao/canine/emrpc/backend"
+	rpctypes "github.com/jackal-dao/canine/emrpc/types"
 	"github.com/tendermint/tendermint/libs/log"
 )
 
@@ -160,7 +160,7 @@ func (a *API) TraceTransaction(hash common.Hash, config *evmtypes.TraceConfig) (
 		// 0 is a special value in `ContextWithHeight`
 		contextHeight = 1
 	}
-	traceResult, err := a.queryClient.TraceTx(rpctypes.ContextWithHeight(contextHeight), &traceTxRequest)
+	traceResult, err := a.queryClient.QueryClient.TraceTx(rpctypes.ContextWithHeight(contextHeight), &traceTxRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -260,7 +260,7 @@ func (a *API) traceBlock(height rpctypes.BlockNumber, config *evmtypes.TraceConf
 		BlockHash:   common.Bytes2Hex(block.BlockID.Hash),
 	}
 
-	res, err := a.queryClient.TraceBlock(ctxWithHeight, traceBlockRequest)
+	res, err := a.queryClient.QueryClient.TraceBlock(ctxWithHeight, traceBlockRequest)
 	if err != nil {
 		return nil, err
 	}

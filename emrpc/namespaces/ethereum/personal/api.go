@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/evmos/ethermint/rpc/backend"
+	"github.com/jackal-dao/canine/emrpc/backend"
 
 	"github.com/cosmos/cosmos-sdk/client"
 
@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/evmos/ethermint/crypto/ethsecp256k1"
-	evmtypes "github.com/evmos/ethermint/x/evm/types"
+	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 )
 
 // PrivateAccountAPI is the personal_ prefixed set of APIs in the Web3 JSON-RPC spec.

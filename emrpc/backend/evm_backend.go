@@ -26,10 +26,12 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 
-	"github.com/evmos/ethermint/rpc/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	ethermint "github.com/evmos/ethermint/types"
-	evmtypes "github.com/evmos/ethermint/x/evm/types"
 	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
+	"github.com/jackal-dao/canine/emrpc/types"
+	emrpctypes "github.com/jackal-dao/canine/emrpc/types"
+	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 )
 
 var bAttributeKeyEthereumBloom = []byte(evmtypes.AttributeKeyEthereumBloom)
@@ -40,7 +42,7 @@ var bAttributeKeyEthereumBloom = []byte(evmtypes.AttributeKeyEthereumBloom)
 func (b *Backend) BlockNumber() (hexutil.Uint64, error) {
 	// do any grpc query, ignore the response and use the returned block height
 	var header metadata.MD
-	_, err := b.queryClient.Params(b.ctx, &evmtypes.QueryParamsRequest{}, grpc.Header(&header))
+	_, err := b.authQueryClient.Params(b.ctx, &authtypes.QueryParamsRequest{}, grpc.Header(&header))
 	if err != nil {
 		return hexutil.Uint64(0), err
 	}
@@ -59,7 +61,7 @@ func (b *Backend) BlockNumber() (hexutil.Uint64, error) {
 }
 
 // GetBlockByNumber returns the block identified by number.
-func (b *Backend) GetBlockByNumber(blockNum types.BlockNumber, fullTx bool) (map[string]interface{}, error) {
+func (b *Backend) GetBlockByNumber(blockNum emrpctypes.BlockNumber, fullTx bool) (map[string]interface{}, error) {
 	resBlock, err := b.GetTendermintBlockByNumber(blockNum)
 	if err != nil {
 		return nil, err
@@ -107,7 +109,7 @@ func (b *Backend) GetBlockByHash(hash common.Hash, fullTx bool) (map[string]inte
 }
 
 // BlockByNumber returns the block identified by number.
-func (b *Backend) BlockByNumber(blockNum types.BlockNumber) (*ethtypes.Block, error) {
+func (b *Backend) BlockByNumber(blockNum emrpctypes.BlockNumber) (*ethtypes.Block, error) {
 	resBlock, err := b.GetTendermintBlockByNumber(blockNum)
 	if err != nil {
 		return nil, err
@@ -158,7 +160,7 @@ func (b *Backend) EthBlockFromTm(resBlock *tmrpctypes.ResultBlock, blockRes *tmr
 		b.logger.Error("failed to fetch Base Fee from prunned block. Check node prunning configuration", "height", height, "error", err)
 	}
 
-	ethHeader := types.EthHeaderFromTendermint(block.Header, bloom, baseFee)
+	ethHeader := emrpctypes.EthHeaderFromTendermint(block.Header, bloom, baseFee)
 
 	resBlockResult, err := b.GetTendermintBlockResultByNumber(&block.Height)
 	if err != nil {
@@ -178,7 +180,7 @@ func (b *Backend) EthBlockFromTm(resBlock *tmrpctypes.ResultBlock, blockRes *tmr
 }
 
 // GetTendermintBlockByNumber returns a Tendermint format block by block number
-func (b *Backend) GetTendermintBlockByNumber(blockNum types.BlockNumber) (*tmrpctypes.ResultBlock, error) {
+func (b *Backend) GetTendermintBlockByNumber(blockNum emrpctypes.BlockNumber) (*tmrpctypes.ResultBlock, error) {
 	height := blockNum.Int64()
 	if height <= 0 {
 		// fetch the latest block number from the app state, more accurate than the tendermint block store state.
@@ -263,7 +265,7 @@ func (b *Backend) EthBlockFromTendermint(
 		}
 
 		tx := ethMsg.AsTransaction()
-		rpcTx, err := types.NewRPCTransaction(
+		rpcTx, err := emrpctypes.NewRPCTransaction(
 			tx,
 			common.BytesToHash(block.Hash()),
 			uint64(block.Height),
@@ -288,8 +290,8 @@ func (b *Backend) EthBlockFromTendermint(
 
 	var validatorAccAddr sdk.AccAddress
 
-	ctx := types.ContextWithHeight(block.Height)
-	res, err := b.queryClient.ValidatorAccount(ctx, req)
+	ctx := emrpctypes.ContextWithHeight(block.Height)
+	res, err := b.queryClient.QueryClient.ValidatorAccount(ctx, req)
 	if err != nil {
 		b.logger.Debug(
 			"failed to query validator operator address",
@@ -308,7 +310,7 @@ func (b *Backend) EthBlockFromTendermint(
 
 	validatorAddr := common.BytesToAddress(validatorAccAddr)
 
-	gasLimit, err := types.BlockMaxGasFromConsensusParams(ctx, b.clientCtx, block.Height)
+	gasLimit, err := emrpctypes.BlockMaxGasFromConsensusParams(ctx, b.clientCtx, block.Height)
 	if err != nil {
 		b.logger.Error("failed to query consensus params", "error", err.Error())
 	}
@@ -324,7 +326,7 @@ func (b *Backend) EthBlockFromTendermint(
 		gasUsed += uint64(txsResult.GetGasUsed())
 	}
 
-	formattedBlock := types.FormatBlock(
+	formattedBlock := emrpctypes.FormatBlock(
 		block.Header, block.Size(),
 		gasLimit, new(big.Int).SetUint64(gasUsed),
 		ethRPCTxs, bloom, validatorAddr, baseFee,
@@ -339,7 +341,7 @@ func (b *Backend) CurrentHeader() *ethtypes.Header {
 }
 
 // HeaderByNumber returns the block header identified by height.
-func (b *Backend) HeaderByNumber(blockNum types.BlockNumber) (*ethtypes.Header, error) {
+func (b *Backend) HeaderByNumber(blockNum emrpctypes.BlockNumber) (*ethtypes.Header, error) {
 	resBlock, err := b.GetTendermintBlockByNumber(blockNum)
 	if err != nil {
 		return nil, err
@@ -365,7 +367,7 @@ func (b *Backend) HeaderByNumber(blockNum types.BlockNumber) (*ethtypes.Header, 
 		b.logger.Error("failed to fetch Base Fee from prunned block. Check node prunning configuration", "height", resBlock.Block.Height, "error", err)
 	}
 
-	ethHeader := types.EthHeaderFromTendermint(resBlock.Block.Header, bloom, baseFee)
+	ethHeader := emrpctypes.EthHeaderFromTendermint(resBlock.Block.Header, bloom, baseFee)
 	return ethHeader, nil
 }
 
@@ -407,7 +409,7 @@ func (b *Backend) HeaderByHash(blockHash common.Hash) (*ethtypes.Header, error) 
 		b.logger.Error("failed to fetch Base Fee from prunned block. Check node prunning configuration", "height", resBlock.Block.Height, "error", err)
 	}
 
-	ethHeader := types.EthHeaderFromTendermint(resBlock.Block.Header, bloom, baseFee)
+	ethHeader := emrpctypes.EthHeaderFromTendermint(resBlock.Block.Header, bloom, baseFee)
 	return ethHeader, nil
 }
 
@@ -477,7 +479,7 @@ func (b *Backend) GetCoinbase() (sdk.AccAddress, error) {
 		ConsAddress: sdk.ConsAddress(status.ValidatorInfo.Address).String(),
 	}
 
-	res, err := b.queryClient.ValidatorAccount(b.ctx, req)
+	res, err := b.queryClient.QueryClient.ValidatorAccount(b.ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -487,7 +489,7 @@ func (b *Backend) GetCoinbase() (sdk.AccAddress, error) {
 }
 
 // GetTransactionByHash returns the Ethereum format transaction identified by Ethereum transaction hash
-func (b *Backend) GetTransactionByHash(txHash common.Hash) (*types.RPCTransaction, error) {
+func (b *Backend) GetTransactionByHash(txHash common.Hash) (*emrpctypes.RPCTransaction, error) {
 	res, err := b.GetTxByEthHash(txHash)
 	hexTx := txHash.Hex()
 
@@ -507,7 +509,7 @@ func (b *Backend) GetTransactionByHash(txHash common.Hash) (*types.RPCTransactio
 			}
 
 			if msg.Hash == hexTx {
-				rpctx, err := types.NewTransactionFromMsg(
+				rpctx, err := emrpctypes.NewTransactionFromMsg(
 					msg,
 					common.Hash{},
 					uint64(0),
@@ -529,7 +531,7 @@ func (b *Backend) GetTransactionByHash(txHash common.Hash) (*types.RPCTransactio
 		return nil, errors.New("invalid ethereum tx")
 	}
 
-	parsedTxs, err := types.ParseTxResult(&res.TxResult)
+	parsedTxs, err := emrpctypes.ParseTxResult(&res.TxResult)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse tx events: %s", hexTx)
 	}
@@ -582,7 +584,7 @@ func (b *Backend) GetTransactionByHash(txHash common.Hash) (*types.RPCTransactio
 		b.logger.Error("failed to fetch Base Fee from prunned block. Check node prunning configuration", "height", blockRes.Height, "error", err)
 	}
 
-	return types.NewTransactionFromMsg(
+	return emrpctypes.NewTransactionFromMsg(
 		msg,
 		common.BytesToHash(block.BlockID.Hash.Bytes()),
 		uint64(res.Height),
@@ -704,8 +706,8 @@ func (b *Backend) SendTransaction(args evmtypes.TransactionArgs) (common.Hash, e
 }
 
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
-func (b *Backend) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *types.BlockNumber) (hexutil.Uint64, error) {
-	blockNr := types.EthPendingBlockNumber
+func (b *Backend) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *emrpctypes.BlockNumber) (hexutil.Uint64, error) {
+	blockNr := emrpctypes.EthPendingBlockNumber
 	if blockNrOptional != nil {
 		blockNr = *blockNrOptional
 	}
@@ -723,7 +725,7 @@ func (b *Backend) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *ty
 	// From ContextWithHeight: if the provided height is 0,
 	// it will return an empty context and the gRPC query will use
 	// the latest block height for querying.
-	res, err := b.queryClient.EstimateGas(types.ContextWithHeight(blockNr.Int64()), &req)
+	res, err := b.queryClient.QueryClient.EstimateGas(types.ContextWithHeight(blockNr.Int64()), &req)
 	if err != nil {
 		return 0, err
 	}
@@ -731,7 +733,7 @@ func (b *Backend) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *ty
 }
 
 // GetTransactionCount returns the number of transactions at the given address up to the given block number.
-func (b *Backend) GetTransactionCount(address common.Address, blockNum types.BlockNumber) (*hexutil.Uint64, error) {
+func (b *Backend) GetTransactionCount(address common.Address, blockNum emrpctypes.BlockNumber) (*hexutil.Uint64, error) {
 	// Get nonce (sequence) from account
 	from := sdk.AccAddress(address.Bytes())
 	accRet := b.clientCtx.AccountRetriever
@@ -743,7 +745,7 @@ func (b *Backend) GetTransactionCount(address common.Address, blockNum types.Blo
 		return &n, nil
 	}
 
-	includePending := blockNum == types.EthPendingBlockNumber
+	includePending := blockNum == emrpctypes.EthPendingBlockNumber
 	nonce, err := b.getAccountNonce(address, includePending, blockNum.Int64(), b.logger)
 	if err != nil {
 		return nil, err
@@ -792,7 +794,7 @@ func (b *Backend) RPCBlockRangeCap() int32 {
 // the node config. If set value is 0, it will default to 20.
 
 func (b *Backend) RPCMinGasPrice() int64 {
-	evmParams, err := b.queryClient.Params(b.ctx, &evmtypes.QueryParamsRequest{})
+	evmParams, err := b.queryClient.QueryClient.Params(b.ctx, &evmtypes.QueryParamsRequest{})
 	if err != nil {
 		return ethermint.DefaultGasPrice
 	}
@@ -808,7 +810,7 @@ func (b *Backend) RPCMinGasPrice() int64 {
 
 // ChainConfig returns the latest ethereum chain configuration
 func (b *Backend) ChainConfig() *params.ChainConfig {
-	params, err := b.queryClient.Params(b.ctx, &evmtypes.QueryParamsRequest{})
+	params, err := b.queryClient.QueryClient.Params(b.ctx, &evmtypes.QueryParamsRequest{})
 	if err != nil {
 		return nil
 	}
@@ -853,7 +855,7 @@ func (b *Backend) SuggestGasTipCap(baseFee *big.Int) (*big.Int, error) {
 // return nil.
 func (b *Backend) BaseFee(blockRes *tmrpctypes.ResultBlockResults) (*big.Int, error) {
 	// return BaseFee if London hard fork is activated and feemarket is enabled
-	res, err := b.queryClient.BaseFee(types.ContextWithHeight(blockRes.Height), &evmtypes.QueryBaseFeeRequest{})
+	res, err := b.queryClient.QueryClient.BaseFee(types.ContextWithHeight(blockRes.Height), &evmtypes.QueryBaseFeeRequest{})
 	if err != nil {
 		// fallback to parsing from begin blocker event, could happen on pruned nodes.
 		// faster to iterate reversely
@@ -891,7 +893,7 @@ func (b *Backend) FeeHistory(
 	userBlockCount rpc.DecimalOrHex, // number blocks to fetch, maximum is 100
 	lastBlock rpc.BlockNumber, // the block to start search , to oldest
 	rewardPercentiles []float64, // percentiles to fetch reward
-) (*types.FeeHistoryResult, error) {
+) (*emrpctypes.FeeHistoryResult, error) {
 	blockEnd := int64(lastBlock)
 
 	if blockEnd <= 0 {
@@ -949,7 +951,7 @@ func (b *Backend) FeeHistory(
 			return nil, err
 		}
 
-		oneFeeHistory := types.OneFeeHistory{}
+		oneFeeHistory := emrpctypes.OneFeeHistory{}
 		err = b.processBlock(tendermintblock, &ethBlock, rewardPercentiles, tendermintBlockResult, &oneFeeHistory)
 		if err != nil {
 			return nil, err
@@ -968,7 +970,7 @@ func (b *Backend) FeeHistory(
 		}
 	}
 
-	feeHistory := types.FeeHistoryResult{
+	feeHistory := emrpctypes.FeeHistoryResult{
 		OldestBlock:  oldestBlock,
 		BaseFee:      thisBaseFee,
 		GasUsedRatio: thisGasUsedRatio,

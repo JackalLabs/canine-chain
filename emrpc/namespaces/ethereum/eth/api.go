@@ -23,7 +23,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -34,11 +33,10 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/evmos/ethermint/crypto/hd"
-	"github.com/evmos/ethermint/rpc/backend"
-	rpctypes "github.com/evmos/ethermint/rpc/types"
 	ethermint "github.com/evmos/ethermint/types"
-	evmtypes "github.com/evmos/ethermint/x/evm/types"
+	"github.com/jackal-dao/canine/emrpc/backend"
+	rpctypes "github.com/jackal-dao/canine/emrpc/types"
+	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 )
 
 // PublicAPI is the eth_ prefixed set of APIs in the Web3 JSON-RPC spec.
@@ -65,29 +63,32 @@ func NewPublicAPI(
 		panic(err)
 	}
 
-	algos, _ := clientCtx.Keyring.SupportedAlgorithms()
+	// overwriting the cosmos keyring with eth-compatible signatures
 
-	if !algos.Contains(hd.EthSecp256k1) {
-		// kr, err := keyring.New(
-		// 	sdk.KeyringServiceName(),
-		// 	viper.GetString(flags.FlagKeyringBackend),
-		// 	clientCtx.KeyringDir,
-		// 	clientCtx.Input,
-		// 	hd.EthSecp256k1Option(),
-		// )
-		kr, err := keyring.New(
-			sdk.KeyringServiceName(),
-			keyring.BackendOS,
-			clientCtx.KeyringDir,
-			clientCtx.Input,
-			hd.EthSecp256k1Option(),
-		)
-		if err != nil {
-			panic(err)
-		}
+	// algos, _ := clientCtx.Keyring.SupportedAlgorithms()
+	// if !algos.Contains(hd.EthSecp256k1) {
+	// kr, err := keyring.New(
+	// 	sdk.KeyringServiceName(),
+	// 	viper.GetString(flags.FlagKeyringBackend),
+	// 	clientCtx.KeyringDir,
+	// 	clientCtx.Input,
+	// 	hd.EthSecp256k1Option(),
+	// )
 
-		clientCtx = clientCtx.WithKeyring(kr)
-	}
+	// leaving keyring.BackendOS as default for now.
+	// kr, err := keyring.New(
+	// 	sdk.KeyringServiceName(),
+	// 	keyring.BackendOS,
+	// 	clientCtx.KeyringDir,
+	// 	clientCtx.Input,
+	// 	hd.EthSecp256k1Option(),
+	// )
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// clientCtx = clientCtx.WithKeyring(kr)
+	// }
 
 	// The signer used by the API should always be the 'latest' known one because we expect
 	// signers to be backwards-compatible with old transactions.
@@ -268,6 +269,8 @@ func (e *PublicAPI) Accounts() ([]common.Address, error) {
 // BlockNumber returns the current block number.
 func (e *PublicAPI) BlockNumber() (hexutil.Uint64, error) {
 	e.logger.Debug("eth_blockNumber")
+	// fmt.Println("blocknumber accessed by backend below:")
+	// fmt.Println(e.backend.BlockNumber())
 	return e.backend.BlockNumber()
 }
 
@@ -284,7 +287,7 @@ func (e *PublicAPI) GetBalance(address common.Address, blockNrOrHash rpctypes.Bl
 		Address: address.String(),
 	}
 
-	res, err := e.queryClient.Balance(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	res, err := e.queryClient.QueryClient.Balance(rpctypes.ContextWithHeight(blockNum.Int64()), req)
 	if err != nil {
 		return nil, err
 	}
@@ -311,7 +314,7 @@ func (e *PublicAPI) GetStorageAt(address common.Address, key string, blockNrOrHa
 		Key:     key,
 	}
 
-	res, err := e.queryClient.Storage(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	res, err := e.queryClient.QueryClient.Storage(rpctypes.ContextWithHeight(blockNum.Int64()), req)
 	if err != nil {
 		return nil, err
 	}
@@ -402,7 +405,7 @@ func (e *PublicAPI) GetCode(address common.Address, blockNrOrHash rpctypes.Block
 		Address: address.String(),
 	}
 
-	res, err := e.queryClient.Code(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	res, err := e.queryClient.QueryClient.Code(rpctypes.ContextWithHeight(blockNum.Int64()), req)
 	if err != nil {
 		return nil, err
 	}
@@ -718,7 +721,7 @@ func (e *PublicAPI) doCall(
 	// this makes sure resources are cleaned up.
 	defer cancel()
 
-	res, err := e.queryClient.EthCall(ctx, &req)
+	res, err := e.queryClient.QueryClient.EthCall(ctx, &req)
 	if err != nil {
 		return nil, err
 	}
@@ -1104,7 +1107,7 @@ func (e *PublicAPI) GetProof(address common.Address, storageKeys []string, block
 		Address: address.String(),
 	}
 
-	res, err := e.queryClient.Account(ctx, req)
+	res, err := e.queryClient.QueryClient.Account(ctx, req)
 	if err != nil {
 		return nil, err
 	}

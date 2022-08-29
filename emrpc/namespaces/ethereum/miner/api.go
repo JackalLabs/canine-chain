@@ -21,9 +21,9 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmtypes "github.com/tendermint/tendermint/types"
 
-	"github.com/evmos/ethermint/rpc/backend"
-	rpctypes "github.com/evmos/ethermint/rpc/types"
-	"github.com/evmos/ethermint/server/config"
+	"github.com/jackal-dao/canine/emrpc/backend"
+	rpctypes "github.com/jackal-dao/canine/emrpc/types"
+	emconfig "github.com/jackal-dao/canine/emserver/config"
 )
 
 // API is the private miner prefixed set of APIs in the Miner JSON-RPC spec.
@@ -80,7 +80,7 @@ func (api *API) SetEtherbase(etherbase common.Address) bool {
 	}
 
 	// Fetch minimun gas price to calculate fees using the configuration.
-	appConf := config.GetConfig(api.ctx.Viper)
+	appConf := emconfig.GetConfig(api.ctx.Viper)
 
 	minGasPrices := appConf.GetMinGasPrices()
 	if len(minGasPrices) == 0 || minGasPrices.Empty() {
@@ -160,7 +160,7 @@ func (api *API) SetEtherbase(etherbase common.Address) bool {
 // to use float values, the gas prices must be configured using the configuration file
 func (api *API) SetGasPrice(gasPrice hexutil.Big) bool {
 	api.logger.Info(api.ctx.Viper.ConfigFileUsed())
-	appConf := config.GetConfig(api.ctx.Viper)
+	appConf := emconfig.GetConfig(api.ctx.Viper)
 
 	var unit string
 	minGasPrices := appConf.GetMinGasPrices()

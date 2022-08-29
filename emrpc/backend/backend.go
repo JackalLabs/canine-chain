@@ -8,15 +8,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/server"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/evmos/ethermint/rpc/types"
 	"github.com/evmos/ethermint/server/config"
 	ethermint "github.com/evmos/ethermint/types"
-	evmtypes "github.com/evmos/ethermint/x/evm/types"
+	emrpctypes "github.com/jackal-dao/canine/emrpc/types"
+	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
@@ -51,30 +52,30 @@ type EVMBackend interface {
 
 	// Blockchain API
 	BlockNumber() (hexutil.Uint64, error)
-	GetTendermintBlockByNumber(blockNum types.BlockNumber) (*tmrpctypes.ResultBlock, error)
+	GetTendermintBlockByNumber(blockNum emrpctypes.BlockNumber) (*tmrpctypes.ResultBlock, error)
 	GetTendermintBlockResultByNumber(height *int64) (*tmrpctypes.ResultBlockResults, error)
 	GetTendermintBlockByHash(blockHash common.Hash) (*tmrpctypes.ResultBlock, error)
-	GetBlockByNumber(blockNum types.BlockNumber, fullTx bool) (map[string]interface{}, error)
+	GetBlockByNumber(blockNum emrpctypes.BlockNumber, fullTx bool) (map[string]interface{}, error)
 	GetBlockByHash(hash common.Hash, fullTx bool) (map[string]interface{}, error)
-	BlockByNumber(blockNum types.BlockNumber) (*ethtypes.Block, error)
+	BlockByNumber(blockNum emrpctypes.BlockNumber) (*ethtypes.Block, error)
 	BlockByHash(blockHash common.Hash) (*ethtypes.Block, error)
 	CurrentHeader() *ethtypes.Header
-	HeaderByNumber(blockNum types.BlockNumber) (*ethtypes.Header, error)
+	HeaderByNumber(blockNum emrpctypes.BlockNumber) (*ethtypes.Header, error)
 	HeaderByHash(blockHash common.Hash) (*ethtypes.Header, error)
 	GetBlockNumberByHash(blockHash common.Hash) (*big.Int, error)
 	PendingTransactions() ([]*sdk.Tx, error)
-	GetTransactionCount(address common.Address, blockNum types.BlockNumber) (*hexutil.Uint64, error)
+	GetTransactionCount(address common.Address, blockNum emrpctypes.BlockNumber) (*hexutil.Uint64, error)
 	SendTransaction(args evmtypes.TransactionArgs) (common.Hash, error)
 	GetCoinbase() (sdk.AccAddress, error)
-	GetTransactionByHash(txHash common.Hash) (*types.RPCTransaction, error)
+	GetTransactionByHash(txHash common.Hash) (*emrpctypes.RPCTransaction, error)
 	GetTxByEthHash(txHash common.Hash) (*tmrpctypes.ResultTx, error)
 	GetTxByTxIndex(height int64, txIndex uint) (*tmrpctypes.ResultTx, error)
-	EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *types.BlockNumber) (hexutil.Uint64, error)
+	EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *emrpctypes.BlockNumber) (hexutil.Uint64, error)
 	BaseFee(blockRes *tmrpctypes.ResultBlockResults) (*big.Int, error)
 	GlobalMinGasPrice() (sdk.Dec, error)
 
 	// Fee API
-	FeeHistory(blockCount rpc.DecimalOrHex, lastBlock rpc.BlockNumber, rewardPercentiles []float64) (*types.FeeHistoryResult, error)
+	FeeHistory(blockCount rpc.DecimalOrHex, lastBlock rpc.BlockNumber, rewardPercentiles []float64) (*emrpctypes.FeeHistoryResult, error)
 
 	// Filter API
 	BloomStatus() (uint64, uint64)
@@ -91,7 +92,8 @@ var _ BackendI = (*Backend)(nil)
 type Backend struct {
 	ctx                 context.Context
 	clientCtx           client.Context
-	queryClient         *types.QueryClient // gRPC query client
+	queryClient         *emrpctypes.QueryClient // gRPC query client
+	authQueryClient     authtypes.QueryClient
 	logger              log.Logger
 	chainID             *big.Int
 	cfg                 config.Config
@@ -106,11 +108,11 @@ func NewBackend(ctx *server.Context, logger log.Logger, clientCtx client.Context
 	}
 
 	appConf := config.GetConfig(ctx.Viper)
-
 	return &Backend{
 		ctx:                 context.Background(),
 		clientCtx:           clientCtx,
-		queryClient:         types.NewQueryClient(clientCtx),
+		queryClient:         emrpctypes.NewQueryClient(clientCtx),
+		authQueryClient:     authtypes.NewQueryClient(clientCtx),
 		logger:              logger.With("module", "backend"),
 		chainID:             chainID,
 		cfg:                 appConf,
