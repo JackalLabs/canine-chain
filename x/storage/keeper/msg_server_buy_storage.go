@@ -29,7 +29,11 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 	price := sdk.NewCoin(denom, sdk.NewInt(gbs*8000))
-	err := k.bankkeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(msg.Creator), types.ModuleName, sdk.NewCoins(price))
+	add, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return nil, err
+	}
+	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, sdk.NewCoins(price))
 	if err != nil {
 		return nil, err
 	}
