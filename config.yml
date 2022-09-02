@@ -5,6 +5,12 @@ accounts:
   - name: bob
     coins: ["100000000ujkl"]
     mnemonic: "ripple doctor enforce review soldier rebuild video blanket vehicle market media forward hover thought fitness cover effort uniform club fence reveal slam spoon wasp"
+  - name: charlie
+    coins: ["10000000ujkl"]
+    mnemonic: "flock stereo dignity lawsuit mouse page faith exact mountain clinic hazard parent arrest face couch asset jump feed benefit upper hair scrap loud spirit"
+  - name: danny
+    coins: ["100000ujkl"]
+    mnemonic: "brief enhance flee chest rabbit matter chaos clever lady enable luggage arrange hint quarter change float embark canoe chalk husband legal dignity music web"
 validator:
   name: alice
   staked: "100000000ujkl"
