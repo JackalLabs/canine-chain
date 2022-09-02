@@ -26,6 +26,7 @@ import JackalDaoCanineCosmwasmWasmV1 from './jackal-dao/canine/cosmwasm.wasm.v1'
 import JackalDaoCanineJackaldaoCanineDsig from './jackal-dao/canine/jackaldao.canine.dsig'
 import JackalDaoCanineJackaldaoCanineFiletree from './jackal-dao/canine/jackaldao.canine.filetree'
 import JackalDaoCanineJackaldaoCanineJklaccounts from './jackal-dao/canine/jackaldao.canine.jklaccounts'
+import JackalDaoCanineJackaldaoCanineJklmint from './jackal-dao/canine/jackaldao.canine.jklmint'
 import JackalDaoCanineJackaldaoCanineRns from './jackal-dao/canine/jackaldao.canine.rns'
 import JackalDaoCanineJackaldaoCanineStorage from './jackal-dao/canine/jackaldao.canine.storage'
 
@@ -57,6 +58,7 @@ export default {
   JackalDaoCanineJackaldaoCanineDsig: load(JackalDaoCanineJackaldaoCanineDsig, 'jackaldao.canine.dsig'),
   JackalDaoCanineJackaldaoCanineFiletree: load(JackalDaoCanineJackaldaoCanineFiletree, 'jackaldao.canine.filetree'),
   JackalDaoCanineJackaldaoCanineJklaccounts: load(JackalDaoCanineJackaldaoCanineJklaccounts, 'jackaldao.canine.jklaccounts'),
+  JackalDaoCanineJackaldaoCanineJklmint: load(JackalDaoCanineJackaldaoCanineJklmint, 'jackaldao.canine.jklmint'),
   JackalDaoCanineJackaldaoCanineRns: load(JackalDaoCanineJackaldaoCanineRns, 'jackaldao.canine.rns'),
   JackalDaoCanineJackaldaoCanineStorage: load(JackalDaoCanineJackaldaoCanineStorage, 'jackaldao.canine.storage'),
   

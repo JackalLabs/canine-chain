@@ -23,6 +23,7 @@ type BankKeeper interface {
 		ctx sdk.Context, senderModule, recipientModule string, amt sdk.Coins,
 	) error
 	MintCoins(ctx sdk.Context, name string, amt sdk.Coins) error
+	GetSupply(ctx sdk.Context, denom string) sdk.Coin
 
 	// Methods imported from bank should be defined here
 }

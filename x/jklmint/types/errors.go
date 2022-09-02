@@ -8,5 +8,6 @@ import (
 
 // x/jklmint module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrCannotParseFloat = sdkerrors.Register(ModuleName, 1101, "cannot parse float")
+	ErrZeroDivision     = sdkerrors.Register(ModuleName, 1102, "cannot use zero value for division")
 )

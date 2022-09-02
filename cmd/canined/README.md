@@ -15,8 +15,13 @@ The storage provider is a web-server that accepts incoming files from users and 
 This assumes you have either already set up a node or are using another RPC provider in your `~/.canined/config/client.toml` file.
 
 To quickly set up a storage provider, one must initialize their provider & announce themselves to the network. Then they start the provider from their account of choice which stores files in the `~/.canined/config/networkfiles` folder (this can be changed with the --home flag).
+
+To use a different home directory to store the files, you must run `init` with the home flag set to where you wish to initialize it.
+
+You must also be using the keyring-backend: `test`. (`canined config keyring-backend test`)
+
 ```sh
-$ canined tx storage init-miner {IP_ADDRESS} 100000000000 --from {KEY_NAME} --gas-prices=0.002ujkl --gas-adjustment=1.5
+$ canined tx storage init-miner {IP_ADDRESS} {STORAGE_IN_BYTES} --from {KEY_NAME} --gas-prices=0.002ujkl --gas-adjustment=1.5
 
 $ canined start-miner --from {KEY_NAME} --gas-prices=0.002ujkl --gas-adjustment=1.5 -y
 ```
