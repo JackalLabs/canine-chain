@@ -21,6 +21,8 @@ parent:
         + [params](#params)
     + [Transactions](#transactions)
         + [register](#register)
+        + [add-record](#add-record)
+        + [del-record](#del-record)
         + [list](#list)
         + [delist](#delist)
         + [buy](#buy)
@@ -83,6 +85,16 @@ canined tx rns --help
 The `register` command registers a name for the years specified under the user account. Must also pass in a data field, used for storing a JSON structure defining extra characteristics of the name. Will take tokens from user account proportional to years registered & length of name.
 ```sh
 canined tx rns register [name] [years] [data]
+```
+#### add-record
+The `add-record` command appends the new record to the name acting as a subdomain.
+```sh
+canined tx rns add-record [name] [record] [data]
+```
+#### del-record
+The `del-record` command removes the record from the name.
+```sh
+canined tx rns del-record [name] [record] [data]
 ```
 #### list
 The `list` command lists a name for sale at a specified price. When bought, the amount specified will be sent to the user.
