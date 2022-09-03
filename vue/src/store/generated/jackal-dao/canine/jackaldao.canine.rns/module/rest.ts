@@ -28,11 +28,15 @@ export interface RnsForsale {
 
 export type RnsMsgAcceptBidResponse = object;
 
+export type RnsMsgAddRecordResponse = object;
+
 export type RnsMsgBidResponse = object;
 
 export type RnsMsgBuyResponse = object;
 
 export type RnsMsgCancelBidResponse = object;
+
+export type RnsMsgDelRecordResponse = object;
 
 export type RnsMsgDelistResponse = object;
 
@@ -43,11 +47,12 @@ export type RnsMsgRegisterResponse = object;
 export type RnsMsgTransferResponse = object;
 
 export interface RnsNames {
-  index?: string;
   name?: string;
   expires?: string;
   value?: string;
   data?: string;
+  subdomains?: RnsNames[];
+  tld?: string;
 }
 
 /**

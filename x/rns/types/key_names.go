@@ -1,6 +1,9 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"fmt"
+)
 
 var _ binary.ByteOrder
 
@@ -11,11 +14,12 @@ const (
 
 // NamesKey returns the store key to retrieve a Names from the index fields
 func NamesKey(
-	index string,
+	name string,
+	tld string,
 ) []byte {
 	var key []byte
 
-	indexBytes := []byte(index)
+	indexBytes := []byte(fmt.Sprintf("%s.%s", name, tld))
 	key = append(key, indexBytes...)
 	key = append(key, []byte("/")...)
 

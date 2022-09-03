@@ -32,10 +32,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				NamesList: []types.Names{
 					{
-						Index: "0",
+						Name: "0",
+						Tld:  "o",
 					},
 					{
-						Index: "1",
+						Name: "1",
+						Tld:  "o",
 					},
 				},
 				BidsList: []types.Bids{
@@ -77,10 +79,12 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				NamesList: []types.Names{
 					{
-						Index: "0",
+						Name: "0",
+						Tld:  "o",
 					},
 					{
-						Index: "0",
+						Name: "0",
+						Tld:  "o",
 					},
 				},
 			},

@@ -65,6 +65,23 @@ export interface MsgTransfer {
 
 export interface MsgTransferResponse {}
 
+export interface MsgAddRecord {
+  creator: string;
+  name: string;
+  value: string;
+  data: string;
+  record: string;
+}
+
+export interface MsgAddRecordResponse {}
+
+export interface MsgDelRecord {
+  creator: string;
+  name: string;
+}
+
+export interface MsgDelRecordResponse {}
+
 const baseMsgRegister: object = { creator: "", name: "", years: "", data: "" };
 
 export const MsgRegister = {
@@ -1047,6 +1064,283 @@ export const MsgTransferResponse = {
   },
 };
 
+const baseMsgAddRecord: object = {
+  creator: "",
+  name: "",
+  value: "",
+  data: "",
+  record: "",
+};
+
+export const MsgAddRecord = {
+  encode(message: MsgAddRecord, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    if (message.value !== "") {
+      writer.uint32(26).string(message.value);
+    }
+    if (message.data !== "") {
+      writer.uint32(34).string(message.data);
+    }
+    if (message.record !== "") {
+      writer.uint32(42).string(message.record);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgAddRecord {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgAddRecord } as MsgAddRecord;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.name = reader.string();
+          break;
+        case 3:
+          message.value = reader.string();
+          break;
+        case 4:
+          message.data = reader.string();
+          break;
+        case 5:
+          message.record = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgAddRecord {
+    const message = { ...baseMsgAddRecord } as MsgAddRecord;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = String(object.name);
+    } else {
+      message.name = "";
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = String(object.value);
+    } else {
+      message.value = "";
+    }
+    if (object.data !== undefined && object.data !== null) {
+      message.data = String(object.data);
+    } else {
+      message.data = "";
+    }
+    if (object.record !== undefined && object.record !== null) {
+      message.record = String(object.record);
+    } else {
+      message.record = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgAddRecord): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.name !== undefined && (obj.name = message.name);
+    message.value !== undefined && (obj.value = message.value);
+    message.data !== undefined && (obj.data = message.data);
+    message.record !== undefined && (obj.record = message.record);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgAddRecord>): MsgAddRecord {
+    const message = { ...baseMsgAddRecord } as MsgAddRecord;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = object.name;
+    } else {
+      message.name = "";
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = object.value;
+    } else {
+      message.value = "";
+    }
+    if (object.data !== undefined && object.data !== null) {
+      message.data = object.data;
+    } else {
+      message.data = "";
+    }
+    if (object.record !== undefined && object.record !== null) {
+      message.record = object.record;
+    } else {
+      message.record = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgAddRecordResponse: object = {};
+
+export const MsgAddRecordResponse = {
+  encode(_: MsgAddRecordResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgAddRecordResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgAddRecordResponse } as MsgAddRecordResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgAddRecordResponse {
+    const message = { ...baseMsgAddRecordResponse } as MsgAddRecordResponse;
+    return message;
+  },
+
+  toJSON(_: MsgAddRecordResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgAddRecordResponse>): MsgAddRecordResponse {
+    const message = { ...baseMsgAddRecordResponse } as MsgAddRecordResponse;
+    return message;
+  },
+};
+
+const baseMsgDelRecord: object = { creator: "", name: "" };
+
+export const MsgDelRecord = {
+  encode(message: MsgDelRecord, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgDelRecord {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgDelRecord } as MsgDelRecord;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.name = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgDelRecord {
+    const message = { ...baseMsgDelRecord } as MsgDelRecord;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = String(object.name);
+    } else {
+      message.name = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgDelRecord): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.name !== undefined && (obj.name = message.name);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgDelRecord>): MsgDelRecord {
+    const message = { ...baseMsgDelRecord } as MsgDelRecord;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = object.name;
+    } else {
+      message.name = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgDelRecordResponse: object = {};
+
+export const MsgDelRecordResponse = {
+  encode(_: MsgDelRecordResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgDelRecordResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgDelRecordResponse } as MsgDelRecordResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgDelRecordResponse {
+    const message = { ...baseMsgDelRecordResponse } as MsgDelRecordResponse;
+    return message;
+  },
+
+  toJSON(_: MsgDelRecordResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgDelRecordResponse>): MsgDelRecordResponse {
+    const message = { ...baseMsgDelRecordResponse } as MsgDelRecordResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   Register(request: MsgRegister): Promise<MsgRegisterResponse>;
@@ -1056,8 +1350,10 @@ export interface Msg {
   List(request: MsgList): Promise<MsgListResponse>;
   Buy(request: MsgBuy): Promise<MsgBuyResponse>;
   Delist(request: MsgDelist): Promise<MsgDelistResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Transfer(request: MsgTransfer): Promise<MsgTransferResponse>;
+  AddRecord(request: MsgAddRecord): Promise<MsgAddRecordResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  DelRecord(request: MsgDelRecord): Promise<MsgDelRecordResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1135,6 +1431,30 @@ export class MsgClientImpl implements Msg {
       data
     );
     return promise.then((data) => MsgTransferResponse.decode(new Reader(data)));
+  }
+
+  AddRecord(request: MsgAddRecord): Promise<MsgAddRecordResponse> {
+    const data = MsgAddRecord.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.rns.Msg",
+      "AddRecord",
+      data
+    );
+    return promise.then((data) =>
+      MsgAddRecordResponse.decode(new Reader(data))
+    );
+  }
+
+  DelRecord(request: MsgDelRecord): Promise<MsgDelRecordResponse> {
+    const data = MsgDelRecord.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.rns.Msg",
+      "DelRecord",
+      data
+    );
+    return promise.then((data) =>
+      MsgDelRecordResponse.decode(new Reader(data))
+    );
   }
 }
 

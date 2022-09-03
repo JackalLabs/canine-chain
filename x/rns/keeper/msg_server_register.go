@@ -14,10 +14,20 @@ import (
 func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*types.MsgRegisterResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Try getting a name from the store
-	whois, isFound := k.GetNames(ctx, msg.Name)
+
+	name, tld, err := getNameAndTLD(msg.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	if types.IS_RESERVED[tld] {
+		return nil, types.ErrReserved
+	}
+
+	whois, isFound := k.GetNames(ctx, name, tld)
 	// Set the price at which the name has to be bought if it didn't have an owner before
 
-	chars := strings.Count(msg.Name, "")
+	chars := strings.Count(name, "")
 
 	cost := 1000000
 
@@ -26,22 +36,16 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Must be 1 or more characters.")
 	case 1:
 		cost = 12000000
-		break
 	case 2:
 		cost = 6000000
-		break
 	case 3:
 		cost = 3000000
-		break
 	case 4:
 		cost = 1500000
-		break
 	case 5:
 		cost = 750000
-		break
 	default:
 		cost = 375000
-		break
 	}
 
 	price := sdk.Coins{sdk.NewInt64Coin("ujkl", int64(cost))}
@@ -72,13 +76,16 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)
 
+	emptySubdomains := []*types.Names{}
+
 	// Create an updated whois record
 	newWhois := types.Names{
-		Index:   msg.Name,
-		Name:    msg.Name,
-		Expires: strconv.FormatInt(time, 10),
-		Value:   owner.String(),
-		Data:    msg.Data,
+		Name:       name,
+		Expires:    strconv.FormatInt(time, 10),
+		Value:      owner.String(),
+		Data:       msg.Data,
+		Subdomains: emptySubdomains,
+		Tld:        tld,
 	}
 	// Write whois information to the store
 	k.SetNames(ctx, newWhois)

@@ -36,7 +36,7 @@ func (gs GenesisState) Validate() error {
 	namesIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.NamesList {
-		index := string(NamesKey(elem.Index))
+		index := string(NamesKey(elem.Name, elem.Tld))
 		if _, ok := namesIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for names")
 		}

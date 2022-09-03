@@ -18,7 +18,12 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already listed.")
 	}
 
-	name, nfound := k.GetNames(ctx, msg.Name)
+	n, tld, err := getNameAndTLD(msg.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	name, nfound := k.GetNames(ctx, n, tld)
 
 	if !nfound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name does not exist or has expired.")

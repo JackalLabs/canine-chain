@@ -45,12 +45,28 @@ func (k Keeper) Names(c context.Context, req *types.QueryGetNamesRequest) (*type
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetNames(
-		ctx,
-		req.Index,
-	)
+	n, tld, err := getNameAndTLD(req.Index)
+	if err != nil {
+		return nil, err
+	}
+
+	sub, name, hasSub := getSubdomain(n)
+	if hasSub {
+		n = name
+	}
+
+	val, found := k.GetNames(ctx, n, tld)
+
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
+	}
+
+	if hasSub {
+		for _, domain := range val.Subdomains {
+			if domain.Name == sub {
+				return &types.QueryGetNamesResponse{Names: *domain}, nil
+			}
+		}
 	}
 
 	return &types.QueryGetNamesResponse{Names: val}, nil

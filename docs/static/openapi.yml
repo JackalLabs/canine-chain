@@ -33440,50 +33440,7 @@ paths:
         '200':
           description: A successful response.
           schema:
-            type: object
-            properties:
-              names:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    index:
-                      type: string
-                    name:
-                      type: string
-                    expires:
-                      type: string
-                    value:
-                      type: string
-                    data:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
+            $ref: '#/definitions/jackaldao.canine.rns.QueryAllNamesResponse'
         default:
           description: An unexpected error response.
           schema:
@@ -33569,21 +33526,7 @@ paths:
         '200':
           description: A successful response.
           schema:
-            type: object
-            properties:
-              names:
-                type: object
-                properties:
-                  index:
-                    type: string
-                  name:
-                    type: string
-                  expires:
-                    type: string
-                  value:
-                    type: string
-                  data:
-                    type: string
+            $ref: '#/definitions/jackaldao.canine.rns.QueryGetNamesResponse'
         default:
           description: An unexpected error response.
           schema:
@@ -57292,11 +57235,15 @@ definitions:
         type: string
   jackaldao.canine.rns.MsgAcceptBidResponse:
     type: object
+  jackaldao.canine.rns.MsgAddRecordResponse:
+    type: object
   jackaldao.canine.rns.MsgBidResponse:
     type: object
   jackaldao.canine.rns.MsgBuyResponse:
     type: object
   jackaldao.canine.rns.MsgCancelBidResponse:
+    type: object
+  jackaldao.canine.rns.MsgDelRecordResponse:
     type: object
   jackaldao.canine.rns.MsgDelistResponse:
     type: object
@@ -57309,8 +57256,6 @@ definitions:
   jackaldao.canine.rns.Names:
     type: object
     properties:
-      index:
-        type: string
       name:
         type: string
       expires:
@@ -57318,6 +57263,12 @@ definitions:
       value:
         type: string
       data:
+        type: string
+      subdomains:
+        type: array
+        items:
+          $ref: '#/definitions/jackaldao.canine.rns.Names'
+      tld:
         type: string
   jackaldao.canine.rns.Params:
     type: object
@@ -57408,18 +57359,7 @@ definitions:
       names:
         type: array
         items:
-          type: object
-          properties:
-            index:
-              type: string
-            name:
-              type: string
-            expires:
-              type: string
-            value:
-              type: string
-            data:
-              type: string
+          $ref: '#/definitions/jackaldao.canine.rns.Names'
       pagination:
         type: object
         properties:
@@ -57475,18 +57415,7 @@ definitions:
     type: object
     properties:
       names:
-        type: object
-        properties:
-          index:
-            type: string
-          name:
-            type: string
-          expires:
-            type: string
-          value:
-            type: string
-          data:
-            type: string
+        $ref: '#/definitions/jackaldao.canine.rns.Names'
   jackaldao.canine.rns.QueryParamsResponse:
     type: object
     properties:

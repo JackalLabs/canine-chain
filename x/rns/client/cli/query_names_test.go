@@ -29,7 +29,7 @@ func networkWithNamesObjects(t *testing.T, n int) (*network.Network, []types.Nam
 
 	for i := 0; i < n; i++ {
 		names := types.Names{
-			Index: strconv.Itoa(i),
+			Name: strconv.Itoa(i),
 		}
 		nullify.Fill(&names)
 		state.NamesList = append(state.NamesList, names)
@@ -57,7 +57,7 @@ func TestShowNames(t *testing.T) {
 	}{
 		{
 			desc:    "found",
-			idIndex: objs[0].Index,
+			idIndex: objs[0].Name,
 
 			args: common,
 			obj:  objs[0],

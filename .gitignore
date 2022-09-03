@@ -8,6 +8,8 @@
 .vscode
 .idea
 
+log.txt
+
 # Build
 vendor
 build

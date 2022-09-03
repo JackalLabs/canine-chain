@@ -8,5 +8,6 @@ import (
 
 // x/rns module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrNoTLD    = sdkerrors.Register(ModuleName, 1100, "could not extract the tld from the name provided")
+	ErrReserved = sdkerrors.Register(ModuleName, 1101, "tld is reserved by the system")
 )

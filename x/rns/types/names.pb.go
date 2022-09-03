@@ -23,11 +23,12 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Names struct {
-	Index   string `protobuf:"bytes,1,opt,name=index,proto3" json:"index,omitempty"`
-	Name    string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Expires string `protobuf:"bytes,3,opt,name=expires,proto3" json:"expires,omitempty"`
-	Value   string `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty"`
-	Data    string `protobuf:"bytes,5,opt,name=data,proto3" json:"data,omitempty"`
+	Name       string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Expires    string   `protobuf:"bytes,2,opt,name=expires,proto3" json:"expires,omitempty"`
+	Value      string   `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	Data       string   `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
+	Subdomains []*Names `protobuf:"bytes,5,rep,name=subdomains,proto3" json:"subdomains,omitempty"`
+	Tld        string   `protobuf:"bytes,6,opt,name=tld,proto3" json:"tld,omitempty"`
 }
 
 func (m *Names) Reset()         { *m = Names{} }
@@ -63,13 +64,6 @@ func (m *Names) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Names proto.InternalMessageInfo
 
-func (m *Names) GetIndex() string {
-	if m != nil {
-		return m.Index
-	}
-	return ""
-}
-
 func (m *Names) GetName() string {
 	if m != nil {
 		return m.Name
@@ -98,6 +92,20 @@ func (m *Names) GetData() string {
 	return ""
 }
 
+func (m *Names) GetSubdomains() []*Names {
+	if m != nil {
+		return m.Subdomains
+	}
+	return nil
+}
+
+func (m *Names) GetTld() string {
+	if m != nil {
+		return m.Tld
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Names)(nil), "jackaldao.canine.rns.Names")
 }
@@ -105,20 +113,22 @@ func init() {
 func init() { proto.RegisterFile("rns/names.proto", fileDescriptor_0bf9fb45456da4ab) }
 
 var fileDescriptor_0bf9fb45456da4ab = []byte{
-	// 207 bytes of a gzipped FileDescriptorProto
+	// 239 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2f, 0xca, 0x2b, 0xd6,
 	0xcf, 0x4b, 0xcc, 0x4d, 0x2d, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0xc9, 0x4a, 0x4c,
 	0xce, 0x4e, 0xcc, 0x49, 0x49, 0xcc, 0xd7, 0x4b, 0x4e, 0xcc, 0xcb, 0xcc, 0x4b, 0xd5, 0x2b, 0xca,
-	0x2b, 0x56, 0x2a, 0xe5, 0x62, 0xf5, 0x03, 0x29, 0x12, 0x12, 0xe1, 0x62, 0xcd, 0xcc, 0x4b, 0x49,
-	0xad, 0x90, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0x70, 0x84, 0x84, 0xb8, 0x58, 0x40, 0x66,
-	0x48, 0x30, 0x81, 0x05, 0xc1, 0x6c, 0x21, 0x09, 0x2e, 0xf6, 0xd4, 0x8a, 0x82, 0xcc, 0xa2, 0xd4,
-	0x62, 0x09, 0x66, 0xb0, 0x30, 0x8c, 0x0b, 0x32, 0xa3, 0x2c, 0x31, 0xa7, 0x34, 0x55, 0x82, 0x05,
-	0x62, 0x06, 0x98, 0x03, 0x32, 0x23, 0x25, 0xb1, 0x24, 0x51, 0x82, 0x15, 0x62, 0x06, 0x88, 0xed,
-	0xe4, 0x74, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78,
-	0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0x1a, 0xe9, 0x99, 0x25,
-	0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0x10, 0x17, 0xeb, 0xa6, 0x24, 0xe6, 0xeb, 0x43,
-	0x9c, 0xac, 0x5f, 0xa1, 0x0f, 0xf2, 0x56, 0x49, 0x65, 0x41, 0x6a, 0x71, 0x12, 0x1b, 0xd8, 0x5f,
-	0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x4d, 0xc2, 0xb2, 0x5c, 0xea, 0x00, 0x00, 0x00,
+	0x2b, 0x56, 0x5a, 0xc7, 0xc8, 0xc5, 0xea, 0x07, 0x52, 0x25, 0x24, 0xc4, 0xc5, 0x02, 0x52, 0x2e,
+	0xc1, 0xa8, 0xc0, 0xa8, 0xc1, 0x19, 0x04, 0x66, 0x0b, 0x49, 0x70, 0xb1, 0xa7, 0x56, 0x14, 0x64,
+	0x16, 0xa5, 0x16, 0x4b, 0x30, 0x81, 0x85, 0x61, 0x5c, 0x21, 0x11, 0x2e, 0xd6, 0xb2, 0xc4, 0x9c,
+	0xd2, 0x54, 0x09, 0x66, 0xb0, 0x38, 0x84, 0x03, 0x32, 0x23, 0x25, 0xb1, 0x24, 0x51, 0x82, 0x05,
+	0x62, 0x06, 0x88, 0x2d, 0x64, 0xcd, 0xc5, 0x55, 0x5c, 0x9a, 0x94, 0x92, 0x9f, 0x9b, 0x98, 0x99,
+	0x57, 0x2c, 0xc1, 0xaa, 0xc0, 0xac, 0xc1, 0x6d, 0x24, 0xad, 0x87, 0xcd, 0x31, 0x7a, 0x60, 0x87,
+	0x04, 0x21, 0x29, 0x17, 0x12, 0xe0, 0x62, 0x2e, 0xc9, 0x49, 0x91, 0x60, 0x03, 0x9b, 0x07, 0x62,
+	0x3a, 0x39, 0x9d, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13,
+	0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43, 0x94, 0x46, 0x7a, 0x66,
+	0x49, 0x46, 0x69, 0x92, 0x5e, 0x72, 0x7e, 0xae, 0x3e, 0xc4, 0x78, 0xdd, 0x94, 0xc4, 0x7c, 0x7d,
+	0x88, 0xf9, 0xfa, 0x15, 0xfa, 0xa0, 0x00, 0x29, 0xa9, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0x87,
+	0x88, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0xa4, 0x7d, 0x80, 0x3f, 0x24, 0x01, 0x00, 0x00,
 }
 
 func (m *Names) Marshal() (dAtA []byte, err error) {
@@ -141,38 +151,52 @@ func (m *Names) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.Tld) > 0 {
+		i -= len(m.Tld)
+		copy(dAtA[i:], m.Tld)
+		i = encodeVarintNames(dAtA, i, uint64(len(m.Tld)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.Subdomains) > 0 {
+		for iNdEx := len(m.Subdomains) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Subdomains[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintNames(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x2a
+		}
+	}
 	if len(m.Data) > 0 {
 		i -= len(m.Data)
 		copy(dAtA[i:], m.Data)
 		i = encodeVarintNames(dAtA, i, uint64(len(m.Data)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if len(m.Value) > 0 {
 		i -= len(m.Value)
 		copy(dAtA[i:], m.Value)
 		i = encodeVarintNames(dAtA, i, uint64(len(m.Value)))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x1a
 	}
 	if len(m.Expires) > 0 {
 		i -= len(m.Expires)
 		copy(dAtA[i:], m.Expires)
 		i = encodeVarintNames(dAtA, i, uint64(len(m.Expires)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x12
 	}
 	if len(m.Name) > 0 {
 		i -= len(m.Name)
 		copy(dAtA[i:], m.Name)
 		i = encodeVarintNames(dAtA, i, uint64(len(m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Index) > 0 {
-		i -= len(m.Index)
-		copy(dAtA[i:], m.Index)
-		i = encodeVarintNames(dAtA, i, uint64(len(m.Index)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -196,10 +220,6 @@ func (m *Names) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Index)
-	if l > 0 {
-		n += 1 + l + sovNames(uint64(l))
-	}
 	l = len(m.Name)
 	if l > 0 {
 		n += 1 + l + sovNames(uint64(l))
@@ -213,6 +233,16 @@ func (m *Names) Size() (n int) {
 		n += 1 + l + sovNames(uint64(l))
 	}
 	l = len(m.Data)
+	if l > 0 {
+		n += 1 + l + sovNames(uint64(l))
+	}
+	if len(m.Subdomains) > 0 {
+		for _, e := range m.Subdomains {
+			l = e.Size()
+			n += 1 + l + sovNames(uint64(l))
+		}
+	}
+	l = len(m.Tld)
 	if l > 0 {
 		n += 1 + l + sovNames(uint64(l))
 	}
@@ -256,38 +286,6 @@ func (m *Names) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowNames
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthNames
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthNames
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Index = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -318,7 +316,7 @@ func (m *Names) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Expires", wireType)
 			}
@@ -350,7 +348,7 @@ func (m *Names) Unmarshal(dAtA []byte) error {
 			}
 			m.Expires = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Value", wireType)
 			}
@@ -382,7 +380,7 @@ func (m *Names) Unmarshal(dAtA []byte) error {
 			}
 			m.Value = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
 			}
@@ -413,6 +411,72 @@ func (m *Names) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Data = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Subdomains", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowNames
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthNames
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthNames
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Subdomains = append(m.Subdomains, &Names{})
+			if err := m.Subdomains[len(m.Subdomains)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tld", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowNames
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthNames
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthNames
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Tld = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

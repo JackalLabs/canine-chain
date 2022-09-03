@@ -11,9 +11,16 @@ import (
 func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*types.MsgTransferResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	owner, _ := sdk.AccAddressFromBech32(msg.Creator)
+	sender, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	whois, isFound := k.GetNames(ctx, msg.Name)
+	name, tld, err := getNameAndTLD(msg.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	whois, isFound := k.GetNames(ctx, name, tld)
+
+	admin := whois.Value
 
 	block_height := ctx.BlockHeight()
 
@@ -24,20 +31,15 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 			return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 		}
 
-		if whois.Value != owner.String() {
+		if admin != sender.String() {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You are not the owner of that name.")
 		}
 
-		// Create an updated whois record
-		newWhois := types.Names{
-			Index:   msg.Name,
-			Name:    msg.Name,
-			Expires: whois.Expires,
-			Value:   msg.Reciever,
-			Data:    "{}",
-		}
+		whois.Data = "{}"
+		whois.Value = msg.Reciever
+
 		// Write whois information to the store
-		k.SetNames(ctx, newWhois)
+		k.SetNames(ctx, whois)
 
 	} else {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")

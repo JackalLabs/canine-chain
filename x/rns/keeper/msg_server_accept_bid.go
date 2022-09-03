@@ -14,7 +14,12 @@ func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*t
 
 	owner, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	whois, isFound := k.GetNames(ctx, msg.Name)
+	n, tld, err := getNameAndTLD(msg.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	whois, isFound := k.GetNames(ctx, n, tld)
 
 	block_height := ctx.BlockHeight()
 
@@ -38,16 +43,11 @@ func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*t
 
 			k.RemoveBids(ctx, msg.From+msg.Name)
 
-			// Create an updated whois record
-			newWhois := types.Names{
-				Index:   msg.Name,
-				Name:    msg.Name,
-				Expires: whois.Expires,
-				Value:   bid.Bidder,
-				Data:    whois.Data,
-			}
+			whois.Value = bid.Bidder
+			whois.Data = "{}"
+
 			// Write whois information to the store
-			k.SetNames(ctx, newWhois)
+			k.SetNames(ctx, whois)
 		} else {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Bid does not exist or has expired.")
 		}

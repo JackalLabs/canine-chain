@@ -20,7 +20,11 @@ func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyR
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name not for sale.")
 	}
 
-	name, nfound := k.GetNames(ctx, msg.Name)
+	n, tld, err := getNameAndTLD(msg.Name)
+	if err != nil {
+		return nil, err
+	}
+	name, nfound := k.GetNames(ctx, n, tld)
 
 	if !nfound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name does not exist or has expired.")
@@ -50,7 +54,7 @@ func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyR
 
 	ctx.Logger().Error(fmt.Sprintf("%s %s", "coins available: ", k.bankKeeper.SpendableCoins(ctx, buyer).String()))
 
-	err := k.bankKeeper.SendCoins(ctx, buyer, seller, coins)
+	err = k.bankKeeper.SendCoins(ctx, buyer, seller, coins)
 	if err != nil {
 		return nil, err
 	}

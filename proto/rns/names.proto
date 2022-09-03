@@ -4,11 +4,11 @@ package jackaldao.canine.rns;
 option go_package = "github.com/jackal-dao/canine/x/rns/types";
 
 message Names {
-  string index = 1; 
-  string name = 2; 
-  string expires = 3; 
-  string value = 4; 
-  string data = 5; 
-  
+  string name = 1; 
+  string expires = 2; 
+  string value = 3; 
+  string data = 4; 
+  repeated Names subdomains = 5;
+  string tld = 6;
 }
 
