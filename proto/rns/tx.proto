@@ -17,6 +17,7 @@ service Msg {
   rpc Transfer(MsgTransfer) returns (MsgTransferResponse);
   rpc AddRecord(MsgAddRecord) returns (MsgAddRecordResponse);
   rpc DelRecord(MsgDelRecord) returns (MsgDelRecordResponse);
+  rpc Init(MsgInit) returns (MsgInitResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -109,6 +110,14 @@ message MsgDelRecord {
 }
 
 message MsgDelRecordResponse {
+}
+
+message MsgInit {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgInitResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

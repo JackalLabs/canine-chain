@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -29,26 +28,28 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	chars := strings.Count(name, "")
 
-	cost := 1000000
+	var baseCost int64 = getCost(tld)
+
+	var cost int64
 
 	switch chars {
 	case 0:
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Must be 1 or more characters.")
 	case 1:
-		cost = 12000000
+		cost = baseCost * 32
 	case 2:
-		cost = 6000000
+		cost = baseCost * 16
 	case 3:
-		cost = 3000000
+		cost = baseCost * 8
 	case 4:
-		cost = 1500000
+		cost = baseCost * 4
 	case 5:
-		cost = 750000
+		cost = baseCost * 2
 	default:
-		cost = 375000
+		cost = baseCost
 	}
 
-	price := sdk.Coins{sdk.NewInt64Coin("ujkl", int64(cost))}
+	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost)}
 
 	num_years, _ := sdk.NewIntFromString(msg.Years)
 
@@ -60,12 +61,10 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 	// If a name is found in store
 	if isFound {
 
-		expires, _ := sdk.NewIntFromString(whois.Expires)
-
 		if whois.Value == owner.String() {
-			time = expires.Int64() + time
+			time = whois.Expires + time
 		} else {
-			if block_height < expires.Int64() {
+			if block_height < whois.Expires {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 			}
 		}
@@ -74,18 +73,22 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 		time = time + block_height
 	}
 
-	k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)
+	if err != nil {
+		return nil, err
+	}
 
 	emptySubdomains := []*types.Names{}
 
 	// Create an updated whois record
 	newWhois := types.Names{
 		Name:       name,
-		Expires:    strconv.FormatInt(time, 10),
+		Expires:    time,
 		Value:      owner.String(),
 		Data:       msg.Data,
 		Subdomains: emptySubdomains,
 		Tld:        tld,
+		Locked:     0,
 	}
 	// Write whois information to the store
 	k.SetNames(ctx, newWhois)

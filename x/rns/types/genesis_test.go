@@ -56,6 +56,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Name: "1",
 					},
 				},
+				InitList: []types.Init{
+					{
+						Address: "0",
+					},
+					{
+						Address: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -113,6 +121,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						Name: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated init",
+			genState: &types.GenesisState{
+				InitList: []types.Init{
+					{
+						Address: "0",
+					},
+					{
+						Address: "0",
 					},
 				},
 			},

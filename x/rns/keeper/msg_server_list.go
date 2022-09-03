@@ -33,10 +33,13 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You do not own this name.")
 	}
 
-	expires, _ := sdk.NewIntFromString(name.Expires)
 	block_height := ctx.BlockHeight()
 
-	if block_height > expires.Int64() {
+	if name.Locked > block_height {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot transfer free name")
+	}
+
+	if block_height > name.Expires {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 	}
 

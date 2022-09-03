@@ -4,6 +4,7 @@ import { Whois } from "../rns/whois";
 import { Names } from "../rns/names";
 import { Bids } from "../rns/bids";
 import { Forsale } from "../rns/forsale";
+import { Init } from "../rns/init";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "jackaldao.canine.rns";
@@ -14,8 +15,9 @@ export interface GenesisState {
   whoisList: Whois[];
   namesList: Names[];
   bidsList: Bids[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   forsaleList: Forsale[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  initList: Init[];
 }
 
 const baseGenesisState: object = {};
@@ -37,6 +39,9 @@ export const GenesisState = {
     for (const v of message.forsaleList) {
       Forsale.encode(v!, writer.uint32(42).fork()).ldelim();
     }
+    for (const v of message.initList) {
+      Init.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -48,6 +53,7 @@ export const GenesisState = {
     message.namesList = [];
     message.bidsList = [];
     message.forsaleList = [];
+    message.initList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -66,6 +72,9 @@ export const GenesisState = {
         case 5:
           message.forsaleList.push(Forsale.decode(reader, reader.uint32()));
           break;
+        case 6:
+          message.initList.push(Init.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -80,6 +89,7 @@ export const GenesisState = {
     message.namesList = [];
     message.bidsList = [];
     message.forsaleList = [];
+    message.initList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -103,6 +113,11 @@ export const GenesisState = {
     if (object.forsaleList !== undefined && object.forsaleList !== null) {
       for (const e of object.forsaleList) {
         message.forsaleList.push(Forsale.fromJSON(e));
+      }
+    }
+    if (object.initList !== undefined && object.initList !== null) {
+      for (const e of object.initList) {
+        message.initList.push(Init.fromJSON(e));
       }
     }
     return message;
@@ -140,6 +155,13 @@ export const GenesisState = {
     } else {
       obj.forsaleList = [];
     }
+    if (message.initList) {
+      obj.initList = message.initList.map((e) =>
+        e ? Init.toJSON(e) : undefined
+      );
+    } else {
+      obj.initList = [];
+    }
     return obj;
   },
 
@@ -149,6 +171,7 @@ export const GenesisState = {
     message.namesList = [];
     message.bidsList = [];
     message.forsaleList = [];
+    message.initList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -172,6 +195,11 @@ export const GenesisState = {
     if (object.forsaleList !== undefined && object.forsaleList !== null) {
       for (const e of object.forsaleList) {
         message.forsaleList.push(Forsale.fromPartial(e));
+      }
+    }
+    if (object.initList !== undefined && object.initList !== null) {
+      for (const e of object.initList) {
+        message.initList.push(Init.fromPartial(e));
       }
     }
     return message;

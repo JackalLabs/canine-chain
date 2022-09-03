@@ -9,6 +9,7 @@ import "rns/whois.proto";
 import "rns/names.proto";
 import "rns/bids.proto";
 import "rns/forsale.proto";
+import "rns/init.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/rns/types";
@@ -48,6 +49,16 @@ service Query {
 	// Queries all Listings.
 	rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryAllForsaleResponse) {
 		option (google.api.http).get = "/jackal-dao/canine/rnsforsale";
+	}
+
+// Queries a Init by index.
+	rpc Init(QueryGetInitRequest) returns (QueryGetInitResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rns/init/{address}";
+	}
+
+	// Queries a list of Init items.
+	rpc InitAll(QueryAllInitRequest) returns (QueryAllInitResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/rns/init";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -131,6 +142,24 @@ message QueryAllForsaleRequest {
 
 message QueryAllForsaleResponse {
 	repeated Forsale forsale = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetInitRequest {
+	  string address = 1;
+
+}
+
+message QueryGetInitResponse {
+	Init init = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllInitRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllInitResponse {
+	repeated Init init = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

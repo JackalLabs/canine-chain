@@ -37,6 +37,8 @@ genesis:
     mint:
       params:
         mint_denom: "ujkl"
+    feegrant:
+      free_messages: ["/jackaldao.canine.rns.MsgInit"]
   chain_id: "canine-1"
 build:
   main: "cmd/canined"

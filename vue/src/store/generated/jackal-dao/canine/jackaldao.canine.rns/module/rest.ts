@@ -26,6 +26,11 @@ export interface RnsForsale {
   owner?: string;
 }
 
+export interface RnsInit {
+  address?: string;
+  complete?: boolean;
+}
+
 export type RnsMsgAcceptBidResponse = object;
 
 export type RnsMsgAddRecordResponse = object;
@@ -40,6 +45,8 @@ export type RnsMsgDelRecordResponse = object;
 
 export type RnsMsgDelistResponse = object;
 
+export type RnsMsgInitResponse = object;
+
 export type RnsMsgListResponse = object;
 
 export type RnsMsgRegisterResponse = object;
@@ -48,11 +55,16 @@ export type RnsMsgTransferResponse = object;
 
 export interface RnsNames {
   name?: string;
+
+  /** @format int64 */
   expires?: string;
   value?: string;
   data?: string;
   subdomains?: RnsNames[];
   tld?: string;
+
+  /** @format int64 */
+  locked?: string;
 }
 
 /**
@@ -90,6 +102,21 @@ export interface RnsQueryAllForsaleResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface RnsQueryAllInitResponse {
+  init?: RnsInit[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface RnsQueryAllNamesResponse {
   names?: RnsNames[];
 
@@ -111,6 +138,10 @@ export interface RnsQueryGetBidsResponse {
 
 export interface RnsQueryGetForsaleResponse {
   forsale?: RnsForsale;
+}
+
+export interface RnsQueryGetInitResponse {
+  init?: RnsInit;
 }
 
 export interface RnsQueryGetNamesResponse {
@@ -391,6 +422,48 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryInitAll
+   * @summary Queries a list of Init items.
+   * @request GET:/jackal-dao/canine/rns/init
+   */
+  queryInitAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<RnsQueryAllInitResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rns/init`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryInit
+   * @summary Queries a Init by index.
+   * @request GET:/jackal-dao/canine/rns/init/{address}
+   */
+  queryInit = (address: string, params: RequestParams = {}) =>
+    this.request<RnsQueryGetInitResponse, RpcStatus>({
+      path: `/jackal-dao/canine/rns/init/${address}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *

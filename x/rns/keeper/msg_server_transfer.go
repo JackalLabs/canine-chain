@@ -25,14 +25,17 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 	block_height := ctx.BlockHeight()
 
 	if isFound {
-		expires, _ := sdk.NewIntFromString(whois.Expires)
 
-		if block_height > expires.Int64() {
+		if block_height > whois.Expires {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 		}
 
 		if admin != sender.String() {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You are not the owner of that name.")
+		}
+
+		if whois.Locked > block_height {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot transfer free name")
 		}
 
 		whois.Data = "{}"

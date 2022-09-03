@@ -9,6 +9,7 @@ import {
 import { Names } from "../rns/names";
 import { Bids } from "../rns/bids";
 import { Forsale } from "../rns/forsale";
+import { Init } from "../rns/init";
 
 export const protobufPackage = "jackaldao.canine.rns";
 
@@ -86,6 +87,23 @@ export interface QueryAllForsaleRequest {
 
 export interface QueryAllForsaleResponse {
   forsale: Forsale[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetInitRequest {
+  address: string;
+}
+
+export interface QueryGetInitResponse {
+  init: Init | undefined;
+}
+
+export interface QueryAllInitRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllInitResponse {
+  init: Init[];
   pagination: PageResponse | undefined;
 }
 
@@ -1282,6 +1300,272 @@ export const QueryAllForsaleResponse = {
   },
 };
 
+const baseQueryGetInitRequest: object = { address: "" };
+
+export const QueryGetInitRequest = {
+  encode(
+    message: QueryGetInitRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetInitRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetInitRequest } as QueryGetInitRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetInitRequest {
+    const message = { ...baseQueryGetInitRequest } as QueryGetInitRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetInitRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryGetInitRequest>): QueryGetInitRequest {
+    const message = { ...baseQueryGetInitRequest } as QueryGetInitRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetInitResponse: object = {};
+
+export const QueryGetInitResponse = {
+  encode(
+    message: QueryGetInitResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.init !== undefined) {
+      Init.encode(message.init, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetInitResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetInitResponse } as QueryGetInitResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.init = Init.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetInitResponse {
+    const message = { ...baseQueryGetInitResponse } as QueryGetInitResponse;
+    if (object.init !== undefined && object.init !== null) {
+      message.init = Init.fromJSON(object.init);
+    } else {
+      message.init = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetInitResponse): unknown {
+    const obj: any = {};
+    message.init !== undefined &&
+      (obj.init = message.init ? Init.toJSON(message.init) : undefined);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryGetInitResponse>): QueryGetInitResponse {
+    const message = { ...baseQueryGetInitResponse } as QueryGetInitResponse;
+    if (object.init !== undefined && object.init !== null) {
+      message.init = Init.fromPartial(object.init);
+    } else {
+      message.init = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllInitRequest: object = {};
+
+export const QueryAllInitRequest = {
+  encode(
+    message: QueryAllInitRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllInitRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllInitRequest } as QueryAllInitRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllInitRequest {
+    const message = { ...baseQueryAllInitRequest } as QueryAllInitRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllInitRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryAllInitRequest>): QueryAllInitRequest {
+    const message = { ...baseQueryAllInitRequest } as QueryAllInitRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllInitResponse: object = {};
+
+export const QueryAllInitResponse = {
+  encode(
+    message: QueryAllInitResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.init) {
+      Init.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllInitResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllInitResponse } as QueryAllInitResponse;
+    message.init = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.init.push(Init.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllInitResponse {
+    const message = { ...baseQueryAllInitResponse } as QueryAllInitResponse;
+    message.init = [];
+    if (object.init !== undefined && object.init !== null) {
+      for (const e of object.init) {
+        message.init.push(Init.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllInitResponse): unknown {
+    const obj: any = {};
+    if (message.init) {
+      obj.init = message.init.map((e) => (e ? Init.toJSON(e) : undefined));
+    } else {
+      obj.init = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryAllInitResponse>): QueryAllInitResponse {
+    const message = { ...baseQueryAllInitResponse } as QueryAllInitResponse;
+    message.init = [];
+    if (object.init !== undefined && object.init !== null) {
+      for (const e of object.init) {
+        message.init.push(Init.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1298,6 +1582,10 @@ export interface Query {
   Forsale(request: QueryGetForsaleRequest): Promise<QueryGetForsaleResponse>;
   /** Queries all Listings. */
   ForsaleAll(request: QueryAllForsaleRequest): Promise<QueryAllForsaleResponse>;
+  /** Queries a Init by index. */
+  Init(request: QueryGetInitRequest): Promise<QueryGetInitResponse>;
+  /** Queries a list of Init items. */
+  InitAll(request: QueryAllInitRequest): Promise<QueryAllInitResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1386,6 +1674,30 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllForsaleResponse.decode(new Reader(data))
+    );
+  }
+
+  Init(request: QueryGetInitRequest): Promise<QueryGetInitResponse> {
+    const data = QueryGetInitRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.rns.Query",
+      "Init",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetInitResponse.decode(new Reader(data))
+    );
+  }
+
+  InitAll(request: QueryAllInitRequest): Promise<QueryAllInitResponse> {
+    const data = QueryAllInitRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.rns.Query",
+      "InitAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllInitResponse.decode(new Reader(data))
     );
   }
 }

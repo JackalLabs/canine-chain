@@ -82,6 +82,13 @@ export interface MsgDelRecord {
 
 export interface MsgDelRecordResponse {}
 
+export interface MsgInit {
+  creator: string;
+  name: string;
+}
+
+export interface MsgInitResponse {}
+
 const baseMsgRegister: object = { creator: "", name: "", years: "", data: "" };
 
 export const MsgRegister = {
@@ -1341,6 +1348,116 @@ export const MsgDelRecordResponse = {
   },
 };
 
+const baseMsgInit: object = { creator: "", name: "" };
+
+export const MsgInit = {
+  encode(message: MsgInit, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInit {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInit } as MsgInit;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.name = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgInit {
+    const message = { ...baseMsgInit } as MsgInit;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = String(object.name);
+    } else {
+      message.name = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgInit): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.name !== undefined && (obj.name = message.name);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgInit>): MsgInit {
+    const message = { ...baseMsgInit } as MsgInit;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = object.name;
+    } else {
+      message.name = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgInitResponse: object = {};
+
+export const MsgInitResponse = {
+  encode(_: MsgInitResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInitResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInitResponse } as MsgInitResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgInitResponse {
+    const message = { ...baseMsgInitResponse } as MsgInitResponse;
+    return message;
+  },
+
+  toJSON(_: MsgInitResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgInitResponse>): MsgInitResponse {
+    const message = { ...baseMsgInitResponse } as MsgInitResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   Register(request: MsgRegister): Promise<MsgRegisterResponse>;
@@ -1352,8 +1469,9 @@ export interface Msg {
   Delist(request: MsgDelist): Promise<MsgDelistResponse>;
   Transfer(request: MsgTransfer): Promise<MsgTransferResponse>;
   AddRecord(request: MsgAddRecord): Promise<MsgAddRecordResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   DelRecord(request: MsgDelRecord): Promise<MsgDelRecordResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Init(request: MsgInit): Promise<MsgInitResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1455,6 +1573,12 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) =>
       MsgDelRecordResponse.decode(new Reader(data))
     );
+  }
+
+  Init(request: MsgInit): Promise<MsgInitResponse> {
+    const data = MsgInit.encode(request).finish();
+    const promise = this.rpc.request("jackaldao.canine.rns.Msg", "Init", data);
+    return promise.then((data) => MsgInitResponse.decode(new Reader(data)));
   }
 }
 

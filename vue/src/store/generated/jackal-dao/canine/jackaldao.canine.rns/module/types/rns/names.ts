@@ -1,23 +1,26 @@
 /* eslint-disable */
-import { Writer, Reader } from "protobufjs/minimal";
+import * as Long from "long";
+import { util, configure, Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "jackaldao.canine.rns";
 
 export interface Names {
   name: string;
-  expires: string;
+  expires: number;
   value: string;
   data: string;
   subdomains: Names[];
   tld: string;
+  locked: number;
 }
 
 const baseNames: object = {
   name: "",
-  expires: "",
+  expires: 0,
   value: "",
   data: "",
   tld: "",
+  locked: 0,
 };
 
 export const Names = {
@@ -25,8 +28,8 @@ export const Names = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.expires !== "") {
-      writer.uint32(18).string(message.expires);
+    if (message.expires !== 0) {
+      writer.uint32(16).int64(message.expires);
     }
     if (message.value !== "") {
       writer.uint32(26).string(message.value);
@@ -39,6 +42,9 @@ export const Names = {
     }
     if (message.tld !== "") {
       writer.uint32(50).string(message.tld);
+    }
+    if (message.locked !== 0) {
+      writer.uint32(56).int64(message.locked);
     }
     return writer;
   },
@@ -55,7 +61,7 @@ export const Names = {
           message.name = reader.string();
           break;
         case 2:
-          message.expires = reader.string();
+          message.expires = longToNumber(reader.int64() as Long);
           break;
         case 3:
           message.value = reader.string();
@@ -68,6 +74,9 @@ export const Names = {
           break;
         case 6:
           message.tld = reader.string();
+          break;
+        case 7:
+          message.locked = longToNumber(reader.int64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -86,9 +95,9 @@ export const Names = {
       message.name = "";
     }
     if (object.expires !== undefined && object.expires !== null) {
-      message.expires = String(object.expires);
+      message.expires = Number(object.expires);
     } else {
-      message.expires = "";
+      message.expires = 0;
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = String(object.value);
@@ -110,6 +119,11 @@ export const Names = {
     } else {
       message.tld = "";
     }
+    if (object.locked !== undefined && object.locked !== null) {
+      message.locked = Number(object.locked);
+    } else {
+      message.locked = 0;
+    }
     return message;
   },
 
@@ -127,6 +141,7 @@ export const Names = {
       obj.subdomains = [];
     }
     message.tld !== undefined && (obj.tld = message.tld);
+    message.locked !== undefined && (obj.locked = message.locked);
     return obj;
   },
 
@@ -141,7 +156,7 @@ export const Names = {
     if (object.expires !== undefined && object.expires !== null) {
       message.expires = object.expires;
     } else {
-      message.expires = "";
+      message.expires = 0;
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
@@ -163,9 +178,24 @@ export const Names = {
     } else {
       message.tld = "";
     }
+    if (object.locked !== undefined && object.locked !== null) {
+      message.locked = object.locked;
+    } else {
+      message.locked = 0;
+    }
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -177,3 +207,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}
