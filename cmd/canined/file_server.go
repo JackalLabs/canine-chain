@@ -5,20 +5,20 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 
 	"github.com/jackal-dao/canine/x/storage/types"
 
@@ -28,38 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// This function returns the filename(to save in database) of the saved file
-// or an error if it occurs
-func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
-	// ParseMultipartForm parses a request body as multipart/form-data
-	r.ParseMultipartForm(32 << 20)
-
-	clientCtx, qerr := client.GetClientTxContext(cmd)
-
-	if qerr != nil {
-		fmt.Printf("Client Context Error: %v\n", qerr)
-		v := ErrorResponse{
-			Error: qerr.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
-	}
-
-	file, handler, err := r.FormFile("file") // Retrieve the file from form data
-
-	sender := r.Form.Get("sender")
-
-	if err != nil {
-		fmt.Printf("Error with form file!\n")
-		v := ErrorResponse{
-			Error: err.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
-	}
-
+func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) (string, []byte, error) {
 	size := handler.Size
 	h := sha256.New()
 	io.Copy(h, file)
@@ -69,12 +38,8 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 	direrr := os.MkdirAll(fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, fmt.Sprintf("%x", hashName)), os.ModePerm)
 	if direrr != nil {
 		fmt.Printf("Error directory can't be made!\n")
-		v := ErrorResponse{
-			Error: direrr.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+
+		return "", nil, direrr
 	}
 
 	var blocksize int64 = 1024
@@ -83,12 +48,7 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		f, err := os.OpenFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, fmt.Sprintf("%x", hashName), i/blocksize, ".jkl"), os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
 			fmt.Printf("Error can't open file!\n")
-			v := ErrorResponse{
-				Error: err.Error(),
-			}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(v)
-			return
+			return "", nil, err
 		}
 
 		firstx := make([]byte, blocksize)
@@ -111,22 +71,12 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 	res, ctrerr := makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"})
 	if ctrerr != nil {
 		fmt.Printf("CONTRACT ERROR: %v\n", ctrerr)
-		v := ErrorResponse{
-			Error: ctrerr.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+		return "", nil, ctrerr
 	}
 
 	if res.Code != 0 {
 		fmt.Println(fmt.Errorf(res.RawLog))
-		v := ErrorResponse{
-			Error: res.RawLog,
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+		return "", nil, fmt.Errorf(res.RawLog)
 	}
 	// cidhash := sha256.New()
 	// flags := cmd.Flag("from")
@@ -135,23 +85,13 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 
 	if ierr != nil {
 		fmt.Printf("Inforing Error: %v\n", ierr)
-		v := ErrorResponse{
-			Error: ierr.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+		return "", nil, ierr
 	}
 
 	ko, err := keyring.MkAccKeyOutput(info)
 	if err != nil {
 		fmt.Printf("Inforing Error: %v\n", ierr)
-		v := ErrorResponse{
-			Error: ierr.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+		return "", nil, err
 	}
 
 	cidhash := sha256.New()
@@ -163,22 +103,12 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 	err = datedb.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(fmt.Sprintf("%d", 0)), nil)
 	if err != nil {
 		fmt.Printf("Database Error: %v\n", err)
-		v := ErrorResponse{
-			Error: err.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+		return "", nil, err
 	}
 	derr := db.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(strcid), nil)
 	if derr != nil {
 		fmt.Printf("Database Error: %v\n", derr)
-		v := ErrorResponse{
-			Error: derr.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+		return "", nil, err
 	}
 
 	fmt.Printf("%s %s\n", fmt.Sprintf("%x", hashName), "Added to database")
@@ -186,30 +116,10 @@ func FileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 	_, cerr := db.Get([]byte(fmt.Sprintf("%x", hashName)), nil)
 	if cerr != nil {
 		fmt.Printf("ERROR: %s\n", cerr.Error())
-		v := ErrorResponse{
-			Error: cerr.Error(),
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
-		return
+		return "", nil, err
 	}
 
-	v := UploadResponse{
-		CID: strcid,
-		FID: fmt.Sprintf("%x", hashName),
-	}
-	json.NewEncoder(w).Encode(v)
-}
-
-func indexres(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	clientCtx := client.GetClientContextFromCmd(cmd)
-
-	v := IndexResponse{
-		Status:  "online",
-		Address: clientCtx.GetFromAddress().String(),
-	}
-	json.NewEncoder(w).Encode(v)
+	return strcid, hashName, nil
 }
 
 func makeContract(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
@@ -269,7 +179,6 @@ func HashData(cmd *cobra.Command, filename string) (string, string, string) {
 	}
 
 	return hex.EncodeToString(t.Root()), fmt.Sprintf("%d", size), filename
-
 }
 
 func queryBlock(cmd *cobra.Command, cid string) (string, error) {
@@ -313,62 +222,6 @@ func checkVerified(cmd *cobra.Command, cid string) (bool, error) {
 	}
 
 	return ver, nil
-}
-
-func downfil(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	clientCtx, qerr := client.GetClientTxContext(cmd)
-	if qerr != nil {
-		return
-	}
-
-	files, _ := os.ReadDir(fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, ps.ByName("file")))
-
-	var data []byte
-
-	for i := 0; i < len(files); i += 1 {
-		f, err := os.ReadFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, ps.ByName("file"), i, ".jkl"))
-		if err != nil {
-			fmt.Printf("Error can't open file!\n")
-			w.Write([]byte("cannot find file"))
-			return
-		}
-
-		data = append(data, f...)
-	}
-
-	w.Write(data)
-}
-
-func checkVersion(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	v := VersionResponse{
-		Version: "1.0.0",
-	}
-	json.NewEncoder(w).Encode(v)
-}
-
-func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
-	dfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		downfil(cmd, w, r, ps)
-	}
-
-	ires := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		indexres(cmd, w, r, ps)
-	}
-
-	router.GET("/version", checkVersion)
-	router.GET("/v", checkVersion)
-	router.GET("/download/:file", dfil)
-	router.GET("/d/:file", dfil)
-	router.GET("/", ires)
-}
-
-func postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB, datedb *leveldb.DB) {
-	upfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		FileUpload(w, r, ps, cmd, db, datedb)
-	}
-
-	router.POST("/upload", upfil)
-	router.POST("/u", upfil)
 }
 
 func StartFileServer(cmd *cobra.Command) {

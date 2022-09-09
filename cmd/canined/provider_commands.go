@@ -9,7 +9,7 @@ import (
 func StartServer() *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:   "start-miner",
+		Use:   "start-provider",
 		Short: "start jackal storage provider",
 		Long:  `Start jackal storage provider`,
 		Args:  cobra.ExactArgs(0),
@@ -21,7 +21,7 @@ func StartServer() *cobra.Command {
 
 	flags.AddTxFlagsToCmd(cmd)
 	cmd.Flags().Bool("debug", false, "allow printing info messages from the storage provider daemon")
-	cmd.Flags().Uint16("interval", 10, "the interval in seconds for which to check proofs")
+	cmd.Flags().Uint16("interval", 30, "the interval in seconds for which to check proofs")
 
 	return cmd
 }
