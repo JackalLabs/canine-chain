@@ -42,7 +42,10 @@ func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*t
 		if bidFound {
 			cost, _ := sdk.NewIntFromString(bid.Price)
 			price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
-			k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, owner, price)
+			err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, owner, price)
+			if err != nil {
+				return nil, err
+			}
 
 			k.RemoveBids(ctx, msg.From+msg.Name)
 

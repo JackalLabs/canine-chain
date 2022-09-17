@@ -14,7 +14,10 @@ func (k msgServer) Bid(goCtx context.Context, msg *types.MsgBid) (*types.MsgBidR
 
 	cost, _ := sdk.NewIntFromString(msg.Bid)
 	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
-	k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidder, types.ModuleName, price)
+	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidder, types.ModuleName, price)
+	if err != nil {
+		return nil, err
+	}
 
 	newBid := types.Bids{
 		Index:  bidder.String() + msg.Name,

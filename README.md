@@ -17,3 +17,4 @@ To install `canined` on your Linux/MacOs machine, please go to [Releases](https:
 Canine by Jackal uses the [MIT License](/LICENSE.md).
 
 ### [Developer Contact](/ABOUT.md)
+

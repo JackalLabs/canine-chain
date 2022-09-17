@@ -19,7 +19,11 @@ func (k msgServer) CancelBid(goCtx context.Context, msg *types.MsgCancelBid) (*t
 
 		cost, _ := sdk.NewIntFromString(bid.Price)
 		price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
-		k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidder, price)
+		err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidder, price)
+		if err != nil {
+			return nil, err
+		}
+
 		k.RemoveBids(ctx, msg.Creator+msg.Name)
 	} else {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Bid does not exist or has expired.")
