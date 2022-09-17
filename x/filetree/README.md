@@ -42,7 +42,8 @@ let hh2 := H(h2)
 // we also hash the child
 let hh3 := H(child)
 
-// this leaves us with each chunk hashed and protected from prying eyes already, but it's clear this has 3 items in its path (NOT GOOD)
+// this leaves us with each chunk hashed and protected from prying eyes already, 
+// but it's clear this has 3 items in its path (NOT GOOD)
 
 // we can then hash every item in this list with the proceeding item
 
@@ -58,7 +59,8 @@ func checkChild(parent ps, child cs, hc H(child)) {
     return H(parent + hc) == child
 }
 
-// this gives us the ability to keep the usefulness of plaintext paths but add a level of privacy that would be impossible to achieve with plaintext.
+// this gives us the ability to keep the usefulness of plaintext paths but add a 
+// level of privacy that would be impossible to achieve with plaintext.
 ```
 
 
