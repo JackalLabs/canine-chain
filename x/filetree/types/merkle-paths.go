@@ -8,13 +8,10 @@ import (
 
 func AddToMerkle(path string, append string) string {
 	total := path
+	
+	k := fmt.Sprintf("%s%s", total, append)
 
 	h := sha256.New()
-	h.Write([]byte(append))
-	b := fmt.Sprintf("%x", h.Sum(nil))
-	k := fmt.Sprintf("%s%s", total, b)
-
-	h = sha256.New()
 	h.Write([]byte(k))
 	total = fmt.Sprintf("%x", h.Sum(nil))
 	return total
