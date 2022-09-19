@@ -6,13 +6,19 @@ import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "
 import { Api } from "./rest";
 import { MsgPostFile } from "./types/filetree/tx";
 import { MsgAddViewers } from "./types/filetree/tx";
+<<<<<<< HEAD
 import { MsgPostkey } from "./types/filetree/tx";
+=======
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
 
 
 const types = [
   ["/jackaldao.canine.filetree.MsgPostFile", MsgPostFile],
   ["/jackaldao.canine.filetree.MsgAddViewers", MsgAddViewers],
+<<<<<<< HEAD
   ["/jackaldao.canine.filetree.MsgPostkey", MsgPostkey],
+=======
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -47,7 +53,10 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgPostFile: (data: MsgPostFile): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostFile", value: MsgPostFile.fromPartial( data ) }),
     msgAddViewers: (data: MsgAddViewers): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgAddViewers", value: MsgAddViewers.fromPartial( data ) }),
+<<<<<<< HEAD
     msgPostkey: (data: MsgPostkey): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostkey", value: MsgPostkey.fromPartial( data ) }),
+=======
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
     
   };
 };

@@ -4,15 +4,20 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+<<<<<<< HEAD
 import { MsgList } from "./types/rns/tx";
 import { MsgBid } from "./types/rns/tx";
 import { MsgRegister } from "./types/rns/tx";
 import { MsgDelist } from "./types/rns/tx";
 import { MsgAddRecord } from "./types/rns/tx";
 import { MsgAcceptBid } from "./types/rns/tx";
+=======
+import { MsgBid } from "./types/rns/tx";
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
 import { MsgInit } from "./types/rns/tx";
-import { MsgDelRecord } from "./types/rns/tx";
+import { MsgBuy } from "./types/rns/tx";
 import { MsgCancelBid } from "./types/rns/tx";
+<<<<<<< HEAD
 import { MsgTransfer } from "./types/rns/tx";
 import { MsgBuy } from "./types/rns/tx";
 
@@ -24,11 +29,34 @@ const types = [
   ["/jackaldao.canine.rns.MsgDelist", MsgDelist],
   ["/jackaldao.canine.rns.MsgAddRecord", MsgAddRecord],
   ["/jackaldao.canine.rns.MsgAcceptBid", MsgAcceptBid],
+=======
+import { MsgAcceptBid } from "./types/rns/tx";
+import { MsgList } from "./types/rns/tx";
+import { MsgTransfer } from "./types/rns/tx";
+import { MsgDelRecord } from "./types/rns/tx";
+import { MsgDelist } from "./types/rns/tx";
+import { MsgAddRecord } from "./types/rns/tx";
+import { MsgRegister } from "./types/rns/tx";
+
+
+const types = [
+  ["/jackaldao.canine.rns.MsgBid", MsgBid],
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
   ["/jackaldao.canine.rns.MsgInit", MsgInit],
-  ["/jackaldao.canine.rns.MsgDelRecord", MsgDelRecord],
+  ["/jackaldao.canine.rns.MsgBuy", MsgBuy],
   ["/jackaldao.canine.rns.MsgCancelBid", MsgCancelBid],
+<<<<<<< HEAD
   ["/jackaldao.canine.rns.MsgTransfer", MsgTransfer],
   ["/jackaldao.canine.rns.MsgBuy", MsgBuy],
+=======
+  ["/jackaldao.canine.rns.MsgAcceptBid", MsgAcceptBid],
+  ["/jackaldao.canine.rns.MsgList", MsgList],
+  ["/jackaldao.canine.rns.MsgTransfer", MsgTransfer],
+  ["/jackaldao.canine.rns.MsgDelRecord", MsgDelRecord],
+  ["/jackaldao.canine.rns.MsgDelist", MsgDelist],
+  ["/jackaldao.canine.rns.MsgAddRecord", MsgAddRecord],
+  ["/jackaldao.canine.rns.MsgRegister", MsgRegister],
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -61,17 +89,31 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+<<<<<<< HEAD
     msgList: (data: MsgList): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgList", value: MsgList.fromPartial( data ) }),
     msgBid: (data: MsgBid): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgBid", value: MsgBid.fromPartial( data ) }),
     msgRegister: (data: MsgRegister): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgRegister", value: MsgRegister.fromPartial( data ) }),
     msgDelist: (data: MsgDelist): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgDelist", value: MsgDelist.fromPartial( data ) }),
     msgAddRecord: (data: MsgAddRecord): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgAddRecord", value: MsgAddRecord.fromPartial( data ) }),
     msgAcceptBid: (data: MsgAcceptBid): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgAcceptBid", value: MsgAcceptBid.fromPartial( data ) }),
+=======
+    msgBid: (data: MsgBid): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgBid", value: MsgBid.fromPartial( data ) }),
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
     msgInit: (data: MsgInit): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgInit", value: MsgInit.fromPartial( data ) }),
-    msgDelRecord: (data: MsgDelRecord): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgDelRecord", value: MsgDelRecord.fromPartial( data ) }),
+    msgBuy: (data: MsgBuy): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgBuy", value: MsgBuy.fromPartial( data ) }),
     msgCancelBid: (data: MsgCancelBid): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgCancelBid", value: MsgCancelBid.fromPartial( data ) }),
+<<<<<<< HEAD
     msgTransfer: (data: MsgTransfer): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgTransfer", value: MsgTransfer.fromPartial( data ) }),
     msgBuy: (data: MsgBuy): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgBuy", value: MsgBuy.fromPartial( data ) }),
+=======
+    msgAcceptBid: (data: MsgAcceptBid): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgAcceptBid", value: MsgAcceptBid.fromPartial( data ) }),
+    msgList: (data: MsgList): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgList", value: MsgList.fromPartial( data ) }),
+    msgTransfer: (data: MsgTransfer): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgTransfer", value: MsgTransfer.fromPartial( data ) }),
+    msgDelRecord: (data: MsgDelRecord): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgDelRecord", value: MsgDelRecord.fromPartial( data ) }),
+    msgDelist: (data: MsgDelist): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgDelist", value: MsgDelist.fromPartial( data ) }),
+    msgAddRecord: (data: MsgAddRecord): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgAddRecord", value: MsgAddRecord.fromPartial( data ) }),
+    msgRegister: (data: MsgRegister): EncodeObject => ({ typeUrl: "/jackaldao.canine.rns.MsgRegister", value: MsgRegister.fromPartial( data ) }),
+>>>>>>> d3584237d1295a036e3a1be837b66d909f3d7823
     
   };
 };
