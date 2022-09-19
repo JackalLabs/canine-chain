@@ -11,6 +11,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -102,7 +103,7 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 
 	err = datedb.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(fmt.Sprintf("%d", 0)), nil)
 	if err != nil {
-		fmt.Printf("Database Error: %v\n", err)
+		fmt.Printf("Date Database Error: %v\n", err)
 		return "", nil, err
 	}
 	derr := db.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(strcid), nil)
@@ -115,7 +116,7 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 
 	_, cerr := db.Get([]byte(fmt.Sprintf("%x", hashName)), nil)
 	if cerr != nil {
-		fmt.Printf("ERROR: %s\n", cerr.Error())
+		fmt.Printf("Hash Database Error: %s\n", cerr.Error())
 		return "", nil, err
 	}
 
@@ -123,7 +124,6 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 }
 
 func makeContract(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
-	fmt.Printf("%s\n", args[0])
 
 	merkleroot, filesize, fid := HashData(cmd, args[0])
 
@@ -154,14 +154,23 @@ func HashData(cmd *cobra.Command, filename string) (string, string, string) {
 		return "", "", qerr.Error()
 	}
 
-	files, _ := os.ReadDir(fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, filename))
+	path := fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, filename)
+	files, err := os.ReadDir(filepath.Clean(path))
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
 	fmt.Printf("%s\n", fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, filename))
-	fmt.Printf("Found %d\n", len(files))
 	var size = 0
 	var list [][]byte
 
 	for i := 0; i < len(files); i++ {
-		dat, _ := os.ReadFile(fmt.Sprintf("%s/networkfiles/%s/%d.jkl", clientCtx.HomeDir, filename, i))
+
+		path := fmt.Sprintf("%s/networkfiles/%s/%d.jkl", clientCtx.HomeDir, filename, i)
+
+		dat, err := os.ReadFile(filepath.Clean(path))
+		if err != nil {
+			fmt.Printf("%v\n", err)
+		}
 
 		size = size + len(dat)
 
