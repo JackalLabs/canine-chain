@@ -25,6 +25,13 @@ export interface MsgAddViewers {
 
 export interface MsgAddViewersResponse {}
 
+export interface MsgPostkey {
+  creator: string;
+  key: string;
+}
+
+export interface MsgPostkeyResponse {}
+
 const baseMsgPostFile: object = {
   creator: "",
   hashpath: "",
@@ -379,11 +386,122 @@ export const MsgAddViewersResponse = {
   },
 };
 
+const baseMsgPostkey: object = { creator: "", key: "" };
+
+export const MsgPostkey = {
+  encode(message: MsgPostkey, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.key !== "") {
+      writer.uint32(18).string(message.key);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgPostkey {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgPostkey } as MsgPostkey;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.key = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgPostkey {
+    const message = { ...baseMsgPostkey } as MsgPostkey;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.key !== undefined && object.key !== null) {
+      message.key = String(object.key);
+    } else {
+      message.key = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgPostkey): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.key !== undefined && (obj.key = message.key);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgPostkey>): MsgPostkey {
+    const message = { ...baseMsgPostkey } as MsgPostkey;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgPostkeyResponse: object = {};
+
+export const MsgPostkeyResponse = {
+  encode(_: MsgPostkeyResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgPostkeyResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgPostkeyResponse } as MsgPostkeyResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgPostkeyResponse {
+    const message = { ...baseMsgPostkeyResponse } as MsgPostkeyResponse;
+    return message;
+  },
+
+  toJSON(_: MsgPostkeyResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgPostkeyResponse>): MsgPostkeyResponse {
+    const message = { ...baseMsgPostkeyResponse } as MsgPostkeyResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   AddViewers(request: MsgAddViewers): Promise<MsgAddViewersResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Postkey(request: MsgPostkey): Promise<MsgPostkeyResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -411,6 +529,16 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) =>
       MsgAddViewersResponse.decode(new Reader(data))
     );
+  }
+
+  Postkey(request: MsgPostkey): Promise<MsgPostkeyResponse> {
+    const data = MsgPostkey.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "Postkey",
+      data
+    );
+    return promise.then((data) => MsgPostkeyResponse.decode(new Reader(data)));
   }
 }
 

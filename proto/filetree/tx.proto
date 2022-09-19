@@ -9,6 +9,7 @@ option go_package = "github.com/jackal-dao/canine/x/filetree/types";
 service Msg {
       rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
   rpc AddViewers(MsgAddViewers) returns (MsgAddViewersResponse);
+  rpc Postkey(MsgPostkey) returns (MsgPostkeyResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -33,6 +34,14 @@ message MsgAddViewers {
 }
 
 message MsgAddViewersResponse {
+}
+
+message MsgPostkey {
+  string creator = 1;
+  string key = 2;
+}
+
+message MsgPostkeyResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

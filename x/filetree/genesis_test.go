@@ -22,6 +22,14 @@ func TestGenesis(t *testing.T) {
 				Address: "1",
 			},
 		},
+		PubkeyList: []types.Pubkey{
+			{
+				Address: "0",
+			},
+			{
+				Address: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -34,5 +42,6 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.FilesList, got.FilesList)
+	require.ElementsMatch(t, genesisState.PubkeyList, got.PubkeyList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

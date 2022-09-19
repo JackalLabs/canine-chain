@@ -9,6 +9,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
@@ -65,12 +66,14 @@ func CmdGetKeys() *cobra.Command {
 				return err
 			}
 
-			from := clientCtx.From
+			key, err := MakePrivateKey(clientCtx)
+			if err != nil {
+				return err
+			}
 
-			decrypt, _, err := clientCtx.Keyring.Decrypt(from, hexMessage)
+			decrypt, err := eciesgo.Decrypt(key, hexMessage)
 			if err != nil {
 				fmt.Printf("%v\n", hexMessage)
-
 				return err
 			}
 
