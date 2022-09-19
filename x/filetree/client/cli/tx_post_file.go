@@ -14,7 +14,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	eciesgo "github.com/ecies/go/v2"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	filtypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
@@ -42,7 +41,7 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			pathString := keeper.MakeAddress(argHashpath, clientCtx.FromAddress.String())
+			merklePath := types.MerklePath(argHashpath)
 
 			viewers := make(map[string]string)
 			editors := make(map[string]string)
@@ -120,7 +119,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", pathString, v)))
+				h.Write([]byte(fmt.Sprintf("e%s%s", merklePath, v))) //this used to be pathString but in future could be just argHashpath
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
@@ -140,7 +139,7 @@ func CmdPostFile() *cobra.Command {
 
 			msg := types.NewMsgPostFile(
 				clientCtx.GetFromAddress().String(),
-				pathString,
+				merklePath,
 				argContents,
 				string(jsonViewers),
 				string(jsonEditors),

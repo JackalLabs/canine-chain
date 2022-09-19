@@ -42,6 +42,7 @@ func CmdListFiles() *cobra.Command {
 	return cmd
 }
 
+// Need to input the full hex formatted merkleHash address for this to work
 func CmdShowFiles() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-files [address]",
@@ -56,6 +57,38 @@ func CmdShowFiles() *cobra.Command {
 
 			params := &types.QueryGetFilesRequest{
 				Address: argAddress,
+			}
+
+			res, err := queryClient.Files(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// Query using human readable path to show that merklePath() function works as intended
+func CmdShowFileFromPath() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "show-file-from-path [path]",
+		Short: "shows a file given human readable path",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			argAddress := args[0]
+			merklePath := types.MerklePath(argAddress)
+
+			params := &types.QueryGetFilesRequest{
+				Address: merklePath,
 			}
 
 			res, err := queryClient.Files(context.Background(), params)

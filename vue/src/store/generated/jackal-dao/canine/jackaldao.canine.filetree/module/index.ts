@@ -4,15 +4,15 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgPostFile } from "./types/filetree/tx";
-import { MsgAddViewers } from "./types/filetree/tx";
 import { MsgPostkey } from "./types/filetree/tx";
+import { MsgAddViewers } from "./types/filetree/tx";
+import { MsgPostFile } from "./types/filetree/tx";
 
 
 const types = [
-  ["/jackaldao.canine.filetree.MsgPostFile", MsgPostFile],
-  ["/jackaldao.canine.filetree.MsgAddViewers", MsgAddViewers],
   ["/jackaldao.canine.filetree.MsgPostkey", MsgPostkey],
+  ["/jackaldao.canine.filetree.MsgAddViewers", MsgAddViewers],
+  ["/jackaldao.canine.filetree.MsgPostFile", MsgPostFile],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -45,9 +45,9 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgPostFile: (data: MsgPostFile): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostFile", value: MsgPostFile.fromPartial( data ) }),
-    msgAddViewers: (data: MsgAddViewers): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgAddViewers", value: MsgAddViewers.fromPartial( data ) }),
     msgPostkey: (data: MsgPostkey): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostkey", value: MsgPostkey.fromPartial( data ) }),
+    msgAddViewers: (data: MsgAddViewers): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgAddViewers", value: MsgAddViewers.fromPartial( data ) }),
+    msgPostFile: (data: MsgPostFile): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostFile", value: MsgPostFile.fromPartial( data ) }),
     
   };
 };
