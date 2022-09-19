@@ -49,7 +49,7 @@ let hh3 := H(child)
 
 let s := H(hh1)
 ps := H(s + hh2)
-cs := H(s + hh3)
+cs := H(ps + hh3)
 
 // what we are left with is the merkle path of the child (cs) and the path of the parent (ps)
 
