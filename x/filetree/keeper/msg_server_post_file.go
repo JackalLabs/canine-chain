@@ -12,15 +12,16 @@ import (
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	//old implementation: hex ( hash ( concatenate (msg.Creator, msg.Hashpath)))
+	// h := sha256.New()
+	// h.Write([]byte(fmt.Sprintf("%s%s", msg.Creator, msg.Hashpath)))
+	// hash := h.Sum(nil)
+
+	pathString := msg.Hashpath
+
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("%s%s", msg.Creator, msg.Hashpath)))
+	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator))) //May not need this in future
 	hash := h.Sum(nil)
-
-	pathString := fmt.Sprintf("%x", hash)
-
-	h = sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator)))
-	hash = h.Sum(nil)
 
 	ownerString := fmt.Sprintf("%x", hash)
 
