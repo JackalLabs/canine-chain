@@ -14,7 +14,6 @@ func (k msgServer) Postkey(goCtx context.Context, msg *types.MsgPostkey) (*types
 		Address: msg.Creator,
 		Key:     msg.Key,
 	}
-
 	k.SetPubkey(ctx, pubKey)
 
 	return &types.MsgPostkeyResponse{}, nil
