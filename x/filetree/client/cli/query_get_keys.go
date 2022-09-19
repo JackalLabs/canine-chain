@@ -65,7 +65,7 @@ func CmdGetKeys() *cobra.Command {
 				return err
 			}
 
-			from := clientCtx.From
+			from := clientCtx.FromName
 
 			decrypt, _, err := clientCtx.Keyring.Decrypt(from, hexMessage)
 			if err != nil {
