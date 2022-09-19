@@ -13,8 +13,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
+	filtypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -57,30 +59,18 @@ func CmdPostFile() *cobra.Command {
 					return err
 				}
 
-				queryClient := authtypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Account(cmd.Context(), &authtypes.QueryAccountRequest{Address: key.String()})
+				queryClient := filtypes.NewQueryClient(clientCtx)
+				res, err := queryClient.Pubkey(cmd.Context(), &filtypes.QueryGetPubkeyRequest{Address: key.String()})
 				if err != nil {
 					return err
 				}
 
-				var acc authtypes.BaseAccount
-
-				err = acc.Unmarshal(res.Account.Value)
-				if err != nil {
-					return err
-				}
-				var pkey secp256k1.PubKey
-
-				if acc.PubKey == nil {
-					return fmt.Errorf("pub key not found")
-				}
-
-				err = pkey.Unmarshal(acc.PubKey.Value)
+				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
 				if err != nil {
 					return err
 				}
 
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Key, []byte(argKeys))
+				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(argKeys))
 				if err != nil {
 					return err
 				}

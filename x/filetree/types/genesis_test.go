@@ -30,6 +30,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
+				PubkeyList: []types.Pubkey{
+					{
+						Address: "0",
+					},
+					{
+						Address: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -38,6 +46,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated files",
 			genState: &types.GenesisState{
 				FilesList: []types.Files{
+					{
+						Address: "0",
+					},
+					{
+						Address: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated pubkey",
+			genState: &types.GenesisState{
+				PubkeyList: []types.Pubkey{
 					{
 						Address: "0",
 					},

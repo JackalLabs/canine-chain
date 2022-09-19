@@ -6,6 +6,7 @@ import {
   PageRequest,
   PageResponse,
 } from "../cosmos/base/query/v1beta1/pagination";
+import { Pubkey } from "../filetree/pubkey";
 
 export const protobufPackage = "jackaldao.canine.filetree";
 
@@ -63,6 +64,23 @@ export interface QueryGetKeysResponse {
 export interface QueryGetKeyRequest {
   filepath: string;
   owner: string;
+}
+
+export interface QueryGetPubkeyRequest {
+  address: string;
+}
+
+export interface QueryGetPubkeyResponse {
+  pubkey: Pubkey | undefined;
+}
+
+export interface QueryAllPubkeyRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllPubkeyResponse {
+  pubkey: Pubkey[];
+  pagination: PageResponse | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -873,6 +891,282 @@ export const QueryGetKeyRequest = {
   },
 };
 
+const baseQueryGetPubkeyRequest: object = { address: "" };
+
+export const QueryGetPubkeyRequest = {
+  encode(
+    message: QueryGetPubkeyRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetPubkeyRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetPubkeyRequest } as QueryGetPubkeyRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetPubkeyRequest {
+    const message = { ...baseQueryGetPubkeyRequest } as QueryGetPubkeyRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetPubkeyRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetPubkeyRequest>
+  ): QueryGetPubkeyRequest {
+    const message = { ...baseQueryGetPubkeyRequest } as QueryGetPubkeyRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetPubkeyResponse: object = {};
+
+export const QueryGetPubkeyResponse = {
+  encode(
+    message: QueryGetPubkeyResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pubkey !== undefined) {
+      Pubkey.encode(message.pubkey, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetPubkeyResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetPubkeyResponse } as QueryGetPubkeyResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pubkey = Pubkey.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetPubkeyResponse {
+    const message = { ...baseQueryGetPubkeyResponse } as QueryGetPubkeyResponse;
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      message.pubkey = Pubkey.fromJSON(object.pubkey);
+    } else {
+      message.pubkey = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetPubkeyResponse): unknown {
+    const obj: any = {};
+    message.pubkey !== undefined &&
+      (obj.pubkey = message.pubkey ? Pubkey.toJSON(message.pubkey) : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetPubkeyResponse>
+  ): QueryGetPubkeyResponse {
+    const message = { ...baseQueryGetPubkeyResponse } as QueryGetPubkeyResponse;
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      message.pubkey = Pubkey.fromPartial(object.pubkey);
+    } else {
+      message.pubkey = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllPubkeyRequest: object = {};
+
+export const QueryAllPubkeyRequest = {
+  encode(
+    message: QueryAllPubkeyRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllPubkeyRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllPubkeyRequest } as QueryAllPubkeyRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllPubkeyRequest {
+    const message = { ...baseQueryAllPubkeyRequest } as QueryAllPubkeyRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllPubkeyRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllPubkeyRequest>
+  ): QueryAllPubkeyRequest {
+    const message = { ...baseQueryAllPubkeyRequest } as QueryAllPubkeyRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllPubkeyResponse: object = {};
+
+export const QueryAllPubkeyResponse = {
+  encode(
+    message: QueryAllPubkeyResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.pubkey) {
+      Pubkey.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllPubkeyResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllPubkeyResponse } as QueryAllPubkeyResponse;
+    message.pubkey = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pubkey.push(Pubkey.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllPubkeyResponse {
+    const message = { ...baseQueryAllPubkeyResponse } as QueryAllPubkeyResponse;
+    message.pubkey = [];
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      for (const e of object.pubkey) {
+        message.pubkey.push(Pubkey.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllPubkeyResponse): unknown {
+    const obj: any = {};
+    if (message.pubkey) {
+      obj.pubkey = message.pubkey.map((e) =>
+        e ? Pubkey.toJSON(e) : undefined
+      );
+    } else {
+      obj.pubkey = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllPubkeyResponse>
+  ): QueryAllPubkeyResponse {
+    const message = { ...baseQueryAllPubkeyResponse } as QueryAllPubkeyResponse;
+    message.pubkey = [];
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      for (const e of object.pubkey) {
+        message.pubkey.push(Pubkey.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -887,6 +1181,10 @@ export interface Query {
   FilesAll(request: QueryAllFilesRequest): Promise<QueryAllFilesResponse>;
   /** Queries a list of GetKeys items. */
   GetKeys(request: QueryGetKeysRequest): Promise<QueryGetKeysResponse>;
+  /** Queries a Pubkey by index. */
+  Pubkey(request: QueryGetPubkeyRequest): Promise<QueryGetPubkeyResponse>;
+  /** Queries a list of Pubkey items. */
+  PubkeyAll(request: QueryAllPubkeyRequest): Promise<QueryAllPubkeyResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -961,6 +1259,30 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryGetKeysResponse.decode(new Reader(data))
+    );
+  }
+
+  Pubkey(request: QueryGetPubkeyRequest): Promise<QueryGetPubkeyResponse> {
+    const data = QueryGetPubkeyRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Query",
+      "Pubkey",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetPubkeyResponse.decode(new Reader(data))
+    );
+  }
+
+  PubkeyAll(request: QueryAllPubkeyRequest): Promise<QueryAllPubkeyResponse> {
+    const data = QueryAllPubkeyRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Query",
+      "PubkeyAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllPubkeyResponse.decode(new Reader(data))
     );
   }
 }

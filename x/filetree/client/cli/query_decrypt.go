@@ -7,6 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	eciesgo "github.com/ecies/go/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -30,9 +31,12 @@ func CmdDecrypt() *cobra.Command {
 				return err
 			}
 
-			from := clientCtx.From
+			key, err := MakePrivateKey(clientCtx)
+			if err != nil {
+				return err
+			}
 
-			decrypt, _, err := clientCtx.Keyring.Decrypt(from, hexMessage)
+			decrypt, err := eciesgo.Decrypt(key, hexMessage)
 			if err != nil {
 				return err
 			}

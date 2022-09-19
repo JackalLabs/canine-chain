@@ -19,9 +19,6 @@ client:
     path: "docs/static/openapi.yml"
   vuex:
     path: "vue/src/store"
-faucet:
-  name: bob
-  coins: ["1000000ujkl"]
 init:
   app:
     minimum-gas-prices: "0.002ujkl"
