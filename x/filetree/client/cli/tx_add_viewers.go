@@ -108,8 +108,8 @@ func CmdAddViewers() *cobra.Command {
 				if err != nil {
 					return err
 				}
-
-				viewerIds = append(viewerIds, aString)
+				newViewerID := keeper.MakeViewerAddress(argAddress, v)
+				viewerIds = append(viewerIds, newViewerID)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 			}
 
