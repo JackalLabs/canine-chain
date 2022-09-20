@@ -203,6 +203,17 @@ func request_Query_Files_0(ctx context.Context, marshaler runtime.Marshaler, cli
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
 	}
 
+	val, ok = pathParams["ownerAddress"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ownerAddress")
+	}
+
+	protoReq.OwnerAddress, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ownerAddress", err)
+	}
+
 	msg, err := client.Files(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -228,6 +239,17 @@ func local_request_Query_Files_0(ctx context.Context, marshaler runtime.Marshale
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
+	}
+
+	val, ok = pathParams["ownerAddress"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ownerAddress")
+	}
+
+	protoReq.OwnerAddress, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ownerAddress", err)
 	}
 
 	msg, err := server.Files(ctx, &protoReq)
@@ -816,7 +838,7 @@ var (
 
 	pattern_Query_Decrypt_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine", "filetree", "decrypt", "message"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Files_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine", "filetree", "files", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Files_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine", "filetree", "files", "address", "ownerAddress"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_FilesAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine", "filetree", "files"}, "", runtime.AssumeColonVerbOpt(true)))
 

@@ -32863,7 +32863,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/jackal-dao/canine/filetree/files/{address}':
+  '/jackal-dao/canine/filetree/files/{address}/{ownerAddress}':
     get:
       summary: Queries a Files by index.
       operationId: JackaldaoCanineFiletreeFiles
@@ -32906,6 +32906,10 @@ paths:
                   additionalProperties: {}
       parameters:
         - name: address
+          in: path
+          required: true
+          type: string
+        - name: ownerAddress
           in: path
           required: true
           type: string

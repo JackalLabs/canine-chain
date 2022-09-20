@@ -20,7 +20,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	pathString := msg.Hashpath
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator))) //May not need this in future
+	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator))) //msg.Creator will change to msg.accountAddress soon
 	hash := h.Sum(nil)
 
 	ownerString := fmt.Sprintf("%x", hash)

@@ -48,7 +48,7 @@ func (k Keeper) Files(c context.Context, req *types.QueryGetFilesRequest) (*type
 	val, found := k.GetFiles(
 		ctx,
 		req.Address,
-	)
+		req.OwnerAddress)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}

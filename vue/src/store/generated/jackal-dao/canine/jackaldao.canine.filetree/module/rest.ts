@@ -427,11 +427,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryFiles
    * @summary Queries a Files by index.
-   * @request GET:/jackal-dao/canine/filetree/files/{address}
+   * @request GET:/jackal-dao/canine/filetree/files/{address}/{ownerAddress}
    */
-  queryFiles = (address: string, params: RequestParams = {}) =>
+  queryFiles = (address: string, ownerAddress: string, params: RequestParams = {}) =>
     this.request<FiletreeQueryGetFilesResponse, RpcStatus>({
-      path: `/jackal-dao/canine/filetree/files/${address}`,
+      path: `/jackal-dao/canine/filetree/files/${address}/${ownerAddress}`,
       method: "GET",
       format: "json",
       ...params,

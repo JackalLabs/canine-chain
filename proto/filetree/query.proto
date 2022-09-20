@@ -29,7 +29,7 @@ service Query {
 
 // Queries a Files by index.
 	rpc Files(QueryGetFilesRequest) returns (QueryGetFilesResponse) {
-		option (google.api.http).get = "/jackal-dao/canine/filetree/files/{address}";
+		option (google.api.http).get = "/jackal-dao/canine/filetree/files/{address}/{ownerAddress}";
 	}
 
 	// Queries a list of Files items.
@@ -84,7 +84,7 @@ message QueryDecryptResponse {
 
 message QueryGetFilesRequest {
 	  string address = 1;
-
+	  string ownerAddress = 2;
 }
 
 message QueryGetFilesResponse {
