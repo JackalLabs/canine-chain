@@ -39,6 +39,7 @@ func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*t
 	return &types.QueryAllFilesResponse{Files: filess, Pagination: pageRes}, nil
 }
 
+// BELOW DOES NOT WORK. Fixing it right now would require a change to query.proto and I want to isolate successful file posting first
 func (k Keeper) Files(c context.Context, req *types.QueryGetFilesRequest) (*types.QueryGetFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
@@ -48,7 +49,7 @@ func (k Keeper) Files(c context.Context, req *types.QueryGetFilesRequest) (*type
 	val, found := k.GetFiles(
 		ctx,
 		req.Address,
-	)
+		"ownerAddress") //Placing a dummy variable so I can ensure that posting a file works with concatenation(address, ownerAddress) as key
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}

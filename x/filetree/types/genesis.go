@@ -24,7 +24,7 @@ func (gs GenesisState) Validate() error {
 	filesIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.FilesList {
-		index := string(FilesKey(elem.Address))
+		index := string(FilesKey(elem.Address, elem.Owner))
 		if _, ok := filesIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for files")
 		}
