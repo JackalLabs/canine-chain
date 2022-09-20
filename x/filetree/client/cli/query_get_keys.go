@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -32,12 +33,16 @@ func CmdGetKeys() *cobra.Command {
 			}
 
 			queryClient := types.NewQueryClient(clientCtx)
+			pathString := types.MerklePath(reqHashpath)
 
-			pathString := keeper.MakeChainAddress(reqHashpath, reqOwner)
-			fmt.Println(pathString)
+			h := sha256.New()
+			h.Write([]byte(fmt.Sprintf("o%s%s", pathString, reqOwner))) //May not need this in future
+			hash := h.Sum(nil)
+			ownerString := fmt.Sprintf("%x", hash)
 
 			params := &types.QueryGetFilesRequest{
-				Address: pathString,
+				Address:      pathString,
+				OwnerAddress: ownerString,
 			}
 
 			res, err := queryClient.Files(context.Background(), params)

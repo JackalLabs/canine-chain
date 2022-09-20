@@ -38,6 +38,7 @@ export interface QueryDecryptResponse {
 
 export interface QueryGetFilesRequest {
   address: string;
+  ownerAddress: string;
 }
 
 export interface QueryGetFilesResponse {
@@ -430,7 +431,7 @@ export const QueryDecryptResponse = {
   },
 };
 
-const baseQueryGetFilesRequest: object = { address: "" };
+const baseQueryGetFilesRequest: object = { address: "", ownerAddress: "" };
 
 export const QueryGetFilesRequest = {
   encode(
@@ -439,6 +440,9 @@ export const QueryGetFilesRequest = {
   ): Writer {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
+    }
+    if (message.ownerAddress !== "") {
+      writer.uint32(18).string(message.ownerAddress);
     }
     return writer;
   },
@@ -452,6 +456,9 @@ export const QueryGetFilesRequest = {
       switch (tag >>> 3) {
         case 1:
           message.address = reader.string();
+          break;
+        case 2:
+          message.ownerAddress = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -468,12 +475,19 @@ export const QueryGetFilesRequest = {
     } else {
       message.address = "";
     }
+    if (object.ownerAddress !== undefined && object.ownerAddress !== null) {
+      message.ownerAddress = String(object.ownerAddress);
+    } else {
+      message.ownerAddress = "";
+    }
     return message;
   },
 
   toJSON(message: QueryGetFilesRequest): unknown {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
+    message.ownerAddress !== undefined &&
+      (obj.ownerAddress = message.ownerAddress);
     return obj;
   },
 
@@ -483,6 +497,11 @@ export const QueryGetFilesRequest = {
       message.address = object.address;
     } else {
       message.address = "";
+    }
+    if (object.ownerAddress !== undefined && object.ownerAddress !== null) {
+      message.ownerAddress = object.ownerAddress;
+    } else {
+      message.ownerAddress = "";
     }
     return message;
   },
