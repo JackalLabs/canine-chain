@@ -10,6 +10,7 @@ service Msg {
       rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
   rpc AddViewers(MsgAddViewers) returns (MsgAddViewersResponse);
   rpc Postkey(MsgPostkey) returns (MsgPostkeyResponse);
+  rpc InitAccount(MsgInitAccount) returns (MsgInitAccountResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -42,6 +43,16 @@ message MsgPostkey {
 }
 
 message MsgPostkeyResponse {
+}
+
+message MsgInitAccount {
+  string creator = 1;
+  string rootHashpath = 2;
+  string editors = 3;
+  string key = 4; 
+}
+
+message MsgInitAccountResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

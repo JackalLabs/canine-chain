@@ -32,6 +32,15 @@ export interface MsgPostkey {
 
 export interface MsgPostkeyResponse {}
 
+export interface MsgInitAccount {
+  creator: string;
+  rootHashpath: string;
+  editors: string;
+  key: string;
+}
+
+export interface MsgInitAccountResponse {}
+
 const baseMsgPostFile: object = {
   creator: "",
   hashpath: "",
@@ -496,12 +505,163 @@ export const MsgPostkeyResponse = {
   },
 };
 
+const baseMsgInitAccount: object = {
+  creator: "",
+  rootHashpath: "",
+  editors: "",
+  key: "",
+};
+
+export const MsgInitAccount = {
+  encode(message: MsgInitAccount, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.rootHashpath !== "") {
+      writer.uint32(18).string(message.rootHashpath);
+    }
+    if (message.editors !== "") {
+      writer.uint32(26).string(message.editors);
+    }
+    if (message.key !== "") {
+      writer.uint32(34).string(message.key);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInitAccount {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInitAccount } as MsgInitAccount;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.rootHashpath = reader.string();
+          break;
+        case 3:
+          message.editors = reader.string();
+          break;
+        case 4:
+          message.key = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgInitAccount {
+    const message = { ...baseMsgInitAccount } as MsgInitAccount;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
+      message.rootHashpath = String(object.rootHashpath);
+    } else {
+      message.rootHashpath = "";
+    }
+    if (object.editors !== undefined && object.editors !== null) {
+      message.editors = String(object.editors);
+    } else {
+      message.editors = "";
+    }
+    if (object.key !== undefined && object.key !== null) {
+      message.key = String(object.key);
+    } else {
+      message.key = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgInitAccount): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.rootHashpath !== undefined &&
+      (obj.rootHashpath = message.rootHashpath);
+    message.editors !== undefined && (obj.editors = message.editors);
+    message.key !== undefined && (obj.key = message.key);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgInitAccount>): MsgInitAccount {
+    const message = { ...baseMsgInitAccount } as MsgInitAccount;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
+      message.rootHashpath = object.rootHashpath;
+    } else {
+      message.rootHashpath = "";
+    }
+    if (object.editors !== undefined && object.editors !== null) {
+      message.editors = object.editors;
+    } else {
+      message.editors = "";
+    }
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgInitAccountResponse: object = {};
+
+export const MsgInitAccountResponse = {
+  encode(_: MsgInitAccountResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInitAccountResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgInitAccountResponse {
+    const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    return message;
+  },
+
+  toJSON(_: MsgInitAccountResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgInitAccountResponse>): MsgInitAccountResponse {
+    const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
   AddViewers(request: MsgAddViewers): Promise<MsgAddViewersResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Postkey(request: MsgPostkey): Promise<MsgPostkeyResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -539,6 +699,18 @@ export class MsgClientImpl implements Msg {
       data
     );
     return promise.then((data) => MsgPostkeyResponse.decode(new Reader(data)));
+  }
+
+  InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse> {
+    const data = MsgInitAccount.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "InitAccount",
+      data
+    );
+    return promise.then((data) =>
+      MsgInitAccountResponse.decode(new Reader(data))
+    );
   }
 }
 

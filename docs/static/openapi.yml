@@ -57429,6 +57429,8 @@ definitions:
         type: string
   jackaldao.canine.filetree.MsgAddViewersResponse:
     type: object
+  jackaldao.canine.filetree.MsgInitAccountResponse:
+    type: object
   jackaldao.canine.filetree.MsgPostFileResponse:
     type: object
     properties:

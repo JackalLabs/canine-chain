@@ -119,7 +119,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", merklePath, v))) //this used to be pathString but in future could be just argHashpath
+				h.Write([]byte(fmt.Sprintf("e%s%s", argHashpath, v))) //this used to be pathString
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)

@@ -19,6 +19,8 @@ export interface FiletreeFiles {
 
 export type FiletreeMsgAddViewersResponse = object;
 
+export type FiletreeMsgInitAccountResponse = object;
+
 export interface FiletreeMsgPostFileResponse {
   path?: string;
 }
