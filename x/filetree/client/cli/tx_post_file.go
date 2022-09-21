@@ -15,7 +15,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/types"
-	filtypes "github.com/jackal-dao/canine/x/filetree/types"
+	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -57,11 +57,11 @@ func CmdPostFile() *cobra.Command {
 				if err != nil {
 					return err
 				}
-
-				queryClient := filtypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &filtypes.QueryGetPubkeyRequest{Address: key.String()})
+				//As of right now, if you post a file and try to add viewers that have not initiated an account, this will error and say "public key not found, perhaps not inited yet"
+				queryClient := filetypes.NewQueryClient(clientCtx)
+				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
 				if err != nil {
-					return err
+					return types.ErrPubKeyNotFound
 				}
 
 				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
