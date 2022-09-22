@@ -16,10 +16,12 @@ service Msg {
 
 message MsgPostFile {
   string creator = 1;
-  string hashpath = 2;
-  string contents = 3;
-  string viewers = 4;
-  string editors = 5;
+  string account = 2;
+  string hashParent = 3; 
+  string hashChild = 4;
+  string contents = 5;
+  string viewers = 6;
+  string editors = 7;
 }
 
 message MsgPostFileResponse {

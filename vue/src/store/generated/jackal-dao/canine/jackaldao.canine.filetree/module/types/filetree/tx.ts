@@ -5,7 +5,9 @@ export const protobufPackage = "jackaldao.canine.filetree";
 
 export interface MsgPostFile {
   creator: string;
-  hashpath: string;
+  account: string;
+  hashParent: string;
+  hashChild: string;
   contents: string;
   viewers: string;
   editors: string;
@@ -43,7 +45,9 @@ export interface MsgInitAccountResponse {}
 
 const baseMsgPostFile: object = {
   creator: "",
-  hashpath: "",
+  account: "",
+  hashParent: "",
+  hashChild: "",
   contents: "",
   viewers: "",
   editors: "",
@@ -54,17 +58,23 @@ export const MsgPostFile = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.hashpath !== "") {
-      writer.uint32(18).string(message.hashpath);
+    if (message.account !== "") {
+      writer.uint32(18).string(message.account);
+    }
+    if (message.hashParent !== "") {
+      writer.uint32(26).string(message.hashParent);
+    }
+    if (message.hashChild !== "") {
+      writer.uint32(34).string(message.hashChild);
     }
     if (message.contents !== "") {
-      writer.uint32(26).string(message.contents);
+      writer.uint32(42).string(message.contents);
     }
     if (message.viewers !== "") {
-      writer.uint32(34).string(message.viewers);
+      writer.uint32(50).string(message.viewers);
     }
     if (message.editors !== "") {
-      writer.uint32(42).string(message.editors);
+      writer.uint32(58).string(message.editors);
     }
     return writer;
   },
@@ -80,15 +90,21 @@ export const MsgPostFile = {
           message.creator = reader.string();
           break;
         case 2:
-          message.hashpath = reader.string();
+          message.account = reader.string();
           break;
         case 3:
-          message.contents = reader.string();
+          message.hashParent = reader.string();
           break;
         case 4:
-          message.viewers = reader.string();
+          message.hashChild = reader.string();
           break;
         case 5:
+          message.contents = reader.string();
+          break;
+        case 6:
+          message.viewers = reader.string();
+          break;
+        case 7:
           message.editors = reader.string();
           break;
         default:
@@ -106,10 +122,20 @@ export const MsgPostFile = {
     } else {
       message.creator = "";
     }
-    if (object.hashpath !== undefined && object.hashpath !== null) {
-      message.hashpath = String(object.hashpath);
+    if (object.account !== undefined && object.account !== null) {
+      message.account = String(object.account);
     } else {
-      message.hashpath = "";
+      message.account = "";
+    }
+    if (object.hashParent !== undefined && object.hashParent !== null) {
+      message.hashParent = String(object.hashParent);
+    } else {
+      message.hashParent = "";
+    }
+    if (object.hashChild !== undefined && object.hashChild !== null) {
+      message.hashChild = String(object.hashChild);
+    } else {
+      message.hashChild = "";
     }
     if (object.contents !== undefined && object.contents !== null) {
       message.contents = String(object.contents);
@@ -132,7 +158,9 @@ export const MsgPostFile = {
   toJSON(message: MsgPostFile): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.hashpath !== undefined && (obj.hashpath = message.hashpath);
+    message.account !== undefined && (obj.account = message.account);
+    message.hashParent !== undefined && (obj.hashParent = message.hashParent);
+    message.hashChild !== undefined && (obj.hashChild = message.hashChild);
     message.contents !== undefined && (obj.contents = message.contents);
     message.viewers !== undefined && (obj.viewers = message.viewers);
     message.editors !== undefined && (obj.editors = message.editors);
@@ -146,10 +174,20 @@ export const MsgPostFile = {
     } else {
       message.creator = "";
     }
-    if (object.hashpath !== undefined && object.hashpath !== null) {
-      message.hashpath = object.hashpath;
+    if (object.account !== undefined && object.account !== null) {
+      message.account = object.account;
     } else {
-      message.hashpath = "";
+      message.account = "";
+    }
+    if (object.hashParent !== undefined && object.hashParent !== null) {
+      message.hashParent = object.hashParent;
+    } else {
+      message.hashParent = "";
+    }
+    if (object.hashChild !== undefined && object.hashChild !== null) {
+      message.hashChild = object.hashChild;
+    } else {
+      message.hashChild = "";
     }
     if (object.contents !== undefined && object.contents !== null) {
       message.contents = object.contents;

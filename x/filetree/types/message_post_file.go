@@ -9,13 +9,15 @@ const TypeMsgPostFile = "post_file"
 
 var _ sdk.Msg = &MsgPostFile{}
 
-func NewMsgPostFile(creator string, hashpath string, contents string, viewers string, editors string) *MsgPostFile {
+func NewMsgPostFile(creator string, account string, hashparent string, hashchild string, contents string, viewers string, editors string) *MsgPostFile {
 	return &MsgPostFile{
-		Creator:  creator,
-		Hashpath: hashpath,
-		Contents: contents,
-		Viewers:  viewers,
-		Editors:  editors,
+		Creator:    creator,
+		Account:    account,
+		HashParent: hashparent,
+		HashChild:  hashchild,
+		Contents:   contents,
+		Viewers:    viewers,
+		Editors:    editors,
 	}
 }
 

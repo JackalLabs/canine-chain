@@ -17,23 +17,39 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	// h.Write([]byte(fmt.Sprintf("%s%s", msg.Creator, msg.Hashpath)))
 	// hash := h.Sum(nil)
 
-	pathString := msg.Hashpath
-
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator))) //msg.Creator will change to msg.accountAddress soon
+	h.Write([]byte(fmt.Sprintf("o%s%s", msg.HashParent, msg.Account)))
 	hash := h.Sum(nil)
-
 	ownerString := fmt.Sprintf("%x", hash)
+
+	parentFile, found := k.GetFiles(ctx, msg.HashParent, ownerString)
+	if !found {
+		return nil, types.ErrParentFileNotFound
+	}
+
+	hasEdit := HasEditAccess(parentFile, msg.Creator)
+	if !hasEdit {
+		return nil, types.ErrCannotWrite
+	}
+
+	//Make the full path
+	merklePath := types.AddToMerkle(msg.HashParent, msg.HashChild)
+
+	//desperately need a 'makeownerString function'
+	ha := sha256.New()
+	ha.Write([]byte(fmt.Sprintf("o%s%s", merklePath, msg.Account))) //msg.Creator will change to msg.accountAddress soon
+	Hash := h.Sum(nil)
+	Owner := fmt.Sprintf("%x", Hash)
 
 	file := types.Files{
 		Contents:      msg.Contents,
-		Owner:         ownerString,
+		Owner:         Owner,
 		ViewingAccess: msg.Viewers,
 		EditAccess:    msg.Editors,
-		Address:       pathString,
+		Address:       merklePath,
 	}
 
 	k.SetFiles(ctx, file)
 
-	return &types.MsgPostFileResponse{Path: pathString}, nil
+	return &types.MsgPostFileResponse{Path: merklePath}, nil
 }

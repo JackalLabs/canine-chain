@@ -33,17 +33,20 @@ func HasEditAccess(file types.Files, user string) bool {
 	jvacc := make(map[string]string)
 	json.Unmarshal([]byte(pvacc), &jvacc)
 
+	//file.Address is the merklePath but so far we've been giving editors: hex( hash ( humanReadablePath, editorAddress)) when saving editors during file posting
+	//but the problem is that the full merklePath can't be created before we enter the Keeper
+	//I guess we could build the editors and viewers list inside of keeper, but omg that would incur so much gas
 	h := sha256.New()
 	h.Write([]byte(fmt.Sprintf("e%s%s", file.Address, user)))
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
-
+	//if editor exists, we return 'ok'
 	if _, ok := jvacc[addressString]; ok {
 		return ok
 	}
-
-	return true
+	//If editor doesn't exist...we should return false
+	return false
 }
 
 func IsOwner(file types.Files, user string) bool {

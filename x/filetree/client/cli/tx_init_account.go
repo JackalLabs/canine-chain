@@ -53,7 +53,7 @@ func CmdInitAccount() *cobra.Command {
 				//The "is editor" function works the same here
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", argRootHashpath, v))) //this used to be pathString
+				h.Write([]byte(fmt.Sprintf("e%s%s", merklePath, v))) //this used to be pathString
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
