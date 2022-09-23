@@ -42,17 +42,14 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			//Cut out the / at the end to save heartache
+			//Cut out the / at the end for compatibility with types/merkle-paths.go
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			chunks := strings.Split(trimPath, "/")
 
-			//The problem: In order to check editor or viewer access, access.go functions need to consume a file, and they hex( hash (file.address, user)) to check if the user
-			//In question has viewing access. Unfortunately, unless we build the full merklePath on the CLI side and pass it into our editors/viewers address map, our access.go
-			//functions don't work. I guess we could build the viewers and editors inside of the keeper, but that would be so expensive.
-			//However, inside of the keeper, we do a check to ensure that the caller of postFile msg is in fact the owner of the parent file...so if
-			//They are not, then the JSON viewers and editors that we just passed in, won't even be used because the child file will never be created!
+			//Explanation for why we need this also will be provided in Slack
 			fullMerklePath := types.MerklePath(trimPath)
 
+			//Print statements left in temporarily for troubleshooting
 			parentString := strings.Join(chunks[0:len(chunks)-1], "/")
 			fmt.Println("parentString is", parentString)
 
@@ -81,7 +78,7 @@ func CmdPostFile() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				//As of right now, if you post a file and try to add viewers that have not initiated an account, this will error and say "public key not found, perhaps not inited yet"
+
 				queryClient := filetypes.NewQueryClient(clientCtx)
 				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
 				if err != nil {
@@ -99,7 +96,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%s%s", fullMerklePath, v)))
+				h.Write([]byte(fmt.Sprintf("v%s%s", fullMerklePath, v))) //this used to be the human readable path. This shall be addressed in slack.
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
@@ -143,7 +140,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", fullMerklePath, v))) //this used to be pathString
+				h.Write([]byte(fmt.Sprintf("e%s%s", fullMerklePath, v))) //this used to be the human readable path. This shall be addressed in slack.
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
@@ -166,7 +163,7 @@ func CmdPostFile() *cobra.Command {
 				argAccount,
 				parentHash,
 				childHash,
-				argContents, //child piece
+				argContents,
 				string(jsonViewers),
 				string(jsonEditors),
 			)

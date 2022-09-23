@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -33,15 +34,16 @@ func CmdGetKeys() *cobra.Command {
 			}
 
 			queryClient := types.NewQueryClient(clientCtx)
-			pathString := types.MerklePath(reqHashpath)
+			trimPath := strings.TrimSuffix(reqHashpath, "/")
+			merklePath := types.MerklePath(trimPath)
 
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("o%s%s", pathString, reqOwner))) //May not need this in future
+			h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, reqOwner))) //May not need this in future
 			hash := h.Sum(nil)
-			ownerString := fmt.Sprintf("%x", hash)
+			ownerString := fmt.Sprintf("%x", hash) //Make the owner string to find the file
 
 			params := &types.QueryGetFilesRequest{
-				Address:      pathString,
+				Address:      merklePath,
 				OwnerAddress: ownerString,
 			}
 
@@ -60,14 +62,12 @@ func CmdGetKeys() *cobra.Command {
 				return jerr
 			}
 
-			addressString := keeper.MakeViewerAddress(reqHashpath, clientCtx.GetFromAddress().String())
-			fmt.Println(addressString)
-			fmt.Println(m)
+			addressString := keeper.MakeViewerAddress(merklePath, clientCtx.GetFromAddress().String())
+
 			todec := m[addressString]
-			fmt.Printf("%v\n", todec)
+
 			hexMessage, err := hex.DecodeString(todec)
 			if err != nil {
-
 				return err
 			}
 
@@ -79,7 +79,7 @@ func CmdGetKeys() *cobra.Command {
 			decrypt, err := eciesgo.Decrypt(key, hexMessage)
 			if err != nil {
 				fmt.Printf("%v\n", hexMessage)
-				return err
+				return types.ErrNoViewingAccess
 			}
 
 			fmt.Printf("DECRYPTED:\n%s\n", string(decrypt))

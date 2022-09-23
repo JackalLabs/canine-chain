@@ -37,8 +37,10 @@ func CmdInitAccount() *cobra.Command {
 			}
 
 			pubKey := newKey.PublicKey.Bytes(false)
+			//In the keeper, the merklePath function will trim the trailing slash for us but let's just do it anyways to be safe.
+			trimMerklePath := strings.TrimSuffix(argRootHashpath, "/")
+			merklePath := types.MerklePath(trimMerklePath)
 
-			merklePath := types.MerklePath(argRootHashpath)
 			editors := make(map[string]string)
 			editorAddresses := strings.Split(argEditors, ",")
 			editorAddresses = append(editorAddresses, clientCtx.GetFromAddress().String())
@@ -49,8 +51,7 @@ func CmdInitAccount() *cobra.Command {
 				}
 
 				//This root folder is not supposed to hold the file's AES key, so there is nothing to encrypt. The purpose
-				//Of the list of editors is to allow a user to invite others to write to their root folder. We are still using the JSON map to ensure that
-				//The "is editor" function works the same here
+				//Of the list of editors is to allow a user to invite others to write to their root folder.
 
 				h := sha256.New()
 				h.Write([]byte(fmt.Sprintf("e%s%s", merklePath, v))) //this used to be pathString
@@ -67,7 +68,7 @@ func CmdInitAccount() *cobra.Command {
 			}
 
 			msgInitRoot := types.NewMsgInitAccount(
-				clientCtx.GetFromAddress().String(),
+				clientCtx.GetFromAddress().String(), //need another parametre for account
 				merklePath,
 				string(jsonEditors),
 				fmt.Sprintf("%x", pubKey),

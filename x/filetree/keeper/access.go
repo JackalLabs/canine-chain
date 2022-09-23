@@ -28,24 +28,22 @@ func HasViewingAccess(file types.Files, user string) bool {
 }
 
 func HasEditAccess(file types.Files, user string) bool {
-	pvacc := file.EditAccess
+	//I believe pvacc above stands for 'private viewing access' so we should use peacc for 'private editing access'?
+	peacc := file.EditAccess
 
 	jvacc := make(map[string]string)
-	json.Unmarshal([]byte(pvacc), &jvacc)
+	json.Unmarshal([]byte(peacc), &jvacc)
 
-	//file.Address is the merklePath but so far we've been giving editors: hex( hash ( humanReadablePath, editorAddress)) when saving editors during file posting
-	//but the problem is that the full merklePath can't be created before we enter the Keeper
-	//I guess we could build the editors and viewers list inside of keeper, but omg that would incur so much gas
 	h := sha256.New()
 	h.Write([]byte(fmt.Sprintf("e%s%s", file.Address, user)))
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
-	//if editor exists, we return 'ok'
+	//if editor exists, body of if statement executes and ok is returned as 'true'
 	if _, ok := jvacc[addressString]; ok {
 		return ok
 	}
-	//If editor doesn't exist...we should return false
+	//During sandbox testing, if editor doesn't exist, the body of the if statement never executes, so we need to return false
 	return false
 }
 
@@ -60,6 +58,28 @@ func IsOwner(file types.Files, user string) bool {
 	return addressString == file.Owner
 }
 
+func MakeViewerAddress(path string, user string) string {
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("v%s%s", path, user)))
+	hash := h.Sum(nil)
+	addressString := fmt.Sprintf("%x", hash)
+
+	return addressString
+}
+
+// Owner address is whoever owns this file/folder
+func MakeOwnerAddress(merklePath string, user string) string {
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, user)))
+	hash := h.Sum(nil)
+	ownerString := fmt.Sprintf("%x", hash)
+
+	return ownerString
+}
+
+// Delete these two below?...Not sure what "MakeAddress" is used for?
 func MakeAddress(path string, user string) string {
 
 	h := sha256.New()
@@ -85,14 +105,4 @@ func MakeChainAddress(path string, user string) string {
 	pathString = fmt.Sprintf("%x", hash)
 
 	return pathString
-}
-
-func MakeViewerAddress(path string, user string) string {
-
-	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%s%s", path, user)))
-	hash := h.Sum(nil)
-	addressString := fmt.Sprintf("%x", hash)
-
-	return addressString
 }

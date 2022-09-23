@@ -29,7 +29,7 @@ func CmdAddViewers() *cobra.Command {
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argViewerIds := args[0]
-			argAddress := args[1]
+			argHashpath := args[1]
 			argOwner := args[2] //may be named to accountAddress
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -39,8 +39,9 @@ func CmdAddViewers() *cobra.Command {
 
 			fileQueryClient := types.NewQueryClient(clientCtx)
 
-			merklePath := types.MerklePath(argAddress)
-			//In next commit, this should all be packed into a fully fledged file query that does permission checking
+			merklePath := types.MerklePath(argHashpath)
+
+			//Can't use helper functions in access.go so just build ownerString
 			h := sha256.New()
 			h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, argOwner)))
 			hash := h.Sum(nil)
@@ -85,9 +86,9 @@ func CmdAddViewers() *cobra.Command {
 				viewers := file.Files.ViewingAccess
 				var m map[string]string
 
-				json.Unmarshal([]byte(viewers), &m) //Unmarshal file's viewing access array into address of this newly declared map 'm'
+				json.Unmarshal([]byte(viewers), &m)
 
-				ownerViewingAddress := keeper.MakeViewerAddress(argAddress, argOwner)
+				ownerViewingAddress := keeper.MakeViewerAddress(merklePath, argOwner)
 
 				hexMessage, err := hex.DecodeString(m[ownerViewingAddress])
 				if err != nil {
@@ -119,7 +120,7 @@ func CmdAddViewers() *cobra.Command {
 			}
 
 			msg := types.NewMsgAddViewers(
-				clientCtx.GetFromAddress().String(), //msg caller who wants to add viewers
+				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),
 				strings.Join(viewerKeys, ","),
 				merklePath,

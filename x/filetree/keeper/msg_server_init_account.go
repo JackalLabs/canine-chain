@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"crypto/sha256"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,25 +12,20 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	pubKey := types.Pubkey{
-		Address: msg.Creator,
+		Address: msg.Creator, //this is hex(hashed)
 		Key:     msg.Key,
 	}
 	k.SetPubkey(ctx, pubKey)
 
-	pathString := msg.RootHashpath
-
-	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator))) //msg.Creator will change to msg.accountAddress soon
-	hash := h.Sum(nil)
-
-	ownerString := fmt.Sprintf("%x", hash)
+	merklePath := msg.RootHashpath
+	ownerString := MakeOwnerAddress(merklePath, msg.Creator)
 
 	file := types.Files{
-		Contents:      "home/",
+		Contents:      fmt.Sprintf("%x", "homeContents"), //dummy contents
 		Owner:         ownerString,
-		ViewingAccess: "NONE",
+		ViewingAccess: fmt.Sprintf("%x", "NONE"), //dummy var, no viewing access
 		EditAccess:    msg.Editors,
-		Address:       pathString,
+		Address:       merklePath,
 	}
 
 	k.SetFiles(ctx, file)
