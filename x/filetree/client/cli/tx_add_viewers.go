@@ -88,7 +88,7 @@ func CmdAddViewers() *cobra.Command {
 
 				json.Unmarshal([]byte(viewers), &m)
 
-				ownerViewingAddress := keeper.MakeViewerAddress(merklePath, argOwner)
+				ownerViewingAddress := keeper.MakeViewerAddress(file.Files.TrackingNumber, argOwner)
 
 				hexMessage, err := hex.DecodeString(m[ownerViewingAddress])
 				if err != nil {
@@ -113,7 +113,7 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-				newViewerID := keeper.MakeViewerAddress(merklePath, v) //This used to just be argAddress
+				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 

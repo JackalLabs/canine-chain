@@ -94,14 +94,12 @@ func CmdShowFileFromPath() *cobra.Command {
 			argOwnerAddress := args[1]
 			trimMerklePath := strings.TrimSuffix(argAddress, "/")
 			merklePath := types.MerklePath(trimMerklePath)
-			fmt.Println("The merklePath is", merklePath)
+
 			//hash the owner address alone
 			h := sha256.New()
 			h.Write([]byte(fmt.Sprintf("%s", argOwnerAddress)))
 			hash := h.Sum(nil)
 			accountHash := fmt.Sprintf("%x", hash)
-
-			fmt.Println("accountHash is", accountHash)
 
 			//make the full OwnerAddress
 			H := sha256.New()
@@ -113,9 +111,7 @@ func CmdShowFileFromPath() *cobra.Command {
 				Address:      merklePath,
 				OwnerAddress: ownerAddress,
 			}
-			fmt.Println("The owner bech32 is", argOwnerAddress)
-			fmt.Println("owner Address is", ownerAddress)
-			fmt.Println("path Address is", merklePath)
+
 			res, err := queryClient.Files(context.Background(), params)
 			if err != nil {
 				return err

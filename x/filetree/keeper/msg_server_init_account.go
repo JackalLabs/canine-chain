@@ -19,10 +19,6 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 
 	//msg.Account was already hex(hashed) before it go to here.
 	//make the full OwnerAddress
-	// H := sha256.New()
-	// H.Write([]byte(fmt.Sprintf("o%s%s", msg.RootHashpath, msg.Account)))
-	// Hash := H.Sum(nil)
-	// ownerAddress := fmt.Sprintf("%x", Hash)
 
 	ownerAddress := MakeOwnerAddress(msg.RootHashpath, msg.Account)
 

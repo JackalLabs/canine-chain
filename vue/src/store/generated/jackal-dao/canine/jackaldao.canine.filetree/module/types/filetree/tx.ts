@@ -12,6 +12,7 @@ export interface MsgPostFile {
   contents: string;
   viewers: string;
   editors: string;
+  trackingNumber: number;
 }
 
 export interface MsgPostFileResponse {
@@ -56,6 +57,7 @@ const baseMsgPostFile: object = {
   contents: "",
   viewers: "",
   editors: "",
+  trackingNumber: 0,
 };
 
 export const MsgPostFile = {
@@ -80,6 +82,9 @@ export const MsgPostFile = {
     }
     if (message.editors !== "") {
       writer.uint32(58).string(message.editors);
+    }
+    if (message.trackingNumber !== 0) {
+      writer.uint32(64).uint64(message.trackingNumber);
     }
     return writer;
   },
@@ -111,6 +116,9 @@ export const MsgPostFile = {
           break;
         case 7:
           message.editors = reader.string();
+          break;
+        case 8:
+          message.trackingNumber = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -157,6 +165,11 @@ export const MsgPostFile = {
     } else {
       message.editors = "";
     }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = Number(object.trackingNumber);
+    } else {
+      message.trackingNumber = 0;
+    }
     return message;
   },
 
@@ -169,6 +182,8 @@ export const MsgPostFile = {
     message.contents !== undefined && (obj.contents = message.contents);
     message.viewers !== undefined && (obj.viewers = message.viewers);
     message.editors !== undefined && (obj.editors = message.editors);
+    message.trackingNumber !== undefined &&
+      (obj.trackingNumber = message.trackingNumber);
     return obj;
   },
 
@@ -208,6 +223,11 @@ export const MsgPostFile = {
       message.editors = object.editors;
     } else {
       message.editors = "";
+    }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = object.trackingNumber;
+    } else {
+      message.trackingNumber = 0;
     }
     return message;
   },

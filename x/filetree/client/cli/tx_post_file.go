@@ -46,23 +46,22 @@ func CmdPostFile() *cobra.Command {
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			chunks := strings.Split(trimPath, "/")
 
-			//Explanation for why we need this also will be provided in Slack
-			fullMerklePath := types.MerklePath(trimPath)
-
 			//Print statements left in temporarily for troubleshooting
 			parentString := strings.Join(chunks[0:len(chunks)-1], "/")
-			fmt.Println("parentString is", parentString)
-
 			childString := string(chunks[len(chunks)-1])
-			fmt.Println("ChildString is:", childString)
-
 			parentHash := types.MerklePath(parentString)
-			fmt.Println("parent hash is", parentHash)
 
 			h := sha256.New()
 			h.Write([]byte(childString))
 			childHash := fmt.Sprintf("%x", h.Sum(nil))
-			fmt.Println("child hash is", childHash)
+
+			//Getting the tracker from the client side safe? By the time your transaction is done, the tracker would have been incremented by many other transactions
+			queryClient := filetypes.NewQueryClient(clientCtx)
+			res, err := queryClient.Tracker(cmd.Context(), &filetypes.QueryGetTrackerRequest{})
+			if err != nil {
+				return types.ErrTrackerNotFound
+			}
+			trackingNumber := res.Tracker.TrackingNumber
 
 			viewers := make(map[string]string)
 			editors := make(map[string]string)
@@ -96,7 +95,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%s%s", fullMerklePath, v))) //this used to be the human readable path. This shall be addressed in slack.
+				h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, v))) //this used to be the human readable path. This shall be addressed in slack.
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
@@ -140,7 +139,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", fullMerklePath, v))) //this used to be the human readable path. This shall be addressed in slack.
+				h.Write([]byte(fmt.Sprintf("e%d%s", trackingNumber, v))) //this used to be the human readable path. This shall be addressed in slack.
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
@@ -158,14 +157,21 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
+			H := sha256.New()
+			H.Write([]byte(fmt.Sprintf("%s", argAccount)))
+			hash := H.Sum(nil)
+
+			accountHash := fmt.Sprintf("%x", hash)
+
 			msg := types.NewMsgPostFile(
 				clientCtx.GetFromAddress().String(), //Sender of msg
-				argAccount,
+				accountHash,
 				parentHash,
 				childHash,
 				argContents,
 				string(jsonViewers),
 				string(jsonEditors),
+				trackingNumber,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

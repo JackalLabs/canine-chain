@@ -10,12 +10,13 @@ import (
 
 func HasViewingAccess(file types.Files, user string) bool {
 	pvacc := file.ViewingAccess
+	trackingNumber := file.TrackingNumber
 
 	jvacc := make(map[string]string)
 	json.Unmarshal([]byte(pvacc), &jvacc)
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%s%s", file.Address, user)))
+	h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, user)))
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
@@ -30,12 +31,13 @@ func HasViewingAccess(file types.Files, user string) bool {
 func HasEditAccess(file types.Files, user string) bool {
 	//I believe pvacc above stands for 'private viewing access' so we should use peacc for 'private editing access'?
 	peacc := file.EditAccess
+	trackingNumber := file.TrackingNumber
 
 	jvacc := make(map[string]string)
 	json.Unmarshal([]byte(peacc), &jvacc)
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%s%s", file.Address, user)))
+	h.Write([]byte(fmt.Sprintf("e%d%s", trackingNumber, user)))
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
@@ -58,10 +60,10 @@ func IsOwner(file types.Files, user string) bool {
 	return addressString == file.Owner
 }
 
-func MakeViewerAddress(path string, user string) string {
+func MakeViewerAddress(trackingNumber uint64, user string) string {
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%s%s", path, user)))
+	h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, user)))
 	hash := h.Sum(nil)
 	addressString := fmt.Sprintf("%x", hash)
 

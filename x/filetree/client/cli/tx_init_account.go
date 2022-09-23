@@ -42,7 +42,7 @@ func CmdInitAccount() *cobra.Command {
 			//In the keeper, the merklePath function will trim the trailing slash for us but let's just do it anyways to be safe.
 			trimMerklePath := strings.TrimSuffix(argRootHashpath, "/")
 			merklePath := types.MerklePath(trimMerklePath)
-			fmt.Println("The merkle path is", merklePath)
+
 			editors := make(map[string]string)
 			editorAddresses := strings.Split(argEditors, ",")
 			editorAddresses = append(editorAddresses, clientCtx.GetFromAddress().String())
@@ -54,7 +54,6 @@ func CmdInitAccount() *cobra.Command {
 				return types.ErrTrackerNotFound
 			}
 			trackingNumber := res.Tracker.TrackingNumber
-			fmt.Println("Tracking number is", trackingNumber)
 
 			for _, v := range editorAddresses {
 				if len(v) < 1 {
@@ -78,15 +77,11 @@ func CmdInitAccount() *cobra.Command {
 				return err
 			}
 
-			fmt.Println("argAccount bech32 is", argAccount)
-
 			h := sha256.New()
 			h.Write([]byte(fmt.Sprintf("%s", argAccount)))
 			hash := h.Sum(nil)
 
 			accountHash := fmt.Sprintf("%x", hash)
-
-			fmt.Println("accountHash is", accountHash)
 
 			msgInitRoot := types.NewMsgInitAccount(
 				clientCtx.GetFromAddress().String(),
