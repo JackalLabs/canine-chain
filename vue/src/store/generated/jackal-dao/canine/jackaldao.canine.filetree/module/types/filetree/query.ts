@@ -7,6 +7,7 @@ import {
   PageResponse,
 } from "../cosmos/base/query/v1beta1/pagination";
 import { Pubkey } from "../filetree/pubkey";
+import { Tracker } from "../filetree/tracker";
 
 export const protobufPackage = "jackaldao.canine.filetree";
 
@@ -82,6 +83,12 @@ export interface QueryAllPubkeyRequest {
 export interface QueryAllPubkeyResponse {
   pubkey: Pubkey[];
   pagination: PageResponse | undefined;
+}
+
+export interface QueryGetTrackerRequest {}
+
+export interface QueryGetTrackerResponse {
+  Tracker: Tracker | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -1186,6 +1193,113 @@ export const QueryAllPubkeyResponse = {
   },
 };
 
+const baseQueryGetTrackerRequest: object = {};
+
+export const QueryGetTrackerRequest = {
+  encode(_: QueryGetTrackerRequest, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetTrackerRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetTrackerRequest } as QueryGetTrackerRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryGetTrackerRequest {
+    const message = { ...baseQueryGetTrackerRequest } as QueryGetTrackerRequest;
+    return message;
+  },
+
+  toJSON(_: QueryGetTrackerRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<QueryGetTrackerRequest>): QueryGetTrackerRequest {
+    const message = { ...baseQueryGetTrackerRequest } as QueryGetTrackerRequest;
+    return message;
+  },
+};
+
+const baseQueryGetTrackerResponse: object = {};
+
+export const QueryGetTrackerResponse = {
+  encode(
+    message: QueryGetTrackerResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.Tracker !== undefined) {
+      Tracker.encode(message.Tracker, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetTrackerResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetTrackerResponse,
+    } as QueryGetTrackerResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.Tracker = Tracker.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetTrackerResponse {
+    const message = {
+      ...baseQueryGetTrackerResponse,
+    } as QueryGetTrackerResponse;
+    if (object.Tracker !== undefined && object.Tracker !== null) {
+      message.Tracker = Tracker.fromJSON(object.Tracker);
+    } else {
+      message.Tracker = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetTrackerResponse): unknown {
+    const obj: any = {};
+    message.Tracker !== undefined &&
+      (obj.Tracker = message.Tracker
+        ? Tracker.toJSON(message.Tracker)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetTrackerResponse>
+  ): QueryGetTrackerResponse {
+    const message = {
+      ...baseQueryGetTrackerResponse,
+    } as QueryGetTrackerResponse;
+    if (object.Tracker !== undefined && object.Tracker !== null) {
+      message.Tracker = Tracker.fromPartial(object.Tracker);
+    } else {
+      message.Tracker = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1204,6 +1318,8 @@ export interface Query {
   Pubkey(request: QueryGetPubkeyRequest): Promise<QueryGetPubkeyResponse>;
   /** Queries a list of Pubkey items. */
   PubkeyAll(request: QueryAllPubkeyRequest): Promise<QueryAllPubkeyResponse>;
+  /** Queries a Tracker by index. */
+  Tracker(request: QueryGetTrackerRequest): Promise<QueryGetTrackerResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1302,6 +1418,18 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllPubkeyResponse.decode(new Reader(data))
+    );
+  }
+
+  Tracker(request: QueryGetTrackerRequest): Promise<QueryGetTrackerResponse> {
+    const data = QueryGetTrackerRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Query",
+      "Tracker",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetTrackerResponse.decode(new Reader(data))
     );
   }
 }

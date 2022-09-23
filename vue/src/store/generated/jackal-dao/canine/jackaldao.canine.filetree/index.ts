@@ -4,9 +4,10 @@ import { Files } from "./module/types/filetree/files"
 import { Params } from "./module/types/filetree/params"
 import { Pubkey } from "./module/types/filetree/pubkey"
 import { QueryGetKeyRequest } from "./module/types/filetree/query"
+import { Tracker } from "./module/types/filetree/tracker"
 
 
-export { Files, Params, Pubkey, QueryGetKeyRequest };
+export { Files, Params, Pubkey, QueryGetKeyRequest, Tracker };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -52,12 +53,14 @@ const getDefaultState = () => {
 				GetKeys: {},
 				Pubkey: {},
 				PubkeyAll: {},
+				Tracker: {},
 				
 				_Structure: {
 						Files: getStructure(Files.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						Pubkey: getStructure(Pubkey.fromPartial({})),
 						QueryGetKeyRequest: getStructure(QueryGetKeyRequest.fromPartial({})),
+						Tracker: getStructure(Tracker.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -133,6 +136,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.PubkeyAll[JSON.stringify(params)] ?? {}
+		},
+				getTracker: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Tracker[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -352,36 +361,28 @@ export default {
 		},
 		
 		
-		async sendMsgPostFile({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		
+		 		
+		
+		
+		async QueryTracker({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
 			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgPostFile(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryTracker()).data
+				
+					
+				commit('QUERY', { query: 'Tracker', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryTracker', payload: { options: { all }, params: {...key},query }})
+				return getters['getTracker']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgPostFile:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgPostFile:Send Could not broadcast Tx: '+ e.message)
-				}
+				throw new Error('QueryClient:QueryTracker API Node Unavailable. Could not perform query: ' + e.message)
+				
 			}
 		},
-		async sendMsgPostkey({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgPostkey(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgPostkey:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
+		
+		
 		async sendMsgAddViewers({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -394,6 +395,21 @@ export default {
 					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgAddViewers:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgPostFile({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgPostFile(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgPostFile:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgPostFile:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -412,33 +428,22 @@ export default {
 				}
 			}
 		},
-		
-		async MsgPostFile({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgPostFile(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgPostFile:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgPostFile:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgPostkey({ rootGetters }, { value }) {
+		async sendMsgPostkey({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
 				const msg = await txClient.msgPostkey(value)
-				return msg
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgPostkey:Create Could not create message: ' + e.message)
+				}else{
+					throw new Error('TxClient:MsgPostkey:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
+		
 		async MsgAddViewers({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -452,6 +457,19 @@ export default {
 				}
 			}
 		},
+		async MsgPostFile({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgPostFile(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgPostFile:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgPostFile:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgInitAccount({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -462,6 +480,19 @@ export default {
 					throw new Error('TxClient:MsgInitAccount:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgInitAccount:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgPostkey({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgPostkey(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgPostkey:Create Could not create message: ' + e.message)
 				}
 			}
 		},

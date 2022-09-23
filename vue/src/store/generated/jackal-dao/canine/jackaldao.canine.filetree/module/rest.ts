@@ -87,12 +87,21 @@ export interface FiletreeQueryGetPubkeyResponse {
   pubkey?: FiletreePubkey;
 }
 
+export interface FiletreeQueryGetTrackerResponse {
+  Tracker?: FiletreeTracker;
+}
+
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  */
 export interface FiletreeQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: FiletreeParams;
+}
+
+export interface FiletreeTracker {
+  /** @format uint64 */
+  trackingNumber?: string;
 }
 
 export interface ProtobufAny {
@@ -492,6 +501,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryPubkey = (address: string, params: RequestParams = {}) =>
     this.request<FiletreeQueryGetPubkeyResponse, RpcStatus>({
       path: `/jackal-dao/canine/filetree/pubkey/${address}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryTracker
+   * @summary Queries a Tracker by index.
+   * @request GET:/jackal-dao/canine/filetree/tracker
+   */
+  queryTracker = (params: RequestParams = {}) =>
+    this.request<FiletreeQueryGetTrackerResponse, RpcStatus>({
+      path: `/jackal-dao/canine/filetree/tracker`,
       method: "GET",
       format: "json",
       ...params,
