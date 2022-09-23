@@ -49,12 +49,15 @@ message MsgPostkeyResponse {
 
 message MsgInitAccount {
   string creator = 1;
-  string rootHashpath = 2;
-  string editors = 3;
-  string key = 4; 
+  string account = 2;
+  string rootHashpath = 3;
+  string editors = 4;
+  string key = 5; 
+  uint64 trackingNumber = 6;
 }
 
 message MsgInitAccountResponse {
+  uint64 trackingNumber = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

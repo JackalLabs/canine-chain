@@ -70,13 +70,14 @@ func MakeViewerAddress(path string, user string) string {
 
 // Owner address is whoever owns this file/folder
 func MakeOwnerAddress(merklePath string, user string) string {
-
+	//make sure that user was already hex(hashed) before it was passed into
+	//this function
 	h := sha256.New()
 	h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, user)))
 	hash := h.Sum(nil)
-	ownerString := fmt.Sprintf("%x", hash)
+	ownerAddress := fmt.Sprintf("%x", hash)
 
-	return ownerString
+	return ownerAddress
 }
 
 // Delete these two below?...Not sure what MakeAddress does

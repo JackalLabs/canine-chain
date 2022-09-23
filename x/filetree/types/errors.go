@@ -16,4 +16,5 @@ var (
 	ErrParentFileNotFound = sdkerrors.Register(ModuleName, 1106, "Parent folder does not exist")
 	ErrCannotWrite        = sdkerrors.Register(ModuleName, 1107, "You are not permitted to write to this folder")
 	ErrNoViewingAccess    = sdkerrors.Register(ModuleName, 1108, "You do not have viewing access. Failed to decrypt")
+	ErrTrackerNotFound    = sdkerrors.Register(ModuleName, 1109, "Tracking number not found")
 )

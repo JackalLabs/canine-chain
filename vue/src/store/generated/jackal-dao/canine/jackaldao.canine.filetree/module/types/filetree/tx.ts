@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { Reader, Writer } from "protobufjs/minimal";
+import { Reader, util, configure, Writer } from "protobufjs/minimal";
+import * as Long from "long";
 
 export const protobufPackage = "jackaldao.canine.filetree";
 
@@ -36,12 +37,16 @@ export interface MsgPostkeyResponse {}
 
 export interface MsgInitAccount {
   creator: string;
+  account: string;
   rootHashpath: string;
   editors: string;
   key: string;
+  trackingNumber: number;
 }
 
-export interface MsgInitAccountResponse {}
+export interface MsgInitAccountResponse {
+  trackingNumber: number;
+}
 
 const baseMsgPostFile: object = {
   creator: "",
@@ -545,9 +550,11 @@ export const MsgPostkeyResponse = {
 
 const baseMsgInitAccount: object = {
   creator: "",
+  account: "",
   rootHashpath: "",
   editors: "",
   key: "",
+  trackingNumber: 0,
 };
 
 export const MsgInitAccount = {
@@ -555,14 +562,20 @@ export const MsgInitAccount = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.account !== "") {
+      writer.uint32(18).string(message.account);
+    }
     if (message.rootHashpath !== "") {
-      writer.uint32(18).string(message.rootHashpath);
+      writer.uint32(26).string(message.rootHashpath);
     }
     if (message.editors !== "") {
-      writer.uint32(26).string(message.editors);
+      writer.uint32(34).string(message.editors);
     }
     if (message.key !== "") {
-      writer.uint32(34).string(message.key);
+      writer.uint32(42).string(message.key);
+    }
+    if (message.trackingNumber !== 0) {
+      writer.uint32(48).uint64(message.trackingNumber);
     }
     return writer;
   },
@@ -578,13 +591,19 @@ export const MsgInitAccount = {
           message.creator = reader.string();
           break;
         case 2:
-          message.rootHashpath = reader.string();
+          message.account = reader.string();
           break;
         case 3:
-          message.editors = reader.string();
+          message.rootHashpath = reader.string();
           break;
         case 4:
+          message.editors = reader.string();
+          break;
+        case 5:
           message.key = reader.string();
+          break;
+        case 6:
+          message.trackingNumber = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -601,6 +620,11 @@ export const MsgInitAccount = {
     } else {
       message.creator = "";
     }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = String(object.account);
+    } else {
+      message.account = "";
+    }
     if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
       message.rootHashpath = String(object.rootHashpath);
     } else {
@@ -616,16 +640,24 @@ export const MsgInitAccount = {
     } else {
       message.key = "";
     }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = Number(object.trackingNumber);
+    } else {
+      message.trackingNumber = 0;
+    }
     return message;
   },
 
   toJSON(message: MsgInitAccount): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.account !== undefined && (obj.account = message.account);
     message.rootHashpath !== undefined &&
       (obj.rootHashpath = message.rootHashpath);
     message.editors !== undefined && (obj.editors = message.editors);
     message.key !== undefined && (obj.key = message.key);
+    message.trackingNumber !== undefined &&
+      (obj.trackingNumber = message.trackingNumber);
     return obj;
   },
 
@@ -635,6 +667,11 @@ export const MsgInitAccount = {
       message.creator = object.creator;
     } else {
       message.creator = "";
+    }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = object.account;
+    } else {
+      message.account = "";
     }
     if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
       message.rootHashpath = object.rootHashpath;
@@ -651,14 +688,25 @@ export const MsgInitAccount = {
     } else {
       message.key = "";
     }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = object.trackingNumber;
+    } else {
+      message.trackingNumber = 0;
+    }
     return message;
   },
 };
 
-const baseMsgInitAccountResponse: object = {};
+const baseMsgInitAccountResponse: object = { trackingNumber: 0 };
 
 export const MsgInitAccountResponse = {
-  encode(_: MsgInitAccountResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: MsgInitAccountResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.trackingNumber !== 0) {
+      writer.uint32(8).uint64(message.trackingNumber);
+    }
     return writer;
   },
 
@@ -669,6 +717,9 @@ export const MsgInitAccountResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.trackingNumber = longToNumber(reader.uint64() as Long);
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -677,18 +728,32 @@ export const MsgInitAccountResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgInitAccountResponse {
+  fromJSON(object: any): MsgInitAccountResponse {
     const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = Number(object.trackingNumber);
+    } else {
+      message.trackingNumber = 0;
+    }
     return message;
   },
 
-  toJSON(_: MsgInitAccountResponse): unknown {
+  toJSON(message: MsgInitAccountResponse): unknown {
     const obj: any = {};
+    message.trackingNumber !== undefined &&
+      (obj.trackingNumber = message.trackingNumber);
     return obj;
   },
 
-  fromPartial(_: DeepPartial<MsgInitAccountResponse>): MsgInitAccountResponse {
+  fromPartial(
+    object: DeepPartial<MsgInitAccountResponse>
+  ): MsgInitAccountResponse {
     const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = object.trackingNumber;
+    } else {
+      message.trackingNumber = 0;
+    }
     return message;
   },
 };
@@ -760,6 +825,16 @@ interface Rpc {
   ): Promise<Uint8Array>;
 }
 
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
   ? T
@@ -770,3 +845,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

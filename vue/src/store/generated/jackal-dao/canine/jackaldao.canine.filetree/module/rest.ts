@@ -15,11 +15,17 @@ export interface FiletreeFiles {
   owner?: string;
   viewingAccess?: string;
   editAccess?: string;
+
+  /** @format uint64 */
+  trackingNumber?: string;
 }
 
 export type FiletreeMsgAddViewersResponse = object;
 
-export type FiletreeMsgInitAccountResponse = object;
+export interface FiletreeMsgInitAccountResponse {
+  /** @format uint64 */
+  trackingNumber?: string;
+}
 
 export interface FiletreeMsgPostFileResponse {
   path?: string;
