@@ -36,7 +36,6 @@ export interface MsgPostkeyResponse {}
 
 export interface MsgInitAccount {
   creator: string;
-  account: string;
   rootHashpath: string;
   editors: string;
   key: string;
@@ -546,7 +545,6 @@ export const MsgPostkeyResponse = {
 
 const baseMsgInitAccount: object = {
   creator: "",
-  account: "",
   rootHashpath: "",
   editors: "",
   key: "",
@@ -557,17 +555,14 @@ export const MsgInitAccount = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.account !== "") {
-      writer.uint32(18).string(message.account);
-    }
     if (message.rootHashpath !== "") {
-      writer.uint32(26).string(message.rootHashpath);
+      writer.uint32(18).string(message.rootHashpath);
     }
     if (message.editors !== "") {
-      writer.uint32(34).string(message.editors);
+      writer.uint32(26).string(message.editors);
     }
     if (message.key !== "") {
-      writer.uint32(42).string(message.key);
+      writer.uint32(34).string(message.key);
     }
     return writer;
   },
@@ -583,15 +578,12 @@ export const MsgInitAccount = {
           message.creator = reader.string();
           break;
         case 2:
-          message.account = reader.string();
-          break;
-        case 3:
           message.rootHashpath = reader.string();
           break;
-        case 4:
+        case 3:
           message.editors = reader.string();
           break;
-        case 5:
+        case 4:
           message.key = reader.string();
           break;
         default:
@@ -608,11 +600,6 @@ export const MsgInitAccount = {
       message.creator = String(object.creator);
     } else {
       message.creator = "";
-    }
-    if (object.account !== undefined && object.account !== null) {
-      message.account = String(object.account);
-    } else {
-      message.account = "";
     }
     if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
       message.rootHashpath = String(object.rootHashpath);
@@ -635,7 +622,6 @@ export const MsgInitAccount = {
   toJSON(message: MsgInitAccount): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.account !== undefined && (obj.account = message.account);
     message.rootHashpath !== undefined &&
       (obj.rootHashpath = message.rootHashpath);
     message.editors !== undefined && (obj.editors = message.editors);
@@ -649,11 +635,6 @@ export const MsgInitAccount = {
       message.creator = object.creator;
     } else {
       message.creator = "";
-    }
-    if (object.account !== undefined && object.account !== null) {
-      message.account = object.account;
-    } else {
-      message.account = "";
     }
     if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
       message.rootHashpath = object.rootHashpath;

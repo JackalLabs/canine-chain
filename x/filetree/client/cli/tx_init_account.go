@@ -68,7 +68,7 @@ func CmdInitAccount() *cobra.Command {
 			}
 
 			msgInitRoot := types.NewMsgInitAccount(
-				clientCtx.GetFromAddress().String(), //need another parametre for account
+				clientCtx.GetFromAddress().String(),
 				merklePath,
 				string(jsonEditors),
 				fmt.Sprintf("%x", pubKey),

@@ -79,7 +79,7 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	return ownerString
 }
 
-// Delete these two below?...Not sure what "MakeAddress" is used for?
+// Delete these two below?...Not sure what MakeAddress does
 func MakeAddress(path string, user string) string {
 
 	h := sha256.New()
