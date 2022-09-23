@@ -16,6 +16,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/jackal-dao/canine/x/storage/client/cli"
 	"github.com/jackal-dao/canine/x/storage/keeper"
@@ -283,8 +284,8 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 				continue
 			}
 
-			fmt.Printf("File size: %s\n", deal.Filesize)
-			fmt.Printf("Total size: %d\n", networkSize)
+			ctx.Logger().Debug(fmt.Sprintf("File size: %s\n", deal.Filesize))
+			ctx.Logger().Debug(fmt.Sprintf("Total size: %d\n", networkSize))
 
 			sid := sdk.NewDec(sizeint.Int64())
 			ts := sdk.NewDec(networkSize)
@@ -297,6 +298,11 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 			div, err := ts.Float64()
 			if err != nil {
 				ctx.Logger().Error(err.Error())
+				continue
+			}
+
+			if div == 0 {
+				ctx.Logger().Error(sdkerrors.Wrap(types.ErrDivideByZero, "dividing by zero").Error())
 				continue
 			}
 

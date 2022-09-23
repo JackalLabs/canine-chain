@@ -8,5 +8,5 @@ import (
 
 // x/storage module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrDivideByZero = sdkerrors.Register(ModuleName, 1110, "DivideByZero")
 )
