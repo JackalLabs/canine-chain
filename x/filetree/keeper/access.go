@@ -49,6 +49,7 @@ func HasEditAccess(file types.Files, user string) bool {
 	return false
 }
 
+// Not currently working
 func IsOwner(file types.Files, user string) bool {
 
 	h := sha256.New()

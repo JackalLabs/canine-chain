@@ -38,14 +38,23 @@ func CmdAddViewers() *cobra.Command {
 			}
 
 			fileQueryClient := types.NewQueryClient(clientCtx)
+			trimPath := strings.TrimSuffix(argHashpath, "/")
 
-			merklePath := types.MerklePath(argHashpath)
+			merklePath := types.MerklePath(trimPath)
 
 			//Can't use helper functions in access.go so just build ownerString
+			//Not working. Need to build the hash of the owner first.
+
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, argOwner)))
+			h.Write([]byte(fmt.Sprintf("%s", argOwner)))
 			hash := h.Sum(nil)
-			ownerString := fmt.Sprintf("%x", hash)
+
+			accountHash := fmt.Sprintf("%x", hash)
+
+			H := sha256.New()
+			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+			Hash := H.Sum(nil)
+			ownerString := fmt.Sprintf("%x", Hash)
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
 

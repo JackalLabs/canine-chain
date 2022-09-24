@@ -164,7 +164,7 @@ func CmdPostFile() *cobra.Command {
 			accountHash := fmt.Sprintf("%x", hash)
 
 			msg := types.NewMsgPostFile(
-				clientCtx.GetFromAddress().String(), //Sender of msg
+				clientCtx.GetFromAddress().String(),
 				accountHash,
 				parentHash,
 				childHash,
