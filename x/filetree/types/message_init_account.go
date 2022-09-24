@@ -5,32 +5,30 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgPostFile = "post_file"
+const TypeMsgInitAccount = "init_account"
 
-var _ sdk.Msg = &MsgPostFile{}
+var _ sdk.Msg = &MsgInitAccount{}
 
-func NewMsgPostFile(creator string, account string, hashparent string, hashchild string, contents string, viewers string, editors string, trackingNumber uint64) *MsgPostFile {
-	return &MsgPostFile{
+func NewMsgInitAccount(creator string, account string, rootHashpath string, editors string, key string, trackingNumber uint64) *MsgInitAccount {
+	return &MsgInitAccount{
 		Creator:        creator,
 		Account:        account,
-		HashParent:     hashparent,
-		HashChild:      hashchild,
-		Contents:       contents,
-		Viewers:        viewers,
+		RootHashpath:   rootHashpath,
 		Editors:        editors,
+		Key:            key,
 		TrackingNumber: trackingNumber,
 	}
 }
 
-func (msg *MsgPostFile) Route() string {
+func (msg *MsgInitAccount) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgPostFile) Type() string {
-	return TypeMsgPostFile
+func (msg *MsgInitAccount) Type() string {
+	return TypeMsgInitAccount
 }
 
-func (msg *MsgPostFile) GetSigners() []sdk.AccAddress {
+func (msg *MsgInitAccount) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -38,12 +36,12 @@ func (msg *MsgPostFile) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgPostFile) GetSignBytes() []byte {
+func (msg *MsgInitAccount) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgPostFile) ValidateBasic() error {
+func (msg *MsgInitAccount) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

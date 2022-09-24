@@ -1,0 +1,9 @@
+syntax = "proto3";
+package jackaldao.canine.filetree;
+
+option go_package = "github.com/jackal-dao/canine/x/filetree/types";
+
+message Tracker {
+  uint64 trackingNumber = 1; 
+  
+}

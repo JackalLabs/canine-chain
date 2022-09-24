@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"context"
-	"crypto/sha256"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/filetree/types"
@@ -12,28 +10,47 @@ import (
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	//old implementation: hex ( hash ( concatenate (msg.Creator, msg.Hashpath)))
-	// h := sha256.New()
-	// h.Write([]byte(fmt.Sprintf("%s%s", msg.Creator, msg.Hashpath)))
-	// hash := h.Sum(nil)
+	parentOwnerString := MakeOwnerAddress(msg.HashParent, msg.Account)
 
-	pathString := msg.Hashpath
+	parentFile, found := k.GetFiles(ctx, msg.HashParent, parentOwnerString)
+	if !found {
+		return nil, types.ErrParentFileNotFound
+	}
 
-	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", pathString, msg.Creator))) //msg.Creator will change to msg.accountAddress soon
-	hash := h.Sum(nil)
+	hasEdit := HasEditAccess(parentFile, msg.Creator)
+	if !hasEdit {
+		return nil, types.ErrCannotWrite
+	}
 
-	ownerString := fmt.Sprintf("%x", hash)
+	//Make the full path
+	fullMerklePath := types.AddToMerkle(msg.HashParent, msg.HashChild)
+
+	owner := MakeOwnerAddress(fullMerklePath, msg.Account)
 
 	file := types.Files{
-		Contents:      msg.Contents,
-		Owner:         ownerString,
-		ViewingAccess: msg.Viewers,
-		EditAccess:    msg.Editors,
-		Address:       pathString,
+		Contents:       msg.Contents,
+		Owner:          owner,
+		ViewingAccess:  msg.Viewers,
+		EditAccess:     msg.Editors,
+		Address:        fullMerklePath,
+		TrackingNumber: msg.TrackingNumber,
+	}
+
+	updatedTrackingNumber := msg.TrackingNumber + 1
+
+	//need to double check this number
+	if msg.TrackingNumber == 18446744073709551615 {
+		updatedTrackingNumber = 0
+		k.SetTracker(ctx, types.Tracker{
+			TrackingNumber: uint64(updatedTrackingNumber),
+		})
+	} else {
+		k.SetTracker(ctx, types.Tracker{
+			TrackingNumber: uint64(updatedTrackingNumber),
+		})
 	}
 
 	k.SetFiles(ctx, file)
 
-	return &types.MsgPostFileResponse{Path: pathString}, nil
+	return &types.MsgPostFileResponse{Path: fullMerklePath}, nil
 }

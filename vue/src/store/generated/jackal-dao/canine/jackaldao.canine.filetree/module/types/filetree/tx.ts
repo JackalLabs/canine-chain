@@ -1,14 +1,18 @@
 /* eslint-disable */
-import { Reader, Writer } from "protobufjs/minimal";
+import { Reader, util, configure, Writer } from "protobufjs/minimal";
+import * as Long from "long";
 
 export const protobufPackage = "jackaldao.canine.filetree";
 
 export interface MsgPostFile {
   creator: string;
-  hashpath: string;
+  account: string;
+  hashParent: string;
+  hashChild: string;
   contents: string;
   viewers: string;
   editors: string;
+  trackingNumber: number;
 }
 
 export interface MsgPostFileResponse {
@@ -32,12 +36,28 @@ export interface MsgPostkey {
 
 export interface MsgPostkeyResponse {}
 
+export interface MsgInitAccount {
+  creator: string;
+  account: string;
+  rootHashpath: string;
+  editors: string;
+  key: string;
+  trackingNumber: number;
+}
+
+export interface MsgInitAccountResponse {
+  trackingNumber: number;
+}
+
 const baseMsgPostFile: object = {
   creator: "",
-  hashpath: "",
+  account: "",
+  hashParent: "",
+  hashChild: "",
   contents: "",
   viewers: "",
   editors: "",
+  trackingNumber: 0,
 };
 
 export const MsgPostFile = {
@@ -45,17 +65,26 @@ export const MsgPostFile = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.hashpath !== "") {
-      writer.uint32(18).string(message.hashpath);
+    if (message.account !== "") {
+      writer.uint32(18).string(message.account);
+    }
+    if (message.hashParent !== "") {
+      writer.uint32(26).string(message.hashParent);
+    }
+    if (message.hashChild !== "") {
+      writer.uint32(34).string(message.hashChild);
     }
     if (message.contents !== "") {
-      writer.uint32(26).string(message.contents);
+      writer.uint32(42).string(message.contents);
     }
     if (message.viewers !== "") {
-      writer.uint32(34).string(message.viewers);
+      writer.uint32(50).string(message.viewers);
     }
     if (message.editors !== "") {
-      writer.uint32(42).string(message.editors);
+      writer.uint32(58).string(message.editors);
+    }
+    if (message.trackingNumber !== 0) {
+      writer.uint32(64).uint64(message.trackingNumber);
     }
     return writer;
   },
@@ -71,16 +100,25 @@ export const MsgPostFile = {
           message.creator = reader.string();
           break;
         case 2:
-          message.hashpath = reader.string();
+          message.account = reader.string();
           break;
         case 3:
-          message.contents = reader.string();
+          message.hashParent = reader.string();
           break;
         case 4:
-          message.viewers = reader.string();
+          message.hashChild = reader.string();
           break;
         case 5:
+          message.contents = reader.string();
+          break;
+        case 6:
+          message.viewers = reader.string();
+          break;
+        case 7:
           message.editors = reader.string();
+          break;
+        case 8:
+          message.trackingNumber = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -97,10 +135,20 @@ export const MsgPostFile = {
     } else {
       message.creator = "";
     }
-    if (object.hashpath !== undefined && object.hashpath !== null) {
-      message.hashpath = String(object.hashpath);
+    if (object.account !== undefined && object.account !== null) {
+      message.account = String(object.account);
     } else {
-      message.hashpath = "";
+      message.account = "";
+    }
+    if (object.hashParent !== undefined && object.hashParent !== null) {
+      message.hashParent = String(object.hashParent);
+    } else {
+      message.hashParent = "";
+    }
+    if (object.hashChild !== undefined && object.hashChild !== null) {
+      message.hashChild = String(object.hashChild);
+    } else {
+      message.hashChild = "";
     }
     if (object.contents !== undefined && object.contents !== null) {
       message.contents = String(object.contents);
@@ -117,16 +165,25 @@ export const MsgPostFile = {
     } else {
       message.editors = "";
     }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = Number(object.trackingNumber);
+    } else {
+      message.trackingNumber = 0;
+    }
     return message;
   },
 
   toJSON(message: MsgPostFile): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.hashpath !== undefined && (obj.hashpath = message.hashpath);
+    message.account !== undefined && (obj.account = message.account);
+    message.hashParent !== undefined && (obj.hashParent = message.hashParent);
+    message.hashChild !== undefined && (obj.hashChild = message.hashChild);
     message.contents !== undefined && (obj.contents = message.contents);
     message.viewers !== undefined && (obj.viewers = message.viewers);
     message.editors !== undefined && (obj.editors = message.editors);
+    message.trackingNumber !== undefined &&
+      (obj.trackingNumber = message.trackingNumber);
     return obj;
   },
 
@@ -137,10 +194,20 @@ export const MsgPostFile = {
     } else {
       message.creator = "";
     }
-    if (object.hashpath !== undefined && object.hashpath !== null) {
-      message.hashpath = object.hashpath;
+    if (object.account !== undefined && object.account !== null) {
+      message.account = object.account;
     } else {
-      message.hashpath = "";
+      message.account = "";
+    }
+    if (object.hashParent !== undefined && object.hashParent !== null) {
+      message.hashParent = object.hashParent;
+    } else {
+      message.hashParent = "";
+    }
+    if (object.hashChild !== undefined && object.hashChild !== null) {
+      message.hashChild = object.hashChild;
+    } else {
+      message.hashChild = "";
     }
     if (object.contents !== undefined && object.contents !== null) {
       message.contents = object.contents;
@@ -156,6 +223,11 @@ export const MsgPostFile = {
       message.editors = object.editors;
     } else {
       message.editors = "";
+    }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = object.trackingNumber;
+    } else {
+      message.trackingNumber = 0;
     }
     return message;
   },
@@ -496,12 +568,223 @@ export const MsgPostkeyResponse = {
   },
 };
 
+const baseMsgInitAccount: object = {
+  creator: "",
+  account: "",
+  rootHashpath: "",
+  editors: "",
+  key: "",
+  trackingNumber: 0,
+};
+
+export const MsgInitAccount = {
+  encode(message: MsgInitAccount, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.account !== "") {
+      writer.uint32(18).string(message.account);
+    }
+    if (message.rootHashpath !== "") {
+      writer.uint32(26).string(message.rootHashpath);
+    }
+    if (message.editors !== "") {
+      writer.uint32(34).string(message.editors);
+    }
+    if (message.key !== "") {
+      writer.uint32(42).string(message.key);
+    }
+    if (message.trackingNumber !== 0) {
+      writer.uint32(48).uint64(message.trackingNumber);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInitAccount {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInitAccount } as MsgInitAccount;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.account = reader.string();
+          break;
+        case 3:
+          message.rootHashpath = reader.string();
+          break;
+        case 4:
+          message.editors = reader.string();
+          break;
+        case 5:
+          message.key = reader.string();
+          break;
+        case 6:
+          message.trackingNumber = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgInitAccount {
+    const message = { ...baseMsgInitAccount } as MsgInitAccount;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = String(object.account);
+    } else {
+      message.account = "";
+    }
+    if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
+      message.rootHashpath = String(object.rootHashpath);
+    } else {
+      message.rootHashpath = "";
+    }
+    if (object.editors !== undefined && object.editors !== null) {
+      message.editors = String(object.editors);
+    } else {
+      message.editors = "";
+    }
+    if (object.key !== undefined && object.key !== null) {
+      message.key = String(object.key);
+    } else {
+      message.key = "";
+    }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = Number(object.trackingNumber);
+    } else {
+      message.trackingNumber = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgInitAccount): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.account !== undefined && (obj.account = message.account);
+    message.rootHashpath !== undefined &&
+      (obj.rootHashpath = message.rootHashpath);
+    message.editors !== undefined && (obj.editors = message.editors);
+    message.key !== undefined && (obj.key = message.key);
+    message.trackingNumber !== undefined &&
+      (obj.trackingNumber = message.trackingNumber);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgInitAccount>): MsgInitAccount {
+    const message = { ...baseMsgInitAccount } as MsgInitAccount;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = object.account;
+    } else {
+      message.account = "";
+    }
+    if (object.rootHashpath !== undefined && object.rootHashpath !== null) {
+      message.rootHashpath = object.rootHashpath;
+    } else {
+      message.rootHashpath = "";
+    }
+    if (object.editors !== undefined && object.editors !== null) {
+      message.editors = object.editors;
+    } else {
+      message.editors = "";
+    }
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = "";
+    }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = object.trackingNumber;
+    } else {
+      message.trackingNumber = 0;
+    }
+    return message;
+  },
+};
+
+const baseMsgInitAccountResponse: object = { trackingNumber: 0 };
+
+export const MsgInitAccountResponse = {
+  encode(
+    message: MsgInitAccountResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.trackingNumber !== 0) {
+      writer.uint32(8).uint64(message.trackingNumber);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInitAccountResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.trackingNumber = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgInitAccountResponse {
+    const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = Number(object.trackingNumber);
+    } else {
+      message.trackingNumber = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgInitAccountResponse): unknown {
+    const obj: any = {};
+    message.trackingNumber !== undefined &&
+      (obj.trackingNumber = message.trackingNumber);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<MsgInitAccountResponse>
+  ): MsgInitAccountResponse {
+    const message = { ...baseMsgInitAccountResponse } as MsgInitAccountResponse;
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = object.trackingNumber;
+    } else {
+      message.trackingNumber = 0;
+    }
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
   AddViewers(request: MsgAddViewers): Promise<MsgAddViewersResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Postkey(request: MsgPostkey): Promise<MsgPostkeyResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -540,6 +823,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) => MsgPostkeyResponse.decode(new Reader(data)));
   }
+
+  InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse> {
+    const data = MsgInitAccount.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "InitAccount",
+      data
+    );
+    return promise.then((data) =>
+      MsgInitAccountResponse.decode(new Reader(data))
+    );
+  }
 }
 
 interface Rpc {
@@ -549,6 +844,16 @@ interface Rpc {
     data: Uint8Array
   ): Promise<Uint8Array>;
 }
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -560,3 +865,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

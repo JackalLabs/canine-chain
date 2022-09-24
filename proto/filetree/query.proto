@@ -7,6 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "filetree/params.proto";
 import "filetree/files.proto";
 import "filetree/pubkey.proto";
+import "filetree/tracker.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/filetree/types";
@@ -53,6 +54,10 @@ service Query {
 		option (google.api.http).get = "/jackal-dao/canine/filetree/pubkey";
 	}
 
+// Queries a Tracker by index.
+	rpc Tracker(QueryGetTrackerRequest) returns (QueryGetTrackerResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/filetree/tracker";
+	}
 // this line is used by starport scaffolding # 2
 }
 
@@ -133,4 +138,9 @@ message QueryAllPubkeyResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+message QueryGetTrackerRequest {}
+
+message QueryGetTrackerResponse {
+	Tracker Tracker = 1 [(gogoproto.nullable) = false];
+}
 // this line is used by starport scaffolding # 3
