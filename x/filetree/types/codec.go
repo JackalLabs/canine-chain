@@ -11,6 +11,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPostFile{}, "filetree/PostFile", nil)
 	cdc.RegisterConcrete(&MsgAddViewers{}, "filetree/AddViewers", nil)
 	cdc.RegisterConcrete(&MsgPostkey{}, "filetree/Postkey", nil)
+	cdc.RegisterConcrete(&MsgInitAccount{}, "filetree/InitAccount", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -23,6 +24,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostkey{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgInitAccount{},
 	)
 	// this line is used by starport scaffolding # 3
 

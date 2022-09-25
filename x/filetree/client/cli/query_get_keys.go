@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -33,15 +34,22 @@ func CmdGetKeys() *cobra.Command {
 			}
 
 			queryClient := types.NewQueryClient(clientCtx)
-			pathString := types.MerklePath(reqHashpath)
+			trimPath := strings.TrimSuffix(reqHashpath, "/")
+			merklePath := types.MerklePath(trimPath)
 
+			//hash the owner address alone
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("o%s%s", pathString, reqOwner))) //May not need this in future
+			h.Write([]byte(fmt.Sprintf("%s", reqOwner)))
 			hash := h.Sum(nil)
-			ownerString := fmt.Sprintf("%x", hash)
+			accountHash := fmt.Sprintf("%x", hash)
+
+			H := sha256.New()
+			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash))) //May not need this in future
+			Hash := H.Sum(nil)
+			ownerString := fmt.Sprintf("%x", Hash) //Make the owner string to find the file
 
 			params := &types.QueryGetFilesRequest{
-				Address:      pathString,
+				Address:      merklePath,
 				OwnerAddress: ownerString,
 			}
 
@@ -59,15 +67,13 @@ func CmdGetKeys() *cobra.Command {
 				fmt.Println("cannot unmarshall viewers")
 				return jerr
 			}
+			//fix something here for it to work
+			addressString := keeper.MakeViewerAddress(res.Files.TrackingNumber, clientCtx.GetFromAddress().String())
 
-			addressString := keeper.MakeViewerAddress(reqHashpath, clientCtx.GetFromAddress().String())
-			fmt.Println(addressString)
-			fmt.Println(m)
 			todec := m[addressString]
-			fmt.Printf("%v\n", todec)
+
 			hexMessage, err := hex.DecodeString(todec)
 			if err != nil {
-
 				return err
 			}
 
@@ -79,7 +85,7 @@ func CmdGetKeys() *cobra.Command {
 			decrypt, err := eciesgo.Decrypt(key, hexMessage)
 			if err != nil {
 				fmt.Printf("%v\n", hexMessage)
-				return err
+				return types.ErrNoViewingAccess
 			}
 
 			fmt.Printf("DECRYPTED:\n%s\n", string(decrypt))

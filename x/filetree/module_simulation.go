@@ -36,6 +36,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPostkey int = 100
 
+	opWeightMsgInitAccount = "op_weight_msg_init_account"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgInitAccount int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -101,6 +105,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgPostkey,
 		filetreesimulation.SimulateMsgPostkey(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgInitAccount int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgInitAccount, &weightMsgInitAccount, nil,
+		func(_ *rand.Rand) {
+			weightMsgInitAccount = defaultWeightMsgInitAccount
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgInitAccount,
+		filetreesimulation.SimulateMsgInitAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
