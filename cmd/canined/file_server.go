@@ -159,7 +159,6 @@ func HashData(cmd *cobra.Command, filename string) (string, string, string) {
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
-	fmt.Printf("%s\n", fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, filename))
 	var size = 0
 	var list [][]byte
 
