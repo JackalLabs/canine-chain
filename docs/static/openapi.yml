@@ -57474,6 +57474,8 @@ definitions:
         format: uint64
   jackaldao.canine.filetree.MsgAddViewersResponse:
     type: object
+  jackaldao.canine.filetree.MsgDeleteFileResponse:
+    type: object
   jackaldao.canine.filetree.MsgInitAccountResponse:
     type: object
     properties:

@@ -11,6 +11,7 @@ service Msg {
   rpc AddViewers(MsgAddViewers) returns (MsgAddViewersResponse);
   rpc Postkey(MsgPostkey) returns (MsgPostkeyResponse);
   rpc InitAccount(MsgInitAccount) returns (MsgInitAccountResponse);
+  rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -59,6 +60,15 @@ message MsgInitAccount {
 
 message MsgInitAccountResponse {
   uint64 trackingNumber = 1;
+}
+
+message MsgDeleteFile {
+  string creator = 1;
+  string hashPath = 2;
+  string account = 3;
+}
+
+message MsgDeleteFileResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
