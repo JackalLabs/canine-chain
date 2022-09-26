@@ -131,6 +131,10 @@ import (
 	filetreemodulekeeper "github.com/jackal-dao/canine/x/filetree/keeper"
 	filetreemoduletypes "github.com/jackal-dao/canine/x/filetree/types"
 
+	lpmodule "github.com/jackal-dao/canine/x/lp"
+	lpmodulekeeper "github.com/jackal-dao/canine/x/lp/keeper"
+	lpmoduletypes "github.com/jackal-dao/canine/x/lp/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
@@ -231,6 +235,7 @@ var (
 		storagemodule.AppModuleBasic{},
 		dsigmodule.AppModuleBasic{},
 		filetreemodule.AppModuleBasic{},
+		lpmodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -247,6 +252,7 @@ var (
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
 		dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
+		lpmoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 	}
 )
 
@@ -305,6 +311,8 @@ type WasmApp struct {
 	DsigKeeper     dsigmodulekeeper.Keeper
 	FileTreeKeeper filetreemodulekeeper.Keeper
 
+	LpKeeper lpmodulekeeper.Keeper
+
 	// the module manager
 	mm *module.Manager
 
@@ -344,6 +352,7 @@ func NewWasmApp(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
 		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
+		lpmoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -601,6 +610,16 @@ func NewWasmApp(
 	)
 	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
 
+	app.LpKeeper = *lpmodulekeeper.NewKeeper(
+		appCodec,
+		keys[lpmoduletypes.StoreKey],
+		keys[lpmoduletypes.MemStoreKey],
+		app.getSubspace(lpmoduletypes.ModuleName),
+
+		app.bankKeeper,
+	)
+	lpModule := lpmodule.NewAppModule(appCodec, app.LpKeeper, app.accountKeeper, app.bankKeeper)
+
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 
@@ -664,6 +683,7 @@ func NewWasmApp(
 		storageModule,
 		dsigModule,
 		filetreeModule,
+		lpModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -697,6 +717,7 @@ func NewWasmApp(
 		storagemoduletypes.ModuleName,
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		lpmoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -726,6 +747,7 @@ func NewWasmApp(
 		storagemoduletypes.ModuleName,
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		lpmoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -763,6 +785,7 @@ func NewWasmApp(
 		storagemoduletypes.ModuleName,
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		lpmoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -796,6 +819,7 @@ func NewWasmApp(
 		transferModule,
 		rnsModule,
 		storageModule,
+		lpModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -1001,6 +1025,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
+	paramsKeeper.Subspace(lpmoduletypes.ModuleName)
 
 	return paramsKeeper
 }

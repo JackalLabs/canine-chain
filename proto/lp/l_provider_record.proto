@@ -1,0 +1,25 @@
+syntax = "proto3";
+package jackaldao.canine.lp;
+
+option go_package = "github.com/jackal-dao/canine/x/lp/types";
+
+// LProviderRecord is a record of a liquidity provider depositing to a pool.
+// It is used to enforce withdraw panelty and calculate rewards collected. 
+// This record is created only once when provider contributes to a pool and
+// only updated after witdrawal or deposit.
+// It is deleted when the provider burns all of the liquidity pool token.
+// This is stored at KVStore with 
+// 	{LProviderRecordKeyPrefix}{poolName}{provider} key.
+message LProviderRecord {
+	// Provider is the account address of the provider.
+	string provider = 1;
+	// A pool that the provider contributed to.
+	string poolName = 2;
+	// Burning LP token is locked for certain duration the after provider
+	// deposits to the pool. Unlock time is updated every succeeding deposits.
+	// The provider can burn their LP token during lock time but has to take
+	// certain amount of panelty.
+	// Unlock time is blocktime + lockDuration at time of contribution.
+	string unlockTime = 3;
+	string lockDuration = 4;
+}
