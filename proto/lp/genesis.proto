@@ -1,0 +1,18 @@
+syntax = "proto3";
+package jackaldao.canine.lp;
+
+import "gogoproto/gogo.proto";
+import "lp/params.proto";
+import "lp/l_pool.proto";
+import "lp/l_provider_record.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/jackal-dao/canine/x/lp/types";
+
+// GenesisState defines the lp module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated LPool lPoolList = 2 [(gogoproto.nullable) = false];
+  repeated LProviderRecord lProviderRecordList = 3 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
