@@ -1128,25 +1128,25 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"canine-LP", "lp", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine", "lp", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_LPool_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"canine-LP", "lp", "l_pool", "index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_LPool_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine", "lp", "l_pool", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_LPoolAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"canine-LP", "lp", "l_pool"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_LPoolAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine", "lp", "l_pool"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_LProviderRecord_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"canine-LP", "lp", "l_provider_record", "poolName", "provider"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_LProviderRecord_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine", "lp", "l_provider_record", "poolName", "provider"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_EstimateSwapOut_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"canine-LP", "lp", "estimate_out", "poolName", "inputCoin"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_EstimateSwapOut_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine", "lp", "estimate_out", "poolName", "inputCoin"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_EstimateSwapIn_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"canine-LP", "lp", "estimate_in", "poolName", "outputCoins"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_EstimateSwapIn_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine", "lp", "estimate_in", "poolName", "outputCoins"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_EstimateContribution_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"canine-LP", "lp", "estimate_contribution", "poolName", "desiredAmount"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_EstimateContribution_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine", "lp", "estimate_contribution", "poolName", "desiredAmount"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MakeValidPair_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"canine-LP", "lp", "make_pair", "poolName", "coin"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MakeValidPair_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine", "lp", "make_pair", "poolName", "coin"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_EstimatePoolRemove_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"canine-LP", "lp", "estimate_pool_remove", "amount"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_EstimatePoolRemove_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine", "lp", "estimate_pool_remove", "amount"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ListRecordsFromPool_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"canine-LP", "lp", "list_records_from_pool", "poolName"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ListRecordsFromPool_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine", "lp", "list_records_from_pool", "poolName"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

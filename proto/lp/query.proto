@@ -16,52 +16,52 @@ option go_package = "github.com/jackal-dao/canine/x/lp/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/canine-LP/lp/params";
+    option (google.api.http).get = "/jackal-dao/canine/lp/params";
   }
   // Queries a LPool by index.
 	rpc LPool(QueryGetLPoolRequest) returns (QueryGetLPoolResponse) {
-		option (google.api.http).get = "/canine-LP/lp/l_pool/{index}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/l_pool/{index}";
 	}
 
 	// Queries a list of LPool items.
 	rpc LPoolAll(QueryAllLPoolRequest) returns (QueryAllLPoolResponse) {
-		option (google.api.http).get = "/canine-LP/lp/l_pool";
+		option (google.api.http).get = "/jackal-dao/canine/lp/l_pool";
 	}
 
 // Queries a LProviderRecord by pool name and provider address.
 	rpc LProviderRecord(QueryGetLProviderRecordRequest) returns (QueryGetLProviderRecordResponse) {
-		option (google.api.http).get = "/canine-LP/lp/l_provider_record/{poolName}/{provider}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/l_provider_record/{poolName}/{provider}";
 	}
 
 // Estimate coin output from a swap.
 	rpc EstimateSwapOut(QueryEstimateSwapOutRequest) returns (QueryEstimateSwapOutResponse) {
-		option (google.api.http).get = "/canine-LP/lp/estimate_out/{poolName}/{inputCoin}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/estimate_out/{poolName}/{inputCoin}";
 	}
 
 // Estimate coin input to get desired coin output from a swap.
 	rpc EstimateSwapIn(QueryEstimateSwapInRequest) returns (QueryEstimateSwapInResponse) {
-		option (google.api.http).get = "/canine-LP/lp/estimate_in/{poolName}/{outputCoins}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/estimate_in/{poolName}/{outputCoins}";
 	}
 
 // Estimate coin inputs to get desired amount of LPToken.
 	rpc EstimateContribution(QueryEstimateContributionRequest) returns (QueryEstimateContributionResponse) {
-		option (google.api.http).get = "/canine-LP/lp/estimate_contribution/{poolName}/{desiredAmount}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/estimate_contribution/{poolName}/{desiredAmount}";
 	}
 
 // Query coins to deposit to make valid liquidity pair.
 // Input one coin and get other coins to deposit to make liquidity pair.
 	rpc MakeValidPair(QueryMakeValidPairRequest) returns (QueryMakeValidPairResponse) {
-		option (google.api.http).get = "/canine-LP/lp/make_pair/{poolName}/{coin}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/make_pair/{poolName}/{coin}";
 	}
 
 // Estimate amoutn of coins returned by burning a LPToken.
 	rpc EstimatePoolRemove(QueryEstimatePoolRemoveRequest) returns (QueryEstimatePoolRemoveResponse) {
-		option (google.api.http).get = "/canine-LP/lp/estimate_pool_remove/{amount}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/estimate_pool_remove/{amount}";
 	}
 
 // Queries a list of ListRecordsFromPool items.
 	rpc ListRecordsFromPool(QueryListRecordsFromPoolRequest) returns (QueryListRecordsFromPoolResponse) {
-		option (google.api.http).get = "/canine-LP/lp/list_records_from_pool/{poolName}";
+		option (google.api.http).get = "/jackal-dao/canine/lp/list_records_from_pool/{poolName}";
 	}
 
 // this line is used by starport scaffolding # 2

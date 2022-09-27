@@ -462,11 +462,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryEstimateContribution
    * @summary Estimate coin inputs to get desired amount of LPToken.
-   * @request GET:/canine-LP/lp/estimate_contribution/{poolName}/{desiredAmount}
+   * @request GET:/jackal-dao/canine/lp/estimate_contribution/{poolName}/{desiredAmount}
    */
   queryEstimateContribution = (poolName: string, desiredAmount: string, params: RequestParams = {}) =>
     this.request<LpQueryEstimateContributionResponse, RpcStatus>({
-      path: `/canine-LP/lp/estimate_contribution/${poolName}/${desiredAmount}`,
+      path: `/jackal-dao/canine/lp/estimate_contribution/${poolName}/${desiredAmount}`,
       method: "GET",
       format: "json",
       ...params,
@@ -478,11 +478,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryEstimateSwapIn
    * @summary Estimate coin input to get desired coin output from a swap.
-   * @request GET:/canine-LP/lp/estimate_in/{poolName}/{outputCoins}
+   * @request GET:/jackal-dao/canine/lp/estimate_in/{poolName}/{outputCoins}
    */
   queryEstimateSwapIn = (poolName: string, outputCoins: string, params: RequestParams = {}) =>
     this.request<LpQueryEstimateSwapInResponse, RpcStatus>({
-      path: `/canine-LP/lp/estimate_in/${poolName}/${outputCoins}`,
+      path: `/jackal-dao/canine/lp/estimate_in/${poolName}/${outputCoins}`,
       method: "GET",
       format: "json",
       ...params,
@@ -494,11 +494,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryEstimateSwapOut
    * @summary Estimate coin output from a swap.
-   * @request GET:/canine-LP/lp/estimate_out/{poolName}/{inputCoin}
+   * @request GET:/jackal-dao/canine/lp/estimate_out/{poolName}/{inputCoin}
    */
   queryEstimateSwapOut = (poolName: string, inputCoin: string, params: RequestParams = {}) =>
     this.request<LpQueryEstimateSwapOutResponse, RpcStatus>({
-      path: `/canine-LP/lp/estimate_out/${poolName}/${inputCoin}`,
+      path: `/jackal-dao/canine/lp/estimate_out/${poolName}/${inputCoin}`,
       method: "GET",
       format: "json",
       ...params,
@@ -510,11 +510,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryEstimatePoolRemove
    * @summary Estimate amoutn of coins returned by burning a LPToken.
-   * @request GET:/canine-LP/lp/estimate_pool_remove/{amount}
+   * @request GET:/jackal-dao/canine/lp/estimate_pool_remove/{amount}
    */
   queryEstimatePoolRemove = (amount: string, query?: { poolName?: string }, params: RequestParams = {}) =>
     this.request<LpQueryEstimatePoolRemoveResponse, RpcStatus>({
-      path: `/canine-LP/lp/estimate_pool_remove/${amount}`,
+      path: `/jackal-dao/canine/lp/estimate_pool_remove/${amount}`,
       method: "GET",
       query: query,
       format: "json",
@@ -527,7 +527,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryLPoolAll
    * @summary Queries a list of LPool items.
-   * @request GET:/canine-LP/lp/l_pool
+   * @request GET:/jackal-dao/canine/lp/l_pool
    */
   queryLPoolAll = (
     query?: {
@@ -540,7 +540,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<LpQueryAllLPoolResponse, RpcStatus>({
-      path: `/canine-LP/lp/l_pool`,
+      path: `/jackal-dao/canine/lp/l_pool`,
       method: "GET",
       query: query,
       format: "json",
@@ -553,11 +553,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryLPool
    * @summary Queries a LPool by index.
-   * @request GET:/canine-LP/lp/l_pool/{index}
+   * @request GET:/jackal-dao/canine/lp/l_pool/{index}
    */
   queryLPool = (index: string, params: RequestParams = {}) =>
     this.request<LpQueryGetLPoolResponse, RpcStatus>({
-      path: `/canine-LP/lp/l_pool/${index}`,
+      path: `/jackal-dao/canine/lp/l_pool/${index}`,
       method: "GET",
       format: "json",
       ...params,
@@ -569,11 +569,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryLProviderRecord
    * @summary Queries a LProviderRecord by pool name and provider address.
-   * @request GET:/canine-LP/lp/l_provider_record/{poolName}/{provider}
+   * @request GET:/jackal-dao/canine/lp/l_provider_record/{poolName}/{provider}
    */
   queryLProviderRecord = (poolName: string, provider: string, params: RequestParams = {}) =>
     this.request<LpQueryGetLProviderRecordResponse, RpcStatus>({
-      path: `/canine-LP/lp/l_provider_record/${poolName}/${provider}`,
+      path: `/jackal-dao/canine/lp/l_provider_record/${poolName}/${provider}`,
       method: "GET",
       format: "json",
       ...params,
@@ -585,11 +585,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryListRecordsFromPool
    * @summary Queries a list of ListRecordsFromPool items.
-   * @request GET:/canine-LP/lp/list_records_from_pool/{poolName}
+   * @request GET:/jackal-dao/canine/lp/list_records_from_pool/{poolName}
    */
   queryListRecordsFromPool = (poolName: string, params: RequestParams = {}) =>
     this.request<LpQueryListRecordsFromPoolResponse, RpcStatus>({
-      path: `/canine-LP/lp/list_records_from_pool/${poolName}`,
+      path: `/jackal-dao/canine/lp/list_records_from_pool/${poolName}`,
       method: "GET",
       format: "json",
       ...params,
@@ -602,11 +602,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
  * @name QueryMakeValidPair
  * @summary Query coins to deposit to make valid liquidity pair.
 Input one coin and get other coins to deposit to make liquidity pair.
- * @request GET:/canine-LP/lp/make_pair/{poolName}/{coin}
+ * @request GET:/jackal-dao/canine/lp/make_pair/{poolName}/{coin}
  */
   queryMakeValidPair = (poolName: string, coin: string, params: RequestParams = {}) =>
     this.request<LpQueryMakeValidPairResponse, RpcStatus>({
-      path: `/canine-LP/lp/make_pair/${poolName}/${coin}`,
+      path: `/jackal-dao/canine/lp/make_pair/${poolName}/${coin}`,
       method: "GET",
       format: "json",
       ...params,
@@ -618,11 +618,11 @@ Input one coin and get other coins to deposit to make liquidity pair.
    * @tags Query
    * @name QueryParams
    * @summary Parameters queries the parameters of the module.
-   * @request GET:/canine-LP/lp/params
+   * @request GET:/jackal-dao/canine/lp/params
    */
   queryParams = (params: RequestParams = {}) =>
     this.request<LpQueryParamsResponse, RpcStatus>({
-      path: `/canine-LP/lp/params`,
+      path: `/jackal-dao/canine/lp/params`,
       method: "GET",
       format: "json",
       ...params,
