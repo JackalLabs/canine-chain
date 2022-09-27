@@ -49,6 +49,14 @@ export interface MsgInitAccountResponse {
   trackingNumber: number;
 }
 
+export interface MsgDeleteFile {
+  creator: string;
+  hashPath: string;
+  account: string;
+}
+
+export interface MsgDeleteFileResponse {}
+
 const baseMsgPostFile: object = {
   creator: "",
   account: "",
@@ -778,13 +786,141 @@ export const MsgInitAccountResponse = {
   },
 };
 
+const baseMsgDeleteFile: object = { creator: "", hashPath: "", account: "" };
+
+export const MsgDeleteFile = {
+  encode(message: MsgDeleteFile, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.hashPath !== "") {
+      writer.uint32(18).string(message.hashPath);
+    }
+    if (message.account !== "") {
+      writer.uint32(26).string(message.account);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgDeleteFile {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgDeleteFile } as MsgDeleteFile;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.hashPath = reader.string();
+          break;
+        case 3:
+          message.account = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgDeleteFile {
+    const message = { ...baseMsgDeleteFile } as MsgDeleteFile;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.hashPath !== undefined && object.hashPath !== null) {
+      message.hashPath = String(object.hashPath);
+    } else {
+      message.hashPath = "";
+    }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = String(object.account);
+    } else {
+      message.account = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgDeleteFile): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.hashPath !== undefined && (obj.hashPath = message.hashPath);
+    message.account !== undefined && (obj.account = message.account);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgDeleteFile>): MsgDeleteFile {
+    const message = { ...baseMsgDeleteFile } as MsgDeleteFile;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.hashPath !== undefined && object.hashPath !== null) {
+      message.hashPath = object.hashPath;
+    } else {
+      message.hashPath = "";
+    }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = object.account;
+    } else {
+      message.account = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgDeleteFileResponse: object = {};
+
+export const MsgDeleteFileResponse = {
+  encode(_: MsgDeleteFileResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgDeleteFileResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgDeleteFileResponse } as MsgDeleteFileResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgDeleteFileResponse {
+    const message = { ...baseMsgDeleteFileResponse } as MsgDeleteFileResponse;
+    return message;
+  },
+
+  toJSON(_: MsgDeleteFileResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgDeleteFileResponse>): MsgDeleteFileResponse {
+    const message = { ...baseMsgDeleteFileResponse } as MsgDeleteFileResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
   AddViewers(request: MsgAddViewers): Promise<MsgAddViewersResponse>;
   Postkey(request: MsgPostkey): Promise<MsgPostkeyResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  DeleteFile(request: MsgDeleteFile): Promise<MsgDeleteFileResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -833,6 +969,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgInitAccountResponse.decode(new Reader(data))
+    );
+  }
+
+  DeleteFile(request: MsgDeleteFile): Promise<MsgDeleteFileResponse> {
+    const data = MsgDeleteFile.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "DeleteFile",
+      data
+    );
+    return promise.then((data) =>
+      MsgDeleteFileResponse.decode(new Reader(data))
     );
   }
 }

@@ -58422,8 +58422,17 @@ definitions:
           Unlock time is blocktime + lockDuration at time of contribution.
       lockDuration:
         type: string
+<<<<<<< HEAD
+        format: uint64
+  jackaldao.canine.filetree.MsgAddViewersResponse:
+    type: object
+  jackaldao.canine.filetree.MsgDeleteFileResponse:
+    type: object
+  jackaldao.canine.filetree.MsgInitAccountResponse:
+=======
     description: "LProviderRecord is a record of a liquidity provider depositing to a pool.\nIt is used to enforce withdraw panelty and calculate rewards collected. \nThis record is created only once when provider contributes to a pool and\nonly updated after witdrawal or deposit.\nIt is deleted when the provider burns all of the liquidity pool token.\nThis is stored at KVStore with \n\t{LProviderRecordKeyPrefix}{poolName}{provider} key."
   jackaldao.canine.lp.MsgCreateLPoolResponse:
+>>>>>>> master
     type: object
     properties:
       id:

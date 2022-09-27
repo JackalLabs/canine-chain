@@ -4,15 +4,14 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	filetypes "github.com/jackal-dao/canine/x/filetree/types"
@@ -77,6 +76,47 @@ func CmdPostFile() *cobra.Command {
 				if err != nil {
 					return err
 				}
+				//So, we're decoding it from Bech32, and then using .String(), the Stringer interface, to convert it back to bech32...unnecessary?
+				fmt.Println("Account is", v)
+				fmt.Println("key is", key)
+				fmt.Println("key is", key.String())
+				os.Exit(0)
+
+				queryClient := filetypes.NewQueryClient(clientCtx)
+
+				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
+				if err != nil {
+					return types.ErrPubKeyNotFound
+				}
+
+				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+				if err != nil {
+					return err
+				}
+
+				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(argKeys))
+				if err != nil {
+					return err
+				}
+
+				h := sha256.New()
+				h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, v)))
+				hash := h.Sum(nil)
+
+				addressString := fmt.Sprintf("%x", hash)
+
+				viewers[addressString] = fmt.Sprintf("%x", encrypted)
+			}
+
+			for _, v := range editorAddresses {
+				if len(v) < 1 {
+					continue
+				}
+
+				key, err := sdk.AccAddressFromBech32(v)
+				if err != nil {
+					return err
+				}
 
 				queryClient := filetypes.NewQueryClient(clientCtx)
 				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
@@ -95,51 +135,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, v))) //this used to be the human readable path. This shall be addressed in slack.
-				hash := h.Sum(nil)
-
-				addressString := fmt.Sprintf("%x", hash)
-
-				viewers[addressString] = fmt.Sprintf("%x", encrypted)
-			}
-
-			for _, v := range editorAddresses {
-				if len(v) < 1 {
-					continue
-				}
-				fmt.Println(v)
-
-				key, err := sdk.AccAddressFromBech32(v)
-				if err != nil {
-					return err
-				}
-
-				queryClient := authtypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Account(cmd.Context(), &authtypes.QueryAccountRequest{Address: key.String()})
-				if err != nil {
-					return err
-				}
-
-				var acc authtypes.BaseAccount
-
-				err = acc.Unmarshal(res.Account.Value)
-				if err != nil {
-					return err
-				}
-				var pkey secp256k1.PubKey
-
-				err = pkey.Unmarshal(acc.PubKey.Value)
-				if err != nil {
-					return err
-				}
-
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Key, []byte(argKeys))
-				if err != nil {
-					return err
-				}
-
-				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%d%s", trackingNumber, v))) //this used to be the human readable path. This shall be addressed in slack.
+				h.Write([]byte(fmt.Sprintf("e%d%s", trackingNumber, v)))
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)

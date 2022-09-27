@@ -82,7 +82,7 @@ func CmdInitAccount() *cobra.Command {
 			hash := h.Sum(nil)
 
 			accountHash := fmt.Sprintf("%x", hash)
-
+			//FE will init their own root folders, but we are creating home/ in the CLI for visualizing the work flow
 			msgInitRoot := types.NewMsgInitAccount(
 				clientCtx.GetFromAddress().String(),
 				accountHash,

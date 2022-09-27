@@ -15,15 +15,20 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 		Address: msg.Creator, //create public key for message caller
 		Key:     msg.Key,
 	}
+
 	k.SetPubkey(ctx, pubKey)
+
+	//free RNS name
 
 	//msg.Account was already hex(hashed) before it go to here.
 	//make the full OwnerAddress
 
 	ownerAddress := MakeOwnerAddress(msg.RootHashpath, msg.Account)
 
+	//These addresses in the viewer access and editor access below are not one
+	//And the same as the wallet address
 	file := types.Files{
-		Contents:       "home/", //might hex this later but leaving it here for now to see it in swagger
+		Contents:       "Root/", //might hex this later but leaving it here for now to see it in swagger
 		Owner:          ownerAddress,
 		ViewingAccess:  fmt.Sprintf("%x", "NONE"), //dummy var, no viewing access
 		EditAccess:     msg.Editors,
