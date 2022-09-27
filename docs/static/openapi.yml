@@ -33301,7 +33301,7 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
-  '/canine-LP/lp/estimate_contribution/{poolName}/{desiredAmount}':
+  '/jackal-dao/canine/lp/estimate_contribution/{poolName}/{desiredAmount}':
     get:
       summary: Estimate coin inputs to get desired amount of LPToken.
       operationId: JackaldaoCanineLpEstimateContribution
@@ -33357,7 +33357,7 @@ paths:
           type: string
       tags:
         - Query
-  '/canine-LP/lp/estimate_in/{poolName}/{outputCoins}':
+  '/jackal-dao/canine/lp/estimate_in/{poolName}/{outputCoins}':
     get:
       summary: Estimate coin input to get desired coin output from a swap.
       operationId: JackaldaoCanineLpEstimateSwapIn
@@ -33411,7 +33411,7 @@ paths:
           type: string
       tags:
         - Query
-  '/canine-LP/lp/estimate_out/{poolName}/{inputCoin}':
+  '/jackal-dao/canine/lp/estimate_out/{poolName}/{inputCoin}':
     get:
       summary: Estimate coin output from a swap.
       operationId: JackaldaoCanineLpEstimateSwapOut
@@ -33465,7 +33465,7 @@ paths:
           type: string
       tags:
         - Query
-  '/canine-LP/lp/estimate_pool_remove/{amount}':
+  '/jackal-dao/canine/lp/estimate_pool_remove/{amount}':
     get:
       summary: Estimate amoutn of coins returned by burning a LPToken.
       operationId: JackaldaoCanineLpEstimatePoolRemove
@@ -33521,7 +33521,7 @@ paths:
           type: string
       tags:
         - Query
-  /canine-LP/lp/l_pool:
+  /jackal-dao/canine/lp/l_pool:
     get:
       summary: Queries a list of LPool items.
       operationId: JackaldaoCanineLpLPoolAll
@@ -33678,7 +33678,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/canine-LP/lp/l_pool/{index}':
+  '/jackal-dao/canine/lp/l_pool/{index}':
     get:
       summary: Queries a LPool by index.
       operationId: JackaldaoCanineLpLPool
@@ -33753,7 +33753,7 @@ paths:
           type: string
       tags:
         - Query
-  '/canine-LP/lp/l_provider_record/{poolName}/{provider}':
+  '/jackal-dao/canine/lp/l_provider_record/{poolName}/{provider}':
     get:
       summary: Queries a LProviderRecord by pool name and provider address.
       operationId: JackaldaoCanineLpLProviderRecord
@@ -33820,7 +33820,7 @@ paths:
           type: string
       tags:
         - Query
-  '/canine-LP/lp/list_records_from_pool/{poolName}':
+  '/jackal-dao/canine/lp/list_records_from_pool/{poolName}':
     get:
       summary: Queries a list of ListRecordsFromPool items.
       operationId: JackaldaoCanineLpListRecordsFromPool
@@ -33885,7 +33885,7 @@ paths:
           type: string
       tags:
         - Query
-  '/canine-LP/lp/make_pair/{poolName}/{coin}':
+  '/jackal-dao/canine/lp/make_pair/{poolName}/{coin}':
     get:
       summary: |-
         Query coins to deposit to make valid liquidity pair.
@@ -33941,7 +33941,7 @@ paths:
           type: string
       tags:
         - Query
-  /canine-LP/lp/params:
+  /jackal-dao/canine/lp/params:
     get:
       summary: Parameters queries the parameters of the module.
       operationId: JackaldaoCanineLpParams
