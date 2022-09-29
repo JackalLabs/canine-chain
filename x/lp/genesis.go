@@ -1,9 +1,9 @@
 package lp
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/lp/keeper"
 	"github.com/jackal-dao/canine/x/lp/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

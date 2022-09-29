@@ -3,11 +3,11 @@ package simulation
 import (
 	"math/rand"
 
-	"github.com/jackal-dao/canine/x/lp/keeper"
-	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/jackal-dao/canine/x/lp/keeper"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 func SimulateMsgCreateLPool(

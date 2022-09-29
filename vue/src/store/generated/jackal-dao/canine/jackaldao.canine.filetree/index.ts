@@ -383,21 +383,6 @@ export default {
 		},
 		
 		
-		async sendMsgAddViewers({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgAddViewers(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgAddViewers:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgInitAccount({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -428,21 +413,6 @@ export default {
 				}
 			}
 		},
-		async sendMsgPostkey({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgPostkey(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgPostkey:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgDeleteFile({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -458,20 +428,37 @@ export default {
 				}
 			}
 		},
-		
-		async MsgAddViewers({ rootGetters }, { value }) {
+		async sendMsgPostkey({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgAddViewers(value)
-				return msg
+				const msg = await txClient.msgPostkey(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgAddViewers:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgPostkey:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
+		async sendMsgAddViewers({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgAddViewers(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgAddViewers:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		
 		async MsgInitAccount({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -498,6 +485,19 @@ export default {
 				}
 			}
 		},
+		async MsgDeleteFile({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgDeleteFile(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteFile:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDeleteFile:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgPostkey({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -511,16 +511,16 @@ export default {
 				}
 			}
 		},
-		async MsgDeleteFile({ rootGetters }, { value }) {
+		async MsgAddViewers({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDeleteFile(value)
+				const msg = await txClient.msgAddViewers(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteFile:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgDeleteFile:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgAddViewers:Create Could not create message: ' + e.message)
 				}
 			}
 		},

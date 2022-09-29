@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
@@ -42,7 +42,7 @@ func GetSwapFeeCost(swapFee string, coin sdk.Coin) (sdk.Coin, error) {
 	if err != nil {
 		return coin, err
 	}
-		
+
 	feeAmt := sfm.MulInt(coin.Amount)
 	return sdk.NewCoin(coin.GetDenom(), feeAmt.RoundInt()), nil
 }
@@ -70,12 +70,12 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 		}
 	}
 
-	swapFeeCoin, err := GetSwapFeeCost(pool.SwapFeeMulti, depositCoin) 
+	swapFeeCoin, err := GetSwapFeeCost(pool.SwapFeeMulti, depositCoin)
 	// Something went wrong when LPool was initialized
 	// SwapFeeMulti saved in string format that could not be parsed
 	// by sdk.Dec NewDecFromStr()
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Internal error! Location: Swap()" + 
+		return nil, errors.New(fmt.Sprintf("Internal error! Location: Swap()"+
 			" Failed to parse SwapFeeMulti: %s, err: %s", pool.SwapFeeMulti, err))
 	}
 

@@ -3,14 +3,14 @@ package cli
 import (
 	"strconv"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/spf13/cobra"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var _ = strconv.Itoa(0)

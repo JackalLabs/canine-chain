@@ -4,10 +4,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 func SortDenoms(denoms []string) []string {
@@ -99,15 +99,15 @@ func (k Keeper) NewLPool(ctx sdk.Context, msg *types.MsgCreateLPool) types.LPool
 	poolName := generatePoolName(normCoins)
 
 	var pool = types.LPool{
-		Index : poolName,
-		Name: poolName,
-		Coins: normCoins,
-		AMM_Id: msg.Amm_Id,
-		SwapFeeMulti: msg.SwapFeeMulti,
+		Index:           poolName,
+		Name:            poolName,
+		Coins:           normCoins,
+		AMM_Id:          msg.Amm_Id,
+		SwapFeeMulti:    msg.SwapFeeMulti,
 		MinLockDuration: msg.MinLockDuration,
-		PenaltyMulti: msg.PenaltyMulti,
+		PenaltyMulti:    msg.PenaltyMulti,
 		// NOTE: use chain token alias
-		LptokenDenom: generatePoolName(normCoins) + "-JKL",
+		LptokenDenom:   generatePoolName(normCoins) + "-JKL",
 		LPTokenBalance: ""}
 
 	return pool

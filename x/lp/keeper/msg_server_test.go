@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	keepertest "github.com/jackal-dao/canine/testutil/keeper"
 	"github.com/jackal-dao/canine/x/lp/keeper"
 	"github.com/jackal-dao/canine/x/lp/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {

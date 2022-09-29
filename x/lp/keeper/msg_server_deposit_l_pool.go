@@ -3,9 +3,9 @@ package keeper
 import (
 	"context"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 func (k Keeper) validateDepositLPoolMsg(ctx sdk.Context, msg *types.MsgDepositLPool) error {
@@ -85,7 +85,7 @@ func (k msgServer) DepositLPool(goCtx context.Context, msg *types.MsgDepositLPoo
 	pool.LPTokenBalance = poolTotalToken.String()
 
 	k.SetLPool(ctx, pool)
-	
+
 	// Initialize LProviderRecord
 	lockDuration := GetDuration(msg.LockDuration)
 
@@ -102,7 +102,6 @@ func (k msgServer) DepositLPool(goCtx context.Context, msg *types.MsgDepositLPoo
 		record.LockDuration = lockDuration.String()
 		k.SetLProviderRecord(ctx, record)
 	}
-
 
 	err = k.EngageLock(ctx, recordKey)
 

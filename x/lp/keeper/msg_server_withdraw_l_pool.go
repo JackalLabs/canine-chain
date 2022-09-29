@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 func (k Keeper) validateWithdrawLPool(ctx sdk.Context, msg *types.MsgWithdrawLPool) error {
@@ -51,16 +51,16 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 	// If LPToken is still locked, take panelty.
 	recordKey := types.LProviderRecordKey(pool.Name, creatorAcc.String())
 	record, _ := k.GetLProviderRecord(ctx, recordKey)
-	
-	unlockTime, _ := StringToTime(record.UnlockTime) 
+
+	unlockTime, _ := StringToTime(record.UnlockTime)
 
 	// This is used to calculate amount of coins to return
 	penaltyShare := sdk.NewInt(msg.Shares)
 
 	pm, err := sdk.NewDecFromStr(pool.PenaltyMulti)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Failed to convert penalty" +
-		" multiplier; saved in invalid format: %s err: %s",
+		return nil, errors.New(fmt.Sprintf("Failed to convert penalty"+
+			" multiplier; saved in invalid format: %s err: %s",
 			pool.PenaltyMulti, err))
 	}
 	if ctx.BlockTime().Before(unlockTime) {
@@ -73,7 +73,7 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,
-			"Failed to calculate pool share burn return",	
+			"Failed to calculate pool share burn return",
 		)
 	}
 
@@ -81,7 +81,7 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 
 	// Transfer LPToken to module
 	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAcc, types.ModuleName, burninLToken)
-	
+
 	if sdkErr != nil {
 		return nil, sdkErr
 	}
@@ -106,7 +106,7 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 	totalShares = totalShares.Sub(sdk.NewInt(msg.Shares))
 
 	pool.Coins = poolCoins
-	pool.LPTokenBalance= totalShares.String()
+	pool.LPTokenBalance = totalShares.String()
 
 	k.SetLPool(ctx, pool)
 
