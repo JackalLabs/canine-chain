@@ -24,7 +24,19 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgCreateNotifications = "op_weight_msg_notifications"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateNotifications int = 100
+
+	opWeightMsgUpdateNotifications = "op_weight_msg_notifications"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateNotifications int = 100
+
+	opWeightMsgDeleteNotifications = "op_weight_msg_notifications"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteNotifications int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -35,6 +47,16 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	notificationsGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		NotificationsList: []types.Notifications{
+			{
+				Creator: sample.AccAddress(),
+				Count:   0,
+			},
+			{
+				Creator: sample.AccAddress(),
+				Count:   1,
+			},
+		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&notificationsGenesis)
@@ -57,6 +79,39 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgCreateNotifications int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateNotifications, &weightMsgCreateNotifications, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateNotifications = defaultWeightMsgCreateNotifications
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateNotifications,
+		notificationssimulation.SimulateMsgCreateNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateNotifications int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateNotifications, &weightMsgUpdateNotifications, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateNotifications = defaultWeightMsgUpdateNotifications
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateNotifications,
+		notificationssimulation.SimulateMsgUpdateNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteNotifications int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteNotifications, &weightMsgDeleteNotifications, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteNotifications = defaultWeightMsgDeleteNotifications
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteNotifications,
+		notificationssimulation.SimulateMsgDeleteNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 

@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "notifications/params.proto";
+import "notifications/notifications.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/notifications/types";
@@ -15,7 +16,22 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackal-dao/canine/notifications/params";
   }
-  // this line is used by starport scaffolding # 2
+  // Queries a Notifications by index.
+	rpc Notifications(QueryGetNotificationsRequest) returns (QueryGetNotificationsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/notifications/notifications/{count}";
+	}
+
+	// Queries a list of Notifications items.
+	rpc NotificationsAll(QueryAllNotificationsRequest) returns (QueryAllNotificationsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/notifications/notifications";
+	}
+
+// Queries a list of FilteredNotifications items.
+	rpc FilteredNotifications(QueryFilteredNotificationsRequest) returns (QueryFilteredNotificationsResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/notifications/filtered_notifications/{maxCount}";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,6 +41,32 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetNotificationsRequest {
+	  uint64 count = 1;
+
+}
+
+message QueryGetNotificationsResponse {
+	Notifications notifications = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllNotificationsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllNotificationsResponse {
+	repeated Notifications notifications = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryFilteredNotificationsRequest {
+  uint64 maxCount = 1;
+}
+
+message QueryFilteredNotificationsResponse {
+	repeated Notifications notifications = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3
