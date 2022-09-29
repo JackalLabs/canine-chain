@@ -18,7 +18,7 @@ service Query {
   }
   // Queries a Notifications by index.
 	rpc Notifications(QueryGetNotificationsRequest) returns (QueryGetNotificationsResponse) {
-		option (google.api.http).get = "/jackal-dao/canine/notifications/notifications/{count}";
+		option (google.api.http).get = "/jackal-dao/canine/notifications/notifications/{count}/{address}";
 	}
 
 	// Queries a list of Notifications items.
@@ -28,7 +28,7 @@ service Query {
 
 // Queries a list of FilteredNotifications items.
 	rpc FilteredNotifications(QueryFilteredNotificationsRequest) returns (QueryFilteredNotificationsResponse) {
-		option (google.api.http).get = "/jackal-dao/canine/notifications/filtered_notifications/{maxCount}";
+		option (google.api.http).get = "/jackal-dao/canine/notifications/filtered_notifications/{maxCount}/{address}";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -45,6 +45,7 @@ message QueryParamsResponse {
 
 message QueryGetNotificationsRequest {
 	  uint64 count = 1;
+	  string address = 2; 
 
 }
 
@@ -63,6 +64,7 @@ message QueryAllNotificationsResponse {
 
 message QueryFilteredNotificationsRequest {
   uint64 maxCount = 1;
+  string address = 2; 
 }
 
 message QueryFilteredNotificationsResponse {

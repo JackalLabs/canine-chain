@@ -15,6 +15,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 	_, isFound := k.GetNotifications(
 		ctx,
 		msg.Count,
+		msg.Address,
 	)
 	if isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
@@ -41,6 +42,7 @@ func (k msgServer) UpdateNotifications(goCtx context.Context, msg *types.MsgUpda
 	valFound, isFound := k.GetNotifications(
 		ctx,
 		msg.Count,
+		msg.Address,
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -70,6 +72,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 	valFound, isFound := k.GetNotifications(
 		ctx,
 		msg.Count,
+		msg.Creator, //this needs to be fleshed out with permissions checking
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -83,6 +86,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 	k.RemoveNotifications(
 		ctx,
 		msg.Count,
+		msg.Creator, //this needs to be fleshed out with permissions checking
 	)
 
 	return &types.MsgDeleteNotificationsResponse{}, nil

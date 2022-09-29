@@ -48,6 +48,7 @@ func (k Keeper) Notifications(c context.Context, req *types.QueryGetNotification
 	val, found := k.GetNotifications(
 		ctx,
 		req.Count,
+		req.Address,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")

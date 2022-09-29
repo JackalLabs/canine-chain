@@ -22,6 +22,7 @@ func (k Keeper) FilteredNotifications(c context.Context, req *types.QueryFiltere
 		val, found := k.GetNotifications(
 			ctx,
 			i,
+			req.Address,
 		)
 		if !found {
 			return nil, status.Error(codes.NotFound, "not found")

@@ -31,7 +31,7 @@ func SimulateMsgCreateNotifications(
 			Count:   uint64(i),
 		}
 
-		_, found := k.GetNotifications(ctx, msg.Count)
+		_, found := k.GetNotifications(ctx, msg.Count, msg.Address)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Notifications already exist"), nil, nil
 		}

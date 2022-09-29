@@ -33987,7 +33987,7 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
-  '/jackal-dao/canine/notifications/filtered_notifications/{maxCount}':
+  '/jackal-dao/canine/notifications/filtered_notifications/{maxCount}/{address}':
     get:
       summary: Queries a list of FilteredNotifications items.
       operationId: JackaldaoCanineNotificationsFilteredNotifications
@@ -34035,6 +34035,10 @@ paths:
           required: true
           type: string
           format: uint64
+        - name: address
+          in: path
+          required: true
+          type: string
       tags:
         - Query
   /jackal-dao/canine/notifications/notifications:
@@ -34165,7 +34169,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/jackal-dao/canine/notifications/notifications/{count}':
+  '/jackal-dao/canine/notifications/notifications/{count}/{address}':
     get:
       summary: Queries a Notifications by index.
       operationId: JackaldaoCanineNotificationsNotifications
@@ -34211,6 +34215,10 @@ paths:
           required: true
           type: string
           format: uint64
+        - name: address
+          in: path
+          required: true
+          type: string
       tags:
         - Query
   /jackal-dao/canine/notifications/params:
