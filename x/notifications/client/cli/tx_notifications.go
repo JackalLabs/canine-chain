@@ -11,15 +11,15 @@ import (
 
 func CmdCreateNotifications() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-notifications [count] [notification] [address]",
+		Use:   "create-notifications [notification] [address]",
 		Short: "Create a new notifications",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			// Get indexes
-			indexCount, err := cast.ToUint64E(args[0])
-			if err != nil {
-				return err
-			}
+			// // Get indexes
+			// indexCount, err := cast.ToUint64E(args[0])
+			// if err != nil {
+			// 	return err
+			// }
 
 			// Get value arguments
 			argNotification := args[1]
@@ -28,7 +28,7 @@ func CmdCreateNotifications() *cobra.Command {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
-			}
+			} //possible to get their Counter from keeper? Yeah it would make things seemless
 
 			msg := types.NewMsgCreateNotifications(
 				clientCtx.GetFromAddress().String(),

@@ -285,29 +285,16 @@ export default {
 		},
 		
 		
-		async sendMsgCreateNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgSetCounter({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineNotifications.tx.sendMsgCreateNotifications({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineNotifications.tx.sendMsgSetCounter({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateNotifications:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSetCounter:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateNotifications:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgUpdateNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineNotifications.tx.sendMsgUpdateNotifications({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateNotifications:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUpdateNotifications:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgSetCounter:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -324,43 +311,43 @@ export default {
 				}
 			}
 		},
-		async sendMsgSetCounter({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgUpdateNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineNotifications.tx.sendMsgSetCounter({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineNotifications.tx.sendMsgUpdateNotifications({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetCounter:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateNotifications:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgSetCounter:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgUpdateNotifications:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCreateNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineNotifications.tx.sendMsgCreateNotifications({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateNotifications:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateNotifications:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgCreateNotifications({ rootGetters }, { value }) {
+		async MsgSetCounter({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineNotifications.tx.msgCreateNotifications({value})
+				const msg = await client.JackaldaoCanineNotifications.tx.msgSetCounter({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateNotifications:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSetCounter:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateNotifications:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgUpdateNotifications({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineNotifications.tx.msgUpdateNotifications({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateNotifications:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUpdateNotifications:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgSetCounter:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -377,16 +364,29 @@ export default {
 				}
 			}
 		},
-		async MsgSetCounter({ rootGetters }, { value }) {
+		async MsgUpdateNotifications({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineNotifications.tx.msgSetCounter({value})
+				const msg = await client.JackaldaoCanineNotifications.tx.msgUpdateNotifications({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetCounter:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateNotifications:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgSetCounter:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgUpdateNotifications:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateNotifications({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineNotifications.tx.msgCreateNotifications({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateNotifications:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateNotifications:Create Could not create message: ' + e.message)
 				}
 			}
 		},

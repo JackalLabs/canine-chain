@@ -11,10 +11,19 @@ import (
 func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCreateNotifications) (*types.MsgCreateNotificationsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// Find the notiCounter
+	notiCounter, found := k.GetNotiCounter(
+		ctx,
+		msg.Address,
+	)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Recipients notiCounter not set")
+	}
+
 	// Check if the value already exists
 	_, isFound := k.GetNotifications(
 		ctx,
-		msg.Count,
+		notiCounter.Counter,
 		msg.Address,
 	)
 	if isFound {
@@ -23,7 +32,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 
 	var notifications = types.Notifications{
 		Creator:      msg.Creator,
-		Count:        msg.Count,
+		Count:        notiCounter.Counter,
 		Notification: msg.Notification,
 		Address:      msg.Address,
 	}
@@ -32,6 +41,13 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		ctx,
 		notifications,
 	)
+
+	notiCounter.Counter += 1
+	k.SetNotiCounter(
+		ctx,
+		notiCounter,
+	)
+
 	return &types.MsgCreateNotificationsResponse{}, nil
 }
 

@@ -29,12 +29,13 @@ import { Module as JackaldaoCanineDsig, msgTypes as JackaldaoCanineDsigMsgTypes 
 import { Module as JackaldaoCanineFiletree, msgTypes as JackaldaoCanineFiletreeMsgTypes } from './jackaldao.canine.filetree'
 import { Module as JackaldaoCanineJklmint, msgTypes as JackaldaoCanineJklmintMsgTypes } from './jackaldao.canine.jklmint'
 import { Module as JackaldaoCanineLp, msgTypes as JackaldaoCanineLpMsgTypes } from './jackaldao.canine.lp'
+import { Module as JackaldaoCanineNotifications, msgTypes as JackaldaoCanineNotificationsMsgTypes } from './jackaldao.canine.notifications'
 import { Module as JackaldaoCanineRns, msgTypes as JackaldaoCanineRnsMsgTypes } from './jackaldao.canine.rns'
 import { Module as JackaldaoCanineStorage, msgTypes as JackaldaoCanineStorageMsgTypes } from './jackaldao.canine.storage'
 
 
 const Client = IgniteClient.plugin([
-    CosmosAuthV1Beta1, CosmosAuthzV1Beta1, CosmosBankV1Beta1, CosmosBaseTendermintV1Beta1, CosmosCrisisV1Beta1, CosmosDistributionV1Beta1, CosmosEvidenceV1Beta1, CosmosFeegrantV1Beta1, CosmosGovV1Beta1, CosmosParamsV1Beta1, CosmosSlashingV1Beta1, CosmosStakingV1Beta1, CosmosTxV1Beta1, CosmosUpgradeV1Beta1, CosmosVestingV1Beta1, CosmwasmWasmV1, IbcApplicationsInterchainAccountsControllerV1, IbcApplicationsInterchainAccountsHostV1, IbcApplicationsTransferV1, IbcCoreChannelV1, IbcCoreClientV1, IbcCoreConnectionV1, Intertx, JackaldaoCanineDsig, JackaldaoCanineFiletree, JackaldaoCanineJklmint, JackaldaoCanineLp, JackaldaoCanineRns, JackaldaoCanineStorage
+    CosmosAuthV1Beta1, CosmosAuthzV1Beta1, CosmosBankV1Beta1, CosmosBaseTendermintV1Beta1, CosmosCrisisV1Beta1, CosmosDistributionV1Beta1, CosmosEvidenceV1Beta1, CosmosFeegrantV1Beta1, CosmosGovV1Beta1, CosmosParamsV1Beta1, CosmosSlashingV1Beta1, CosmosStakingV1Beta1, CosmosTxV1Beta1, CosmosUpgradeV1Beta1, CosmosVestingV1Beta1, CosmwasmWasmV1, IbcApplicationsInterchainAccountsControllerV1, IbcApplicationsInterchainAccountsHostV1, IbcApplicationsTransferV1, IbcCoreChannelV1, IbcCoreClientV1, IbcCoreConnectionV1, Intertx, JackaldaoCanineDsig, JackaldaoCanineFiletree, JackaldaoCanineJklmint, JackaldaoCanineLp, JackaldaoCanineNotifications, JackaldaoCanineRns, JackaldaoCanineStorage
 ]);
 
 const registry = new Registry([
@@ -65,6 +66,7 @@ const registry = new Registry([
   ...JackaldaoCanineFiletreeMsgTypes,
   ...JackaldaoCanineJklmintMsgTypes,
   ...JackaldaoCanineLpMsgTypes,
+  ...JackaldaoCanineNotificationsMsgTypes,
   ...JackaldaoCanineRnsMsgTypes,
   ...JackaldaoCanineStorageMsgTypes,
   

@@ -269,19 +269,6 @@ export default {
 				}
 			}
 		},
-		async sendMsgSignform({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineDsig.tx.sendMsgSignform({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSignform:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgSignform:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgCreateform({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -292,6 +279,19 @@ export default {
 					throw new Error('TxClient:MsgCreateform:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgCreateform:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgSignform({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineDsig.tx.sendMsgSignform({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSignform:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSignform:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -309,19 +309,6 @@ export default {
 				}
 			}
 		},
-		async MsgSignform({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineDsig.tx.msgSignform({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSignform:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgSignform:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgCreateform({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -332,6 +319,19 @@ export default {
 					throw new Error('TxClient:MsgCreateform:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgCreateform:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgSignform({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineDsig.tx.msgSignform({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSignform:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgSignform:Create Could not create message: ' + e.message)
 				}
 			}
 		},
