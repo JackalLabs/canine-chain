@@ -1,0 +1,43 @@
+{
+  "name": "hsl-triad",
+  "version": "1.0.0",
+  "description": "Generate a color triad.",
+  "license": "MIT",
+  "repository": "usemeta/hsl-triad",
+  "author": {
+    "name": "Tobias Herber",
+    "email": "tobihrbr@gmail.com",
+    "url": "https://tobihrbr.com"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "hsl",
+    "triad",
+    "color",
+    "colors"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "codecov": "^3.1.0",
+    "jest": "^23.6.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage",
+    "coverageReporters": [
+      "lcov",
+      "text"
+    ],
+    "testMatch": [
+      "**/test/**"
+    ]
+  }
+}

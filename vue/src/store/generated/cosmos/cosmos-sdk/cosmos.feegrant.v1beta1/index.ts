@@ -46,7 +46,6 @@ const getDefaultState = () => {
 	return {
 				Allowance: {},
 				Allowances: {},
-				AllowancesByGranter: {},
 				
 				_Structure: {
 						BasicAllowance: getStructure(BasicAllowance.fromPartial({})),
@@ -92,12 +91,6 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Allowances[JSON.stringify(params)] ?? {}
-		},
-				getAllowancesByGranter: (state) => (params = { params: {}}) => {
-					if (!(<any> params).query) {
-						(<any> params).query=null
-					}
-			return state.AllowancesByGranter[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -181,32 +174,6 @@ export default {
 		},
 		
 		
-		
-		
-		 		
-		
-		
-		async QueryAllowancesByGranter({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
-			try {
-				const key = params ?? {};
-				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryAllowancesByGranter( key.granter, query)).data
-				
-					
-				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
-					let next_values=(await queryClient.queryAllowancesByGranter( key.granter, {...query, 'pagination.key':(<any> value).pagination.next_key})).data
-					value = mergeResults(value, next_values);
-				}
-				commit('QUERY', { query: 'AllowancesByGranter', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryAllowancesByGranter', payload: { options: { all }, params: {...key},query }})
-				return getters['getAllowancesByGranter']( { params: {...key}, query}) ?? {}
-			} catch (e) {
-				throw new Error('QueryClient:QueryAllowancesByGranter API Node Unavailable. Could not perform query: ' + e.message)
-				
-			}
-		},
-		
-		
 		async sendMsgRevokeAllowance({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -246,7 +213,7 @@ export default {
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgRevokeAllowance:Init Could not initialize signing client. Wallet is required.')
-				} else{
+				}else{
 					throw new Error('TxClient:MsgRevokeAllowance:Create Could not create message: ' + e.message)
 				}
 			}
@@ -259,7 +226,7 @@ export default {
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgGrantAllowance:Init Could not initialize signing client. Wallet is required.')
-				} else{
+				}else{
 					throw new Error('TxClient:MsgGrantAllowance:Create Could not create message: ' + e.message)
 				}
 			}
