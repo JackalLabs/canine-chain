@@ -17,10 +17,8 @@ service Msg {
 
 message MsgCreateNotifications {
   string creator = 1;
-  uint64 count = 2;
-
-  string notification = 3;
-  string address = 4;
+  string notification = 2;
+  string address = 3;
 }
 message MsgCreateNotificationsResponse {}
 

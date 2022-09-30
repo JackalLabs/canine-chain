@@ -27,7 +27,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		msg.Address,
 	)
 	if isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "notification already set")
 	}
 
 	var notifications = types.Notifications{
@@ -43,6 +43,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 	)
 
 	notiCounter.Counter += 1
+
 	k.SetNotiCounter(
 		ctx,
 		notiCounter,
@@ -51,6 +52,34 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 	return &types.MsgCreateNotificationsResponse{}, nil
 }
 
+func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDeleteNotifications) (*types.MsgDeleteNotificationsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// Check if the value exists
+	valFound, isFound := k.GetNotifications(
+		ctx,
+		msg.Count,
+		msg.Creator, //this needs to be fleshed out with permissions checking
+	)
+	if !isFound {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
+	}
+
+	// Checks if the the msg creator is the same as the current owner
+	if msg.Creator != valFound.Creator {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
+	}
+
+	k.RemoveNotifications(
+		ctx,
+		msg.Count,
+		msg.Creator, //this needs to be fleshed out with permissions checking
+	)
+
+	return &types.MsgDeleteNotificationsResponse{}, nil
+}
+
+// I don't think update is needed. Seems pointless to overwrite a current notification--just append to the end
 func (k msgServer) UpdateNotifications(goCtx context.Context, msg *types.MsgUpdateNotifications) (*types.MsgUpdateNotificationsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -79,31 +108,4 @@ func (k msgServer) UpdateNotifications(goCtx context.Context, msg *types.MsgUpda
 	k.SetNotifications(ctx, notifications)
 
 	return &types.MsgUpdateNotificationsResponse{}, nil
-}
-
-func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDeleteNotifications) (*types.MsgDeleteNotificationsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Check if the value exists
-	valFound, isFound := k.GetNotifications(
-		ctx,
-		msg.Count,
-		msg.Creator, //this needs to be fleshed out with permissions checking
-	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	k.RemoveNotifications(
-		ctx,
-		msg.Count,
-		msg.Creator, //this needs to be fleshed out with permissions checking
-	)
-
-	return &types.MsgDeleteNotificationsResponse{}, nil
 }

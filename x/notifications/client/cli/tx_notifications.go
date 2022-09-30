@@ -22,8 +22,8 @@ func CmdCreateNotifications() *cobra.Command {
 			// }
 
 			// Get value arguments
-			argNotification := args[1]
-			argAddress := args[2]
+			argNotification := args[0]
+			argAddress := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {

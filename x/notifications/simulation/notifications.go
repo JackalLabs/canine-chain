@@ -25,13 +25,12 @@ func SimulateMsgCreateNotifications(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
-		i := r.Int()
+		//i := r.Int()
 		msg := &types.MsgCreateNotifications{
 			Creator: simAccount.Address.String(),
-			Count:   uint64(i),
 		}
-
-		_, found := k.GetNotifications(ctx, msg.Count, msg.Address)
+		//dummy uint64 put below, will error again when updating 'GetNotifications'
+		_, found := k.GetNotifications(ctx, uint64(1), msg.Address)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Notifications already exist"), nil, nil
 		}

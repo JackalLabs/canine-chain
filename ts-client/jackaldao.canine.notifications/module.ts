@@ -9,11 +9,11 @@ import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
 import { MsgSetCounter } from "./types/notifications/tx";
 import { MsgDeleteNotifications } from "./types/notifications/tx";
-import { MsgUpdateNotifications } from "./types/notifications/tx";
 import { MsgCreateNotifications } from "./types/notifications/tx";
+import { MsgUpdateNotifications } from "./types/notifications/tx";
 
 
-export { MsgSetCounter, MsgDeleteNotifications, MsgUpdateNotifications, MsgCreateNotifications };
+export { MsgSetCounter, MsgDeleteNotifications, MsgCreateNotifications, MsgUpdateNotifications };
 
 type sendMsgSetCounterParams = {
   value: MsgSetCounter,
@@ -27,14 +27,14 @@ type sendMsgDeleteNotificationsParams = {
   memo?: string
 };
 
-type sendMsgUpdateNotificationsParams = {
-  value: MsgUpdateNotifications,
+type sendMsgCreateNotificationsParams = {
+  value: MsgCreateNotifications,
   fee?: StdFee,
   memo?: string
 };
 
-type sendMsgCreateNotificationsParams = {
-  value: MsgCreateNotifications,
+type sendMsgUpdateNotificationsParams = {
+  value: MsgUpdateNotifications,
   fee?: StdFee,
   memo?: string
 };
@@ -48,12 +48,12 @@ type msgDeleteNotificationsParams = {
   value: MsgDeleteNotifications,
 };
 
-type msgUpdateNotificationsParams = {
-  value: MsgUpdateNotifications,
-};
-
 type msgCreateNotificationsParams = {
   value: MsgCreateNotifications,
+};
+
+type msgUpdateNotificationsParams = {
+  value: MsgUpdateNotifications,
 };
 
 
@@ -102,20 +102,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgUpdateNotifications({ value, fee, memo }: sendMsgUpdateNotificationsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgUpdateNotifications: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgUpdateNotifications({ value: MsgUpdateNotifications.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgUpdateNotifications: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgCreateNotifications({ value, fee, memo }: sendMsgCreateNotificationsParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgCreateNotifications: Unable to sign Tx. Signer is not present.')
@@ -127,6 +113,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgCreateNotifications: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgUpdateNotifications({ value, fee, memo }: sendMsgUpdateNotificationsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateNotifications: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateNotifications({ value: MsgUpdateNotifications.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateNotifications: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -147,19 +147,19 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgUpdateNotifications({ value }: msgUpdateNotificationsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.notifications.MsgUpdateNotifications", value: MsgUpdateNotifications.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgUpdateNotifications: Could not create message: ' + e.message)
-			}
-		},
-		
 		msgCreateNotifications({ value }: msgCreateNotificationsParams): EncodeObject {
 			try {
 				return { typeUrl: "/jackaldao.canine.notifications.MsgCreateNotifications", value: MsgCreateNotifications.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgCreateNotifications: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgUpdateNotifications({ value }: msgUpdateNotificationsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.notifications.MsgUpdateNotifications", value: MsgUpdateNotifications.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateNotifications: Could not create message: ' + e.message)
 			}
 		},
 		

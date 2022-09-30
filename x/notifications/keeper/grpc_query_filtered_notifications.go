@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// Query all the notifications that belong to an address
 func (k Keeper) FilteredNotifications(c context.Context, req *types.QueryFilteredNotificationsRequest) (*types.QueryFilteredNotificationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")

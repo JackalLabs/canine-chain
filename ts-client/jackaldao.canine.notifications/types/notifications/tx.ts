@@ -6,7 +6,6 @@ export const protobufPackage = "jackaldao.canine.notifications";
 
 export interface MsgCreateNotifications {
   creator: string;
-  count: number;
   notification: string;
   address: string;
 }
@@ -37,7 +36,6 @@ export interface MsgSetCounterResponse {}
 
 const baseMsgCreateNotifications: object = {
   creator: "",
-  count: 0,
   notification: "",
   address: "",
 };
@@ -50,14 +48,11 @@ export const MsgCreateNotifications = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.count !== 0) {
-      writer.uint32(16).uint64(message.count);
-    }
     if (message.notification !== "") {
-      writer.uint32(26).string(message.notification);
+      writer.uint32(18).string(message.notification);
     }
     if (message.address !== "") {
-      writer.uint32(34).string(message.address);
+      writer.uint32(26).string(message.address);
     }
     return writer;
   },
@@ -73,12 +68,9 @@ export const MsgCreateNotifications = {
           message.creator = reader.string();
           break;
         case 2:
-          message.count = longToNumber(reader.uint64() as Long);
-          break;
-        case 3:
           message.notification = reader.string();
           break;
-        case 4:
+        case 3:
           message.address = reader.string();
           break;
         default:
@@ -96,11 +88,6 @@ export const MsgCreateNotifications = {
     } else {
       message.creator = "";
     }
-    if (object.count !== undefined && object.count !== null) {
-      message.count = Number(object.count);
-    } else {
-      message.count = 0;
-    }
     if (object.notification !== undefined && object.notification !== null) {
       message.notification = String(object.notification);
     } else {
@@ -117,7 +104,6 @@ export const MsgCreateNotifications = {
   toJSON(message: MsgCreateNotifications): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.count !== undefined && (obj.count = message.count);
     message.notification !== undefined &&
       (obj.notification = message.notification);
     message.address !== undefined && (obj.address = message.address);
@@ -132,11 +118,6 @@ export const MsgCreateNotifications = {
       message.creator = object.creator;
     } else {
       message.creator = "";
-    }
-    if (object.count !== undefined && object.count !== null) {
-      message.count = object.count;
-    } else {
-      message.count = 0;
     }
     if (object.notification !== undefined && object.notification !== null) {
       message.notification = object.notification;

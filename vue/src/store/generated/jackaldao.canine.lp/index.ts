@@ -401,16 +401,16 @@ export default {
 		},
 		
 		
-		async sendMsgCreateLPool({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgWithdrawLPool({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineLp.tx.sendMsgCreateLPool({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineLp.tx.sendMsgWithdrawLPool({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateLPool:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgWithdrawLPool:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateLPool:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgWithdrawLPool:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -427,19 +427,6 @@ export default {
 				}
 			}
 		},
-		async sendMsgWithdrawLPool({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineLp.tx.sendMsgWithdrawLPool({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgWithdrawLPool:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgWithdrawLPool:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgDepositLPool({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -453,17 +440,30 @@ export default {
 				}
 			}
 		},
-		
-		async MsgCreateLPool({ rootGetters }, { value }) {
+		async sendMsgCreateLPool({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineLp.tx.msgCreateLPool({value})
-				return msg
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineLp.tx.sendMsgCreateLPool({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgCreateLPool:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateLPool:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		
+		async MsgWithdrawLPool({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineLp.tx.msgWithdrawLPool({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgWithdrawLPool:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateLPool:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgWithdrawLPool:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -480,19 +480,6 @@ export default {
 				}
 			}
 		},
-		async MsgWithdrawLPool({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineLp.tx.msgWithdrawLPool({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgWithdrawLPool:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgWithdrawLPool:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgDepositLPool({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -503,6 +490,19 @@ export default {
 					throw new Error('TxClient:MsgDepositLPool:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgDepositLPool:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateLPool({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineLp.tx.msgCreateLPool({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateLPool:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateLPool:Create Could not create message: ' + e.message)
 				}
 			}
 		},
