@@ -74,28 +74,6 @@ import JackaldaoCanineJklmint from './jackaldao.canine.jklmint'
 import JackaldaoCanineLp from './jackaldao.canine.lp'
 import JackaldaoCanineRns from './jackaldao.canine.rns'
 import JackaldaoCanineStorage from './jackaldao.canine.storage'
-import Intertx from './intertx'
-import IbcApplicationsInterchainAccountsControllerV1 from './ibc.applications.interchain_accounts.controller.v1'
-import IbcApplicationsInterchainAccountsHostV1 from './ibc.applications.interchain_accounts.host.v1'
-import IbcApplicationsTransferV1 from './ibc.applications.transfer.v1'
-import IbcCoreChannelV1 from './ibc.core.channel.v1'
-import IbcCoreClientV1 from './ibc.core.client.v1'
-import IbcCoreConnectionV1 from './ibc.core.connection.v1'
-import CosmosAuthV1Beta1 from './cosmos.auth.v1beta1'
-import CosmosAuthzV1Beta1 from './cosmos.authz.v1beta1'
-import CosmosBankV1Beta1 from './cosmos.bank.v1beta1'
-import CosmosBaseTendermintV1Beta1 from './cosmos.base.tendermint.v1beta1'
-import CosmosCrisisV1Beta1 from './cosmos.crisis.v1beta1'
-import CosmosDistributionV1Beta1 from './cosmos.distribution.v1beta1'
-import CosmosEvidenceV1Beta1 from './cosmos.evidence.v1beta1'
-import CosmosFeegrantV1Beta1 from './cosmos.feegrant.v1beta1'
-import CosmosGovV1Beta1 from './cosmos.gov.v1beta1'
-import CosmosParamsV1Beta1 from './cosmos.params.v1beta1'
-import CosmosSlashingV1Beta1 from './cosmos.slashing.v1beta1'
-import CosmosStakingV1Beta1 from './cosmos.staking.v1beta1'
-import CosmosTxV1Beta1 from './cosmos.tx.v1beta1'
-import CosmosUpgradeV1Beta1 from './cosmos.upgrade.v1beta1'
-import CosmosVestingV1Beta1 from './cosmos.vesting.v1beta1'
 
 
 export default { 
@@ -106,6 +84,7 @@ export default {
   JackaldaoCanineLp: load(JackaldaoCanineLp, 'jackaldao.canine.lp'),
   JackaldaoCanineRns: load(JackaldaoCanineRns, 'jackaldao.canine.rns'),
   JackaldaoCanineStorage: load(JackaldaoCanineStorage, 'jackaldao.canine.storage'),
+<<<<<<< HEAD
   Intertx: load(Intertx, 'intertx'),
   IbcApplicationsInterchainAccountsControllerV1: load(IbcApplicationsInterchainAccountsControllerV1, 'ibc.applications.interchain_accounts.controller.v1'),
   IbcApplicationsInterchainAccountsHostV1: load(IbcApplicationsInterchainAccountsHostV1, 'ibc.applications.interchain_accounts.host.v1'),
@@ -128,6 +107,8 @@ export default {
   CosmosTxV1Beta1: load(CosmosTxV1Beta1, 'cosmos.tx.v1beta1'),
   CosmosUpgradeV1Beta1: load(CosmosUpgradeV1Beta1, 'cosmos.upgrade.v1beta1'),
   CosmosVestingV1Beta1: load(CosmosVestingV1Beta1, 'cosmos.vesting.v1beta1'),
+>>>>>>> master
+=======
 >>>>>>> master
   
 }
