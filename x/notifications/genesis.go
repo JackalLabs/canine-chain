@@ -13,6 +13,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.NotificationsList {
 		k.SetNotifications(ctx, elem)
 	}
+	// Set all the notiCounter
+	for _, elem := range genState.NotiCounterList {
+		k.SetNotiCounter(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -23,6 +27,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.NotificationsList = k.GetAllNotifications(ctx)
+	genesis.NotiCounterList = k.GetAllNotiCounter(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

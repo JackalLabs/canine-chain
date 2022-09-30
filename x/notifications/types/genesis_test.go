@@ -30,6 +30,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Count: 1,
 					},
 				},
+				NotiCounterList: []types.NotiCounter{
+					{
+						Address: "0",
+					},
+					{
+						Address: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -43,6 +51,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						Count: 0,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated notiCounter",
+			genState: &types.GenesisState{
+				NotiCounterList: []types.NotiCounter{
+					{
+						Address: "0",
+					},
+					{
+						Address: "0",
 					},
 				},
 			},

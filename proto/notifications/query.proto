@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "notifications/params.proto";
 import "notifications/notifications.proto";
+import "notifications/noti_counter.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/notifications/types";
@@ -29,6 +30,16 @@ service Query {
 // Queries a list of FilteredNotifications items.
 	rpc FilteredNotifications(QueryFilteredNotificationsRequest) returns (QueryFilteredNotificationsResponse) {
 		option (google.api.http).get = "/jackal-dao/canine/notifications/filtered_notifications/{maxCount}/{address}";
+	}
+
+// Queries a NotiCounter by index.
+	rpc NotiCounter(QueryGetNotiCounterRequest) returns (QueryGetNotiCounterResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/notifications/noti_counter/{address}";
+	}
+
+	// Queries a list of NotiCounter items.
+	rpc NotiCounterAll(QueryAllNotiCounterRequest) returns (QueryAllNotiCounterResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/notifications/noti_counter";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -69,6 +80,24 @@ message QueryFilteredNotificationsRequest {
 
 message QueryFilteredNotificationsResponse {
 	repeated Notifications notifications = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetNotiCounterRequest {
+	  string address = 1;
+
+}
+
+message QueryGetNotiCounterResponse {
+	NotiCounter notiCounter = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllNotiCounterRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllNotiCounterResponse {
+	repeated NotiCounter notiCounter = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

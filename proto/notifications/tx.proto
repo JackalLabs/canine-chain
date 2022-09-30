@@ -11,6 +11,7 @@ service Msg {
       rpc CreateNotifications(MsgCreateNotifications) returns (MsgCreateNotificationsResponse);
   rpc UpdateNotifications(MsgUpdateNotifications) returns (MsgUpdateNotificationsResponse);
   rpc DeleteNotifications(MsgDeleteNotifications) returns (MsgDeleteNotificationsResponse);
+  rpc SetCounter(MsgSetCounter) returns (MsgSetCounterResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -37,5 +38,12 @@ message MsgDeleteNotifications {
   uint64 count = 2;
 }
 message MsgDeleteNotificationsResponse {}
+
+message MsgSetCounter {
+  string creator = 1;
+}
+
+message MsgSetCounterResponse {
+}
 
 // this line is used by starport scaffolding # proto/tx/message
