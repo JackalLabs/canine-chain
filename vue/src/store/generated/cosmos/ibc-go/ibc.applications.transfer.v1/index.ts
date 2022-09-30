@@ -45,7 +45,6 @@ const getDefaultState = () => {
 				DenomTrace: {},
 				DenomTraces: {},
 				Params: {},
-				DenomHash: {},
 				
 				_Structure: {
 						DenomTrace: getStructure(DenomTrace.fromPartial({})),
@@ -95,12 +94,6 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Params[JSON.stringify(params)] ?? {}
-		},
-				getDenomHash: (state) => (params = { params: {}}) => {
-					if (!(<any> params).query) {
-						(<any> params).query=null
-					}
-			return state.DenomHash[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -206,28 +199,6 @@ export default {
 		},
 		
 		
-		
-		
-		 		
-		
-		
-		async QueryDenomHash({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
-			try {
-				const key = params ?? {};
-				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryDenomHash( key.trace)).data
-				
-					
-				commit('QUERY', { query: 'DenomHash', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDenomHash', payload: { options: { all }, params: {...key},query }})
-				return getters['getDenomHash']( { params: {...key}, query}) ?? {}
-			} catch (e) {
-				throw new Error('QueryClient:QueryDenomHash API Node Unavailable. Could not perform query: ' + e.message)
-				
-			}
-		},
-		
-		
 		async sendMsgTransfer({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -252,7 +223,7 @@ export default {
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgTransfer:Init Could not initialize signing client. Wallet is required.')
-				} else{
+				}else{
 					throw new Error('TxClient:MsgTransfer:Create Could not create message: ' + e.message)
 				}
 			}

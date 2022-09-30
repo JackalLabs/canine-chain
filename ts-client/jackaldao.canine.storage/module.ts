@@ -7,147 +7,33 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgUpdateActiveDeals } from "./types/storage/tx";
-import { MsgDeleteContracts } from "./types/storage/tx";
-import { MsgItem } from "./types/storage/tx";
-import { MsgSignContract } from "./types/storage/tx";
-import { MsgInitMiner } from "./types/storage/tx";
-import { MsgSetMinerIp } from "./types/storage/tx";
-import { MsgCreateMiners } from "./types/storage/tx";
-import { MsgBuyStorage } from "./types/storage/tx";
-import { MsgUpdateProofs } from "./types/storage/tx";
-import { MsgCreateProofs } from "./types/storage/tx";
-import { MsgDeleteActiveDeals } from "./types/storage/tx";
-import { MsgPostproof } from "./types/storage/tx";
-import { MsgUpdateMiners } from "./types/storage/tx";
 import { MsgUpdateContracts } from "./types/storage/tx";
-import { MsgSetMinerTotalspace } from "./types/storage/tx";
-import { MsgCancelContract } from "./types/storage/tx";
-import { MsgCreateActiveDeals } from "./types/storage/tx";
-import { MsgPostContract } from "./types/storage/tx";
-import { MsgDeleteMiners } from "./types/storage/tx";
-import { MsgCreateContracts } from "./types/storage/tx";
 import { MsgDeleteProofs } from "./types/storage/tx";
+import { MsgInitMiner } from "./types/storage/tx";
+import { MsgPostproof } from "./types/storage/tx";
+import { MsgUpdateProofs } from "./types/storage/tx";
+import { MsgCreateContracts } from "./types/storage/tx";
+import { MsgDeleteMiners } from "./types/storage/tx";
+import { MsgBuyStorage } from "./types/storage/tx";
+import { MsgCreateMiners } from "./types/storage/tx";
+import { MsgCreateProofs } from "./types/storage/tx";
+import { MsgPostContract } from "./types/storage/tx";
+import { MsgSetMinerIp } from "./types/storage/tx";
+import { MsgDeleteContracts } from "./types/storage/tx";
+import { MsgSignContract } from "./types/storage/tx";
+import { MsgCreateActiveDeals } from "./types/storage/tx";
+import { MsgUpdateActiveDeals } from "./types/storage/tx";
+import { MsgDeleteActiveDeals } from "./types/storage/tx";
+import { MsgCancelContract } from "./types/storage/tx";
+import { MsgSetMinerTotalspace } from "./types/storage/tx";
+import { MsgUpdateMiners } from "./types/storage/tx";
+import { MsgItem } from "./types/storage/tx";
 
 
-export { MsgUpdateActiveDeals, MsgDeleteContracts, MsgItem, MsgSignContract, MsgInitMiner, MsgSetMinerIp, MsgCreateMiners, MsgBuyStorage, MsgUpdateProofs, MsgCreateProofs, MsgDeleteActiveDeals, MsgPostproof, MsgUpdateMiners, MsgUpdateContracts, MsgSetMinerTotalspace, MsgCancelContract, MsgCreateActiveDeals, MsgPostContract, MsgDeleteMiners, MsgCreateContracts, MsgDeleteProofs };
-
-type sendMsgUpdateActiveDealsParams = {
-  value: MsgUpdateActiveDeals,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgDeleteContractsParams = {
-  value: MsgDeleteContracts,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgItemParams = {
-  value: MsgItem,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgSignContractParams = {
-  value: MsgSignContract,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgInitMinerParams = {
-  value: MsgInitMiner,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgSetMinerIpParams = {
-  value: MsgSetMinerIp,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCreateMinersParams = {
-  value: MsgCreateMiners,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgBuyStorageParams = {
-  value: MsgBuyStorage,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgUpdateProofsParams = {
-  value: MsgUpdateProofs,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCreateProofsParams = {
-  value: MsgCreateProofs,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgDeleteActiveDealsParams = {
-  value: MsgDeleteActiveDeals,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgPostproofParams = {
-  value: MsgPostproof,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgUpdateMinersParams = {
-  value: MsgUpdateMiners,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgUpdateContracts, MsgDeleteProofs, MsgInitMiner, MsgPostproof, MsgUpdateProofs, MsgCreateContracts, MsgDeleteMiners, MsgBuyStorage, MsgCreateMiners, MsgCreateProofs, MsgPostContract, MsgSetMinerIp, MsgDeleteContracts, MsgSignContract, MsgCreateActiveDeals, MsgUpdateActiveDeals, MsgDeleteActiveDeals, MsgCancelContract, MsgSetMinerTotalspace, MsgUpdateMiners, MsgItem };
 
 type sendMsgUpdateContractsParams = {
   value: MsgUpdateContracts,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgSetMinerTotalspaceParams = {
-  value: MsgSetMinerTotalspace,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCancelContractParams = {
-  value: MsgCancelContract,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCreateActiveDealsParams = {
-  value: MsgCreateActiveDeals,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgPostContractParams = {
-  value: MsgPostContract,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgDeleteMinersParams = {
-  value: MsgDeleteMiners,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCreateContractsParams = {
-  value: MsgCreateContracts,
   fee?: StdFee,
   memo?: string
 };
@@ -158,89 +44,203 @@ type sendMsgDeleteProofsParams = {
   memo?: string
 };
 
-
-type msgUpdateActiveDealsParams = {
-  value: MsgUpdateActiveDeals,
+type sendMsgInitMinerParams = {
+  value: MsgInitMiner,
+  fee?: StdFee,
+  memo?: string
 };
 
-type msgDeleteContractsParams = {
+type sendMsgPostproofParams = {
+  value: MsgPostproof,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateProofsParams = {
+  value: MsgUpdateProofs,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCreateContractsParams = {
+  value: MsgCreateContracts,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgDeleteMinersParams = {
+  value: MsgDeleteMiners,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgBuyStorageParams = {
+  value: MsgBuyStorage,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCreateMinersParams = {
+  value: MsgCreateMiners,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCreateProofsParams = {
+  value: MsgCreateProofs,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgPostContractParams = {
+  value: MsgPostContract,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgSetMinerIpParams = {
+  value: MsgSetMinerIp,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgDeleteContractsParams = {
   value: MsgDeleteContracts,
+  fee?: StdFee,
+  memo?: string
 };
 
-type msgItemParams = {
-  value: MsgItem,
-};
-
-type msgSignContractParams = {
+type sendMsgSignContractParams = {
   value: MsgSignContract,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCreateActiveDealsParams = {
+  value: MsgCreateActiveDeals,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateActiveDealsParams = {
+  value: MsgUpdateActiveDeals,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgDeleteActiveDealsParams = {
+  value: MsgDeleteActiveDeals,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCancelContractParams = {
+  value: MsgCancelContract,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgSetMinerTotalspaceParams = {
+  value: MsgSetMinerTotalspace,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateMinersParams = {
+  value: MsgUpdateMiners,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgItemParams = {
+  value: MsgItem,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgUpdateContractsParams = {
+  value: MsgUpdateContracts,
+};
+
+type msgDeleteProofsParams = {
+  value: MsgDeleteProofs,
 };
 
 type msgInitMinerParams = {
   value: MsgInitMiner,
 };
 
-type msgSetMinerIpParams = {
-  value: MsgSetMinerIp,
-};
-
-type msgCreateMinersParams = {
-  value: MsgCreateMiners,
-};
-
-type msgBuyStorageParams = {
-  value: MsgBuyStorage,
+type msgPostproofParams = {
+  value: MsgPostproof,
 };
 
 type msgUpdateProofsParams = {
   value: MsgUpdateProofs,
 };
 
-type msgCreateProofsParams = {
-  value: MsgCreateProofs,
-};
-
-type msgDeleteActiveDealsParams = {
-  value: MsgDeleteActiveDeals,
-};
-
-type msgPostproofParams = {
-  value: MsgPostproof,
-};
-
-type msgUpdateMinersParams = {
-  value: MsgUpdateMiners,
-};
-
-type msgUpdateContractsParams = {
-  value: MsgUpdateContracts,
-};
-
-type msgSetMinerTotalspaceParams = {
-  value: MsgSetMinerTotalspace,
-};
-
-type msgCancelContractParams = {
-  value: MsgCancelContract,
-};
-
-type msgCreateActiveDealsParams = {
-  value: MsgCreateActiveDeals,
-};
-
-type msgPostContractParams = {
-  value: MsgPostContract,
+type msgCreateContractsParams = {
+  value: MsgCreateContracts,
 };
 
 type msgDeleteMinersParams = {
   value: MsgDeleteMiners,
 };
 
-type msgCreateContractsParams = {
-  value: MsgCreateContracts,
+type msgBuyStorageParams = {
+  value: MsgBuyStorage,
 };
 
-type msgDeleteProofsParams = {
-  value: MsgDeleteProofs,
+type msgCreateMinersParams = {
+  value: MsgCreateMiners,
+};
+
+type msgCreateProofsParams = {
+  value: MsgCreateProofs,
+};
+
+type msgPostContractParams = {
+  value: MsgPostContract,
+};
+
+type msgSetMinerIpParams = {
+  value: MsgSetMinerIp,
+};
+
+type msgDeleteContractsParams = {
+  value: MsgDeleteContracts,
+};
+
+type msgSignContractParams = {
+  value: MsgSignContract,
+};
+
+type msgCreateActiveDealsParams = {
+  value: MsgCreateActiveDeals,
+};
+
+type msgUpdateActiveDealsParams = {
+  value: MsgUpdateActiveDeals,
+};
+
+type msgDeleteActiveDealsParams = {
+  value: MsgDeleteActiveDeals,
+};
+
+type msgCancelContractParams = {
+  value: MsgCancelContract,
+};
+
+type msgSetMinerTotalspaceParams = {
+  value: MsgSetMinerTotalspace,
+};
+
+type msgUpdateMinersParams = {
+  value: MsgUpdateMiners,
+};
+
+type msgItemParams = {
+  value: MsgItem,
 };
 
 
@@ -261,188 +261,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgUpdateActiveDeals({ value, fee, memo }: sendMsgUpdateActiveDealsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgUpdateActiveDeals: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgUpdateActiveDeals({ value: MsgUpdateActiveDeals.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgUpdateActiveDeals: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgDeleteContracts({ value, fee, memo }: sendMsgDeleteContractsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteContracts: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteContracts({ value: MsgDeleteContracts.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteContracts: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgItem({ value, fee, memo }: sendMsgItemParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgItem: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgItem({ value: MsgItem.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgItem: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgSignContract({ value, fee, memo }: sendMsgSignContractParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgSignContract: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgSignContract({ value: MsgSignContract.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgSignContract: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgInitMiner({ value, fee, memo }: sendMsgInitMinerParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgInitMiner: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgInitMiner({ value: MsgInitMiner.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgInitMiner: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgSetMinerIp({ value, fee, memo }: sendMsgSetMinerIpParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgSetMinerIp: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgSetMinerIp({ value: MsgSetMinerIp.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgSetMinerIp: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCreateMiners({ value, fee, memo }: sendMsgCreateMinersParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateMiners: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateMiners({ value: MsgCreateMiners.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateMiners: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgBuyStorage({ value, fee, memo }: sendMsgBuyStorageParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgBuyStorage: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgBuyStorage({ value: MsgBuyStorage.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgBuyStorage: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgUpdateProofs({ value, fee, memo }: sendMsgUpdateProofsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgUpdateProofs: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgUpdateProofs({ value: MsgUpdateProofs.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgUpdateProofs: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCreateProofs({ value, fee, memo }: sendMsgCreateProofsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateProofs: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateProofs({ value: MsgCreateProofs.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateProofs: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgDeleteActiveDeals({ value, fee, memo }: sendMsgDeleteActiveDealsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteActiveDeals: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteActiveDeals({ value: MsgDeleteActiveDeals.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteActiveDeals: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgPostproof({ value, fee, memo }: sendMsgPostproofParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgPostproof: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgPostproof({ value: MsgPostproof.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgPostproof: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgUpdateMiners({ value, fee, memo }: sendMsgUpdateMinersParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgUpdateMiners: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgUpdateMiners({ value: MsgUpdateMiners.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgUpdateMiners: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgUpdateContracts({ value, fee, memo }: sendMsgUpdateContractsParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgUpdateContracts: Unable to sign Tx. Signer is not present.')
@@ -454,90 +272,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgUpdateContracts: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgSetMinerTotalspace({ value, fee, memo }: sendMsgSetMinerTotalspaceParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgSetMinerTotalspace: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgSetMinerTotalspace({ value: MsgSetMinerTotalspace.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgSetMinerTotalspace: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCancelContract({ value, fee, memo }: sendMsgCancelContractParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCancelContract: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCancelContract({ value: MsgCancelContract.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCancelContract: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCreateActiveDeals({ value, fee, memo }: sendMsgCreateActiveDealsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateActiveDeals: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateActiveDeals({ value: MsgCreateActiveDeals.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateActiveDeals: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgPostContract({ value, fee, memo }: sendMsgPostContractParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgPostContract: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgPostContract({ value: MsgPostContract.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgPostContract: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgDeleteMiners({ value, fee, memo }: sendMsgDeleteMinersParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteMiners: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteMiners({ value: MsgDeleteMiners.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteMiners: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCreateContracts({ value, fee, memo }: sendMsgCreateContractsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateContracts: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateContracts({ value: MsgCreateContracts.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateContracts: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -555,36 +289,286 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgUpdateActiveDeals({ value }: msgUpdateActiveDealsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgUpdateActiveDeals", value: MsgUpdateActiveDeals.fromPartial( value ) }  
+		async sendMsgInitMiner({ value, fee, memo }: sendMsgInitMinerParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgInitMiner: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgInitMiner({ value: MsgInitMiner.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgUpdateActiveDeals: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgInitMiner: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
-		msgDeleteContracts({ value }: msgDeleteContractsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgDeleteContracts", value: MsgDeleteContracts.fromPartial( value ) }  
+		async sendMsgPostproof({ value, fee, memo }: sendMsgPostproofParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgPostproof: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgPostproof({ value: MsgPostproof.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteContracts: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgPostproof: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
-		msgItem({ value }: msgItemParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgItem", value: MsgItem.fromPartial( value ) }  
+		async sendMsgUpdateProofs({ value, fee, memo }: sendMsgUpdateProofsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateProofs: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateProofs({ value: MsgUpdateProofs.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgItem: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgUpdateProofs: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
-		msgSignContract({ value }: msgSignContractParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgSignContract", value: MsgSignContract.fromPartial( value ) }  
+		async sendMsgCreateContracts({ value, fee, memo }: sendMsgCreateContractsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateContracts: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateContracts({ value: MsgCreateContracts.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgSignContract: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgCreateContracts: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgDeleteMiners({ value, fee, memo }: sendMsgDeleteMinersParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteMiners: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteMiners({ value: MsgDeleteMiners.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteMiners: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgBuyStorage({ value, fee, memo }: sendMsgBuyStorageParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgBuyStorage: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgBuyStorage({ value: MsgBuyStorage.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgBuyStorage: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCreateMiners({ value, fee, memo }: sendMsgCreateMinersParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateMiners: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateMiners({ value: MsgCreateMiners.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateMiners: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCreateProofs({ value, fee, memo }: sendMsgCreateProofsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateProofs: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateProofs({ value: MsgCreateProofs.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateProofs: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgPostContract({ value, fee, memo }: sendMsgPostContractParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgPostContract: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgPostContract({ value: MsgPostContract.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgPostContract: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgSetMinerIp({ value, fee, memo }: sendMsgSetMinerIpParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgSetMinerIp: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgSetMinerIp({ value: MsgSetMinerIp.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgSetMinerIp: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgDeleteContracts({ value, fee, memo }: sendMsgDeleteContractsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteContracts: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteContracts({ value: MsgDeleteContracts.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteContracts: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgSignContract({ value, fee, memo }: sendMsgSignContractParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgSignContract: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgSignContract({ value: MsgSignContract.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgSignContract: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCreateActiveDeals({ value, fee, memo }: sendMsgCreateActiveDealsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateActiveDeals: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateActiveDeals({ value: MsgCreateActiveDeals.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateActiveDeals: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgUpdateActiveDeals({ value, fee, memo }: sendMsgUpdateActiveDealsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateActiveDeals: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateActiveDeals({ value: MsgUpdateActiveDeals.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateActiveDeals: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgDeleteActiveDeals({ value, fee, memo }: sendMsgDeleteActiveDealsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteActiveDeals: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteActiveDeals({ value: MsgDeleteActiveDeals.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteActiveDeals: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCancelContract({ value, fee, memo }: sendMsgCancelContractParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCancelContract: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCancelContract({ value: MsgCancelContract.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCancelContract: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgSetMinerTotalspace({ value, fee, memo }: sendMsgSetMinerTotalspaceParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgSetMinerTotalspace: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgSetMinerTotalspace({ value: MsgSetMinerTotalspace.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgSetMinerTotalspace: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgUpdateMiners({ value, fee, memo }: sendMsgUpdateMinersParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateMiners: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateMiners({ value: MsgUpdateMiners.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateMiners: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgItem({ value, fee, memo }: sendMsgItemParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgItem: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgItem({ value: MsgItem.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgItem: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgUpdateContracts({ value }: msgUpdateContractsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgUpdateContracts", value: MsgUpdateContracts.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateContracts: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteProofs({ value }: msgDeleteProofsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgDeleteProofs", value: MsgDeleteProofs.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteProofs: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -596,27 +580,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgSetMinerIp({ value }: msgSetMinerIpParams): EncodeObject {
+		msgPostproof({ value }: msgPostproofParams): EncodeObject {
 			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgSetMinerIp", value: MsgSetMinerIp.fromPartial( value ) }  
+				return { typeUrl: "/jackaldao.canine.storage.MsgPostproof", value: MsgPostproof.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgSetMinerIp: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgCreateMiners({ value }: msgCreateMinersParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgCreateMiners", value: MsgCreateMiners.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateMiners: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgBuyStorage({ value }: msgBuyStorageParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgBuyStorage", value: MsgBuyStorage.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgBuyStorage: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgPostproof: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -628,75 +596,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgCreateProofs({ value }: msgCreateProofsParams): EncodeObject {
+		msgCreateContracts({ value }: msgCreateContractsParams): EncodeObject {
 			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgCreateProofs", value: MsgCreateProofs.fromPartial( value ) }  
+				return { typeUrl: "/jackaldao.canine.storage.MsgCreateContracts", value: MsgCreateContracts.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateProofs: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgDeleteActiveDeals({ value }: msgDeleteActiveDealsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgDeleteActiveDeals", value: MsgDeleteActiveDeals.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteActiveDeals: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgPostproof({ value }: msgPostproofParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgPostproof", value: MsgPostproof.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgPostproof: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgUpdateMiners({ value }: msgUpdateMinersParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgUpdateMiners", value: MsgUpdateMiners.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgUpdateMiners: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgUpdateContracts({ value }: msgUpdateContractsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgUpdateContracts", value: MsgUpdateContracts.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgUpdateContracts: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgSetMinerTotalspace({ value }: msgSetMinerTotalspaceParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgSetMinerTotalspace", value: MsgSetMinerTotalspace.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgSetMinerTotalspace: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgCancelContract({ value }: msgCancelContractParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgCancelContract", value: MsgCancelContract.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCancelContract: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgCreateActiveDeals({ value }: msgCreateActiveDealsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgCreateActiveDeals", value: MsgCreateActiveDeals.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateActiveDeals: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgPostContract({ value }: msgPostContractParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgPostContract", value: MsgPostContract.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgPostContract: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgCreateContracts: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -708,19 +612,115 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgCreateContracts({ value }: msgCreateContractsParams): EncodeObject {
+		msgBuyStorage({ value }: msgBuyStorageParams): EncodeObject {
 			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgCreateContracts", value: MsgCreateContracts.fromPartial( value ) }  
+				return { typeUrl: "/jackaldao.canine.storage.MsgBuyStorage", value: MsgBuyStorage.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateContracts: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgBuyStorage: Could not create message: ' + e.message)
 			}
 		},
 		
-		msgDeleteProofs({ value }: msgDeleteProofsParams): EncodeObject {
+		msgCreateMiners({ value }: msgCreateMinersParams): EncodeObject {
 			try {
-				return { typeUrl: "/jackaldao.canine.storage.MsgDeleteProofs", value: MsgDeleteProofs.fromPartial( value ) }  
+				return { typeUrl: "/jackaldao.canine.storage.MsgCreateMiners", value: MsgCreateMiners.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteProofs: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgCreateMiners: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCreateProofs({ value }: msgCreateProofsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgCreateProofs", value: MsgCreateProofs.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateProofs: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgPostContract({ value }: msgPostContractParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgPostContract", value: MsgPostContract.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgPostContract: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgSetMinerIp({ value }: msgSetMinerIpParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgSetMinerIp", value: MsgSetMinerIp.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgSetMinerIp: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteContracts({ value }: msgDeleteContractsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgDeleteContracts", value: MsgDeleteContracts.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteContracts: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgSignContract({ value }: msgSignContractParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgSignContract", value: MsgSignContract.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgSignContract: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCreateActiveDeals({ value }: msgCreateActiveDealsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgCreateActiveDeals", value: MsgCreateActiveDeals.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateActiveDeals: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgUpdateActiveDeals({ value }: msgUpdateActiveDealsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgUpdateActiveDeals", value: MsgUpdateActiveDeals.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateActiveDeals: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteActiveDeals({ value }: msgDeleteActiveDealsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgDeleteActiveDeals", value: MsgDeleteActiveDeals.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteActiveDeals: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCancelContract({ value }: msgCancelContractParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgCancelContract", value: MsgCancelContract.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCancelContract: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgSetMinerTotalspace({ value }: msgSetMinerTotalspaceParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgSetMinerTotalspace", value: MsgSetMinerTotalspace.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgSetMinerTotalspace: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgUpdateMiners({ value }: msgUpdateMinersParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgUpdateMiners", value: MsgUpdateMiners.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateMiners: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgItem({ value }: msgItemParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.storage.MsgItem", value: MsgItem.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgItem: Could not create message: ' + e.message)
 			}
 		},
 		

@@ -54,7 +54,6 @@ const getDefaultState = () => {
 				GetTx: {},
 				BroadcastTx: {},
 				GetTxsEvent: {},
-				GetBlockWithTxs: {},
 				
 				_Structure: {
 						Tx: getStructure(Tx.fromPartial({})),
@@ -118,12 +117,6 @@ export default {
 						(<any> params).query=null
 					}
 			return state.GetTxsEvent[JSON.stringify(params)] ?? {}
-		},
-				getGetBlockWithTxs: (state) => (params = { params: {}}) => {
-					if (!(<any> params).query) {
-						(<any> params).query=null
-					}
-			return state.GetBlockWithTxs[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -246,32 +239,6 @@ export default {
 				return getters['getGetTxsEvent']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:ServiceGetTxsEvent API Node Unavailable. Could not perform query: ' + e.message)
-				
-			}
-		},
-		
-		
-		
-		
-		 		
-		
-		
-		async ServiceGetBlockWithTxs({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
-			try {
-				const key = params ?? {};
-				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.serviceGetBlockWithTxs( key.height, query)).data
-				
-					
-				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
-					let next_values=(await queryClient.serviceGetBlockWithTxs( key.height, {...query, 'pagination.key':(<any> value).pagination.next_key})).data
-					value = mergeResults(value, next_values);
-				}
-				commit('QUERY', { query: 'GetBlockWithTxs', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'ServiceGetBlockWithTxs', payload: { options: { all }, params: {...key},query }})
-				return getters['getGetBlockWithTxs']( { params: {...key}, query}) ?? {}
-			} catch (e) {
-				throw new Error('QueryClient:ServiceGetBlockWithTxs API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

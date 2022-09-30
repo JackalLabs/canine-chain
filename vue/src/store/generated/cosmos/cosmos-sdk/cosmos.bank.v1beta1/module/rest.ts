@@ -227,18 +227,6 @@ export interface V1Beta1QueryParamsResponse {
 }
 
 /**
-* QuerySpendableBalancesResponse defines the gRPC response structure for querying
-an account's spendable balances.
-*/
-export interface V1Beta1QuerySpendableBalancesResponse {
-  /** balances is the spendable balances of all the coins. */
-  balances?: V1Beta1Coin[];
-
-  /** pagination defines the pagination in the response. */
-  pagination?: V1Beta1PageResponse;
-}
-
-/**
  * QuerySupplyOfResponse is the response type for the Query/SupplyOf RPC method.
  */
 export interface V1Beta1QuerySupplyOfResponse {
@@ -560,34 +548,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     this.request<V1Beta1QueryParamsResponse, RpcStatus>({
       path: `/cosmos/bank/v1beta1/params`,
       method: "GET",
-      format: "json",
-      ...params,
-    });
-
-  /**
- * No description
- * 
- * @tags Query
- * @name QuerySpendableBalances
- * @summary SpendableBalances queries the spenable balance of all coins for a single
-account.
- * @request GET:/cosmos/bank/v1beta1/spendable_balances/{address}
- */
-  querySpendableBalances = (
-    address: string,
-    query?: {
-      "pagination.key"?: string;
-      "pagination.offset"?: string;
-      "pagination.limit"?: string;
-      "pagination.count_total"?: boolean;
-      "pagination.reverse"?: boolean;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<V1Beta1QuerySpendableBalancesResponse, RpcStatus>({
-      path: `/cosmos/bank/v1beta1/spendable_balances/${address}`,
-      method: "GET",
-      query: query,
       format: "json",
       ...params,
     });

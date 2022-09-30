@@ -22,6 +22,8 @@ export interface FiletreeFiles {
 
 export type FiletreeMsgAddViewersResponse = object;
 
+export type FiletreeMsgDeleteFileResponse = object;
+
 export interface FiletreeMsgInitAccountResponse {
   /** @format uint64 */
   trackingNumber?: string;
