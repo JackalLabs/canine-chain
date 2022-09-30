@@ -107,6 +107,16 @@ export interface QueryAllInitResponse {
   pagination: PageResponse | undefined;
 }
 
+export interface QueryListOwnedNamesRequest {
+  address: string;
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryListOwnedNamesResponse {
+  names: Names[];
+  pagination: PageResponse | undefined;
+}
+
 const baseQueryParamsRequest: object = {};
 
 export const QueryParamsRequest = {
@@ -1566,6 +1576,194 @@ export const QueryAllInitResponse = {
   },
 };
 
+const baseQueryListOwnedNamesRequest: object = { address: "" };
+
+export const QueryListOwnedNamesRequest = {
+  encode(
+    message: QueryListOwnedNamesRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryListOwnedNamesRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryListOwnedNamesRequest,
+    } as QueryListOwnedNamesRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        case 2:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryListOwnedNamesRequest {
+    const message = {
+      ...baseQueryListOwnedNamesRequest,
+    } as QueryListOwnedNamesRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryListOwnedNamesRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryListOwnedNamesRequest>
+  ): QueryListOwnedNamesRequest {
+    const message = {
+      ...baseQueryListOwnedNamesRequest,
+    } as QueryListOwnedNamesRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryListOwnedNamesResponse: object = {};
+
+export const QueryListOwnedNamesResponse = {
+  encode(
+    message: QueryListOwnedNamesResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.names) {
+      Names.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryListOwnedNamesResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryListOwnedNamesResponse,
+    } as QueryListOwnedNamesResponse;
+    message.names = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.names.push(Names.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryListOwnedNamesResponse {
+    const message = {
+      ...baseQueryListOwnedNamesResponse,
+    } as QueryListOwnedNamesResponse;
+    message.names = [];
+    if (object.names !== undefined && object.names !== null) {
+      for (const e of object.names) {
+        message.names.push(Names.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryListOwnedNamesResponse): unknown {
+    const obj: any = {};
+    if (message.names) {
+      obj.names = message.names.map((e) => (e ? Names.toJSON(e) : undefined));
+    } else {
+      obj.names = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryListOwnedNamesResponse>
+  ): QueryListOwnedNamesResponse {
+    const message = {
+      ...baseQueryListOwnedNamesResponse,
+    } as QueryListOwnedNamesResponse;
+    message.names = [];
+    if (object.names !== undefined && object.names !== null) {
+      for (const e of object.names) {
+        message.names.push(Names.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1586,6 +1784,10 @@ export interface Query {
   Init(request: QueryGetInitRequest): Promise<QueryGetInitResponse>;
   /** Queries a list of Init items. */
   InitAll(request: QueryAllInitRequest): Promise<QueryAllInitResponse>;
+  /** Queries a list of ListOwnedNames items. */
+  ListOwnedNames(
+    request: QueryListOwnedNamesRequest
+  ): Promise<QueryListOwnedNamesResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1698,6 +1900,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllInitResponse.decode(new Reader(data))
+    );
+  }
+
+  ListOwnedNames(
+    request: QueryListOwnedNamesRequest
+  ): Promise<QueryListOwnedNamesResponse> {
+    const data = QueryListOwnedNamesRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.rns.Query",
+      "ListOwnedNames",
+      data
+    );
+    return promise.then((data) =>
+      QueryListOwnedNamesResponse.decode(new Reader(data))
     );
   }
 }
