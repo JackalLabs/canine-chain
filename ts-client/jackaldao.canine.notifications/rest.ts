@@ -363,11 +363,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryFilteredNotifications
    * @summary Queries a list of FilteredNotifications items.
-   * @request GET:/jackal-dao/canine/notifications/filtered_notifications/{maxCount}/{address}
+   * @request GET:/jackal-dao/canine/notifications/filtered_notifications/{address}
    */
-  queryFilteredNotifications = (maxCount: string, address: string, params: RequestParams = {}) =>
+  queryFilteredNotifications = (address: string, params: RequestParams = {}) =>
     this.request<NotificationsQueryFilteredNotificationsResponse, RpcStatus>({
-      path: `/jackal-dao/canine/notifications/filtered_notifications/${maxCount}/${address}`,
+      path: `/jackal-dao/canine/notifications/filtered_notifications/${address}`,
       method: "GET",
       format: "json",
       ...params,

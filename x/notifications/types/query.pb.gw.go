@@ -174,17 +174,6 @@ func request_Query_FilteredNotifications_0(ctx context.Context, marshaler runtim
 		_   = err
 	)
 
-	val, ok = pathParams["maxCount"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "maxCount")
-	}
-
-	protoReq.MaxCount, err = runtime.Uint64(val)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "maxCount", err)
-	}
-
 	val, ok = pathParams["address"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "address")
@@ -211,17 +200,6 @@ func local_request_Query_FilteredNotifications_0(ctx context.Context, marshaler 
 		err error
 		_   = err
 	)
-
-	val, ok = pathParams["maxCount"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "maxCount")
-	}
-
-	protoReq.MaxCount, err = runtime.Uint64(val)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "maxCount", err)
-	}
 
 	val, ok = pathParams["address"]
 	if !ok {
@@ -644,7 +622,7 @@ var (
 
 	pattern_Query_NotificationsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2}, []string{"jackal-dao", "canine", "notifications"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_FilteredNotifications_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine", "notifications", "filtered_notifications", "maxCount", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_FilteredNotifications_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine", "notifications", "filtered_notifications", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_NotiCounter_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine", "notifications", "noti_counter", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 

@@ -39,7 +39,6 @@ export interface QueryAllNotificationsResponse {
 }
 
 export interface QueryFilteredNotificationsRequest {
-  maxCount: number;
   address: string;
 }
 
@@ -497,21 +496,15 @@ export const QueryAllNotificationsResponse = {
   },
 };
 
-const baseQueryFilteredNotificationsRequest: object = {
-  maxCount: 0,
-  address: "",
-};
+const baseQueryFilteredNotificationsRequest: object = { address: "" };
 
 export const QueryFilteredNotificationsRequest = {
   encode(
     message: QueryFilteredNotificationsRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.maxCount !== 0) {
-      writer.uint32(8).uint64(message.maxCount);
-    }
     if (message.address !== "") {
-      writer.uint32(18).string(message.address);
+      writer.uint32(10).string(message.address);
     }
     return writer;
   },
@@ -529,9 +522,6 @@ export const QueryFilteredNotificationsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.maxCount = longToNumber(reader.uint64() as Long);
-          break;
-        case 2:
           message.address = reader.string();
           break;
         default:
@@ -546,11 +536,6 @@ export const QueryFilteredNotificationsRequest = {
     const message = {
       ...baseQueryFilteredNotificationsRequest,
     } as QueryFilteredNotificationsRequest;
-    if (object.maxCount !== undefined && object.maxCount !== null) {
-      message.maxCount = Number(object.maxCount);
-    } else {
-      message.maxCount = 0;
-    }
     if (object.address !== undefined && object.address !== null) {
       message.address = String(object.address);
     } else {
@@ -561,7 +546,6 @@ export const QueryFilteredNotificationsRequest = {
 
   toJSON(message: QueryFilteredNotificationsRequest): unknown {
     const obj: any = {};
-    message.maxCount !== undefined && (obj.maxCount = message.maxCount);
     message.address !== undefined && (obj.address = message.address);
     return obj;
   },
@@ -572,11 +556,6 @@ export const QueryFilteredNotificationsRequest = {
     const message = {
       ...baseQueryFilteredNotificationsRequest,
     } as QueryFilteredNotificationsRequest;
-    if (object.maxCount !== undefined && object.maxCount !== null) {
-      message.maxCount = object.maxCount;
-    } else {
-      message.maxCount = 0;
-    }
     if (object.address !== undefined && object.address !== null) {
       message.address = object.address;
     } else {

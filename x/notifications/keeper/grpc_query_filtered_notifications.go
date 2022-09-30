@@ -4,6 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackal-dao/canine/x/notifications/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -17,9 +18,18 @@ func (k Keeper) FilteredNotifications(c context.Context, req *types.QueryFiltere
 
 	ctx := sdk.UnwrapSDKContext(c)
 
+	// Find the notiCounter
+	notiCounter, found := k.GetNotiCounter(
+		ctx,
+		req.Address,
+	)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Recipients notiCounter not set")
+	}
+
 	i := uint64(0)
 	var notifications []types.Notifications
-	for i < req.MaxCount {
+	for i < notiCounter.Counter {
 		val, found := k.GetNotifications(
 			ctx,
 			i,

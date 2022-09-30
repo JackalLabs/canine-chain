@@ -39,6 +39,7 @@ func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificat
 	return &types.QueryAllNotificationsResponse{Notifications: notificationss, Pagination: pageRes}, nil
 }
 
+// This one is querying a single notification given its index--it was auto generated and is a little bit useless
 func (k Keeper) Notifications(c context.Context, req *types.QueryGetNotificationsRequest) (*types.QueryGetNotificationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
