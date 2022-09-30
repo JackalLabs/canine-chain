@@ -32,7 +32,6 @@ func CmdCreateNotifications() *cobra.Command {
 
 			msg := types.NewMsgCreateNotifications(
 				clientCtx.GetFromAddress().String(),
-				indexCount,
 				argNotification,
 				argAddress,
 			)

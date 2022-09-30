@@ -15,14 +15,12 @@ var _ sdk.Msg = &MsgCreateNotifications{}
 
 func NewMsgCreateNotifications(
 	creator string,
-	count uint64,
 	notification string,
 	address string,
 
 ) *MsgCreateNotifications {
 	return &MsgCreateNotifications{
 		Creator:      creator,
-		Count:        count,
 		Notification: notification,
 		Address:      address,
 	}
