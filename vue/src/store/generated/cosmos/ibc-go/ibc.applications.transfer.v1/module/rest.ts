@@ -190,15 +190,6 @@ export interface V1Height {
 export type V1MsgTransferResponse = object;
 
 /**
-* QueryDenomHashResponse is the response type for the Query/DenomHash RPC
-method.
-*/
-export interface V1QueryDenomHashResponse {
-  /** hash (in hex format) of the denomination trace information. */
-  hash?: string;
-}
-
-/**
 * QueryDenomTraceResponse is the response type for the Query/DenomTrace RPC
 method.
 */
@@ -490,22 +481,6 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  /**
-   * No description
-   *
-   * @tags Query
-   * @name QueryDenomHash
-   * @summary DenomHash queries a denomination hash information.
-   * @request GET:/ibc/apps/transfer/v1/denom_hashes/{trace}
-   */
-  queryDenomHash = (trace: string, params: RequestParams = {}) =>
-    this.request<V1QueryDenomHashResponse, RpcStatus>({
-      path: `/ibc/apps/transfer/v1/denom_hashes/${trace}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-
   /**
    * No description
    *

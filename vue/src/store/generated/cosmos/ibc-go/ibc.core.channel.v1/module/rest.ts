@@ -317,14 +317,7 @@ export interface V1IdentifiedClientState {
 /**
  * MsgAcknowledgementResponse defines the Msg/Acknowledgement response type.
  */
-export interface V1MsgAcknowledgementResponse {
-  /**
-   * - RESPONSE_RESULT_UNSPECIFIED: Default zero value enumeration
-   *  - RESPONSE_RESULT_NOOP: The message did not call the IBC application callbacks (because, for example, the packet had already been relayed)
-   *  - RESPONSE_RESULT_SUCCESS: The message was executed successfully
-   */
-  result?: V1ResponseResultType;
-}
+export type V1MsgAcknowledgementResponse = object;
 
 /**
 * MsgChannelCloseConfirmResponse defines the Msg/ChannelCloseConfirm response
@@ -351,9 +344,7 @@ export type V1MsgChannelOpenConfirmResponse = object;
 /**
  * MsgChannelOpenInitResponse defines the Msg/ChannelOpenInit response type.
  */
-export interface V1MsgChannelOpenInitResponse {
-  channel_id?: string;
-}
+export type V1MsgChannelOpenInitResponse = object;
 
 /**
  * MsgChannelOpenTryResponse defines the Msg/ChannelOpenTry response type.
@@ -363,38 +354,17 @@ export type V1MsgChannelOpenTryResponse = object;
 /**
  * MsgRecvPacketResponse defines the Msg/RecvPacket response type.
  */
-export interface V1MsgRecvPacketResponse {
-  /**
-   * - RESPONSE_RESULT_UNSPECIFIED: Default zero value enumeration
-   *  - RESPONSE_RESULT_NOOP: The message did not call the IBC application callbacks (because, for example, the packet had already been relayed)
-   *  - RESPONSE_RESULT_SUCCESS: The message was executed successfully
-   */
-  result?: V1ResponseResultType;
-}
+export type V1MsgRecvPacketResponse = object;
 
 /**
  * MsgTimeoutOnCloseResponse defines the Msg/TimeoutOnClose response type.
  */
-export interface V1MsgTimeoutOnCloseResponse {
-  /**
-   * - RESPONSE_RESULT_UNSPECIFIED: Default zero value enumeration
-   *  - RESPONSE_RESULT_NOOP: The message did not call the IBC application callbacks (because, for example, the packet had already been relayed)
-   *  - RESPONSE_RESULT_SUCCESS: The message was executed successfully
-   */
-  result?: V1ResponseResultType;
-}
+export type V1MsgTimeoutOnCloseResponse = object;
 
 /**
  * MsgTimeoutResponse defines the Msg/Timeout response type.
  */
-export interface V1MsgTimeoutResponse {
-  /**
-   * - RESPONSE_RESULT_UNSPECIFIED: Default zero value enumeration
-   *  - RESPONSE_RESULT_NOOP: The message did not call the IBC application callbacks (because, for example, the packet had already been relayed)
-   *  - RESPONSE_RESULT_SUCCESS: The message was executed successfully
-   */
-  result?: V1ResponseResultType;
-}
+export type V1MsgTimeoutResponse = object;
 
 /**
 * - ORDER_NONE_UNSPECIFIED: zero-value for channel ordering
@@ -824,17 +794,6 @@ export interface V1QueryUnreceivedPacketsResponse {
    * gets reset
    */
   height?: V1Height;
-}
-
-/**
-* - RESPONSE_RESULT_UNSPECIFIED: Default zero value enumeration
- - RESPONSE_RESULT_NOOP: The message did not call the IBC application callbacks (because, for example, the packet had already been relayed)
- - RESPONSE_RESULT_SUCCESS: The message was executed successfully
-*/
-export enum V1ResponseResultType {
-  RESPONSE_RESULT_UNSPECIFIED = "RESPONSE_RESULT_UNSPECIFIED",
-  RESPONSE_RESULT_NOOP = "RESPONSE_RESULT_NOOP",
-  RESPONSE_RESULT_SUCCESS = "RESPONSE_RESULT_SUCCESS",
 }
 
 /**
