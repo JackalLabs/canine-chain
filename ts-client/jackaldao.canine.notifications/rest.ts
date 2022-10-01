@@ -22,6 +22,7 @@ export interface NotificationsNotiCounter {
 
   /** @format uint64 */
   counter?: string;
+  permittedSenders?: string;
 }
 
 export interface NotificationsNotifications {

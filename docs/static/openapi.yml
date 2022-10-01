@@ -34056,6 +34056,8 @@ paths:
                     counter:
                       type: string
                       format: uint64
+                    permittedSenders:
+                      type: string
               pagination:
                 type: object
                 properties:
@@ -34178,6 +34180,8 @@ paths:
                   counter:
                     type: string
                     format: uint64
+                  permittedSenders:
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -59263,6 +59267,8 @@ definitions:
       counter:
         type: string
         format: uint64
+      permittedSenders:
+        type: string
   jackaldao.canine.notifications.Notifications:
     type: object
     properties:
@@ -59291,6 +59297,8 @@ definitions:
             counter:
               type: string
               format: uint64
+            permittedSenders:
+              type: string
       pagination:
         type: object
         properties:
@@ -59386,6 +59394,8 @@ definitions:
           counter:
             type: string
             format: uint64
+          permittedSenders:
+            type: string
   jackaldao.canine.notifications.QueryGetNotificationsResponse:
     type: object
     properties:
