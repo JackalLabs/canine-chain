@@ -689,16 +689,16 @@ export default {
 		},
 		
 		
-		async sendMsgDeleteProofs({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgInitMiner({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgDeleteProofs({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgInitMiner({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteProofs:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgInitMiner:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgDeleteProofs:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgInitMiner:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -715,16 +715,29 @@ export default {
 				}
 			}
 		},
-		async sendMsgCancelContract({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgSignContract({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgCancelContract({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgSignContract({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCancelContract:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSignContract:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCancelContract:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgSignContract:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgDeleteContracts({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgDeleteContracts({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteContracts:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgDeleteContracts:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -738,84 +751,6 @@ export default {
 					throw new Error('TxClient:MsgItem:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgItem:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgUpdateMiners({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgUpdateMiners({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateMiners:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUpdateMiners:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgUpdateActiveDeals({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgUpdateActiveDeals({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateActiveDeals:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUpdateActiveDeals:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgSetMinerTotalspace({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgSetMinerTotalspace({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetMinerTotalspace:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgSetMinerTotalspace:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgDeleteActiveDeals({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgDeleteActiveDeals({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteActiveDeals:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgDeleteActiveDeals:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgInitMiner({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgInitMiner({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgInitMiner:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgInitMiner:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgCreateMiners({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgCreateMiners({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateMiners:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateMiners:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -845,16 +780,133 @@ export default {
 				}
 			}
 		},
-		async sendMsgSignContract({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgDeleteProofs({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgSignContract({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgDeleteProofs({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSignContract:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDeleteProofs:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgSignContract:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgDeleteProofs:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgSetMinerTotalspace({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgSetMinerTotalspace({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSetMinerTotalspace:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSetMinerTotalspace:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCancelContract({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgCancelContract({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancelContract:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCancelContract:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgBuyStorage({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgBuyStorage({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBuyStorage:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgBuyStorage:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCreateActiveDeals({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgCreateActiveDeals({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateActiveDeals:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateActiveDeals:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgUpdateMiners({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgUpdateMiners({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateMiners:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateMiners:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgUpdateContracts({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgUpdateContracts({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateContracts:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateContracts:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgUpdateActiveDeals({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgUpdateActiveDeals({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateActiveDeals:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateActiveDeals:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgPostproof({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgPostproof({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgPostproof:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgPostproof:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgDeleteActiveDeals({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgDeleteActiveDeals({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteActiveDeals:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgDeleteActiveDeals:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -871,16 +923,16 @@ export default {
 				}
 			}
 		},
-		async sendMsgUpdateContracts({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateMiners({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgUpdateContracts({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineStorage.tx.sendMsgCreateMiners({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateContracts:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateMiners:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgUpdateContracts:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateMiners:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -910,69 +962,17 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateActiveDeals({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgCreateActiveDeals({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateActiveDeals:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateActiveDeals:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgPostproof({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgPostproof({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgPostproof:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgPostproof:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgBuyStorage({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgBuyStorage({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBuyStorage:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgBuyStorage:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgDeleteContracts({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineStorage.tx.sendMsgDeleteContracts({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteContracts:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgDeleteContracts:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		
-		async MsgDeleteProofs({ rootGetters }, { value }) {
+		async MsgInitMiner({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgDeleteProofs({value})
+				const msg = await client.JackaldaoCanineStorage.tx.msgInitMiner({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteProofs:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgInitMiner:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgDeleteProofs:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgInitMiner:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -989,16 +989,29 @@ export default {
 				}
 			}
 		},
-		async MsgCancelContract({ rootGetters }, { value }) {
+		async MsgSignContract({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgCancelContract({value})
+				const msg = await client.JackaldaoCanineStorage.tx.msgSignContract({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCancelContract:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSignContract:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCancelContract:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgSignContract:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgDeleteContracts({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgDeleteContracts({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteContracts:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDeleteContracts:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -1012,84 +1025,6 @@ export default {
 					throw new Error('TxClient:MsgItem:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgItem:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgUpdateMiners({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgUpdateMiners({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateMiners:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUpdateMiners:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgUpdateActiveDeals({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgUpdateActiveDeals({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateActiveDeals:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUpdateActiveDeals:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgSetMinerTotalspace({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgSetMinerTotalspace({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetMinerTotalspace:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgSetMinerTotalspace:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgDeleteActiveDeals({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgDeleteActiveDeals({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteActiveDeals:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgDeleteActiveDeals:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgInitMiner({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgInitMiner({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgInitMiner:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgInitMiner:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgCreateMiners({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgCreateMiners({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateMiners:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreateMiners:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -1119,16 +1054,133 @@ export default {
 				}
 			}
 		},
-		async MsgSignContract({ rootGetters }, { value }) {
+		async MsgDeleteProofs({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgSignContract({value})
+				const msg = await client.JackaldaoCanineStorage.tx.msgDeleteProofs({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSignContract:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDeleteProofs:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgSignContract:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgDeleteProofs:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgSetMinerTotalspace({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgSetMinerTotalspace({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSetMinerTotalspace:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgSetMinerTotalspace:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCancelContract({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgCancelContract({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancelContract:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCancelContract:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgBuyStorage({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgBuyStorage({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBuyStorage:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgBuyStorage:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateActiveDeals({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgCreateActiveDeals({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateActiveDeals:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateActiveDeals:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateMiners({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgUpdateMiners({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateMiners:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateMiners:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateContracts({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgUpdateContracts({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateContracts:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateContracts:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateActiveDeals({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgUpdateActiveDeals({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateActiveDeals:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateActiveDeals:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgPostproof({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgPostproof({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgPostproof:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgPostproof:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgDeleteActiveDeals({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineStorage.tx.msgDeleteActiveDeals({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteActiveDeals:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDeleteActiveDeals:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -1145,16 +1197,16 @@ export default {
 				}
 			}
 		},
-		async MsgUpdateContracts({ rootGetters }, { value }) {
+		async MsgCreateMiners({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgUpdateContracts({value})
+				const msg = await client.JackaldaoCanineStorage.tx.msgCreateMiners({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateContracts:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateMiners:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgUpdateContracts:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateMiners:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -1181,58 +1233,6 @@ export default {
 					throw new Error('TxClient:MsgUpdateProofs:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgUpdateProofs:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgCreateActiveDeals({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgCreateActiveDeals({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateActiveDeals:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreateActiveDeals:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgPostproof({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgPostproof({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgPostproof:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgPostproof:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgBuyStorage({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgBuyStorage({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBuyStorage:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgBuyStorage:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgDeleteContracts({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineStorage.tx.msgDeleteContracts({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteContracts:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgDeleteContracts:Create Could not create message: ' + e.message)
 				}
 			}
 		},
