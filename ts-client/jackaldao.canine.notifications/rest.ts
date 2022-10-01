@@ -9,6 +9,8 @@
  * ---------------------------------------------------------------
  */
 
+export type NotificationsMsgAddSendersResponse = object;
+
 export type NotificationsMsgCreateNotificationsResponse = object;
 
 export type NotificationsMsgDeleteNotificationsResponse = object;

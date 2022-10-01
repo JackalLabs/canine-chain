@@ -8,5 +8,6 @@ import (
 
 // x/notifications module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrNotiCounterNotFound = sdkerrors.Register(ModuleName, 1100, "User's notiCounter not set")
+	ErrCantUnmarshall      = sdkerrors.Register(ModuleName, 1101, "Cannot unmarshall from JSON")
 )

@@ -7,25 +7,13 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgCreateLPool } from "./types/lp/tx";
-import { MsgDepositLPool } from "./types/lp/tx";
 import { MsgSwap } from "./types/lp/tx";
 import { MsgWithdrawLPool } from "./types/lp/tx";
+import { MsgCreateLPool } from "./types/lp/tx";
+import { MsgDepositLPool } from "./types/lp/tx";
 
 
-export { MsgCreateLPool, MsgDepositLPool, MsgSwap, MsgWithdrawLPool };
-
-type sendMsgCreateLPoolParams = {
-  value: MsgCreateLPool,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgDepositLPoolParams = {
-  value: MsgDepositLPool,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgSwap, MsgWithdrawLPool, MsgCreateLPool, MsgDepositLPool };
 
 type sendMsgSwapParams = {
   value: MsgSwap,
@@ -39,14 +27,18 @@ type sendMsgWithdrawLPoolParams = {
   memo?: string
 };
 
-
-type msgCreateLPoolParams = {
+type sendMsgCreateLPoolParams = {
   value: MsgCreateLPool,
+  fee?: StdFee,
+  memo?: string
 };
 
-type msgDepositLPoolParams = {
+type sendMsgDepositLPoolParams = {
   value: MsgDepositLPool,
+  fee?: StdFee,
+  memo?: string
 };
+
 
 type msgSwapParams = {
   value: MsgSwap,
@@ -54,6 +46,14 @@ type msgSwapParams = {
 
 type msgWithdrawLPoolParams = {
   value: MsgWithdrawLPool,
+};
+
+type msgCreateLPoolParams = {
+  value: MsgCreateLPool,
+};
+
+type msgDepositLPoolParams = {
+  value: MsgDepositLPool,
 };
 
 
@@ -73,34 +73,6 @@ interface TxClientOptions {
 export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "http://localhost:26657", prefix: "cosmos" }) => {
 
   return {
-		
-		async sendMsgCreateLPool({ value, fee, memo }: sendMsgCreateLPoolParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateLPool: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateLPool({ value: MsgCreateLPool.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateLPool: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgDepositLPool({ value, fee, memo }: sendMsgDepositLPoolParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDepositLPool: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDepositLPool({ value: MsgDepositLPool.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDepositLPool: Could not broadcast Tx: '+ e.message)
-			}
-		},
 		
 		async sendMsgSwap({ value, fee, memo }: sendMsgSwapParams): Promise<DeliverTxResponse> {
 			if (!signer) {
@@ -130,22 +102,34 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgCreateLPool({ value }: msgCreateLPoolParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.lp.MsgCreateLPool", value: MsgCreateLPool.fromPartial( value ) }  
+		async sendMsgCreateLPool({ value, fee, memo }: sendMsgCreateLPoolParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateLPool: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateLPool({ value: MsgCreateLPool.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateLPool: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgCreateLPool: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
-		msgDepositLPool({ value }: msgDepositLPoolParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.lp.MsgDepositLPool", value: MsgDepositLPool.fromPartial( value ) }  
+		async sendMsgDepositLPool({ value, fee, memo }: sendMsgDepositLPoolParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDepositLPool: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDepositLPool({ value: MsgDepositLPool.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgDepositLPool: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgDepositLPool: Could not broadcast Tx: '+ e.message)
 			}
 		},
+		
 		
 		msgSwap({ value }: msgSwapParams): EncodeObject {
 			try {
@@ -160,6 +144,22 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return { typeUrl: "/jackaldao.canine.lp.MsgWithdrawLPool", value: MsgWithdrawLPool.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgWithdrawLPool: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCreateLPool({ value }: msgCreateLPoolParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.lp.MsgCreateLPool", value: MsgCreateLPool.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateLPool: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDepositLPool({ value }: msgDepositLPoolParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.lp.MsgDepositLPool", value: MsgDepositLPool.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDepositLPool: Could not create message: ' + e.message)
 			}
 		},
 		

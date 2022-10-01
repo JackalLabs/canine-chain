@@ -7,12 +7,18 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+import { MsgSignform } from "./types/dsig/tx";
 import { MsgUploadfile } from "./types/dsig/tx";
 import { MsgCreateform } from "./types/dsig/tx";
-import { MsgSignform } from "./types/dsig/tx";
 
 
-export { MsgUploadfile, MsgCreateform, MsgSignform };
+export { MsgSignform, MsgUploadfile, MsgCreateform };
+
+type sendMsgSignformParams = {
+  value: MsgSignform,
+  fee?: StdFee,
+  memo?: string
+};
 
 type sendMsgUploadfileParams = {
   value: MsgUploadfile,
@@ -26,12 +32,10 @@ type sendMsgCreateformParams = {
   memo?: string
 };
 
-type sendMsgSignformParams = {
-  value: MsgSignform,
-  fee?: StdFee,
-  memo?: string
-};
 
+type msgSignformParams = {
+  value: MsgSignform,
+};
 
 type msgUploadfileParams = {
   value: MsgUploadfile,
@@ -39,10 +43,6 @@ type msgUploadfileParams = {
 
 type msgCreateformParams = {
   value: MsgCreateform,
-};
-
-type msgSignformParams = {
-  value: MsgSignform,
 };
 
 
@@ -62,6 +62,20 @@ interface TxClientOptions {
 export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "http://localhost:26657", prefix: "cosmos" }) => {
 
   return {
+		
+		async sendMsgSignform({ value, fee, memo }: sendMsgSignformParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgSignform: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgSignform({ value: MsgSignform.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgSignform: Could not broadcast Tx: '+ e.message)
+			}
+		},
 		
 		async sendMsgUploadfile({ value, fee, memo }: sendMsgUploadfileParams): Promise<DeliverTxResponse> {
 			if (!signer) {
@@ -91,20 +105,14 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgSignform({ value, fee, memo }: sendMsgSignformParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgSignform: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgSignform({ value: MsgSignform.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+		
+		msgSignform({ value }: msgSignformParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.dsig.MsgSignform", value: MsgSignform.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:sendMsgSignform: Could not broadcast Tx: '+ e.message)
+				throw new Error('TxClient:MsgSignform: Could not create message: ' + e.message)
 			}
 		},
-		
 		
 		msgUploadfile({ value }: msgUploadfileParams): EncodeObject {
 			try {
@@ -119,14 +127,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return { typeUrl: "/jackaldao.canine.dsig.MsgCreateform", value: MsgCreateform.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgCreateform: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgSignform({ value }: msgSignformParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.dsig.MsgSignform", value: MsgSignform.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgSignform: Could not create message: ' + e.message)
 			}
 		},
 		

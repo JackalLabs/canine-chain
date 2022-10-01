@@ -12,6 +12,7 @@ service Msg {
   rpc UpdateNotifications(MsgUpdateNotifications) returns (MsgUpdateNotificationsResponse);
   rpc DeleteNotifications(MsgDeleteNotifications) returns (MsgDeleteNotificationsResponse);
   rpc SetCounter(MsgSetCounter) returns (MsgSetCounterResponse);
+  rpc AddSenders(MsgAddSenders) returns (MsgAddSendersResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -42,6 +43,14 @@ message MsgSetCounter {
 }
 
 message MsgSetCounterResponse {
+}
+
+message MsgAddSenders {
+  string creator = 1;
+  string senderIds = 2;
+}
+
+message MsgAddSendersResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

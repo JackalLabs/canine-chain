@@ -7,16 +7,17 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgCreateNotifications } from "./types/notifications/tx";
+import { MsgAddSenders } from "./types/notifications/tx";
 import { MsgUpdateNotifications } from "./types/notifications/tx";
-import { MsgDeleteNotifications } from "./types/notifications/tx";
 import { MsgSetCounter } from "./types/notifications/tx";
+import { MsgCreateNotifications } from "./types/notifications/tx";
+import { MsgDeleteNotifications } from "./types/notifications/tx";
 
 
-export { MsgCreateNotifications, MsgUpdateNotifications, MsgDeleteNotifications, MsgSetCounter };
+export { MsgAddSenders, MsgUpdateNotifications, MsgSetCounter, MsgCreateNotifications, MsgDeleteNotifications };
 
-type sendMsgCreateNotificationsParams = {
-  value: MsgCreateNotifications,
+type sendMsgAddSendersParams = {
+  value: MsgAddSenders,
   fee?: StdFee,
   memo?: string
 };
@@ -27,33 +28,43 @@ type sendMsgUpdateNotificationsParams = {
   memo?: string
 };
 
-type sendMsgDeleteNotificationsParams = {
-  value: MsgDeleteNotifications,
-  fee?: StdFee,
-  memo?: string
-};
-
 type sendMsgSetCounterParams = {
   value: MsgSetCounter,
   fee?: StdFee,
   memo?: string
 };
 
-
-type msgCreateNotificationsParams = {
+type sendMsgCreateNotificationsParams = {
   value: MsgCreateNotifications,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgDeleteNotificationsParams = {
+  value: MsgDeleteNotifications,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgAddSendersParams = {
+  value: MsgAddSenders,
 };
 
 type msgUpdateNotificationsParams = {
   value: MsgUpdateNotifications,
 };
 
-type msgDeleteNotificationsParams = {
-  value: MsgDeleteNotifications,
-};
-
 type msgSetCounterParams = {
   value: MsgSetCounter,
+};
+
+type msgCreateNotificationsParams = {
+  value: MsgCreateNotifications,
+};
+
+type msgDeleteNotificationsParams = {
+  value: MsgDeleteNotifications,
 };
 
 
@@ -74,17 +85,17 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgCreateNotifications({ value, fee, memo }: sendMsgCreateNotificationsParams): Promise<DeliverTxResponse> {
+		async sendMsgAddSenders({ value, fee, memo }: sendMsgAddSendersParams): Promise<DeliverTxResponse> {
 			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateNotifications: Unable to sign Tx. Signer is not present.')
+					throw new Error('TxClient:sendMsgAddSenders: Unable to sign Tx. Signer is not present.')
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateNotifications({ value: MsgCreateNotifications.fromPartial(value) })
+				let msg = this.msgAddSenders({ value: MsgAddSenders.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateNotifications: Could not broadcast Tx: '+ e.message)
+				throw new Error('TxClient:sendMsgAddSenders: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -102,20 +113,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgDeleteNotifications({ value, fee, memo }: sendMsgDeleteNotificationsParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteNotifications: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteNotifications({ value: MsgDeleteNotifications.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteNotifications: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgSetCounter({ value, fee, memo }: sendMsgSetCounterParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgSetCounter: Unable to sign Tx. Signer is not present.')
@@ -130,12 +127,40 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgCreateNotifications({ value }: msgCreateNotificationsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.notifications.MsgCreateNotifications", value: MsgCreateNotifications.fromPartial( value ) }  
+		async sendMsgCreateNotifications({ value, fee, memo }: sendMsgCreateNotificationsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateNotifications: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateNotifications({ value: MsgCreateNotifications.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateNotifications: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgCreateNotifications: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgDeleteNotifications({ value, fee, memo }: sendMsgDeleteNotificationsParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteNotifications: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteNotifications({ value: MsgDeleteNotifications.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteNotifications: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgAddSenders({ value }: msgAddSendersParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.notifications.MsgAddSenders", value: MsgAddSenders.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgAddSenders: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -147,19 +172,27 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgDeleteNotifications({ value }: msgDeleteNotificationsParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.notifications.MsgDeleteNotifications", value: MsgDeleteNotifications.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteNotifications: Could not create message: ' + e.message)
-			}
-		},
-		
 		msgSetCounter({ value }: msgSetCounterParams): EncodeObject {
 			try {
 				return { typeUrl: "/jackaldao.canine.notifications.MsgSetCounter", value: MsgSetCounter.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgSetCounter: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCreateNotifications({ value }: msgCreateNotificationsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.notifications.MsgCreateNotifications", value: MsgCreateNotifications.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateNotifications: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteNotifications({ value }: msgDeleteNotificationsParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.notifications.MsgDeleteNotifications", value: MsgDeleteNotifications.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteNotifications: Could not create message: ' + e.message)
 			}
 		},
 		
