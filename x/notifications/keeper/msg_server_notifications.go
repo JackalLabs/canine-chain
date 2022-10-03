@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -30,6 +31,12 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "notification already set")
 	}
 
+	//Check if sender is permitted to notify
+
+	if !isSender(notiCounter, msg.Creator) {
+		return nil, types.ErrCannotAddSenders
+	}
+
 	var notifications = types.Notifications{
 		Creator:      msg.Creator,
 		Count:        notiCounter.Counter,
@@ -50,6 +57,23 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 	)
 
 	return &types.MsgCreateNotificationsResponse{}, nil
+}
+
+func isSender(notiCounter types.NotiCounter, user string) bool {
+
+	currentSenders := notiCounter.PermittedSenders
+
+	placeholderMap := make([]string, 0, 1000)
+	json.Unmarshal([]byte(currentSenders), &placeholderMap)
+
+	for _, v := range placeholderMap {
+
+		if string(v) == user {
+			return true
+		}
+	}
+	return false
+
 }
 
 func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDeleteNotifications) (*types.MsgDeleteNotificationsResponse, error) {

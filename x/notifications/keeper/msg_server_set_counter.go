@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -21,9 +22,21 @@ func (k msgServer) SetCounter(goCtx context.Context, msg *types.MsgSetCounter) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "counter already set")
 	}
 
+	//Add yourself as a permitted Sender in the beginning so you can notify yourself
+
+	placeholderMap := make([]string, 0, 1000) //Perhaps I could just use an array
+	placeholderMap = append(placeholderMap, msg.Creator)
+	marshalledSenders, err := json.Marshal(placeholderMap)
+	if err != nil {
+		return nil, types.ErrCantUnmarshall
+	}
+
+	updatedSenders := string(marshalledSenders)
+
 	var counter = types.NotiCounter{
-		Address: msg.Creator,
-		Counter: 0,
+		Address:          msg.Creator,
+		Counter:          0,
+		PermittedSenders: updatedSenders,
 	}
 
 	k.SetNotiCounter(
