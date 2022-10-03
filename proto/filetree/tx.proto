@@ -12,6 +12,7 @@ service Msg {
   rpc Postkey(MsgPostkey) returns (MsgPostkeyResponse);
   rpc InitAccount(MsgInitAccount) returns (MsgInitAccountResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
+  rpc InitAll(MsgInitAll) returns (MsgInitAllResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -69,6 +70,15 @@ message MsgDeleteFile {
 }
 
 message MsgDeleteFileResponse {
+}
+
+message MsgInitAll {
+  string creator = 1;
+  string name = 2;
+  string pubkey = 3;
+}
+
+message MsgInitAllResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

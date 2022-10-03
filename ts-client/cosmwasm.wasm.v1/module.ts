@@ -7,38 +7,39 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+<<<<<<< HEAD
 import { MsgMigrateContract } from "./types/cosmwasm/wasm/v1/tx";
 import { MsgIBCSend } from "./types/cosmwasm/wasm/v1/ibc";
 import { MsgExecuteContract } from "./types/cosmwasm/wasm/v1/tx";
 import { MsgUpdateAdmin } from "./types/cosmwasm/wasm/v1/tx";
 import { MsgInstantiateContract } from "./types/cosmwasm/wasm/v1/tx";
 import { MsgStoreCode } from "./types/cosmwasm/wasm/v1/tx";
+=======
+import { MsgUpdateAdmin } from "./types/cosmwasm/wasm/v1/tx";
+import { MsgMigrateContract } from "./types/cosmwasm/wasm/v1/tx";
+import { MsgInstantiateContract } from "./types/cosmwasm/wasm/v1/tx";
+import { MsgStoreCode } from "./types/cosmwasm/wasm/v1/tx";
+import { MsgExecuteContract } from "./types/cosmwasm/wasm/v1/tx";
+import { MsgIBCSend } from "./types/cosmwasm/wasm/v1/ibc";
+>>>>>>> master
 import { MsgIBCCloseChannel } from "./types/cosmwasm/wasm/v1/ibc";
 import { MsgClearAdmin } from "./types/cosmwasm/wasm/v1/tx";
 
 
+<<<<<<< HEAD
 export { MsgMigrateContract, MsgIBCSend, MsgExecuteContract, MsgUpdateAdmin, MsgInstantiateContract, MsgStoreCode, MsgIBCCloseChannel, MsgClearAdmin };
-
-type sendMsgMigrateContractParams = {
-  value: MsgMigrateContract,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgIBCSendParams = {
-  value: MsgIBCSend,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgExecuteContractParams = {
-  value: MsgExecuteContract,
-  fee?: StdFee,
-  memo?: string
-};
+=======
+export { MsgUpdateAdmin, MsgMigrateContract, MsgInstantiateContract, MsgStoreCode, MsgExecuteContract, MsgIBCSend, MsgIBCCloseChannel, MsgClearAdmin };
 
 type sendMsgUpdateAdminParams = {
   value: MsgUpdateAdmin,
+  fee?: StdFee,
+  memo?: string
+};
+>>>>>>> master
+
+type sendMsgMigrateContractParams = {
+  value: MsgMigrateContract,
   fee?: StdFee,
   memo?: string
 };
@@ -49,8 +50,41 @@ type sendMsgInstantiateContractParams = {
   memo?: string
 };
 
+<<<<<<< HEAD
+type sendMsgExecuteContractParams = {
+  value: MsgExecuteContract,
+=======
 type sendMsgStoreCodeParams = {
   value: MsgStoreCode,
+>>>>>>> master
+  fee?: StdFee,
+  memo?: string
+};
+
+<<<<<<< HEAD
+type sendMsgUpdateAdminParams = {
+  value: MsgUpdateAdmin,
+=======
+type sendMsgExecuteContractParams = {
+  value: MsgExecuteContract,
+>>>>>>> master
+  fee?: StdFee,
+  memo?: string
+};
+
+<<<<<<< HEAD
+type sendMsgInstantiateContractParams = {
+  value: MsgInstantiateContract,
+=======
+type sendMsgIBCSendParams = {
+  value: MsgIBCSend,
+>>>>>>> master
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgIBCCloseChannelParams = {
+  value: MsgIBCCloseChannel,
   fee?: StdFee,
   memo?: string
 };
@@ -68,6 +102,7 @@ type sendMsgClearAdminParams = {
 };
 
 
+<<<<<<< HEAD
 type msgMigrateContractParams = {
   value: MsgMigrateContract,
 };
@@ -82,6 +117,13 @@ type msgExecuteContractParams = {
 
 type msgUpdateAdminParams = {
   value: MsgUpdateAdmin,
+=======
+type msgUpdateAdminParams = {
+  value: MsgUpdateAdmin,
+};
+
+type msgMigrateContractParams = {
+  value: MsgMigrateContract,
 };
 
 type msgInstantiateContractParams = {
@@ -90,6 +132,19 @@ type msgInstantiateContractParams = {
 
 type msgStoreCodeParams = {
   value: MsgStoreCode,
+>>>>>>> master
+};
+
+type msgInstantiateContractParams = {
+  value: MsgInstantiateContract,
+};
+
+type msgIBCSendParams = {
+  value: MsgIBCSend,
+};
+
+type msgIBCCloseChannelParams = {
+  value: MsgIBCCloseChannel,
 };
 
 type msgIBCCloseChannelParams = {
@@ -132,13 +187,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+<<<<<<< HEAD
 		async sendMsgIBCSend({ value, fee, memo }: sendMsgIBCSendParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgIBCSend: Unable to sign Tx. Signer is not present.')
+=======
+		async sendMsgMigrateContract({ value, fee, memo }: sendMsgMigrateContractParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgMigrateContract: Unable to sign Tx. Signer is not present.')
+>>>>>>> master
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+<<<<<<< HEAD
 				let msg = this.msgIBCSend({ value: MsgIBCSend.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
@@ -149,10 +211,23 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 		async sendMsgExecuteContract({ value, fee, memo }: sendMsgExecuteContractParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgExecuteContract: Unable to sign Tx. Signer is not present.')
+=======
+				let msg = this.msgMigrateContract({ value: MsgMigrateContract.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgMigrateContract: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgInstantiateContract({ value, fee, memo }: sendMsgInstantiateContractParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgInstantiateContract: Unable to sign Tx. Signer is not present.')
+>>>>>>> master
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+<<<<<<< HEAD
 				let msg = this.msgExecuteContract({ value: MsgExecuteContract.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
@@ -163,24 +238,7 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 		async sendMsgUpdateAdmin({ value, fee, memo }: sendMsgUpdateAdminParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgUpdateAdmin: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgUpdateAdmin({ value: MsgUpdateAdmin.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgUpdateAdmin: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgInstantiateContract({ value, fee, memo }: sendMsgInstantiateContractParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgInstantiateContract: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+=======
 				let msg = this.msgInstantiateContract({ value: MsgInstantiateContract.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
@@ -191,14 +249,76 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 		async sendMsgStoreCode({ value, fee, memo }: sendMsgStoreCodeParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgStoreCode: Unable to sign Tx. Signer is not present.')
+>>>>>>> master
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+<<<<<<< HEAD
+				let msg = this.msgUpdateAdmin({ value: MsgUpdateAdmin.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateAdmin: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgInstantiateContract({ value, fee, memo }: sendMsgInstantiateContractParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgInstantiateContract: Unable to sign Tx. Signer is not present.')
+=======
 				let msg = this.msgStoreCode({ value: MsgStoreCode.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgStoreCode: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgExecuteContract({ value, fee, memo }: sendMsgExecuteContractParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgExecuteContract: Unable to sign Tx. Signer is not present.')
+>>>>>>> master
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+<<<<<<< HEAD
+				let msg = this.msgInstantiateContract({ value: MsgInstantiateContract.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgInstantiateContract: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgStoreCode({ value, fee, memo }: sendMsgStoreCodeParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgStoreCode: Unable to sign Tx. Signer is not present.')
+=======
+				let msg = this.msgExecuteContract({ value: MsgExecuteContract.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgExecuteContract: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgIBCSend({ value, fee, memo }: sendMsgIBCSendParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgIBCSend: Unable to sign Tx. Signer is not present.')
+>>>>>>> master
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+<<<<<<< HEAD
+				let msg = this.msgStoreCode({ value: MsgStoreCode.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgStoreCode: Could not broadcast Tx: '+ e.message)
+=======
+				let msg = this.msgIBCSend({ value: MsgIBCSend.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgIBCSend: Could not broadcast Tx: '+ e.message)
+>>>>>>> master
 			}
 		},
 		
@@ -231,6 +351,17 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 		},
 		
 		
+<<<<<<< HEAD
+=======
+		msgUpdateAdmin({ value }: msgUpdateAdminParams): EncodeObject {
+			try {
+				return { typeUrl: "/cosmwasm.wasm.v1.MsgUpdateAdmin", value: MsgUpdateAdmin.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateAdmin: Could not create message: ' + e.message)
+			}
+		},
+		
+>>>>>>> master
 		msgMigrateContract({ value }: msgMigrateContractParams): EncodeObject {
 			try {
 				return { typeUrl: "/cosmwasm.wasm.v1.MsgMigrateContract", value: MsgMigrateContract.fromPartial( value ) }  
@@ -239,14 +370,15 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgIBCSend({ value }: msgIBCSendParams): EncodeObject {
+		msgInstantiateContract({ value }: msgInstantiateContractParams): EncodeObject {
 			try {
-				return { typeUrl: "/cosmwasm.wasm.v1.MsgIBCSend", value: MsgIBCSend.fromPartial( value ) }  
+				return { typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract", value: MsgInstantiateContract.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgIBCSend: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgInstantiateContract: Could not create message: ' + e.message)
 			}
 		},
 		
+<<<<<<< HEAD
 		msgExecuteContract({ value }: msgExecuteContractParams): EncodeObject {
 			try {
 				return { typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract", value: MsgExecuteContract.fromPartial( value ) }  
@@ -268,14 +400,37 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return { typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract", value: MsgInstantiateContract.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgInstantiateContract: Could not create message: ' + e.message)
-			}
-		},
-		
+=======
 		msgStoreCode({ value }: msgStoreCodeParams): EncodeObject {
 			try {
 				return { typeUrl: "/cosmwasm.wasm.v1.MsgStoreCode", value: MsgStoreCode.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgStoreCode: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgExecuteContract({ value }: msgExecuteContractParams): EncodeObject {
+			try {
+				return { typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract", value: MsgExecuteContract.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgExecuteContract: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgIBCSend({ value }: msgIBCSendParams): EncodeObject {
+			try {
+				return { typeUrl: "/cosmwasm.wasm.v1.MsgIBCSend", value: MsgIBCSend.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgIBCSend: Could not create message: ' + e.message)
+>>>>>>> master
+			}
+		},
+		
+		msgIBCCloseChannel({ value }: msgIBCCloseChannelParams): EncodeObject {
+			try {
+				return { typeUrl: "/cosmwasm.wasm.v1.MsgIBCCloseChannel", value: MsgIBCCloseChannel.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgIBCCloseChannel: Could not create message: ' + e.message)
 			}
 		},
 		

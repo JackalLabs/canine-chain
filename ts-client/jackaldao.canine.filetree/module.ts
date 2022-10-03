@@ -7,29 +7,51 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+<<<<<<< HEAD
 import { MsgInitAccount } from "./types/filetree/tx";
 import { MsgDeleteFile } from "./types/filetree/tx";
 import { MsgPostkey } from "./types/filetree/tx";
+=======
+import { MsgInitAll } from "./types/filetree/tx";
+import { MsgPostkey } from "./types/filetree/tx";
+import { MsgDeleteFile } from "./types/filetree/tx";
+import { MsgInitAccount } from "./types/filetree/tx";
+>>>>>>> master
 import { MsgPostFile } from "./types/filetree/tx";
 import { MsgAddViewers } from "./types/filetree/tx";
 
 
+<<<<<<< HEAD
 export { MsgInitAccount, MsgDeleteFile, MsgPostkey, MsgPostFile, MsgAddViewers };
+=======
+export { MsgInitAll, MsgPostkey, MsgDeleteFile, MsgInitAccount, MsgPostFile, MsgAddViewers };
+>>>>>>> master
 
-type sendMsgInitAccountParams = {
-  value: MsgInitAccount,
+type sendMsgInitAllParams = {
+  value: MsgInitAll,
   fee?: StdFee,
   memo?: string
 };
 
+<<<<<<< HEAD
 type sendMsgDeleteFileParams = {
   value: MsgDeleteFile,
+=======
+type sendMsgPostkeyParams = {
+  value: MsgPostkey,
+>>>>>>> master
   fee?: StdFee,
   memo?: string
 };
 
 type sendMsgPostkeyParams = {
   value: MsgPostkey,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgInitAccountParams = {
+  value: MsgInitAccount,
   fee?: StdFee,
   memo?: string
 };
@@ -47,16 +69,28 @@ type sendMsgAddViewersParams = {
 };
 
 
-type msgInitAccountParams = {
-  value: MsgInitAccount,
+type msgInitAllParams = {
+  value: MsgInitAll,
 };
 
+<<<<<<< HEAD
+=======
+type msgPostkeyParams = {
+  value: MsgPostkey,
+};
+
+>>>>>>> master
 type msgDeleteFileParams = {
   value: MsgDeleteFile,
 };
 
+<<<<<<< HEAD
 type msgPostkeyParams = {
   value: MsgPostkey,
+=======
+type msgInitAccountParams = {
+  value: MsgInitAccount,
+>>>>>>> master
 };
 
 type msgPostFileParams = {
@@ -85,31 +119,44 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgInitAccount({ value, fee, memo }: sendMsgInitAccountParams): Promise<DeliverTxResponse> {
+		async sendMsgInitAll({ value, fee, memo }: sendMsgInitAllParams): Promise<DeliverTxResponse> {
 			if (!signer) {
-					throw new Error('TxClient:sendMsgInitAccount: Unable to sign Tx. Signer is not present.')
+					throw new Error('TxClient:sendMsgInitAll: Unable to sign Tx. Signer is not present.')
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgInitAccount({ value: MsgInitAccount.fromPartial(value) })
+				let msg = this.msgInitAll({ value: MsgInitAll.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:sendMsgInitAccount: Could not broadcast Tx: '+ e.message)
+				throw new Error('TxClient:sendMsgInitAll: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
+<<<<<<< HEAD
 		async sendMsgDeleteFile({ value, fee, memo }: sendMsgDeleteFileParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgDeleteFile: Unable to sign Tx. Signer is not present.')
+=======
+		async sendMsgPostkey({ value, fee, memo }: sendMsgPostkeyParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgPostkey: Unable to sign Tx. Signer is not present.')
+>>>>>>> master
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+<<<<<<< HEAD
 				let msg = this.msgDeleteFile({ value: MsgDeleteFile.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgDeleteFile: Could not broadcast Tx: '+ e.message)
+=======
+				let msg = this.msgPostkey({ value: MsgPostkey.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgPostkey: Could not broadcast Tx: '+ e.message)
+>>>>>>> master
 			}
 		},
 		
@@ -124,6 +171,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgPostkey: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgInitAccount({ value, fee, memo }: sendMsgInitAccountParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgInitAccount: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgInitAccount({ value: MsgInitAccount.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgInitAccount: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -156,19 +217,27 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 		},
 		
 		
-		msgInitAccount({ value }: msgInitAccountParams): EncodeObject {
+		msgInitAll({ value }: msgInitAllParams): EncodeObject {
 			try {
-				return { typeUrl: "/jackaldao.canine.filetree.MsgInitAccount", value: MsgInitAccount.fromPartial( value ) }  
+				return { typeUrl: "/jackaldao.canine.filetree.MsgInitAll", value: MsgInitAll.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgInitAccount: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgInitAll: Could not create message: ' + e.message)
 			}
 		},
 		
+<<<<<<< HEAD
 		msgDeleteFile({ value }: msgDeleteFileParams): EncodeObject {
 			try {
 				return { typeUrl: "/jackaldao.canine.filetree.MsgDeleteFile", value: MsgDeleteFile.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgDeleteFile: Could not create message: ' + e.message)
+=======
+		msgPostkey({ value }: msgPostkeyParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.filetree.MsgPostkey", value: MsgPostkey.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgPostkey: Could not create message: ' + e.message)
+>>>>>>> master
 			}
 		},
 		
@@ -177,6 +246,14 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return { typeUrl: "/jackaldao.canine.filetree.MsgPostkey", value: MsgPostkey.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgPostkey: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgInitAccount({ value }: msgInitAccountParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.filetree.MsgInitAccount", value: MsgInitAccount.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgInitAccount: Could not create message: ' + e.message)
 			}
 		},
 		

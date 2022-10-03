@@ -389,6 +389,7 @@ export default {
 				}
 			}
 		},
+<<<<<<< HEAD
 		async sendMsgPostkey({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -398,6 +399,30 @@ export default {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
 				}else{
+=======
+		async sendMsgAddViewers({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineFiletree.tx.sendMsgAddViewers({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgAddViewers:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgPostkey({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineFiletree.tx.sendMsgPostkey({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
+				}else{
+>>>>>>> master
 					throw new Error('TxClient:MsgPostkey:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
@@ -428,16 +453,16 @@ export default {
 				}
 			}
 		},
-		async sendMsgAddViewers({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgInitAll({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineFiletree.tx.sendMsgAddViewers({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineFiletree.tx.sendMsgInitAll({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgInitAll:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgAddViewers:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgInitAll:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -455,6 +480,7 @@ export default {
 				}
 			}
 		},
+<<<<<<< HEAD
 		async MsgPostkey({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -464,6 +490,30 @@ export default {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
 				} else{
+=======
+		async MsgAddViewers({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineFiletree.tx.msgAddViewers({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgAddViewers:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgPostkey({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineFiletree.tx.msgPostkey({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgPostkey:Init Could not initialize signing client. Wallet is required.')
+				} else{
+>>>>>>> master
 					throw new Error('TxClient:MsgPostkey:Create Could not create message: ' + e.message)
 				}
 			}
@@ -494,16 +544,16 @@ export default {
 				}
 			}
 		},
-		async MsgAddViewers({ rootGetters }, { value }) {
+		async MsgInitAll({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineFiletree.tx.msgAddViewers({value})
+				const msg = await client.JackaldaoCanineFiletree.tx.msgInitAll({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgAddViewers:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgInitAll:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgAddViewers:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgInitAll:Create Could not create message: ' + e.message)
 				}
 			}
 		},
