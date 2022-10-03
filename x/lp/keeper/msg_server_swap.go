@@ -25,6 +25,11 @@ func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
 	// Convert DecCoin to Normalized Coin
 	coin, _ := sdk.NormalizeDecCoin(msg.Coin).TruncateDecimal()
 
+	if !coin.IsValid() || coin.IsZero() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins,
+			"coin is invalid or has zero amount")
+	}
+
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
 	// Check if msg denoms match pool coin denoms.
@@ -54,7 +59,8 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	emptyMsgResponse := types.MsgSwapResponse{}
 
 	if err := k.validateSwapMsg(ctx, msg); err != nil {
-		return &emptyMsgResponse, err
+		return &emptyMsgResponse, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest,
+			err.Error())
 	}
 
 	pool, _ := k.GetLPool(ctx, msg.PoolName)
@@ -91,8 +97,8 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 
 	if err != nil {
 		return &emptyMsgResponse, sdkerrors.Wrapf(
-			err,
-			"failed to run AMM",
+			sdkerrors.ErrInvalidRequest,
+			err.Error(),
 		)
 	}
 
@@ -103,14 +109,14 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAcc, types.ModuleName, sdk.NewCoins(depositCoin))
 
 	if sdkErr != nil {
-		return &emptyMsgResponse, sdkErr
+		return &emptyMsgResponse, sdkerrors.Wrap(sdkErr, "swap failed")
 	}
 
 	// Send other coin to creator
 	sdkErr = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, creatorAcc, swapReturnCoins)
 
 	if sdkErr != nil {
-		return &emptyMsgResponse, sdkErr
+		return &emptyMsgResponse, sdkerrors.Wrap(sdkErr, "swap failed")
 	}
 
 	// Update pool balance
