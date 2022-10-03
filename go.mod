@@ -6,6 +6,7 @@ require (
 	github.com/CosmWasm/wasmvm v1.0.0
 	github.com/armon/go-metrics v0.4.0
 	github.com/btcsuite/btcd v0.22.1
+	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/coinbase/rosetta-sdk-go v0.7.0
 	github.com/cosmos/cosmos-sdk v0.45.5
 	github.com/cosmos/iavl v0.17.3
@@ -63,7 +64,6 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1 // indirect
-	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce // indirect
 	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -85,17 +85,20 @@ require (
 	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/gballet/go-libpcsclite v0.0.0-20190607065134-2772fd86a8ff // indirect
+	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
+	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/btree v1.0.0 // indirect
 	github.com/google/orderedcode v0.0.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3 // indirect
 	github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c // indirect
 	github.com/gtank/merlin v0.1.1 // indirect
 	github.com/gtank/ristretto255 v0.1.2 // indirect

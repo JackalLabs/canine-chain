@@ -10,6 +10,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
 	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 )
@@ -19,17 +20,19 @@ import (
 //  - EVM module queries
 // 	- Fee market module queries
 type QueryClient struct {
-	ServiceClient tx.ServiceClient
-	QueryClient   evmtypes.QueryClient
-	FeeMarket     feemarkettypes.QueryClient
+	ServiceClient   tx.ServiceClient
+	QueryClient     evmtypes.QueryClient
+	BankQueryClient banktypes.QueryClient
+	FeeMarket       feemarkettypes.QueryClient
 }
 
 // NewQueryClient creates a new gRPC query client
 func NewQueryClient(clientCtx client.Context) *QueryClient {
 	return &QueryClient{
-		ServiceClient: tx.NewServiceClient(clientCtx),
-		QueryClient:   evmtypes.NewQueryClient(clientCtx),
-		FeeMarket:     feemarkettypes.NewQueryClient(clientCtx),
+		ServiceClient:   tx.NewServiceClient(clientCtx),
+		QueryClient:     evmtypes.NewQueryClient(clientCtx),
+		BankQueryClient: banktypes.NewQueryClient(clientCtx),
+		FeeMarket:       feemarkettypes.NewQueryClient(clientCtx),
 	}
 }
 

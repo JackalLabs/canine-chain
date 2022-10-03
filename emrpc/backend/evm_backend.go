@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"reflect"
 	"strconv"
 	"time"
 
@@ -27,6 +28,7 @@ import (
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ethermint "github.com/evmos/ethermint/types"
 	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
 	"github.com/jackal-dao/canine/emrpc/types"
@@ -83,7 +85,6 @@ func (b *Backend) GetBlockByNumber(blockNum emrpctypes.BlockNumber, fullTx bool)
 		b.logger.Debug("EthBlockFromTendermint failed", "height", blockNum, "error", err.Error())
 		return nil, err
 	}
-
 	return res, nil
 }
 
@@ -745,8 +746,8 @@ func (b *Backend) GetTransactionCount(address common.Address, blockNum emrpctype
 		return &n, nil
 	}
 
-	includePending := blockNum == emrpctypes.EthPendingBlockNumber
-	nonce, err := b.getAccountNonce(address, includePending, blockNum.Int64(), b.logger)
+	// includePending := blockNum == emrpctypes.EthPendingBlockNumber
+	nonce, err := b.getAccountNonce(address, false, blockNum.Int64(), b.logger)
 	if err != nil {
 		return nil, err
 	}
@@ -990,6 +991,7 @@ func (b *Backend) GetEthereumMsgsFromTendermintBlock(resBlock *tmrpctypes.Result
 	block := resBlock.Block
 
 	txResults := blockRes.TxsResults
+	b.clientCtx.Logger.Info(block.Txs)
 
 	for i, tx := range block.Txs {
 		// check tx exists on EVM by cross checking with blockResults
@@ -1004,12 +1006,27 @@ func (b *Backend) GetEthereumMsgsFromTendermintBlock(resBlock *tmrpctypes.Result
 			b.logger.Debug("failed to decode transaction in block", "height", block.Height, "error", err.Error())
 			continue
 		}
-
+		b.clientCtx.Logger.Info("transaction messages")
+		// fmt.Println(tx.GetMsgs())
 		for _, msg := range tx.GetMsgs() {
-			ethMsg, ok := msg.(*evmtypes.MsgEthereumTx)
+			fmt.Println("Message type:")
+			fmt.Println(reflect.TypeOf(msg))
+			// converting from *banktypes.MsgSend to *evmtypes.MsgEthereumTx
+			bankMsg, ok := msg.(*banktypes.MsgSend)
 			if !ok {
 				continue
 			}
+			
+			// new ethereum transaction
+			ethMsg := *&evmtypes.MsgEthereumTx{
+				Hash: 
+			}
+
+
+			// ethMsg, ok := msg.(*evmtypes.MsgEthereumTx)
+			// if !ok {
+			// 	continue
+			// }
 
 			result = append(result, ethMsg)
 		}

@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -94,6 +95,7 @@ type Backend struct {
 	clientCtx           client.Context
 	queryClient         *emrpctypes.QueryClient // gRPC query client
 	authQueryClient     authtypes.QueryClient
+	bankQueryClient     banktypes.QueryClient
 	logger              log.Logger
 	chainID             *big.Int
 	cfg                 config.Config

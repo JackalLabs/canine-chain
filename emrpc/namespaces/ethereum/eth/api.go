@@ -7,6 +7,8 @@ import (
 	"math"
 	"math/big"
 
+	bech32 "github.com/btcsuite/btcutil/bech32"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/evmos/ethermint/ethereum/eip712"
 
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
@@ -128,13 +130,13 @@ func (e *PublicAPI) Ctx() context.Context {
 
 // ProtocolVersion returns the supported Ethereum protocol version.
 func (e *PublicAPI) ProtocolVersion() hexutil.Uint {
-	e.logger.Debug("eth_protocolVersion")
+	fmt.Println("eth_protocolVersion")
 	return hexutil.Uint(ethermint.ProtocolVersion)
 }
 
 // ChainId is the EIP-155 replay-protection chain id for the current ethereum chain config.
 func (e *PublicAPI) ChainId() (*hexutil.Big, error) { // nolint
-	e.logger.Debug("eth_chainId")
+	fmt.Println("eth_chainId")
 	// if current block is at or past the EIP-155 replay-protection fork block, return chainID from config
 	bn, err := e.backend.BlockNumber()
 	if err != nil {
@@ -157,7 +159,7 @@ func (e *PublicAPI) ChainId() (*hexutil.Big, error) { // nolint
 // - pulledStates:  number of state entries processed until now
 // - knownStates:   number of known state entries that still need to be pulled
 func (e *PublicAPI) Syncing() (interface{}, error) {
-	e.logger.Debug("eth_syncing")
+	fmt.Println("eth_syncing")
 
 	status, err := e.clientCtx.Client.Status(e.ctx)
 	if err != nil {
@@ -179,7 +181,7 @@ func (e *PublicAPI) Syncing() (interface{}, error) {
 
 // Coinbase is the address that staking rewards will be send to (alias for Etherbase).
 func (e *PublicAPI) Coinbase() (string, error) {
-	e.logger.Debug("eth_coinbase")
+	fmt.Println("eth_coinbase")
 
 	coinbase, err := e.backend.GetCoinbase()
 	if err != nil {
@@ -191,19 +193,19 @@ func (e *PublicAPI) Coinbase() (string, error) {
 
 // Mining returns whether or not this node is currently mining. Always false.
 func (e *PublicAPI) Mining() bool {
-	e.logger.Debug("eth_mining")
+	fmt.Println("eth_mining")
 	return false
 }
 
 // Hashrate returns the current node's hashrate. Always 0.
 func (e *PublicAPI) Hashrate() hexutil.Uint64 {
-	e.logger.Debug("eth_hashrate")
+	fmt.Println("eth_hashrate")
 	return 0
 }
 
 // GasPrice returns the current gas price based on Ethermint's gas price oracle.
 func (e *PublicAPI) GasPrice() (*hexutil.Big, error) {
-	e.logger.Debug("eth_gasPrice")
+	fmt.Println("eth_gasPrice")
 	var (
 		result *big.Int
 		err    error
@@ -233,7 +235,7 @@ func (e *PublicAPI) GasPrice() (*hexutil.Big, error) {
 
 // MaxPriorityFeePerGas returns a suggestion for a gas tip cap for dynamic fee transactions.
 func (e *PublicAPI) MaxPriorityFeePerGas() (*hexutil.Big, error) {
-	e.logger.Debug("eth_maxPriorityFeePerGas")
+	fmt.Println("eth_maxPriorityFeePerGas")
 	head := e.backend.CurrentHeader()
 	tipcap, err := e.backend.SuggestGasTipCap(head.BaseFee)
 	if err != nil {
@@ -243,13 +245,13 @@ func (e *PublicAPI) MaxPriorityFeePerGas() (*hexutil.Big, error) {
 }
 
 func (e *PublicAPI) FeeHistory(blockCount rpc.DecimalOrHex, lastBlock rpc.BlockNumber, rewardPercentiles []float64) (*rpctypes.FeeHistoryResult, error) {
-	e.logger.Debug("eth_feeHistory")
+	fmt.Println("eth_feeHistory")
 	return e.backend.FeeHistory(blockCount, lastBlock, rewardPercentiles)
 }
 
 // Accounts returns the list of accounts available to this node.
 func (e *PublicAPI) Accounts() ([]common.Address, error) {
-	e.logger.Debug("eth_accounts")
+	fmt.Println("eth_accounts")
 
 	addresses := make([]common.Address, 0) // return [] instead of nil if empty
 
@@ -268,7 +270,7 @@ func (e *PublicAPI) Accounts() ([]common.Address, error) {
 
 // BlockNumber returns the current block number.
 func (e *PublicAPI) BlockNumber() (hexutil.Uint64, error) {
-	e.logger.Debug("eth_blockNumber")
+	fmt.Println("eth_blockNumber")
 	// fmt.Println("blocknumber accessed by backend below:")
 	// fmt.Println(e.backend.BlockNumber())
 	return e.backend.BlockNumber()
@@ -276,23 +278,33 @@ func (e *PublicAPI) BlockNumber() (hexutil.Uint64, error) {
 
 // GetBalance returns the provided account's balance up to the provided block number.
 func (e *PublicAPI) GetBalance(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (*hexutil.Big, error) {
-	e.logger.Debug("eth_getBalance", "address", address.String(), "block number or hash", blockNrOrHash)
-
+	fmt.Println("eth_getBalance", "address", address.String(), "block number or hash", blockNrOrHash)
 	blockNum, err := e.getBlockNumber(blockNrOrHash)
 	if err != nil {
 		return nil, err
 	}
 
-	req := &evmtypes.QueryBalanceRequest{
-		Address: address.String(),
+	// converting to base32
+	conv, err := bech32.ConvertBits(address.Bytes(), 8, 5, true)
+	if err != nil {
+		// implement better error catching
+		fmt.Println("Error:", err)
+	}
+	encoded, err := bech32.Encode("jkl", conv)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	req := &banktypes.QueryBalanceRequest{
+		Address: encoded,
+		Denom:   "ujkl",
 	}
 
-	res, err := e.queryClient.QueryClient.Balance(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	res, err := e.queryClient.BankQueryClient.Balance(rpctypes.ContextWithHeight(blockNum.Int64()), req)
 	if err != nil {
 		return nil, err
 	}
 
-	val, ok := sdk.NewIntFromString(res.Balance)
+	val, ok := sdk.NewIntFromString(res.Balance.Amount.String())
 	if !ok {
 		return nil, errors.New("invalid balance")
 	}
@@ -302,7 +314,7 @@ func (e *PublicAPI) GetBalance(address common.Address, blockNrOrHash rpctypes.Bl
 
 // GetStorageAt returns the contract storage at the given address, block number, and key.
 func (e *PublicAPI) GetStorageAt(address common.Address, key string, blockNrOrHash rpctypes.BlockNumberOrHash) (hexutil.Bytes, error) {
-	e.logger.Debug("eth_getStorageAt", "address", address.Hex(), "key", key, "block number or hash", blockNrOrHash)
+	fmt.Println("eth_getStorageAt", "address", address.Hex(), "key", key, "block number or hash", blockNrOrHash)
 
 	blockNum, err := e.getBlockNumber(blockNrOrHash)
 	if err != nil {
@@ -325,7 +337,7 @@ func (e *PublicAPI) GetStorageAt(address common.Address, key string, blockNrOrHa
 
 // GetTransactionCount returns the number of transactions at the given address up to the given block number.
 func (e *PublicAPI) GetTransactionCount(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (*hexutil.Uint64, error) {
-	e.logger.Debug("eth_getTransactionCount", "address", address.Hex(), "block number or hash", blockNrOrHash)
+	fmt.Println("eth_getTransactionCount", "address", address.Hex(), "block number or hash", blockNrOrHash)
 	blockNum, err := e.getBlockNumber(blockNrOrHash)
 	if err != nil {
 		return nil, err
@@ -335,7 +347,7 @@ func (e *PublicAPI) GetTransactionCount(address common.Address, blockNrOrHash rp
 
 // GetBlockTransactionCountByHash returns the number of transactions in the block identified by hash.
 func (e *PublicAPI) GetBlockTransactionCountByHash(hash common.Hash) *hexutil.Uint {
-	e.logger.Debug("eth_getBlockTransactionCountByHash", "hash", hash.Hex())
+	fmt.Println("eth_getBlockTransactionCountByHash", "hash", hash.Hex())
 
 	block, err := e.clientCtx.Client.BlockByHash(e.ctx, hash.Bytes())
 	if err != nil {
@@ -343,43 +355,21 @@ func (e *PublicAPI) GetBlockTransactionCountByHash(hash common.Hash) *hexutil.Ui
 		return nil
 	}
 
-	if block.Block == nil {
-		e.logger.Debug("block not found", "hash", hash.Hex())
-		return nil
-	}
-
-	blockRes, err := e.backend.GetTendermintBlockResultByNumber(&block.Block.Height)
-	if err != nil {
-		return nil
-	}
-
-	ethMsgs := e.backend.GetEthereumMsgsFromTendermintBlock(block, blockRes)
-	n := hexutil.Uint(len(ethMsgs))
-	return &n
+	txs := hexutil.Uint(len(block.Block.Txs))
+	return &txs
 }
 
 // GetBlockTransactionCountByNumber returns the number of transactions in the block identified by number.
 func (e *PublicAPI) GetBlockTransactionCountByNumber(blockNum rpctypes.BlockNumber) *hexutil.Uint {
-	e.logger.Debug("eth_getBlockTransactionCountByNumber", "height", blockNum.Int64())
+	fmt.Println("eth_getBlockTransactionCountByNumber", "height", blockNum.Int64())
 	block, err := e.backend.GetTendermintBlockByNumber(blockNum)
 	if err != nil {
 		e.logger.Debug("block not found", "height", blockNum.Int64(), "error", err.Error())
 		return nil
 	}
 
-	if block.Block == nil {
-		e.logger.Debug("block not found", "height", blockNum.Int64())
-		return nil
-	}
-
-	blockRes, err := e.backend.GetTendermintBlockResultByNumber(&block.Block.Height)
-	if err != nil {
-		return nil
-	}
-
-	ethMsgs := e.backend.GetEthereumMsgsFromTendermintBlock(block, blockRes)
-	n := hexutil.Uint(len(ethMsgs))
-	return &n
+	txs := hexutil.Uint(len(block.Block.Txs))
+	return &txs
 }
 
 // GetUncleCountByBlockHash returns the number of uncles in the block identified by hash. Always zero.
@@ -394,7 +384,7 @@ func (e *PublicAPI) GetUncleCountByBlockNumber(blockNum rpctypes.BlockNumber) he
 
 // GetCode returns the contract code at the given address and block number.
 func (e *PublicAPI) GetCode(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (hexutil.Bytes, error) {
-	e.logger.Debug("eth_getCode", "address", address.Hex(), "block number or hash", blockNrOrHash)
+	fmt.Println("eth_getCode", "address", address.Hex(), "block number or hash", blockNrOrHash)
 
 	blockNum, err := e.getBlockNumber(blockNrOrHash)
 	if err != nil {
@@ -415,7 +405,7 @@ func (e *PublicAPI) GetCode(address common.Address, blockNrOrHash rpctypes.Block
 
 // GetTransactionLogs returns the logs given a transaction hash.
 func (e *PublicAPI) GetTransactionLogs(txHash common.Hash) ([]*ethtypes.Log, error) {
-	e.logger.Debug("eth_getTransactionLogs", "hash", txHash)
+	fmt.Println("eth_getTransactionLogs", "hash", txHash)
 
 	hexTx := txHash.Hex()
 	res, err := e.backend.GetTxByEthHash(txHash)
@@ -445,7 +435,7 @@ func (e *PublicAPI) GetTransactionLogs(txHash common.Hash) ([]*ethtypes.Log, err
 
 // Sign signs the provided data using the private key of address via Geth's signature standard.
 func (e *PublicAPI) Sign(address common.Address, data hexutil.Bytes) (hexutil.Bytes, error) {
-	e.logger.Debug("eth_sign", "address", address.Hex(), "data", common.Bytes2Hex(data))
+	fmt.Println("eth_sign", "address", address.Hex(), "data", common.Bytes2Hex(data))
 
 	from := sdk.AccAddress(address.Bytes())
 
@@ -468,7 +458,7 @@ func (e *PublicAPI) Sign(address common.Address, data hexutil.Bytes) (hexutil.By
 
 // SignTypedData signs EIP-712 conformant typed data
 func (e *PublicAPI) SignTypedData(address common.Address, typedData apitypes.TypedData) (hexutil.Bytes, error) {
-	e.logger.Debug("eth_signTypedData", "address", address.Hex(), "data", typedData)
+	fmt.Println("eth_signTypedData", "address", address.Hex(), "data", typedData)
 	from := sdk.AccAddress(address.Bytes())
 
 	_, err := e.clientCtx.Keyring.KeyByAddress(from)
@@ -495,7 +485,7 @@ func (e *PublicAPI) SignTypedData(address common.Address, typedData apitypes.Typ
 
 // SendTransaction sends an Ethereum transaction.
 func (e *PublicAPI) SendTransaction(args evmtypes.TransactionArgs) (common.Hash, error) {
-	e.logger.Debug("eth_sendTransaction", "args", args.String())
+	fmt.Println("eth_sendTransaction", "args", args.String())
 	return e.backend.SendTransaction(args)
 }
 
@@ -525,7 +515,7 @@ func (e *PublicAPI) FillTransaction(args evmtypes.TransactionArgs) (*rpctypes.Si
 
 // SendRawTransaction send a raw Ethereum transaction.
 func (e *PublicAPI) SendRawTransaction(data hexutil.Bytes) (common.Hash, error) {
-	e.logger.Debug("eth_sendRawTransaction", "length", len(data))
+	fmt.Println("eth_sendRawTransaction", "length", len(data))
 
 	// RLP decode raw transaction bytes
 	tx := &ethtypes.Transaction{}
@@ -609,7 +599,7 @@ func checkTxFee(gasPrice *big.Int, gas uint64, cap float64) error {
 // Resend accepts an existing transaction and a new gas price and limit. It will remove
 // the given transaction from the pool and reinsert it with the new gas price and limit.
 func (e *PublicAPI) Resend(ctx context.Context, args evmtypes.TransactionArgs, gasPrice *hexutil.Big, gasLimit *hexutil.Uint64) (common.Hash, error) {
-	e.logger.Debug("eth_resend", "args", args.String())
+	fmt.Println("eth_resend", "args", args.String())
 	if args.Nonce == nil {
 		return common.Hash{}, fmt.Errorf("missing transaction nonce in transaction spec")
 	}
@@ -673,7 +663,7 @@ func (e *PublicAPI) Resend(ctx context.Context, args evmtypes.TransactionArgs, g
 
 // Call performs a raw contract call.
 func (e *PublicAPI) Call(args evmtypes.TransactionArgs, blockNrOrHash rpctypes.BlockNumberOrHash, _ *rpctypes.StateOverride) (hexutil.Bytes, error) {
-	e.logger.Debug("eth_call", "args", args.String(), "block number or hash", blockNrOrHash)
+	fmt.Println("eth_call", "args", args.String(), "block number or hash", blockNrOrHash)
 
 	blockNum, err := e.getBlockNumber(blockNrOrHash)
 	if err != nil {
@@ -738,25 +728,25 @@ func (e *PublicAPI) doCall(
 
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
 func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *rpctypes.BlockNumber) (hexutil.Uint64, error) {
-	e.logger.Debug("eth_estimateGas")
+	fmt.Println("eth_estimateGas")
 	return e.backend.EstimateGas(args, blockNrOptional)
 }
 
 // GetBlockByHash returns the block identified by hash.
 func (e *PublicAPI) GetBlockByHash(hash common.Hash, fullTx bool) (map[string]interface{}, error) {
-	e.logger.Debug("eth_getBlockByHash", "hash", hash.Hex(), "full", fullTx)
+	fmt.Println("eth_getBlockByHash", "hash", hash.Hex(), "full", fullTx)
 	return e.backend.GetBlockByHash(hash, fullTx)
 }
 
 // GetBlockByNumber returns the block identified by number.
 func (e *PublicAPI) GetBlockByNumber(ethBlockNum rpctypes.BlockNumber, fullTx bool) (map[string]interface{}, error) {
-	e.logger.Debug("eth_getBlockByNumber", "number", ethBlockNum, "full", fullTx)
+	fmt.Println("eth_getBlockByNumber", "number", ethBlockNum, "full", fullTx)
 	return e.backend.GetBlockByNumber(ethBlockNum, fullTx)
 }
 
 // GetTransactionByHash returns the transaction identified by hash.
 func (e *PublicAPI) GetTransactionByHash(hash common.Hash) (*rpctypes.RPCTransaction, error) {
-	e.logger.Debug("eth_getTransactionByHash", "hash", hash.Hex())
+	fmt.Println("eth_getTransactionByHash", "hash", hash.Hex())
 	return e.backend.GetTransactionByHash(hash)
 }
 
@@ -822,7 +812,7 @@ func (e *PublicAPI) getTransactionByBlockAndIndex(block *tmrpctypes.ResultBlock,
 
 // GetTransactionByBlockHashAndIndex returns the transaction identified by hash and index.
 func (e *PublicAPI) GetTransactionByBlockHashAndIndex(hash common.Hash, idx hexutil.Uint) (*rpctypes.RPCTransaction, error) {
-	e.logger.Debug("eth_getTransactionByBlockHashAndIndex", "hash", hash.Hex(), "index", idx)
+	fmt.Println("eth_getTransactionByBlockHashAndIndex", "hash", hash.Hex(), "index", idx)
 
 	block, err := e.clientCtx.Client.BlockByHash(e.ctx, hash.Bytes())
 	if err != nil {
@@ -840,7 +830,7 @@ func (e *PublicAPI) GetTransactionByBlockHashAndIndex(hash common.Hash, idx hexu
 
 // GetTransactionByBlockNumberAndIndex returns the transaction identified by number and index.
 func (e *PublicAPI) GetTransactionByBlockNumberAndIndex(blockNum rpctypes.BlockNumber, idx hexutil.Uint) (*rpctypes.RPCTransaction, error) {
-	e.logger.Debug("eth_getTransactionByBlockNumberAndIndex", "number", blockNum, "index", idx)
+	fmt.Println("eth_getTransactionByBlockNumberAndIndex", "number", blockNum, "index", idx)
 
 	block, err := e.backend.GetTendermintBlockByNumber(blockNum)
 	if err != nil {
@@ -859,7 +849,7 @@ func (e *PublicAPI) GetTransactionByBlockNumberAndIndex(blockNum rpctypes.BlockN
 // GetTransactionReceipt returns the transaction receipt identified by hash.
 func (e *PublicAPI) GetTransactionReceipt(hash common.Hash) (map[string]interface{}, error) {
 	hexTx := hash.Hex()
-	e.logger.Debug("eth_getTransactionReceipt", "hash", hexTx)
+	fmt.Println("eth_getTransactionReceipt", "hash", hexTx)
 
 	res, err := e.backend.GetTxByEthHash(hash)
 	if err != nil {
@@ -1007,7 +997,7 @@ func (e *PublicAPI) GetTransactionReceipt(hash common.Hash) (map[string]interfac
 // GetPendingTransactions returns the transactions that are in the transaction pool
 // and have a from address that is one of the accounts this node manages.
 func (e *PublicAPI) GetPendingTransactions() ([]*rpctypes.RPCTransaction, error) {
-	e.logger.Debug("eth_getPendingTransactions")
+	fmt.Println("eth_getPendingTransactions")
 
 	txs, err := e.backend.PendingTransactions()
 	if err != nil {
@@ -1053,7 +1043,7 @@ func (e *PublicAPI) GetUncleByBlockNumberAndIndex(number, idx hexutil.Uint) map[
 
 // GetProof returns an account object with proof and any storage proofs
 func (e *PublicAPI) GetProof(address common.Address, storageKeys []string, blockNrOrHash rpctypes.BlockNumberOrHash) (*rpctypes.AccountResult, error) {
-	e.logger.Debug("eth_getProof", "address", address.Hex(), "keys", storageKeys, "block number or hash", blockNrOrHash)
+	fmt.Println("eth_getProof", "address", address.Hex(), "keys", storageKeys, "block number or hash", blockNrOrHash)
 
 	blockNum, err := e.getBlockNumber(blockNrOrHash)
 	if err != nil {

@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	codeErrInvalidState      = uint32(iota) + 2 // NOTE: code 1 is reserved for internal errors
-	codeErrExecutionReverted                    // IMPORTANT: Do not move this error as it complies with the JSON-RPC error standard
+	codeErrInvalidState      = uint32(iota) + 34 // NOTE: code 1 is reserved for internal errors
+	codeErrExecutionReverted                     // IMPORTANT: Do not move this error as it complies with the JSON-RPC error standard
 	codeErrChainConfigNotFound
 	codeErrInvalidChainConfig
 	codeErrZeroAddress
