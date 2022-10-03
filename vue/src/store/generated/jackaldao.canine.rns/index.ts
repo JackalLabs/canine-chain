@@ -427,29 +427,16 @@ export default {
 		},
 		
 		
-		async sendMsgInit({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgRegister({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineRns.tx.sendMsgInit({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.JackaldaoCanineRns.tx.sendMsgRegister({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgInit:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgRegister:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgInit:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgBid({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineRns.tx.sendMsgBid({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBid:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgBid:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgRegister:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -466,6 +453,19 @@ export default {
 				}
 			}
 		},
+		async sendMsgList({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineRns.tx.sendMsgList({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgList:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgList:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgAcceptBid({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -479,6 +479,32 @@ export default {
 				}
 			}
 		},
+		async sendMsgBid({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineRns.tx.sendMsgBid({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBid:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgBid:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgInit({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineRns.tx.sendMsgInit({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgInit:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgInit:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgTransfer({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -489,6 +515,32 @@ export default {
 					throw new Error('TxClient:MsgTransfer:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgTransfer:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgDelist({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineRns.tx.sendMsgDelist({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDelist:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgDelist:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgBuy({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineRns.tx.sendMsgBuy({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBuy:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgBuy:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -518,82 +570,17 @@ export default {
 				}
 			}
 		},
-		async sendMsgBuy({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		async MsgRegister({ rootGetters }, { value }) {
 			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineRns.tx.sendMsgBuy({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBuy:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgBuy:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgDelist({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineRns.tx.sendMsgDelist({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDelist:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgDelist:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgRegister({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineRns.tx.sendMsgRegister({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineRns.tx.msgRegister({value})
+				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgRegister:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgRegister:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgList({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineRns.tx.sendMsgList({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgList:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgList:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		
-		async MsgInit({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineRns.tx.msgInit({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgInit:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgInit:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgBid({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineRns.tx.msgBid({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBid:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgBid:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgRegister:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -610,6 +597,19 @@ export default {
 				}
 			}
 		},
+		async MsgList({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineRns.tx.msgList({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgList:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgList:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgAcceptBid({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -623,6 +623,32 @@ export default {
 				}
 			}
 		},
+		async MsgBid({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineRns.tx.msgBid({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBid:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgBid:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgInit({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineRns.tx.msgInit({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgInit:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgInit:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgTransfer({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -633,6 +659,32 @@ export default {
 					throw new Error('TxClient:MsgTransfer:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgTransfer:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgDelist({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineRns.tx.msgDelist({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDelist:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDelist:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgBuy({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineRns.tx.msgBuy({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBuy:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgBuy:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -659,58 +711,6 @@ export default {
 					throw new Error('TxClient:MsgAddRecord:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgAddRecord:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgBuy({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineRns.tx.msgBuy({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBuy:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgBuy:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgDelist({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineRns.tx.msgDelist({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDelist:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgDelist:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgRegister({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineRns.tx.msgRegister({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgRegister:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgRegister:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgList({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineRns.tx.msgList({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgList:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgList:Create Could not create message: ' + e.message)
 				}
 			}
 		},

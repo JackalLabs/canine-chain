@@ -58258,6 +58258,8 @@ definitions:
       trackingNumber:
         type: string
         format: uint64
+  jackaldao.canine.filetree.MsgInitAllResponse:
+    type: object
   jackaldao.canine.filetree.MsgPostFileResponse:
     type: object
     properties:
