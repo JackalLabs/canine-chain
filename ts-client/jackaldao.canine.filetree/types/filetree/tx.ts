@@ -57,6 +57,14 @@ export interface MsgDeleteFile {
 
 export interface MsgDeleteFileResponse {}
 
+export interface MsgInitAll {
+  creator: string;
+  name: string;
+  pubkey: string;
+}
+
+export interface MsgInitAllResponse {}
+
 const baseMsgPostFile: object = {
   creator: "",
   account: "",
@@ -913,14 +921,142 @@ export const MsgDeleteFileResponse = {
   },
 };
 
+const baseMsgInitAll: object = { creator: "", name: "", pubkey: "" };
+
+export const MsgInitAll = {
+  encode(message: MsgInitAll, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    if (message.pubkey !== "") {
+      writer.uint32(26).string(message.pubkey);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInitAll {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInitAll } as MsgInitAll;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.name = reader.string();
+          break;
+        case 3:
+          message.pubkey = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgInitAll {
+    const message = { ...baseMsgInitAll } as MsgInitAll;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = String(object.name);
+    } else {
+      message.name = "";
+    }
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      message.pubkey = String(object.pubkey);
+    } else {
+      message.pubkey = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgInitAll): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.name !== undefined && (obj.name = message.name);
+    message.pubkey !== undefined && (obj.pubkey = message.pubkey);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgInitAll>): MsgInitAll {
+    const message = { ...baseMsgInitAll } as MsgInitAll;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = object.name;
+    } else {
+      message.name = "";
+    }
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      message.pubkey = object.pubkey;
+    } else {
+      message.pubkey = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgInitAllResponse: object = {};
+
+export const MsgInitAllResponse = {
+  encode(_: MsgInitAllResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgInitAllResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgInitAllResponse } as MsgInitAllResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgInitAllResponse {
+    const message = { ...baseMsgInitAllResponse } as MsgInitAllResponse;
+    return message;
+  },
+
+  toJSON(_: MsgInitAllResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgInitAllResponse>): MsgInitAllResponse {
+    const message = { ...baseMsgInitAllResponse } as MsgInitAllResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
   AddViewers(request: MsgAddViewers): Promise<MsgAddViewersResponse>;
   Postkey(request: MsgPostkey): Promise<MsgPostkeyResponse>;
   InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   DeleteFile(request: MsgDeleteFile): Promise<MsgDeleteFileResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  InitAll(request: MsgInitAll): Promise<MsgInitAllResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -982,6 +1118,16 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) =>
       MsgDeleteFileResponse.decode(new Reader(data))
     );
+  }
+
+  InitAll(request: MsgInitAll): Promise<MsgInitAllResponse> {
+    const data = MsgInitAll.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "InitAll",
+      data
+    );
+    return promise.then((data) => MsgInitAllResponse.decode(new Reader(data)));
   }
 }
 

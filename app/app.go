@@ -607,6 +607,7 @@ func NewWasmApp(
 		keys[filetreemoduletypes.StoreKey],
 		keys[filetreemoduletypes.MemStoreKey],
 		app.getSubspace(filetreemoduletypes.ModuleName),
+		app.RnsKeeper,
 	)
 	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
 

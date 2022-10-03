@@ -29,6 +29,8 @@ export interface FiletreeMsgInitAccountResponse {
   trackingNumber?: string;
 }
 
+export type FiletreeMsgInitAllResponse = object;
+
 export interface FiletreeMsgPostFileResponse {
   path?: string;
 }
