@@ -34,24 +34,6 @@ func CmdAddSenders() *cobra.Command {
 				if len(v) < 1 {
 					continue
 				}
-
-				// queryClient := notifications.NewQueryClient(clientCtx)
-				// //Get user's notiCounter
-				// params := &types.QueryGetNotiCounterRequest{
-				// 	Address: clientCtx.GetFromAddress().String(),
-				// }
-
-				// notiCounter, err := queryClient.NotiCounter(context.Background(), params)
-				// if err != nil {
-				// 	return types.ErrNotiCounterNotFound
-				// }
-
-				// //purpose of this?....
-				// senders := notiCounter.NotiCounter.PermittedSenders
-				// var m map[string]string
-
-				// json.Unmarshal([]byte(senders), &m)
-
 				senderIds = append(senderIds, v)
 			}
 

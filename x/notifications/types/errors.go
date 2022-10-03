@@ -10,4 +10,5 @@ import (
 var (
 	ErrNotiCounterNotFound = sdkerrors.Register(ModuleName, 1100, "User's notiCounter not set")
 	ErrCantUnmarshall      = sdkerrors.Register(ModuleName, 1101, "Cannot unmarshall from JSON")
+	ErrCannotAddSenders    = sdkerrors.Register(ModuleName, 1102, "You do not own this notiCounter and cannot add senders")
 )

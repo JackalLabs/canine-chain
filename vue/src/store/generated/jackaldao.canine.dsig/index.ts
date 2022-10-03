@@ -256,8 +256,19 @@ export default {
 		},
 		
 		
-<<<<<<< HEAD
-=======
+		async sendMsgUploadfile({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.JackaldaoCanineDsig.tx.sendMsgUploadfile({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUploadfile:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgCreateform({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -271,7 +282,6 @@ export default {
 				}
 			}
 		},
->>>>>>> master
 		async sendMsgSignform({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -285,32 +295,20 @@ export default {
 				}
 			}
 		},
-		async sendMsgUploadfile({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		async MsgUploadfile({ rootGetters }, { value }) {
 			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineDsig.tx.sendMsgUploadfile({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
+				const client=initClient(rootGetters)
+				const msg = await client.JackaldaoCanineDsig.tx.msgUploadfile({value})
+				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUploadfile:Send Could not broadcast Tx: '+ e.message)
+				} else{
+					throw new Error('TxClient:MsgUploadfile:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-<<<<<<< HEAD
-		async sendMsgUploadfile({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.JackaldaoCanineDsig.tx.sendMsgUploadfile({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUploadfile:Send Could not broadcast Tx: '+ e.message)
-=======
-		
 		async MsgCreateform({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -321,11 +319,9 @@ export default {
 					throw new Error('TxClient:MsgCreateform:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgCreateform:Create Could not create message: ' + e.message)
->>>>>>> master
 				}
 			}
 		},
-		
 		async MsgSignform({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -336,32 +332,6 @@ export default {
 					throw new Error('TxClient:MsgSignform:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgSignform:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgUploadfile({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineDsig.tx.msgUploadfile({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUploadfile:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgUploadfile({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.JackaldaoCanineDsig.tx.msgUploadfile({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUploadfile:Create Could not create message: ' + e.message)
 				}
 			}
 		},

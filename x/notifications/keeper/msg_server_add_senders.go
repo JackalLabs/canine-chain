@@ -17,32 +17,41 @@ func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (
 		return nil, types.ErrNotiCounterNotFound
 	}
 
-	//Check if the whoever is adding senders is already a permitted sender. Need to add owner as a Sender in the beginning
-	// hasEdit := HasEditAccess(file, msg.Creator)
-	// if !hasEdit {
-	// 	return nil, types.ErrNoAccess
-	// }
+	//This message is already set to only allow the msg.Creator to add to their own notiCounter, but add this in just in case
+	if !(notiCounter.Address == msg.Creator) {
+		return nil, types.ErrCannotAddSenders
+	}
 
-	psacc := notiCounter.PermittedSenders
+	currentSenders := notiCounter.PermittedSenders
 
-	jsacc := make(map[string]string) //Perhaps I could just use an array
-	json.Unmarshal([]byte(psacc), &jsacc)
+	placeholderMap := make([]string, 0, 1000) //Perhaps I could just use an array
+	json.Unmarshal([]byte(currentSenders), &placeholderMap)
 
 	ids := strings.Split(msg.SenderIds, ",")
 
-	for _, v := range ids {
-		jsacc[v] = "user is a sender"
-	}
+	placeholderMap = append(placeholderMap, ids...)
 
-	saccbytes, err := json.Marshal(jsacc)
+	marshalledSenders, err := json.Marshal(placeholderMap)
 	if err != nil {
 		return nil, types.ErrCantUnmarshall
 	}
-	newSenders := string(saccbytes)
+	updatedSenders := string(marshalledSenders)
 
-	notiCounter.PermittedSenders = newSenders
+	notiCounter.PermittedSenders = updatedSenders
 
 	k.SetNotiCounter(ctx, notiCounter)
 
 	return &types.MsgAddSendersResponse{}, nil
 }
+
+// func isSender(currentSenders []string, user string) bool {
+
+// 	for _, v := range currentSenders {
+// 		if v == user {
+// 			return true
+// 			break
+// 		}
+// 	}
+// 	return false
+
+// }
