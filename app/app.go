@@ -610,12 +610,21 @@ func NewWasmApp(
 	)
 	dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.accountKeeper, app.bankKeeper)
 
+	app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
+		appCodec,
+		keys[notificationsmoduletypes.StoreKey],
+		keys[notificationsmoduletypes.MemStoreKey],
+		app.getSubspace(notificationsmoduletypes.ModuleName),
+	)
+	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.accountKeeper, app.bankKeeper)
+
 	app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
 		appCodec,
 		keys[filetreemoduletypes.StoreKey],
 		keys[filetreemoduletypes.MemStoreKey],
 		app.getSubspace(filetreemoduletypes.ModuleName),
 		app.RnsKeeper,
+		app.NotificationsKeeper,
 	)
 	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
 
@@ -628,14 +637,6 @@ func NewWasmApp(
 		app.bankKeeper,
 	)
 	lpModule := lpmodule.NewAppModule(appCodec, app.LpKeeper, app.accountKeeper, app.bankKeeper)
-
-	app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
-		appCodec,
-		keys[notificationsmoduletypes.StoreKey],
-		keys[notificationsmoduletypes.MemStoreKey],
-		app.getSubspace(lpmoduletypes.ModuleName),
-	)
-	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.accountKeeper, app.bankKeeper)
 
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()

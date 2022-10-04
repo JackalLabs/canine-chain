@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 
@@ -77,10 +76,6 @@ func CmdPostFile() *cobra.Command {
 					return err
 				}
 				//So, we're decoding it from Bech32, and then using .String(), the Stringer interface, to convert it back to bech32...unnecessary?
-				fmt.Println("Account is", v)
-				fmt.Println("key is", key)
-				fmt.Println("key is", key.String())
-				os.Exit(0)
 
 				queryClient := filetypes.NewQueryClient(clientCtx)
 

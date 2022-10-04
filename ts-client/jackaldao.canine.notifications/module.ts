@@ -7,17 +7,17 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgAddSenders } from "./types/notifications/tx";
-import { MsgUpdateNotifications } from "./types/notifications/tx";
 import { MsgSetCounter } from "./types/notifications/tx";
+import { MsgUpdateNotifications } from "./types/notifications/tx";
+import { MsgAddSenders } from "./types/notifications/tx";
 import { MsgCreateNotifications } from "./types/notifications/tx";
 import { MsgDeleteNotifications } from "./types/notifications/tx";
 
 
-export { MsgAddSenders, MsgUpdateNotifications, MsgSetCounter, MsgCreateNotifications, MsgDeleteNotifications };
+export { MsgSetCounter, MsgUpdateNotifications, MsgAddSenders, MsgCreateNotifications, MsgDeleteNotifications };
 
-type sendMsgAddSendersParams = {
-  value: MsgAddSenders,
+type sendMsgSetCounterParams = {
+  value: MsgSetCounter,
   fee?: StdFee,
   memo?: string
 };
@@ -28,8 +28,8 @@ type sendMsgUpdateNotificationsParams = {
   memo?: string
 };
 
-type sendMsgSetCounterParams = {
-  value: MsgSetCounter,
+type sendMsgAddSendersParams = {
+  value: MsgAddSenders,
   fee?: StdFee,
   memo?: string
 };
@@ -47,16 +47,16 @@ type sendMsgDeleteNotificationsParams = {
 };
 
 
-type msgAddSendersParams = {
-  value: MsgAddSenders,
+type msgSetCounterParams = {
+  value: MsgSetCounter,
 };
 
 type msgUpdateNotificationsParams = {
   value: MsgUpdateNotifications,
 };
 
-type msgSetCounterParams = {
-  value: MsgSetCounter,
+type msgAddSendersParams = {
+  value: MsgAddSenders,
 };
 
 type msgCreateNotificationsParams = {
@@ -85,17 +85,17 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgAddSenders({ value, fee, memo }: sendMsgAddSendersParams): Promise<DeliverTxResponse> {
+		async sendMsgSetCounter({ value, fee, memo }: sendMsgSetCounterParams): Promise<DeliverTxResponse> {
 			if (!signer) {
-					throw new Error('TxClient:sendMsgAddSenders: Unable to sign Tx. Signer is not present.')
+					throw new Error('TxClient:sendMsgSetCounter: Unable to sign Tx. Signer is not present.')
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgAddSenders({ value: MsgAddSenders.fromPartial(value) })
+				let msg = this.msgSetCounter({ value: MsgSetCounter.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:sendMsgAddSenders: Could not broadcast Tx: '+ e.message)
+				throw new Error('TxClient:sendMsgSetCounter: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -113,17 +113,17 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgSetCounter({ value, fee, memo }: sendMsgSetCounterParams): Promise<DeliverTxResponse> {
+		async sendMsgAddSenders({ value, fee, memo }: sendMsgAddSendersParams): Promise<DeliverTxResponse> {
 			if (!signer) {
-					throw new Error('TxClient:sendMsgSetCounter: Unable to sign Tx. Signer is not present.')
+					throw new Error('TxClient:sendMsgAddSenders: Unable to sign Tx. Signer is not present.')
 			}
 			try {			
 				const { address } = (await signer.getAccounts())[0]; 
 				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgSetCounter({ value: MsgSetCounter.fromPartial(value) })
+				let msg = this.msgAddSenders({ value: MsgAddSenders.fromPartial(value) })
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:sendMsgSetCounter: Could not broadcast Tx: '+ e.message)
+				throw new Error('TxClient:sendMsgAddSenders: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -156,11 +156,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 		},
 		
 		
-		msgAddSenders({ value }: msgAddSendersParams): EncodeObject {
+		msgSetCounter({ value }: msgSetCounterParams): EncodeObject {
 			try {
-				return { typeUrl: "/jackaldao.canine.notifications.MsgAddSenders", value: MsgAddSenders.fromPartial( value ) }  
+				return { typeUrl: "/jackaldao.canine.notifications.MsgSetCounter", value: MsgSetCounter.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgAddSenders: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgSetCounter: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -172,11 +172,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgSetCounter({ value }: msgSetCounterParams): EncodeObject {
+		msgAddSenders({ value }: msgAddSendersParams): EncodeObject {
 			try {
-				return { typeUrl: "/jackaldao.canine.notifications.MsgSetCounter", value: MsgSetCounter.fromPartial( value ) }  
+				return { typeUrl: "/jackaldao.canine.notifications.MsgAddSenders", value: MsgAddSenders.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgSetCounter: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgAddSenders: Could not create message: ' + e.message)
 			}
 		},
 		

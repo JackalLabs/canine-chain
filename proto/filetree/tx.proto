@@ -25,6 +25,8 @@ message MsgPostFile {
   string viewers = 6;
   string editors = 7;
   uint64 trackingNumber = 8;
+  string notifyViewers = 9;
+  string notifyEditors = 10;
 }
 
 message MsgPostFileResponse {
