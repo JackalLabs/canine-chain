@@ -231,7 +231,7 @@ export default {
 			try {
 				const key = params ?? {};
 				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryFilteredNotifications( key.maxCount,  key.address)).data
+				let value= (await queryClient.queryFilteredNotifications( key.address)).data
 				
 					
 				commit('QUERY', { query: 'FilteredNotifications', key: { params: {...key}, query}, value })
@@ -292,21 +292,6 @@ export default {
 		},
 		
 		
-		async sendMsgDeleteNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDeleteNotifications(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteNotifications:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgDeleteNotifications:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgUpdateNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -319,21 +304,6 @@ export default {
 					throw new Error('TxClient:MsgUpdateNotifications:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgUpdateNotifications:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgCreateNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateNotifications(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateNotifications:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateNotifications:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -352,20 +322,52 @@ export default {
 				}
 			}
 		},
-		
-		async MsgDeleteNotifications({ rootGetters }, { value }) {
+		async sendMsgCreateNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDeleteNotifications(value)
-				return msg
+				const msg = await txClient.msgCreateNotifications(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteNotifications:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgDeleteNotifications:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateNotifications:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateNotifications:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
+		async sendMsgAddSenders({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgAddSenders(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAddSenders:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgAddSenders:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgDeleteNotifications({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgDeleteNotifications(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteNotifications:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgDeleteNotifications:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		
 		async MsgUpdateNotifications({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -376,6 +378,19 @@ export default {
 					throw new Error('TxClient:MsgUpdateNotifications:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgUpdateNotifications:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgSetCounter({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgSetCounter(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSetCounter:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgSetCounter:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -392,16 +407,29 @@ export default {
 				}
 			}
 		},
-		async MsgSetCounter({ rootGetters }, { value }) {
+		async MsgAddSenders({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgSetCounter(value)
+				const msg = await txClient.msgAddSenders(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetCounter:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgAddSenders:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgSetCounter:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgAddSenders:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgDeleteNotifications({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgDeleteNotifications(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteNotifications:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDeleteNotifications:Create Could not create message: ' + e.message)
 				}
 			}
 		},

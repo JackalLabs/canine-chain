@@ -13,6 +13,8 @@ export interface MsgPostFile {
   viewers: string;
   editors: string;
   trackingNumber: number;
+  notifyViewers: string;
+  notifyEditors: string;
 }
 
 export interface MsgPostFileResponse {
@@ -74,6 +76,8 @@ const baseMsgPostFile: object = {
   viewers: "",
   editors: "",
   trackingNumber: 0,
+  notifyViewers: "",
+  notifyEditors: "",
 };
 
 export const MsgPostFile = {
@@ -101,6 +105,12 @@ export const MsgPostFile = {
     }
     if (message.trackingNumber !== 0) {
       writer.uint32(64).uint64(message.trackingNumber);
+    }
+    if (message.notifyViewers !== "") {
+      writer.uint32(74).string(message.notifyViewers);
+    }
+    if (message.notifyEditors !== "") {
+      writer.uint32(82).string(message.notifyEditors);
     }
     return writer;
   },
@@ -135,6 +145,12 @@ export const MsgPostFile = {
           break;
         case 8:
           message.trackingNumber = longToNumber(reader.uint64() as Long);
+          break;
+        case 9:
+          message.notifyViewers = reader.string();
+          break;
+        case 10:
+          message.notifyEditors = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -186,6 +202,16 @@ export const MsgPostFile = {
     } else {
       message.trackingNumber = 0;
     }
+    if (object.notifyViewers !== undefined && object.notifyViewers !== null) {
+      message.notifyViewers = String(object.notifyViewers);
+    } else {
+      message.notifyViewers = "";
+    }
+    if (object.notifyEditors !== undefined && object.notifyEditors !== null) {
+      message.notifyEditors = String(object.notifyEditors);
+    } else {
+      message.notifyEditors = "";
+    }
     return message;
   },
 
@@ -200,6 +226,10 @@ export const MsgPostFile = {
     message.editors !== undefined && (obj.editors = message.editors);
     message.trackingNumber !== undefined &&
       (obj.trackingNumber = message.trackingNumber);
+    message.notifyViewers !== undefined &&
+      (obj.notifyViewers = message.notifyViewers);
+    message.notifyEditors !== undefined &&
+      (obj.notifyEditors = message.notifyEditors);
     return obj;
   },
 
@@ -244,6 +274,16 @@ export const MsgPostFile = {
       message.trackingNumber = object.trackingNumber;
     } else {
       message.trackingNumber = 0;
+    }
+    if (object.notifyViewers !== undefined && object.notifyViewers !== null) {
+      message.notifyViewers = object.notifyViewers;
+    } else {
+      message.notifyViewers = "";
+    }
+    if (object.notifyEditors !== undefined && object.notifyEditors !== null) {
+      message.notifyEditors = object.notifyEditors;
+    } else {
+      message.notifyEditors = "";
     }
     return message;
   },

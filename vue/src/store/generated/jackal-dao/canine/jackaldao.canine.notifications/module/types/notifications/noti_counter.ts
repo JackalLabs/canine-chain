@@ -7,9 +7,14 @@ export const protobufPackage = "jackaldao.canine.notifications";
 export interface NotiCounter {
   address: string;
   counter: number;
+  permittedSenders: string;
 }
 
-const baseNotiCounter: object = { address: "", counter: 0 };
+const baseNotiCounter: object = {
+  address: "",
+  counter: 0,
+  permittedSenders: "",
+};
 
 export const NotiCounter = {
   encode(message: NotiCounter, writer: Writer = Writer.create()): Writer {
@@ -18,6 +23,9 @@ export const NotiCounter = {
     }
     if (message.counter !== 0) {
       writer.uint32(16).uint64(message.counter);
+    }
+    if (message.permittedSenders !== "") {
+      writer.uint32(26).string(message.permittedSenders);
     }
     return writer;
   },
@@ -34,6 +42,9 @@ export const NotiCounter = {
           break;
         case 2:
           message.counter = longToNumber(reader.uint64() as Long);
+          break;
+        case 3:
+          message.permittedSenders = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -55,6 +66,14 @@ export const NotiCounter = {
     } else {
       message.counter = 0;
     }
+    if (
+      object.permittedSenders !== undefined &&
+      object.permittedSenders !== null
+    ) {
+      message.permittedSenders = String(object.permittedSenders);
+    } else {
+      message.permittedSenders = "";
+    }
     return message;
   },
 
@@ -62,6 +81,8 @@ export const NotiCounter = {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
     message.counter !== undefined && (obj.counter = message.counter);
+    message.permittedSenders !== undefined &&
+      (obj.permittedSenders = message.permittedSenders);
     return obj;
   },
 
@@ -76,6 +97,14 @@ export const NotiCounter = {
       message.counter = object.counter;
     } else {
       message.counter = 0;
+    }
+    if (
+      object.permittedSenders !== undefined &&
+      object.permittedSenders !== null
+    ) {
+      message.permittedSenders = object.permittedSenders;
+    } else {
+      message.permittedSenders = "";
     }
     return message;
   },

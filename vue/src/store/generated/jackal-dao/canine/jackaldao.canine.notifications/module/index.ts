@@ -4,17 +4,19 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgDeleteNotifications } from "./types/notifications/tx";
 import { MsgUpdateNotifications } from "./types/notifications/tx";
-import { MsgCreateNotifications } from "./types/notifications/tx";
 import { MsgSetCounter } from "./types/notifications/tx";
+import { MsgCreateNotifications } from "./types/notifications/tx";
+import { MsgAddSenders } from "./types/notifications/tx";
+import { MsgDeleteNotifications } from "./types/notifications/tx";
 
 
 const types = [
-  ["/jackaldao.canine.notifications.MsgDeleteNotifications", MsgDeleteNotifications],
   ["/jackaldao.canine.notifications.MsgUpdateNotifications", MsgUpdateNotifications],
-  ["/jackaldao.canine.notifications.MsgCreateNotifications", MsgCreateNotifications],
   ["/jackaldao.canine.notifications.MsgSetCounter", MsgSetCounter],
+  ["/jackaldao.canine.notifications.MsgCreateNotifications", MsgCreateNotifications],
+  ["/jackaldao.canine.notifications.MsgAddSenders", MsgAddSenders],
+  ["/jackaldao.canine.notifications.MsgDeleteNotifications", MsgDeleteNotifications],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -47,10 +49,11 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgDeleteNotifications: (data: MsgDeleteNotifications): EncodeObject => ({ typeUrl: "/jackaldao.canine.notifications.MsgDeleteNotifications", value: MsgDeleteNotifications.fromPartial( data ) }),
     msgUpdateNotifications: (data: MsgUpdateNotifications): EncodeObject => ({ typeUrl: "/jackaldao.canine.notifications.MsgUpdateNotifications", value: MsgUpdateNotifications.fromPartial( data ) }),
-    msgCreateNotifications: (data: MsgCreateNotifications): EncodeObject => ({ typeUrl: "/jackaldao.canine.notifications.MsgCreateNotifications", value: MsgCreateNotifications.fromPartial( data ) }),
     msgSetCounter: (data: MsgSetCounter): EncodeObject => ({ typeUrl: "/jackaldao.canine.notifications.MsgSetCounter", value: MsgSetCounter.fromPartial( data ) }),
+    msgCreateNotifications: (data: MsgCreateNotifications): EncodeObject => ({ typeUrl: "/jackaldao.canine.notifications.MsgCreateNotifications", value: MsgCreateNotifications.fromPartial( data ) }),
+    msgAddSenders: (data: MsgAddSenders): EncodeObject => ({ typeUrl: "/jackaldao.canine.notifications.MsgAddSenders", value: MsgAddSenders.fromPartial( data ) }),
+    msgDeleteNotifications: (data: MsgDeleteNotifications): EncodeObject => ({ typeUrl: "/jackaldao.canine.notifications.MsgDeleteNotifications", value: MsgDeleteNotifications.fromPartial( data ) }),
     
   };
 };

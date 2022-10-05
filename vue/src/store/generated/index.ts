@@ -25,6 +25,7 @@ import JackalDaoCanineJackaldaoCanineDsig from './jackal-dao/canine/jackaldao.ca
 import JackalDaoCanineJackaldaoCanineFiletree from './jackal-dao/canine/jackaldao.canine.filetree'
 import JackalDaoCanineJackaldaoCanineJklmint from './jackal-dao/canine/jackaldao.canine.jklmint'
 import JackalDaoCanineJackaldaoCanineLp from './jackal-dao/canine/jackaldao.canine.lp'
+import JackalDaoCanineJackaldaoCanineNotifications from './jackal-dao/canine/jackaldao.canine.notifications'
 import JackalDaoCanineJackaldaoCanineRns from './jackal-dao/canine/jackaldao.canine.rns'
 import JackalDaoCanineJackaldaoCanineStorage from './jackal-dao/canine/jackaldao.canine.storage'
 
@@ -55,6 +56,7 @@ export default {
   JackalDaoCanineJackaldaoCanineFiletree: load(JackalDaoCanineJackaldaoCanineFiletree, 'jackaldao.canine.filetree'),
   JackalDaoCanineJackaldaoCanineJklmint: load(JackalDaoCanineJackaldaoCanineJklmint, 'jackaldao.canine.jklmint'),
   JackalDaoCanineJackaldaoCanineLp: load(JackalDaoCanineJackaldaoCanineLp, 'jackaldao.canine.lp'),
+  JackalDaoCanineJackaldaoCanineNotifications: load(JackalDaoCanineJackaldaoCanineNotifications, 'jackaldao.canine.notifications'),
   JackalDaoCanineJackaldaoCanineRns: load(JackalDaoCanineJackaldaoCanineRns, 'jackaldao.canine.rns'),
   JackalDaoCanineJackaldaoCanineStorage: load(JackalDaoCanineJackaldaoCanineStorage, 'jackaldao.canine.storage'),
   

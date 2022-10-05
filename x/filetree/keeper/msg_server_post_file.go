@@ -30,35 +30,34 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	owner := MakeOwnerAddress(fullMerklePath, msg.Account)
 
 	file := types.Files{
+		Address:        fullMerklePath,
 		Contents:       msg.Contents,
 		Owner:          owner,
 		ViewingAccess:  msg.Viewers,
 		EditAccess:     msg.Editors,
-		Address:        fullMerklePath,
 		TrackingNumber: msg.TrackingNumber,
 	}
 
 	incrementTracker(k, ctx, msg)
 	k.SetFiles(ctx, file)
 
+	//notify viewers
 	bool, error := notify(k, ctx, msg.NotifyViewers, string("you have viewer access"), msg.Creator)
 	if !bool {
 		return nil, error
 	}
 
+	//notify editors
 	ok, err := notify(k, ctx, msg.NotifyEditors, string("you have editor access"), msg.Creator)
 	if !ok {
 		return nil, err
 	}
 
-	//Notify the viewers first, then editors later
-
 	return &types.MsgPostFileResponse{Path: fullMerklePath}, nil
 }
 
-// Need to notify all the viewers, then all the editors
-// if bool returns 'true', we successfully notified everyone, otherwise if it's false we return the error
-//viewers will have their own message message from editors, so should send in a general notification, and an array of viewers or editors
+//if bool returns 'true', we successfully notified everyone, otherwise if it's false we return the error
+//viewers will have their own message from editors, so should send in a general notification, and a string of viewers or editors
 
 func notify(k msgServer, ctx sdk.Context, recipients string, notification string, sender string) (bool, error) {
 
@@ -69,7 +68,7 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 		// Find the notiCounter
 		notiCounter, found := k.notiKeeper.GetNotiCounter(
 			ctx,
-			v, //currently only works on the creator--notify yourself
+			v,
 		)
 
 		if !found {
@@ -79,10 +78,10 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 		// Check if the notification already exists. Should always come back false because recipient's notiCounter is incremented everytime someone sends them a msg
 		_, isFound := k.notiKeeper.GetNotifications(
 			ctx,
-			notiCounter.Counter, //creator's notiCounter
+			notiCounter.Counter,
 			v,
 		)
-		//If it exists, this function will return false to return the error
+		//If it exists, we return false to return the error
 		if isFound {
 			return false, notiTypes.ErrNotificationAlreadySet
 		}
@@ -96,7 +95,9 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 			Creator:      sender, //sender of the notification--who in this case is the poster of the file
 			Count:        notiCounter.Counter,
 			Notification: notification, //need extra param in MsgPostFile
-			Address:      v,            //This will be address of the viewer
+			Address:      v,            //The address of the recipient--their list of notifications
+			//merklePath of file
+			//hashPathOwner // this is here because the sender of the file won't always be the owner
 		}
 
 		k.notiKeeper.SetNotifications(
