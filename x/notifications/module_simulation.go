@@ -57,12 +57,12 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		Params: types.DefaultParams(),
 		NotificationsList: []types.Notifications{
 			{
-				Creator: sample.AccAddress(),
-				Count:   0,
+				Sender: sample.AccAddress(),
+				Count:  0,
 			},
 			{
-				Creator: sample.AccAddress(),
-				Count:   1,
+				Sender: sample.AccAddress(),
+				Count:  1,
 			},
 		},
 		// this line is used by starport scaffolding # simapp/module/genesisState

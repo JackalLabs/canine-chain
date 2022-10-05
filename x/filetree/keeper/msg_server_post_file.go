@@ -92,7 +92,7 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 		}
 
 		var notifications = notiTypes.Notifications{
-			Creator:      sender, //sender of the notification--who in this case is the poster of the file
+			Sender:       sender, //sender of the notification--who in this case is the poster of the file
 			Count:        notiCounter.Counter,
 			Notification: notification, //need extra param in MsgPostFile
 			Address:      v,            //The address of the recipient--their list of notifications

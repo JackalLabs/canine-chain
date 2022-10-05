@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 	"encoding/json"
-	"strings"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/notifications/types"
@@ -24,18 +24,35 @@ func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (
 
 	currentSenders := notiCounter.PermittedSenders
 
+	fmt.Println("@@@@@@@@@@@@@@CURRENT SENDERS ARE", currentSenders)
+
 	placeholderMap := make([]string, 0, 1000) //Perhaps I could just use an array
 	json.Unmarshal([]byte(currentSenders), &placeholderMap)
 
-	ids := strings.Split(msg.SenderIds, ",")
+	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ PLACEHOLDER MAP CONTAINS", placeholderMap)
+	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ PASSED IN JSON SENDERS CONTAINS", msg.SenderIds)
 
-	placeholderMap = append(placeholderMap, ids...)
+	temporaryMap := make([]string, 0, 1000) //Perhaps I could just use an array
+	json.Unmarshal([]byte(msg.SenderIds), &temporaryMap)
+
+	//SenderIds := strings.Split(temporaryMap, ",")
+
+	//fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ SenderIds CONTAINS", SenderIds)
+
+	placeholderMap = append(placeholderMap, temporaryMap...)
+
+	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ PLACEHOLDER MAP CONTAINS", placeholderMap)
 
 	marshalledSenders, err := json.Marshal(placeholderMap)
 	if err != nil {
 		return nil, types.ErrCantUnmarshall
 	}
+
+	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ MARSHALED SENDERS CONTAINS", marshalledSenders)
+
 	updatedSenders := string(marshalledSenders)
+
+	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ UPDATED SENDERS CONTAINS", updatedSenders)
 
 	notiCounter.PermittedSenders = updatedSenders
 

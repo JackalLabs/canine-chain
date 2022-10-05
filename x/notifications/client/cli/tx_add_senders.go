@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -37,9 +39,16 @@ func CmdAddSenders() *cobra.Command {
 				senderIds = append(senderIds, v)
 			}
 
+			jsonSenders, err := json.Marshal(senderIds)
+			if err != nil {
+				return err
+			}
+
+			fmt.Println(string(jsonSenders))
+
 			msg := types.NewMsgAddSenders(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(senderIds, ","),
+				string(jsonSenders),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

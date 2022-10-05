@@ -68,7 +68,7 @@ func SimulateMsgUpdateNotifications(
 			found            = false
 		)
 		for _, obj := range allNotifications {
-			simAccount, found = FindAccount(accs, obj.Creator)
+			simAccount, found = FindAccount(accs, obj.Sender)
 			if found {
 				notifications = obj
 				break
@@ -114,7 +114,7 @@ func SimulateMsgDeleteNotifications(
 			found            = false
 		)
 		for _, obj := range allNotifications {
-			simAccount, found = FindAccount(accs, obj.Creator)
+			simAccount, found = FindAccount(accs, obj.Sender)
 			if found {
 				notifications = obj
 				break

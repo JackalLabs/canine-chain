@@ -34009,7 +34009,11 @@ paths:
                       type: string
                     address:
                       type: string
-                    creator:
+                    sender:
+                      type: string
+                    hashPath:
+                      type: string
+                    hashPathOwner:
                       type: string
         default:
           description: An unexpected error response.
@@ -34229,7 +34233,11 @@ paths:
                       type: string
                     address:
                       type: string
-                    creator:
+                    sender:
+                      type: string
+                    hashPath:
+                      type: string
+                    hashPathOwner:
                       type: string
               pagination:
                 type: object
@@ -34355,7 +34363,11 @@ paths:
                     type: string
                   address:
                     type: string
-                  creator:
+                  sender:
+                    type: string
+                  hashPath:
+                    type: string
+                  hashPathOwner:
                     type: string
         default:
           description: An unexpected error response.
@@ -59283,7 +59295,11 @@ definitions:
         type: string
       address:
         type: string
-      creator:
+      sender:
+        type: string
+      hashPath:
+        type: string
+      hashPathOwner:
         type: string
   jackaldao.canine.notifications.Params:
     type: object
@@ -59343,7 +59359,11 @@ definitions:
               type: string
             address:
               type: string
-            creator:
+            sender:
+              type: string
+            hashPath:
+              type: string
+            hashPathOwner:
               type: string
       pagination:
         type: object
@@ -59385,7 +59405,11 @@ definitions:
               type: string
             address:
               type: string
-            creator:
+            sender:
+              type: string
+            hashPath:
+              type: string
+            hashPathOwner:
               type: string
   jackaldao.canine.notifications.QueryGetNotiCounterResponse:
     type: object
@@ -59413,7 +59437,11 @@ definitions:
             type: string
           address:
             type: string
-          creator:
+          sender:
+            type: string
+          hashPath:
+            type: string
+          hashPathOwner:
             type: string
   jackaldao.canine.notifications.QueryParamsResponse:
     type: object

@@ -32,7 +32,9 @@ export interface NotificationsNotifications {
   count?: string;
   notification?: string;
   address?: string;
-  creator?: string;
+  sender?: string;
+  hashPath?: string;
+  hashPathOwner?: string;
 }
 
 /**
