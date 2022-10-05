@@ -263,18 +263,18 @@ export default {
 		},
 		
 		
-		async sendMsgUploadfile({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateform({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgUploadfile(value)
+				const msg = await txClient.msgCreateform(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateform:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgUploadfile:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateform:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -293,32 +293,32 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateform({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgUploadfile({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateform(value)
+				const msg = await txClient.msgUploadfile(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateform:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateform:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgUploadfile:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgUploadfile({ rootGetters }, { value }) {
+		async MsgCreateform({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgUploadfile(value)
+				const msg = await txClient.msgCreateform(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateform:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgUploadfile:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateform:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -335,16 +335,16 @@ export default {
 				}
 			}
 		},
-		async MsgCreateform({ rootGetters }, { value }) {
+		async MsgUploadfile({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateform(value)
+				const msg = await txClient.msgUploadfile(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateform:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUploadfile:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateform:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgUploadfile:Create Could not create message: ' + e.message)
 				}
 			}
 		},
