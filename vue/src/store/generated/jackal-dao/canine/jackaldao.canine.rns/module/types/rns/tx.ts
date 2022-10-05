@@ -84,7 +84,6 @@ export interface MsgDelRecordResponse {}
 
 export interface MsgInit {
   creator: string;
-  name: string;
 }
 
 export interface MsgInitResponse {}
@@ -1348,15 +1347,12 @@ export const MsgDelRecordResponse = {
   },
 };
 
-const baseMsgInit: object = { creator: "", name: "" };
+const baseMsgInit: object = { creator: "" };
 
 export const MsgInit = {
   encode(message: MsgInit, writer: Writer = Writer.create()): Writer {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
-    }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
     }
     return writer;
   },
@@ -1370,9 +1366,6 @@ export const MsgInit = {
       switch (tag >>> 3) {
         case 1:
           message.creator = reader.string();
-          break;
-        case 2:
-          message.name = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1389,18 +1382,12 @@ export const MsgInit = {
     } else {
       message.creator = "";
     }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = "";
-    }
     return message;
   },
 
   toJSON(message: MsgInit): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 
@@ -1410,11 +1397,6 @@ export const MsgInit = {
       message.creator = object.creator;
     } else {
       message.creator = "";
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = "";
     }
     return message;
   },

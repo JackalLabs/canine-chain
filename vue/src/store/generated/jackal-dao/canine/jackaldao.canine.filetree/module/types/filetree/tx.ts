@@ -59,11 +59,12 @@ export interface MsgDeleteFileResponse {}
 
 export interface MsgInitAll {
   creator: string;
-  name: string;
   pubkey: string;
 }
 
-export interface MsgInitAllResponse {}
+export interface MsgInitAllResponse {
+  name: string;
+}
 
 const baseMsgPostFile: object = {
   creator: "",
@@ -921,15 +922,12 @@ export const MsgDeleteFileResponse = {
   },
 };
 
-const baseMsgInitAll: object = { creator: "", name: "", pubkey: "" };
+const baseMsgInitAll: object = { creator: "", pubkey: "" };
 
 export const MsgInitAll = {
   encode(message: MsgInitAll, writer: Writer = Writer.create()): Writer {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
-    }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
     }
     if (message.pubkey !== "") {
       writer.uint32(26).string(message.pubkey);
@@ -946,9 +944,6 @@ export const MsgInitAll = {
       switch (tag >>> 3) {
         case 1:
           message.creator = reader.string();
-          break;
-        case 2:
-          message.name = reader.string();
           break;
         case 3:
           message.pubkey = reader.string();
@@ -968,11 +963,6 @@ export const MsgInitAll = {
     } else {
       message.creator = "";
     }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = "";
-    }
     if (object.pubkey !== undefined && object.pubkey !== null) {
       message.pubkey = String(object.pubkey);
     } else {
@@ -984,7 +974,6 @@ export const MsgInitAll = {
   toJSON(message: MsgInitAll): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.name !== undefined && (obj.name = message.name);
     message.pubkey !== undefined && (obj.pubkey = message.pubkey);
     return obj;
   },
@@ -996,11 +985,6 @@ export const MsgInitAll = {
     } else {
       message.creator = "";
     }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = "";
-    }
     if (object.pubkey !== undefined && object.pubkey !== null) {
       message.pubkey = object.pubkey;
     } else {
@@ -1010,10 +994,16 @@ export const MsgInitAll = {
   },
 };
 
-const baseMsgInitAllResponse: object = {};
+const baseMsgInitAllResponse: object = { name: "" };
 
 export const MsgInitAllResponse = {
-  encode(_: MsgInitAllResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: MsgInitAllResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
     return writer;
   },
 
@@ -1024,6 +1014,9 @@ export const MsgInitAllResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.name = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1032,18 +1025,29 @@ export const MsgInitAllResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgInitAllResponse {
+  fromJSON(object: any): MsgInitAllResponse {
     const message = { ...baseMsgInitAllResponse } as MsgInitAllResponse;
+    if (object.name !== undefined && object.name !== null) {
+      message.name = String(object.name);
+    } else {
+      message.name = "";
+    }
     return message;
   },
 
-  toJSON(_: MsgInitAllResponse): unknown {
+  toJSON(message: MsgInitAllResponse): unknown {
     const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 
-  fromPartial(_: DeepPartial<MsgInitAllResponse>): MsgInitAllResponse {
+  fromPartial(object: DeepPartial<MsgInitAllResponse>): MsgInitAllResponse {
     const message = { ...baseMsgInitAllResponse } as MsgInitAllResponse;
+    if (object.name !== undefined && object.name !== null) {
+      message.name = object.name;
+    } else {
+      message.name = "";
+    }
     return message;
   },
 };

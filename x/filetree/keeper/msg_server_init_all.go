@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -33,7 +34,8 @@ func (k msgServer) InitAll(goCtx context.Context, msg *types.MsgInitAll) (*types
 
 	k.rnsKeeper.SetInit(ctx, i)
 
-	name := msg.Name
+	bh := ctx.BlockHeight()
+	name := rnsTypes.MakeName(int(bh), bh)
 
 	if strings.Contains(name, ".") {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "name cannot contain '.'")
@@ -71,5 +73,5 @@ func (k msgServer) InitAll(goCtx context.Context, msg *types.MsgInitAll) (*types
 	// Write whois information to the store
 	k.rnsKeeper.SetNames(ctx, newWhois)
 
-	return &types.MsgInitAllResponse{}, nil
+	return &types.MsgInitAllResponse{Name: fmt.Sprintf("%s.jkl", name)}, nil
 }

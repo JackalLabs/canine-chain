@@ -74,11 +74,11 @@ message MsgDeleteFileResponse {
 
 message MsgInitAll {
   string creator = 1;
-  string name = 2;
   string pubkey = 3;
 }
 
 message MsgInitAllResponse {
+  string name = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

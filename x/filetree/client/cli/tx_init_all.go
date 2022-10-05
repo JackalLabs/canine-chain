@@ -1,26 +1,25 @@
 package cli
 
 import (
-    "strconv"
-	
-	"github.com/spf13/cobra"
-    "github.com/cosmos/cosmos-sdk/client"
+	"strconv"
+
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/spf13/cobra"
 )
 
 var _ = strconv.Itoa(0)
 
 func CmdInitAll() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "init-all [name] [pubkey]",
+		Use:   "init-all [pubkey]",
 		Short: "initialize the entire account",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-      		 argName := args[0]
-             argPubkey := args[1]
-            
+			argPubkey := args[0]
+
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
@@ -28,9 +27,7 @@ func CmdInitAll() *cobra.Command {
 
 			msg := types.NewMsgInitAll(
 				clientCtx.GetFromAddress().String(),
-				argName,
 				argPubkey,
-				
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -41,5 +38,5 @@ func CmdInitAll() *cobra.Command {
 
 	flags.AddTxFlagsToCmd(cmd)
 
-    return cmd
+	return cmd
 }

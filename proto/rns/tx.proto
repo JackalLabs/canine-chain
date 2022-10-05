@@ -114,7 +114,6 @@ message MsgDelRecordResponse {
 
 message MsgInit {
   string creator = 1;
-  string name = 2;
 }
 
 message MsgInitResponse {
