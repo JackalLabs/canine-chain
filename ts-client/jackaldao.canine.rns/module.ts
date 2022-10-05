@@ -7,38 +7,20 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgBuy } from "./types/rns/tx";
-import { MsgCancelBid } from "./types/rns/tx";
-import { MsgList } from "./types/rns/tx";
 import { MsgInit } from "./types/rns/tx";
 import { MsgDelist } from "./types/rns/tx";
-import { MsgTransfer } from "./types/rns/tx";
 import { MsgAcceptBid } from "./types/rns/tx";
-import { MsgAddRecord } from "./types/rns/tx";
 import { MsgBid } from "./types/rns/tx";
+import { MsgBuy } from "./types/rns/tx";
 import { MsgDelRecord } from "./types/rns/tx";
+import { MsgList } from "./types/rns/tx";
+import { MsgTransfer } from "./types/rns/tx";
+import { MsgAddRecord } from "./types/rns/tx";
+import { MsgCancelBid } from "./types/rns/tx";
 import { MsgRegister } from "./types/rns/tx";
 
 
-export { MsgBuy, MsgCancelBid, MsgList, MsgInit, MsgDelist, MsgTransfer, MsgAcceptBid, MsgAddRecord, MsgBid, MsgDelRecord, MsgRegister };
-
-type sendMsgBuyParams = {
-  value: MsgBuy,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCancelBidParams = {
-  value: MsgCancelBid,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgListParams = {
-  value: MsgList,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgInit, MsgDelist, MsgAcceptBid, MsgBid, MsgBuy, MsgDelRecord, MsgList, MsgTransfer, MsgAddRecord, MsgCancelBid, MsgRegister };
 
 type sendMsgInitParams = {
   value: MsgInit,
@@ -52,20 +34,8 @@ type sendMsgDelistParams = {
   memo?: string
 };
 
-type sendMsgTransferParams = {
-  value: MsgTransfer,
-  fee?: StdFee,
-  memo?: string
-};
-
 type sendMsgAcceptBidParams = {
   value: MsgAcceptBid,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgAddRecordParams = {
-  value: MsgAddRecord,
   fee?: StdFee,
   memo?: string
 };
@@ -76,8 +46,38 @@ type sendMsgBidParams = {
   memo?: string
 };
 
+type sendMsgBuyParams = {
+  value: MsgBuy,
+  fee?: StdFee,
+  memo?: string
+};
+
 type sendMsgDelRecordParams = {
   value: MsgDelRecord,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgListParams = {
+  value: MsgList,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgTransferParams = {
+  value: MsgTransfer,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgAddRecordParams = {
+  value: MsgAddRecord,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCancelBidParams = {
+  value: MsgCancelBid,
   fee?: StdFee,
   memo?: string
 };
@@ -89,18 +89,6 @@ type sendMsgRegisterParams = {
 };
 
 
-type msgBuyParams = {
-  value: MsgBuy,
-};
-
-type msgCancelBidParams = {
-  value: MsgCancelBid,
-};
-
-type msgListParams = {
-  value: MsgList,
-};
-
 type msgInitParams = {
   value: MsgInit,
 };
@@ -109,24 +97,36 @@ type msgDelistParams = {
   value: MsgDelist,
 };
 
-type msgTransferParams = {
-  value: MsgTransfer,
-};
-
 type msgAcceptBidParams = {
   value: MsgAcceptBid,
-};
-
-type msgAddRecordParams = {
-  value: MsgAddRecord,
 };
 
 type msgBidParams = {
   value: MsgBid,
 };
 
+type msgBuyParams = {
+  value: MsgBuy,
+};
+
 type msgDelRecordParams = {
   value: MsgDelRecord,
+};
+
+type msgListParams = {
+  value: MsgList,
+};
+
+type msgTransferParams = {
+  value: MsgTransfer,
+};
+
+type msgAddRecordParams = {
+  value: MsgAddRecord,
+};
+
+type msgCancelBidParams = {
+  value: MsgCancelBid,
 };
 
 type msgRegisterParams = {
@@ -150,48 +150,6 @@ interface TxClientOptions {
 export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "http://localhost:26657", prefix: "cosmos" }) => {
 
   return {
-		
-		async sendMsgBuy({ value, fee, memo }: sendMsgBuyParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgBuy: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgBuy({ value: MsgBuy.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgBuy: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCancelBid({ value, fee, memo }: sendMsgCancelBidParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCancelBid: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCancelBid({ value: MsgCancelBid.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCancelBid: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgList({ value, fee, memo }: sendMsgListParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgList: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgList({ value: MsgList.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgList: Could not broadcast Tx: '+ e.message)
-			}
-		},
 		
 		async sendMsgInit({ value, fee, memo }: sendMsgInitParams): Promise<DeliverTxResponse> {
 			if (!signer) {
@@ -221,20 +179,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgTransfer({ value, fee, memo }: sendMsgTransferParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgTransfer: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgTransfer({ value: MsgTransfer.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgTransfer: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgAcceptBid({ value, fee, memo }: sendMsgAcceptBidParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgAcceptBid: Unable to sign Tx. Signer is not present.')
@@ -246,20 +190,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgAcceptBid: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgAddRecord({ value, fee, memo }: sendMsgAddRecordParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgAddRecord: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgAddRecord({ value: MsgAddRecord.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgAddRecord: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -277,6 +207,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		async sendMsgBuy({ value, fee, memo }: sendMsgBuyParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgBuy: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgBuy({ value: MsgBuy.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgBuy: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
 		async sendMsgDelRecord({ value, fee, memo }: sendMsgDelRecordParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgDelRecord: Unable to sign Tx. Signer is not present.')
@@ -288,6 +232,62 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgDelRecord: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgList({ value, fee, memo }: sendMsgListParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgList: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgList({ value: MsgList.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgList: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgTransfer({ value, fee, memo }: sendMsgTransferParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgTransfer: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgTransfer({ value: MsgTransfer.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgTransfer: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgAddRecord({ value, fee, memo }: sendMsgAddRecordParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgAddRecord: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgAddRecord({ value: MsgAddRecord.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgAddRecord: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCancelBid({ value, fee, memo }: sendMsgCancelBidParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCancelBid: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCancelBid({ value: MsgCancelBid.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCancelBid: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -306,30 +306,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 		},
 		
 		
-		msgBuy({ value }: msgBuyParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.rns.MsgBuy", value: MsgBuy.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgBuy: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgCancelBid({ value }: msgCancelBidParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.rns.MsgCancelBid", value: MsgCancelBid.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCancelBid: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgList({ value }: msgListParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.rns.MsgList", value: MsgList.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgList: Could not create message: ' + e.message)
-			}
-		},
-		
 		msgInit({ value }: msgInitParams): EncodeObject {
 			try {
 				return { typeUrl: "/jackaldao.canine.rns.MsgInit", value: MsgInit.fromPartial( value ) }  
@@ -346,27 +322,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgTransfer({ value }: msgTransferParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.rns.MsgTransfer", value: MsgTransfer.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgTransfer: Could not create message: ' + e.message)
-			}
-		},
-		
 		msgAcceptBid({ value }: msgAcceptBidParams): EncodeObject {
 			try {
 				return { typeUrl: "/jackaldao.canine.rns.MsgAcceptBid", value: MsgAcceptBid.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgAcceptBid: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgAddRecord({ value }: msgAddRecordParams): EncodeObject {
-			try {
-				return { typeUrl: "/jackaldao.canine.rns.MsgAddRecord", value: MsgAddRecord.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgAddRecord: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -378,11 +338,51 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		msgBuy({ value }: msgBuyParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.rns.MsgBuy", value: MsgBuy.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgBuy: Could not create message: ' + e.message)
+			}
+		},
+		
 		msgDelRecord({ value }: msgDelRecordParams): EncodeObject {
 			try {
 				return { typeUrl: "/jackaldao.canine.rns.MsgDelRecord", value: MsgDelRecord.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgDelRecord: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgList({ value }: msgListParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.rns.MsgList", value: MsgList.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgList: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgTransfer({ value }: msgTransferParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.rns.MsgTransfer", value: MsgTransfer.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgTransfer: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgAddRecord({ value }: msgAddRecordParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.rns.MsgAddRecord", value: MsgAddRecord.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgAddRecord: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCancelBid({ value }: msgCancelBidParams): EncodeObject {
+			try {
+				return { typeUrl: "/jackaldao.canine.rns.MsgCancelBid", value: MsgCancelBid.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCancelBid: Could not create message: ' + e.message)
 			}
 		},
 		

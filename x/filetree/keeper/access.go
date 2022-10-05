@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/filetree/types"
 )
 
@@ -109,4 +110,21 @@ func MakeChainAddress(path string, user string) string {
 	pathString = fmt.Sprintf("%x", hash)
 
 	return pathString
+}
+
+// Leaving this here for tidyness but it will be replaced by UUID soon
+func incrementTracker(k msgServer, ctx sdk.Context, msg *types.MsgPostFile) {
+	updatedTrackingNumber := msg.TrackingNumber + 1
+
+	//need to double check this number
+	if msg.TrackingNumber == 18446744073709551615 {
+		updatedTrackingNumber = 0
+		k.SetTracker(ctx, types.Tracker{
+			TrackingNumber: uint64(updatedTrackingNumber),
+		})
+	} else {
+		k.SetTracker(ctx, types.Tracker{
+			TrackingNumber: uint64(updatedTrackingNumber),
+		})
+	}
 }

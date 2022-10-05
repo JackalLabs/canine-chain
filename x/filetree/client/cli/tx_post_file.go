@@ -12,7 +12,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
-	"github.com/jackal-dao/canine/x/filetree/types"
 	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -40,24 +39,13 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			//Cut out the / at the end for compatibility with types/merkle-paths.go
-			trimPath := strings.TrimSuffix(argHashpath, "/")
-			chunks := strings.Split(trimPath, "/")
-
-			//Print statements left in temporarily for troubleshooting
-			parentString := strings.Join(chunks[0:len(chunks)-1], "/")
-			childString := string(chunks[len(chunks)-1])
-			parentHash := types.MerklePath(parentString)
-
-			h := sha256.New()
-			h.Write([]byte(childString))
-			childHash := fmt.Sprintf("%x", h.Sum(nil))
+			parentHash, childHash := merkleHelper(argHashpath)
 
 			//Getting the tracker from the client side safe? By the time your transaction is done, the tracker would have been incremented by many other transactions
 			queryClient := filetypes.NewQueryClient(clientCtx)
 			res, err := queryClient.Tracker(cmd.Context(), &filetypes.QueryGetTrackerRequest{})
 			if err != nil {
-				return types.ErrTrackerNotFound
+				return filetypes.ErrTrackerNotFound
 			}
 			trackingNumber := res.Tracker.TrackingNumber
 
@@ -66,6 +54,9 @@ func CmdPostFile() *cobra.Command {
 
 			viewerAddresses = append(viewerAddresses, clientCtx.GetFromAddress().String())
 			editorAddresses = append(editorAddresses, clientCtx.GetFromAddress().String())
+
+			var viewersToNotify []string
+			var editorsToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
@@ -81,7 +72,7 @@ func CmdPostFile() *cobra.Command {
 
 				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
 				if err != nil {
-					return types.ErrPubKeyNotFound
+					return filetypes.ErrPubKeyNotFound
 				}
 
 				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
@@ -101,6 +92,8 @@ func CmdPostFile() *cobra.Command {
 				addressString := fmt.Sprintf("%x", hash)
 
 				viewers[addressString] = fmt.Sprintf("%x", encrypted)
+				viewersToNotify = append(viewersToNotify, v)
+
 			}
 
 			for _, v := range editorAddresses {
@@ -116,7 +109,7 @@ func CmdPostFile() *cobra.Command {
 				queryClient := filetypes.NewQueryClient(clientCtx)
 				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
 				if err != nil {
-					return types.ErrPubKeyNotFound
+					return filetypes.ErrPubKeyNotFound
 				}
 
 				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
@@ -136,6 +129,8 @@ func CmdPostFile() *cobra.Command {
 				addressString := fmt.Sprintf("%x", hash)
 
 				editors[addressString] = fmt.Sprintf("%x", encrypted)
+				editorsToNotify = append(editorsToNotify, v)
+
 			}
 
 			jsonViewers, err := json.Marshal(viewers)
@@ -154,7 +149,27 @@ func CmdPostFile() *cobra.Command {
 
 			accountHash := fmt.Sprintf("%x", hash)
 
-			msg := types.NewMsgPostFile(
+			//Marshall viewers and editors to notify. Last element is the person who is posting this file so we probably don't want them to notify themselves
+
+			if len(viewersToNotify) > 0 {
+				viewersToNotify = viewersToNotify[:len(viewersToNotify)-1]
+			}
+
+			if len(editorsToNotify) > 0 {
+				editorsToNotify = editorsToNotify[:len(editorsToNotify)-1]
+			}
+
+			jsonViewersToNotify, err := json.Marshal(viewersToNotify)
+			if err != nil {
+				return err
+			}
+
+			jsonEditorsToNotify, err := json.Marshal(editorsToNotify)
+			if err != nil {
+				return err
+			}
+
+			msg := filetypes.NewMsgPostFile(
 				clientCtx.GetFromAddress().String(),
 				accountHash,
 				parentHash,
@@ -162,7 +177,9 @@ func CmdPostFile() *cobra.Command {
 				argContents,
 				string(jsonViewers),
 				string(jsonEditors),
-				trackingNumber,
+				trackingNumber, //UUID goes here
+				string(jsonViewersToNotify),
+				string(jsonEditorsToNotify),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -2,10 +2,13 @@ package keeper
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackal-dao/canine/x/filetree/types"
+	notiTypes "github.com/jackal-dao/canine/x/notifications/types"
 )
 
 func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount) (*types.MsgInitAccountResponse, error) {
@@ -17,16 +20,11 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 	}
 
 	k.SetPubkey(ctx, pubKey)
-
-	//free RNS name
-
 	//msg.Account was already hex(hashed) before it go to here.
 	//make the full OwnerAddress
 
 	ownerAddress := MakeOwnerAddress(msg.RootHashpath, msg.Account)
 
-	//These addresses in the viewer access and editor access below are not one
-	//And the same as the wallet address
 	file := types.Files{
 		Contents:       "Root/", //might hex this later but leaving it here for now to see it in swagger
 		Owner:          ownerAddress,
@@ -36,6 +34,46 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 		TrackingNumber: msg.TrackingNumber, //place holder
 	}
 
+	increaseTracker(k, ctx, msg)
+	k.SetFiles(ctx, file)
+
+	//Set notiCounter
+	// Check if the counter already exists
+	_, isFound := k.notiKeeper.GetNotiCounter(
+		ctx,
+		msg.Creator,
+	)
+	if isFound {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "notiCounter already set")
+	}
+
+	//Add yourself as a permitted Sender in the beginning so you can notify yourself
+
+	placeholderMap := make([]string, 0, 2000)
+	placeholderMap = append(placeholderMap, msg.Creator)
+	marshalledSenders, err := json.Marshal(placeholderMap)
+	if err != nil {
+		return nil, types.ErrCantUnmarshall
+	}
+
+	updatedSenders := string(marshalledSenders)
+
+	var counter = notiTypes.NotiCounter{
+		Address:          msg.Creator,
+		Counter:          0,
+		PermittedSenders: updatedSenders,
+	}
+
+	k.notiKeeper.SetNotiCounter(
+		ctx,
+		counter,
+	)
+
+	return &types.MsgInitAccountResponse{ /*Don't really need tracking number or anything here*/ }, nil
+}
+
+// Leaving this here for tidyness but it will be replaced by UUID soon
+func increaseTracker(k msgServer, ctx sdk.Context, msg *types.MsgInitAccount) {
 	updatedTrackingNumber := msg.TrackingNumber + 1
 
 	//need to double check this number
@@ -49,8 +87,4 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 			TrackingNumber: uint64(updatedTrackingNumber),
 		})
 	}
-
-	k.SetFiles(ctx, file)
-
-	return &types.MsgInitAccountResponse{TrackingNumber: updatedTrackingNumber}, nil
 }
