@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/filetree/types"
@@ -73,8 +72,6 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 			v, //currently only works on the creator--notify yourself
 		)
 
-		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@  BOB NOTI COUNTER IS ", notiCounter)
-
 		if !found {
 			return false, notiTypes.ErrNotiCounterNotFound
 		}
@@ -89,10 +86,6 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 		if isFound {
 			return false, notiTypes.ErrNotificationAlreadySet
 		}
-
-		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@  BOB IS FOUND? IS", isFound)
-		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@  MSG.CREATOR IS", sender)
-		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@  Are they permitted sender? Should be false", isSender(notiCounter, sender))
 
 		//Check if sender is permitted to notify
 		if !isSender(notiCounter, sender) {
