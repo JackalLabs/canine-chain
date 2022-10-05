@@ -159,7 +159,7 @@ func (k msgServer) CreateLPool(
 		)
 	}
 
-
+	EmitPoolCreatedEvent(ctx, creatorAccAddr, pool)
 
 	return &types.MsgCreateLPoolResponse{Id: pool.Index}, nil
 }

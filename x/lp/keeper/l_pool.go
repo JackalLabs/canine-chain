@@ -26,45 +26,6 @@ func GetAllDenoms(coins sdk.Coins) []string {
 	return denoms
 }
 
-// Generate pool name from coins.
-func generatePoolName(coins sdk.Coins) string {
-	denoms := GetAllDenoms(coins)
-
-	return strings.Join(SortDenoms(denoms), "-")
-}
-
-// Generate a denom unit for LPToken with itself as smallest unit.
-func generateLPTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUnit {
-	// More info about denom units:
-	// https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.46.0/x/bank/types#DenomUnit
-	tokenDenomUnit := banktypes.DenomUnit{
-		Denom:    denom,
-		Exponent: 0,
-	}
-	return []*banktypes.DenomUnit{&tokenDenomUnit}
-}
-
-func (k Keeper) registerLPToken(ctx sdk.Context, denom string) {
-	metaData, found := k.bankKeeper.GetDenomMetaData(ctx, denom)
-
-	aliase := "JKLLP"
-
-	if !found {
-		// Register LPTokenDenom meta data.
-		// Step 1: generate denom units for LPToken.
-		denomUnits := generateLPTokenDenomUnit(denom, aliase)
-
-		// Step 2: add it to bank's denom meta data store.
-		metaData = banktypes.Metadata{
-			Description: "Jackal liquidity pool token",
-			DenomUnits:  denomUnits,
-			Base:        denomUnits[0].Denom,
-		}
-
-		k.bankKeeper.SetDenomMetaData(ctx, metaData)
-	}
-}
-
 // Mint liquidity token and send it to toAddr.
 // Returns error when minting or sending fails.
 func (k Keeper) MintAndSendLPToken(
@@ -167,4 +128,43 @@ func (k Keeper) GetAllLPool(ctx sdk.Context) (list []types.LPool) {
 	}
 
 	return
+}
+
+// Generate pool name from coins.
+func generatePoolName(coins sdk.Coins) string {
+	denoms := GetAllDenoms(coins)
+
+	return strings.Join(SortDenoms(denoms), "-")
+}
+
+// Generate a denom unit for LPToken with itself as smallest unit.
+func generateLPTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUnit {
+	// More info about denom units:
+	// https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.46.0/x/bank/types#DenomUnit
+	tokenDenomUnit := banktypes.DenomUnit{
+		Denom:    denom,
+		Exponent: 0,
+	}
+	return []*banktypes.DenomUnit{&tokenDenomUnit}
+}
+
+func (k Keeper) registerLPToken(ctx sdk.Context, denom string) {
+	metaData, found := k.bankKeeper.GetDenomMetaData(ctx, denom)
+
+	aliase := "JKLLP"
+
+	if !found {
+		// Register LPTokenDenom meta data.
+		// Step 1: generate denom units for LPToken.
+		denomUnits := generateLPTokenDenomUnit(denom, aliase)
+
+		// Step 2: add it to bank's denom meta data store.
+		metaData = banktypes.Metadata{
+			Description: "Jackal liquidity pool token",
+			DenomUnits:  denomUnits,
+			Base:        denomUnits[0].Denom,
+		}
+
+		k.bankKeeper.SetDenomMetaData(ctx, metaData)
+	}
 }
