@@ -57,6 +57,27 @@ func downfil(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps http
 	w.Write(data)
 }
 
+func listFiles(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	clientCtx, qerr := client.GetClientTxContext(cmd)
+	if qerr != nil {
+		return
+	}
+
+	files, _ := os.ReadDir(fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, ps.ByName("file")))
+
+	var fileNames []string = make([]string, 0)
+
+	for _, f := range files {
+		fileNames = append(fileNames, f.Name())
+	}
+
+	v := ListResponse{
+		Files: fileNames,
+	}
+
+	json.NewEncoder(w).Encode(v)
+}
+
 func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
 	dfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		downfil(cmd, w, r, ps)
@@ -66,10 +87,16 @@ func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
 		indexres(cmd, w, r, ps)
 	}
 
+	lres := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		listFiles(cmd, w, r, ps)
+	}
+
 	router.GET("/version", checkVersion)
 	router.GET("/v", checkVersion)
 	router.GET("/download/:file", dfil)
 	router.GET("/d/:file", dfil)
+	router.GET("/list", lres)
+	router.GET("/l", lres)
 	router.GET("/", ires)
 }
 
