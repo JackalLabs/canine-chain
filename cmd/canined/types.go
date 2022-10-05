@@ -17,3 +17,7 @@ type ErrorResponse struct {
 type VersionResponse struct {
 	Version string
 }
+
+type ListResponse struct {
+	Files []string
+}
