@@ -42,13 +42,13 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	k.SetFiles(ctx, file)
 
 	//notify viewers
-	bool, error := notify(k, ctx, msg.NotifyViewers, string("you have viewer access"), msg.Creator)
+	bool, error := notify(k, ctx, msg.NotifyViewers, string("you have viewer access"), msg.Creator, fullMerklePath, owner)
 	if !bool {
 		return nil, error
 	}
 
 	//notify editors
-	ok, err := notify(k, ctx, msg.NotifyEditors, string("you have editor access"), msg.Creator)
+	ok, err := notify(k, ctx, msg.NotifyEditors, string("you have editor access"), msg.Creator, fullMerklePath, owner)
 	if !ok {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 //if bool returns 'true', we successfully notified everyone, otherwise if it's false we return the error
 //viewers will have their own message from editors, so should send in a general notification, and a string of viewers or editors
 
-func notify(k msgServer, ctx sdk.Context, recipients string, notification string, sender string) (bool, error) {
+func notify(k msgServer, ctx sdk.Context, recipients string, notification string, sender string, hashPath string, hashPathOwner string) (bool, error) {
 
 	placeholderMap := make([]string, 0, 1000)
 	json.Unmarshal([]byte(recipients), &placeholderMap)
@@ -92,12 +92,13 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 		}
 
 		var notifications = notiTypes.Notifications{
-			Sender:       sender, //sender of the notification--who in this case is the poster of the file
-			Count:        notiCounter.Counter,
-			Notification: notification, //need extra param in MsgPostFile
-			Address:      v,            //The address of the recipient--their list of notifications
-			//merklePath of file
-			//hashPathOwner // this is here because the sender of the file won't always be the owner
+			Sender:        sender, //delete this for security?
+			Count:         notiCounter.Counter,
+			Notification:  notification, //need extra param in MsgPostFile
+			Address:       v,            //This will be hashed before it enters the keeper
+			HashPath:      hashPath,
+			HashPathOwner: hashPathOwner, // this is here because the sender of the file won't always be the owner
+
 		}
 
 		k.notiKeeper.SetNotifications(
