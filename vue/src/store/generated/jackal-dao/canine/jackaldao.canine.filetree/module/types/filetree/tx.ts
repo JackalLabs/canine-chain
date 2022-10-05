@@ -27,6 +27,7 @@ export interface MsgAddViewers {
   viewerKeys: string;
   address: string;
   fileowner: string;
+  notifyViewers: string;
 }
 
 export interface MsgAddViewersResponse {}
@@ -353,6 +354,7 @@ const baseMsgAddViewers: object = {
   viewerKeys: "",
   address: "",
   fileowner: "",
+  notifyViewers: "",
 };
 
 export const MsgAddViewers = {
@@ -371,6 +373,9 @@ export const MsgAddViewers = {
     }
     if (message.fileowner !== "") {
       writer.uint32(42).string(message.fileowner);
+    }
+    if (message.notifyViewers !== "") {
+      writer.uint32(50).string(message.notifyViewers);
     }
     return writer;
   },
@@ -396,6 +401,9 @@ export const MsgAddViewers = {
           break;
         case 5:
           message.fileowner = reader.string();
+          break;
+        case 6:
+          message.notifyViewers = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -432,6 +440,11 @@ export const MsgAddViewers = {
     } else {
       message.fileowner = "";
     }
+    if (object.notifyViewers !== undefined && object.notifyViewers !== null) {
+      message.notifyViewers = String(object.notifyViewers);
+    } else {
+      message.notifyViewers = "";
+    }
     return message;
   },
 
@@ -442,6 +455,8 @@ export const MsgAddViewers = {
     message.viewerKeys !== undefined && (obj.viewerKeys = message.viewerKeys);
     message.address !== undefined && (obj.address = message.address);
     message.fileowner !== undefined && (obj.fileowner = message.fileowner);
+    message.notifyViewers !== undefined &&
+      (obj.notifyViewers = message.notifyViewers);
     return obj;
   },
 
@@ -471,6 +486,11 @@ export const MsgAddViewers = {
       message.fileowner = object.fileowner;
     } else {
       message.fileowner = "";
+    }
+    if (object.notifyViewers !== undefined && object.notifyViewers !== null) {
+      message.notifyViewers = object.notifyViewers;
+    } else {
+      message.notifyViewers = "";
     }
     return message;
   },

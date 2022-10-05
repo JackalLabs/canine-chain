@@ -39,27 +39,20 @@ func CmdAddViewers() *cobra.Command {
 
 			fileQueryClient := types.NewQueryClient(clientCtx)
 			trimPath := strings.TrimSuffix(argHashpath, "/")
-
 			merklePath := types.MerklePath(trimPath)
 
-			//Can't use helper functions in access.go so just build ownerString
-			//Not working. Need to build the hash of the owner first.
-
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("%s", argOwner)))
+			h.Write([]byte(argOwner))
 			hash := h.Sum(nil)
-
 			accountHash := fmt.Sprintf("%x", hash)
-
-			H := sha256.New()
-			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
-			Hash := H.Sum(nil)
-			ownerString := fmt.Sprintf("%x", Hash)
+			ownerString := MakeOwnerAddress(merklePath, accountHash)
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
 
 			var viewerIds []string
 			var viewerKeys []string
+
+			var viewersToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
@@ -67,7 +60,6 @@ func CmdAddViewers() *cobra.Command {
 				}
 				key, err := sdk.AccAddressFromBech32(v)
 				if err != nil {
-					fmt.Printf("address: %s\n", v)
 					return err
 				}
 
@@ -125,15 +117,23 @@ func CmdAddViewers() *cobra.Command {
 				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
+				viewersToNotify = append(viewersToNotify, v)
 
 			}
 
+			jsonViewersToNotify, err := json.Marshal(viewersToNotify)
+			if err != nil {
+				return err
+			}
+
+			//viewerIds supposed to be JSON marshalled aswell?
 			msg := types.NewMsgAddViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),
 				strings.Join(viewerKeys, ","),
 				merklePath,
 				ownerString,
+				string(jsonViewersToNotify),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
