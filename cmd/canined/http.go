@@ -17,11 +17,17 @@ import (
 
 func indexres(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	clientCtx := client.GetClientContextFromCmd(cmd)
+	clientCtx, err := client.GetClientTxContext(cmd)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	address := clientCtx.GetFromAddress()
 
 	v := IndexResponse{
 		Status:  "online",
-		Address: clientCtx.GetFromAddress().String(),
+		Address: address.String(),
 	}
 	json.NewEncoder(w).Encode(v)
 }

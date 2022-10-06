@@ -4,21 +4,21 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgPostkey } from "./types/filetree/tx";
 import { MsgAddViewers } from "./types/filetree/tx";
 import { MsgDeleteFile } from "./types/filetree/tx";
-import { MsgPostkey } from "./types/filetree/tx";
 import { MsgPostFile } from "./types/filetree/tx";
-import { MsgInitAccount } from "./types/filetree/tx";
 import { MsgInitAll } from "./types/filetree/tx";
+import { MsgInitAccount } from "./types/filetree/tx";
 
 
 const types = [
+  ["/jackaldao.canine.filetree.MsgPostkey", MsgPostkey],
   ["/jackaldao.canine.filetree.MsgAddViewers", MsgAddViewers],
   ["/jackaldao.canine.filetree.MsgDeleteFile", MsgDeleteFile],
-  ["/jackaldao.canine.filetree.MsgPostkey", MsgPostkey],
   ["/jackaldao.canine.filetree.MsgPostFile", MsgPostFile],
-  ["/jackaldao.canine.filetree.MsgInitAccount", MsgInitAccount],
   ["/jackaldao.canine.filetree.MsgInitAll", MsgInitAll],
+  ["/jackaldao.canine.filetree.MsgInitAccount", MsgInitAccount],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -51,12 +51,12 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgPostkey: (data: MsgPostkey): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostkey", value: MsgPostkey.fromPartial( data ) }),
     msgAddViewers: (data: MsgAddViewers): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgAddViewers", value: MsgAddViewers.fromPartial( data ) }),
     msgDeleteFile: (data: MsgDeleteFile): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgDeleteFile", value: MsgDeleteFile.fromPartial( data ) }),
-    msgPostkey: (data: MsgPostkey): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostkey", value: MsgPostkey.fromPartial( data ) }),
     msgPostFile: (data: MsgPostFile): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgPostFile", value: MsgPostFile.fromPartial( data ) }),
-    msgInitAccount: (data: MsgInitAccount): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgInitAccount", value: MsgInitAccount.fromPartial( data ) }),
     msgInitAll: (data: MsgInitAll): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgInitAll", value: MsgInitAll.fromPartial( data ) }),
+    msgInitAccount: (data: MsgInitAccount): EncodeObject => ({ typeUrl: "/jackaldao.canine.filetree.MsgInitAccount", value: MsgInitAccount.fromPartial( data ) }),
     
   };
 };
