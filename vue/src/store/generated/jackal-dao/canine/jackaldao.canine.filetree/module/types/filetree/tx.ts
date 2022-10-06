@@ -13,8 +13,10 @@ export interface MsgPostFile {
   viewers: string;
   editors: string;
   trackingNumber: number;
-  notifyViewers: string;
-  notifyEditors: string;
+  viewersToNotify: string;
+  editorsToNotify: string;
+  notiForViewers: string;
+  notiForEditors: string;
 }
 
 export interface MsgPostFileResponse {
@@ -77,8 +79,10 @@ const baseMsgPostFile: object = {
   viewers: "",
   editors: "",
   trackingNumber: 0,
-  notifyViewers: "",
-  notifyEditors: "",
+  viewersToNotify: "",
+  editorsToNotify: "",
+  notiForViewers: "",
+  notiForEditors: "",
 };
 
 export const MsgPostFile = {
@@ -107,11 +111,17 @@ export const MsgPostFile = {
     if (message.trackingNumber !== 0) {
       writer.uint32(64).uint64(message.trackingNumber);
     }
-    if (message.notifyViewers !== "") {
-      writer.uint32(74).string(message.notifyViewers);
+    if (message.viewersToNotify !== "") {
+      writer.uint32(74).string(message.viewersToNotify);
     }
-    if (message.notifyEditors !== "") {
-      writer.uint32(82).string(message.notifyEditors);
+    if (message.editorsToNotify !== "") {
+      writer.uint32(82).string(message.editorsToNotify);
+    }
+    if (message.notiForViewers !== "") {
+      writer.uint32(90).string(message.notiForViewers);
+    }
+    if (message.notiForEditors !== "") {
+      writer.uint32(98).string(message.notiForEditors);
     }
     return writer;
   },
@@ -148,10 +158,16 @@ export const MsgPostFile = {
           message.trackingNumber = longToNumber(reader.uint64() as Long);
           break;
         case 9:
-          message.notifyViewers = reader.string();
+          message.viewersToNotify = reader.string();
           break;
         case 10:
-          message.notifyEditors = reader.string();
+          message.editorsToNotify = reader.string();
+          break;
+        case 11:
+          message.notiForViewers = reader.string();
+          break;
+        case 12:
+          message.notiForEditors = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -203,15 +219,31 @@ export const MsgPostFile = {
     } else {
       message.trackingNumber = 0;
     }
-    if (object.notifyViewers !== undefined && object.notifyViewers !== null) {
-      message.notifyViewers = String(object.notifyViewers);
+    if (
+      object.viewersToNotify !== undefined &&
+      object.viewersToNotify !== null
+    ) {
+      message.viewersToNotify = String(object.viewersToNotify);
     } else {
-      message.notifyViewers = "";
+      message.viewersToNotify = "";
     }
-    if (object.notifyEditors !== undefined && object.notifyEditors !== null) {
-      message.notifyEditors = String(object.notifyEditors);
+    if (
+      object.editorsToNotify !== undefined &&
+      object.editorsToNotify !== null
+    ) {
+      message.editorsToNotify = String(object.editorsToNotify);
     } else {
-      message.notifyEditors = "";
+      message.editorsToNotify = "";
+    }
+    if (object.notiForViewers !== undefined && object.notiForViewers !== null) {
+      message.notiForViewers = String(object.notiForViewers);
+    } else {
+      message.notiForViewers = "";
+    }
+    if (object.notiForEditors !== undefined && object.notiForEditors !== null) {
+      message.notiForEditors = String(object.notiForEditors);
+    } else {
+      message.notiForEditors = "";
     }
     return message;
   },
@@ -227,10 +259,14 @@ export const MsgPostFile = {
     message.editors !== undefined && (obj.editors = message.editors);
     message.trackingNumber !== undefined &&
       (obj.trackingNumber = message.trackingNumber);
-    message.notifyViewers !== undefined &&
-      (obj.notifyViewers = message.notifyViewers);
-    message.notifyEditors !== undefined &&
-      (obj.notifyEditors = message.notifyEditors);
+    message.viewersToNotify !== undefined &&
+      (obj.viewersToNotify = message.viewersToNotify);
+    message.editorsToNotify !== undefined &&
+      (obj.editorsToNotify = message.editorsToNotify);
+    message.notiForViewers !== undefined &&
+      (obj.notiForViewers = message.notiForViewers);
+    message.notiForEditors !== undefined &&
+      (obj.notiForEditors = message.notiForEditors);
     return obj;
   },
 
@@ -276,15 +312,31 @@ export const MsgPostFile = {
     } else {
       message.trackingNumber = 0;
     }
-    if (object.notifyViewers !== undefined && object.notifyViewers !== null) {
-      message.notifyViewers = object.notifyViewers;
+    if (
+      object.viewersToNotify !== undefined &&
+      object.viewersToNotify !== null
+    ) {
+      message.viewersToNotify = object.viewersToNotify;
     } else {
-      message.notifyViewers = "";
+      message.viewersToNotify = "";
     }
-    if (object.notifyEditors !== undefined && object.notifyEditors !== null) {
-      message.notifyEditors = object.notifyEditors;
+    if (
+      object.editorsToNotify !== undefined &&
+      object.editorsToNotify !== null
+    ) {
+      message.editorsToNotify = object.editorsToNotify;
     } else {
-      message.notifyEditors = "";
+      message.editorsToNotify = "";
+    }
+    if (object.notiForViewers !== undefined && object.notiForViewers !== null) {
+      message.notiForViewers = object.notiForViewers;
+    } else {
+      message.notiForViewers = "";
+    }
+    if (object.notiForEditors !== undefined && object.notiForEditors !== null) {
+      message.notiForEditors = object.notiForEditors;
+    } else {
+      message.notiForEditors = "";
     }
     return message;
   },

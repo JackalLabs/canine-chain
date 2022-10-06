@@ -41,7 +41,6 @@ func CmdPostFile() *cobra.Command {
 
 			parentHash, childHash := merkleHelper(argHashpath)
 
-			//Getting the tracker from the client side safe? By the time your transaction is done, the tracker would have been incremented by many other transactions
 			queryClient := filetypes.NewQueryClient(clientCtx)
 			res, err := queryClient.Tracker(cmd.Context(), &filetypes.QueryGetTrackerRequest{})
 			if err != nil {
@@ -150,7 +149,6 @@ func CmdPostFile() *cobra.Command {
 			accountHash := fmt.Sprintf("%x", hash)
 
 			//Marshall viewers and editors to notify. Last element is the person who is posting this file so we probably don't want them to notify themselves
-
 			if len(viewersToNotify) > 0 {
 				viewersToNotify = viewersToNotify[:len(viewersToNotify)-1]
 			}
@@ -169,6 +167,9 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
+			notiForViewers := fmt.Sprintf("%s has given you read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+			notiForEditors := fmt.Sprintf("%s has given you editor access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+
 			msg := filetypes.NewMsgPostFile(
 				clientCtx.GetFromAddress().String(),
 				accountHash,
@@ -180,6 +181,8 @@ func CmdPostFile() *cobra.Command {
 				trackingNumber, //UUID goes here
 				string(jsonViewersToNotify),
 				string(jsonEditorsToNotify),
+				notiForViewers,
+				notiForEditors,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
