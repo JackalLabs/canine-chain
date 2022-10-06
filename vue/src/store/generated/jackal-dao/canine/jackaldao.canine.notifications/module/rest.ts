@@ -73,7 +73,7 @@ export interface NotificationsQueryAllNotificationsResponse {
 }
 
 export interface NotificationsQueryFilteredNotificationsResponse {
-  notifications?: NotificationsNotifications[];
+  notifications?: string[];
 }
 
 export interface NotificationsQueryGetNotiCounterResponse {

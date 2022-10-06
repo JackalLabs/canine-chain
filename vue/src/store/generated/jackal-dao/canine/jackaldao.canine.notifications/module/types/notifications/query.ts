@@ -43,7 +43,8 @@ export interface QueryFilteredNotificationsRequest {
 }
 
 export interface QueryFilteredNotificationsResponse {
-  notifications: Notifications[];
+  /** could turn it back to 'repeated Notifications notifications' */
+  notifications: string[];
 }
 
 export interface QueryGetNotiCounterRequest {
@@ -565,7 +566,7 @@ export const QueryFilteredNotificationsRequest = {
   },
 };
 
-const baseQueryFilteredNotificationsResponse: object = {};
+const baseQueryFilteredNotificationsResponse: object = { notifications: "" };
 
 export const QueryFilteredNotificationsResponse = {
   encode(
@@ -573,7 +574,7 @@ export const QueryFilteredNotificationsResponse = {
     writer: Writer = Writer.create()
   ): Writer {
     for (const v of message.notifications) {
-      Notifications.encode(v!, writer.uint32(10).fork()).ldelim();
+      writer.uint32(10).string(v!);
     }
     return writer;
   },
@@ -592,9 +593,7 @@ export const QueryFilteredNotificationsResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.notifications.push(
-            Notifications.decode(reader, reader.uint32())
-          );
+          message.notifications.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -611,7 +610,7 @@ export const QueryFilteredNotificationsResponse = {
     message.notifications = [];
     if (object.notifications !== undefined && object.notifications !== null) {
       for (const e of object.notifications) {
-        message.notifications.push(Notifications.fromJSON(e));
+        message.notifications.push(String(e));
       }
     }
     return message;
@@ -620,9 +619,7 @@ export const QueryFilteredNotificationsResponse = {
   toJSON(message: QueryFilteredNotificationsResponse): unknown {
     const obj: any = {};
     if (message.notifications) {
-      obj.notifications = message.notifications.map((e) =>
-        e ? Notifications.toJSON(e) : undefined
-      );
+      obj.notifications = message.notifications.map((e) => e);
     } else {
       obj.notifications = [];
     }
@@ -638,7 +635,7 @@ export const QueryFilteredNotificationsResponse = {
     message.notifications = [];
     if (object.notifications !== undefined && object.notifications !== null) {
       for (const e of object.notifications) {
-        message.notifications.push(Notifications.fromPartial(e));
+        message.notifications.push(e);
       }
     }
     return message;

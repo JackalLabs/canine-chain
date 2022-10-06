@@ -28,7 +28,8 @@ func (k Keeper) FilteredNotifications(c context.Context, req *types.QueryFiltere
 	}
 
 	i := uint64(0)
-	var notifications []types.Notifications
+	var notifications []string
+
 	for i < notiCounter.Counter {
 		val, found := k.GetNotifications(
 			ctx,
@@ -38,7 +39,7 @@ func (k Keeper) FilteredNotifications(c context.Context, req *types.QueryFiltere
 		if !found {
 			return nil, status.Error(codes.NotFound, "not found")
 		}
-		notifications = append(notifications, val)
+		notifications = append(notifications, val.Notification)
 		i += 1
 	}
 

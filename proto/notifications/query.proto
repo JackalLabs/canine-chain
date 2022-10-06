@@ -78,7 +78,7 @@ message QueryFilteredNotificationsRequest {
 }
 
 message QueryFilteredNotificationsResponse {
-	repeated Notifications notifications = 1 [(gogoproto.nullable) = false];
+	repeated string notifications = 1 [(gogoproto.nullable) = false]; //could turn it back to 'repeated Notifications notifications' 
 }
 
 message QueryGetNotiCounterRequest {

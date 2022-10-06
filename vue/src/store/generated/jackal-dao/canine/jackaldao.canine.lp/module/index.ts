@@ -4,17 +4,17 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgDepositLPool } from "./types/lp/tx";
-import { MsgSwap } from "./types/lp/tx";
 import { MsgWithdrawLPool } from "./types/lp/tx";
+import { MsgSwap } from "./types/lp/tx";
 import { MsgCreateLPool } from "./types/lp/tx";
+import { MsgDepositLPool } from "./types/lp/tx";
 
 
 const types = [
-  ["/jackaldao.canine.lp.MsgDepositLPool", MsgDepositLPool],
-  ["/jackaldao.canine.lp.MsgSwap", MsgSwap],
   ["/jackaldao.canine.lp.MsgWithdrawLPool", MsgWithdrawLPool],
+  ["/jackaldao.canine.lp.MsgSwap", MsgSwap],
   ["/jackaldao.canine.lp.MsgCreateLPool", MsgCreateLPool],
+  ["/jackaldao.canine.lp.MsgDepositLPool", MsgDepositLPool],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -47,10 +47,10 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgDepositLPool: (data: MsgDepositLPool): EncodeObject => ({ typeUrl: "/jackaldao.canine.lp.MsgDepositLPool", value: MsgDepositLPool.fromPartial( data ) }),
-    msgSwap: (data: MsgSwap): EncodeObject => ({ typeUrl: "/jackaldao.canine.lp.MsgSwap", value: MsgSwap.fromPartial( data ) }),
     msgWithdrawLPool: (data: MsgWithdrawLPool): EncodeObject => ({ typeUrl: "/jackaldao.canine.lp.MsgWithdrawLPool", value: MsgWithdrawLPool.fromPartial( data ) }),
+    msgSwap: (data: MsgSwap): EncodeObject => ({ typeUrl: "/jackaldao.canine.lp.MsgSwap", value: MsgSwap.fromPartial( data ) }),
     msgCreateLPool: (data: MsgCreateLPool): EncodeObject => ({ typeUrl: "/jackaldao.canine.lp.MsgCreateLPool", value: MsgCreateLPool.fromPartial( data ) }),
+    msgDepositLPool: (data: MsgDepositLPool): EncodeObject => ({ typeUrl: "/jackaldao.canine.lp.MsgDepositLPool", value: MsgDepositLPool.fromPartial( data ) }),
     
   };
 };

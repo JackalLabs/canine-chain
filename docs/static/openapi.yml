@@ -34000,21 +34000,7 @@ paths:
               notifications:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    count:
-                      type: string
-                      format: uint64
-                    notification:
-                      type: string
-                    address:
-                      type: string
-                    sender:
-                      type: string
-                    hashPath:
-                      type: string
-                    hashPathOwner:
-                      type: string
+                  type: string
         default:
           description: An unexpected error response.
           schema:
@@ -59394,21 +59380,7 @@ definitions:
       notifications:
         type: array
         items:
-          type: object
-          properties:
-            count:
-              type: string
-              format: uint64
-            notification:
-              type: string
-            address:
-              type: string
-            sender:
-              type: string
-            hashPath:
-              type: string
-            hashPathOwner:
-              type: string
+          type: string
   jackaldao.canine.notifications.QueryGetNotiCounterResponse:
     type: object
     properties:
