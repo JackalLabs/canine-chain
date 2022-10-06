@@ -45,13 +45,10 @@ func (k Keeper) Init(c context.Context, req *types.QueryGetInitRequest) (*types.
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetInit(
+	_, found := k.GetInit(
 		ctx,
 		req.Address,
 	)
-	if !found {
-		return nil, status.Error(codes.NotFound, "not found")
-	}
 
-	return &types.QueryGetInitResponse{Init: val}, nil
+	return &types.QueryGetInitResponse{Init: found}, nil
 }
