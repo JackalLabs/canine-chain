@@ -9,10 +9,9 @@ const TypeMsgInit = "init"
 
 var _ sdk.Msg = &MsgInit{}
 
-func NewMsgInit(creator string, name string) *MsgInit {
+func NewMsgInit(creator string) *MsgInit {
 	return &MsgInit{
 		Creator: creator,
-		Name:    name,
 	}
 }
 
