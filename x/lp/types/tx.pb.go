@@ -174,7 +174,7 @@ type MsgDepositLPool struct {
 	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	PoolName string `protobuf:"bytes,2,opt,name=poolName,proto3" json:"poolName,omitempty"`
 	// Input format:
-	// "{amount0}{denomination},...,{amountN}{denominationN}"
+	//"{amount0}{denomination},...,{amountN}{denominationN}"
 	Coins []types.DecCoin `protobuf:"bytes,3,rep,name=coins,proto3" json:"coins"`
 	// The contributor can choose lock duration
 	LockDuration int64 `protobuf:"varint,4,opt,name=lockDuration,proto3" json:"lockDuration,omitempty"`
