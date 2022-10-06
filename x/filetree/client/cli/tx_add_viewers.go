@@ -58,10 +58,16 @@ func CmdAddViewers() *cobra.Command {
 				if len(v) < 1 {
 					continue
 				}
+				fmt.Println("v is", v)
 				key, err := sdk.AccAddressFromBech32(v)
 				if err != nil {
 					return err
 				}
+				fmt.Println("AccAddressFromBech32(v) is", key)
+				fmt.Println("key.String() is", key.String())
+				//os.Exit(0)
+
+				//So, we're decoding it from Bech32, and then using .String(), the Stringer interface, to convert it back to bech32...unnecessary?
 
 				queryClient := filetypes.NewQueryClient(clientCtx)
 				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})

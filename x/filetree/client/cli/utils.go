@@ -2,6 +2,7 @@ package cli
 
 import (
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	eciesgo "github.com/ecies/go/v2"
 	filetypes "github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/spf13/cobra"
 )
 
 func MakePrivateKey(clientCtx client.Context) (*eciesgo.PrivateKey, error) {
@@ -52,4 +54,72 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	ownerAddress := fmt.Sprintf("%x", hash)
 
 	return ownerAddress
+}
+
+func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, error) {
+
+	clientCtx, err := client.GetClientTxContext(cmd)
+	if err != nil {
+		return nil, err
+	}
+
+	queryClient := filetypes.NewQueryClient(clientCtx)
+
+	res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key})
+	if err != nil {
+		return nil, filetypes.ErrPubKeyNotFound
+	}
+
+	pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+	if err != nil {
+		return nil, err
+	}
+
+	encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(argKeys))
+	if err != nil {
+		return nil, err
+	}
+	return encrypted, nil
+
+}
+
+func getTrackingAndCallerAddress(ctx client.Context, cmd *cobra.Command) (uint64, *string, error) {
+
+	queryClient := filetypes.NewQueryClient(ctx)
+	res, err := queryClient.Tracker(cmd.Context(), &filetypes.QueryGetTrackerRequest{})
+	if err != nil {
+		return 0, nil, err
+	}
+	trackingNumber := res.Tracker.TrackingNumber
+
+	fromAddress := ctx.GetFromAddress().String()
+
+	return trackingNumber, &fromAddress, nil
+
+}
+
+func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]string, viewersToNotify []string, editorsToNotify []string) ([]byte, []byte, []byte, []byte, error) {
+
+	jsonViewers, err := json.Marshal(viewers)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	jsonEditors, err := json.Marshal(editors)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	jsonViewersToNotify, err := json.Marshal(viewersToNotify)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	jsonEditorsToNotify, err := json.Marshal(editorsToNotify)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	return jsonViewers, jsonEditors, jsonViewersToNotify, jsonEditorsToNotify, nil
+
 }
