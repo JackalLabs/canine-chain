@@ -156,7 +156,7 @@ message QueryGetInitRequest {
 }
 
 message QueryGetInitResponse {
-	Init init = 1 [(gogoproto.nullable) = false];
+	bool init = 1;
 }
 
 message QueryAllInitRequest {

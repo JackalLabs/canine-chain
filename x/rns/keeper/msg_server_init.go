@@ -25,7 +25,9 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 
 	k.SetInit(ctx, i)
 
-	name := msg.Name
+	bh := ctx.BlockHeight()
+
+	name := types.MakeName(int(bh), bh)
 
 	if strings.Contains(name, ".") {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "name cannot contain '.'")

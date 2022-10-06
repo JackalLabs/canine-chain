@@ -2,6 +2,8 @@ package types
 
 import (
 	"encoding/binary"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 var _ binary.ByteOrder
@@ -23,6 +25,18 @@ func LProviderRecordKey(
 	addrBytes := []byte(provider)
 
 	return CombineKeys(poolBytes, addrBytes)
+}
+
+// LProviderRecordKey returns the store key to retrieve a LProviderRecord 
+// reference.
+func LProviderRecordRefKey(
+	poolName string,
+	provider sdk.AccAddress,
+) []byte {
+	poolBytes := []byte(poolName)
+	addrBytes := []byte(provider.String())
+	
+	return CombineKeys(addrBytes, poolBytes)
 }
 
 // Takes LProviderRecord struct to generate store key.

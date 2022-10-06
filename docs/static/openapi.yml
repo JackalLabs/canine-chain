@@ -34569,12 +34569,7 @@ paths:
             type: object
             properties:
               init:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  complete:
-                    type: boolean
+                type: boolean
         default:
           description: An unexpected error response.
           schema:
@@ -58708,6 +58703,9 @@ definitions:
         format: uint64
   jackaldao.canine.filetree.MsgInitAllResponse:
     type: object
+    properties:
+      name:
+        type: string
   jackaldao.canine.filetree.MsgPostFileResponse:
     type: object
     properties:
@@ -59702,12 +59700,7 @@ definitions:
     type: object
     properties:
       init:
-        type: object
-        properties:
-          address:
-            type: string
-          complete:
-            type: boolean
+        type: boolean
   jackaldao.canine.rns.QueryGetNamesResponse:
     type: object
     properties:

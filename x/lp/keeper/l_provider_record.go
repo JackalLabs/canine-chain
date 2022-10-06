@@ -107,18 +107,33 @@ func (k Keeper) GetLProviderRecord(
 	return val, true
 }
 
+// Removes LProviderRecord and reference from store.
+func (k Keeper) EraseLProviderRecord(
+	ctx sdk.Context, 
+	provider sdk.AccAddress,
+	poolName string,
+) error {
+	recordKey := types.LProviderRecordKey(poolName, provider.String())
+
+	record, found := k.GetLProviderRecord(ctx, recordKey)
+
+	if !found {
+		return types.ErrLProviderRecordNotFound
+	}
+
+	k.RemoveProviderRef(ctx, record)
+	k.RemoveLProviderRecord(ctx, recordKey)
+
+	return nil
+}
+
 // RemoveLProviderRecord removes a lProviderRecord from the store
 func (k Keeper) RemoveLProviderRecord(
 	ctx sdk.Context,
-	poolName string,
-	provider string,
-
+	recordKey []byte,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
-	store.Delete(types.LProviderRecordKey(
-		poolName,
-		provider,
-	))
+	store.Delete(recordKey)
 }
 
 // GetAllLProviderRecord returns all lProviderRecord
@@ -207,4 +222,14 @@ func (k Keeper) AddProviderRef(ctx sdk.Context, record types.LProviderRecord) er
 	store.Set(refKey, recordKey)
 
 	return nil
+}
+
+// Remove LProviderRecord reference from KVStore.
+func (k Keeper) RemoveProviderRef (ctx sdk.Context, record types.LProviderRecord) {
+	// Generate reference key
+	refKey := types.GetProviderRefKey(record)
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
+
+	store.Delete(refKey)
 }

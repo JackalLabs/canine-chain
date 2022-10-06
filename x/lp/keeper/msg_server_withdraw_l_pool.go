@@ -55,7 +55,9 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 	unlockTime, _ := StringToTime(record.UnlockTime)
 
 	// This is used to calculate amount of coins to return
-	penaltyShare := sdk.NewInt(msg.Shares)
+	burningAmt := sdk.NewInt(msg.Shares)
+
+	penaltyAmt := sdk.ZeroInt()
 
 	pm, err := sdk.NewDecFromStr(pool.PenaltyMulti)
 	if err != nil {
@@ -63,12 +65,14 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 			" multiplier; saved in invalid format: %s err: %s",
 			pool.PenaltyMulti, err))
 	}
+
 	if ctx.BlockTime().Before(unlockTime) {
-		penalty := pm.MulInt64(msg.Shares)
-		penaltyShare = penaltyShare.Sub(penalty.RoundInt())
+		penaltyAmt = pm.MulInt(burningAmt).RoundInt()
 	}
 
-	returns, err := CalculatePoolShareBurnReturn(pool, penaltyShare)
+	burningAmt = burningAmt.Sub(penaltyAmt)
+
+	coinsOut, err := CalculatePoolShareBurnReturn(pool, burningAmt)
 
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
@@ -77,31 +81,32 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 		)
 	}
 
-	burninLToken := sdk.NewCoins(sdk.NewCoin(pool.LptokenDenom, sdk.NewInt(msg.Shares)))
+	burningCoin := sdk.NewCoin(pool.LptokenDenom, sdk.NewInt(msg.Shares))
+	burningCoins := sdk.NewCoins(burningCoin)
 
 	// Transfer LPToken to module
-	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAcc, types.ModuleName, burninLToken)
-
+	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAcc, types.ModuleName, burningCoins)
+	
 	if sdkErr != nil {
 		return nil, sdkErr
 	}
 
 	// Send return coins
-	sdkErr = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, creatorAcc, returns)
+	sdkErr = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, creatorAcc, coinsOut)
 
 	if sdkErr != nil {
 		return nil, sdkErr
 	}
 
 	// Finally, burn that LPToken :fire:
-	sdkErr = k.bankKeeper.BurnCoins(ctx, types.ModuleName, burninLToken)
+	sdkErr = k.bankKeeper.BurnCoins(ctx, types.ModuleName, burningCoins)
 
 	if sdkErr != nil {
 		return nil, sdkErr
 	}
 
 	// Update amount on pool
-	poolCoins = poolCoins.Sub(returns)
+	poolCoins = poolCoins.Sub(coinsOut)
 
 	totalShares = totalShares.Sub(sdk.NewInt(msg.Shares))
 
@@ -109,6 +114,14 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 	pool.LPTokenBalance = totalShares.String()
 
 	k.SetLPool(ctx, pool)
+
+	EmitPoolExitedEvent(
+		ctx,
+		creatorAcc,
+		pool,
+		sdk.NewCoin(pool.LptokenDenom, sdk.NewInt(msg.Shares)),
+		coinsOut,
+		sdk.NewCoin(pool.LptokenDenom, penaltyAmt))
 
 	return nil, nil
 }
