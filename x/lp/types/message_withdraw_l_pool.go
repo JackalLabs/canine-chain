@@ -5,27 +5,27 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgWithdrawLPool = "withdraw_l_pool"
+const TypeMsgExitPool = "exit_pool"
 
-var _ sdk.Msg = &MsgWithdrawLPool{}
+var _ sdk.Msg = &MsgExitPool{}
 
-func NewMsgWithdrawLPool(creator string, poolName string, shares int64) *MsgWithdrawLPool {
-	return &MsgWithdrawLPool{
+func NewMsgExitPool(creator string, poolName string, shares int64) *MsgExitPool {
+	return &MsgExitPool{
 		Creator:  creator,
 		PoolName: poolName,
 		Shares:   shares,
 	}
 }
 
-func (msg *MsgWithdrawLPool) Route() string {
+func (msg *MsgExitPool) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgWithdrawLPool) Type() string {
-	return TypeMsgWithdrawLPool
+func (msg *MsgExitPool) Type() string {
+	return TypeMsgExitPool
 }
 
-func (msg *MsgWithdrawLPool) GetSigners() []sdk.AccAddress {
+func (msg *MsgExitPool) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -33,12 +33,12 @@ func (msg *MsgWithdrawLPool) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgWithdrawLPool) GetSignBytes() []byte {
+func (msg *MsgExitPool) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgWithdrawLPool) ValidateBasic() error {
+func (msg *MsgExitPool) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

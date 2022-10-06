@@ -10,7 +10,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-func (k Keeper) validateWithdrawLPool(ctx sdk.Context, msg *types.MsgWithdrawLPool) error {
+func (k Keeper) validateExitPool(ctx sdk.Context, msg *types.MsgExitPool) error {
 	pool, found := k.GetLPool(ctx, msg.PoolName)
 
 	if !found {
@@ -35,11 +35,11 @@ func (k Keeper) validateWithdrawLPool(ctx sdk.Context, msg *types.MsgWithdrawLPo
 	return nil
 }
 
-func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLPool) (*types.MsgWithdrawLPoolResponse, error) {
+func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*types.MsgExitPoolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	creatorAcc, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	if err := k.validateWithdrawLPool(ctx, msg); err != nil {
+	if err := k.validateExitPool(ctx, msg); err != nil {
 		return nil, err
 	}
 

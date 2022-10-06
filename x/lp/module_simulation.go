@@ -32,9 +32,9 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgJoinPool int = 100
 
-	opWeightMsgWithdrawLPool = "op_weight_msg_withdraw_l_pool"
+	opWeightMsgExitPool = "op_weight_msg_withdraw_l_pool"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgWithdrawLPool int = 100
+	defaultWeightMsgExitPool int = 100
 
 	opWeightMsgSwap = "op_weight_msg_swap"
 	// TODO: Determine the simulation weight value
@@ -96,15 +96,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		lpsimulation.SimulateMsgJoinPool(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgWithdrawLPool int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgWithdrawLPool, &weightMsgWithdrawLPool, nil,
+	var weightMsgExitPool int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgExitPool, &weightMsgExitPool, nil,
 		func(_ *rand.Rand) {
-			weightMsgWithdrawLPool = defaultWeightMsgWithdrawLPool
+			weightMsgExitPool = defaultWeightMsgExitPool
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgWithdrawLPool,
-		lpsimulation.SimulateMsgWithdrawLPool(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgExitPool,
+		lpsimulation.SimulateMsgExitPool(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgSwap int

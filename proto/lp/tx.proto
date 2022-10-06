@@ -9,9 +9,9 @@ option go_package = "github.com/jackal-dao/canine/x/lp/types";
 
 // Msg defines the Msg service.
 service Msg {
-      rpc CreateLPool(MsgCreateLPool) returns (MsgCreateLPoolResponse);
+  rpc CreateLPool(MsgCreateLPool) returns (MsgCreateLPoolResponse);
   rpc JoinPool(MsgJoinPool) returns (MsgJoinPoolResponse);
-  rpc WithdrawLPool(MsgWithdrawLPool) returns (MsgWithdrawLPoolResponse);
+  rpc ExitPool(MsgExitPool) returns (MsgExitPoolResponse);
   rpc Swap(MsgSwap) returns (MsgSwapResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
@@ -57,13 +57,13 @@ message MsgJoinPoolResponse {
   uint64 shares = 1;
 }
 
-message MsgWithdrawLPool {
+message MsgExitPool {
   string creator = 1;
   string poolName = 2;
   int64 shares = 3;
 }
 
-message MsgWithdrawLPoolResponse {
+message MsgExitPoolResponse {
 }
 
 message MsgSwap {
