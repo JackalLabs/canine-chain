@@ -34121,12 +34121,7 @@ paths:
             type: object
             properties:
               init:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  complete:
-                    type: boolean
+                type: boolean
         default:
           description: An unexpected error response.
           schema:
@@ -59072,12 +59067,7 @@ definitions:
     type: object
     properties:
       init:
-        type: object
-        properties:
-          address:
-            type: string
-          complete:
-            type: boolean
+        type: boolean
   jackaldao.canine.rns.QueryGetNamesResponse:
     type: object
     properties:
