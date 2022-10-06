@@ -110,5 +110,7 @@ func (k msgServer) DepositLPool(goCtx context.Context, msg *types.MsgDepositLPoo
 		return nil, err
 	}
 
+	EmitPoolJoinedEvent(ctx, creator, pool, coins, msg.LockDuration)
+
 	return &types.MsgDepositLPoolResponse{}, nil
 }

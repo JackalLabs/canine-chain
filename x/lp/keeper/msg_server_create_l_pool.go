@@ -67,8 +67,8 @@ func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPoo
 	return nil
 }
 
-// Creates new liquidity pool with unique coin denoms.
-// Coins are parsed and normalized (converted to smallest unit) and stored as string.
+// Creates new liquidity pool with unique coins pairs.
+// DecCoins are normalized (converted to smallest unit) and stored as sdk.Coins.
 // A provider record is created with contribution and unlock time.
 // If pool already exists with coin denoms it returns error.
 func (k msgServer) CreateLPool(
@@ -100,27 +100,6 @@ func (k msgServer) CreateLPool(
 			"Failed to create liquidity pool, error during CalculatePoolShare()")
 	}
 
-	// Transfer coins from the creator to module account and give liquidity pool
-	// token.
-	sdkError := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAccAddr,
-		types.ModuleName, normCoins)
-
-	if sdkError != nil {
-		return nil, sdkerrors.Wrapf(
-			sdkError,
-			"failed to create liquidity pool. Failed to retrieve deposit coins " +
-			"from sender")
-	}
-
-	sdkError = k.MintAndSendLPToken(ctx, pool, creatorAccAddr, shareAmount)
-
-	if sdkError != nil {
-		return &types.MsgCreateLPoolResponse{}, sdkerrors.Wrapf(
-			sdkError,
-			"Failed to create liquidity pool. Failed to mint and send token",
-		)
-	}
-
 	pool.Coins = normCoins
 	pool.LPTokenBalance = shareAmount.String()
 
@@ -131,20 +110,56 @@ func (k msgServer) CreateLPool(
 	err = k.InitLProviderRecord(ctx, creatorAccAddr, pool.Name, lockDuration)
 
 	if err != nil {
+		k.RemoveLPool(ctx, pool.Index)
+
 		return nil, sdkerrors.Wrapf(
 			err,
-			"Failed to create liquidity pool. Failed to initialize", 
+			"Failed to create liquidity pool. Failed to initialize" +
 			" LProviderRecord",
 		)
 	}
 
 	recordKey := types.LProviderRecordKey(pool.Name, creatorAccAddr.String())
+
+	// Engage lock
 	if err := k.EngageLock(ctx, recordKey); err != nil {
+		k.RemoveLPool(ctx, pool.Index)
+		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name)
+
 		return nil, sdkerrors.Wrapf(
 			err,
 			"Failed to create liquidity pool. Failed to engage lock",
 		)
 	}
+
+	// Transfer coins from the creator to module account and give liquidity pool
+	// token.
+	sdkError := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAccAddr,
+		types.ModuleName, normCoins)
+
+	if sdkError != nil {
+		k.RemoveLPool(ctx, pool.Index)
+		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name)
+
+		return nil, sdkerrors.Wrapf(
+			sdkError,
+			"failed to create liquidity pool. Failed to retrieve deposit coins " +
+			"from sender")
+	}
+
+	sdkError = k.MintAndSendLPToken(ctx, pool, creatorAccAddr, shareAmount)
+
+	if sdkError != nil {
+		k.RemoveLPool(ctx, pool.Index)
+		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name)
+
+		return &types.MsgCreateLPoolResponse{}, sdkerrors.Wrapf(
+			sdkError,
+			"Failed to create liquidity pool. Failed to mint and send token",
+		)
+	}
+
+	EmitPoolCreatedEvent(ctx, creatorAccAddr, pool)
 
 	return &types.MsgCreateLPoolResponse{Id: pool.Index}, nil
 }
