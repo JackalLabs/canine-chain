@@ -8,7 +8,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-func (k Keeper) validateDepositLPoolMsg(ctx sdk.Context, msg *types.MsgDepositLPool) error {
+func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) error {
 	if err := msg.ValidateBasic(); err != nil {
 		return err
 	}
@@ -32,10 +32,10 @@ func (k Keeper) validateDepositLPoolMsg(ctx sdk.Context, msg *types.MsgDepositLP
 	return nil
 }
 
-func (k msgServer) DepositLPool(goCtx context.Context, msg *types.MsgDepositLPool) (*types.MsgDepositLPoolResponse, error) {
+func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*types.MsgJoinPoolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.validateDepositLPoolMsg(ctx, msg)
+	err := k.validateJoinPoolMsg(ctx, msg)
 
 	if err != nil {
 		return nil, err
@@ -53,11 +53,11 @@ func (k msgServer) DepositLPool(goCtx context.Context, msg *types.MsgDepositLPoo
 		return nil, err
 	}
 
-	// Mint and send pool token to depositor (is that even a word?).
 
+	// Mint and send pool token to msg creator
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	// Transfer money from depositor to module account
+	// Transfer liquidity from the creator account to module account
 	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, coins)
 
 	if sdkErr != nil {
@@ -68,7 +68,7 @@ func (k msgServer) DepositLPool(goCtx context.Context, msg *types.MsgDepositLPoo
 		return nil, err
 	}
 
-	// Update pool
+	// Update pool liquidity
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
 	for _, c := range coins {
@@ -112,5 +112,5 @@ func (k msgServer) DepositLPool(goCtx context.Context, msg *types.MsgDepositLPoo
 
 	EmitPoolJoinedEvent(ctx, creator, pool, coins, msg.LockDuration)
 
-	return &types.MsgDepositLPoolResponse{}, nil
+	return &types.MsgJoinPoolResponse{}, nil
 }

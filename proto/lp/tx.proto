@@ -10,7 +10,7 @@ option go_package = "github.com/jackal-dao/canine/x/lp/types";
 // Msg defines the Msg service.
 service Msg {
       rpc CreateLPool(MsgCreateLPool) returns (MsgCreateLPoolResponse);
-  rpc DepositLPool(MsgDepositLPool) returns (MsgDepositLPoolResponse);
+  rpc JoinPool(MsgJoinPool) returns (MsgJoinPoolResponse);
   rpc WithdrawLPool(MsgWithdrawLPool) returns (MsgWithdrawLPoolResponse);
   rpc Swap(MsgSwap) returns (MsgSwapResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
@@ -42,7 +42,7 @@ message MsgCreateLPoolResponse {
   string id = 1;
 }
 
-message MsgDepositLPool {
+message MsgJoinPool {
   string creator = 1;
   string poolName = 2;
   // Input format:
@@ -52,7 +52,7 @@ message MsgDepositLPool {
   int64 lockDuration = 4;
 }
 
-message MsgDepositLPoolResponse {
+message MsgJoinPoolResponse {
   // Amount of shares given to pool contributor.
   uint64 shares = 1;
 }

@@ -30,7 +30,7 @@ func (k Keeper) EstimateSwapOut(
 	depositCoins, err := sdk.ParseCoinsNormalized(req.InputCoin)
 
 	if err != nil || depositCoins.IsAnyNegative() {
-		return nil, status.Error(codes.InvalidArgument, "invalid deposit coins")
+		return nil, status.Error(codes.InvalidArgument, "invalid coinIn")
 	}
 
 	AMM, _ := types.GetAMM(pool.AMM_Id)

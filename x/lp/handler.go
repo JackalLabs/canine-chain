@@ -21,8 +21,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgCreateLPool:
 			res, err := msgServer.CreateLPool(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgDepositLPool:
-			res, err := msgServer.DepositLPool(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgJoinPool:
+			res, err := msgServer.JoinPool(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgWithdrawLPool:
 			res, err := msgServer.WithdrawLPool(sdk.WrapSDKContext(ctx), msg)
