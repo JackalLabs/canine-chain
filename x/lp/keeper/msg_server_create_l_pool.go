@@ -115,8 +115,8 @@ func (k msgServer) CreateLPool(
 
 		return nil, sdkerrors.Wrapf(
 			err,
-			"Failed to create liquidity pool. Failed to initialize" +
-			" LProviderRecord",
+			"Failed to create liquidity pool. Failed to initialize"+
+				" LProviderRecord",
 		)
 	}
 
@@ -144,8 +144,8 @@ func (k msgServer) CreateLPool(
 
 		return nil, sdkerrors.Wrapf(
 			sdkError,
-			"failed to create liquidity pool. Failed to retrieve deposit coins " +
-			"from sender")
+			"failed to create liquidity pool. Failed to retrieve deposit coins "+
+				"from sender")
 	}
 
 	sdkError = k.MintAndSendLPToken(ctx, pool, creatorAccAddr, shareAmount)

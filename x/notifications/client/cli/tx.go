@@ -35,7 +35,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdDeleteNotifications())
 	cmd.AddCommand(CmdSetCounter())
 	cmd.AddCommand(CmdAddSenders())
-// this line is used by starport scaffolding # 1
+	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

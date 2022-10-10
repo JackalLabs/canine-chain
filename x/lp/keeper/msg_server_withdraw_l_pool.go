@@ -86,7 +86,7 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 
 	// Transfer LPToken to module
 	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAcc, types.ModuleName, burningCoins)
-	
+
 	if sdkErr != nil {
 		return nil, sdkErr
 	}

@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgInitAll_ValidateBasic(t *testing.T) {
+func TestMsgRemoveViewers_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgInitAll
+		msg  MsgRemoveViewers
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgInitAll{
+			msg: MsgRemoveViewers{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgInitAll{
+			msg: MsgRemoveViewers{
 				Creator: sample.AccAddress(),
 			},
 		},

@@ -109,7 +109,7 @@ func (k Keeper) GetLProviderRecord(
 
 // Removes LProviderRecord and reference from store.
 func (k Keeper) EraseLProviderRecord(
-	ctx sdk.Context, 
+	ctx sdk.Context,
 	provider sdk.AccAddress,
 	poolName string,
 ) error {
@@ -225,7 +225,7 @@ func (k Keeper) AddProviderRef(ctx sdk.Context, record types.LProviderRecord) er
 }
 
 // Remove LProviderRecord reference from KVStore.
-func (k Keeper) RemoveProviderRef (ctx sdk.Context, record types.LProviderRecord) {
+func (k Keeper) RemoveProviderRef(ctx sdk.Context, record types.LProviderRecord) {
 	// Generate reference key
 	refKey := types.GetProviderRefKey(record)
 

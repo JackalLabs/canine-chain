@@ -3,7 +3,6 @@ package cli
 import (
 	"context"
 	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -12,20 +11,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
-	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
 var _ = strconv.Itoa(0)
 
-func CmdAddViewers() *cobra.Command {
+func CmdRemoveViewers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-viewers [viewer-ids] [file path] [file owner]",
-		Short: "add an address to the files viewing permisisons",
+		Use:   "remove-viewers [viewer-ids] [file path] [file owner]",
+		Short: "remove an address from the files viewing permisisons",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argViewerIds := args[0]
@@ -50,33 +46,13 @@ func CmdAddViewers() *cobra.Command {
 			viewerAddresses := strings.Split(argViewerIds, ",")
 
 			var viewerIds []string
-			var viewerKeys []string
-
 			var viewersToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
 					continue
 				}
-				fmt.Println("v is", v)
-				key, err := sdk.AccAddressFromBech32(v)
-				if err != nil {
-					return err
-				}
-				fmt.Println("AccAddressFromBech32(v) is", key)
-				fmt.Println("key.String() is", key.String())
-				//So, we're decoding it from Bech32, and then using .String(), the Stringer interface, to convert it back to bech32...unnecessary?
 
-				queryClient := filetypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
-				if err != nil {
-					return types.ErrPubKeyNotFound
-				}
-
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
-				if err != nil {
-					return err
-				}
 				params := &types.QueryGetFilesRequest{
 					Address:      merklePath,
 					OwnerAddress: ownerString,
@@ -87,39 +63,8 @@ func CmdAddViewers() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				viewers := file.Files.ViewingAccess
-				var m map[string]string
-
-				json.Unmarshal([]byte(viewers), &m)
-
-				ownerViewingAddress := keeper.MakeViewerAddress(file.Files.TrackingNumber, argOwner)
-
-				hexMessage, err := hex.DecodeString(m[ownerViewingAddress])
-				if err != nil {
-					return err
-				}
-
-				//May need to use "clientCtx.from?"
-				ownerPrivateKey, err := MakePrivateKey(clientCtx)
-				if err != nil {
-					return err
-				}
-
-				decrypt, err := eciesgo.Decrypt(ownerPrivateKey, hexMessage)
-				if err != nil {
-					fmt.Printf("%v\n", hexMessage)
-					return err
-				}
-
-				//encrypt using viewer's public key
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(decrypt))
-				if err != nil {
-					return err
-				}
-
 				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
-				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 				viewersToNotify = append(viewersToNotify, v)
 
 			}
@@ -130,10 +75,9 @@ func CmdAddViewers() *cobra.Command {
 			}
 
 			//viewerIds supposed to be JSON marshalled aswell?
-			msg := types.NewMsgAddViewers(
+			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),
-				strings.Join(viewerKeys, ","),
 				merklePath,
 				ownerString,
 				string(jsonViewersToNotify),

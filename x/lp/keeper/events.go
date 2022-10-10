@@ -6,7 +6,7 @@ import (
 )
 
 // New event that has current state of pool balance
-func newPoolBalanceEvent (pool types.LPool) sdk.Event {
+func newPoolBalanceEvent(pool types.LPool) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventPoolInfo,
 		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
@@ -16,34 +16,34 @@ func newPoolBalanceEvent (pool types.LPool) sdk.Event {
 	)
 }
 
-func EmitPoolCreatedEvent (ctx sdk.Context, sender sdk.AccAddress, pool types.LPool) {
+func EmitPoolCreatedEvent(ctx sdk.Context, sender sdk.AccAddress, pool types.LPool) {
 	if ctx.EventManager() == nil {
 		return
 	}
 
 	ctx.EventManager().EmitEvents(
-		sdk.Events{ newPoolCreatedEvent(sender, pool), newPoolBalanceEvent(pool) },
+		sdk.Events{newPoolCreatedEvent(sender, pool), newPoolBalanceEvent(pool)},
 	)
 }
 
-func newPoolCreatedEvent (sender sdk.AccAddress, pool types.LPool) sdk.Event {
+func newPoolCreatedEvent(sender sdk.AccAddress, pool types.LPool) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventPoolCreated,
-		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()), 
+		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
 		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
 		sdk.NewAttribute(types.AttrKeySwapFeeMulti, pool.SwapFeeMulti),
 		sdk.NewAttribute(types.AttrKeyPenaltyMulti, pool.PenaltyMulti),
 		sdk.NewAttribute(types.AttrKeyLPTokenDenom, pool.LptokenDenom),
 		sdk.NewAttribute(
-			types.AttrKeyLockDuration, 
+			types.AttrKeyLockDuration,
 			ToSecondsStr(pool.MinLockDuration)),
 	)
 }
 
-func EmitPoolJoinedEvent (
-	ctx sdk.Context, 
-	sender sdk.AccAddress, 
+func EmitPoolJoinedEvent(
+	ctx sdk.Context,
+	sender sdk.AccAddress,
 	pool types.LPool,
 	coins sdk.Coins,
 	lockDuration int64,
@@ -53,21 +53,21 @@ func EmitPoolJoinedEvent (
 	}
 
 	ctx.EventManager().EmitEvents(
-		sdk.Events{ 
-			newPoolJoinedEvent(sender, pool, coins, lockDuration), 
-			newPoolBalanceEvent(pool) },
+		sdk.Events{
+			newPoolJoinedEvent(sender, pool, coins, lockDuration),
+			newPoolBalanceEvent(pool)},
 	)
 }
 
-func newPoolJoinedEvent (
+func newPoolJoinedEvent(
 	sender sdk.AccAddress,
-	pool types.LPool, 
-	coins sdk.Coins, 
+	pool types.LPool,
+	coins sdk.Coins,
 	lockDuration int64,
 ) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventPoolJoined,
-		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()), 
+		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
 		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
 		sdk.NewAttribute(types.AttrKeyCoinsIn, coins.String()),
@@ -75,9 +75,9 @@ func newPoolJoinedEvent (
 	)
 }
 
-func EmitPoolExitedEvent (
-	ctx sdk.Context, 
-	sender sdk.AccAddress, 
+func EmitPoolExitedEvent(
+	ctx sdk.Context,
+	sender sdk.AccAddress,
 	pool types.LPool,
 	amount sdk.Coin,
 	coinsOut sdk.Coins,
@@ -88,13 +88,13 @@ func EmitPoolExitedEvent (
 	}
 
 	ctx.EventManager().EmitEvents(
-		sdk.Events{ 
+		sdk.Events{
 			newPoolExitedEvent(sender, pool, amount, coinsOut, penaltyFee),
-			newPoolBalanceEvent(pool) },
+			newPoolBalanceEvent(pool)},
 	)
 }
 
-func newPoolExitedEvent (
+func newPoolExitedEvent(
 	sender sdk.AccAddress,
 	pool types.LPool,
 	amount sdk.Coin,
@@ -103,7 +103,7 @@ func newPoolExitedEvent (
 ) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventPoolExited,
-		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()), 
+		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
 		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
 		sdk.NewAttribute(types.AttrKeyCoinsIn, amount.String()),
@@ -112,9 +112,9 @@ func newPoolExitedEvent (
 	)
 }
 
-func EmitCoinSwappedEvent (
-	ctx sdk.Context, 
-	sender sdk.AccAddress, 
+func EmitCoinSwappedEvent(
+	ctx sdk.Context,
+	sender sdk.AccAddress,
 	pool types.LPool,
 	coinsIn sdk.Coins,
 	coinsOut sdk.Coins,
@@ -125,13 +125,13 @@ func EmitCoinSwappedEvent (
 	}
 
 	ctx.EventManager().EmitEvents(
-		sdk.Events{ 
+		sdk.Events{
 			newCoinSwappedEvent(sender, pool, coinsIn, coinsOut, swapFee),
-			newPoolBalanceEvent(pool) },
+			newPoolBalanceEvent(pool)},
 	)
 }
 
-func newCoinSwappedEvent (
+func newCoinSwappedEvent(
 	sender sdk.AccAddress,
 	pool types.LPool,
 	coinsIn sdk.Coins,
@@ -140,7 +140,7 @@ func newCoinSwappedEvent (
 ) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventCoinSwapped,
-		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()), 
+		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
 		sdk.NewAttribute(types.AttrKeyCoinsIn, coinsIn.String()),
 		sdk.NewAttribute(types.AttrKeyCoinsOut, coinsOut.String()),

@@ -128,10 +128,10 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	k.SetLPool(ctx, pool)
 
 	EmitCoinSwappedEvent(
-		ctx, 
-		creatorAcc, 
-		pool, 
-		sdk.NewCoins(depositCoin), 
+		ctx,
+		creatorAcc,
+		pool,
+		sdk.NewCoins(depositCoin),
 		swapReturnCoins,
 		sdk.NewCoins(swapFeeCoin))
 

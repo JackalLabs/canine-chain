@@ -13,6 +13,7 @@ service Msg {
   rpc InitAccount(MsgInitAccount) returns (MsgInitAccountResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc InitAll(MsgInitAll) returns (MsgInitAllResponse);
+  rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -84,6 +85,17 @@ message MsgInitAll {
 
 message MsgInitAllResponse {
   string name = 1;
+}
+
+message MsgRemoveViewers {
+  string creator = 1;
+  string viewerIds = 2;
+  string address = 3;
+  string fileowner = 4;
+  string notifyviewers = 5;
+}
+
+message MsgRemoveViewersResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

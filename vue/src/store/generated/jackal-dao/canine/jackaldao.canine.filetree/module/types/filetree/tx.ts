@@ -71,6 +71,16 @@ export interface MsgInitAllResponse {
   name: string;
 }
 
+export interface MsgRemoveViewers {
+  creator: string;
+  viewerIds: string;
+  address: string;
+  fileowner: string;
+  notifyviewers: string;
+}
+
+export interface MsgRemoveViewersResponse {}
+
 const baseMsgPostFile: object = {
   creator: "",
   account: "",
@@ -1164,6 +1174,188 @@ export const MsgInitAllResponse = {
   },
 };
 
+const baseMsgRemoveViewers: object = {
+  creator: "",
+  viewerIds: "",
+  address: "",
+  fileowner: "",
+  notifyviewers: "",
+};
+
+export const MsgRemoveViewers = {
+  encode(message: MsgRemoveViewers, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.viewerIds !== "") {
+      writer.uint32(18).string(message.viewerIds);
+    }
+    if (message.address !== "") {
+      writer.uint32(26).string(message.address);
+    }
+    if (message.fileowner !== "") {
+      writer.uint32(34).string(message.fileowner);
+    }
+    if (message.notifyviewers !== "") {
+      writer.uint32(42).string(message.notifyviewers);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgRemoveViewers {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgRemoveViewers } as MsgRemoveViewers;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.viewerIds = reader.string();
+          break;
+        case 3:
+          message.address = reader.string();
+          break;
+        case 4:
+          message.fileowner = reader.string();
+          break;
+        case 5:
+          message.notifyviewers = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgRemoveViewers {
+    const message = { ...baseMsgRemoveViewers } as MsgRemoveViewers;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.viewerIds !== undefined && object.viewerIds !== null) {
+      message.viewerIds = String(object.viewerIds);
+    } else {
+      message.viewerIds = "";
+    }
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    if (object.fileowner !== undefined && object.fileowner !== null) {
+      message.fileowner = String(object.fileowner);
+    } else {
+      message.fileowner = "";
+    }
+    if (object.notifyviewers !== undefined && object.notifyviewers !== null) {
+      message.notifyviewers = String(object.notifyviewers);
+    } else {
+      message.notifyviewers = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgRemoveViewers): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.viewerIds !== undefined && (obj.viewerIds = message.viewerIds);
+    message.address !== undefined && (obj.address = message.address);
+    message.fileowner !== undefined && (obj.fileowner = message.fileowner);
+    message.notifyviewers !== undefined &&
+      (obj.notifyviewers = message.notifyviewers);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgRemoveViewers>): MsgRemoveViewers {
+    const message = { ...baseMsgRemoveViewers } as MsgRemoveViewers;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.viewerIds !== undefined && object.viewerIds !== null) {
+      message.viewerIds = object.viewerIds;
+    } else {
+      message.viewerIds = "";
+    }
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    if (object.fileowner !== undefined && object.fileowner !== null) {
+      message.fileowner = object.fileowner;
+    } else {
+      message.fileowner = "";
+    }
+    if (object.notifyviewers !== undefined && object.notifyviewers !== null) {
+      message.notifyviewers = object.notifyviewers;
+    } else {
+      message.notifyviewers = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgRemoveViewersResponse: object = {};
+
+export const MsgRemoveViewersResponse = {
+  encode(
+    _: MsgRemoveViewersResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgRemoveViewersResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgRemoveViewersResponse,
+    } as MsgRemoveViewersResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgRemoveViewersResponse {
+    const message = {
+      ...baseMsgRemoveViewersResponse,
+    } as MsgRemoveViewersResponse;
+    return message;
+  },
+
+  toJSON(_: MsgRemoveViewersResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgRemoveViewersResponse>
+  ): MsgRemoveViewersResponse {
+    const message = {
+      ...baseMsgRemoveViewersResponse,
+    } as MsgRemoveViewersResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
@@ -1171,8 +1363,9 @@ export interface Msg {
   Postkey(request: MsgPostkey): Promise<MsgPostkeyResponse>;
   InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse>;
   DeleteFile(request: MsgDeleteFile): Promise<MsgDeleteFileResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   InitAll(request: MsgInitAll): Promise<MsgInitAllResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  RemoveViewers(request: MsgRemoveViewers): Promise<MsgRemoveViewersResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1244,6 +1437,18 @@ export class MsgClientImpl implements Msg {
       data
     );
     return promise.then((data) => MsgInitAllResponse.decode(new Reader(data)));
+  }
+
+  RemoveViewers(request: MsgRemoveViewers): Promise<MsgRemoveViewersResponse> {
+    const data = MsgRemoveViewers.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "RemoveViewers",
+      data
+    );
+    return promise.then((data) =>
+      MsgRemoveViewersResponse.decode(new Reader(data))
+    );
   }
 }
 

@@ -27,7 +27,7 @@ func LProviderRecordKey(
 	return CombineKeys(poolBytes, addrBytes)
 }
 
-// LProviderRecordKey returns the store key to retrieve a LProviderRecord 
+// LProviderRecordKey returns the store key to retrieve a LProviderRecord
 // reference.
 func LProviderRecordRefKey(
 	poolName string,
@@ -35,7 +35,7 @@ func LProviderRecordRefKey(
 ) []byte {
 	poolBytes := []byte(poolName)
 	addrBytes := []byte(provider.String())
-	
+
 	return CombineKeys(addrBytes, poolBytes)
 }
 
