@@ -128,29 +128,22 @@ func (e *PublicAPI) Ctx() context.Context {
 	return e.ctx
 }
 
+// WORKING
 // ProtocolVersion returns the supported Ethereum protocol version.
 func (e *PublicAPI) ProtocolVersion() hexutil.Uint {
 	fmt.Println("eth_protocolVersion")
 	return hexutil.Uint(ethermint.ProtocolVersion)
 }
 
+// WORKING
 // ChainId is the EIP-155 replay-protection chain id for the current ethereum chain config.
 func (e *PublicAPI) ChainId() (*hexutil.Big, error) { // nolint
 	fmt.Println("eth_chainId")
-	// if current block is at or past the EIP-155 replay-protection fork block, return chainID from config
-	bn, err := e.backend.BlockNumber()
-	if err != nil {
-		e.logger.Debug("failed to fetch latest block number", "error", err.Error())
-		return (*hexutil.Big)(e.chainIDEpoch), nil
-	}
-
-	if config := e.backend.ChainConfig(); config.IsEIP155(new(big.Int).SetUint64(uint64(bn))) {
-		return (*hexutil.Big)(config.ChainID), nil
-	}
-
-	return nil, fmt.Errorf("chain not synced beyond EIP-155 replay-protection fork block")
+	// check if config.ChainID is used elsewhere
+	return (*hexutil.Big)(e.chainIDEpoch), nil
 }
 
+// WORKING -- not connected to ETH mainnet anyway
 // Syncing returns false in case the node is currently not syncing with the network. It can be up to date or has not
 // yet received the latest block headers from its pears. In case it is synchronizing:
 // - startingBlock: block number this node started to synchronize from
@@ -179,6 +172,7 @@ func (e *PublicAPI) Syncing() (interface{}, error) {
 	}, nil
 }
 
+// BROKEN
 // Coinbase is the address that staking rewards will be send to (alias for Etherbase).
 func (e *PublicAPI) Coinbase() (string, error) {
 	fmt.Println("eth_coinbase")
@@ -191,18 +185,21 @@ func (e *PublicAPI) Coinbase() (string, error) {
 	return ethAddr.Hex(), nil
 }
 
+// WORKING -- Always false.
 // Mining returns whether or not this node is currently mining. Always false.
 func (e *PublicAPI) Mining() bool {
 	fmt.Println("eth_mining")
 	return false
 }
 
+// WORKING
 // Hashrate returns the current node's hashrate. Always 0.
 func (e *PublicAPI) Hashrate() hexutil.Uint64 {
 	fmt.Println("eth_hashrate")
 	return 0
 }
 
+// NOT WORKING -- not needed
 // GasPrice returns the current gas price based on Ethermint's gas price oracle.
 func (e *PublicAPI) GasPrice() (*hexutil.Big, error) {
 	fmt.Println("eth_gasPrice")
@@ -233,6 +230,7 @@ func (e *PublicAPI) GasPrice() (*hexutil.Big, error) {
 	return (*hexutil.Big)(result), nil
 }
 
+// Not needed?
 // MaxPriorityFeePerGas returns a suggestion for a gas tip cap for dynamic fee transactions.
 func (e *PublicAPI) MaxPriorityFeePerGas() (*hexutil.Big, error) {
 	fmt.Println("eth_maxPriorityFeePerGas")
@@ -244,11 +242,13 @@ func (e *PublicAPI) MaxPriorityFeePerGas() (*hexutil.Big, error) {
 	return (*hexutil.Big)(tipcap), nil
 }
 
+// NOT NEEDED
 func (e *PublicAPI) FeeHistory(blockCount rpc.DecimalOrHex, lastBlock rpc.BlockNumber, rewardPercentiles []float64) (*rpctypes.FeeHistoryResult, error) {
 	fmt.Println("eth_feeHistory")
 	return e.backend.FeeHistory(blockCount, lastBlock, rewardPercentiles)
 }
 
+// WORKING
 // Accounts returns the list of accounts available to this node.
 func (e *PublicAPI) Accounts() ([]common.Address, error) {
 	fmt.Println("eth_accounts")
@@ -262,12 +262,14 @@ func (e *PublicAPI) Accounts() ([]common.Address, error) {
 
 	for _, info := range infos {
 		addressBytes := info.GetPubKey().Address().Bytes()
+		e.logger.Error(common.BytesToAddress(addressBytes).String())
 		addresses = append(addresses, common.BytesToAddress(addressBytes))
 	}
 
 	return addresses, nil
 }
 
+// WORKING
 // BlockNumber returns the current block number.
 func (e *PublicAPI) BlockNumber() (hexutil.Uint64, error) {
 	fmt.Println("eth_blockNumber")
@@ -276,6 +278,7 @@ func (e *PublicAPI) BlockNumber() (hexutil.Uint64, error) {
 	return e.backend.BlockNumber()
 }
 
+// WORKING
 // GetBalance returns the provided account's balance up to the provided block number.
 func (e *PublicAPI) GetBalance(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (*hexutil.Big, error) {
 	fmt.Println("eth_getBalance", "address", address.String(), "block number or hash", blockNrOrHash)
@@ -796,10 +799,12 @@ func (e *PublicAPI) getTransactionByBlockAndIndex(block *tmrpctypes.ResultBlock,
 	}
 
 	baseFee, err := e.backend.BaseFee(blockRes)
-	if err != nil {
-		// handle the error for pruned node.
-		e.logger.Error("failed to fetch Base Fee from prunned block. Check node prunning configuration", "height", block.Block.Height, "error", err)
-	}
+	e.logger.Error("Base fee: ")
+	e.logger.Error(baseFee.String())
+	// if err != nil {
+	// 	// handle the error for pruned node.
+	// 	e.logger.Error("failed to fetch Base Fee from prunned block. Check node prunning configuration", "height", block.Block.Height, "error", err)
+	// }
 
 	return rpctypes.NewTransactionFromMsg(
 		msg,

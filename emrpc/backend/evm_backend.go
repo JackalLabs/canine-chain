@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
-	"reflect"
 	"strconv"
 	"time"
 
@@ -28,7 +27,6 @@ import (
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ethermint "github.com/evmos/ethermint/types"
 	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
 	"github.com/jackal-dao/canine/emrpc/types"
@@ -529,7 +527,7 @@ func (b *Backend) GetTransactionByHash(txHash common.Hash) (*emrpctypes.RPCTrans
 	}
 
 	if !TxSuccessOrExceedsBlockGasLimit(&res.TxResult) {
-		return nil, errors.New("invalid ethereum tx")
+		return nil, errors.New("invalblocknuethereum tx")
 	}
 
 	parsedTxs, err := emrpctypes.ParseTxResult(&res.TxResult)
@@ -991,7 +989,6 @@ func (b *Backend) GetEthereumMsgsFromTendermintBlock(resBlock *tmrpctypes.Result
 	block := resBlock.Block
 
 	txResults := blockRes.TxsResults
-	b.clientCtx.Logger.Info(block.Txs)
 
 	for i, tx := range block.Txs {
 		// check tx exists on EVM by cross checking with blockResults
@@ -1006,34 +1003,71 @@ func (b *Backend) GetEthereumMsgsFromTendermintBlock(resBlock *tmrpctypes.Result
 			b.logger.Debug("failed to decode transaction in block", "height", block.Height, "error", err.Error())
 			continue
 		}
-		b.clientCtx.Logger.Info("transaction messages")
-		// fmt.Println(tx.GetMsgs())
+
 		for _, msg := range tx.GetMsgs() {
-			fmt.Println("Message type:")
-			fmt.Println(reflect.TypeOf(msg))
-			// converting from *banktypes.MsgSend to *evmtypes.MsgEthereumTx
-			bankMsg, ok := msg.(*banktypes.MsgSend)
+			ethMsg, ok := msg.(*evmtypes.MsgEthereumTx)
 			if !ok {
 				continue
 			}
-			
-			// new ethereum transaction
-			ethMsg := *&evmtypes.MsgEthereumTx{
-				Hash: 
-			}
-
-
-			// ethMsg, ok := msg.(*evmtypes.MsgEthereumTx)
-			// if !ok {
-			// 	continue
-			// }
-
 			result = append(result, ethMsg)
 		}
+		// file, _ := json.MarshalIndent(result, "", " ")
+		// _ = ioutil.WriteFile("test.json", file, 0644)
+
 	}
 
 	return result
 }
+
+// GetEthereumMsgsFromTendermintBlock returns all real MsgEthereumTxs from a Tendermint block.
+// It also ensures consistency over the correct txs indexes across RPC endpoints
+// func (b *Backend) GetEthereumMsgsFromTendermintBlock(resBlock *tmrpctypes.ResultBlock, blockRes *tmrpctypes.ResultBlockResults) []*evmtypes.MsgEthereumTx {
+// 	var result []*evmtypes.MsgEthereumTx
+// 	block := resBlock.Block
+
+// 	txResults := blockRes.TxsResults
+// 	b.clientCtx.Logger.Info(block.Txs)
+
+// 	for i, tx := range block.Txs {
+// 		// check tx exists on EVM by cross checking with blockResults
+// 		// include the tx that exceeds block gas limit
+// 		if !TxSuccessOrExceedsBlockGasLimit(txResults[i]) {
+// 			b.logger.Debug("invalid tx result code", "cosmos-hash", hexutil.Encode(tx.Hash()))
+// 			continue
+// 		}
+
+// 		tx, err := b.clientCtx.TxConfig.TxDecoder()(tx)
+// 		if err != nil {
+// 			b.logger.Debug("failed to decode transaction in block", "height", block.Height, "error", err.Error())
+// 			continue
+// 		}
+// 		b.clientCtx.Logger.Info("transaction messages")
+// 		// fmt.Println(tx.GetMsgs())
+// 		for _, msg := range tx.GetMsgs() {
+// 			fmt.Println("Message type:")
+// 			fmt.Println(reflect.TypeOf(msg))
+// 			// converting from *banktypes.MsgSend to *evmtypes.MsgEthereumTx
+// 			bankMsg, ok := msg.(*banktypes.MsgSend)
+// 			if !ok {
+// 				continue
+// 			}
+
+// 			// new ethereum transaction
+// 			ethMsg := *&evmtypes.MsgEthereumTx{
+// 				Hash:
+// 			}
+
+// 			// ethMsg, ok := msg.(*evmtypes.MsgEthereumTx)
+// 			// if !ok {
+// 			// 	continue
+// 			// }
+
+// 			result = append(result, ethMsg)
+// 		}
+// 	}
+
+// 	return result
+// }
 
 // UnprotectedAllowed returns the node configuration value for allowing
 // unprotected transactions (i.e not replay-protected)
