@@ -81,6 +81,18 @@ export interface MsgRemoveViewers {
 
 export interface MsgRemoveViewersResponse {}
 
+export interface MsgMakeFolder {
+  creator: string;
+  account: string;
+  rootHashPath: string;
+  contents: string;
+  editors: string;
+  viewers: string;
+  trackingNumber: number;
+}
+
+export interface MsgMakeFolderResponse {}
+
 const baseMsgPostFile: object = {
   creator: "",
   account: "",
@@ -1356,6 +1368,211 @@ export const MsgRemoveViewersResponse = {
   },
 };
 
+const baseMsgMakeFolder: object = {
+  creator: "",
+  account: "",
+  rootHashPath: "",
+  contents: "",
+  editors: "",
+  viewers: "",
+  trackingNumber: 0,
+};
+
+export const MsgMakeFolder = {
+  encode(message: MsgMakeFolder, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.account !== "") {
+      writer.uint32(18).string(message.account);
+    }
+    if (message.rootHashPath !== "") {
+      writer.uint32(26).string(message.rootHashPath);
+    }
+    if (message.contents !== "") {
+      writer.uint32(34).string(message.contents);
+    }
+    if (message.editors !== "") {
+      writer.uint32(42).string(message.editors);
+    }
+    if (message.viewers !== "") {
+      writer.uint32(50).string(message.viewers);
+    }
+    if (message.trackingNumber !== 0) {
+      writer.uint32(56).uint64(message.trackingNumber);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgMakeFolder {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgMakeFolder } as MsgMakeFolder;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.account = reader.string();
+          break;
+        case 3:
+          message.rootHashPath = reader.string();
+          break;
+        case 4:
+          message.contents = reader.string();
+          break;
+        case 5:
+          message.editors = reader.string();
+          break;
+        case 6:
+          message.viewers = reader.string();
+          break;
+        case 7:
+          message.trackingNumber = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgMakeFolder {
+    const message = { ...baseMsgMakeFolder } as MsgMakeFolder;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = String(object.account);
+    } else {
+      message.account = "";
+    }
+    if (object.rootHashPath !== undefined && object.rootHashPath !== null) {
+      message.rootHashPath = String(object.rootHashPath);
+    } else {
+      message.rootHashPath = "";
+    }
+    if (object.contents !== undefined && object.contents !== null) {
+      message.contents = String(object.contents);
+    } else {
+      message.contents = "";
+    }
+    if (object.editors !== undefined && object.editors !== null) {
+      message.editors = String(object.editors);
+    } else {
+      message.editors = "";
+    }
+    if (object.viewers !== undefined && object.viewers !== null) {
+      message.viewers = String(object.viewers);
+    } else {
+      message.viewers = "";
+    }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = Number(object.trackingNumber);
+    } else {
+      message.trackingNumber = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgMakeFolder): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.account !== undefined && (obj.account = message.account);
+    message.rootHashPath !== undefined &&
+      (obj.rootHashPath = message.rootHashPath);
+    message.contents !== undefined && (obj.contents = message.contents);
+    message.editors !== undefined && (obj.editors = message.editors);
+    message.viewers !== undefined && (obj.viewers = message.viewers);
+    message.trackingNumber !== undefined &&
+      (obj.trackingNumber = message.trackingNumber);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgMakeFolder>): MsgMakeFolder {
+    const message = { ...baseMsgMakeFolder } as MsgMakeFolder;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.account !== undefined && object.account !== null) {
+      message.account = object.account;
+    } else {
+      message.account = "";
+    }
+    if (object.rootHashPath !== undefined && object.rootHashPath !== null) {
+      message.rootHashPath = object.rootHashPath;
+    } else {
+      message.rootHashPath = "";
+    }
+    if (object.contents !== undefined && object.contents !== null) {
+      message.contents = object.contents;
+    } else {
+      message.contents = "";
+    }
+    if (object.editors !== undefined && object.editors !== null) {
+      message.editors = object.editors;
+    } else {
+      message.editors = "";
+    }
+    if (object.viewers !== undefined && object.viewers !== null) {
+      message.viewers = object.viewers;
+    } else {
+      message.viewers = "";
+    }
+    if (object.trackingNumber !== undefined && object.trackingNumber !== null) {
+      message.trackingNumber = object.trackingNumber;
+    } else {
+      message.trackingNumber = 0;
+    }
+    return message;
+  },
+};
+
+const baseMsgMakeFolderResponse: object = {};
+
+export const MsgMakeFolderResponse = {
+  encode(_: MsgMakeFolderResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgMakeFolderResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgMakeFolderResponse } as MsgMakeFolderResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgMakeFolderResponse {
+    const message = { ...baseMsgMakeFolderResponse } as MsgMakeFolderResponse;
+    return message;
+  },
+
+  toJSON(_: MsgMakeFolderResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgMakeFolderResponse>): MsgMakeFolderResponse {
+    const message = { ...baseMsgMakeFolderResponse } as MsgMakeFolderResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   PostFile(request: MsgPostFile): Promise<MsgPostFileResponse>;
@@ -1364,8 +1581,9 @@ export interface Msg {
   InitAccount(request: MsgInitAccount): Promise<MsgInitAccountResponse>;
   DeleteFile(request: MsgDeleteFile): Promise<MsgDeleteFileResponse>;
   InitAll(request: MsgInitAll): Promise<MsgInitAllResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   RemoveViewers(request: MsgRemoveViewers): Promise<MsgRemoveViewersResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  MakeFolder(request: MsgMakeFolder): Promise<MsgMakeFolderResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1448,6 +1666,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgRemoveViewersResponse.decode(new Reader(data))
+    );
+  }
+
+  MakeFolder(request: MsgMakeFolder): Promise<MsgMakeFolderResponse> {
+    const data = MsgMakeFolder.encode(request).finish();
+    const promise = this.rpc.request(
+      "jackaldao.canine.filetree.Msg",
+      "MakeFolder",
+      data
+    );
+    return promise.then((data) =>
+      MsgMakeFolderResponse.decode(new Reader(data))
     );
   }
 }

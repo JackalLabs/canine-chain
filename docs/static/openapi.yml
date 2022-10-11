@@ -58692,6 +58692,8 @@ definitions:
     properties:
       name:
         type: string
+  jackaldao.canine.filetree.MsgMakeFolderResponse:
+    type: object
   jackaldao.canine.filetree.MsgPostFileResponse:
     type: object
     properties:

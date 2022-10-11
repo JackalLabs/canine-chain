@@ -14,6 +14,7 @@ service Msg {
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc InitAll(MsgInitAll) returns (MsgInitAllResponse);
   rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
+  rpc MakeFolder(MsgMakeFolder) returns (MsgMakeFolderResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -96,6 +97,19 @@ message MsgRemoveViewers {
 }
 
 message MsgRemoveViewersResponse {
+}
+
+message MsgMakeFolder {
+  string creator = 1;
+  string account = 2;
+  string rootHashPath = 3;
+  string contents = 4; 
+  string editors = 5;
+  string viewers = 6;
+  uint64 trackingNumber = 7;
+}
+
+message MsgMakeFolderResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

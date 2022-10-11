@@ -48,6 +48,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgRemoveViewers int = 100
 
+	opWeightMsgMakeFolder = "op_weight_msg_make_folder"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgMakeFolder int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -146,6 +150,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgRemoveViewers,
 		filetreesimulation.SimulateMsgRemoveViewers(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgMakeFolder int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgMakeFolder, &weightMsgMakeFolder, nil,
+		func(_ *rand.Rand) {
+			weightMsgMakeFolder = defaultWeightMsgMakeFolder
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgMakeFolder,
+		filetreesimulation.SimulateMsgMakeFolder(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
