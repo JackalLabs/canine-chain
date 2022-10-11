@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 
@@ -13,6 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
+	uuid "github.com/google/uuid"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
@@ -54,13 +54,7 @@ func CmdPostFile() *cobra.Command {
 			h.Write([]byte(childString))
 			childHash := fmt.Sprintf("%x", h.Sum(nil))
 
-			//Getting the tracker from the client side safe? By the time your transaction is done, the tracker would have been incremented by many other transactions
-			queryClient := filetypes.NewQueryClient(clientCtx)
-			res, err := queryClient.Tracker(cmd.Context(), &filetypes.QueryGetTrackerRequest{})
-			if err != nil {
-				return types.ErrTrackerNotFound
-			}
-			trackingNumber := res.Tracker.TrackingNumber
+			trackingNumber := uuid.NewString()
 
 			viewers := make(map[string]string)
 			editors := make(map[string]string)
@@ -77,10 +71,6 @@ func CmdPostFile() *cobra.Command {
 					return err
 				}
 				//So, we're decoding it from Bech32, and then using .String(), the Stringer interface, to convert it back to bech32...unnecessary?
-				fmt.Println("Account is", v)
-				fmt.Println("key is", key)
-				fmt.Println("key is", key.String())
-				os.Exit(0)
 
 				queryClient := filetypes.NewQueryClient(clientCtx)
 
@@ -100,7 +90,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, v)))
+				h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)
@@ -135,7 +125,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%d%s", trackingNumber, v)))
+				h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
 				hash := h.Sum(nil)
 
 				addressString := fmt.Sprintf("%x", hash)

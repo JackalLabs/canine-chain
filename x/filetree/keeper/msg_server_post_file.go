@@ -36,20 +36,6 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		TrackingNumber: msg.TrackingNumber,
 	}
 
-	updatedTrackingNumber := msg.TrackingNumber + 1
-
-	//need to double check this number
-	if msg.TrackingNumber == 18446744073709551615 {
-		updatedTrackingNumber = 0
-		k.SetTracker(ctx, types.Tracker{
-			TrackingNumber: uint64(updatedTrackingNumber),
-		})
-	} else {
-		k.SetTracker(ctx, types.Tracker{
-			TrackingNumber: uint64(updatedTrackingNumber),
-		})
-	}
-
 	k.SetFiles(ctx, file)
 
 	return &types.MsgPostFileResponse{Path: fullMerklePath}, nil

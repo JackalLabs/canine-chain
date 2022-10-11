@@ -24,7 +24,7 @@ message MsgPostFile {
   string contents = 5;
   string viewers = 6;
   string editors = 7;
-  uint64 trackingNumber = 8;
+  string trackingNumber = 8;
 }
 
 message MsgPostFileResponse {
@@ -56,11 +56,10 @@ message MsgInitAccount {
   string rootHashpath = 3;
   string editors = 4;
   string key = 5; 
-  uint64 trackingNumber = 6;
+  string trackingNumber = 6;
 }
 
 message MsgInitAccountResponse {
-  uint64 trackingNumber = 1;
 }
 
 message MsgDeleteFile {
