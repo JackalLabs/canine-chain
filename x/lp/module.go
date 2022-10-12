@@ -11,14 +11,14 @@ import (
 
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/jackal-dao/canine/x/lp/client/cli"
-	"github.com/jackal-dao/canine/x/lp/keeper"
-	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/jackal-dao/canine/x/lp/client/cli"
+	"github.com/jackal-dao/canine/x/lp/keeper"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 var (

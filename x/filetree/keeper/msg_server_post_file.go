@@ -28,29 +28,27 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	owner := MakeOwnerAddress(fullMerklePath, msg.Account)
 
 	file := types.Files{
+		Address:        fullMerklePath,
 		Contents:       msg.Contents,
 		Owner:          owner,
 		ViewingAccess:  msg.Viewers,
 		EditAccess:     msg.Editors,
-		Address:        fullMerklePath,
 		TrackingNumber: msg.TrackingNumber,
 	}
 
-	updatedTrackingNumber := msg.TrackingNumber + 1
+	k.SetFiles(ctx, file)
 
-	//need to double check this number
-	if msg.TrackingNumber == 18446744073709551615 {
-		updatedTrackingNumber = 0
-		k.SetTracker(ctx, types.Tracker{
-			TrackingNumber: uint64(updatedTrackingNumber),
-		})
-	} else {
-		k.SetTracker(ctx, types.Tracker{
-			TrackingNumber: uint64(updatedTrackingNumber),
-		})
+	//notify viewers
+	bool, error := notify(k, ctx, msg.ViewersToNotify, msg.NotiForViewers, msg.Creator, fullMerklePath, owner)
+	if !bool {
+		return nil, error
 	}
 
-	k.SetFiles(ctx, file)
+	//notify editors
+	ok, err := notify(k, ctx, msg.EditorsToNotify, msg.NotiForEditors, msg.Creator, fullMerklePath, owner)
+	if !ok {
+		return nil, err
+	}
 
 	return &types.MsgPostFileResponse{Path: fullMerklePath}, nil
 }

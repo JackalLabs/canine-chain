@@ -2,18 +2,14 @@ package cli
 
 import (
 	"crypto/sha256"
-	"encoding/json"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	eciesgo "github.com/ecies/go/v2"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	uuid "github.com/google/uuid"
 	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -33,79 +29,50 @@ func CmdPostFile() *cobra.Command {
 			argViewers := args[4]
 			argEditors := args[5]
 
-			viewerAddresses := strings.Split(argViewers, ",")
-			editorAddresses := strings.Split(argEditors, ",")
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			//Cut out the / at the end for compatibility with types/merkle-paths.go
-			trimPath := strings.TrimSuffix(argHashpath, "/")
-			chunks := strings.Split(trimPath, "/")
-
-			//Print statements left in temporarily for troubleshooting
-			parentString := strings.Join(chunks[0:len(chunks)-1], "/")
-			childString := string(chunks[len(chunks)-1])
-			parentHash := types.MerklePath(parentString)
-
-			h := sha256.New()
-			h.Write([]byte(childString))
-			childHash := fmt.Sprintf("%x", h.Sum(nil))
-
-			//Getting the tracker from the client side safe? By the time your transaction is done, the tracker would have been incremented by many other transactions
-			queryClient := filetypes.NewQueryClient(clientCtx)
-			res, err := queryClient.Tracker(cmd.Context(), &filetypes.QueryGetTrackerRequest{})
+			fromAddress, err := getCallerAddress(clientCtx, cmd)
 			if err != nil {
-				return types.ErrTrackerNotFound
+				return err
 			}
-			trackingNumber := res.Tracker.TrackingNumber
+
+			viewerAddresses := strings.Split(argViewers, ",")
+			editorAddresses := strings.Split(argEditors, ",")
+
+			parentHash, childHash := merkleHelper(argHashpath)
+
+			trackingNumber := uuid.NewString()
 
 			viewers := make(map[string]string)
 			editors := make(map[string]string)
 
-			viewerAddresses = append(viewerAddresses, clientCtx.GetFromAddress().String())
-			editorAddresses = append(editorAddresses, clientCtx.GetFromAddress().String())
+			viewerAddresses = append(viewerAddresses, *fromAddress)
+			editorAddresses = append(editorAddresses, *fromAddress)
+
+			var viewersToNotify []string
+			var editorsToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
 					continue
 				}
-				key, err := sdk.AccAddressFromBech32(v)
-				if err != nil {
-					return err
-				}
-				//So, we're decoding it from Bech32, and then using .String(), the Stringer interface, to convert it back to bech32...unnecessary?
-				fmt.Println("Account is", v)
-				fmt.Println("key is", key)
-				fmt.Println("key is", key.String())
-				os.Exit(0)
 
-				queryClient := filetypes.NewQueryClient(clientCtx)
-
-				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
-				if err != nil {
-					return types.ErrPubKeyNotFound
-				}
-
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
-				if err != nil {
-					return err
-				}
-
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(argKeys))
+				encrypted, err := encryptFileAESKey(cmd, v, argKeys)
 				if err != nil {
 					return err
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, v)))
+				h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
 				hash := h.Sum(nil)
-
 				addressString := fmt.Sprintf("%x", hash)
 
 				viewers[addressString] = fmt.Sprintf("%x", encrypted)
+				viewersToNotify = append(viewersToNotify, v)
+
 			}
 
 			for _, v := range editorAddresses {
@@ -113,53 +80,43 @@ func CmdPostFile() *cobra.Command {
 					continue
 				}
 
-				key, err := sdk.AccAddressFromBech32(v)
-				if err != nil {
-					return err
-				}
-
-				queryClient := filetypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
-				if err != nil {
-					return types.ErrPubKeyNotFound
-				}
-
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
-				if err != nil {
-					return err
-				}
-
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(argKeys))
+				encrypted, err := encryptFileAESKey(cmd, v, argKeys)
 				if err != nil {
 					return err
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%d%s", trackingNumber, v)))
+				h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
 				hash := h.Sum(nil)
-
 				addressString := fmt.Sprintf("%x", hash)
 
 				editors[addressString] = fmt.Sprintf("%x", encrypted)
+				editorsToNotify = append(editorsToNotify, v)
+
 			}
 
-			jsonViewers, err := json.Marshal(viewers)
+			//Marshall viewers and editors to notify. Last element is the person who is posting this file so we probably don't want them to notify themselves
+			if len(viewersToNotify) > 0 {
+				viewersToNotify = viewersToNotify[:len(viewersToNotify)-1]
+			}
+
+			if len(editorsToNotify) > 0 {
+				editorsToNotify = editorsToNotify[:len(editorsToNotify)-1]
+			}
+			//Marshall everybody - jsonViewersToNotify and jsonEditorsToNotify currently disabled
+			jsonViewers, jsonEditors, _, _, err := JSONMarshalViewersAndEditors(viewers, editors, viewersToNotify, editorsToNotify)
 			if err != nil {
 				return err
 			}
-
-			jsonEditors, err := json.Marshal(editors)
-			if err != nil {
-				return err
-			}
-
 			H := sha256.New()
 			H.Write([]byte(fmt.Sprintf("%s", argAccount)))
 			hash := H.Sum(nil)
-
 			accountHash := fmt.Sprintf("%x", hash)
 
-			msg := types.NewMsgPostFile(
+			// notiForViewers := fmt.Sprintf("6: %s has given you read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+			// notiForEditors := fmt.Sprintf("6: %s has given you editor access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+
+			msg := filetypes.NewMsgPostFile(
 				clientCtx.GetFromAddress().String(),
 				accountHash,
 				parentHash,
@@ -167,7 +124,11 @@ func CmdPostFile() *cobra.Command {
 				argContents,
 				string(jsonViewers),
 				string(jsonEditors),
-				trackingNumber,
+				trackingNumber, //UUID
+				"",             //Passing in empty strings to check that Erin can test system while ignoring notifications system
+				"",
+				"",
+				"",
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -3,13 +3,13 @@ package cli
 import (
 	"strconv"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/spf13/cobra"
 )
 

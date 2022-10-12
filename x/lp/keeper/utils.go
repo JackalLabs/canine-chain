@@ -1,4 +1,4 @@
-package keeper 
+package keeper
 
 import (
 	"strconv"
@@ -9,14 +9,14 @@ import (
 const timeLayout = t.UnixDate
 
 // Get seconds in int64 to time.Duration
-func GetDuration (sec int64) t.Duration {
+func GetDuration(sec int64) t.Duration {
 	duration, _ := t.ParseDuration(ToSecondsStr(sec))
 	return duration
 }
 
 // Convert seconds in int64 to string and append 's'
 // End result: "{seconds}s"
-func ToSecondsStr (sec int64) string {
+func ToSecondsStr(sec int64) string {
 	return strconv.FormatInt(sec, 10) + "s"
 }
 

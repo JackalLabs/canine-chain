@@ -14,10 +14,10 @@ var _ sdk.Msg = &MsgDepositLPool{}
 
 func NewMsgDepositLPool(creator string, poolName string, coins sdk.DecCoins, lockDuration int64) *MsgDepositLPool {
 	return &MsgDepositLPool{
-		Creator:  creator,
-		PoolName: poolName,
-		Coins:    coins,
-		LockDuration: lockDuration, 
+		Creator:      creator,
+		PoolName:     poolName,
+		Coins:        coins,
+		LockDuration: lockDuration,
 	}
 }
 

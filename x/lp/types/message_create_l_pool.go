@@ -1,8 +1,8 @@
 package types
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -21,12 +21,12 @@ func NewMsgCreateLPool(
 	penaltyMulti sdk.Dec,
 ) *MsgCreateLPool {
 	return &MsgCreateLPool{
-		Creator:             creator,
-		Coins:               coins,
-		Amm_Id: aMMId,
-		SwapFeeMulti:	swapFeeMulti.String(), 
-		MinLockDuration: 		minLockDuration,
-		PenaltyMulti: penaltyMulti.String(),
+		Creator:         creator,
+		Coins:           coins,
+		Amm_Id:          aMMId,
+		SwapFeeMulti:    swapFeeMulti.String(),
+		MinLockDuration: minLockDuration,
+		PenaltyMulti:    penaltyMulti.String(),
 	}
 }
 
@@ -71,10 +71,10 @@ func (msg *MsgCreateLPool) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
-	if (sfm.LT(sdk.NewDec(0)) || sfm.GTE(sdk.NewDec(1))) {
+	if sfm.LT(sdk.NewDec(0)) || sfm.GTE(sdk.NewDec(1)) {
 		return sdkerrors.Wrap(errors.New(fmt.Sprintf(
-			"swap fee multiplier should be non-negative number less than 1:" +
-			" 0 < %s < 1", msg.SwapFeeMulti)),
+			"swap fee multiplier should be non-negative number less than 1:"+
+				" 0 < %s < 1", msg.SwapFeeMulti)),
 			sdkerrors.ErrInvalidRequest.Error())
 	}
 
@@ -82,10 +82,10 @@ func (msg *MsgCreateLPool) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
-	if (pm.LT(sdk.NewDec(0)) || pm.GTE(sdk.NewDec(1))) {
+	if pm.LT(sdk.NewDec(0)) || pm.GTE(sdk.NewDec(1)) {
 		return sdkerrors.Wrap(errors.New(fmt.Sprintf(
-			"penalty multiplier fee multiplier should be non-negative number " + 
-			"and less than 1: 0 < %s < 1", msg.PenaltyMulti)),
+			"penalty multiplier fee multiplier should be non-negative number "+
+				"and less than 1: 0 < %s < 1", msg.PenaltyMulti)),
 			sdkerrors.ErrInvalidRequest.Error())
 	}
 

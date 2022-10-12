@@ -3,18 +3,18 @@ package keeper
 import (
 	"context"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (k Keeper) EstimateContribution(
-	goCtx context.Context, 
+	goCtx context.Context,
 	req *types.QueryEstimateContributionRequest,
 ) (
-	*types.QueryEstimateContributionResponse, 
+	*types.QueryEstimateContributionResponse,
 	error,
 ) {
 	if req == nil {

@@ -4,16 +4,17 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 // Calculate amount of pool coins to deposit to get desired amount of LPToken.
 // This assumes that pool coins are normalized.
 // Example: pool has coin x and y.
-// 	This function returns amount of x and y coins to deposit in order to get
-// 	desired amount of LPToken.
+//
+//	This function returns amount of x and y coins to deposit in order to get
+//	desired amount of LPToken.
 func CoinsToDepositForLPToken(pool types.LPool, desiredAmount sdk.Int) (sdk.Coins, error) {
 	totalLPtoken, _ := sdk.NewIntFromString(pool.LPTokenBalance)
 	// Convert [] coin to sdk.Coins
@@ -35,6 +36,7 @@ func CoinsToDepositForLPToken(pool types.LPool, desiredAmount sdk.Int) (sdk.Coin
 
 // Calculate amount of other pool coins to deposit given coin x to deposit same coin values.
 // Example: Pool has coin x and y.
+//
 //	User wants to deposit x but can't figure out how much y to deposit to make valid a
 //	liquidity pair.
 //	This function returns amount of y to make the valid liquidity pair.
@@ -61,7 +63,7 @@ func MakeValidPair(pool types.LPool, deposit sdk.Coin) (sdk.Coins, error) {
 	setU := sdk.NewCoins(pool.Coins...)
 	// Removing x from the set to get y.
 	// e.g. setU = {10x, 20b, 30c}
-	// We want a set without x. So, we subtract the amount of x in setU 
+	// We want a set without x. So, we subtract the amount of x in setU
 	// from setU.
 	// setY = {10x, 20b, 30c} - {10x} = {20b, 30c}
 	xCoins := sdk.NewCoins(sdk.NewCoin(xDenom, xAmtInPool))
@@ -154,18 +156,18 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 }
 
 func CalculatePoolShareBurnReturn(pool types.LPool, burnAmt sdk.Int) (sdk.Coins, error) {
-	
+
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
 	totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)
 
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("Failed to convert LPTokenBalance to" +
+		return nil, errors.New(fmt.Sprintf("Failed to convert LPTokenBalance to"+
 			" sdk.Int: %s", pool.LPTokenBalance))
 	}
 
 	if burnAmt.GT(totalLPToken) {
-		return nil, errors.New(fmt.Sprint("Burn amount is greater than total" + 
+		return nil, errors.New(fmt.Sprint("Burn amount is greater than total" +
 			" liquidity pool token exists"))
 	}
 
@@ -174,7 +176,7 @@ func CalculatePoolShareBurnReturn(pool types.LPool, burnAmt sdk.Int) (sdk.Coins,
 	// Calculate pool coin values in respect to amount of shares burned.
 	// return = burnAmt * coinInPool / totalLPTokens
 	for _, coin := range poolCoins {
-		cAmtInPool := poolCoins.AmountOf(coin.GetDenom())	
+		cAmtInPool := poolCoins.AmountOf(coin.GetDenom())
 		result := burnAmt.Mul(cAmtInPool).Quo(totalLPToken)
 		resultCoin := sdk.NewCoin(coin.GetDenom(), result)
 		returns = returns.Add(resultCoin)

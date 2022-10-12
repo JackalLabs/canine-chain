@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	types "github.com/jackal-dao/canine/x/filetree/types"
 )
 
 // NewHandler ...
@@ -34,6 +34,12 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgDeleteFile:
 			res, err := msgServer.DeleteFile(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgRemoveViewers:
+			res, err := msgServer.RemoveViewers(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgMakeRoot:
+			res, err := msgServer.MakeRoot(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 			// this line is used by starport scaffolding # 1
 		default:

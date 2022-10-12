@@ -28,14 +28,18 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type MsgPostFile struct {
-	Creator        string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Account        string `protobuf:"bytes,2,opt,name=account,proto3" json:"account,omitempty"`
-	HashParent     string `protobuf:"bytes,3,opt,name=hashParent,proto3" json:"hashParent,omitempty"`
-	HashChild      string `protobuf:"bytes,4,opt,name=hashChild,proto3" json:"hashChild,omitempty"`
-	Contents       string `protobuf:"bytes,5,opt,name=contents,proto3" json:"contents,omitempty"`
-	Viewers        string `protobuf:"bytes,6,opt,name=viewers,proto3" json:"viewers,omitempty"`
-	Editors        string `protobuf:"bytes,7,opt,name=editors,proto3" json:"editors,omitempty"`
-	TrackingNumber uint64 `protobuf:"varint,8,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
+	Creator         string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Account         string `protobuf:"bytes,2,opt,name=account,proto3" json:"account,omitempty"`
+	HashParent      string `protobuf:"bytes,3,opt,name=hashParent,proto3" json:"hashParent,omitempty"`
+	HashChild       string `protobuf:"bytes,4,opt,name=hashChild,proto3" json:"hashChild,omitempty"`
+	Contents        string `protobuf:"bytes,5,opt,name=contents,proto3" json:"contents,omitempty"`
+	Viewers         string `protobuf:"bytes,6,opt,name=viewers,proto3" json:"viewers,omitempty"`
+	Editors         string `protobuf:"bytes,7,opt,name=editors,proto3" json:"editors,omitempty"`
+	TrackingNumber  string `protobuf:"bytes,8,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
+	ViewersToNotify string `protobuf:"bytes,9,opt,name=viewersToNotify,proto3" json:"viewersToNotify,omitempty"`
+	EditorsToNotify string `protobuf:"bytes,10,opt,name=editorsToNotify,proto3" json:"editorsToNotify,omitempty"`
+	NotiForViewers  string `protobuf:"bytes,11,opt,name=notiForViewers,proto3" json:"notiForViewers,omitempty"`
+	NotiForEditors  string `protobuf:"bytes,12,opt,name=notiForEditors,proto3" json:"notiForEditors,omitempty"`
 }
 
 func (m *MsgPostFile) Reset()         { *m = MsgPostFile{} }
@@ -120,11 +124,39 @@ func (m *MsgPostFile) GetEditors() string {
 	return ""
 }
 
-func (m *MsgPostFile) GetTrackingNumber() uint64 {
+func (m *MsgPostFile) GetTrackingNumber() string {
 	if m != nil {
 		return m.TrackingNumber
 	}
-	return 0
+	return ""
+}
+
+func (m *MsgPostFile) GetViewersToNotify() string {
+	if m != nil {
+		return m.ViewersToNotify
+	}
+	return ""
+}
+
+func (m *MsgPostFile) GetEditorsToNotify() string {
+	if m != nil {
+		return m.EditorsToNotify
+	}
+	return ""
+}
+
+func (m *MsgPostFile) GetNotiForViewers() string {
+	if m != nil {
+		return m.NotiForViewers
+	}
+	return ""
+}
+
+func (m *MsgPostFile) GetNotiForEditors() string {
+	if m != nil {
+		return m.NotiForEditors
+	}
+	return ""
 }
 
 type MsgPostFileResponse struct {
@@ -172,11 +204,12 @@ func (m *MsgPostFileResponse) GetPath() string {
 }
 
 type MsgAddViewers struct {
-	Creator    string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	ViewerIds  string `protobuf:"bytes,2,opt,name=viewerIds,proto3" json:"viewerIds,omitempty"`
-	ViewerKeys string `protobuf:"bytes,3,opt,name=viewerKeys,proto3" json:"viewerKeys,omitempty"`
-	Address    string `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
-	Fileowner  string `protobuf:"bytes,5,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	Creator       string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	ViewerIds     string `protobuf:"bytes,2,opt,name=viewerIds,proto3" json:"viewerIds,omitempty"`
+	ViewerKeys    string `protobuf:"bytes,3,opt,name=viewerKeys,proto3" json:"viewerKeys,omitempty"`
+	Address       string `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
+	Fileowner     string `protobuf:"bytes,5,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	NotifyViewers string `protobuf:"bytes,6,opt,name=notifyViewers,proto3" json:"notifyViewers,omitempty"`
 }
 
 func (m *MsgAddViewers) Reset()         { *m = MsgAddViewers{} }
@@ -243,6 +276,13 @@ func (m *MsgAddViewers) GetAddress() string {
 func (m *MsgAddViewers) GetFileowner() string {
 	if m != nil {
 		return m.Fileowner
+	}
+	return ""
+}
+
+func (m *MsgAddViewers) GetNotifyViewers() string {
+	if m != nil {
+		return m.NotifyViewers
 	}
 	return ""
 }
@@ -377,7 +417,7 @@ type MsgInitAccount struct {
 	RootHashpath   string `protobuf:"bytes,3,opt,name=rootHashpath,proto3" json:"rootHashpath,omitempty"`
 	Editors        string `protobuf:"bytes,4,opt,name=editors,proto3" json:"editors,omitempty"`
 	Key            string `protobuf:"bytes,5,opt,name=key,proto3" json:"key,omitempty"`
-	TrackingNumber uint64 `protobuf:"varint,6,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
+	TrackingNumber string `protobuf:"bytes,6,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
 }
 
 func (m *MsgInitAccount) Reset()         { *m = MsgInitAccount{} }
@@ -448,15 +488,14 @@ func (m *MsgInitAccount) GetKey() string {
 	return ""
 }
 
-func (m *MsgInitAccount) GetTrackingNumber() uint64 {
+func (m *MsgInitAccount) GetTrackingNumber() string {
 	if m != nil {
 		return m.TrackingNumber
 	}
-	return 0
+	return ""
 }
 
 type MsgInitAccountResponse struct {
-	TrackingNumber uint64 `protobuf:"varint,1,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
 }
 
 func (m *MsgInitAccountResponse) Reset()         { *m = MsgInitAccountResponse{} }
@@ -491,13 +530,6 @@ func (m *MsgInitAccountResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_MsgInitAccountResponse proto.InternalMessageInfo
-
-func (m *MsgInitAccountResponse) GetTrackingNumber() uint64 {
-	if m != nil {
-		return m.TrackingNumber
-	}
-	return 0
-}
 
 type MsgDeleteFile struct {
 	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
@@ -691,6 +723,246 @@ func (m *MsgInitAllResponse) GetName() string {
 	return ""
 }
 
+type MsgRemoveViewers struct {
+	Creator       string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	ViewerIds     string `protobuf:"bytes,2,opt,name=viewerIds,proto3" json:"viewerIds,omitempty"`
+	Address       string `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
+	Fileowner     string `protobuf:"bytes,4,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	Notifyviewers string `protobuf:"bytes,5,opt,name=notifyviewers,proto3" json:"notifyviewers,omitempty"`
+}
+
+func (m *MsgRemoveViewers) Reset()         { *m = MsgRemoveViewers{} }
+func (m *MsgRemoveViewers) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveViewers) ProtoMessage()    {}
+func (*MsgRemoveViewers) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6d56ba37776dc8df, []int{12}
+}
+func (m *MsgRemoveViewers) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveViewers) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveViewers.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveViewers) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveViewers.Merge(m, src)
+}
+func (m *MsgRemoveViewers) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveViewers) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveViewers.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveViewers proto.InternalMessageInfo
+
+func (m *MsgRemoveViewers) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgRemoveViewers) GetViewerIds() string {
+	if m != nil {
+		return m.ViewerIds
+	}
+	return ""
+}
+
+func (m *MsgRemoveViewers) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *MsgRemoveViewers) GetFileowner() string {
+	if m != nil {
+		return m.Fileowner
+	}
+	return ""
+}
+
+func (m *MsgRemoveViewers) GetNotifyviewers() string {
+	if m != nil {
+		return m.Notifyviewers
+	}
+	return ""
+}
+
+type MsgRemoveViewersResponse struct {
+}
+
+func (m *MsgRemoveViewersResponse) Reset()         { *m = MsgRemoveViewersResponse{} }
+func (m *MsgRemoveViewersResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveViewersResponse) ProtoMessage()    {}
+func (*MsgRemoveViewersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6d56ba37776dc8df, []int{13}
+}
+func (m *MsgRemoveViewersResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveViewersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveViewersResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveViewersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveViewersResponse.Merge(m, src)
+}
+func (m *MsgRemoveViewersResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveViewersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveViewersResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveViewersResponse proto.InternalMessageInfo
+
+type MsgMakeRoot struct {
+	Creator        string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Account        string `protobuf:"bytes,2,opt,name=account,proto3" json:"account,omitempty"`
+	RootHashPath   string `protobuf:"bytes,3,opt,name=rootHashPath,proto3" json:"rootHashPath,omitempty"`
+	Contents       string `protobuf:"bytes,4,opt,name=contents,proto3" json:"contents,omitempty"`
+	Editors        string `protobuf:"bytes,5,opt,name=editors,proto3" json:"editors,omitempty"`
+	Viewers        string `protobuf:"bytes,6,opt,name=viewers,proto3" json:"viewers,omitempty"`
+	TrackingNumber string `protobuf:"bytes,7,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
+}
+
+func (m *MsgMakeRoot) Reset()         { *m = MsgMakeRoot{} }
+func (m *MsgMakeRoot) String() string { return proto.CompactTextString(m) }
+func (*MsgMakeRoot) ProtoMessage()    {}
+func (*MsgMakeRoot) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6d56ba37776dc8df, []int{14}
+}
+func (m *MsgMakeRoot) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgMakeRoot) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgMakeRoot.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgMakeRoot) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgMakeRoot.Merge(m, src)
+}
+func (m *MsgMakeRoot) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgMakeRoot) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgMakeRoot.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgMakeRoot proto.InternalMessageInfo
+
+func (m *MsgMakeRoot) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgMakeRoot) GetAccount() string {
+	if m != nil {
+		return m.Account
+	}
+	return ""
+}
+
+func (m *MsgMakeRoot) GetRootHashPath() string {
+	if m != nil {
+		return m.RootHashPath
+	}
+	return ""
+}
+
+func (m *MsgMakeRoot) GetContents() string {
+	if m != nil {
+		return m.Contents
+	}
+	return ""
+}
+
+func (m *MsgMakeRoot) GetEditors() string {
+	if m != nil {
+		return m.Editors
+	}
+	return ""
+}
+
+func (m *MsgMakeRoot) GetViewers() string {
+	if m != nil {
+		return m.Viewers
+	}
+	return ""
+}
+
+func (m *MsgMakeRoot) GetTrackingNumber() string {
+	if m != nil {
+		return m.TrackingNumber
+	}
+	return ""
+}
+
+type MsgMakeRootResponse struct {
+}
+
+func (m *MsgMakeRootResponse) Reset()         { *m = MsgMakeRootResponse{} }
+func (m *MsgMakeRootResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgMakeRootResponse) ProtoMessage()    {}
+func (*MsgMakeRootResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6d56ba37776dc8df, []int{15}
+}
+func (m *MsgMakeRootResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgMakeRootResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgMakeRootResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgMakeRootResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgMakeRootResponse.Merge(m, src)
+}
+func (m *MsgMakeRootResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgMakeRootResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgMakeRootResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgMakeRootResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgPostFile)(nil), "jackaldao.canine.filetree.MsgPostFile")
 	proto.RegisterType((*MsgPostFileResponse)(nil), "jackaldao.canine.filetree.MsgPostFileResponse")
@@ -704,52 +976,67 @@ func init() {
 	proto.RegisterType((*MsgDeleteFileResponse)(nil), "jackaldao.canine.filetree.MsgDeleteFileResponse")
 	proto.RegisterType((*MsgInitAll)(nil), "jackaldao.canine.filetree.MsgInitAll")
 	proto.RegisterType((*MsgInitAllResponse)(nil), "jackaldao.canine.filetree.MsgInitAllResponse")
+	proto.RegisterType((*MsgRemoveViewers)(nil), "jackaldao.canine.filetree.MsgRemoveViewers")
+	proto.RegisterType((*MsgRemoveViewersResponse)(nil), "jackaldao.canine.filetree.MsgRemoveViewersResponse")
+	proto.RegisterType((*MsgMakeRoot)(nil), "jackaldao.canine.filetree.MsgMakeRoot")
+	proto.RegisterType((*MsgMakeRootResponse)(nil), "jackaldao.canine.filetree.MsgMakeRootResponse")
 }
 
 func init() { proto.RegisterFile("filetree/tx.proto", fileDescriptor_6d56ba37776dc8df) }
 
 var fileDescriptor_6d56ba37776dc8df = []byte{
-	// 636 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x55, 0xcd, 0x6e, 0xd3, 0x40,
-	0x10, 0xae, 0x49, 0x9a, 0xa6, 0x53, 0xa8, 0xc0, 0x40, 0x31, 0x56, 0x65, 0x55, 0x96, 0x5a, 0xa5,
-	0x87, 0x38, 0xfc, 0x5c, 0x38, 0x21, 0x0a, 0x08, 0xa8, 0x50, 0x50, 0x95, 0x03, 0x07, 0x2e, 0xd5,
-	0xc6, 0x1e, 0x6c, 0x63, 0xc7, 0x1b, 0xed, 0x6e, 0x68, 0xf3, 0x16, 0xbc, 0x01, 0x2f, 0xc2, 0x03,
-	0x70, 0xec, 0x91, 0x23, 0x4a, 0xae, 0xdc, 0xb9, 0x22, 0xdb, 0x6b, 0x7b, 0xd3, 0xa6, 0x49, 0xc4,
-	0x6d, 0xe7, 0x67, 0x67, 0xbe, 0xfd, 0xbe, 0x19, 0x1b, 0xee, 0x7c, 0x0e, 0x63, 0x14, 0x0c, 0xb1,
-	0x23, 0xce, 0x9d, 0x21, 0xa3, 0x82, 0xea, 0x0f, 0xbf, 0x10, 0x37, 0x22, 0xb1, 0x47, 0xa8, 0xe3,
-	0x92, 0x24, 0x4c, 0xd0, 0x29, 0x72, 0xec, 0xbf, 0x1a, 0x6c, 0x75, 0xb9, 0x7f, 0x42, 0xb9, 0x78,
-	0x13, 0xc6, 0xa8, 0x1b, 0xb0, 0xe1, 0x32, 0x24, 0x82, 0x32, 0x43, 0xdb, 0xd3, 0x5a, 0x9b, 0xbd,
-	0xc2, 0x4c, 0x23, 0xc4, 0x75, 0xe9, 0x28, 0x11, 0xc6, 0x8d, 0x3c, 0x22, 0x4d, 0xdd, 0x02, 0x08,
-	0x08, 0x0f, 0x4e, 0x08, 0xc3, 0x44, 0x18, 0xb5, 0x2c, 0xa8, 0x78, 0xf4, 0x5d, 0xd8, 0x4c, 0xad,
-	0x57, 0x41, 0x18, 0x7b, 0x46, 0x3d, 0x0b, 0x57, 0x0e, 0xdd, 0x84, 0xa6, 0x4b, 0x13, 0x81, 0x89,
-	0xe0, 0xc6, 0x7a, 0x16, 0x2c, 0xed, 0xb4, 0xe7, 0xd7, 0x10, 0xcf, 0x90, 0x71, 0xa3, 0x91, 0xf7,
-	0x94, 0x66, 0x1a, 0x41, 0x2f, 0x14, 0x94, 0x71, 0x63, 0x23, 0x8f, 0x48, 0x53, 0x3f, 0x80, 0x6d,
-	0xc1, 0x88, 0x1b, 0x85, 0x89, 0xff, 0x61, 0x34, 0xe8, 0x23, 0x33, 0x9a, 0x7b, 0x5a, 0xab, 0xde,
-	0xbb, 0xe4, 0xb5, 0x0f, 0xe1, 0xae, 0xf2, 0xf0, 0x1e, 0xf2, 0x21, 0x4d, 0x38, 0xea, 0x3a, 0xd4,
-	0x87, 0x44, 0x04, 0xf2, 0xf5, 0xd9, 0xd9, 0xfe, 0xae, 0xc1, 0xad, 0x2e, 0xf7, 0x8f, 0x3c, 0xef,
-	0x63, 0xd5, 0xfe, 0x1a, 0x9a, 0x76, 0x61, 0x33, 0xc7, 0x78, 0xec, 0x71, 0x49, 0x54, 0xe5, 0x48,
-	0xa9, 0xca, 0x8d, 0xf7, 0x38, 0xe6, 0x05, 0x55, 0x95, 0x27, 0x23, 0xd9, 0xf3, 0x18, 0x72, 0x2e,
-	0x89, 0x2a, 0xcc, 0xb4, 0x6e, 0x2a, 0x1a, 0x3d, 0x4b, 0x90, 0x49, 0x9e, 0x2a, 0x87, 0xfd, 0x00,
-	0xee, 0xcf, 0x00, 0x2c, 0x9e, 0x63, 0x3f, 0x03, 0x90, 0xaf, 0x8c, 0x70, 0xbc, 0x00, 0xf6, 0x6d,
-	0xa8, 0x45, 0x38, 0x96, 0x80, 0xd3, 0xa3, 0x7d, 0x0f, 0xf4, 0xea, 0x66, 0x59, 0xef, 0x87, 0x06,
-	0xdb, 0x5d, 0xee, 0x1f, 0x27, 0xa1, 0x38, 0x92, 0xf2, 0xff, 0xcf, 0xc8, 0xd8, 0x70, 0x93, 0x51,
-	0x2a, 0xde, 0x11, 0x1e, 0x64, 0x6c, 0xe7, 0x4c, 0xcc, 0xf8, 0x54, 0x89, 0xeb, 0xb3, 0x12, 0x4b,
-	0xb0, 0xeb, 0x25, 0xd8, 0x39, 0xa2, 0x37, 0xe6, 0x8a, 0xfe, 0x02, 0x76, 0x66, 0xd1, 0x97, 0xba,
-	0x5f, 0xad, 0xa0, 0xcd, 0xad, 0x70, 0x9a, 0x8d, 0xc2, 0x6b, 0x8c, 0x51, 0xe0, 0x92, 0x8d, 0x31,
-	0xa1, 0x99, 0x6f, 0x81, 0x08, 0xe4, 0xfb, 0x4b, 0x5b, 0xa5, 0xa6, 0x36, 0x43, 0x8d, 0x94, 0xb2,
-	0x6a, 0x50, 0x52, 0xff, 0x3c, 0x93, 0x32, 0xc3, 0x1e, 0xc7, 0x0b, 0xda, 0xee, 0x40, 0x63, 0x38,
-	0xea, 0xa7, 0x04, 0xe5, 0x95, 0xa5, 0x65, 0xb7, 0x32, 0x41, 0xe5, 0x7d, 0x75, 0xde, 0x13, 0x32,
-	0xc0, 0x62, 0xde, 0xd3, 0xf3, 0x93, 0x3f, 0x75, 0xa8, 0x75, 0xb9, 0xaf, 0xf7, 0xa1, 0x59, 0x7e,
-	0x18, 0x0e, 0x9c, 0x6b, 0x3f, 0x22, 0x8e, 0xb2, 0x47, 0xa6, 0xb3, 0x5a, 0x5e, 0xd9, 0x3f, 0x00,
-	0x50, 0xf6, 0xaa, 0xb5, 0xf8, 0x76, 0x95, 0x69, 0x3e, 0x5a, 0x35, 0xb3, 0xec, 0x74, 0x0a, 0x1b,
-	0xc5, 0x1e, 0xec, 0x2f, 0x07, 0x19, 0xe1, 0xd8, 0x6c, 0xaf, 0x94, 0x56, 0x36, 0x88, 0x60, 0x4b,
-	0xdd, 0x8b, 0xc3, 0xc5, 0xb7, 0x95, 0x54, 0xf3, 0xf1, 0xca, 0xa9, 0x2a, 0x6f, 0xca, 0x10, 0x2e,
-	0xe1, 0xad, 0xca, 0x5c, 0xc6, 0xdb, 0xd5, 0xb9, 0x4b, 0x79, 0x2b, 0x86, 0x6e, 0x7f, 0x05, 0x9c,
-	0x71, 0xbc, 0x8c, 0xb7, 0x4b, 0x23, 0xf8, 0xf2, 0xed, 0xcf, 0x89, 0xa5, 0x5d, 0x4c, 0x2c, 0xed,
-	0xf7, 0xc4, 0xd2, 0xbe, 0x4d, 0xad, 0xb5, 0x8b, 0xa9, 0xb5, 0xf6, 0x6b, 0x6a, 0xad, 0x7d, 0x6a,
-	0xfb, 0xa1, 0x08, 0x46, 0x7d, 0xc7, 0xa5, 0x83, 0x4e, 0x5e, 0xb2, 0xed, 0x11, 0xda, 0xc9, 0x6b,
-	0x76, 0xce, 0x3b, 0xd5, 0xaf, 0x6e, 0x3c, 0x44, 0xde, 0x6f, 0x64, 0xbf, 0xbb, 0xa7, 0xff, 0x02,
-	0x00, 0x00, 0xff, 0xff, 0x61, 0x72, 0x14, 0x2a, 0x03, 0x07, 0x00, 0x00,
+	// 810 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x56, 0x4b, 0x6f, 0xd3, 0x4a,
+	0x14, 0xae, 0x6f, 0xde, 0xa7, 0x8f, 0xdb, 0xeb, 0x7b, 0xdb, 0x6b, 0xac, 0x2a, 0x42, 0x16, 0xad,
+	0x52, 0xa1, 0x26, 0x40, 0x37, 0xac, 0x90, 0xca, 0xa3, 0x50, 0xa1, 0x54, 0x55, 0x84, 0xba, 0x60,
+	0x53, 0x39, 0xf6, 0x69, 0x6c, 0xe2, 0x78, 0x82, 0x67, 0xd2, 0x36, 0xff, 0x82, 0x3d, 0x7f, 0x80,
+	0x1f, 0xc1, 0x0e, 0x21, 0xb1, 0xec, 0x92, 0x0d, 0x12, 0x6a, 0xff, 0x08, 0xf2, 0x78, 0x6c, 0x8f,
+	0xd3, 0xbc, 0xa0, 0x3b, 0x9f, 0x33, 0xdf, 0x9c, 0xe7, 0x37, 0x5f, 0x02, 0xff, 0x9c, 0xba, 0x1e,
+	0xb2, 0x00, 0xb1, 0xc1, 0x2e, 0xea, 0xfd, 0x80, 0x30, 0xa2, 0xde, 0x79, 0x67, 0x5a, 0x5d, 0xd3,
+	0xb3, 0x4d, 0x52, 0xb7, 0x4c, 0xdf, 0xf5, 0xb1, 0x1e, 0x63, 0x8c, 0x8f, 0x39, 0x58, 0x6c, 0xd2,
+	0xce, 0x11, 0xa1, 0x6c, 0xdf, 0xf5, 0x50, 0xd5, 0xa0, 0x64, 0x05, 0x68, 0x32, 0x12, 0x68, 0xca,
+	0x5d, 0xa5, 0x56, 0x69, 0xc5, 0x66, 0x78, 0x62, 0x5a, 0x16, 0x19, 0xf8, 0x4c, 0xfb, 0x2b, 0x3a,
+	0x11, 0xa6, 0x5a, 0x05, 0x70, 0x4c, 0xea, 0x1c, 0x99, 0x01, 0xfa, 0x4c, 0xcb, 0xf1, 0x43, 0xc9,
+	0xa3, 0x6e, 0x40, 0x25, 0xb4, 0x9e, 0x39, 0xae, 0x67, 0x6b, 0x79, 0x7e, 0x9c, 0x3a, 0x54, 0x1d,
+	0xca, 0x16, 0xf1, 0x19, 0xfa, 0x8c, 0x6a, 0x05, 0x7e, 0x98, 0xd8, 0x61, 0xce, 0x33, 0x17, 0xcf,
+	0x31, 0xa0, 0x5a, 0x31, 0xca, 0x29, 0xcc, 0xf0, 0x04, 0x6d, 0x97, 0x91, 0x80, 0x6a, 0xa5, 0xe8,
+	0x44, 0x98, 0xea, 0x16, 0xac, 0xb0, 0xc0, 0xb4, 0xba, 0xae, 0xdf, 0x39, 0x1c, 0xf4, 0xda, 0x18,
+	0x68, 0x65, 0x0e, 0x18, 0xf1, 0xaa, 0x35, 0xf8, 0x5b, 0x04, 0x7b, 0x43, 0x0e, 0x09, 0x73, 0x4f,
+	0x87, 0x5a, 0x85, 0x03, 0x47, 0xdd, 0x21, 0x52, 0x04, 0x4f, 0x90, 0x10, 0x21, 0x47, 0xdc, 0x61,
+	0x6e, 0x9f, 0x30, 0x77, 0x9f, 0x04, 0xc7, 0xa2, 0xec, 0xc5, 0x28, 0x77, 0xd6, 0x2b, 0xe1, 0x5e,
+	0x88, 0x26, 0x96, 0x32, 0x38, 0xe1, 0x35, 0xb6, 0xe1, 0x5f, 0x69, 0x39, 0x2d, 0xa4, 0x7d, 0xe2,
+	0x53, 0x54, 0x55, 0xc8, 0xf7, 0x4d, 0xe6, 0x88, 0x0d, 0xf1, 0x6f, 0xe3, 0xab, 0x02, 0xcb, 0x4d,
+	0xda, 0xd9, 0xb3, 0xed, 0xe3, 0x74, 0x44, 0x13, 0x56, 0xb9, 0x01, 0x95, 0xa8, 0xc7, 0x03, 0x9b,
+	0x8a, 0x65, 0xa6, 0x8e, 0x70, 0x9d, 0x91, 0xf1, 0x1a, 0x87, 0x34, 0x5e, 0x67, 0xea, 0xe1, 0x44,
+	0xb0, 0xed, 0x00, 0x29, 0x15, 0xcb, 0x8c, 0xcd, 0x30, 0x6e, 0x48, 0x2c, 0x72, 0xee, 0x63, 0x20,
+	0x76, 0x99, 0x3a, 0xd4, 0x7b, 0xb0, 0xec, 0xf3, 0x31, 0x1d, 0x67, 0x56, 0x9a, 0x75, 0x1a, 0xff,
+	0xc3, 0x5a, 0xa6, 0x8d, 0xb8, 0x69, 0xe3, 0x31, 0x80, 0x98, 0x45, 0x17, 0x87, 0x53, 0x9a, 0x5b,
+	0x85, 0x5c, 0x17, 0x87, 0xa2, 0xad, 0xf0, 0xd3, 0xf8, 0x0f, 0xd4, 0xf4, 0x66, 0x12, 0xef, 0xb3,
+	0x02, 0x2b, 0x4d, 0xda, 0x39, 0xf0, 0x5d, 0xb6, 0x27, 0x88, 0xfc, 0x27, 0xe4, 0x37, 0x60, 0x29,
+	0x20, 0x84, 0xbd, 0x32, 0xa9, 0xc3, 0x77, 0x12, 0xcd, 0x2b, 0xe3, 0x93, 0xc9, 0x9a, 0xcf, 0x92,
+	0x55, 0x14, 0x5b, 0x48, 0x8a, 0x1d, 0x43, 0xdf, 0xe2, 0x38, 0xfa, 0x1a, 0x1a, 0xac, 0x67, 0xab,
+	0x4f, 0x1a, 0x3b, 0xe1, 0x44, 0x78, 0x8e, 0x1e, 0x32, 0x9c, 0xf1, 0xa6, 0x75, 0x28, 0x47, 0xef,
+	0x94, 0x39, 0xa2, 0xaf, 0xc4, 0x96, 0x5b, 0xce, 0x65, 0x5a, 0x16, 0x2b, 0x4a, 0x13, 0x24, 0x99,
+	0x9f, 0xf0, 0x15, 0xf1, 0x9a, 0x3c, 0x6f, 0x4a, 0xda, 0x75, 0x28, 0xf6, 0x07, 0xed, 0xb0, 0xf1,
+	0x28, 0xb2, 0xb0, 0x8c, 0x1a, 0x5f, 0x94, 0xb8, 0x2f, 0xb3, 0xdd, 0x37, 0x7b, 0x18, 0xb3, 0x3d,
+	0xfc, 0x36, 0x3e, 0x29, 0xb0, 0xda, 0xa4, 0x9d, 0x16, 0xf6, 0xc8, 0x19, 0xde, 0x96, 0xf0, 0x12,
+	0xa1, 0x73, 0x53, 0x08, 0x9d, 0x9f, 0x48, 0xe8, 0x58, 0xa3, 0x0a, 0x32, 0xa1, 0x85, 0xd3, 0xd0,
+	0x41, 0x1b, 0xad, 0x34, 0x19, 0xd8, 0x0f, 0x85, 0xab, 0x6f, 0xd3, 0xec, 0x62, 0x8b, 0x90, 0x5b,
+	0x13, 0xf0, 0x68, 0x0c, 0x01, 0xf9, 0x2e, 0x65, 0x8d, 0xcd, 0xdf, 0xd4, 0xd8, 0x98, 0x9c, 0x85,
+	0x2c, 0x39, 0x27, 0xab, 0xef, 0x4d, 0x92, 0x96, 0xc6, 0x92, 0x74, 0x8d, 0xeb, 0x57, 0xdc, 0x5e,
+	0xdc, 0xf6, 0xa3, 0x2f, 0x45, 0xc8, 0x35, 0x69, 0x47, 0x6d, 0x43, 0x39, 0xf9, 0xe1, 0xd9, 0xaa,
+	0x4f, 0xfc, 0x91, 0xaa, 0x4b, 0x1a, 0xa8, 0xd7, 0xe7, 0xc3, 0x25, 0xec, 0x71, 0x00, 0x24, 0x4d,
+	0xac, 0x4d, 0xbf, 0x9d, 0x22, 0xf5, 0x07, 0xf3, 0x22, 0x93, 0x4c, 0x27, 0x50, 0x8a, 0xd5, 0x69,
+	0x73, 0x76, 0x91, 0x5d, 0x1c, 0xea, 0x3b, 0x73, 0xc1, 0x92, 0x04, 0x5d, 0x58, 0x94, 0xd5, 0x6a,
+	0x7b, 0xfa, 0x6d, 0x09, 0xaa, 0x3f, 0x9c, 0x1b, 0x2a, 0xcf, 0x4d, 0x92, 0x90, 0x19, 0x73, 0x4b,
+	0x91, 0xb3, 0xe6, 0x76, 0x53, 0x35, 0xc2, 0xb9, 0xc5, 0x92, 0xb1, 0x39, 0x47, 0x9d, 0x9e, 0x37,
+	0x6b, 0x6e, 0xa3, 0x02, 0xf2, 0x1e, 0x96, 0xb3, 0x42, 0x71, 0x7f, 0xfa, 0xfd, 0x0c, 0x58, 0xdf,
+	0xfd, 0x0d, 0x70, 0x92, 0xb2, 0x0d, 0xe5, 0xe4, 0x51, 0xcf, 0x60, 0x76, 0x8c, 0x9b, 0xc5, 0xec,
+	0xd1, 0x57, 0xf4, 0xf4, 0xe5, 0xb7, 0xab, 0xaa, 0x72, 0x79, 0x55, 0x55, 0x7e, 0x5e, 0x55, 0x95,
+	0x0f, 0xd7, 0xd5, 0x85, 0xcb, 0xeb, 0xea, 0xc2, 0xf7, 0xeb, 0xea, 0xc2, 0xdb, 0x9d, 0x8e, 0xcb,
+	0x9c, 0x41, 0xbb, 0x6e, 0x91, 0x5e, 0x23, 0x8a, 0xb9, 0x63, 0x9b, 0xa4, 0x11, 0x05, 0x6d, 0x5c,
+	0x34, 0xd2, 0x7f, 0x88, 0xc3, 0x3e, 0xd2, 0x76, 0x91, 0xff, 0x4b, 0xdc, 0xfd, 0x15, 0x00, 0x00,
+	0xff, 0xff, 0xb3, 0xb6, 0x4b, 0x99, 0x3a, 0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -770,6 +1057,8 @@ type MsgClient interface {
 	InitAccount(ctx context.Context, in *MsgInitAccount, opts ...grpc.CallOption) (*MsgInitAccountResponse, error)
 	DeleteFile(ctx context.Context, in *MsgDeleteFile, opts ...grpc.CallOption) (*MsgDeleteFileResponse, error)
 	InitAll(ctx context.Context, in *MsgInitAll, opts ...grpc.CallOption) (*MsgInitAllResponse, error)
+	RemoveViewers(ctx context.Context, in *MsgRemoveViewers, opts ...grpc.CallOption) (*MsgRemoveViewersResponse, error)
+	MakeRoot(ctx context.Context, in *MsgMakeRoot, opts ...grpc.CallOption) (*MsgMakeRootResponse, error)
 }
 
 type msgClient struct {
@@ -834,6 +1123,24 @@ func (c *msgClient) InitAll(ctx context.Context, in *MsgInitAll, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *msgClient) RemoveViewers(ctx context.Context, in *MsgRemoveViewers, opts ...grpc.CallOption) (*MsgRemoveViewersResponse, error) {
+	out := new(MsgRemoveViewersResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.filetree.Msg/RemoveViewers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) MakeRoot(ctx context.Context, in *MsgMakeRoot, opts ...grpc.CallOption) (*MsgMakeRootResponse, error) {
+	out := new(MsgMakeRootResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.filetree.Msg/MakeRoot", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	PostFile(context.Context, *MsgPostFile) (*MsgPostFileResponse, error)
@@ -842,6 +1149,8 @@ type MsgServer interface {
 	InitAccount(context.Context, *MsgInitAccount) (*MsgInitAccountResponse, error)
 	DeleteFile(context.Context, *MsgDeleteFile) (*MsgDeleteFileResponse, error)
 	InitAll(context.Context, *MsgInitAll) (*MsgInitAllResponse, error)
+	RemoveViewers(context.Context, *MsgRemoveViewers) (*MsgRemoveViewersResponse, error)
+	MakeRoot(context.Context, *MsgMakeRoot) (*MsgMakeRootResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -865,6 +1174,12 @@ func (*UnimplementedMsgServer) DeleteFile(ctx context.Context, req *MsgDeleteFil
 }
 func (*UnimplementedMsgServer) InitAll(ctx context.Context, req *MsgInitAll) (*MsgInitAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitAll not implemented")
+}
+func (*UnimplementedMsgServer) RemoveViewers(ctx context.Context, req *MsgRemoveViewers) (*MsgRemoveViewersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveViewers not implemented")
+}
+func (*UnimplementedMsgServer) MakeRoot(ctx context.Context, req *MsgMakeRoot) (*MsgMakeRootResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MakeRoot not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -979,6 +1294,42 @@ func _Msg_InitAll_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_RemoveViewers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoveViewers)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoveViewers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.filetree.Msg/RemoveViewers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoveViewers(ctx, req.(*MsgRemoveViewers))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_MakeRoot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgMakeRoot)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).MakeRoot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jackaldao.canine.filetree.Msg/MakeRoot",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).MakeRoot(ctx, req.(*MsgMakeRoot))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "jackaldao.canine.filetree.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -1007,6 +1358,14 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			MethodName: "InitAll",
 			Handler:    _Msg_InitAll_Handler,
 		},
+		{
+			MethodName: "RemoveViewers",
+			Handler:    _Msg_RemoveViewers_Handler,
+		},
+		{
+			MethodName: "MakeRoot",
+			Handler:    _Msg_MakeRoot_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "filetree/tx.proto",
@@ -1032,10 +1391,40 @@ func (m *MsgPostFile) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.TrackingNumber != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.TrackingNumber))
+	if len(m.NotiForEditors) > 0 {
+		i -= len(m.NotiForEditors)
+		copy(dAtA[i:], m.NotiForEditors)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NotiForEditors)))
 		i--
-		dAtA[i] = 0x40
+		dAtA[i] = 0x62
+	}
+	if len(m.NotiForViewers) > 0 {
+		i -= len(m.NotiForViewers)
+		copy(dAtA[i:], m.NotiForViewers)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NotiForViewers)))
+		i--
+		dAtA[i] = 0x5a
+	}
+	if len(m.EditorsToNotify) > 0 {
+		i -= len(m.EditorsToNotify)
+		copy(dAtA[i:], m.EditorsToNotify)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.EditorsToNotify)))
+		i--
+		dAtA[i] = 0x52
+	}
+	if len(m.ViewersToNotify) > 0 {
+		i -= len(m.ViewersToNotify)
+		copy(dAtA[i:], m.ViewersToNotify)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ViewersToNotify)))
+		i--
+		dAtA[i] = 0x4a
+	}
+	if len(m.TrackingNumber) > 0 {
+		i -= len(m.TrackingNumber)
+		copy(dAtA[i:], m.TrackingNumber)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.TrackingNumber)))
+		i--
+		dAtA[i] = 0x42
 	}
 	if len(m.Editors) > 0 {
 		i -= len(m.Editors)
@@ -1139,6 +1528,13 @@ func (m *MsgAddViewers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.NotifyViewers) > 0 {
+		i -= len(m.NotifyViewers)
+		copy(dAtA[i:], m.NotifyViewers)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NotifyViewers)))
+		i--
+		dAtA[i] = 0x32
+	}
 	if len(m.Fileowner) > 0 {
 		i -= len(m.Fileowner)
 		copy(dAtA[i:], m.Fileowner)
@@ -1280,10 +1676,12 @@ func (m *MsgInitAccount) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.TrackingNumber != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.TrackingNumber))
+	if len(m.TrackingNumber) > 0 {
+		i -= len(m.TrackingNumber)
+		copy(dAtA[i:], m.TrackingNumber)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.TrackingNumber)))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x32
 	}
 	if len(m.Key) > 0 {
 		i -= len(m.Key)
@@ -1343,11 +1741,6 @@ func (m *MsgInitAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	_ = i
 	var l int
 	_ = l
-	if m.TrackingNumber != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.TrackingNumber))
-		i--
-		dAtA[i] = 0x8
-	}
 	return len(dAtA) - i, nil
 }
 
@@ -1485,6 +1878,182 @@ func (m *MsgInitAllResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgRemoveViewers) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveViewers) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveViewers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Notifyviewers) > 0 {
+		i -= len(m.Notifyviewers)
+		copy(dAtA[i:], m.Notifyviewers)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Notifyviewers)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.Fileowner) > 0 {
+		i -= len(m.Fileowner)
+		copy(dAtA[i:], m.Fileowner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Fileowner)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ViewerIds) > 0 {
+		i -= len(m.ViewerIds)
+		copy(dAtA[i:], m.ViewerIds)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ViewerIds)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveViewersResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveViewersResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveViewersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgMakeRoot) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgMakeRoot) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgMakeRoot) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TrackingNumber) > 0 {
+		i -= len(m.TrackingNumber)
+		copy(dAtA[i:], m.TrackingNumber)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.TrackingNumber)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if len(m.Viewers) > 0 {
+		i -= len(m.Viewers)
+		copy(dAtA[i:], m.Viewers)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Viewers)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.Editors) > 0 {
+		i -= len(m.Editors)
+		copy(dAtA[i:], m.Editors)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Editors)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.Contents) > 0 {
+		i -= len(m.Contents)
+		copy(dAtA[i:], m.Contents)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Contents)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.RootHashPath) > 0 {
+		i -= len(m.RootHashPath)
+		copy(dAtA[i:], m.RootHashPath)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RootHashPath)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Account) > 0 {
+		i -= len(m.Account)
+		copy(dAtA[i:], m.Account)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Account)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgMakeRootResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgMakeRootResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgMakeRootResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -1530,8 +2099,25 @@ func (m *MsgPostFile) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.TrackingNumber != 0 {
-		n += 1 + sovTx(uint64(m.TrackingNumber))
+	l = len(m.TrackingNumber)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ViewersToNotify)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.EditorsToNotify)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.NotiForViewers)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.NotiForEditors)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
@@ -1572,6 +2158,10 @@ func (m *MsgAddViewers) Size() (n int) {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Fileowner)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.NotifyViewers)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1639,8 +2229,9 @@ func (m *MsgInitAccount) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.TrackingNumber != 0 {
-		n += 1 + sovTx(uint64(m.TrackingNumber))
+	l = len(m.TrackingNumber)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
@@ -1651,9 +2242,6 @@ func (m *MsgInitAccountResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.TrackingNumber != 0 {
-		n += 1 + sovTx(uint64(m.TrackingNumber))
-	}
 	return n
 }
 
@@ -1714,6 +2302,90 @@ func (m *MsgInitAllResponse) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
+	return n
+}
+
+func (m *MsgRemoveViewers) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ViewerIds)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Fileowner)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Notifyviewers)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRemoveViewersResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgMakeRoot) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Account)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RootHashPath)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Contents)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Editors)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Viewers)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.TrackingNumber)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgMakeRootResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
 	return n
 }
 
@@ -1977,10 +2649,10 @@ func (m *MsgPostFile) Unmarshal(dAtA []byte) error {
 			m.Editors = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 8:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TrackingNumber", wireType)
 			}
-			m.TrackingNumber = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1990,11 +2662,152 @@ func (m *MsgPostFile) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TrackingNumber |= uint64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TrackingNumber = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ViewersToNotify", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ViewersToNotify = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field EditorsToNotify", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.EditorsToNotify = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 11:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NotiForViewers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NotiForViewers = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 12:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NotiForEditors", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NotiForEditors = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -2286,6 +3099,38 @@ func (m *MsgAddViewers) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NotifyViewers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NotifyViewers = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2712,10 +3557,10 @@ func (m *MsgInitAccount) Unmarshal(dAtA []byte) error {
 			m.Key = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 6:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TrackingNumber", wireType)
 			}
-			m.TrackingNumber = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -2725,11 +3570,24 @@ func (m *MsgInitAccount) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TrackingNumber |= uint64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TrackingNumber = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -2780,25 +3638,6 @@ func (m *MsgInitAccountResponse) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MsgInitAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TrackingNumber", wireType)
-			}
-			m.TrackingNumber = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.TrackingNumber |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -3191,6 +4030,590 @@ func (m *MsgInitAllResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveViewers) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveViewers: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveViewers: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ViewerIds", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ViewerIds = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Fileowner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Notifyviewers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Notifyviewers = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveViewersResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveViewersResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveViewersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgMakeRoot) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgMakeRoot: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgMakeRoot: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Account", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Account = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RootHashPath", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RootHashPath = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Contents", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Contents = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Editors", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Editors = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Viewers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Viewers = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TrackingNumber", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TrackingNumber = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgMakeRootResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgMakeRootResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgMakeRootResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])

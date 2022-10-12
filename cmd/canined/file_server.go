@@ -18,6 +18,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
+	"github.com/rs/cors"
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -282,11 +283,13 @@ func StartFileServer(cmd *cobra.Command) {
 	getRoutes(cmd, router)
 	q.postRoutes(cmd, router, db, datedb)
 
+	handler := cors.Default().Handler(router)
+
 	go postProofs(cmd, db, datedb)
 	go q.startListener(clientCtx, cmd)
 
 	fmt.Printf("🌍 Storage Provider: http://0.0.0.0:3333\n")
-	err := http.ListenAndServe("0.0.0.0:3333", router)
+	err := http.ListenAndServe("0.0.0.0:3333", handler)
 	if err != nil {
 		fmt.Println(err)
 		return

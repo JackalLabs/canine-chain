@@ -3,9 +3,9 @@ package cli
 import (
 	"strconv"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +29,7 @@ func CmdEstimateSwapOut() *cobra.Command {
 
 			params := &types.QueryEstimateSwapOutRequest{
 
-				PoolName:     reqPoolName,
+				PoolName:  reqPoolName,
 				InputCoin: reqDepositCoins,
 			}
 

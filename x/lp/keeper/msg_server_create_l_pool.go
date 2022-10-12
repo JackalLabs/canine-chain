@@ -5,20 +5,21 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
-/* Checks if MsgCreateLPool is a valid request
-	It validates:
-		1. Coin format
-		2. Max denom count allowed in a pool
-		3. Coin deposit is more than minimum pool creation amount
-		4. Able to create pool name
-		5.	The new pool is not a duplicate 
-		6. AMM model id is valid and exists
-		7. Swap fee, lock duration and penalty percentage are non-negative
+/*
+	 Checks if MsgCreateLPool is a valid request
+		It validates:
+			1. Coin format
+			2. Max denom count allowed in a pool
+			3. Coin deposit is more than minimum pool creation amount
+			4. Able to create pool name
+			5.	The new pool is not a duplicate
+			6. AMM model id is valid and exists
+			7. Swap fee, lock duration and penalty percentage are non-negative
 */
 func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPool) error {
 
@@ -43,7 +44,7 @@ func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPoo
 		if c.Amount.LT(sdk.NewInt(int64(minInitPoolDeposit))) {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 				"You need to deposit at least %v amount to create a liquidity pool",
-				minInitPoolDeposit) 
+				minInitPoolDeposit)
 		}
 	}
 
@@ -60,7 +61,7 @@ func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPoo
 	_, err := types.GetAMM(msg.Amm_Id)
 
 	if err != nil {
-		return sdkerrors.Wrapf(err, "AMM with id %v does not exist", 
+		return sdkerrors.Wrapf(err, "AMM with id %v does not exist",
 			msg.Amm_Id)
 	}
 
@@ -72,10 +73,10 @@ func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPoo
 // A provider record is created with contribution and unlock time.
 // If pool already exists with coin denoms it returns error.
 func (k msgServer) CreateLPool(
-	goCtx context.Context, 
+	goCtx context.Context,
 	msg *types.MsgCreateLPool,
 ) (
-	*types.MsgCreateLPoolResponse, 
+	*types.MsgCreateLPoolResponse,
 	error,
 ) {
 
@@ -106,7 +107,7 @@ func (k msgServer) CreateLPool(
 	k.SetLPool(ctx, pool)
 
 	// Create LProviderRecord
-	lockDuration := GetDuration(msg.MinLockDuration)   
+	lockDuration := GetDuration(msg.MinLockDuration)
 	err = k.InitLProviderRecord(ctx, creatorAccAddr, pool.Name, lockDuration)
 
 	if err != nil {
@@ -114,8 +115,8 @@ func (k msgServer) CreateLPool(
 
 		return nil, sdkerrors.Wrapf(
 			err,
-			"Failed to create liquidity pool. Failed to initialize" +
-			" LProviderRecord",
+			"Failed to create liquidity pool. Failed to initialize"+
+				" LProviderRecord",
 		)
 	}
 
@@ -143,8 +144,8 @@ func (k msgServer) CreateLPool(
 
 		return nil, sdkerrors.Wrapf(
 			sdkError,
-			"failed to create liquidity pool. Failed to retrieve deposit coins " +
-			"from sender")
+			"failed to create liquidity pool. Failed to retrieve deposit coins "+
+				"from sender")
 	}
 
 	sdkError = k.MintAndSendLPToken(ctx, pool, creatorAccAddr, shareAmount)

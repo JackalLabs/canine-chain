@@ -1,8 +1,8 @@
 package keeper
 
 import (
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 // GetParams get all parameters as types.Params
