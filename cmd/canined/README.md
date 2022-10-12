@@ -21,6 +21,8 @@ To use a different home directory to store the files, you must run `init` with t
 You must also be using the keyring-backend: `test`. (`canined config keyring-backend test`)
 
 ```sh
+$ canined config chain-id {current-chain-id}
+
 $ canined tx storage init-miner {IP_ADDRESS} {STORAGE_IN_BYTES} --from {KEY_NAME} --gas-prices=0.002ujkl --gas-adjustment=1.5
 
 $ canined start-miner --from {KEY_NAME} --gas-prices=0.002ujkl --gas-adjustment=1.5 -y
