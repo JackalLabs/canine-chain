@@ -40,6 +40,7 @@ func (k msgServer) MakeRoot(goCtx context.Context, msg *types.MsgMakeRoot) (*typ
 	}
 
 	//Add yourself as a permitted Sender in the beginning so you can notify yourself
+	//edit: Erin wants permittedSenders system removed for now so this may not be necessary
 
 	placeholderMap := make([]string, 0, 2000)
 	placeholderMap = append(placeholderMap, msg.Creator)

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"encoding/json"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	notiTypes "github.com/jackal-dao/canine/x/notifications/types"
@@ -38,18 +37,18 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 			return false, notiTypes.ErrNotificationAlreadySet
 		}
 
-		//Check if sender is permitted to notify
-		if !isSender(notiCounter, sender) {
-			return false, notiTypes.ErrCannotAddSenders
-		}
+		//Deactivating this for now per discussion with Erin
+		// if !isSender(notiCounter, sender) {
+		// 	return false, notiTypes.ErrCannotAddSenders
+		// }
 
 		var notifications = notiTypes.Notifications{
 			Sender:        sender, //delete this for security?
 			Count:         notiCounter.Counter,
-			Notification:  notification, //need extra param in MsgPostFile
-			Address:       v,            //This will be hashed before it enters the keeper
-			HashPath:      hashPath,
-			HashPathOwner: hashPathOwner, // this is here because the sender of the file won't always be the owner
+			Notification:  notification,
+			Address:       v,             //This will be hashed before it enters the keeper
+			HashPath:      hashPath,      // to be removed per discussion with Erin
+			HashPathOwner: hashPathOwner, // to be removed per discussion with Erin
 
 		}
 
@@ -65,25 +64,26 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 			notiCounter,
 		)
 	}
-	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ Did we make it here?")
 
 	return true, nil
 
 }
 
-func isSender(notiCounter notiTypes.NotiCounter, user string) bool {
+//Deacitivating this for now per discussion with Erin
 
-	currentSenders := notiCounter.PermittedSenders
+// func isSender(notiCounter notiTypes.NotiCounter, user string) bool {
 
-	placeholderMap := make([]string, 0, 1000)
-	json.Unmarshal([]byte(currentSenders), &placeholderMap)
+// 	currentSenders := notiCounter.PermittedSenders
 
-	for _, v := range placeholderMap {
+// 	placeholderMap := make([]string, 0, 1000)
+// 	json.Unmarshal([]byte(currentSenders), &placeholderMap)
 
-		if string(v) == user {
-			return true
-		}
-	}
-	return false
+// 	for _, v := range placeholderMap {
 
-}
+// 		if string(v) == user {
+// 			return true
+// 		}
+// 	}
+// 	return false
+
+// }

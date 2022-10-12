@@ -103,8 +103,8 @@ func CmdPostFile() *cobra.Command {
 			if len(editorsToNotify) > 0 {
 				editorsToNotify = editorsToNotify[:len(editorsToNotify)-1]
 			}
-			//Marshall everybody
-			jsonViewers, jsonEditors, jsonViewersToNotify, jsonEditorsToNotify, err := JSONMarshalViewersAndEditors(viewers, editors, viewersToNotify, editorsToNotify)
+			//Marshall everybody - jsonViewersToNotify and jsonEditorsToNotify currently disabled
+			jsonViewers, jsonEditors, _, _, err := JSONMarshalViewersAndEditors(viewers, editors, viewersToNotify, editorsToNotify)
 			if err != nil {
 				return err
 			}
@@ -113,8 +113,8 @@ func CmdPostFile() *cobra.Command {
 			hash := H.Sum(nil)
 			accountHash := fmt.Sprintf("%x", hash)
 
-			notiForViewers := fmt.Sprintf("6: %s has given you read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
-			notiForEditors := fmt.Sprintf("6: %s has given you editor access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+			// notiForViewers := fmt.Sprintf("6: %s has given you read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+			// notiForEditors := fmt.Sprintf("6: %s has given you editor access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
 			msg := filetypes.NewMsgPostFile(
 				clientCtx.GetFromAddress().String(),
@@ -124,11 +124,11 @@ func CmdPostFile() *cobra.Command {
 				argContents,
 				string(jsonViewers),
 				string(jsonEditors),
-				trackingNumber, //UUID goes here
-				string(jsonViewersToNotify),
-				string(jsonEditorsToNotify),
-				notiForViewers,
-				notiForEditors,
+				trackingNumber, //UUID
+				"",             //Passing in empty strings to check that Erin can test system while ignoring notifications system
+				"",
+				"",
+				"",
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
