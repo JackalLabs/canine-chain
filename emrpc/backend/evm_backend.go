@@ -248,10 +248,16 @@ func (b *Backend) EthBlockFromTendermint(
 ) (map[string]interface{}, error) {
 	ethRPCTxs := []interface{}{}
 	block := resBlock.Block
+	// dumping the resBlock
+	// file, _ := json.Marshal(blockRes)
+	// _ = ioutil.WriteFile("resBlockDump.json", file, 0644)
+
+	// checking the basefee
 
 	baseFee, err := b.BaseFee(blockRes)
 	if err != nil {
 		// handle the error for pruned node.
+		// b.logger.Error("Error 2")
 		b.logger.Error("failed to fetch Base Fee from prunned block. Check node prunning configuration", "height", block.Height, "error", err)
 	}
 
@@ -738,12 +744,12 @@ func (b *Backend) GetTransactionCount(address common.Address, blockNum emrpctype
 	accRet := b.clientCtx.AccountRetriever
 
 	err := accRet.EnsureExists(b.clientCtx, from)
+
 	if err != nil {
 		// account doesn't exist yet, return 0
 		n := hexutil.Uint64(0)
 		return &n, nil
 	}
-
 	// includePending := blockNum == emrpctypes.EthPendingBlockNumber
 	nonce, err := b.getAccountNonce(address, false, blockNum.Int64(), b.logger)
 	if err != nil {
@@ -854,7 +860,7 @@ func (b *Backend) SuggestGasTipCap(baseFee *big.Int) (*big.Int, error) {
 // return nil.
 func (b *Backend) BaseFee(blockRes *tmrpctypes.ResultBlockResults) (*big.Int, error) {
 	// return BaseFee if London hard fork is activated and feemarket is enabled
-	res, err := b.queryClient.QueryClient.BaseFee(types.ContextWithHeight(blockRes.Height), &evmtypes.QueryBaseFeeRequest{})
+	res, err := b.queryClient.FeeMarket.BaseFee(types.ContextWithHeight(blockRes.Height), &evmtypes.QueryBaseFeeRequest{})
 	if err != nil {
 		// fallback to parsing from begin blocker event, could happen on pruned nodes.
 		// faster to iterate reversely

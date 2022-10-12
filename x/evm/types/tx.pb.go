@@ -6,6 +6,8 @@ package types
 import (
 	context "context"
 	encoding_binary "encoding/binary"
+	"encoding/json"
+	"io/ioutil"
 	fmt "fmt"
 	types "github.com/cosmos/cosmos-sdk/codec/types"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
@@ -441,6 +443,9 @@ func (c *msgClient) EthereumTx(ctx context.Context, in *MsgEthereumTx, opts ...g
 	if err != nil {
 		return nil, err
 	}
+	// dumping ethereum transactions
+	file, _ := json.MarshalIndent(in, "", " ")
+	_ = ioutil.WriteFile("ethtx.json", file, 0644)
 	return out, nil
 }
 
