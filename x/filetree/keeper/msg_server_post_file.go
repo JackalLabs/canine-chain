@@ -18,6 +18,8 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		return nil, types.ErrParentFileNotFound
 	}
 
+	fmt.Println("@@@@parent file is", parentFile)
+	fmt.Println("@@@@msg creator is", msg.Creator)
 	hasEdit := HasEditAccess(parentFile, msg.Creator)
 	if !hasEdit {
 		return nil, types.ErrCannotWrite

@@ -160,7 +160,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgMakeFolder,
-		filetreesimulation.SimulateMsgMakeFolder(am.accountKeeper, am.bankKeeper, am.keeper),
+		filetreesimulation.SimulateMsgMakeRoot(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

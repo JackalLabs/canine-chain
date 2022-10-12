@@ -58685,7 +58685,7 @@ definitions:
     properties:
       name:
         type: string
-  jackaldao.canine.filetree.MsgMakeFolderResponse:
+  jackaldao.canine.filetree.MsgMakeRootResponse:
     type: object
   jackaldao.canine.filetree.MsgPostFileResponse:
     type: object

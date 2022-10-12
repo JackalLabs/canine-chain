@@ -17,31 +17,29 @@ import (
 
 var _ = strconv.Itoa(0)
 
-// This is a test tx that needs to be carefully removed soon
-func CmdInitAccount() *cobra.Command {
+func CmdMakeRoot() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "init-account [root-hashpath] [account] [editors]",
-		Short: "Broadcast message InitAccount",
-		Args:  cobra.ExactArgs(3),
+		Use:   "make-root [account] [root-hash-path] [contents] [editors] [viewers]",
+		Short: "Broadcast message makeFolder",
+		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argRootHashpath := args[0]
-			argAccount := args[1]
-			argEditors := args[2]
+			argAccount := args[0]
+			argRootHashPath := args[1]
+			argContents := args[2]
+			argEditors := args[3]
+			argViewers := args[4]
+
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			newKey, err := MakePrivateKey(clientCtx)
-
-			if err != nil {
-				return err
-			}
-
-			pubKey := newKey.PublicKey.Bytes(false)
 			//In the keeper, the merklePath function will trim the trailing slash for us but let's just do it anyways to be safe.
-			trimMerklePath := strings.TrimSuffix(argRootHashpath, "/")
+			trimMerklePath := strings.TrimSuffix(argRootHashPath, "/")
 			merklePath := types.MerklePath(trimMerklePath)
 
 			editors := make(map[string]string)
@@ -55,7 +53,7 @@ func CmdInitAccount() *cobra.Command {
 					continue
 				}
 
-				//This root folder is not supposed to hold the file's AES key, so there is nothing to encrypt. The purpose
+				//This root folder is the master root and has no file key, so there is nothing to encrypt. The purpose
 				//Of the list of editors is to allow a user to invite others to write to their root folder.
 
 				h := sha256.New()
@@ -77,20 +75,21 @@ func CmdInitAccount() *cobra.Command {
 			hash := h.Sum(nil)
 
 			accountHash := fmt.Sprintf("%x", hash)
-			//FE will init their own root folders, but we are creating home/ in the CLI for visualizing the work flow
-			msgInitRoot := types.NewMsgInitAccount(
+			//FE will init their own root folders, but w
+
+			msg := types.NewMsgMakeRoot(
 				clientCtx.GetFromAddress().String(),
 				accountHash,
 				merklePath,
+				argContents,
 				string(jsonEditors),
-				fmt.Sprintf("%x", pubKey),
+				argViewers,
 				trackingNumber,
 			)
-
-			if err := msgInitRoot.ValidateBasic(); err != nil {
+			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msgInitRoot)
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
 
