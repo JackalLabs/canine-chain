@@ -248,17 +248,17 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 				const misses_to_burn int64 = 3
 
 				if misses > misses_to_burn {
-					miner, ok := am.keeper.GetMiners(ctx, deal.Miner)
+					provider, ok := am.keeper.GetProviders(ctx, deal.Provider)
 					if !ok {
 						continue
 					}
 
-					curburn, ok := sdk.NewIntFromString(miner.BurnedContracts)
+					curburn, ok := sdk.NewIntFromString(provider.BurnedContracts)
 					if !ok {
 						continue
 					}
-					miner.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
-					am.keeper.SetMiners(ctx, miner)
+					provider.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
+					am.keeper.SetProviders(ctx, provider)
 
 					//Creating new stray file from the burned active deal
 					stray_deal := types.Strays{
@@ -328,13 +328,13 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 			coin := sdk.NewInt64Coin("ujkl", dd.TruncateInt64())
 			coins := sdk.NewCoins(coin)
 
-			miner, err := sdk.AccAddressFromBech32(deal.Miner)
+			provider, err := sdk.AccAddressFromBech32(deal.Provider)
 			if err != nil {
 				ctx.Logger().Error(err.Error())
 				continue
 			}
-			fmt.Printf("Sending coins to %s\n", miner.String())
-			errorr := am.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, miner, coins)
+			fmt.Printf("Sending coins to %s\n", provider.String())
+			errorr := am.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, provider, coins)
 			if errorr != nil {
 				fmt.Printf("ERR: %v\n", errorr)
 				ctx.Logger().Error(errorr.Error())

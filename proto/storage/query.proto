@@ -8,7 +8,7 @@ import "storage/params.proto";
 import "storage/contracts.proto";
 import "storage/proofs.proto";
 import "storage/active_deals.proto";
-import "storage/miners.proto";
+import "storage/providers.proto";
 import "storage/pay_blocks.proto";
 import "storage/client_usage.proto";
 import "storage/strays.proto";
@@ -52,14 +52,14 @@ service Query {
 		option (google.api.http).get = "/jackal-dao/canine/storage/active_deals";
 	}
 
-// Queries a Miners by index.
-	rpc Miners(QueryGetMinersRequest) returns (QueryGetMinersResponse) {
-		option (google.api.http).get = "/jackal-dao/canine/storage/miners/{address}";
+// Queries a Providers by index.
+	rpc Providers(QueryGetProvidersRequest) returns (QueryGetProvidersResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/providers/{address}";
 	}
 
-	// Queries a list of Miners items.
-	rpc MinersAll(QueryAllMinersRequest) returns (QueryAllMinersResponse) {
-		option (google.api.http).get = "/jackal-dao/canine/storage/miners";
+	// Queries a list of Providers items.
+	rpc ProvidersAll(QueryAllProvidersRequest) returns (QueryAllProvidersResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/providers";
 	}
 
 // Queries a list of Freespace items.
@@ -174,21 +174,21 @@ message QueryAllActiveDealsResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetMinersRequest {
+message QueryGetProvidersRequest {
 	  string address = 1;
 
 }
 
-message QueryGetMinersResponse {
-	Miners miners = 1 [(gogoproto.nullable) = false];
+message QueryGetProvidersResponse {
+	Providers providers = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryAllMinersRequest {
+message QueryAllProvidersRequest {
 	cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllMinersResponse {
-	repeated Miners miners = 1 [(gogoproto.nullable) = false];
+message QueryAllProvidersResponse {
+	repeated Providers providers = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -205,7 +205,7 @@ message QueryFindFileRequest {
 }
 
 message QueryFindFileResponse {
-  string minerIps = 1;
+  string providerIps = 1;
 }
 
 message QueryGetPayBlocksRequest {

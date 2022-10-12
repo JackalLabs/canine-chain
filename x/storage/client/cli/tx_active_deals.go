@@ -10,7 +10,7 @@ import (
 
 func CmdCreateActiveDeals() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-active-deals [cid] [signee] [miner] [startblock] [endblock] [filesize] [proofverified] [proofsmissed] [blocktoprove]",
+		Use:   "create-active-deals [cid] [signee] [provider] [startblock] [endblock] [filesize] [proofverified] [proofsmissed] [blocktoprove]",
 		Short: "Create a new active_deals",
 		Args:  cobra.ExactArgs(9),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -19,7 +19,7 @@ func CmdCreateActiveDeals() *cobra.Command {
 
 			// Get value arguments
 			argSignee := args[1]
-			argMiner := args[2]
+			argProvider := args[2]
 			argStartblock := args[3]
 			argEndblock := args[4]
 			argFilesize := args[5]
@@ -36,7 +36,7 @@ func CmdCreateActiveDeals() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				indexCid,
 				argSignee,
-				argMiner,
+				argProvider,
 				argStartblock,
 				argEndblock,
 				argFilesize,
@@ -58,7 +58,7 @@ func CmdCreateActiveDeals() *cobra.Command {
 
 func CmdUpdateActiveDeals() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-active-deals [cid] [signee] [miner] [startblock] [endblock] [filesize] [proofverified] [proofsmissed] [blocktoprove]",
+		Use:   "update-active-deals [cid] [signee] [provider] [startblock] [endblock] [filesize] [proofverified] [proofsmissed] [blocktoprove]",
 		Short: "Update a active_deals",
 		Args:  cobra.ExactArgs(9),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -67,7 +67,7 @@ func CmdUpdateActiveDeals() *cobra.Command {
 
 			// Get value arguments
 			argSignee := args[1]
-			argMiner := args[2]
+			argProvider := args[2]
 			argStartblock := args[3]
 			argEndblock := args[4]
 			argFilesize := args[5]
@@ -84,7 +84,7 @@ func CmdUpdateActiveDeals() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				indexCid,
 				argSignee,
-				argMiner,
+				argProvider,
 				argStartblock,
 				argEndblock,
 				argFilesize,

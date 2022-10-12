@@ -35186,7 +35186,7 @@ paths:
                       type: string
                     signee:
                       type: string
-                    miner:
+                    provider:
                       type: string
                     startblock:
                       type: string
@@ -35327,7 +35327,7 @@ paths:
                     type: string
                   signee:
                     type: string
-                  miner:
+                  provider:
                     type: string
                   startblock:
                     type: string
@@ -35740,7 +35740,7 @@ paths:
           schema:
             type: object
             properties:
-              minerIps:
+              providerIps:
                 type: string
         default:
           description: An unexpected error response.
@@ -35816,183 +35816,6 @@ paths:
             properties:
               bytesfree:
                 type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/miners:
-    get:
-      summary: Queries a list of Miners items.
-      operationId: JackaldaoCanineStorageMinersAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              miners:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    address:
-                      type: string
-                    ip:
-                      type: string
-                    totalspace:
-                      type: string
-                    burned_contracts:
-                      type: string
-                    creator:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/miners/{address}':
-    get:
-      summary: Queries a Miners by index.
-      operationId: JackaldaoCanineStorageMiners
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              miners:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  ip:
-                    type: string
-                  totalspace:
-                    type: string
-                  burned_contracts:
-                    type: string
-                  creator:
-                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -36395,6 +36218,183 @@ paths:
                   additionalProperties: {}
       parameters:
         - name: cid
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /jackal-dao/canine/storage/providers:
+    get:
+      summary: Queries a list of Providers items.
+      operationId: JackaldaoCanineStorageProvidersAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              providers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                    ip:
+                      type: string
+                    totalspace:
+                      type: string
+                    burned_contracts:
+                      type: string
+                    creator:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/jackal-dao/canine/storage/providers/{address}':
+    get:
+      summary: Queries a Providers by index.
+      operationId: JackaldaoCanineStorageProviders
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              providers:
+                type: object
+                properties:
+                  address:
+                    type: string
+                  ip:
+                    type: string
+                  totalspace:
+                    type: string
+                  burned_contracts:
+                    type: string
+                  creator:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: address
           in: path
           required: true
           type: string
@@ -59719,7 +59719,7 @@ definitions:
         type: string
       signee:
         type: string
-      miner:
+      provider:
         type: string
       startblock:
         type: string
@@ -59767,24 +59767,11 @@ definitions:
         type: string
       creator:
         type: string
-  jackaldao.canine.storage.Miners:
-    type: object
-    properties:
-      address:
-        type: string
-      ip:
-        type: string
-      totalspace:
-        type: string
-      burned_contracts:
-        type: string
-      creator:
-        type: string
   jackaldao.canine.storage.MsgBuyStorageResponse:
     type: object
   jackaldao.canine.storage.MsgCancelContractResponse:
     type: object
-  jackaldao.canine.storage.MsgInitMinerResponse:
+  jackaldao.canine.storage.MsgInitProviderResponse:
     type: object
   jackaldao.canine.storage.MsgPostContractResponse:
     type: object
@@ -59793,9 +59780,9 @@ definitions:
     properties:
       merkle:
         type: string
-  jackaldao.canine.storage.MsgSetMinerIpResponse:
+  jackaldao.canine.storage.MsgSetProviderIpResponse:
     type: object
-  jackaldao.canine.storage.MsgSetMinerTotalspaceResponse:
+  jackaldao.canine.storage.MsgSetProviderTotalspaceResponse:
     type: object
   jackaldao.canine.storage.MsgSignContractResponse:
     type: object
@@ -59824,6 +59811,19 @@ definitions:
         type: string
       creator:
         type: string
+  jackaldao.canine.storage.Providers:
+    type: object
+    properties:
+      address:
+        type: string
+      ip:
+        type: string
+      totalspace:
+        type: string
+      burned_contracts:
+        type: string
+      creator:
+        type: string
   jackaldao.canine.storage.QueryAllActiveDealsResponse:
     type: object
     properties:
@@ -59836,7 +59836,7 @@ definitions:
               type: string
             signee:
               type: string
-            miner:
+            provider:
               type: string
             startblock:
               type: string
@@ -59969,49 +59969,6 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  jackaldao.canine.storage.QueryAllMinersResponse:
-    type: object
-    properties:
-      miners:
-        type: array
-        items:
-          type: object
-          properties:
-            address:
-              type: string
-            ip:
-              type: string
-            totalspace:
-              type: string
-            burned_contracts:
-              type: string
-            creator:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
   jackaldao.canine.storage.QueryAllPayBlocksResponse:
     type: object
     properties:
@@ -60094,6 +60051,49 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
+  jackaldao.canine.storage.QueryAllProvidersResponse:
+    type: object
+    properties:
+      providers:
+        type: array
+        items:
+          type: object
+          properties:
+            address:
+              type: string
+            ip:
+              type: string
+            totalspace:
+              type: string
+            burned_contracts:
+              type: string
+            creator:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
   jackaldao.canine.storage.QueryAllStraysResponse:
     type: object
     properties:
@@ -60140,7 +60140,7 @@ definitions:
   jackaldao.canine.storage.QueryFindFileResponse:
     type: object
     properties:
-      minerIps:
+      providerIps:
         type: string
   jackaldao.canine.storage.QueryFreespaceResponse:
     type: object
@@ -60157,7 +60157,7 @@ definitions:
             type: string
           signee:
             type: string
-          miner:
+          provider:
             type: string
           startblock:
             type: string
@@ -60216,22 +60216,6 @@ definitions:
             type: string
           creator:
             type: string
-  jackaldao.canine.storage.QueryGetMinersResponse:
-    type: object
-    properties:
-      miners:
-        type: object
-        properties:
-          address:
-            type: string
-          ip:
-            type: string
-          totalspace:
-            type: string
-          burned_contracts:
-            type: string
-          creator:
-            type: string
   jackaldao.canine.storage.QueryGetPayBlocksResponse:
     type: object
     properties:
@@ -60257,6 +60241,22 @@ definitions:
           item:
             type: string
           hashes:
+            type: string
+          creator:
+            type: string
+  jackaldao.canine.storage.QueryGetProvidersResponse:
+    type: object
+    properties:
+      providers:
+        type: object
+        properties:
+          address:
+            type: string
+          ip:
+            type: string
+          totalspace:
+            type: string
+          burned_contracts:
             type: string
           creator:
             type: string

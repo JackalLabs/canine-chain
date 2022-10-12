@@ -114,13 +114,13 @@ func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, by
 	return nil
 }
 
-func (k Keeper) GetMinerUsing(ctx sdk.Context, miner string) int64 {
+func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 	allDeals := k.GetAllActiveDeals(ctx)
 
 	var space int64 = 0
 	for i := 0; i < len(allDeals); i++ {
 		deal := allDeals[i]
-		if deal.Miner != miner {
+		if deal.Provider != provider {
 			continue
 		}
 		size, ok := sdk.NewIntFromString(deal.Filesize)

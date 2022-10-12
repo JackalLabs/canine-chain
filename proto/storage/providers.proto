@@ -3,7 +3,7 @@ package jackaldao.canine.storage;
 
 option go_package = "github.com/jackal-dao/canine/x/storage/types";
 
-message Miners {
+message Providers {
   string address = 1; 
   string ip = 2; 
   string totalspace = 3; 

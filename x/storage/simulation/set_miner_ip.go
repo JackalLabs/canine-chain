@@ -10,7 +10,7 @@ import (
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
-func SimulateMsgSetMinerIp(
+func SimulateMsgSetProviderIp(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -18,12 +18,12 @@ func SimulateMsgSetMinerIp(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgSetMinerIp{
+		msg := &types.MsgSetProviderIp{
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the SetMinerIp simulation
+		// TODO: Handling the SetProviderIp simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SetMinerIp simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SetProviderIp simulation not implemented"), nil, nil
 	}
 }

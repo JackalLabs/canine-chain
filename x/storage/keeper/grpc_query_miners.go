@@ -11,24 +11,24 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) MinersAll(c context.Context, req *types.QueryAllMinersRequest) (*types.QueryAllMinersResponse, error) {
+func (k Keeper) ProvidersAll(c context.Context, req *types.QueryAllProvidersRequest) (*types.QueryAllProvidersResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var minerss []types.Miners
+	var providerss []types.Providers
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	minersStore := prefix.NewStore(store, types.KeyPrefix(types.MinersKeyPrefix))
+	providersStore := prefix.NewStore(store, types.KeyPrefix(types.ProvidersKeyPrefix))
 
-	pageRes, err := query.Paginate(minersStore, req.Pagination, func(key []byte, value []byte) error {
-		var miners types.Miners
-		if err := k.cdc.Unmarshal(value, &miners); err != nil {
+	pageRes, err := query.Paginate(providersStore, req.Pagination, func(key []byte, value []byte) error {
+		var providers types.Providers
+		if err := k.cdc.Unmarshal(value, &providers); err != nil {
 			return err
 		}
 
-		minerss = append(minerss, miners)
+		providerss = append(providerss, providers)
 		return nil
 	})
 
@@ -36,16 +36,16 @@ func (k Keeper) MinersAll(c context.Context, req *types.QueryAllMinersRequest) (
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllMinersResponse{Miners: minerss, Pagination: pageRes}, nil
+	return &types.QueryAllProvidersResponse{Providers: providerss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Miners(c context.Context, req *types.QueryGetMinersRequest) (*types.QueryGetMinersResponse, error) {
+func (k Keeper) Providers(c context.Context, req *types.QueryGetProvidersRequest) (*types.QueryGetProvidersResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetMiners(
+	val, found := k.GetProviders(
 		ctx,
 		req.Address,
 	)
@@ -53,5 +53,5 @@ func (k Keeper) Miners(c context.Context, req *types.QueryGetMinersRequest) (*ty
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetMinersResponse{Miners: val}, nil
+	return &types.QueryGetProvidersResponse{Providers: val}, nil
 }

@@ -8,10 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CmdCreateMiners() *cobra.Command {
+func CmdCreateProviders() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-miners [address] [ip] [totalspace]",
-		Short: "Create a new miners",
+		Use:   "create-providers [address] [ip] [totalspace]",
+		Short: "Create a new providers",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
@@ -26,7 +26,7 @@ func CmdCreateMiners() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgCreateMiners(
+			msg := types.NewMsgCreateProviders(
 				clientCtx.GetFromAddress().String(),
 				indexAddress,
 				argIp,
@@ -44,10 +44,10 @@ func CmdCreateMiners() *cobra.Command {
 	return cmd
 }
 
-func CmdUpdateMiners() *cobra.Command {
+func CmdUpdateProviders() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-miners [address] [ip] [totalspace]",
-		Short: "Update a miners",
+		Use:   "update-providers [address] [ip] [totalspace]",
+		Short: "Update a providers",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
@@ -62,7 +62,7 @@ func CmdUpdateMiners() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgUpdateMiners(
+			msg := types.NewMsgUpdateProviders(
 				clientCtx.GetFromAddress().String(),
 				indexAddress,
 				argIp,
@@ -80,10 +80,10 @@ func CmdUpdateMiners() *cobra.Command {
 	return cmd
 }
 
-func CmdDeleteMiners() *cobra.Command {
+func CmdDeleteProviders() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "delete-miners [address]",
-		Short: "Delete a miners",
+		Use:   "delete-providers [address]",
+		Short: "Delete a providers",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			indexAddress := args[0]
@@ -93,7 +93,7 @@ func CmdDeleteMiners() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgDeleteMiners(
+			msg := types.NewMsgDeleteProviders(
 				clientCtx.GetFromAddress().String(),
 				indexAddress,
 			)
