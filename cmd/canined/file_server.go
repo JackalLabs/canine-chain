@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -13,10 +14,10 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"sync"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -29,7 +30,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) (string, []byte, error) {
+func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB, w *http.ResponseWriter) error {
 	size := handler.Size
 	h := sha256.New()
 	io.Copy(h, file)
@@ -40,7 +41,7 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 	if direrr != nil {
 		fmt.Printf("Error directory can't be made!\n")
 
-		return "", nil, direrr
+		return direrr
 	}
 
 	var blocksize int64 = 1024
@@ -49,7 +50,7 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 		f, err := os.OpenFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, fmt.Sprintf("%x", hashName), i/blocksize, ".jkl"), os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
 			fmt.Printf("Error can't open file!\n")
-			return "", nil, err
+			return err
 		}
 
 		firstx := make([]byte, blocksize)
@@ -69,30 +70,17 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 	}
 	file.Close()
 
-	res, ctrerr := makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"})
-	if ctrerr != nil {
-		fmt.Printf("CONTRACT ERROR: %v\n", ctrerr)
-		return "", nil, ctrerr
-	}
-
-	if res.Code != 0 {
-		fmt.Println(fmt.Errorf(res.RawLog))
-		return "", nil, fmt.Errorf(res.RawLog)
-	}
-	// cidhash := sha256.New()
-	// flags := cmd.Flag("from")
-
 	info, ierr := clientCtx.Keyring.Key(clientCtx.From)
 
 	if ierr != nil {
 		fmt.Printf("Inforing Error: %v\n", ierr)
-		return "", nil, ierr
+		return ierr
 	}
 
 	ko, err := keyring.MkAccKeyOutput(info)
 	if err != nil {
 		fmt.Printf("Inforing Error: %v\n", ierr)
-		return "", nil, err
+		return err
 	}
 
 	cidhash := sha256.New()
@@ -101,15 +89,40 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 
 	strcid := fmt.Sprintf("%x", cid)
 
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	ctrerr := q.makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"}, &wg)
+	if ctrerr != nil {
+		fmt.Printf("CONTRACT ERROR: %v\n", ctrerr)
+		return ctrerr
+	}
+	wg.Wait()
+
+	fmt.Printf("%x\n", hashName)
+
+	v := UploadResponse{
+		CID: strcid,
+		FID: fmt.Sprintf("%x", hashName),
+	}
+
+	err = json.NewEncoder(*w).Encode(v)
+	if err != nil {
+		fmt.Printf("Json Encode Error: %v\n", err)
+		return err
+	}
+	// cidhash := sha256.New()
+	// flags := cmd.Flag("from")
+
 	err = datedb.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(fmt.Sprintf("%d", 0)), nil)
 	if err != nil {
 		fmt.Printf("Date Database Error: %v\n", err)
-		return "", nil, err
+		return err
 	}
 	derr := db.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(strcid), nil)
 	if derr != nil {
 		fmt.Printf("Database Error: %v\n", derr)
-		return "", nil, err
+		return err
 	}
 
 	fmt.Printf("%s %s\n", fmt.Sprintf("%x", hashName), "Added to database")
@@ -117,19 +130,19 @@ func saveFile(clientCtx client.Context, file multipart.File, handler *multipart.
 	_, cerr := db.Get([]byte(fmt.Sprintf("%x", hashName)), nil)
 	if cerr != nil {
 		fmt.Printf("Hash Database Error: %s\n", cerr.Error())
-		return "", nil, err
+		return err
 	}
 
-	return strcid, hashName, nil
+	return nil
 }
 
-func makeContract(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
+func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.WaitGroup) error {
 
 	merkleroot, filesize, fid := HashData(cmd, args[0])
 
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	msg := types.NewMsgPostContract(
@@ -141,9 +154,17 @@ func makeContract(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
 		merkleroot,
 	)
 	if err := msg.ValidateBasic(); err != nil {
-		return nil, err
+		return err
 	}
-	return SendTx(clientCtx, cmd.Flags(), msg)
+
+	u := Upload{
+		Message:  msg,
+		Callback: wg,
+	}
+
+	q.Queue = append(q.Queue, u)
+
+	return nil
 }
 
 func HashData(cmd *cobra.Command, filename string) (string, string, string) {
@@ -253,10 +274,16 @@ func StartFileServer(cmd *cobra.Command) {
 	}
 	router := httprouter.New()
 
+	q := UploadQueue{
+		Queue:  make([]Upload, 0),
+		Locked: false,
+	}
+
 	getRoutes(cmd, router)
-	postRoutes(cmd, router, db, datedb)
+	q.postRoutes(cmd, router, db, datedb)
 
 	go postProofs(cmd, db, datedb)
+	go q.startListener(clientCtx, cmd)
 
 	fmt.Printf("🌍 Storage Provider: http://0.0.0.0:3333\n")
 	err := http.ListenAndServe("0.0.0.0:3333", router)

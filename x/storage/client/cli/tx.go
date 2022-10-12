@@ -33,9 +33,9 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdPostContract())
 	cmd.AddCommand(CmdPostproof())
 	cmd.AddCommand(CmdSignContract())
-	cmd.AddCommand(CmdSetMinerIp())
-	cmd.AddCommand(CmdSetMinerTotalspace())
-	cmd.AddCommand(CmdInitMiner())
+	cmd.AddCommand(CmdSetProviderIp())
+	cmd.AddCommand(CmdSetProviderTotalspace())
+	cmd.AddCommand(CmdInitProvider())
 	cmd.AddCommand(CmdCancelContract())
 	cmd.AddCommand(CmdBuyStorage())
 	// this line is used by starport scaffolding # 1

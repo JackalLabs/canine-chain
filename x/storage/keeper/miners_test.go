@@ -15,21 +15,21 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNMiners(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Miners {
-	items := make([]types.Miners, n)
+func createNProviders(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Providers {
+	items := make([]types.Providers, n)
 	for i := range items {
 		items[i].Address = strconv.Itoa(i)
 
-		keeper.SetMiners(ctx, items[i])
+		keeper.SetProviders(ctx, items[i])
 	}
 	return items
 }
 
-func TestMinersGet(t *testing.T) {
+func TestProvidersGet(t *testing.T) {
 	keeper, ctx := keepertest.StorageKeeper(t)
-	items := createNMiners(keeper, ctx, 10)
+	items := createNProviders(keeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetMiners(ctx,
+		rst, found := keeper.GetProviders(ctx,
 			item.Address,
 		)
 		require.True(t, found)
@@ -39,25 +39,25 @@ func TestMinersGet(t *testing.T) {
 		)
 	}
 }
-func TestMinersRemove(t *testing.T) {
+func TestProvidersRemove(t *testing.T) {
 	keeper, ctx := keepertest.StorageKeeper(t)
-	items := createNMiners(keeper, ctx, 10)
+	items := createNProviders(keeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveMiners(ctx,
+		keeper.RemoveProviders(ctx,
 			item.Address,
 		)
-		_, found := keeper.GetMiners(ctx,
+		_, found := keeper.GetProviders(ctx,
 			item.Address,
 		)
 		require.False(t, found)
 	}
 }
 
-func TestMinersGetAll(t *testing.T) {
+func TestProvidersGetAll(t *testing.T) {
 	keeper, ctx := keepertest.StorageKeeper(t)
-	items := createNMiners(keeper, ctx, 10)
+	items := createNProviders(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllMiners(ctx)),
+		nullify.Fill(keeper.GetAllProviders(ctx)),
 	)
 }

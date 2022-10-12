@@ -26,14 +26,14 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgSignContract:
 			res, err := msgServer.SignContract(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgSetMinerIp:
-			res, err := msgServer.SetMinerIp(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgSetProviderIp:
+			res, err := msgServer.SetProviderIp(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgSetMinerTotalspace:
-			res, err := msgServer.SetMinerTotalspace(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgSetProviderTotalspace:
+			res, err := msgServer.SetProviderTotalspace(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgInitMiner:
-			res, err := msgServer.InitMiner(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgInitProvider:
+			res, err := msgServer.InitProvider(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgCancelContract:
 			res, err := msgServer.CancelContract(sdk.WrapSDKContext(ctx), msg)

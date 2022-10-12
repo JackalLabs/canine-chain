@@ -21,9 +21,9 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.ActiveDealsList {
 		k.SetActiveDeals(ctx, elem)
 	}
-	// Set all the miners
-	for _, elem := range genState.MinersList {
-		k.SetMiners(ctx, elem)
+	// Set all the Providers
+	for _, elem := range genState.ProvidersList {
+		k.SetProviders(ctx, elem)
 	}
 	// Set all the payBlocks
 	for _, elem := range genState.PayBlocksList {
@@ -49,7 +49,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.ContractsList = k.GetAllContracts(ctx)
 	genesis.ProofsList = k.GetAllProofs(ctx)
 	genesis.ActiveDealsList = k.GetAllActiveDeals(ctx)
-	genesis.MinersList = k.GetAllMiners(ctx)
+	genesis.ProvidersList = k.GetAllProviders(ctx)
 	genesis.PayBlocksList = k.GetAllPayBlocks(ctx)
 	genesis.ClientUsageList = k.GetAllClientUsage(ctx)
 	genesis.StraysList = k.GetAllStrays(ctx)

@@ -7,10 +7,10 @@ import (
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
-func (k msgServer) InitMiner(goCtx context.Context, msg *types.MsgInitMiner) (*types.MsgInitMinerResponse, error) {
+func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvider) (*types.MsgInitProviderResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	miner := types.Miners{
+	provider := types.Providers{
 		Address:         msg.Creator,
 		Ip:              msg.Ip,
 		Totalspace:      msg.Totalspace,
@@ -18,7 +18,7 @@ func (k msgServer) InitMiner(goCtx context.Context, msg *types.MsgInitMiner) (*t
 		BurnedContracts: "0",
 	}
 
-	k.SetMiners(ctx, miner)
+	k.SetProviders(ctx, provider)
 
-	return &types.MsgInitMinerResponse{}, nil
+	return &types.MsgInitProviderResponse{}, nil
 }

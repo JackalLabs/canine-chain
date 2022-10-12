@@ -6,7 +6,7 @@ import "storage/params.proto";
 import "storage/contracts.proto";
 import "storage/proofs.proto";
 import "storage/active_deals.proto";
-import "storage/miners.proto";
+import "storage/providers.proto";
 import "storage/pay_blocks.proto";
 import "storage/client_usage.proto";
 import "storage/strays.proto";
@@ -20,7 +20,7 @@ message GenesisState {
   repeated Contracts contractsList = 2 [(gogoproto.nullable) = false];
   repeated Proofs proofsList = 3 [(gogoproto.nullable) = false];
   repeated ActiveDeals activeDealsList = 4 [(gogoproto.nullable) = false];
-  repeated Miners minersList = 5 [(gogoproto.nullable) = false];
+  repeated Providers providersList = 5 [(gogoproto.nullable) = false];
   repeated PayBlocks payBlocksList = 6 [(gogoproto.nullable) = false];
   repeated ClientUsage clientUsageList = 7 [(gogoproto.nullable) = false];
   repeated Strays straysList = 8 [(gogoproto.nullable) = false];

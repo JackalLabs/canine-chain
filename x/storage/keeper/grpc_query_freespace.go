@@ -17,15 +17,15 @@ func (k Keeper) Freespace(goCtx context.Context, req *types.QueryFreespaceReques
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	num := k.GetMinerUsing(ctx, req.Address)
+	num := k.GetProviderUsing(ctx, req.Address)
 
-	miner, found := k.GetMiners(ctx, req.Address)
+	provider, found := k.GetProviders(ctx, req.Address)
 
 	if !found {
-		return nil, fmt.Errorf("can't find miner")
+		return nil, fmt.Errorf("can't find provider")
 	}
 
-	space, ok := sdk.NewIntFromString(miner.Totalspace)
+	space, ok := sdk.NewIntFromString(provider.Totalspace)
 
 	if !ok {
 		return nil, fmt.Errorf("can't parse total space")
