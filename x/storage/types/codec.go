@@ -21,12 +21,12 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgUpdateActiveDeals{}, "storage/UpdateActiveDeals", nil)
 	cdc.RegisterConcrete(&MsgDeleteActiveDeals{}, "storage/DeleteActiveDeals", nil)
 	cdc.RegisterConcrete(&MsgSignContract{}, "storage/SignContract", nil)
-	cdc.RegisterConcrete(&MsgCreateMiners{}, "storage/CreateMiners", nil)
-	cdc.RegisterConcrete(&MsgUpdateMiners{}, "storage/UpdateMiners", nil)
-	cdc.RegisterConcrete(&MsgDeleteMiners{}, "storage/DeleteMiners", nil)
-	cdc.RegisterConcrete(&MsgSetMinerIp{}, "storage/SetMinerIp", nil)
-	cdc.RegisterConcrete(&MsgSetMinerTotalspace{}, "storage/SetMinerTotalspace", nil)
-	cdc.RegisterConcrete(&MsgInitMiner{}, "storage/InitMiner", nil)
+	cdc.RegisterConcrete(&MsgCreateProviders{}, "storage/CreateProviders", nil)
+	cdc.RegisterConcrete(&MsgUpdateProviders{}, "storage/UpdateProviders", nil)
+	cdc.RegisterConcrete(&MsgDeleteProviders{}, "storage/DeleteProviders", nil)
+	cdc.RegisterConcrete(&MsgSetProviderIp{}, "storage/SetProviderIp", nil)
+	cdc.RegisterConcrete(&MsgSetProviderTotalspace{}, "storage/SetProviderTotalspace", nil)
+	cdc.RegisterConcrete(&MsgInitProvider{}, "storage/InitProvider", nil)
 	cdc.RegisterConcrete(&MsgCancelContract{}, "storage/CancelContract", nil)
 	cdc.RegisterConcrete(&MsgBuyStorage{}, "storage/BuyStorage", nil)
 	// this line is used by starport scaffolding # 2
@@ -61,18 +61,18 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgSignContract{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateMiners{},
-		&MsgUpdateMiners{},
-		&MsgDeleteMiners{},
+		&MsgCreateProviders{},
+		&MsgUpdateProviders{},
+		&MsgDeleteProviders{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgSetMinerIp{},
+		&MsgSetProviderIp{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgSetMinerTotalspace{},
+		&MsgSetProviderTotalspace{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgInitMiner{},
+		&MsgInitProvider{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCancelContract{},

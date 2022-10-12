@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CmdListMiners() *cobra.Command {
+func CmdListProviders() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-miners",
-		Short: "list all miners",
+		Use:   "list-providers",
+		Short: "list all providers",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -23,11 +23,11 @@ func CmdListMiners() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllMinersRequest{
+			params := &types.QueryAllProvidersRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.MinersAll(context.Background(), params)
+			res, err := queryClient.ProvidersAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -42,10 +42,10 @@ func CmdListMiners() *cobra.Command {
 	return cmd
 }
 
-func CmdShowMiners() *cobra.Command {
+func CmdShowProviders() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-miners [address]",
-		Short: "shows a miners",
+		Use:   "show-providers [address]",
+		Short: "shows a providers",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -54,11 +54,11 @@ func CmdShowMiners() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryGetMinersRequest{
+			params := &types.QueryGetProvidersRequest{
 				Address: argAddress,
 			}
 
-			res, err := queryClient.Miners(context.Background(), params)
+			res, err := queryClient.Providers(context.Background(), params)
 			if err != nil {
 				return err
 			}

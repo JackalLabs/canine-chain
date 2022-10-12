@@ -6,24 +6,24 @@ import (
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
-// SetMiners set a specific miners in the store from its index
-func (k Keeper) SetMiners(ctx sdk.Context, miners types.Miners) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MinersKeyPrefix))
-	b := k.cdc.MustMarshal(&miners)
-	store.Set(types.MinersKey(
-		miners.Address,
+// SetProviders set a specific providers in the store from its index
+func (k Keeper) SetProviders(ctx sdk.Context, providers types.Providers) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
+	b := k.cdc.MustMarshal(&providers)
+	store.Set(types.ProvidersKey(
+		providers.Address,
 	), b)
 }
 
-// GetMiners returns a miners from its index
-func (k Keeper) GetMiners(
+// GetProviders returns a providers from its index
+func (k Keeper) GetProviders(
 	ctx sdk.Context,
 	address string,
 
-) (val types.Miners, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MinersKeyPrefix))
+) (val types.Providers, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 
-	b := store.Get(types.MinersKey(
+	b := store.Get(types.ProvidersKey(
 		address,
 	))
 	if b == nil {
@@ -34,27 +34,27 @@ func (k Keeper) GetMiners(
 	return val, true
 }
 
-// RemoveMiners removes a miners from the store
-func (k Keeper) RemoveMiners(
+// RemoveProviders removes a providers from the store
+func (k Keeper) RemoveProviders(
 	ctx sdk.Context,
 	address string,
 
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MinersKeyPrefix))
-	store.Delete(types.MinersKey(
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
+	store.Delete(types.ProvidersKey(
 		address,
 	))
 }
 
-// GetAllMiners returns all miners
-func (k Keeper) GetAllMiners(ctx sdk.Context) (list []types.Miners) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MinersKeyPrefix))
+// GetAllProviders returns all providers
+func (k Keeper) GetAllProviders(ctx sdk.Context) (list []types.Providers) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.Miners
+		var val types.Providers
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}

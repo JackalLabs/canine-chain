@@ -1039,7 +1039,7 @@ type MsgCreateActiveDeals struct {
 	Creator       string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Cid           string `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
 	Signee        string `protobuf:"bytes,3,opt,name=signee,proto3" json:"signee,omitempty"`
-	Miner         string `protobuf:"bytes,4,opt,name=miner,proto3" json:"miner,omitempty"`
+	Provider      string `protobuf:"bytes,4,opt,name=provider,proto3" json:"provider,omitempty"`
 	Startblock    string `protobuf:"bytes,5,opt,name=startblock,proto3" json:"startblock,omitempty"`
 	Endblock      string `protobuf:"bytes,6,opt,name=endblock,proto3" json:"endblock,omitempty"`
 	Filesize      string `protobuf:"bytes,7,opt,name=filesize,proto3" json:"filesize,omitempty"`
@@ -1102,9 +1102,9 @@ func (m *MsgCreateActiveDeals) GetSignee() string {
 	return ""
 }
 
-func (m *MsgCreateActiveDeals) GetMiner() string {
+func (m *MsgCreateActiveDeals) GetProvider() string {
 	if m != nil {
-		return m.Miner
+		return m.Provider
 	}
 	return ""
 }
@@ -1191,7 +1191,7 @@ type MsgUpdateActiveDeals struct {
 	Creator       string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Cid           string `protobuf:"bytes,2,opt,name=cid,proto3" json:"cid,omitempty"`
 	Signee        string `protobuf:"bytes,3,opt,name=signee,proto3" json:"signee,omitempty"`
-	Miner         string `protobuf:"bytes,4,opt,name=miner,proto3" json:"miner,omitempty"`
+	Provider      string `protobuf:"bytes,4,opt,name=provider,proto3" json:"provider,omitempty"`
 	Startblock    string `protobuf:"bytes,5,opt,name=startblock,proto3" json:"startblock,omitempty"`
 	Endblock      string `protobuf:"bytes,6,opt,name=endblock,proto3" json:"endblock,omitempty"`
 	Filesize      string `protobuf:"bytes,7,opt,name=filesize,proto3" json:"filesize,omitempty"`
@@ -1254,9 +1254,9 @@ func (m *MsgUpdateActiveDeals) GetSignee() string {
 	return ""
 }
 
-func (m *MsgUpdateActiveDeals) GetMiner() string {
+func (m *MsgUpdateActiveDeals) GetProvider() string {
 	if m != nil {
-		return m.Miner
+		return m.Provider
 	}
 	return ""
 }
@@ -1515,25 +1515,25 @@ func (m *MsgSignContractResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgSignContractResponse proto.InternalMessageInfo
 
-type MsgCreateMiners struct {
+type MsgCreateProviders struct {
 	Creator    string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address    string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 	Ip         string `protobuf:"bytes,3,opt,name=ip,proto3" json:"ip,omitempty"`
 	Totalspace string `protobuf:"bytes,4,opt,name=totalspace,proto3" json:"totalspace,omitempty"`
 }
 
-func (m *MsgCreateMiners) Reset()         { *m = MsgCreateMiners{} }
-func (m *MsgCreateMiners) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateMiners) ProtoMessage()    {}
-func (*MsgCreateMiners) Descriptor() ([]byte, []int) {
+func (m *MsgCreateProviders) Reset()         { *m = MsgCreateProviders{} }
+func (m *MsgCreateProviders) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateProviders) ProtoMessage()    {}
+func (*MsgCreateProviders) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{26}
 }
-func (m *MsgCreateMiners) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateProviders) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateMiners) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateProviders) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateMiners.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateProviders.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1543,61 +1543,61 @@ func (m *MsgCreateMiners) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateMiners) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateMiners.Merge(m, src)
+func (m *MsgCreateProviders) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateProviders.Merge(m, src)
 }
-func (m *MsgCreateMiners) XXX_Size() int {
+func (m *MsgCreateProviders) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateMiners) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateMiners.DiscardUnknown(m)
+func (m *MsgCreateProviders) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateProviders.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateMiners proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateProviders proto.InternalMessageInfo
 
-func (m *MsgCreateMiners) GetCreator() string {
+func (m *MsgCreateProviders) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgCreateMiners) GetAddress() string {
+func (m *MsgCreateProviders) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-func (m *MsgCreateMiners) GetIp() string {
+func (m *MsgCreateProviders) GetIp() string {
 	if m != nil {
 		return m.Ip
 	}
 	return ""
 }
 
-func (m *MsgCreateMiners) GetTotalspace() string {
+func (m *MsgCreateProviders) GetTotalspace() string {
 	if m != nil {
 		return m.Totalspace
 	}
 	return ""
 }
 
-type MsgCreateMinersResponse struct {
+type MsgCreateProvidersResponse struct {
 }
 
-func (m *MsgCreateMinersResponse) Reset()         { *m = MsgCreateMinersResponse{} }
-func (m *MsgCreateMinersResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateMinersResponse) ProtoMessage()    {}
-func (*MsgCreateMinersResponse) Descriptor() ([]byte, []int) {
+func (m *MsgCreateProvidersResponse) Reset()         { *m = MsgCreateProvidersResponse{} }
+func (m *MsgCreateProvidersResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateProvidersResponse) ProtoMessage()    {}
+func (*MsgCreateProvidersResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{27}
 }
-func (m *MsgCreateMinersResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateProvidersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateProvidersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateMinersResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateProvidersResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1607,37 +1607,37 @@ func (m *MsgCreateMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateMinersResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateMinersResponse.Merge(m, src)
+func (m *MsgCreateProvidersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateProvidersResponse.Merge(m, src)
 }
-func (m *MsgCreateMinersResponse) XXX_Size() int {
+func (m *MsgCreateProvidersResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateMinersResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateMinersResponse.DiscardUnknown(m)
+func (m *MsgCreateProvidersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateProvidersResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateMinersResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateProvidersResponse proto.InternalMessageInfo
 
-type MsgUpdateMiners struct {
+type MsgUpdateProviders struct {
 	Creator    string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address    string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 	Ip         string `protobuf:"bytes,3,opt,name=ip,proto3" json:"ip,omitempty"`
 	Totalspace string `protobuf:"bytes,4,opt,name=totalspace,proto3" json:"totalspace,omitempty"`
 }
 
-func (m *MsgUpdateMiners) Reset()         { *m = MsgUpdateMiners{} }
-func (m *MsgUpdateMiners) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateMiners) ProtoMessage()    {}
-func (*MsgUpdateMiners) Descriptor() ([]byte, []int) {
+func (m *MsgUpdateProviders) Reset()         { *m = MsgUpdateProviders{} }
+func (m *MsgUpdateProviders) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateProviders) ProtoMessage()    {}
+func (*MsgUpdateProviders) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{28}
 }
-func (m *MsgUpdateMiners) XXX_Unmarshal(b []byte) error {
+func (m *MsgUpdateProviders) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateMiners) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUpdateProviders) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateMiners.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUpdateProviders.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1647,61 +1647,61 @@ func (m *MsgUpdateMiners) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateMiners) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateMiners.Merge(m, src)
+func (m *MsgUpdateProviders) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateProviders.Merge(m, src)
 }
-func (m *MsgUpdateMiners) XXX_Size() int {
+func (m *MsgUpdateProviders) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateMiners) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateMiners.DiscardUnknown(m)
+func (m *MsgUpdateProviders) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateProviders.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateMiners proto.InternalMessageInfo
+var xxx_messageInfo_MsgUpdateProviders proto.InternalMessageInfo
 
-func (m *MsgUpdateMiners) GetCreator() string {
+func (m *MsgUpdateProviders) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgUpdateMiners) GetAddress() string {
+func (m *MsgUpdateProviders) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-func (m *MsgUpdateMiners) GetIp() string {
+func (m *MsgUpdateProviders) GetIp() string {
 	if m != nil {
 		return m.Ip
 	}
 	return ""
 }
 
-func (m *MsgUpdateMiners) GetTotalspace() string {
+func (m *MsgUpdateProviders) GetTotalspace() string {
 	if m != nil {
 		return m.Totalspace
 	}
 	return ""
 }
 
-type MsgUpdateMinersResponse struct {
+type MsgUpdateProvidersResponse struct {
 }
 
-func (m *MsgUpdateMinersResponse) Reset()         { *m = MsgUpdateMinersResponse{} }
-func (m *MsgUpdateMinersResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateMinersResponse) ProtoMessage()    {}
-func (*MsgUpdateMinersResponse) Descriptor() ([]byte, []int) {
+func (m *MsgUpdateProvidersResponse) Reset()         { *m = MsgUpdateProvidersResponse{} }
+func (m *MsgUpdateProvidersResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateProvidersResponse) ProtoMessage()    {}
+func (*MsgUpdateProvidersResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{29}
 }
-func (m *MsgUpdateMinersResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgUpdateProvidersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUpdateProvidersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateMinersResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUpdateProvidersResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1711,35 +1711,35 @@ func (m *MsgUpdateMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateMinersResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateMinersResponse.Merge(m, src)
+func (m *MsgUpdateProvidersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateProvidersResponse.Merge(m, src)
 }
-func (m *MsgUpdateMinersResponse) XXX_Size() int {
+func (m *MsgUpdateProvidersResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateMinersResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateMinersResponse.DiscardUnknown(m)
+func (m *MsgUpdateProvidersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateProvidersResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateMinersResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgUpdateProvidersResponse proto.InternalMessageInfo
 
-type MsgDeleteMiners struct {
+type MsgDeleteProviders struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *MsgDeleteMiners) Reset()         { *m = MsgDeleteMiners{} }
-func (m *MsgDeleteMiners) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteMiners) ProtoMessage()    {}
-func (*MsgDeleteMiners) Descriptor() ([]byte, []int) {
+func (m *MsgDeleteProviders) Reset()         { *m = MsgDeleteProviders{} }
+func (m *MsgDeleteProviders) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteProviders) ProtoMessage()    {}
+func (*MsgDeleteProviders) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{30}
 }
-func (m *MsgDeleteMiners) XXX_Unmarshal(b []byte) error {
+func (m *MsgDeleteProviders) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDeleteMiners) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDeleteProviders) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDeleteMiners.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDeleteProviders.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1749,47 +1749,47 @@ func (m *MsgDeleteMiners) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *MsgDeleteMiners) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteMiners.Merge(m, src)
+func (m *MsgDeleteProviders) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteProviders.Merge(m, src)
 }
-func (m *MsgDeleteMiners) XXX_Size() int {
+func (m *MsgDeleteProviders) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDeleteMiners) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteMiners.DiscardUnknown(m)
+func (m *MsgDeleteProviders) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteProviders.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDeleteMiners proto.InternalMessageInfo
+var xxx_messageInfo_MsgDeleteProviders proto.InternalMessageInfo
 
-func (m *MsgDeleteMiners) GetCreator() string {
+func (m *MsgDeleteProviders) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgDeleteMiners) GetAddress() string {
+func (m *MsgDeleteProviders) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-type MsgDeleteMinersResponse struct {
+type MsgDeleteProvidersResponse struct {
 }
 
-func (m *MsgDeleteMinersResponse) Reset()         { *m = MsgDeleteMinersResponse{} }
-func (m *MsgDeleteMinersResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteMinersResponse) ProtoMessage()    {}
-func (*MsgDeleteMinersResponse) Descriptor() ([]byte, []int) {
+func (m *MsgDeleteProvidersResponse) Reset()         { *m = MsgDeleteProvidersResponse{} }
+func (m *MsgDeleteProvidersResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteProvidersResponse) ProtoMessage()    {}
+func (*MsgDeleteProvidersResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{31}
 }
-func (m *MsgDeleteMinersResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgDeleteProvidersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDeleteMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDeleteProvidersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDeleteMinersResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDeleteProvidersResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1799,35 +1799,35 @@ func (m *MsgDeleteMinersResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *MsgDeleteMinersResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteMinersResponse.Merge(m, src)
+func (m *MsgDeleteProvidersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteProvidersResponse.Merge(m, src)
 }
-func (m *MsgDeleteMinersResponse) XXX_Size() int {
+func (m *MsgDeleteProvidersResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDeleteMinersResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteMinersResponse.DiscardUnknown(m)
+func (m *MsgDeleteProvidersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteProvidersResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDeleteMinersResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgDeleteProvidersResponse proto.InternalMessageInfo
 
-type MsgSetMinerIp struct {
+type MsgSetProviderIp struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Ip      string `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
 }
 
-func (m *MsgSetMinerIp) Reset()         { *m = MsgSetMinerIp{} }
-func (m *MsgSetMinerIp) String() string { return proto.CompactTextString(m) }
-func (*MsgSetMinerIp) ProtoMessage()    {}
-func (*MsgSetMinerIp) Descriptor() ([]byte, []int) {
+func (m *MsgSetProviderIp) Reset()         { *m = MsgSetProviderIp{} }
+func (m *MsgSetProviderIp) String() string { return proto.CompactTextString(m) }
+func (*MsgSetProviderIp) ProtoMessage()    {}
+func (*MsgSetProviderIp) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{32}
 }
-func (m *MsgSetMinerIp) XXX_Unmarshal(b []byte) error {
+func (m *MsgSetProviderIp) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgSetMinerIp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSetProviderIp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgSetMinerIp.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSetProviderIp.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1837,47 +1837,47 @@ func (m *MsgSetMinerIp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error
 		return b[:n], nil
 	}
 }
-func (m *MsgSetMinerIp) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSetMinerIp.Merge(m, src)
+func (m *MsgSetProviderIp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetProviderIp.Merge(m, src)
 }
-func (m *MsgSetMinerIp) XXX_Size() int {
+func (m *MsgSetProviderIp) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgSetMinerIp) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSetMinerIp.DiscardUnknown(m)
+func (m *MsgSetProviderIp) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetProviderIp.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgSetMinerIp proto.InternalMessageInfo
+var xxx_messageInfo_MsgSetProviderIp proto.InternalMessageInfo
 
-func (m *MsgSetMinerIp) GetCreator() string {
+func (m *MsgSetProviderIp) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgSetMinerIp) GetIp() string {
+func (m *MsgSetProviderIp) GetIp() string {
 	if m != nil {
 		return m.Ip
 	}
 	return ""
 }
 
-type MsgSetMinerIpResponse struct {
+type MsgSetProviderIpResponse struct {
 }
 
-func (m *MsgSetMinerIpResponse) Reset()         { *m = MsgSetMinerIpResponse{} }
-func (m *MsgSetMinerIpResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgSetMinerIpResponse) ProtoMessage()    {}
-func (*MsgSetMinerIpResponse) Descriptor() ([]byte, []int) {
+func (m *MsgSetProviderIpResponse) Reset()         { *m = MsgSetProviderIpResponse{} }
+func (m *MsgSetProviderIpResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgSetProviderIpResponse) ProtoMessage()    {}
+func (*MsgSetProviderIpResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{33}
 }
-func (m *MsgSetMinerIpResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgSetProviderIpResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgSetMinerIpResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSetProviderIpResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgSetMinerIpResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSetProviderIpResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1887,35 +1887,35 @@ func (m *MsgSetMinerIpResponse) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
-func (m *MsgSetMinerIpResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSetMinerIpResponse.Merge(m, src)
+func (m *MsgSetProviderIpResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetProviderIpResponse.Merge(m, src)
 }
-func (m *MsgSetMinerIpResponse) XXX_Size() int {
+func (m *MsgSetProviderIpResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgSetMinerIpResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSetMinerIpResponse.DiscardUnknown(m)
+func (m *MsgSetProviderIpResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetProviderIpResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgSetMinerIpResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgSetProviderIpResponse proto.InternalMessageInfo
 
-type MsgSetMinerTotalspace struct {
+type MsgSetProviderTotalspace struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Space   string `protobuf:"bytes,2,opt,name=space,proto3" json:"space,omitempty"`
 }
 
-func (m *MsgSetMinerTotalspace) Reset()         { *m = MsgSetMinerTotalspace{} }
-func (m *MsgSetMinerTotalspace) String() string { return proto.CompactTextString(m) }
-func (*MsgSetMinerTotalspace) ProtoMessage()    {}
-func (*MsgSetMinerTotalspace) Descriptor() ([]byte, []int) {
+func (m *MsgSetProviderTotalspace) Reset()         { *m = MsgSetProviderTotalspace{} }
+func (m *MsgSetProviderTotalspace) String() string { return proto.CompactTextString(m) }
+func (*MsgSetProviderTotalspace) ProtoMessage()    {}
+func (*MsgSetProviderTotalspace) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{34}
 }
-func (m *MsgSetMinerTotalspace) XXX_Unmarshal(b []byte) error {
+func (m *MsgSetProviderTotalspace) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgSetMinerTotalspace) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSetProviderTotalspace) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgSetMinerTotalspace.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSetProviderTotalspace.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1925,47 +1925,47 @@ func (m *MsgSetMinerTotalspace) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
-func (m *MsgSetMinerTotalspace) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSetMinerTotalspace.Merge(m, src)
+func (m *MsgSetProviderTotalspace) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetProviderTotalspace.Merge(m, src)
 }
-func (m *MsgSetMinerTotalspace) XXX_Size() int {
+func (m *MsgSetProviderTotalspace) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgSetMinerTotalspace) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSetMinerTotalspace.DiscardUnknown(m)
+func (m *MsgSetProviderTotalspace) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetProviderTotalspace.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgSetMinerTotalspace proto.InternalMessageInfo
+var xxx_messageInfo_MsgSetProviderTotalspace proto.InternalMessageInfo
 
-func (m *MsgSetMinerTotalspace) GetCreator() string {
+func (m *MsgSetProviderTotalspace) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgSetMinerTotalspace) GetSpace() string {
+func (m *MsgSetProviderTotalspace) GetSpace() string {
 	if m != nil {
 		return m.Space
 	}
 	return ""
 }
 
-type MsgSetMinerTotalspaceResponse struct {
+type MsgSetProviderTotalspaceResponse struct {
 }
 
-func (m *MsgSetMinerTotalspaceResponse) Reset()         { *m = MsgSetMinerTotalspaceResponse{} }
-func (m *MsgSetMinerTotalspaceResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgSetMinerTotalspaceResponse) ProtoMessage()    {}
-func (*MsgSetMinerTotalspaceResponse) Descriptor() ([]byte, []int) {
+func (m *MsgSetProviderTotalspaceResponse) Reset()         { *m = MsgSetProviderTotalspaceResponse{} }
+func (m *MsgSetProviderTotalspaceResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgSetProviderTotalspaceResponse) ProtoMessage()    {}
+func (*MsgSetProviderTotalspaceResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{35}
 }
-func (m *MsgSetMinerTotalspaceResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgSetProviderTotalspaceResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgSetMinerTotalspaceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSetProviderTotalspaceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgSetMinerTotalspaceResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSetProviderTotalspaceResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1975,36 +1975,36 @@ func (m *MsgSetMinerTotalspaceResponse) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *MsgSetMinerTotalspaceResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSetMinerTotalspaceResponse.Merge(m, src)
+func (m *MsgSetProviderTotalspaceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetProviderTotalspaceResponse.Merge(m, src)
 }
-func (m *MsgSetMinerTotalspaceResponse) XXX_Size() int {
+func (m *MsgSetProviderTotalspaceResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgSetMinerTotalspaceResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSetMinerTotalspaceResponse.DiscardUnknown(m)
+func (m *MsgSetProviderTotalspaceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetProviderTotalspaceResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgSetMinerTotalspaceResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgSetProviderTotalspaceResponse proto.InternalMessageInfo
 
-type MsgInitMiner struct {
+type MsgInitProvider struct {
 	Creator    string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Ip         string `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
 	Totalspace string `protobuf:"bytes,3,opt,name=totalspace,proto3" json:"totalspace,omitempty"`
 }
 
-func (m *MsgInitMiner) Reset()         { *m = MsgInitMiner{} }
-func (m *MsgInitMiner) String() string { return proto.CompactTextString(m) }
-func (*MsgInitMiner) ProtoMessage()    {}
-func (*MsgInitMiner) Descriptor() ([]byte, []int) {
+func (m *MsgInitProvider) Reset()         { *m = MsgInitProvider{} }
+func (m *MsgInitProvider) String() string { return proto.CompactTextString(m) }
+func (*MsgInitProvider) ProtoMessage()    {}
+func (*MsgInitProvider) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{36}
 }
-func (m *MsgInitMiner) XXX_Unmarshal(b []byte) error {
+func (m *MsgInitProvider) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgInitMiner) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgInitProvider) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgInitMiner.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgInitProvider.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -2014,54 +2014,54 @@ func (m *MsgInitMiner) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 		return b[:n], nil
 	}
 }
-func (m *MsgInitMiner) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgInitMiner.Merge(m, src)
+func (m *MsgInitProvider) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgInitProvider.Merge(m, src)
 }
-func (m *MsgInitMiner) XXX_Size() int {
+func (m *MsgInitProvider) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgInitMiner) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgInitMiner.DiscardUnknown(m)
+func (m *MsgInitProvider) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgInitProvider.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgInitMiner proto.InternalMessageInfo
+var xxx_messageInfo_MsgInitProvider proto.InternalMessageInfo
 
-func (m *MsgInitMiner) GetCreator() string {
+func (m *MsgInitProvider) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgInitMiner) GetIp() string {
+func (m *MsgInitProvider) GetIp() string {
 	if m != nil {
 		return m.Ip
 	}
 	return ""
 }
 
-func (m *MsgInitMiner) GetTotalspace() string {
+func (m *MsgInitProvider) GetTotalspace() string {
 	if m != nil {
 		return m.Totalspace
 	}
 	return ""
 }
 
-type MsgInitMinerResponse struct {
+type MsgInitProviderResponse struct {
 }
 
-func (m *MsgInitMinerResponse) Reset()         { *m = MsgInitMinerResponse{} }
-func (m *MsgInitMinerResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgInitMinerResponse) ProtoMessage()    {}
-func (*MsgInitMinerResponse) Descriptor() ([]byte, []int) {
+func (m *MsgInitProviderResponse) Reset()         { *m = MsgInitProviderResponse{} }
+func (m *MsgInitProviderResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgInitProviderResponse) ProtoMessage()    {}
+func (*MsgInitProviderResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_85eee4bbfcbb21e1, []int{37}
 }
-func (m *MsgInitMinerResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgInitProviderResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgInitMinerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgInitProviderResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgInitMinerResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgInitProviderResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -2071,17 +2071,17 @@ func (m *MsgInitMinerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *MsgInitMinerResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgInitMinerResponse.Merge(m, src)
+func (m *MsgInitProviderResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgInitProviderResponse.Merge(m, src)
 }
-func (m *MsgInitMinerResponse) XXX_Size() int {
+func (m *MsgInitProviderResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgInitMinerResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgInitMinerResponse.DiscardUnknown(m)
+func (m *MsgInitProviderResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgInitProviderResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgInitMinerResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgInitProviderResponse proto.InternalMessageInfo
 
 type MsgCancelContract struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
@@ -2310,18 +2310,18 @@ func init() {
 	proto.RegisterType((*MsgDeleteActiveDealsResponse)(nil), "jackaldao.canine.storage.MsgDeleteActiveDealsResponse")
 	proto.RegisterType((*MsgSignContract)(nil), "jackaldao.canine.storage.MsgSignContract")
 	proto.RegisterType((*MsgSignContractResponse)(nil), "jackaldao.canine.storage.MsgSignContractResponse")
-	proto.RegisterType((*MsgCreateMiners)(nil), "jackaldao.canine.storage.MsgCreateMiners")
-	proto.RegisterType((*MsgCreateMinersResponse)(nil), "jackaldao.canine.storage.MsgCreateMinersResponse")
-	proto.RegisterType((*MsgUpdateMiners)(nil), "jackaldao.canine.storage.MsgUpdateMiners")
-	proto.RegisterType((*MsgUpdateMinersResponse)(nil), "jackaldao.canine.storage.MsgUpdateMinersResponse")
-	proto.RegisterType((*MsgDeleteMiners)(nil), "jackaldao.canine.storage.MsgDeleteMiners")
-	proto.RegisterType((*MsgDeleteMinersResponse)(nil), "jackaldao.canine.storage.MsgDeleteMinersResponse")
-	proto.RegisterType((*MsgSetMinerIp)(nil), "jackaldao.canine.storage.MsgSetMinerIp")
-	proto.RegisterType((*MsgSetMinerIpResponse)(nil), "jackaldao.canine.storage.MsgSetMinerIpResponse")
-	proto.RegisterType((*MsgSetMinerTotalspace)(nil), "jackaldao.canine.storage.MsgSetMinerTotalspace")
-	proto.RegisterType((*MsgSetMinerTotalspaceResponse)(nil), "jackaldao.canine.storage.MsgSetMinerTotalspaceResponse")
-	proto.RegisterType((*MsgInitMiner)(nil), "jackaldao.canine.storage.MsgInitMiner")
-	proto.RegisterType((*MsgInitMinerResponse)(nil), "jackaldao.canine.storage.MsgInitMinerResponse")
+	proto.RegisterType((*MsgCreateProviders)(nil), "jackaldao.canine.storage.MsgCreateProviders")
+	proto.RegisterType((*MsgCreateProvidersResponse)(nil), "jackaldao.canine.storage.MsgCreateProvidersResponse")
+	proto.RegisterType((*MsgUpdateProviders)(nil), "jackaldao.canine.storage.MsgUpdateProviders")
+	proto.RegisterType((*MsgUpdateProvidersResponse)(nil), "jackaldao.canine.storage.MsgUpdateProvidersResponse")
+	proto.RegisterType((*MsgDeleteProviders)(nil), "jackaldao.canine.storage.MsgDeleteProviders")
+	proto.RegisterType((*MsgDeleteProvidersResponse)(nil), "jackaldao.canine.storage.MsgDeleteProvidersResponse")
+	proto.RegisterType((*MsgSetProviderIp)(nil), "jackaldao.canine.storage.MsgSetProviderIp")
+	proto.RegisterType((*MsgSetProviderIpResponse)(nil), "jackaldao.canine.storage.MsgSetProviderIpResponse")
+	proto.RegisterType((*MsgSetProviderTotalspace)(nil), "jackaldao.canine.storage.MsgSetProviderTotalspace")
+	proto.RegisterType((*MsgSetProviderTotalspaceResponse)(nil), "jackaldao.canine.storage.MsgSetProviderTotalspaceResponse")
+	proto.RegisterType((*MsgInitProvider)(nil), "jackaldao.canine.storage.MsgInitProvider")
+	proto.RegisterType((*MsgInitProviderResponse)(nil), "jackaldao.canine.storage.MsgInitProviderResponse")
 	proto.RegisterType((*MsgCancelContract)(nil), "jackaldao.canine.storage.MsgCancelContract")
 	proto.RegisterType((*MsgCancelContractResponse)(nil), "jackaldao.canine.storage.MsgCancelContractResponse")
 	proto.RegisterType((*MsgBuyStorage)(nil), "jackaldao.canine.storage.MsgBuyStorage")
@@ -2331,74 +2331,74 @@ func init() {
 func init() { proto.RegisterFile("storage/tx.proto", fileDescriptor_85eee4bbfcbb21e1) }
 
 var fileDescriptor_85eee4bbfcbb21e1 = []byte{
-	// 1058 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x58, 0xcd, 0x6e, 0xe4, 0x44,
-	0x10, 0x8e, 0xc7, 0xf3, 0x93, 0x94, 0xb2, 0x4b, 0xd6, 0x1a, 0x36, 0x5e, 0xb3, 0x18, 0x64, 0x21,
-	0x7e, 0x04, 0xcc, 0x08, 0xf6, 0x80, 0x38, 0x20, 0xd8, 0x6c, 0x00, 0xe5, 0x30, 0xd2, 0x6a, 0x17,
-	0x24, 0xc4, 0x05, 0x75, 0xec, 0x9e, 0x49, 0x6f, 0x3c, 0x6e, 0xcb, 0xdd, 0x13, 0x6d, 0x38, 0xf0,
-	0x08, 0x88, 0x37, 0xe0, 0x2d, 0x78, 0x06, 0x8e, 0x11, 0x27, 0x8e, 0x90, 0x3c, 0x00, 0xaf, 0x80,
-	0xdc, 0x7f, 0xd3, 0xf6, 0x4c, 0x9c, 0x99, 0x39, 0xe4, 0xb4, 0x37, 0x57, 0x75, 0xf5, 0x57, 0x55,
-	0x5f, 0xb9, 0xaa, 0xdb, 0x86, 0x3d, 0xc6, 0x69, 0x81, 0x26, 0x78, 0xc8, 0x5f, 0x0e, 0xf2, 0x82,
-	0x72, 0xea, 0xf9, 0x2f, 0x50, 0x7c, 0x8a, 0xd2, 0x04, 0xd1, 0x41, 0x8c, 0x32, 0x92, 0xe1, 0x81,
-	0x32, 0x09, 0xf6, 0xb5, 0x6d, 0x4c, 0x33, 0x5e, 0xa0, 0x98, 0x33, 0xb9, 0x25, 0xe8, 0xeb, 0x85,
-	0xbc, 0xa0, 0x74, 0xac, 0xb5, 0x81, 0xd6, 0xa2, 0x98, 0x93, 0x33, 0xfc, 0x53, 0x82, 0x51, 0xba,
-	0xb0, 0x63, 0x4a, 0x32, 0x5c, 0x28, 0x6d, 0xf4, 0xaf, 0x03, 0xaf, 0x8d, 0xd8, 0xe4, 0x29, 0x65,
-	0xfc, 0x89, 0x72, 0xe1, 0xf9, 0xd0, 0x8b, 0x0b, 0x8c, 0x38, 0x2d, 0x7c, 0xe7, 0x6d, 0xe7, 0xfd,
-	0x9d, 0x67, 0x5a, 0xf4, 0x02, 0xd8, 0xce, 0x0b, 0x12, 0x63, 0x34, 0xe5, 0x7e, 0x4b, 0x2c, 0x19,
-	0xd9, 0x0b, 0x01, 0xc4, 0x73, 0x82, 0x33, 0x3a, 0xf5, 0x5d, 0xb1, 0x6a, 0x69, 0xbc, 0xfb, 0xd0,
-	0x9d, 0xe2, 0xe2, 0x34, 0xc5, 0x7e, 0x5b, 0xac, 0x29, 0xa9, 0xd4, 0x33, 0x32, 0xc9, 0x30, 0xf6,
-	0x3b, 0x52, 0x2f, 0xa5, 0xd2, 0x57, 0x32, 0x2b, 0x10, 0x27, 0x34, 0xf3, 0xbb, 0xd2, 0x97, 0x96,
-	0xcb, 0xb5, 0x31, 0x49, 0x31, 0x23, 0x3f, 0x63, 0xbf, 0x27, 0xd7, 0xb4, 0xec, 0xed, 0x81, 0x3b,
-	0x26, 0x89, 0xbf, 0x2d, 0xd4, 0xe5, 0x63, 0xf4, 0x00, 0xf6, 0x6b, 0x29, 0x3e, 0xc3, 0x2c, 0xa7,
-	0x19, 0xc3, 0xd1, 0xaf, 0x2d, 0xf0, 0x46, 0x6c, 0xf2, 0xa4, 0xcc, 0x0f, 0xeb, 0x55, 0xd6, 0xc0,
-	0xc0, 0x1e, 0xb8, 0x31, 0x49, 0x54, 0xf2, 0xe5, 0x63, 0x85, 0x13, 0xb7, 0x91, 0x93, 0xf6, 0x32,
-	0x4e, 0xe2, 0x93, 0x59, 0x76, 0xca, 0x74, 0xee, 0x52, 0xb2, 0xb8, 0xea, 0x5e, 0xc3, 0x55, 0xef,
-	0x5a, 0xae, 0xb6, 0x1b, 0xb8, 0xda, 0x59, 0xce, 0x15, 0xcc, 0xb9, 0x7a, 0x08, 0xc1, 0x22, 0x1f,
-	0x86, 0xae, 0xbf, 0x1c, 0x41, 0xd7, 0xf7, 0x79, 0xb2, 0x31, 0x5d, 0xb7, 0x9d, 0x72, 0x7b, 0x79,
-	0xca, 0x6e, 0x3d, 0xe5, 0x5a, 0x4e, 0x26, 0xe5, 0xaf, 0x44, 0xc6, 0x87, 0x38, 0xc5, 0x1b, 0x66,
-	0xac, 0xf0, 0x6b, 0x08, 0x06, 0x9f, 0x88, 0xfe, 0x93, 0x84, 0x3f, 0x15, 0xbd, 0xbc, 0x16, 0x9d,
-	0x1e, 0xb4, 0x09, 0xc7, 0xba, 0xdf, 0xc4, 0x73, 0x49, 0xd9, 0x09, 0x62, 0x27, 0x98, 0xe9, 0x4e,
-	0x93, 0x92, 0xea, 0x03, 0xdb, 0x55, 0x2d, 0x0a, 0xc9, 0xc1, 0xad, 0x44, 0x61, 0xbb, 0x32, 0x51,
-	0x7c, 0x21, 0xa2, 0x90, 0x4c, 0xad, 0x1f, 0x85, 0x42, 0xb6, 0xb7, 0x1b, 0xe4, 0x2f, 0xa1, 0x37,
-	0x62, 0x93, 0xa3, 0x32, 0xae, 0xc6, 0xe9, 0x56, 0xc6, 0x98, 0x12, 0x66, 0xa6, 0x9b, 0x96, 0xa3,
-	0x7b, 0x22, 0xb4, 0x12, 0xc0, 0x60, 0xbe, 0x80, 0x5d, 0x35, 0x56, 0xc4, 0x0c, 0x6e, 0x00, 0xd6,
-	0xf4, 0xb4, 0x2c, 0x7a, 0x6c, 0x67, 0x6e, 0xd5, 0x99, 0x4e, 0xad, 0x3d, 0x4f, 0x6d, 0x00, 0x7d,
-	0xdb, 0x97, 0x8e, 0xc1, 0xea, 0x1a, 0xc7, 0xee, 0x9a, 0xe8, 0x8f, 0x96, 0xd8, 0x20, 0x6b, 0xfd,
-	0x58, 0x1c, 0x06, 0x87, 0xe5, 0x59, 0xb0, 0x6e, 0xab, 0xaa, 0xd6, 0x73, 0x2b, 0xad, 0xd7, 0x87,
-	0x8e, 0x38, 0x43, 0x54, 0x80, 0x52, 0x28, 0x67, 0x1d, 0xe3, 0xa8, 0xe0, 0xc7, 0x29, 0x8d, 0x4f,
-	0x55, 0x73, 0x5b, 0x9a, 0x32, 0x61, 0x9c, 0x25, 0x72, 0x55, 0xcd, 0x73, 0x2d, 0x37, 0xce, 0xf3,
-	0x77, 0xe0, 0x8e, 0xc8, 0xf9, 0x0c, 0x17, 0x64, 0x4c, 0xb0, 0x9e, 0xec, 0x55, 0xa5, 0x17, 0xc1,
-	0xae, 0x3c, 0x09, 0xa7, 0x84, 0x31, 0x9c, 0xa8, 0x49, 0x57, 0xd1, 0x95, 0x36, 0xc2, 0x1d, 0xa7,
-	0x79, 0x41, 0xcf, 0xb0, 0x1a, 0x7b, 0x15, 0x5d, 0x14, 0xc2, 0xc3, 0x65, 0xbc, 0x99, 0xa2, 0x2b,
-	0x62, 0xe5, 0xeb, 0xfb, 0x8a, 0xd8, 0x75, 0x89, 0x5d, 0xe0, 0xcd, 0x10, 0x7b, 0x20, 0x78, 0x95,
-	0xcd, 0xbb, 0x21, 0xaf, 0xca, 0xc7, 0x02, 0x46, 0x6d, 0xbe, 0x3c, 0x27, 0x93, 0x6c, 0x85, 0xbb,
-	0xce, 0x75, 0xf3, 0xc5, 0xde, 0x6e, 0x90, 0x67, 0xd6, 0x14, 0x1f, 0x89, 0xfb, 0x55, 0x03, 0xb2,
-	0x0f, 0x3d, 0x94, 0x24, 0x05, 0x66, 0x4c, 0xa1, 0x6b, 0xd1, 0xbb, 0x0b, 0x2d, 0x92, 0xab, 0x97,
-	0xa2, 0x45, 0xf2, 0xb2, 0xf4, 0x9c, 0x72, 0x94, 0xb2, 0x1c, 0xc5, 0xfa, 0x28, 0xb3, 0x34, 0x95,
-	0x89, 0x2e, 0xdd, 0xd6, 0x22, 0x92, 0x7c, 0xdf, 0x7a, 0x44, 0xb6, 0x5b, 0x13, 0xd1, 0xd7, 0xd6,
-	0x74, 0xdf, 0x3c, 0xa2, 0xca, 0x94, 0xaf, 0x79, 0xf8, 0x1c, 0xee, 0x94, 0x05, 0xc2, 0x5c, 0xe8,
-	0x8f, 0xf2, 0x06, 0x7c, 0x99, 0x57, 0x4b, 0xe7, 0x15, 0xed, 0xc3, 0xeb, 0x95, 0xad, 0x06, 0xf3,
-	0xdb, 0xca, 0xc2, 0x77, 0x26, 0xd3, 0x06, 0xec, 0x3e, 0x74, 0x24, 0x3d, 0x12, 0x5e, 0x0a, 0xd1,
-	0x5b, 0xf0, 0xe6, 0x52, 0x20, 0xe3, 0xe9, 0x07, 0x71, 0x9e, 0x1c, 0x65, 0x44, 0x5a, 0xac, 0x1e,
-	0x7c, 0xad, 0x28, 0xee, 0x42, 0x51, 0xee, 0x8b, 0xde, 0x32, 0xc8, 0xd6, 0xa9, 0x78, 0xaf, 0x7c,
-	0x7d, 0x50, 0x16, 0xe3, 0x74, 0xa3, 0x8e, 0x78, 0x03, 0x1e, 0x2c, 0x00, 0x18, 0xf4, 0xdf, 0x1d,
-	0x51, 0x8e, 0x83, 0xd9, 0xf9, 0x73, 0xf9, 0xe5, 0xd1, 0x00, 0x1d, 0x02, 0x8c, 0x69, 0xf1, 0xb8,
-	0x52, 0x71, 0x4b, 0x53, 0xb9, 0xed, 0xb9, 0xb5, 0xdb, 0x5e, 0x1f, 0x3a, 0xc7, 0xe7, 0xdc, 0xdc,
-	0x33, 0xa4, 0x20, 0xe6, 0x16, 0x3a, 0x9f, 0xe2, 0x8c, 0x1f, 0x8a, 0xcb, 0x77, 0x47, 0xcd, 0x2d,
-	0x4b, 0xa7, 0x8a, 0x3e, 0x0f, 0x50, 0x87, 0xfe, 0xe9, 0x7f, 0x5d, 0x70, 0x47, 0x6c, 0xe2, 0xa5,
-	0xb0, 0x5b, 0xf9, 0x32, 0xfa, 0x60, 0x70, 0xdd, 0x97, 0xda, 0xa0, 0xf6, 0x85, 0x11, 0x7c, 0xb2,
-	0xb2, 0xa9, 0x39, 0xcc, 0x63, 0xd8, 0x99, 0xdf, 0x26, 0xde, 0xbd, 0x71, 0xbf, 0xb0, 0x0b, 0x06,
-	0xab, 0xd9, 0x19, 0x27, 0x29, 0xec, 0x56, 0x06, 0x60, 0x73, 0x4a, 0xb6, 0xe9, 0x0d, 0x29, 0x2d,
-	0x9b, 0x8b, 0xde, 0x18, 0xc0, 0x6a, 0xc7, 0xf7, 0x9a, 0x01, 0x8c, 0x61, 0x30, 0x5c, 0xd1, 0xd0,
-	0xf8, 0xf9, 0x05, 0xbc, 0x25, 0x2d, 0xba, 0x1a, 0xcc, 0x7c, 0x43, 0xf0, 0xd9, 0x9a, 0x1b, 0xec,
-	0xd2, 0xcd, 0x1b, 0xb7, 0xb9, 0x74, 0xc6, 0xee, 0x86, 0xd2, 0x2d, 0xb4, 0xab, 0x57, 0xc0, 0xdd,
-	0x5a, 0xaf, 0x7e, 0xd8, 0x88, 0x50, 0x35, 0x0e, 0x1e, 0xad, 0x61, 0x6c, 0x17, 0xd0, 0x6a, 0xe0,
-	0xe6, 0x02, 0xce, 0x0d, 0x6f, 0x28, 0xe0, 0x62, 0xc7, 0x1d, 0x7c, 0xf3, 0xe7, 0x65, 0xe8, 0x5c,
-	0x5c, 0x86, 0xce, 0x3f, 0x97, 0xa1, 0xf3, 0xdb, 0x55, 0xb8, 0x75, 0x71, 0x15, 0x6e, 0xfd, 0x7d,
-	0x15, 0x6e, 0xfd, 0xf8, 0xd1, 0x84, 0xf0, 0x93, 0xd9, 0xf1, 0x20, 0xa6, 0xd3, 0xa1, 0x04, 0xfd,
-	0x38, 0x41, 0x74, 0x28, 0x51, 0x87, 0x2f, 0x87, 0xe6, 0x6f, 0xca, 0x79, 0x8e, 0xd9, 0x71, 0x57,
-	0xfc, 0xd6, 0x78, 0xf4, 0x7f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xdd, 0xed, 0xbd, 0xf8, 0x65, 0x11,
-	0x00, 0x00,
+	// 1061 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x58, 0xdd, 0x6e, 0xe3, 0x44,
+	0x14, 0xae, 0xe3, 0xb4, 0x69, 0x8f, 0xda, 0xa5, 0x6b, 0x75, 0xa9, 0xd7, 0xac, 0xa2, 0x95, 0x85,
+	0xf8, 0x27, 0x11, 0xbb, 0x77, 0x08, 0x04, 0xdb, 0xad, 0x10, 0x8b, 0x14, 0xa9, 0xda, 0x85, 0x1b,
+	0xb8, 0x40, 0x53, 0x7b, 0x92, 0xce, 0xd6, 0xf1, 0x58, 0x9e, 0x69, 0xd5, 0xf2, 0x02, 0x5c, 0x20,
+	0x21, 0xde, 0x80, 0x17, 0xe1, 0x01, 0xb8, 0x5c, 0x71, 0xc5, 0x25, 0xb4, 0x2f, 0x82, 0xe6, 0x37,
+	0x63, 0x27, 0x71, 0x93, 0x20, 0xf5, 0x6a, 0xef, 0x7c, 0x7e, 0xe6, 0x3b, 0xe7, 0x7c, 0xe3, 0x73,
+	0x66, 0x6c, 0xd8, 0x65, 0x9c, 0x96, 0x68, 0x84, 0xfb, 0xfc, 0xa2, 0x57, 0x94, 0x94, 0xd3, 0x20,
+	0x7c, 0x89, 0x92, 0x53, 0x94, 0xa5, 0x88, 0xf6, 0x12, 0x94, 0x93, 0x1c, 0xf7, 0xb4, 0x4b, 0xb4,
+	0x6f, 0x7c, 0x13, 0x9a, 0xf3, 0x12, 0x25, 0x9c, 0xa9, 0x25, 0xd1, 0x9e, 0x31, 0x14, 0x25, 0xa5,
+	0x43, 0xa3, 0x8d, 0x8c, 0x16, 0x25, 0x9c, 0x9c, 0xe3, 0x1f, 0x53, 0x8c, 0x32, 0x63, 0xdb, 0x77,
+	0x56, 0x9c, 0x93, 0x14, 0x97, 0xda, 0x10, 0xff, 0xeb, 0xc1, 0x1b, 0x03, 0x36, 0x3a, 0xa2, 0x8c,
+	0x3f, 0xd5, 0x51, 0x82, 0x10, 0x3a, 0x49, 0x89, 0x11, 0xa7, 0x65, 0xe8, 0x3d, 0xf4, 0xde, 0xdb,
+	0x7a, 0x6e, 0xc4, 0x20, 0x82, 0xcd, 0xa2, 0x24, 0x09, 0x46, 0x63, 0x1e, 0xb6, 0xa4, 0xc9, 0xca,
+	0x41, 0x17, 0x40, 0x3e, 0xa7, 0x38, 0xa7, 0xe3, 0xd0, 0x97, 0x56, 0x47, 0x13, 0xbc, 0x09, 0x1b,
+	0x63, 0x5c, 0x9e, 0x66, 0x38, 0x6c, 0x4b, 0x9b, 0x96, 0x84, 0x9e, 0x91, 0x51, 0x8e, 0x71, 0xb8,
+	0xae, 0xf4, 0x4a, 0x12, 0xb1, 0xd2, 0xb3, 0x12, 0x71, 0x42, 0xf3, 0x70, 0x43, 0xc5, 0x32, 0xb2,
+	0xb0, 0x0d, 0x49, 0x86, 0x19, 0xf9, 0x09, 0x87, 0x1d, 0x65, 0x33, 0x72, 0xb0, 0x0b, 0xfe, 0x90,
+	0xa4, 0xe1, 0xa6, 0x54, 0x8b, 0xc7, 0xf8, 0x3e, 0xec, 0xd7, 0x4a, 0x7c, 0x8e, 0x59, 0x41, 0x73,
+	0x86, 0xe3, 0x5f, 0x5b, 0x10, 0x0c, 0xd8, 0xe8, 0xa9, 0xa8, 0x0f, 0x1b, 0x2b, 0x6b, 0x60, 0x60,
+	0x17, 0xfc, 0x84, 0xa4, 0xba, 0x78, 0xf1, 0x58, 0xe1, 0xc4, 0x6f, 0xe4, 0xa4, 0x3d, 0x8b, 0x93,
+	0xe4, 0xe4, 0x2c, 0x3f, 0x65, 0xa6, 0x76, 0x25, 0x39, 0x5c, 0x6d, 0xcc, 0xe1, 0xaa, 0x33, 0x97,
+	0xab, 0xcd, 0x06, 0xae, 0xb6, 0x66, 0x73, 0x05, 0x13, 0xae, 0x1e, 0x40, 0x34, 0xcd, 0x87, 0xa5,
+	0xeb, 0x2f, 0x4f, 0xd2, 0xf5, 0x5d, 0x91, 0xae, 0x4c, 0xd7, 0x6d, 0x97, 0xdc, 0x9e, 0x5d, 0xb2,
+	0x5f, 0x2f, 0xb9, 0x56, 0x93, 0x2d, 0xf9, 0x4b, 0x59, 0xf1, 0x21, 0xce, 0xf0, 0x8a, 0x15, 0x6b,
+	0xfc, 0x1a, 0x82, 0xc5, 0x27, 0xb2, 0xff, 0x14, 0xe1, 0x47, 0xb2, 0x9d, 0x97, 0xa2, 0x33, 0x80,
+	0x36, 0xe1, 0xd8, 0xf4, 0x9b, 0x7c, 0x16, 0x94, 0x9d, 0x20, 0x76, 0x82, 0x99, 0xe9, 0x34, 0x25,
+	0xe9, 0x3e, 0x70, 0x43, 0xd5, 0xb2, 0x50, 0x1c, 0xdc, 0x4a, 0x16, 0x6e, 0x28, 0x9b, 0xc5, 0xe7,
+	0x32, 0x0b, 0xc5, 0xd4, 0xf2, 0x59, 0x68, 0x64, 0x77, 0xb9, 0x45, 0xfe, 0x02, 0x3a, 0x03, 0x36,
+	0x7a, 0x26, 0xf2, 0x6a, 0x9c, 0x6e, 0x22, 0xc7, 0x8c, 0x30, 0x3b, 0xdd, 0x8c, 0x1c, 0xdf, 0x95,
+	0xa9, 0x09, 0x00, 0x8b, 0xf9, 0x12, 0xb6, 0xf5, 0x58, 0x91, 0x63, 0xb8, 0x01, 0xd8, 0xd0, 0xd3,
+	0x72, 0xe8, 0x71, 0x83, 0xf9, 0xd5, 0x60, 0xa6, 0xb4, 0xf6, 0xa4, 0xb4, 0x1e, 0xec, 0xb9, 0xb1,
+	0x4c, 0x0e, 0x4e, 0xd7, 0x78, 0x6e, 0xd7, 0xc4, 0x7f, 0xb4, 0xe4, 0x02, 0xb5, 0xd7, 0x4f, 0xe4,
+	0x79, 0x70, 0x28, 0x8e, 0x83, 0x65, 0x5b, 0x55, 0xb7, 0x9e, 0x5f, 0x6f, 0x3d, 0x73, 0x8c, 0x98,
+	0xf6, 0x32, 0xb2, 0x98, 0x78, 0x8c, 0xa3, 0x92, 0x1f, 0x67, 0x34, 0x39, 0xd5, 0x2d, 0xee, 0x68,
+	0xc4, 0x5a, 0x9c, 0xa7, 0xca, 0xaa, 0xa7, 0xba, 0x91, 0x1b, 0xa7, 0xfa, 0xdb, 0xb0, 0x23, 0x2b,
+	0x3f, 0xc7, 0x25, 0x19, 0x12, 0x6c, 0xe6, 0x7b, 0x55, 0x19, 0xc4, 0xb0, 0xad, 0x8e, 0xc4, 0x31,
+	0x61, 0x0c, 0xa7, 0x7a, 0xde, 0x55, 0x74, 0xc2, 0x47, 0x86, 0xe3, 0x54, 0x24, 0x8d, 0xf5, 0xf0,
+	0xab, 0xe8, 0xe2, 0x2e, 0x3c, 0x98, 0xc5, 0x9e, 0xdd, 0x7a, 0x4d, 0xaf, 0x7a, 0x89, 0x5f, 0xd3,
+	0xbb, 0x1a, 0xbd, 0x53, 0xec, 0x59, 0x7a, 0x0f, 0x24, 0xbb, 0xaa, 0x91, 0x57, 0x64, 0x57, 0xc7,
+	0x98, 0xc2, 0xa8, 0xcd, 0x9a, 0x17, 0x64, 0x94, 0x2f, 0x70, 0xef, 0x99, 0x37, 0x6b, 0xdc, 0xe5,
+	0x16, 0xf9, 0xc2, 0xb9, 0x52, 0x1c, 0x99, 0xeb, 0x56, 0x03, 0x78, 0x08, 0x1d, 0x94, 0xa6, 0x25,
+	0x66, 0x4c, 0x07, 0x30, 0x62, 0x70, 0x07, 0x5a, 0xa4, 0xd0, 0x6f, 0x47, 0x8b, 0x14, 0x62, 0xf7,
+	0x39, 0xe5, 0x28, 0x63, 0x05, 0x4a, 0xcc, 0xc9, 0xe6, 0x68, 0x2a, 0x87, 0xb7, 0x8d, 0x5c, 0xcb,
+	0xcb, 0x0e, 0xde, 0x5b, 0xcf, 0xab, 0x16, 0xd9, 0xe6, 0xf5, 0xb5, 0x73, 0xc2, 0xfe, 0xaf, 0xbc,
+	0x2a, 0x27, 0xed, 0x74, 0x9c, 0xcf, 0x60, 0x57, 0x6c, 0x19, 0xe6, 0xc6, 0xf4, 0xac, 0x68, 0x88,
+	0xa2, 0x6a, 0x6c, 0x99, 0x1a, 0xe3, 0x08, 0xc2, 0xfa, 0x6a, 0x8b, 0xfc, 0x4d, 0xdd, 0xf6, 0xad,
+	0xad, 0xbd, 0x21, 0xc2, 0x1e, 0xac, 0x2b, 0xc2, 0x54, 0x10, 0x25, 0xc4, 0x31, 0x3c, 0x9c, 0x87,
+	0x65, 0xe3, 0xfd, 0xa0, 0x0e, 0xa3, 0x9c, 0x58, 0xa7, 0xc5, 0x0b, 0xa9, 0x6d, 0x96, 0x3f, 0xb5,
+	0x59, 0xea, 0xcd, 0x76, 0xc1, 0x9d, 0x53, 0xf4, 0xae, 0x78, 0xbf, 0x50, 0x9e, 0xe0, 0x6c, 0xa5,
+	0xae, 0x79, 0x0b, 0xee, 0x4f, 0x01, 0x58, 0xf4, 0xdf, 0x3d, 0xd8, 0x19, 0xb0, 0xd1, 0xc1, 0xd9,
+	0xe5, 0x0b, 0xf5, 0xb1, 0xd2, 0x00, 0xdd, 0x05, 0x18, 0xd2, 0xf2, 0x49, 0xe5, 0x35, 0x70, 0x34,
+	0x95, 0xdb, 0xa1, 0x5f, 0xbb, 0x1d, 0xee, 0xc1, 0xfa, 0xf1, 0x25, 0xb7, 0xf7, 0x12, 0x25, 0xc8,
+	0xd9, 0x86, 0x2e, 0xc7, 0x38, 0xe7, 0x87, 0xf2, 0xb2, 0xbe, 0xae, 0x67, 0x9b, 0xa3, 0x8b, 0xf7,
+	0xe1, 0x5e, 0x25, 0x41, 0x93, 0xfa, 0xa3, 0x5f, 0x3a, 0xe0, 0x0f, 0xd8, 0x28, 0xc8, 0x60, 0xbb,
+	0xf2, 0x25, 0xf5, 0x7e, 0x6f, 0xde, 0xc7, 0x5d, 0xaf, 0xf6, 0x45, 0x12, 0x7d, 0xb2, 0xb0, 0xab,
+	0x3d, 0xfc, 0x13, 0xd8, 0x9a, 0xdc, 0x3e, 0xde, 0xb9, 0x71, 0xbd, 0xf4, 0x8b, 0x7a, 0x8b, 0xf9,
+	0xd9, 0x20, 0x19, 0x6c, 0x57, 0x86, 0x64, 0x73, 0x49, 0xae, 0xeb, 0x0d, 0x25, 0xcd, 0x9a, 0x9d,
+	0x01, 0x85, 0x9d, 0x6a, 0x83, 0x7e, 0xd0, 0x8c, 0xe1, 0xfa, 0x46, 0x8f, 0x16, 0xf7, 0xb5, 0x01,
+	0x7f, 0xf6, 0xe0, 0xde, 0xec, 0xc6, 0x5d, 0x18, 0x6d, 0xb2, 0x26, 0xfa, 0x74, 0xf9, 0x35, 0x2e,
+	0xd1, 0x95, 0x8e, 0x6e, 0x26, 0xda, 0x75, 0xbd, 0x81, 0xe8, 0x59, 0xad, 0x1c, 0x94, 0x70, 0xa7,
+	0xd6, 0xc7, 0x1f, 0x36, 0x82, 0x54, 0x9d, 0xa3, 0xc7, 0x4b, 0x38, 0xdb, 0x98, 0x43, 0x00, 0xa7,
+	0xb9, 0xdf, 0x6d, 0x84, 0x98, 0x38, 0x46, 0xfd, 0x05, 0x1d, 0x4d, 0x9c, 0x83, 0xaf, 0xfe, 0xbc,
+	0xea, 0x7a, 0xaf, 0xae, 0xba, 0xde, 0x3f, 0x57, 0x5d, 0xef, 0xb7, 0xeb, 0xee, 0xda, 0xab, 0xeb,
+	0xee, 0xda, 0xdf, 0xd7, 0xdd, 0xb5, 0xef, 0x3f, 0x1a, 0x11, 0x7e, 0x72, 0x76, 0xdc, 0x4b, 0xe8,
+	0xb8, 0xaf, 0x40, 0x3f, 0x4e, 0x11, 0xed, 0x2b, 0xd4, 0xfe, 0x45, 0xdf, 0xfe, 0x9c, 0xb9, 0x2c,
+	0x30, 0x3b, 0xde, 0x90, 0xbf, 0x48, 0x1e, 0xff, 0x17, 0x00, 0x00, 0xff, 0xff, 0x69, 0x67, 0x18,
+	0x8a, 0xb4, 0x11, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -2416,9 +2416,9 @@ type MsgClient interface {
 	PostContract(ctx context.Context, in *MsgPostContract, opts ...grpc.CallOption) (*MsgPostContractResponse, error)
 	Postproof(ctx context.Context, in *MsgPostproof, opts ...grpc.CallOption) (*MsgPostproofResponse, error)
 	SignContract(ctx context.Context, in *MsgSignContract, opts ...grpc.CallOption) (*MsgSignContractResponse, error)
-	SetMinerIp(ctx context.Context, in *MsgSetMinerIp, opts ...grpc.CallOption) (*MsgSetMinerIpResponse, error)
-	SetMinerTotalspace(ctx context.Context, in *MsgSetMinerTotalspace, opts ...grpc.CallOption) (*MsgSetMinerTotalspaceResponse, error)
-	InitMiner(ctx context.Context, in *MsgInitMiner, opts ...grpc.CallOption) (*MsgInitMinerResponse, error)
+	SetProviderIp(ctx context.Context, in *MsgSetProviderIp, opts ...grpc.CallOption) (*MsgSetProviderIpResponse, error)
+	SetProviderTotalspace(ctx context.Context, in *MsgSetProviderTotalspace, opts ...grpc.CallOption) (*MsgSetProviderTotalspaceResponse, error)
+	InitProvider(ctx context.Context, in *MsgInitProvider, opts ...grpc.CallOption) (*MsgInitProviderResponse, error)
 	CancelContract(ctx context.Context, in *MsgCancelContract, opts ...grpc.CallOption) (*MsgCancelContractResponse, error)
 	BuyStorage(ctx context.Context, in *MsgBuyStorage, opts ...grpc.CallOption) (*MsgBuyStorageResponse, error)
 }
@@ -2458,27 +2458,27 @@ func (c *msgClient) SignContract(ctx context.Context, in *MsgSignContract, opts 
 	return out, nil
 }
 
-func (c *msgClient) SetMinerIp(ctx context.Context, in *MsgSetMinerIp, opts ...grpc.CallOption) (*MsgSetMinerIpResponse, error) {
-	out := new(MsgSetMinerIpResponse)
-	err := c.cc.Invoke(ctx, "/jackaldao.canine.storage.Msg/SetMinerIp", in, out, opts...)
+func (c *msgClient) SetProviderIp(ctx context.Context, in *MsgSetProviderIp, opts ...grpc.CallOption) (*MsgSetProviderIpResponse, error) {
+	out := new(MsgSetProviderIpResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.storage.Msg/SetProviderIp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) SetMinerTotalspace(ctx context.Context, in *MsgSetMinerTotalspace, opts ...grpc.CallOption) (*MsgSetMinerTotalspaceResponse, error) {
-	out := new(MsgSetMinerTotalspaceResponse)
-	err := c.cc.Invoke(ctx, "/jackaldao.canine.storage.Msg/SetMinerTotalspace", in, out, opts...)
+func (c *msgClient) SetProviderTotalspace(ctx context.Context, in *MsgSetProviderTotalspace, opts ...grpc.CallOption) (*MsgSetProviderTotalspaceResponse, error) {
+	out := new(MsgSetProviderTotalspaceResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.storage.Msg/SetProviderTotalspace", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) InitMiner(ctx context.Context, in *MsgInitMiner, opts ...grpc.CallOption) (*MsgInitMinerResponse, error) {
-	out := new(MsgInitMinerResponse)
-	err := c.cc.Invoke(ctx, "/jackaldao.canine.storage.Msg/InitMiner", in, out, opts...)
+func (c *msgClient) InitProvider(ctx context.Context, in *MsgInitProvider, opts ...grpc.CallOption) (*MsgInitProviderResponse, error) {
+	out := new(MsgInitProviderResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.storage.Msg/InitProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2508,9 +2508,9 @@ type MsgServer interface {
 	PostContract(context.Context, *MsgPostContract) (*MsgPostContractResponse, error)
 	Postproof(context.Context, *MsgPostproof) (*MsgPostproofResponse, error)
 	SignContract(context.Context, *MsgSignContract) (*MsgSignContractResponse, error)
-	SetMinerIp(context.Context, *MsgSetMinerIp) (*MsgSetMinerIpResponse, error)
-	SetMinerTotalspace(context.Context, *MsgSetMinerTotalspace) (*MsgSetMinerTotalspaceResponse, error)
-	InitMiner(context.Context, *MsgInitMiner) (*MsgInitMinerResponse, error)
+	SetProviderIp(context.Context, *MsgSetProviderIp) (*MsgSetProviderIpResponse, error)
+	SetProviderTotalspace(context.Context, *MsgSetProviderTotalspace) (*MsgSetProviderTotalspaceResponse, error)
+	InitProvider(context.Context, *MsgInitProvider) (*MsgInitProviderResponse, error)
 	CancelContract(context.Context, *MsgCancelContract) (*MsgCancelContractResponse, error)
 	BuyStorage(context.Context, *MsgBuyStorage) (*MsgBuyStorageResponse, error)
 }
@@ -2528,14 +2528,14 @@ func (*UnimplementedMsgServer) Postproof(ctx context.Context, req *MsgPostproof)
 func (*UnimplementedMsgServer) SignContract(ctx context.Context, req *MsgSignContract) (*MsgSignContractResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignContract not implemented")
 }
-func (*UnimplementedMsgServer) SetMinerIp(ctx context.Context, req *MsgSetMinerIp) (*MsgSetMinerIpResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetMinerIp not implemented")
+func (*UnimplementedMsgServer) SetProviderIp(ctx context.Context, req *MsgSetProviderIp) (*MsgSetProviderIpResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetProviderIp not implemented")
 }
-func (*UnimplementedMsgServer) SetMinerTotalspace(ctx context.Context, req *MsgSetMinerTotalspace) (*MsgSetMinerTotalspaceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetMinerTotalspace not implemented")
+func (*UnimplementedMsgServer) SetProviderTotalspace(ctx context.Context, req *MsgSetProviderTotalspace) (*MsgSetProviderTotalspaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetProviderTotalspace not implemented")
 }
-func (*UnimplementedMsgServer) InitMiner(ctx context.Context, req *MsgInitMiner) (*MsgInitMinerResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InitMiner not implemented")
+func (*UnimplementedMsgServer) InitProvider(ctx context.Context, req *MsgInitProvider) (*MsgInitProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InitProvider not implemented")
 }
 func (*UnimplementedMsgServer) CancelContract(ctx context.Context, req *MsgCancelContract) (*MsgCancelContractResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelContract not implemented")
@@ -2602,56 +2602,56 @@ func _Msg_SignContract_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_SetMinerIp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSetMinerIp)
+func _Msg_SetProviderIp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetProviderIp)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).SetMinerIp(ctx, in)
+		return srv.(MsgServer).SetProviderIp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/jackaldao.canine.storage.Msg/SetMinerIp",
+		FullMethod: "/jackaldao.canine.storage.Msg/SetProviderIp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SetMinerIp(ctx, req.(*MsgSetMinerIp))
+		return srv.(MsgServer).SetProviderIp(ctx, req.(*MsgSetProviderIp))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_SetMinerTotalspace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSetMinerTotalspace)
+func _Msg_SetProviderTotalspace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetProviderTotalspace)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).SetMinerTotalspace(ctx, in)
+		return srv.(MsgServer).SetProviderTotalspace(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/jackaldao.canine.storage.Msg/SetMinerTotalspace",
+		FullMethod: "/jackaldao.canine.storage.Msg/SetProviderTotalspace",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SetMinerTotalspace(ctx, req.(*MsgSetMinerTotalspace))
+		return srv.(MsgServer).SetProviderTotalspace(ctx, req.(*MsgSetProviderTotalspace))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_InitMiner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgInitMiner)
+func _Msg_InitProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgInitProvider)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).InitMiner(ctx, in)
+		return srv.(MsgServer).InitProvider(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/jackaldao.canine.storage.Msg/InitMiner",
+		FullMethod: "/jackaldao.canine.storage.Msg/InitProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).InitMiner(ctx, req.(*MsgInitMiner))
+		return srv.(MsgServer).InitProvider(ctx, req.(*MsgInitProvider))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2709,16 +2709,16 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_SignContract_Handler,
 		},
 		{
-			MethodName: "SetMinerIp",
-			Handler:    _Msg_SetMinerIp_Handler,
+			MethodName: "SetProviderIp",
+			Handler:    _Msg_SetProviderIp_Handler,
 		},
 		{
-			MethodName: "SetMinerTotalspace",
-			Handler:    _Msg_SetMinerTotalspace_Handler,
+			MethodName: "SetProviderTotalspace",
+			Handler:    _Msg_SetProviderTotalspace_Handler,
 		},
 		{
-			MethodName: "InitMiner",
-			Handler:    _Msg_InitMiner_Handler,
+			MethodName: "InitProvider",
+			Handler:    _Msg_InitProvider_Handler,
 		},
 		{
 			MethodName: "CancelContract",
@@ -3524,10 +3524,10 @@ func (m *MsgCreateActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.Miner) > 0 {
-		i -= len(m.Miner)
-		copy(dAtA[i:], m.Miner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Miner)))
+	if len(m.Provider) > 0 {
+		i -= len(m.Provider)
+		copy(dAtA[i:], m.Provider)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Provider)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -3640,10 +3640,10 @@ func (m *MsgUpdateActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.Miner) > 0 {
-		i -= len(m.Miner)
-		copy(dAtA[i:], m.Miner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Miner)))
+	if len(m.Provider) > 0 {
+		i -= len(m.Provider)
+		copy(dAtA[i:], m.Provider)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Provider)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -3814,7 +3814,7 @@ func (m *MsgSignContractResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgCreateMiners) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreateProviders) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3824,12 +3824,12 @@ func (m *MsgCreateMiners) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateMiners) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreateProviders) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateMiners) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreateProviders) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3865,7 +3865,7 @@ func (m *MsgCreateMiners) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgCreateMinersResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreateProvidersResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3875,12 +3875,12 @@ func (m *MsgCreateMinersResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateMinersResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreateProvidersResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreateProvidersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3888,7 +3888,7 @@ func (m *MsgCreateMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateMiners) Marshal() (dAtA []byte, err error) {
+func (m *MsgUpdateProviders) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3898,12 +3898,12 @@ func (m *MsgUpdateMiners) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateMiners) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgUpdateProviders) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateMiners) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgUpdateProviders) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3939,7 +3939,7 @@ func (m *MsgUpdateMiners) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateMinersResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgUpdateProvidersResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3949,12 +3949,12 @@ func (m *MsgUpdateMinersResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateMinersResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgUpdateProvidersResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgUpdateProvidersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3962,7 +3962,7 @@ func (m *MsgUpdateMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDeleteMiners) Marshal() (dAtA []byte, err error) {
+func (m *MsgDeleteProviders) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3972,12 +3972,12 @@ func (m *MsgDeleteMiners) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgDeleteMiners) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgDeleteProviders) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgDeleteMiners) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgDeleteProviders) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3999,7 +3999,7 @@ func (m *MsgDeleteMiners) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDeleteMinersResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgDeleteProvidersResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -4009,12 +4009,12 @@ func (m *MsgDeleteMinersResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgDeleteMinersResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgDeleteProvidersResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgDeleteMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgDeleteProvidersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4022,7 +4022,7 @@ func (m *MsgDeleteMinersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgSetMinerIp) Marshal() (dAtA []byte, err error) {
+func (m *MsgSetProviderIp) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -4032,12 +4032,12 @@ func (m *MsgSetMinerIp) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgSetMinerIp) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSetProviderIp) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgSetMinerIp) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSetProviderIp) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4059,7 +4059,7 @@ func (m *MsgSetMinerIp) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgSetMinerIpResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgSetProviderIpResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -4069,12 +4069,12 @@ func (m *MsgSetMinerIpResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgSetMinerIpResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSetProviderIpResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgSetMinerIpResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSetProviderIpResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4082,7 +4082,7 @@ func (m *MsgSetMinerIpResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgSetMinerTotalspace) Marshal() (dAtA []byte, err error) {
+func (m *MsgSetProviderTotalspace) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -4092,12 +4092,12 @@ func (m *MsgSetMinerTotalspace) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgSetMinerTotalspace) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSetProviderTotalspace) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgSetMinerTotalspace) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSetProviderTotalspace) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4119,7 +4119,7 @@ func (m *MsgSetMinerTotalspace) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgSetMinerTotalspaceResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgSetProviderTotalspaceResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -4129,12 +4129,12 @@ func (m *MsgSetMinerTotalspaceResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgSetMinerTotalspaceResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSetProviderTotalspaceResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgSetMinerTotalspaceResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSetProviderTotalspaceResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4142,7 +4142,7 @@ func (m *MsgSetMinerTotalspaceResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgInitMiner) Marshal() (dAtA []byte, err error) {
+func (m *MsgInitProvider) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -4152,12 +4152,12 @@ func (m *MsgInitMiner) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgInitMiner) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgInitProvider) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgInitMiner) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgInitProvider) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4186,7 +4186,7 @@ func (m *MsgInitMiner) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgInitMinerResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgInitProviderResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -4196,12 +4196,12 @@ func (m *MsgInitMinerResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgInitMinerResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgInitProviderResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgInitMinerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgInitProviderResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4721,7 +4721,7 @@ func (m *MsgCreateActiveDeals) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Miner)
+	l = len(m.Provider)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -4779,7 +4779,7 @@ func (m *MsgUpdateActiveDeals) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Miner)
+	l = len(m.Provider)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -4871,7 +4871,7 @@ func (m *MsgSignContractResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgCreateMiners) Size() (n int) {
+func (m *MsgCreateProviders) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4896,7 +4896,7 @@ func (m *MsgCreateMiners) Size() (n int) {
 	return n
 }
 
-func (m *MsgCreateMinersResponse) Size() (n int) {
+func (m *MsgCreateProvidersResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4905,7 +4905,7 @@ func (m *MsgCreateMinersResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateMiners) Size() (n int) {
+func (m *MsgUpdateProviders) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4930,7 +4930,7 @@ func (m *MsgUpdateMiners) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateMinersResponse) Size() (n int) {
+func (m *MsgUpdateProvidersResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4939,7 +4939,7 @@ func (m *MsgUpdateMinersResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgDeleteMiners) Size() (n int) {
+func (m *MsgDeleteProviders) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4956,7 +4956,7 @@ func (m *MsgDeleteMiners) Size() (n int) {
 	return n
 }
 
-func (m *MsgDeleteMinersResponse) Size() (n int) {
+func (m *MsgDeleteProvidersResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4965,7 +4965,7 @@ func (m *MsgDeleteMinersResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgSetMinerIp) Size() (n int) {
+func (m *MsgSetProviderIp) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4982,7 +4982,7 @@ func (m *MsgSetMinerIp) Size() (n int) {
 	return n
 }
 
-func (m *MsgSetMinerIpResponse) Size() (n int) {
+func (m *MsgSetProviderIpResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4991,7 +4991,7 @@ func (m *MsgSetMinerIpResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgSetMinerTotalspace) Size() (n int) {
+func (m *MsgSetProviderTotalspace) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -5008,7 +5008,7 @@ func (m *MsgSetMinerTotalspace) Size() (n int) {
 	return n
 }
 
-func (m *MsgSetMinerTotalspaceResponse) Size() (n int) {
+func (m *MsgSetProviderTotalspaceResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -5017,7 +5017,7 @@ func (m *MsgSetMinerTotalspaceResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgInitMiner) Size() (n int) {
+func (m *MsgInitProvider) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -5038,7 +5038,7 @@ func (m *MsgInitMiner) Size() (n int) {
 	return n
 }
 
-func (m *MsgInitMinerResponse) Size() (n int) {
+func (m *MsgInitProviderResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -7584,7 +7584,7 @@ func (m *MsgCreateActiveDeals) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Miner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Provider", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -7612,7 +7612,7 @@ func (m *MsgCreateActiveDeals) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Miner = string(dAtA[iNdEx:postIndex])
+			m.Provider = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -8004,7 +8004,7 @@ func (m *MsgUpdateActiveDeals) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Miner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Provider", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -8032,7 +8032,7 @@ func (m *MsgUpdateActiveDeals) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Miner = string(dAtA[iNdEx:postIndex])
+			m.Provider = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -8625,7 +8625,7 @@ func (m *MsgSignContractResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgCreateMiners) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateProviders) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -8648,10 +8648,10 @@ func (m *MsgCreateMiners) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateMiners: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateProviders: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateMiners: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateProviders: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -8803,7 +8803,7 @@ func (m *MsgCreateMiners) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgCreateMinersResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateProvidersResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -8826,10 +8826,10 @@ func (m *MsgCreateMinersResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateMinersResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateProvidersResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateMinersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateProvidersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -8853,7 +8853,7 @@ func (m *MsgCreateMinersResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateMiners) Unmarshal(dAtA []byte) error {
+func (m *MsgUpdateProviders) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -8876,10 +8876,10 @@ func (m *MsgUpdateMiners) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateMiners: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUpdateProviders: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateMiners: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUpdateProviders: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -9031,7 +9031,7 @@ func (m *MsgUpdateMiners) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateMinersResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgUpdateProvidersResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9054,10 +9054,10 @@ func (m *MsgUpdateMinersResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateMinersResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUpdateProvidersResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateMinersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUpdateProvidersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -9081,7 +9081,7 @@ func (m *MsgUpdateMinersResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDeleteMiners) Unmarshal(dAtA []byte) error {
+func (m *MsgDeleteProviders) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9104,10 +9104,10 @@ func (m *MsgDeleteMiners) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteMiners: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDeleteProviders: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteMiners: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDeleteProviders: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -9195,7 +9195,7 @@ func (m *MsgDeleteMiners) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDeleteMinersResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgDeleteProvidersResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9218,10 +9218,10 @@ func (m *MsgDeleteMinersResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteMinersResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDeleteProvidersResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteMinersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDeleteProvidersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -9245,7 +9245,7 @@ func (m *MsgDeleteMinersResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgSetMinerIp) Unmarshal(dAtA []byte) error {
+func (m *MsgSetProviderIp) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9268,10 +9268,10 @@ func (m *MsgSetMinerIp) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSetMinerIp: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSetProviderIp: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSetMinerIp: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSetProviderIp: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -9359,7 +9359,7 @@ func (m *MsgSetMinerIp) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgSetMinerIpResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgSetProviderIpResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9382,10 +9382,10 @@ func (m *MsgSetMinerIpResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSetMinerIpResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSetProviderIpResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSetMinerIpResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSetProviderIpResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -9409,7 +9409,7 @@ func (m *MsgSetMinerIpResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgSetMinerTotalspace) Unmarshal(dAtA []byte) error {
+func (m *MsgSetProviderTotalspace) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9432,10 +9432,10 @@ func (m *MsgSetMinerTotalspace) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSetMinerTotalspace: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSetProviderTotalspace: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSetMinerTotalspace: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSetProviderTotalspace: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -9523,7 +9523,7 @@ func (m *MsgSetMinerTotalspace) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgSetMinerTotalspaceResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgSetProviderTotalspaceResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9546,10 +9546,10 @@ func (m *MsgSetMinerTotalspaceResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSetMinerTotalspaceResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSetProviderTotalspaceResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSetMinerTotalspaceResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSetProviderTotalspaceResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -9573,7 +9573,7 @@ func (m *MsgSetMinerTotalspaceResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgInitMiner) Unmarshal(dAtA []byte) error {
+func (m *MsgInitProvider) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9596,10 +9596,10 @@ func (m *MsgInitMiner) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgInitMiner: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgInitProvider: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgInitMiner: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgInitProvider: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -9719,7 +9719,7 @@ func (m *MsgInitMiner) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgInitMinerResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgInitProviderResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -9742,10 +9742,10 @@ func (m *MsgInitMinerResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgInitMinerResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgInitProviderResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgInitMinerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgInitProviderResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

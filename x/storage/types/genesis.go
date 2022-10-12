@@ -13,7 +13,7 @@ func DefaultGenesis() *GenesisState {
 		ContractsList:   []Contracts{},
 		ProofsList:      []Proofs{},
 		ActiveDealsList: []ActiveDeals{},
-		MinersList:      []Miners{},
+		ProvidersList:   []Providers{},
 		PayBlocksList:   []PayBlocks{},
 		ClientUsageList: []ClientUsage{},
 		StraysList:      []Strays{},
@@ -55,15 +55,15 @@ func (gs GenesisState) Validate() error {
 		}
 		activeDealsIndexMap[index] = struct{}{}
 	}
-	// Check for duplicated index in miners
-	minersIndexMap := make(map[string]struct{})
+	// Check for duplicated index in providers
+	providersIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.MinersList {
-		index := string(MinersKey(elem.Address))
-		if _, ok := minersIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for miners")
+	for _, elem := range gs.ProvidersList {
+		index := string(ProvidersKey(elem.Address))
+		if _, ok := providersIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for providers")
 		}
-		minersIndexMap[index] = struct{}{}
+		providersIndexMap[index] = struct{}{}
 	}
 	// Check for duplicated index in payBlocks
 	payBlocksIndexMap := make(map[string]struct{})

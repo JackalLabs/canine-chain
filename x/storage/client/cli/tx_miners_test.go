@@ -18,7 +18,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func TestCreateMiners(t *testing.T) {
+func TestCreateProviders(t *testing.T) {
 	net := network.New(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
@@ -51,7 +51,7 @@ func TestCreateMiners(t *testing.T) {
 			}
 			args = append(args, fields...)
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateMiners(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateProviders(), args)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -64,7 +64,7 @@ func TestCreateMiners(t *testing.T) {
 	}
 }
 
-func TestUpdateMiners(t *testing.T) {
+func TestUpdateProviders(t *testing.T) {
 	net := network.New(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
@@ -81,7 +81,7 @@ func TestUpdateMiners(t *testing.T) {
 	}
 	args = append(args, fields...)
 	args = append(args, common...)
-	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateMiners(), args)
+	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateProviders(), args)
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
@@ -113,7 +113,7 @@ func TestUpdateMiners(t *testing.T) {
 			}
 			args = append(args, fields...)
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdUpdateMiners(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdUpdateProviders(), args)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -126,7 +126,7 @@ func TestUpdateMiners(t *testing.T) {
 	}
 }
 
-func TestDeleteMiners(t *testing.T) {
+func TestDeleteProviders(t *testing.T) {
 	net := network.New(t)
 
 	val := net.Validators[0]
@@ -144,7 +144,7 @@ func TestDeleteMiners(t *testing.T) {
 	}
 	args = append(args, fields...)
 	args = append(args, common...)
-	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateMiners(), args)
+	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateProviders(), args)
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
@@ -175,7 +175,7 @@ func TestDeleteMiners(t *testing.T) {
 				tc.idAddress,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdDeleteMiners(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdDeleteProviders(), args)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

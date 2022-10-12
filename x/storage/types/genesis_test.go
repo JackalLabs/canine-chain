@@ -46,7 +46,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Cid: "1",
 					},
 				},
-				MinersList: []types.Miners{
+				ProvidersList: []types.Providers{
 					{
 						Address: "0",
 					},
@@ -125,9 +125,9 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "duplicated miners",
+			desc: "duplicated providers",
 			genState: &types.GenesisState{
-				MinersList: []types.Miners{
+				ProvidersList: []types.Providers{
 					{
 						Address: "0",
 					},

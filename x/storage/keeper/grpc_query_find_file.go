@@ -19,18 +19,18 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest)
 
 	allDeals := k.GetAllActiveDeals(ctx)
 
-	var miners []string
+	var providers []string
 
 	for i := 0; i < len(allDeals); i++ {
 		if allDeals[i].Fid == req.Fid {
-			miner, ok := k.GetMiners(ctx, allDeals[i].Miner)
+			provider, ok := k.GetProviders(ctx, allDeals[i].Provider)
 			if !ok {
 				continue
 			}
 
-			miners = append(miners, miner.Ip)
+			providers = append(providers, provider.Ip)
 		}
 	}
 
-	return &types.QueryFindFileResponse{MinerIps: fmt.Sprintf("%v", miners)}, nil
+	return &types.QueryFindFileResponse{ProviderIps: fmt.Sprintf("%v", providers)}, nil
 }

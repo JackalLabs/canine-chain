@@ -6,7 +6,7 @@ option go_package = "github.com/jackal-dao/canine/x/storage/types";
 message ActiveDeals {
   string cid = 1; 
   string signee = 2; 
-  string miner = 3; 
+  string provider = 3; 
   string startblock = 4; 
   string endblock = 5; 
   string filesize = 6; 

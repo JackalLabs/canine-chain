@@ -30,7 +30,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 	deal := types.ActiveDeals{
 		Cid:           contract.Cid,
 		Signee:        contract.Signee,
-		Miner:         contract.Creator,
+		Provider:      contract.Creator,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
 		Endblock:      fmt.Sprintf("%d", ctx.BlockHeight()+eblock.Int64()),
 		Filesize:      contract.Filesize,
