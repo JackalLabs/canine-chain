@@ -10,7 +10,7 @@ const TypeMsgPostFile = "post_file"
 var _ sdk.Msg = &MsgPostFile{}
 
 func NewMsgPostFile(creator string, account string, hashparent string, hashchild string, contents string, viewers string, editors string,
-	trackingNumber uint64, viewersToNotify string, editorsToNotify string, notiForViewers string, notiForEditors string) *MsgPostFile {
+	trackingNumber string, viewersToNotify string, editorsToNotify string, notiForViewers string, notiForEditors string) *MsgPostFile {
 	return &MsgPostFile{
 		Creator:         creator,
 		Account:         account,

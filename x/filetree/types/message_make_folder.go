@@ -9,7 +9,7 @@ const TypeMsgMakeFolder = "make_folder"
 
 var _ sdk.Msg = &MsgMakeFolder{}
 
-func NewMsgMakeFolder(creator string, account string, rootHashPath string, contents string, editors string, viewers string, trackingNumber uint64) *MsgMakeFolder {
+func NewMsgMakeFolder(creator string, account string, rootHashPath string, contents string, editors string, viewers string, trackingNumber string) *MsgMakeFolder {
 	return &MsgMakeFolder{
 		Creator:        creator,
 		Account:        account,

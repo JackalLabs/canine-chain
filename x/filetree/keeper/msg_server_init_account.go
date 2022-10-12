@@ -34,7 +34,6 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 		TrackingNumber: msg.TrackingNumber, //place holder
 	}
 
-	increaseTracker(k, ctx, msg)
 	k.SetFiles(ctx, file)
 
 	//Set notiCounter
@@ -70,21 +69,4 @@ func (k msgServer) InitAccount(goCtx context.Context, msg *types.MsgInitAccount)
 	)
 
 	return &types.MsgInitAccountResponse{ /*Don't really need tracking number or anything here*/ }, nil
-}
-
-// Leaving this here for tidyness but it will be replaced by UUID soon
-func increaseTracker(k msgServer, ctx sdk.Context, msg *types.MsgInitAccount) {
-	updatedTrackingNumber := msg.TrackingNumber + 1
-
-	//need to double check this number
-	if msg.TrackingNumber == 18446744073709551615 {
-		updatedTrackingNumber = 0
-		k.SetTracker(ctx, types.Tracker{
-			TrackingNumber: uint64(updatedTrackingNumber),
-		})
-	} else {
-		k.SetTracker(ctx, types.Tracker{
-			TrackingNumber: uint64(updatedTrackingNumber),
-		})
-	}
 }

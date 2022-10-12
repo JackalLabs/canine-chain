@@ -83,18 +83,10 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 
 }
 
-func getTrackingAndCallerAddress(ctx client.Context, cmd *cobra.Command) (uint64, *string, error) {
-
-	queryClient := filetypes.NewQueryClient(ctx)
-	res, err := queryClient.Tracker(cmd.Context(), &filetypes.QueryGetTrackerRequest{})
-	if err != nil {
-		return 0, nil, err
-	}
-	trackingNumber := res.Tracker.TrackingNumber
+func getCallerAddress(ctx client.Context, cmd *cobra.Command) (*string, error) {
 
 	fromAddress := ctx.GetFromAddress().String()
-
-	return trackingNumber, &fromAddress, nil
+	return &fromAddress, nil
 
 }
 

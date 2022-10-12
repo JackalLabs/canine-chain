@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/filetree/types"
@@ -36,7 +37,6 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		TrackingNumber: msg.TrackingNumber,
 	}
 
-	incrementTracker(k, ctx, msg)
 	k.SetFiles(ctx, file)
 
 	//notify viewers
@@ -50,6 +50,6 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	if !ok {
 		return nil, err
 	}
-
+	fmt.Println("@@@@@@@@@@@@@Did we make it here?")
 	return &types.MsgPostFileResponse{Path: fullMerklePath}, nil
 }

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"encoding/json"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	notiTypes "github.com/jackal-dao/canine/x/notifications/types"
@@ -64,6 +65,7 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 			notiCounter,
 		)
 	}
+	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@ Did we make it here?")
 
 	return true, nil
 

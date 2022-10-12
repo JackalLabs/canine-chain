@@ -39,33 +39,38 @@ func CmdAddViewers() *cobra.Command {
 
 			fileQueryClient := types.NewQueryClient(clientCtx)
 			trimPath := strings.TrimSuffix(argHashpath, "/")
+
 			merklePath := types.MerklePath(trimPath)
 
+			//Can't use helper functions in access.go so just build ownerString
+			//Not working. Need to build the hash of the owner first.
+
 			h := sha256.New()
-			h.Write([]byte(argOwner))
+			h.Write([]byte(fmt.Sprintf("%s", argOwner)))
 			hash := h.Sum(nil)
+
 			accountHash := fmt.Sprintf("%x", hash)
-			ownerString := MakeOwnerAddress(merklePath, accountHash)
+
+			H := sha256.New()
+			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+			Hash := H.Sum(nil)
+			ownerString := fmt.Sprintf("%x", Hash)
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
 
 			var viewerIds []string
 			var viewerKeys []string
-
 			var viewersToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
 					continue
 				}
-				fmt.Println("v is", v)
 				key, err := sdk.AccAddressFromBech32(v)
 				if err != nil {
+					fmt.Printf("address: %s\n", v)
 					return err
 				}
-				fmt.Println("AccAddressFromBech32(v) is", key)
-				fmt.Println("key.String() is", key.String())
-				//So, we're decoding it from Bech32, and then using .String(), the Stringer interface, to convert it back to bech32...unnecessary?
 
 				queryClient := filetypes.NewQueryClient(clientCtx)
 				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
@@ -77,6 +82,7 @@ func CmdAddViewers() *cobra.Command {
 				if err != nil {
 					return err
 				}
+				//Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
 				params := &types.QueryGetFilesRequest{
 					Address:      merklePath,
 					OwnerAddress: ownerString,
@@ -129,7 +135,6 @@ func CmdAddViewers() *cobra.Command {
 				return err
 			}
 
-			//viewerIds supposed to be JSON marshalled aswell?
 			msg := types.NewMsgAddViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),

@@ -9,7 +9,7 @@ const TypeMsgInitAccount = "init_account"
 
 var _ sdk.Msg = &MsgInitAccount{}
 
-func NewMsgInitAccount(creator string, account string, rootHashpath string, editors string, key string, trackingNumber uint64) *MsgInitAccount {
+func NewMsgInitAccount(creator string, account string, rootHashpath string, editors string, key string, trackingNumber string) *MsgInitAccount {
 	return &MsgInitAccount{
 		Creator:        creator,
 		Account:        account,

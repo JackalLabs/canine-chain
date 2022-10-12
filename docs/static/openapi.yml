@@ -32761,7 +32761,6 @@ paths:
                       type: string
                     trackingNumber:
                       type: string
-                      format: uint64
               pagination:
                 type: object
                 properties:
@@ -32891,7 +32890,6 @@ paths:
                     type: string
                   trackingNumber:
                     type: string
-                    format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -58676,17 +58674,12 @@ definitions:
         type: string
       trackingNumber:
         type: string
-        format: uint64
   jackaldao.canine.filetree.MsgAddViewersResponse:
     type: object
   jackaldao.canine.filetree.MsgDeleteFileResponse:
     type: object
   jackaldao.canine.filetree.MsgInitAccountResponse:
     type: object
-    properties:
-      trackingNumber:
-        type: string
-        format: uint64
   jackaldao.canine.filetree.MsgInitAllResponse:
     type: object
     properties:
@@ -58733,7 +58726,6 @@ definitions:
               type: string
             trackingNumber:
               type: string
-              format: uint64
       pagination:
         type: object
         properties:
@@ -58824,7 +58816,6 @@ definitions:
             type: string
           trackingNumber:
             type: string
-            format: uint64
   jackaldao.canine.filetree.QueryGetKeysResponse:
     type: object
     properties:

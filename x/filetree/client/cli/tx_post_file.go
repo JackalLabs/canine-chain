@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	uuid "github.com/google/uuid"
 	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -33,8 +34,7 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			//return the current global tracker--soon to be replaced with UUID--and the from address.
-			globalTrackingNumber, fromAddress, err := getTrackingAndCallerAddress(clientCtx, cmd)
+			fromAddress, err := getCallerAddress(clientCtx, cmd)
 			if err != nil {
 				return err
 			}
@@ -43,6 +43,8 @@ func CmdPostFile() *cobra.Command {
 			editorAddresses := strings.Split(argEditors, ",")
 
 			parentHash, childHash := merkleHelper(argHashpath)
+
+			trackingNumber := uuid.NewString()
 
 			viewers := make(map[string]string)
 			editors := make(map[string]string)
@@ -64,7 +66,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%d%s", globalTrackingNumber, v)))
+				h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
 				hash := h.Sum(nil)
 				addressString := fmt.Sprintf("%x", hash)
 
@@ -84,7 +86,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%d%s", globalTrackingNumber, v)))
+				h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
 				hash := h.Sum(nil)
 				addressString := fmt.Sprintf("%x", hash)
 
@@ -122,7 +124,7 @@ func CmdPostFile() *cobra.Command {
 				argContents,
 				string(jsonViewers),
 				string(jsonEditors),
-				globalTrackingNumber, //UUID goes here
+				trackingNumber, //UUID goes here
 				string(jsonViewersToNotify),
 				string(jsonEditorsToNotify),
 				notiForViewers,
