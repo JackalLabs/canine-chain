@@ -1,0 +1,19 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - ci-testing
+
+jobs:
+  build:
+      name: Build
+      needs:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v3
+        
+      - name: Install dependencies
+        run: make build
