@@ -215,7 +215,11 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 
 			byteHash := ctx.HeaderHash().Bytes()[0] + ctx.HeaderHash().Bytes()[1] + ctx.HeaderHash().Bytes()[2]
 
-			iprove = (iprove + ctx.BlockHeight()*int64(byteHash)) % (totalSize.Int64() / fchunks)
+			d := totalSize.Int64() / fchunks
+
+			if d > 0 {
+				iprove = (iprove + ctx.BlockHeight()*int64(byteHash)) % d
+			}
 
 			deal.Blocktoprove = fmt.Sprintf("%d", iprove)
 
