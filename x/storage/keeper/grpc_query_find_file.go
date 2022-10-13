@@ -2,7 +2,8 @@ package keeper
 
 import (
 	"context"
-	"fmt"
+
+	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/storage/types"
@@ -32,5 +33,11 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest)
 		}
 	}
 
-	return &types.QueryFindFileResponse{ProviderIps: fmt.Sprintf("%v", providers)}, nil
+	providerIPs, err := json.Marshal(providers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryFindFileResponse{ProviderIps: string(providerIPs)}, nil
 }
