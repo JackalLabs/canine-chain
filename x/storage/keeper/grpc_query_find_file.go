@@ -33,11 +33,11 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest)
 		}
 	}
 
-	providerIPs, err := json.Marshal(providers)
+	ProviderIps, err := json.Marshal(providers)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.QueryFindFileResponse{ProviderIps: string(providerIPs)}, nil
+	return &types.QueryFindFileResponse{ProviderIps: string(ProviderIps)}, nil
 }
