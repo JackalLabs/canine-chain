@@ -37,26 +37,26 @@ jobs:
           name: canined-${{runner.os}}
           path: canined-${{runner.os}}
 
-  MacOS-ARM64-CLI:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
-        with:
-          go-version: 1.19 # The Go version to download (if necessary) and use.
-      - name: Install xgo
-        run: |
-          go install github.com/crazy-max/xgo@v0.17.0
-          xgo || true # check installation
-      - name: Build MacOS CLI
-        shell: bash
-        run: |
-          make build_macos_arm64_cli
-          cp "canined-macos-arm64" "canined-MacOS-arm64"
-      - uses: actions/upload-artifact@v3
-        with:
-          name: canined-MacOS-arm64
-          path: canined-MacOS-arm64
+  # MacOS-ARM64-CLI:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-go@v3
+  #       with:
+  #         go-version: 1.19 # The Go version to download (if necessary) and use.
+  #     - name: Install xgo
+  #       run: |
+  #         go install github.com/crazy-max/xgo@v0.17.0
+  #         xgo || true # check installation
+  #     - name: Build MacOS CLI
+  #       shell: bash
+  #       run: |
+  #         make build_macos_arm64_cli
+  #         cp "canined-macos-arm64" "canined-MacOS-arm64"
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: canined-MacOS-arm64
+  #         path: canined-MacOS-arm64
 
   Release:
     needs:
@@ -74,7 +74,7 @@ jobs:
           echo "::set-output name=IS_PRE_RELEASE::$(echo "${{ steps.get_version.outputs.VERSION }}" | awk 'BEGIN{prerelease="false"} /beta|alpha/{prerelease="true"} END{print prerelease}')"
       - uses: actions/download-artifact@v3
         with:
-          name: canined-linux
+          name: canined-Linux
       - uses: actions/download-artifact@v3
         with:
           name: canined-macOS
@@ -84,4 +84,4 @@ jobs:
           prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
           files: |
             canined-macOS
-            canined-linux
+            canined-Linux
