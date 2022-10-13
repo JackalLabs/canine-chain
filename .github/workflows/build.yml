@@ -30,7 +30,7 @@ jobs:
       - name: Build CLI
         shell: bash
         run: |
-          make build_cli
+          make build
           cp "canined" "canined-$RUNNER_OS"
       - uses: actions/upload-artifact@v3
         with:
@@ -60,7 +60,7 @@ jobs:
 
   Release:
     needs:
-      [native-build-cli, MacOS-ARM64-CLI]
+      [native-build-cli]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -78,9 +78,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: canined-macOS
-      - uses: actions/download-artifact@v3
-        with:
-          name: canined-MacOS-arm64
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -88,4 +85,3 @@ jobs:
           files: |
             canined-macOS
             canined-Linux
-            canined-MacOS-arm64
