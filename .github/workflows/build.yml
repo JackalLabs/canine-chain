@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - master
-      - ci-testing
+      - ci-test-again
 
 jobs:
   build:
