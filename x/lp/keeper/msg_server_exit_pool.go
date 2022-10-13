@@ -48,7 +48,7 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 	totalShares, _ := sdk.NewIntFromString(pool.LPTokenBalance)
 
 	// Calculate tokens to return
-	// If LPToken is still locked, take panelty.
+	// If LPToken is still locked, apply panelty.
 	recordKey := types.LProviderRecordKey(pool.Name, creatorAcc.String())
 	record, _ := k.GetLProviderRecord(ctx, recordKey)
 	
@@ -98,7 +98,7 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 		return nil, sdkErr
 	}
 
-	// Finally, burn that LPToken :fire:
+	// Burn the LPToken
 	sdkErr = k.bankKeeper.BurnCoins(ctx, types.ModuleName, burningCoins)
 
 	if sdkErr != nil {

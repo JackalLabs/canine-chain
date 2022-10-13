@@ -58521,7 +58521,9 @@ definitions:
       id:
         type: string
         title: Pool id
-  jackaldao.canine.lp.MsgDepositLPoolResponse:
+  jackaldao.canine.lp.MsgExitPoolResponse:
+    type: object
+  jackaldao.canine.lp.MsgJoinPoolResponse:
     type: object
     properties:
       shares:
@@ -58529,8 +58531,6 @@ definitions:
         format: uint64
         description: Amount of shares given to pool contributor.
   jackaldao.canine.lp.MsgSwapResponse:
-    type: object
-  jackaldao.canine.lp.MsgWithdrawLPoolResponse:
     type: object
   jackaldao.canine.lp.Params:
     type: object

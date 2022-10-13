@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -29,6 +31,24 @@ func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) err
 		)
 	}
 
+	// Check if existing record unlock time is later than this message
+	recordKey := types.LProviderRecordKey(pool.Name, msg.Creator)
+	record, found := k.GetLProviderRecord(ctx, recordKey)
+	if found {
+		oldUnlockTime, _ := StringToTime(record.UnlockTime)
+
+		newDuration := GetDuration(msg.LockDuration)
+
+		newUnlockTime := ctx.BlockTime().Add(newDuration)
+
+		if newUnlockTime.Before(oldUnlockTime) {
+			return errors.New(
+				fmt.Sprintf("new unlock time must be after old." +
+				" new: %s, old %s", TimeToString(newUnlockTime), 
+				TimeToString(oldUnlockTime))) 
+		}
+	}
+
 	return nil
 }
 
@@ -38,11 +58,11 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 	err := k.validateJoinPoolMsg(ctx, msg)
 
 	if err != nil {
-		return nil, err
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Calculate amount of pool share
 
+	// Get amount of LPToken to send
 	pool, _ := k.GetLPool(ctx, msg.PoolName)
 
 	coins := sdk.NormalizeCoins(msg.Coins)
@@ -53,39 +73,8 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 		return nil, err
 	}
 
-
-	// Mint and send pool token to msg creator
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	// Transfer liquidity from the creator account to module account
-	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, coins)
-
-	if sdkErr != nil {
-		return nil, sdkErr
-	}
-
-	if err := k.MintAndSendLPToken(ctx, pool, creator, shares); err != nil {
-		return nil, err
-	}
-
-	// Update pool liquidity
-	poolCoins := sdk.NewCoins(pool.Coins...)
-
-	for _, c := range coins {
-		// This works by comparing denoms in poolCoins and doing addition on the first
-		// denom match.
-		poolCoins = poolCoins.Add(c)
-	}
-
-	pool.Coins = poolCoins
-
-	poolTotalToken, _ := sdk.NewIntFromString(pool.LPTokenBalance)
-	poolTotalToken = poolTotalToken.Add(shares)
-
-	pool.LPTokenBalance = poolTotalToken.String()
-
-	k.SetLPool(ctx, pool)
-	
 	// Initialize LProviderRecord
 	lockDuration := GetDuration(msg.LockDuration)
 
@@ -103,13 +92,40 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 		k.SetLProviderRecord(ctx, record)
 	}
 
-
 	err = k.EngageLock(ctx, recordKey)
 
 	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	// Transfer liquidity from the creator account to module account
+	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, coins)
+
+	if sdkErr != nil {
+		return nil, sdkErr
+	}
+
+	if err := k.MintAndSendLPToken(ctx, pool, creator, shares); err != nil {
 		return nil, err
 	}
 
+	// Update pool liquidity
+	poolCoins := sdk.NewCoins(pool.Coins...)
+	// Add liquidity to pool
+	for _, c := range coins {
+		poolCoins = poolCoins.Add(c)
+	}
+
+	pool.Coins = poolCoins
+
+	// Update LPTokens
+	netLPToken, _ := sdk.NewIntFromString(pool.LPTokenBalance)
+	netLPToken = netLPToken.Add(shares)
+
+	pool.LPTokenBalance = netLPToken.String()
+
+	k.SetLPool(ctx, pool)
+	
 	EmitPoolJoinedEvent(ctx, creator, pool, coins, msg.LockDuration)
 
 	return &types.MsgJoinPoolResponse{}, nil
