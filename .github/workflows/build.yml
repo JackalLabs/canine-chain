@@ -14,24 +14,78 @@ jobs:
       steps:
       - uses: actions/checkout@v3
         
-      - name: Install dependencies
+      - name: Build
         run: make build
 
-  pre-release:
-    name: "Pre Release"
-    runs-on: "ubuntu-latest"
-
+  native-build-cli:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, macos-latest]
     steps:
-        # ...
-      - name: "Build & test"
-        run: |
-          make build
-
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v2
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
+          go-version: 1.19 # The Go version to download (if necessary) and use.
+      - name: Build CLI
+        shell: bash
+        run: |
+          make build_cli
+          cp "canined" "canined-$RUNNER_OS"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: canined-${{runner.os}}
+          path: canined-${{runner.os}}
+
+  MacOS-ARM64-CLI:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.19 # The Go version to download (if necessary) and use.
+      - name: Install xgo
+        run: |
+          go install github.com/crazy-max/xgo@v0.17.0
+          xgo || true # check installation
+      - name: Build MacOS CLI
+        shell: bash
+        run: |
+          make build_macos_arm64_cli
+          cp "canined-macos-arm64" "canined-MacOS-arm64"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: canined-MacOS-arm64
+          path: canined-MacOS-arm64
+
+  Release:
+    needs:
+      [native-build-cli, MacOS-ARM64-CLI]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+      - name: Declare Commit Variables
+        id: is_pre_release
+        shell: bash
+        run: |
+          echo "::set-output name=IS_PRE_RELEASE::$(echo "${{ steps.get_version.outputs.VERSION }}" | awk 'BEGIN{prerelease="false"} /beta|alpha/{prerelease="true"} END{print prerelease}')"
+      - uses: actions/download-artifact@v3
+        with:
+          name: canined-Linux
+      - uses: actions/download-artifact@v3
+        with:
+          name: canined-macOS
+      - uses: actions/download-artifact@v3
+        with:
+          name: canined-MacOS-arm64
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
           files: |
-            build/canined
+            canined-macOS
+            canined-Linux
+            canined-MacOS-arm64
