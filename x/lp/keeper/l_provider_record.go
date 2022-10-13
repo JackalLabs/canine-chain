@@ -3,16 +3,16 @@ package keeper
 import (
 	"time"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 // Set unlock time using block time and lock duration.
 // Saves updated record to KVStore.
 // Returns error when the record is not found.
-func (k Keeper) EngageLock (
+func (k Keeper) EngageLock(
 	ctx sdk.Context,
 	recordKey []byte,
 ) error {
@@ -26,14 +26,14 @@ func (k Keeper) EngageLock (
 			recordKey,
 		)
 	}
-	
+
 	lockDuration, _ := time.ParseDuration(record.LockDuration)
 
 	timeNow := ctx.BlockTime()
 
-	record.UnlockTime = TimeToString(timeNow.Add(lockDuration)) 
+	record.UnlockTime = TimeToString(timeNow.Add(lockDuration))
 
-	k.SetLProviderRecord(ctx, record)	
+	k.SetLProviderRecord(ctx, record)
 
 	return nil
 }
@@ -41,7 +41,7 @@ func (k Keeper) EngageLock (
 // Create then store LProviderRecord and reference to KVStore.
 // Lock is not engaged.
 // It returns error when pool doesn't exist.
-func (k Keeper) InitLProviderRecord (
+func (k Keeper) InitLProviderRecord(
 	ctx sdk.Context,
 	provider sdk.AccAddress,
 	poolName string,
@@ -60,9 +60,9 @@ func (k Keeper) InitLProviderRecord (
 	}
 
 	// Create record
-	record := types.LProviderRecord {
-		Provider: provider.String(),
-		PoolName: poolName,
+	record := types.LProviderRecord{
+		Provider:     provider.String(),
+		PoolName:     poolName,
 		LockDuration: lockDuration.String(),
 	}
 
@@ -109,7 +109,7 @@ func (k Keeper) GetLProviderRecord(
 
 // Removes LProviderRecord and reference from store.
 func (k Keeper) EraseLProviderRecord(
-	ctx sdk.Context, 
+	ctx sdk.Context,
 	provider sdk.AccAddress,
 	poolName string,
 ) error {
@@ -157,10 +157,10 @@ func (k Keeper) GetAllLProviderRecord(ctx sdk.Context) (list []types.LProviderRe
 // Collect all LProviderRecord of provider.
 // Parse through all keys in KVStore that has {provider} as its prefix.
 func (k Keeper) GetAllRecordOfProvider(
-	ctx sdk.Context, 
+	ctx sdk.Context,
 	provider sdk.AccAddress,
 ) (list []types.LProviderRecord) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), 
+	store := prefix.NewStore(ctx.KVStore(k.storeKey),
 		types.KeyPrefix(types.LProviderRecordKeyPrefix))
 
 	iterator := sdk.KVStorePrefixIterator(store, []byte(provider.String()))
@@ -170,21 +170,20 @@ func (k Keeper) GetAllRecordOfProvider(
 		var record types.LProviderRecord
 
 		rawRecord := store.Get(iterator.Value())
-		
+
 		k.cdc.MustUnmarshal(rawRecord, &record)
 
 		list = append(list, record)
 	}
 
-	return 
+	return
 }
 
 func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
-)	(list []types.LProviderRecord) {
+) (list []types.LProviderRecord) {
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
 		types.KeyPrefix(types.LProviderRecordKeyPrefix))
-	
 
 	strKey := poolName
 
@@ -208,15 +207,15 @@ func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
 // Reference to LProviderRecord is LProviderRecord's key.
 // Key to the reference key is {provider}{poolName}
 // It returns error when reference key already exists.
-func (k Keeper) AddProviderRef (ctx sdk.Context, record types.LProviderRecord) error {
-	// Generate keys	
+func (k Keeper) AddProviderRef(ctx sdk.Context, record types.LProviderRecord) error {
+	// Generate keys
 	refKey := types.GetProviderRefKey(record)
-	recordKey := types.GetProviderKey(record) 
+	recordKey := types.GetProviderKey(record)
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
 
-	if (store.Has(refKey)) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+	if store.Has(refKey) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"Reference key already exists: %s", refKey)
 	}
 
@@ -226,7 +225,7 @@ func (k Keeper) AddProviderRef (ctx sdk.Context, record types.LProviderRecord) e
 }
 
 // Remove LProviderRecord reference from KVStore.
-func (k Keeper) RemoveProviderRef (ctx sdk.Context, record types.LProviderRecord) {
+func (k Keeper) RemoveProviderRef(ctx sdk.Context, record types.LProviderRecord) {
 	// Generate reference key
 	refKey := types.GetProviderRefKey(record)
 

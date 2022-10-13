@@ -12,10 +12,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetMinerTotalspace() *cobra.Command {
+func CmdSetProviderTotalspace() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-miner-totalspace [space]",
-		Short: "Broadcast message set-miner-totalspace",
+		Use:   "set-provider-totalspace [space]",
+		Short: "Broadcast message set-provider-totalspace",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argSpace := args[0]
@@ -25,7 +25,7 @@ func CmdSetMinerTotalspace() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgSetMinerTotalspace(
+			msg := types.NewMsgSetProviderTotalspace(
 				clientCtx.GetFromAddress().String(),
 				argSpace,
 			)

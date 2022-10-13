@@ -5,12 +5,12 @@ import "encoding/binary"
 var _ binary.ByteOrder
 
 const (
-	// MinersKeyPrefix is the prefix to retrieve all Miners
-	MinersKeyPrefix = "Miners/value/"
+	// ProvidersKeyPrefix is the prefix to retrieve all Providers
+	ProvidersKeyPrefix = "Providers/value/"
 )
 
-// MinersKey returns the store key to retrieve a Miners from the index fields
-func MinersKey(
+// ProvidersKey returns the store key to retrieve a Providers from the index fields
+func ProvidersKey(
 	address string,
 ) []byte {
 	var key []byte

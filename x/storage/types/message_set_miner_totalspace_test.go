@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgSetMinerTotalspace_ValidateBasic(t *testing.T) {
+func TestMsgSetProviderTotalspace_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgSetMinerTotalspace
+		msg  MsgSetProviderTotalspace
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgSetMinerTotalspace{
+			msg: MsgSetProviderTotalspace{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgSetMinerTotalspace{
+			msg: MsgSetProviderTotalspace{
 				Creator: sample.AccAddress(),
 			},
 		},

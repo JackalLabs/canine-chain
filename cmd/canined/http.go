@@ -17,11 +17,17 @@ import (
 
 func indexres(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	clientCtx := client.GetClientContextFromCmd(cmd)
+	clientCtx, err := client.GetClientTxContext(cmd)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	address := clientCtx.GetFromAddress()
 
 	v := IndexResponse{
 		Status:  "online",
-		Address: clientCtx.GetFromAddress().String(),
+		Address: address.String(),
 	}
 	json.NewEncoder(w).Encode(v)
 }
@@ -100,9 +106,9 @@ func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
 	router.GET("/", ires)
 }
 
-func postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB, datedb *leveldb.DB) {
+func (q *UploadQueue) postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB, datedb *leveldb.DB) {
 	upfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		fileUpload(w, r, ps, cmd, db, datedb)
+		q.fileUpload(&w, r, ps, cmd, db, datedb)
 	}
 
 	router.POST("/upload", upfil)
@@ -111,7 +117,7 @@ func postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB, d
 
 // This function returns the filename(to save in database) of the saved file
 // or an error if it occurs
-func fileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
+func (q *UploadQueue) fileUpload(w *http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 	// ParseMultipartForm parses a request body as multipart/form-data
 	r.ParseMultipartForm(32 << 20)
 
@@ -122,8 +128,8 @@ func fileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: qerr.Error(),
 		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
+		(*w).WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(*w).Encode(v)
 		return
 	}
 
@@ -136,23 +142,18 @@ func fileUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params, cm
 		v := ErrorResponse{
 			Error: err.Error(),
 		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
+		(*w).WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(*w).Encode(v)
 		return
 	}
 
-	cid, hashName, err := saveFile(clientCtx, file, handler, sender, cmd, db, datedb)
+	err = q.saveFile(clientCtx, file, handler, sender, cmd, db, datedb, w)
 	if err != nil {
 		v := ErrorResponse{
 			Error: err.Error(),
 		}
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(v)
+		(*w).WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(*w).Encode(v)
 	}
 
-	v := UploadResponse{
-		CID: cid,
-		FID: fmt.Sprintf("%x", hashName),
-	}
-	json.NewEncoder(w).Encode(v)
 }

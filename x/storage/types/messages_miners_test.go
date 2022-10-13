@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgCreateMiners_ValidateBasic(t *testing.T) {
+func TestMsgCreateProviders_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgCreateMiners
+		msg  MsgCreateProviders
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgCreateMiners{
+			msg: MsgCreateProviders{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgCreateMiners{
+			msg: MsgCreateProviders{
 				Creator: sample.AccAddress(),
 			},
 		},
@@ -39,21 +39,21 @@ func TestMsgCreateMiners_ValidateBasic(t *testing.T) {
 	}
 }
 
-func TestMsgUpdateMiners_ValidateBasic(t *testing.T) {
+func TestMsgUpdateProviders_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgUpdateMiners
+		msg  MsgUpdateProviders
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgUpdateMiners{
+			msg: MsgUpdateProviders{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgUpdateMiners{
+			msg: MsgUpdateProviders{
 				Creator: sample.AccAddress(),
 			},
 		},
@@ -70,21 +70,21 @@ func TestMsgUpdateMiners_ValidateBasic(t *testing.T) {
 	}
 }
 
-func TestMsgDeleteMiners_ValidateBasic(t *testing.T) {
+func TestMsgDeleteProviders_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgDeleteMiners
+		msg  MsgDeleteProviders
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgDeleteMiners{
+			msg: MsgDeleteProviders{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgDeleteMiners{
+			msg: MsgDeleteProviders{
 				Creator: sample.AccAddress(),
 			},
 		},

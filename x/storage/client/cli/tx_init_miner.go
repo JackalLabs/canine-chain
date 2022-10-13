@@ -12,10 +12,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdInitMiner() *cobra.Command {
+func CmdInitProvider() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "init-miner [ip] [totalspace]",
-		Short: "Broadcast message init-miner",
+		Use:   "init-provider [ip] [totalspace]",
+		Short: "Broadcast message init-provider",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argIp := args[0]
@@ -26,7 +26,7 @@ func CmdInitMiner() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgInitMiner(
+			msg := types.NewMsgInitProvider(
 				clientCtx.GetFromAddress().String(),
 				argIp,
 				argTotalspace,

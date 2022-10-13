@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/stretchr/testify/require"
 	"github.com/jackal-dao/canine/testutil/sample"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMsgInitAll_ValidateBasic(t *testing.T) {

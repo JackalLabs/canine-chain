@@ -5,12 +5,13 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
+
 var _ binary.ByteOrder
 
 const (
 	// LProviderRecordKeyPrefix is the prefix to retrieve all LProviderRecord
 	LProviderRecordKeyPrefix = "LProviderRecord/value/"
-	RefKeyPrefix = "LProviderRecordRef/"
+	RefKeyPrefix             = "LProviderRecordRef/"
 	// A separator inserted between keys.
 )
 
@@ -26,7 +27,7 @@ func LProviderRecordKey(
 	return CombineKeys(poolBytes, addrBytes)
 }
 
-// LProviderRecordKey returns the store key to retrieve a LProviderRecord 
+// LProviderRecordKey returns the store key to retrieve a LProviderRecord
 // reference.
 func LProviderRecordRefKey(
 	poolName string,
@@ -34,22 +35,22 @@ func LProviderRecordRefKey(
 ) []byte {
 	poolBytes := []byte(poolName)
 	addrBytes := []byte(provider.String())
-	
+
 	return CombineKeys(addrBytes, poolBytes)
 }
 
 // Takes LProviderRecord struct to generate store key.
 // Key format is: {poolName}{provider}
-func GetProviderKey (record LProviderRecord) []byte{
+func GetProviderKey(record LProviderRecord) []byte {
 	return LProviderRecordKey(record.PoolName, record.Provider)
 }
 
 // Takes LProviderRecord struct to generate reference key.
 // Key format is: {provider}{provider}
-func GetProviderRefKey (record LProviderRecord) []byte {
+func GetProviderRefKey(record LProviderRecord) []byte {
 
 	poolBytes := []byte(record.PoolName)
 	addrBytes := []byte(record.Provider)
-	
-	return CombineKeys(addrBytes, poolBytes) 
+
+	return CombineKeys(addrBytes, poolBytes)
 }

@@ -13,6 +13,9 @@ service Msg {
   rpc InitAccount(MsgInitAccount) returns (MsgInitAccountResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc InitAll(MsgInitAll) returns (MsgInitAllResponse);
+  rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
+  rpc MakeRoot(MsgMakeRoot) returns (MsgMakeRootResponse);
+
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -24,7 +27,11 @@ message MsgPostFile {
   string contents = 5;
   string viewers = 6;
   string editors = 7;
-  uint64 trackingNumber = 8;
+  string trackingNumber = 8;
+  string viewersToNotify = 9;
+  string editorsToNotify = 10;
+  string notiForViewers = 11;
+  string notiForEditors = 12; 
 }
 
 message MsgPostFileResponse {
@@ -37,6 +44,7 @@ message MsgAddViewers {
   string viewerKeys = 3;
   string address = 4;
   string fileowner = 5;
+  string notifyViewers = 6;
 }
 
 message MsgAddViewersResponse {
@@ -56,11 +64,10 @@ message MsgInitAccount {
   string rootHashpath = 3;
   string editors = 4;
   string key = 5; 
-  uint64 trackingNumber = 6;
+  string trackingNumber = 6;
 }
 
 message MsgInitAccountResponse {
-  uint64 trackingNumber = 1;
 }
 
 message MsgDeleteFile {
@@ -79,6 +86,30 @@ message MsgInitAll {
 
 message MsgInitAllResponse {
   string name = 1;
+}
+
+message MsgRemoveViewers {
+  string creator = 1;
+  string viewerIds = 2;
+  string address = 3;
+  string fileowner = 4;
+  string notifyviewers = 5;
+}
+
+message MsgRemoveViewersResponse {
+}
+
+message MsgMakeRoot {
+  string creator = 1;
+  string account = 2;
+  string rootHashPath = 3;
+  string contents = 4; 
+  string editors = 5;
+  string viewers = 6;
+  string trackingNumber = 7;
+}
+
+message MsgMakeRootResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

@@ -12,10 +12,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetMinerIp() *cobra.Command {
+func CmdSetProviderIp() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-miner-ip [ip]",
-		Short: "Broadcast message set-miner-ip",
+		Use:   "set-provider-ip [ip]",
+		Short: "Broadcast message set-provider-ip",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argIp := args[0]
@@ -25,7 +25,7 @@ func CmdSetMinerIp() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgSetMinerIp(
+			msg := types.NewMsgSetProviderIp(
 				clientCtx.GetFromAddress().String(),
 				argIp,
 			)

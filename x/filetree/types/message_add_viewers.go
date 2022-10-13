@@ -9,13 +9,14 @@ const TypeMsgAddViewers = "add_viewers"
 
 var _ sdk.Msg = &MsgAddViewers{}
 
-func NewMsgAddViewers(creator string, viewerIds string, viewerKeys string, address string, owner string) *MsgAddViewers {
+func NewMsgAddViewers(creator string, viewerIds string, viewerKeys string, address string, owner string, viewersToNotify string) *MsgAddViewers {
 	return &MsgAddViewers{
-		Creator:    creator,
-		ViewerIds:  viewerIds,
-		ViewerKeys: viewerKeys,
-		Address:    address,
-		Fileowner:  owner,
+		Creator:       creator,
+		ViewerIds:     viewerIds,
+		ViewerKeys:    viewerKeys,
+		Address:       address,
+		Fileowner:     owner,
+		NotifyViewers: viewersToNotify,
 	}
 }
 

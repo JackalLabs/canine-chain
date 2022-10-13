@@ -15,11 +15,11 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
 	var validator_ratio int64 = 4
-	var miner_ratio int64 = 6
+	var provider_ratio int64 = 6
 
 	denom := k.GetParams(ctx).MintDenom
 
-	totalCoin := sdk.NewCoin(denom, sdk.NewInt((validator_ratio+miner_ratio)*1000000))
+	totalCoin := sdk.NewCoin(denom, sdk.NewInt((validator_ratio+provider_ratio)*1000000))
 
 	// mint coins, update supply
 	mintedCoin := sdk.NewCoin(denom, sdk.NewInt(validator_ratio*1000000))
@@ -37,10 +37,10 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	}
 
 	// mint coins, update supply
-	minerCoin := sdk.NewCoin(denom, sdk.NewInt(miner_ratio*1000000))
-	minerCoins := sdk.NewCoins(minerCoin)
+	providerCoin := sdk.NewCoin(denom, sdk.NewInt(provider_ratio*1000000))
+	providerCoins := sdk.NewCoins(providerCoin)
 
-	err = k.SendToMiners(ctx, minerCoins)
+	err = k.SendToProviders(ctx, providerCoins)
 	if err != nil {
 		panic(err)
 	}

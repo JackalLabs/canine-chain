@@ -7,13 +7,13 @@ import (
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
-func (k msgServer) SetMinerTotalspace(goCtx context.Context, msg *types.MsgSetMinerTotalspace) (*types.MsgSetMinerTotalspaceResponse, error) {
+func (k msgServer) SetProviderTotalspace(goCtx context.Context, msg *types.MsgSetProviderTotalspace) (*types.MsgSetProviderTotalspaceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	miner, found := k.GetMiners(ctx, msg.Creator)
+	provider, found := k.GetProviders(ctx, msg.Creator)
 
 	if !found {
-		miner = types.Miners{
+		provider = types.Providers{
 			Address:         msg.Creator,
 			Ip:              "",
 			Totalspace:      "0",
@@ -22,9 +22,9 @@ func (k msgServer) SetMinerTotalspace(goCtx context.Context, msg *types.MsgSetMi
 		}
 	}
 
-	miner.Totalspace = msg.Space
+	provider.Totalspace = msg.Space
 
-	k.SetMiners(ctx, miner)
+	k.SetProviders(ctx, provider)
 
-	return &types.MsgSetMinerTotalspaceResponse{}, nil
+	return &types.MsgSetProviderTotalspaceResponse{}, nil
 }

@@ -1,12 +1,13 @@
 package types
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
+
 // Every liquidity pools have an amm model that balances the assets.
 // All amm models implements AMM interface.
 

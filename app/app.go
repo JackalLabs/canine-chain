@@ -131,6 +131,10 @@ import (
 	filetreemodulekeeper "github.com/jackal-dao/canine/x/filetree/keeper"
 	filetreemoduletypes "github.com/jackal-dao/canine/x/filetree/types"
 
+	notificationsmodule "github.com/jackal-dao/canine/x/notifications"
+	notificationsmodulekeeper "github.com/jackal-dao/canine/x/notifications/keeper"
+	notificationsmoduletypes "github.com/jackal-dao/canine/x/notifications/types"
+
 	lpmodule "github.com/jackal-dao/canine/x/lp"
 	lpmodulekeeper "github.com/jackal-dao/canine/x/lp/keeper"
 	lpmoduletypes "github.com/jackal-dao/canine/x/lp/types"
@@ -236,6 +240,7 @@ var (
 		dsigmodule.AppModuleBasic{},
 		filetreemodule.AppModuleBasic{},
 		lpmodule.AppModuleBasic{},
+		notificationsmodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -313,6 +318,8 @@ type WasmApp struct {
 
 	LpKeeper lpmodulekeeper.Keeper
 
+	NotificationsKeeper notificationsmodulekeeper.Keeper
+
 	// the module manager
 	mm *module.Manager
 
@@ -353,6 +360,7 @@ func NewWasmApp(
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
 		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
 		lpmoduletypes.StoreKey,
+		notificationsmoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -602,12 +610,21 @@ func NewWasmApp(
 	)
 	dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.accountKeeper, app.bankKeeper)
 
+	app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
+		appCodec,
+		keys[notificationsmoduletypes.StoreKey],
+		keys[notificationsmoduletypes.MemStoreKey],
+		app.getSubspace(notificationsmoduletypes.ModuleName),
+	)
+	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.accountKeeper, app.bankKeeper)
+
 	app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
 		appCodec,
 		keys[filetreemoduletypes.StoreKey],
 		keys[filetreemoduletypes.MemStoreKey],
 		app.getSubspace(filetreemoduletypes.ModuleName),
 		app.RnsKeeper,
+		app.NotificationsKeeper,
 	)
 	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
 
@@ -685,6 +702,7 @@ func NewWasmApp(
 		dsigModule,
 		filetreeModule,
 		lpModule,
+		notificationsModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -719,6 +737,7 @@ func NewWasmApp(
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		lpmoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -749,6 +768,7 @@ func NewWasmApp(
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		lpmoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -787,6 +807,7 @@ func NewWasmApp(
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		lpmoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.

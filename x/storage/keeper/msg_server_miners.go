@@ -8,11 +8,11 @@ import (
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
-func (k msgServer) CreateMiners(goCtx context.Context, msg *types.MsgCreateMiners) (*types.MsgCreateMinersResponse, error) {
+func (k msgServer) CreateProviders(goCtx context.Context, msg *types.MsgCreateProviders) (*types.MsgCreateProvidersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
-	_, isFound := k.GetMiners(
+	_, isFound := k.GetProviders(
 		ctx,
 		msg.Address,
 	)
@@ -20,25 +20,25 @@ func (k msgServer) CreateMiners(goCtx context.Context, msg *types.MsgCreateMiner
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	var miners = types.Miners{
+	var providers = types.Providers{
 		Creator:    msg.Creator,
 		Address:    msg.Address,
 		Ip:         msg.Ip,
 		Totalspace: msg.Totalspace,
 	}
 
-	k.SetMiners(
+	k.SetProviders(
 		ctx,
-		miners,
+		providers,
 	)
-	return &types.MsgCreateMinersResponse{}, nil
+	return &types.MsgCreateProvidersResponse{}, nil
 }
 
-func (k msgServer) UpdateMiners(goCtx context.Context, msg *types.MsgUpdateMiners) (*types.MsgUpdateMinersResponse, error) {
+func (k msgServer) UpdateProviders(goCtx context.Context, msg *types.MsgUpdateProviders) (*types.MsgUpdateProvidersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value exists
-	valFound, isFound := k.GetMiners(
+	valFound, isFound := k.GetProviders(
 		ctx,
 		msg.Address,
 	)
@@ -51,23 +51,23 @@ func (k msgServer) UpdateMiners(goCtx context.Context, msg *types.MsgUpdateMiner
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	var miners = types.Miners{
+	var providers = types.Providers{
 		Creator:    msg.Creator,
 		Address:    msg.Address,
 		Ip:         msg.Ip,
 		Totalspace: msg.Totalspace,
 	}
 
-	k.SetMiners(ctx, miners)
+	k.SetProviders(ctx, providers)
 
-	return &types.MsgUpdateMinersResponse{}, nil
+	return &types.MsgUpdateProvidersResponse{}, nil
 }
 
-func (k msgServer) DeleteMiners(goCtx context.Context, msg *types.MsgDeleteMiners) (*types.MsgDeleteMinersResponse, error) {
+func (k msgServer) DeleteProviders(goCtx context.Context, msg *types.MsgDeleteProviders) (*types.MsgDeleteProvidersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value exists
-	valFound, isFound := k.GetMiners(
+	valFound, isFound := k.GetProviders(
 		ctx,
 		msg.Address,
 	)
@@ -80,10 +80,10 @@ func (k msgServer) DeleteMiners(goCtx context.Context, msg *types.MsgDeleteMiner
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	k.RemoveMiners(
+	k.RemoveProviders(
 		ctx,
 		msg.Address,
 	)
 
-	return &types.MsgDeleteMinersResponse{}, nil
+	return &types.MsgDeleteProvidersResponse{}, nil
 }

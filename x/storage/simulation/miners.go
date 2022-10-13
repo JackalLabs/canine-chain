@@ -16,7 +16,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func SimulateMsgCreateMiners(
+func SimulateMsgCreateProviders(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -26,14 +26,14 @@ func SimulateMsgCreateMiners(
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
 		i := r.Int()
-		msg := &types.MsgCreateMiners{
+		msg := &types.MsgCreateProviders{
 			Creator: simAccount.Address.String(),
 			Address: strconv.Itoa(i),
 		}
 
-		_, found := k.GetMiners(ctx, msg.Address)
+		_, found := k.GetProviders(ctx, msg.Address)
 		if found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Miners already exist"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Providers already exist"), nil, nil
 		}
 
 		txCtx := simulation.OperationInput{
@@ -54,7 +54,7 @@ func SimulateMsgCreateMiners(
 	}
 }
 
-func SimulateMsgUpdateMiners(
+func SimulateMsgUpdateProviders(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -62,25 +62,25 @@ func SimulateMsgUpdateMiners(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		var (
-			simAccount = simtypes.Account{}
-			miners     = types.Miners{}
-			msg        = &types.MsgUpdateMiners{}
-			allMiners  = k.GetAllMiners(ctx)
-			found      = false
+			simAccount   = simtypes.Account{}
+			providers    = types.Providers{}
+			msg          = &types.MsgUpdateProviders{}
+			allProviders = k.GetAllProviders(ctx)
+			found        = false
 		)
-		for _, obj := range allMiners {
+		for _, obj := range allProviders {
 			simAccount, found = FindAccount(accs, obj.Creator)
 			if found {
-				miners = obj
+				providers = obj
 				break
 			}
 		}
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "miners creator not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "providers creator not found"), nil, nil
 		}
 		msg.Creator = simAccount.Address.String()
 
-		msg.Address = miners.Address
+		msg.Address = providers.Address
 
 		txCtx := simulation.OperationInput{
 			R:               r,
@@ -100,7 +100,7 @@ func SimulateMsgUpdateMiners(
 	}
 }
 
-func SimulateMsgDeleteMiners(
+func SimulateMsgDeleteProviders(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -108,25 +108,25 @@ func SimulateMsgDeleteMiners(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		var (
-			simAccount = simtypes.Account{}
-			miners     = types.Miners{}
-			msg        = &types.MsgUpdateMiners{}
-			allMiners  = k.GetAllMiners(ctx)
-			found      = false
+			simAccount   = simtypes.Account{}
+			providers    = types.Providers{}
+			msg          = &types.MsgUpdateProviders{}
+			allProviders = k.GetAllProviders(ctx)
+			found        = false
 		)
-		for _, obj := range allMiners {
+		for _, obj := range allProviders {
 			simAccount, found = FindAccount(accs, obj.Creator)
 			if found {
-				miners = obj
+				providers = obj
 				break
 			}
 		}
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "miners creator not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "providers creator not found"), nil, nil
 		}
 		msg.Creator = simAccount.Address.String()
 
-		msg.Address = miners.Address
+		msg.Address = providers.Address
 
 		txCtx := simulation.OperationInput{
 			R:               r,

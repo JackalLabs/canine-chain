@@ -9,7 +9,7 @@ message Files {
   string owner = 3; 
   string viewingAccess = 4; 
   string editAccess = 5; 
-  uint64 trackingNumber = 6;
+  string trackingNumber = 6;
 
 }
 

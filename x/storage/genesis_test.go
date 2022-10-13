@@ -38,7 +38,7 @@ func TestGenesis(t *testing.T) {
 				Cid: "1",
 			},
 		},
-		MinersList: []types.Miners{
+		ProvidersList: []types.Providers{
 			{
 				Address: "0",
 			},
@@ -84,7 +84,7 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.ContractsList, got.ContractsList)
 	require.ElementsMatch(t, genesisState.ProofsList, got.ProofsList)
 	require.ElementsMatch(t, genesisState.ActiveDealsList, got.ActiveDealsList)
-	require.ElementsMatch(t, genesisState.MinersList, got.MinersList)
+	require.ElementsMatch(t, genesisState.ProvidersList, got.ProvidersList)
 	require.ElementsMatch(t, genesisState.PayBlocksList, got.PayBlocksList)
 	require.ElementsMatch(t, genesisState.ClientUsageList, got.ClientUsageList)
 	require.ElementsMatch(t, genesisState.StraysList, got.StraysList)

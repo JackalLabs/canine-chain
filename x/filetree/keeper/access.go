@@ -16,7 +16,7 @@ func HasViewingAccess(file types.Files, user string) bool {
 	json.Unmarshal([]byte(pvacc), &jvacc)
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, user)))
+	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
@@ -37,14 +37,16 @@ func HasEditAccess(file types.Files, user string) bool {
 	json.Unmarshal([]byte(peacc), &jvacc)
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%d%s", trackingNumber, user)))
+	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, user)))
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
+	fmt.Println("@@@@address string is", addressString)
 	//if editor exists, body of if statement executes and ok is returned as 'true'
 	if _, ok := jvacc[addressString]; ok {
 		return ok
 	}
+
 	//During sandbox testing, if editor doesn't exist, the body of the if statement never executes, so we need to return false
 	return false
 }
@@ -61,10 +63,10 @@ func IsOwner(file types.Files, user string) bool {
 	return addressString == file.Owner
 }
 
-func MakeViewerAddress(trackingNumber uint64, user string) string {
+func MakeViewerAddress(trackingNumber string, user string) string {
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%d%s", trackingNumber, user)))
+	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
 	hash := h.Sum(nil)
 	addressString := fmt.Sprintf("%x", hash)
 

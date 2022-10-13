@@ -60,6 +60,7 @@ func CmdAddViewers() *cobra.Command {
 
 			var viewerIds []string
 			var viewerKeys []string
+			var viewersToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
@@ -125,7 +126,13 @@ func CmdAddViewers() *cobra.Command {
 				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
+				viewersToNotify = append(viewersToNotify, v)
 
+			}
+
+			jsonViewersToNotify, err := json.Marshal(viewersToNotify)
+			if err != nil {
+				return err
 			}
 
 			msg := types.NewMsgAddViewers(
@@ -134,6 +141,7 @@ func CmdAddViewers() *cobra.Command {
 				strings.Join(viewerKeys, ","),
 				merklePath,
 				ownerString,
+				string(jsonViewersToNotify),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

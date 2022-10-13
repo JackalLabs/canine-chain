@@ -4,7 +4,7 @@ package jackaldao.canine.storage;
 import "storage/contracts.proto";
 import "storage/proofs.proto";
 import "storage/active_deals.proto";
-import "storage/miners.proto";
+import "storage/providers.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/jackal-dao/canine/x/storage/types";
@@ -14,9 +14,9 @@ service Msg {
       rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
   rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
   rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
-  rpc SetMinerIp(MsgSetMinerIp) returns (MsgSetMinerIpResponse);
-  rpc SetMinerTotalspace(MsgSetMinerTotalspace) returns (MsgSetMinerTotalspaceResponse);
-  rpc InitMiner(MsgInitMiner) returns (MsgInitMinerResponse);
+  rpc SetProviderIp(MsgSetProviderIp) returns (MsgSetProviderIpResponse);
+  rpc SetProviderTotalspace(MsgSetProviderTotalspace) returns (MsgSetProviderTotalspaceResponse);
+  rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
@@ -118,7 +118,7 @@ message MsgCreateActiveDeals {
   string cid = 2;
 
   string signee = 3;
-  string miner = 4;
+  string provider = 4;
   string startblock = 5;
   string endblock = 6;
   string filesize = 7;
@@ -133,7 +133,7 @@ message MsgUpdateActiveDeals {
   string cid = 2;
 
   string signee = 3;
-  string miner = 4;
+  string provider = 4;
   string startblock = 5;
   string endblock = 6;
   string filesize = 7;
@@ -157,53 +157,53 @@ message MsgSignContract {
 message MsgSignContractResponse {
 }
 
-message MsgCreateMiners {
+message MsgCreateProviders {
   string creator = 1;
   string address = 2;
 
   string ip = 3;
   string totalspace = 4;
 }
-message MsgCreateMinersResponse {}
+message MsgCreateProvidersResponse {}
 
-message MsgUpdateMiners {
+message MsgUpdateProviders {
   string creator = 1;
   string address = 2;
 
   string ip = 3;
   string totalspace = 4;
 }
-message MsgUpdateMinersResponse {}
+message MsgUpdateProvidersResponse {}
 
-message MsgDeleteMiners {
+message MsgDeleteProviders {
   string creator = 1;
   string address = 2;
 }
-message MsgDeleteMinersResponse {}
+message MsgDeleteProvidersResponse {}
 
-message MsgSetMinerIp {
+message MsgSetProviderIp {
   string creator = 1;
   string ip = 2;
 }
 
-message MsgSetMinerIpResponse {
+message MsgSetProviderIpResponse {
 }
 
-message MsgSetMinerTotalspace {
+message MsgSetProviderTotalspace {
   string creator = 1;
   string space = 2;
 }
 
-message MsgSetMinerTotalspaceResponse {
+message MsgSetProviderTotalspaceResponse {
 }
 
-message MsgInitMiner {
+message MsgInitProvider {
   string creator = 1;
   string ip = 2;
   string totalspace = 3;
 }
 
-message MsgInitMinerResponse {
+message MsgInitProviderResponse {
 }
 
 message MsgCancelContract {

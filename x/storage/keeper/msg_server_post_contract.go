@@ -13,12 +13,12 @@ import (
 func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContract) (*types.MsgPostContractResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	miner, ok := k.GetMiners(ctx, msg.Creator)
+	provider, ok := k.GetProviders(ctx, msg.Creator)
 	if !ok {
-		return nil, fmt.Errorf("can't find miner")
+		return nil, fmt.Errorf("can't find provider")
 	}
 
-	ts, ok := sdk.NewIntFromString(miner.Totalspace)
+	ts, ok := sdk.NewIntFromString(provider.Totalspace)
 
 	if !ok {
 		return nil, fmt.Errorf("error parsing total space")
@@ -30,8 +30,8 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		return nil, fmt.Errorf("error parsing file size")
 	}
 
-	if k.GetMinerUsing(ctx, msg.Creator)+fs.Int64() > ts.Int64() {
-		return nil, fmt.Errorf("not enough space on miner")
+	if k.GetProviderUsing(ctx, msg.Creator)+fs.Int64() > ts.Int64() {
+		return nil, fmt.Errorf("not enough space on provider")
 	}
 
 	paidAMT := k.GetPaidAmount(ctx, msg.Signee, ctx.BlockHeight())
