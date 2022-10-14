@@ -20,8 +20,8 @@ parent:
         + [params](#params)
     + [Transactions](#transactions)
         + [create-l-pool](#create-l-pool)
-        + [deposit-l-pool](#deposit-l-pool)
-        + [withdraw-l-pool](#withdraw-l-pool)
+        + [join-pool](#join-pool)
+        + [exit-pool](#exit-pool)
         + [swap](#swap)
 3. [Development](#development)
     + [Todo](#todo)
@@ -116,35 +116,35 @@ canined tx lp create-l-pool [pool-coins] [invariant model id] \
    "swap-fee-percentage" [pool-lock-time] "withdraw-penalty-percentage"
 ```
 
-#### deposit-l-pool
+#### join-pool
 
-The `deposit-l-pool` command allows users to contribute to a pool and receive
+The `join-pool` command allows users to contribute to a pool and receive
 liquidity pool token.
 Expected format for `[deposit-coins]` (omit curly brackets): "{denom0}{amount0}
 ...{denomN}{amountN}"
 
 ```sh
-canined tx lp deposit-l-pool "pool-name" [deposit-coins]
+canined tx lp join-pool "pool-name" [deposit-coins]
 ```
 
-#### withdraw-l-pool
+#### exit-pool
 
-The `withdraw-l-pool` command allows users to burn their liquidity pool token
+The `exit-pool` command allows users to burn their liquidity pool token
 to receive pool coins.  
 The `[burn-amount]` is an integer.
 
 ```sh
-canined tx withdraw-l-pool "pool-name" [burn-amount]
+canined tx lp exit-pool "pool-name" [burn-amount]
 ```
 
 #### swap
 
 The `swap` command allows users to swap token in a liquidity pool.  
-Expected format for `[deposit-coins]` (omit curly brackets): "{denom0}{amount0}
+Expected format for `[swap-in]` (omit curly brackets): "{denom0}{amount0}
 ...{denomN}{amountN}"
 
 ```sh
-canined tx withdraw-l-pool "pool-name" [deposit-coins]
+canined tx lp swap "pool-name" [swap-in]
 ```
 
 # Development

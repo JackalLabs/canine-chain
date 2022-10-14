@@ -10,7 +10,7 @@ import (
 	"github.com/jackal-dao/canine/x/lp/types"
 )
 
-func SimulateMsgWithdrawLPool(
+func SimulateMsgExitPool(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -18,12 +18,12 @@ func SimulateMsgWithdrawLPool(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgWithdrawLPool{
+		msg := &types.MsgExitPool{
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the WithdrawLPool simulation
+		// TODO: Handling the ExitPool simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "WithdrawLPool simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ExitPool simulation not implemented"), nil, nil
 	}
 }

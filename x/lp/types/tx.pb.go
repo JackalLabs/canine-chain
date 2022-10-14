@@ -170,7 +170,7 @@ func (m *MsgCreateLPoolResponse) GetId() string {
 	return ""
 }
 
-type MsgDepositLPool struct {
+type MsgJoinPool struct {
 	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	PoolName string `protobuf:"bytes,2,opt,name=poolName,proto3" json:"poolName,omitempty"`
 	// Input format:
@@ -180,18 +180,18 @@ type MsgDepositLPool struct {
 	LockDuration int64 `protobuf:"varint,4,opt,name=lockDuration,proto3" json:"lockDuration,omitempty"`
 }
 
-func (m *MsgDepositLPool) Reset()         { *m = MsgDepositLPool{} }
-func (m *MsgDepositLPool) String() string { return proto.CompactTextString(m) }
-func (*MsgDepositLPool) ProtoMessage()    {}
-func (*MsgDepositLPool) Descriptor() ([]byte, []int) {
+func (m *MsgJoinPool) Reset()         { *m = MsgJoinPool{} }
+func (m *MsgJoinPool) String() string { return proto.CompactTextString(m) }
+func (*MsgJoinPool) ProtoMessage()    {}
+func (*MsgJoinPool) Descriptor() ([]byte, []int) {
 	return fileDescriptor_bb876facf30080e2, []int{2}
 }
-func (m *MsgDepositLPool) XXX_Unmarshal(b []byte) error {
+func (m *MsgJoinPool) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDepositLPool) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgJoinPool) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDepositLPool.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgJoinPool.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -201,63 +201,63 @@ func (m *MsgDepositLPool) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *MsgDepositLPool) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDepositLPool.Merge(m, src)
+func (m *MsgJoinPool) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgJoinPool.Merge(m, src)
 }
-func (m *MsgDepositLPool) XXX_Size() int {
+func (m *MsgJoinPool) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDepositLPool) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDepositLPool.DiscardUnknown(m)
+func (m *MsgJoinPool) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgJoinPool.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDepositLPool proto.InternalMessageInfo
+var xxx_messageInfo_MsgJoinPool proto.InternalMessageInfo
 
-func (m *MsgDepositLPool) GetCreator() string {
+func (m *MsgJoinPool) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgDepositLPool) GetPoolName() string {
+func (m *MsgJoinPool) GetPoolName() string {
 	if m != nil {
 		return m.PoolName
 	}
 	return ""
 }
 
-func (m *MsgDepositLPool) GetCoins() []types.DecCoin {
+func (m *MsgJoinPool) GetCoins() []types.DecCoin {
 	if m != nil {
 		return m.Coins
 	}
 	return nil
 }
 
-func (m *MsgDepositLPool) GetLockDuration() int64 {
+func (m *MsgJoinPool) GetLockDuration() int64 {
 	if m != nil {
 		return m.LockDuration
 	}
 	return 0
 }
 
-type MsgDepositLPoolResponse struct {
+type MsgJoinPoolResponse struct {
 	// Amount of shares given to pool contributor.
 	Shares uint64 `protobuf:"varint,1,opt,name=shares,proto3" json:"shares,omitempty"`
 }
 
-func (m *MsgDepositLPoolResponse) Reset()         { *m = MsgDepositLPoolResponse{} }
-func (m *MsgDepositLPoolResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDepositLPoolResponse) ProtoMessage()    {}
-func (*MsgDepositLPoolResponse) Descriptor() ([]byte, []int) {
+func (m *MsgJoinPoolResponse) Reset()         { *m = MsgJoinPoolResponse{} }
+func (m *MsgJoinPoolResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgJoinPoolResponse) ProtoMessage()    {}
+func (*MsgJoinPoolResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_bb876facf30080e2, []int{3}
 }
-func (m *MsgDepositLPoolResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgJoinPoolResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDepositLPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgJoinPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDepositLPoolResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgJoinPoolResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -267,43 +267,43 @@ func (m *MsgDepositLPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *MsgDepositLPoolResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDepositLPoolResponse.Merge(m, src)
+func (m *MsgJoinPoolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgJoinPoolResponse.Merge(m, src)
 }
-func (m *MsgDepositLPoolResponse) XXX_Size() int {
+func (m *MsgJoinPoolResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDepositLPoolResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDepositLPoolResponse.DiscardUnknown(m)
+func (m *MsgJoinPoolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgJoinPoolResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDepositLPoolResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgJoinPoolResponse proto.InternalMessageInfo
 
-func (m *MsgDepositLPoolResponse) GetShares() uint64 {
+func (m *MsgJoinPoolResponse) GetShares() uint64 {
 	if m != nil {
 		return m.Shares
 	}
 	return 0
 }
 
-type MsgWithdrawLPool struct {
+type MsgExitPool struct {
 	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	PoolName string `protobuf:"bytes,2,opt,name=poolName,proto3" json:"poolName,omitempty"`
 	Shares   int64  `protobuf:"varint,3,opt,name=shares,proto3" json:"shares,omitempty"`
 }
 
-func (m *MsgWithdrawLPool) Reset()         { *m = MsgWithdrawLPool{} }
-func (m *MsgWithdrawLPool) String() string { return proto.CompactTextString(m) }
-func (*MsgWithdrawLPool) ProtoMessage()    {}
-func (*MsgWithdrawLPool) Descriptor() ([]byte, []int) {
+func (m *MsgExitPool) Reset()         { *m = MsgExitPool{} }
+func (m *MsgExitPool) String() string { return proto.CompactTextString(m) }
+func (*MsgExitPool) ProtoMessage()    {}
+func (*MsgExitPool) Descriptor() ([]byte, []int) {
 	return fileDescriptor_bb876facf30080e2, []int{4}
 }
-func (m *MsgWithdrawLPool) XXX_Unmarshal(b []byte) error {
+func (m *MsgExitPool) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgWithdrawLPool) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgExitPool) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgWithdrawLPool.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgExitPool.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -313,54 +313,54 @@ func (m *MsgWithdrawLPool) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 		return b[:n], nil
 	}
 }
-func (m *MsgWithdrawLPool) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgWithdrawLPool.Merge(m, src)
+func (m *MsgExitPool) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgExitPool.Merge(m, src)
 }
-func (m *MsgWithdrawLPool) XXX_Size() int {
+func (m *MsgExitPool) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgWithdrawLPool) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgWithdrawLPool.DiscardUnknown(m)
+func (m *MsgExitPool) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgExitPool.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgWithdrawLPool proto.InternalMessageInfo
+var xxx_messageInfo_MsgExitPool proto.InternalMessageInfo
 
-func (m *MsgWithdrawLPool) GetCreator() string {
+func (m *MsgExitPool) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgWithdrawLPool) GetPoolName() string {
+func (m *MsgExitPool) GetPoolName() string {
 	if m != nil {
 		return m.PoolName
 	}
 	return ""
 }
 
-func (m *MsgWithdrawLPool) GetShares() int64 {
+func (m *MsgExitPool) GetShares() int64 {
 	if m != nil {
 		return m.Shares
 	}
 	return 0
 }
 
-type MsgWithdrawLPoolResponse struct {
+type MsgExitPoolResponse struct {
 }
 
-func (m *MsgWithdrawLPoolResponse) Reset()         { *m = MsgWithdrawLPoolResponse{} }
-func (m *MsgWithdrawLPoolResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgWithdrawLPoolResponse) ProtoMessage()    {}
-func (*MsgWithdrawLPoolResponse) Descriptor() ([]byte, []int) {
+func (m *MsgExitPoolResponse) Reset()         { *m = MsgExitPoolResponse{} }
+func (m *MsgExitPoolResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgExitPoolResponse) ProtoMessage()    {}
+func (*MsgExitPoolResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_bb876facf30080e2, []int{5}
 }
-func (m *MsgWithdrawLPoolResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgExitPoolResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgWithdrawLPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgExitPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgWithdrawLPoolResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgExitPoolResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -370,17 +370,17 @@ func (m *MsgWithdrawLPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *MsgWithdrawLPoolResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgWithdrawLPoolResponse.Merge(m, src)
+func (m *MsgExitPoolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgExitPoolResponse.Merge(m, src)
 }
-func (m *MsgWithdrawLPoolResponse) XXX_Size() int {
+func (m *MsgExitPoolResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgWithdrawLPoolResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgWithdrawLPoolResponse.DiscardUnknown(m)
+func (m *MsgExitPoolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgExitPoolResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgWithdrawLPoolResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgExitPoolResponse proto.InternalMessageInfo
 
 type MsgSwap struct {
 	Creator  string        `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
@@ -481,10 +481,10 @@ var xxx_messageInfo_MsgSwapResponse proto.InternalMessageInfo
 func init() {
 	proto.RegisterType((*MsgCreateLPool)(nil), "jackaldao.canine.lp.MsgCreateLPool")
 	proto.RegisterType((*MsgCreateLPoolResponse)(nil), "jackaldao.canine.lp.MsgCreateLPoolResponse")
-	proto.RegisterType((*MsgDepositLPool)(nil), "jackaldao.canine.lp.MsgDepositLPool")
-	proto.RegisterType((*MsgDepositLPoolResponse)(nil), "jackaldao.canine.lp.MsgDepositLPoolResponse")
-	proto.RegisterType((*MsgWithdrawLPool)(nil), "jackaldao.canine.lp.MsgWithdrawLPool")
-	proto.RegisterType((*MsgWithdrawLPoolResponse)(nil), "jackaldao.canine.lp.MsgWithdrawLPoolResponse")
+	proto.RegisterType((*MsgJoinPool)(nil), "jackaldao.canine.lp.MsgJoinPool")
+	proto.RegisterType((*MsgJoinPoolResponse)(nil), "jackaldao.canine.lp.MsgJoinPoolResponse")
+	proto.RegisterType((*MsgExitPool)(nil), "jackaldao.canine.lp.MsgExitPool")
+	proto.RegisterType((*MsgExitPoolResponse)(nil), "jackaldao.canine.lp.MsgExitPoolResponse")
 	proto.RegisterType((*MsgSwap)(nil), "jackaldao.canine.lp.MsgSwap")
 	proto.RegisterType((*MsgSwapResponse)(nil), "jackaldao.canine.lp.MsgSwapResponse")
 }
@@ -492,43 +492,43 @@ func init() {
 func init() { proto.RegisterFile("lp/tx.proto", fileDescriptor_bb876facf30080e2) }
 
 var fileDescriptor_bb876facf30080e2 = []byte{
-	// 573 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x54, 0xcd, 0x6e, 0xd3, 0x40,
-	0x10, 0x8e, 0xe3, 0x34, 0x85, 0xc9, 0x4f, 0xa9, 0x81, 0x62, 0x59, 0x95, 0x89, 0xdc, 0x20, 0x22,
-	0xa0, 0xb6, 0x52, 0x24, 0xc4, 0x95, 0x36, 0x42, 0x2a, 0xaa, 0x11, 0x32, 0x07, 0x24, 0x2e, 0x66,
-	0x63, 0x2f, 0xce, 0x12, 0xdb, 0x6b, 0x79, 0x1d, 0xd2, 0xbe, 0x05, 0x2f, 0xc1, 0xbb, 0xf4, 0xd8,
-	0x23, 0x27, 0x84, 0x92, 0x37, 0xe0, 0x8e, 0x84, 0xbc, 0x76, 0xdc, 0xb8, 0x22, 0x10, 0xe0, 0xb6,
-	0xf3, 0xf7, 0x7d, 0x33, 0xdf, 0xec, 0x2e, 0x34, 0xfc, 0xc8, 0x48, 0x4e, 0xf5, 0x28, 0xa6, 0x09,
-	0x95, 0x6e, 0x7e, 0x40, 0xce, 0x18, 0xf9, 0x2e, 0xa2, 0xba, 0x83, 0x42, 0x12, 0x62, 0xdd, 0x8f,
-	0x14, 0xd5, 0xa1, 0x2c, 0xa0, 0xcc, 0x18, 0x22, 0x86, 0x8d, 0x8f, 0xfd, 0x21, 0x4e, 0x50, 0xdf,
-	0x70, 0x28, 0x09, 0xb3, 0x22, 0xe5, 0x96, 0x47, 0x3d, 0xca, 0x8f, 0x46, 0x7a, 0xca, 0xbc, 0xda,
-	0x77, 0x01, 0xda, 0x26, 0xf3, 0x8e, 0x62, 0x8c, 0x12, 0x7c, 0xf2, 0x8a, 0x52, 0x5f, 0x92, 0x61,
-	0xd3, 0x49, 0x4d, 0x1a, 0xcb, 0x42, 0x47, 0xe8, 0x5d, 0xb7, 0x16, 0xa6, 0xf4, 0x14, 0x36, 0x52,
-	0x40, 0x26, 0x57, 0x3b, 0x62, 0xaf, 0x71, 0xb0, 0xab, 0x67, 0x94, 0x7a, 0x4a, 0xa9, 0xe7, 0x94,
-	0xfa, 0x00, 0x3b, 0x47, 0x94, 0x84, 0x87, 0xb5, 0xf3, 0xaf, 0x77, 0x2b, 0x56, 0x56, 0x20, 0xdd,
-	0x86, 0x3a, 0x0a, 0x02, 0xfb, 0xd8, 0x95, 0xc5, 0x8e, 0xd0, 0x6b, 0x59, 0x1b, 0x28, 0x08, 0x8e,
-	0x5d, 0xa9, 0x0b, 0x6d, 0x36, 0x45, 0x91, 0xfd, 0x1e, 0x63, 0x3b, 0x98, 0xf8, 0x09, 0x91, 0x6b,
-	0x9c, 0xb1, 0x99, 0x7a, 0x9f, 0x63, 0x6c, 0xa6, 0x3e, 0xe9, 0x01, 0x6c, 0x07, 0x24, 0xb4, 0x7d,
-	0xea, 0x8c, 0x6d, 0x77, 0x12, 0xa3, 0x84, 0xd0, 0x50, 0xde, 0xe8, 0x08, 0x3d, 0xd1, 0xda, 0x0a,
-	0x48, 0x78, 0x42, 0x9d, 0xf1, 0x20, 0x77, 0x4b, 0x7b, 0xd0, 0x8a, 0x70, 0x88, 0xfc, 0xe4, 0x2c,
-	0x07, 0xac, 0x67, 0x80, 0xb9, 0x93, 0x03, 0x6a, 0x3d, 0xd8, 0x29, 0xcf, 0x6c, 0x61, 0x16, 0xd1,
-	0x90, 0x61, 0xa9, 0x0d, 0x55, 0xe2, 0xe6, 0x63, 0x57, 0x89, 0xab, 0x7d, 0x16, 0x60, 0xcb, 0x64,
-	0xde, 0x00, 0x47, 0x94, 0x91, 0xe4, 0x4f, 0xfa, 0x28, 0x70, 0x2d, 0xa2, 0xd4, 0x7f, 0x89, 0x02,
-	0x2c, 0x57, 0x79, 0xa8, 0xb0, 0x2f, 0xb5, 0x13, 0xff, 0x56, 0x3b, 0x0d, 0x9a, 0xfe, 0xd2, 0x88,
-	0x5c, 0x22, 0xd1, 0x2a, 0xf9, 0xb4, 0x3e, 0xdc, 0xb9, 0xd2, 0x66, 0x31, 0xd2, 0x0e, 0xd4, 0xd9,
-	0x08, 0xc5, 0x98, 0xf1, 0x6e, 0x6b, 0x56, 0x6e, 0x69, 0xef, 0xe0, 0x86, 0xc9, 0xbc, 0x37, 0x24,
-	0x19, 0xb9, 0x31, 0x9a, 0xfe, 0xcf, 0x68, 0x97, 0x0c, 0x22, 0x6f, 0x6d, 0xc1, 0xa0, 0x80, 0x7c,
-	0x95, 0x61, 0xd1, 0x95, 0x36, 0x85, 0x4d, 0x93, 0x79, 0xaf, 0xa7, 0x28, 0xfa, 0x47, 0xd2, 0x27,
-	0x50, 0x4b, 0xe5, 0xe1, 0x94, 0xeb, 0xc9, 0xc9, 0xf3, 0xb5, 0x6d, 0xbe, 0xd0, 0x94, 0x78, 0xd1,
-	0xcb, 0xc1, 0x8f, 0x2a, 0x88, 0x26, 0xf3, 0x24, 0x1b, 0x1a, 0xcb, 0xef, 0x60, 0x4f, 0xff, 0xc5,
-	0x33, 0xd3, 0xcb, 0x17, 0x47, 0x79, 0xb8, 0x46, 0x52, 0xb1, 0x8a, 0x21, 0x34, 0x4b, 0x37, 0xa9,
-	0xbb, 0xaa, 0x78, 0x39, 0x4b, 0x79, 0xb4, 0x4e, 0x56, 0xc1, 0x81, 0xa1, 0x55, 0xde, 0xe9, 0xbd,
-	0x55, 0xe5, 0xa5, 0x34, 0x65, 0x7f, 0xad, 0xb4, 0x82, 0xe6, 0x05, 0xd4, 0xf8, 0xf2, 0x76, 0x57,
-	0x95, 0xa5, 0x51, 0xa5, 0xfb, 0xbb, 0xe8, 0x02, 0xeb, 0xf0, 0xd9, 0xf9, 0x4c, 0x15, 0x2e, 0x66,
-	0xaa, 0xf0, 0x6d, 0xa6, 0x0a, 0x9f, 0xe6, 0x6a, 0xe5, 0x62, 0xae, 0x56, 0xbe, 0xcc, 0xd5, 0xca,
-	0xdb, 0xfb, 0x1e, 0x49, 0x46, 0x93, 0xa1, 0xee, 0xd0, 0xc0, 0xc8, 0x90, 0xf6, 0x5d, 0x44, 0x8d,
-	0x0c, 0xca, 0x38, 0x35, 0xd2, 0x4f, 0xf1, 0x2c, 0xc2, 0x6c, 0x58, 0xe7, 0xbf, 0xd9, 0xe3, 0x9f,
-	0x01, 0x00, 0x00, 0xff, 0xff, 0x57, 0x22, 0x39, 0x11, 0x27, 0x05, 0x00, 0x00,
+	// 562 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x94, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0xc7, 0xe3, 0x38, 0x4d, 0xcb, 0xa4, 0x4d, 0x55, 0x97, 0x56, 0x96, 0x55, 0x99, 0xc8, 0xad,
+	0x84, 0x05, 0xaa, 0xad, 0x16, 0x09, 0x71, 0xa5, 0x2d, 0x48, 0xad, 0x1a, 0x84, 0x8c, 0xc4, 0x01,
+	0x0e, 0xd6, 0xc6, 0x5e, 0xdc, 0x25, 0xb6, 0xc7, 0xca, 0x3a, 0x24, 0x7d, 0x0b, 0x5e, 0x81, 0xb7,
+	0xe9, 0xb1, 0x47, 0x4e, 0x08, 0x25, 0x6f, 0xc0, 0x13, 0x20, 0xaf, 0x3f, 0x9a, 0x20, 0x42, 0x0b,
+	0xdc, 0x3c, 0xb3, 0x33, 0xbf, 0xff, 0x7c, 0xac, 0x17, 0x5a, 0x61, 0x62, 0xa7, 0x63, 0x2b, 0x19,
+	0x60, 0x8a, 0xca, 0xe6, 0x47, 0xe2, 0xf5, 0x49, 0xe8, 0x13, 0xb4, 0x3c, 0x12, 0xb3, 0x98, 0x5a,
+	0x61, 0xa2, 0xe9, 0x1e, 0xf2, 0x08, 0xb9, 0xdd, 0x23, 0x9c, 0xda, 0x9f, 0x0e, 0x7a, 0x34, 0x25,
+	0x07, 0xb6, 0x87, 0x2c, 0xce, 0x93, 0xb4, 0xfb, 0x01, 0x06, 0x28, 0x3e, 0xed, 0xec, 0x2b, 0xf7,
+	0x1a, 0x3f, 0x24, 0x68, 0x77, 0x79, 0x70, 0x3c, 0xa0, 0x24, 0xa5, 0xe7, 0xaf, 0x11, 0x43, 0x45,
+	0x85, 0x65, 0x2f, 0x33, 0x71, 0xa0, 0x4a, 0x1d, 0xc9, 0xbc, 0xe7, 0x94, 0xa6, 0xf2, 0x0c, 0x96,
+	0x32, 0x20, 0x57, 0xeb, 0x1d, 0xd9, 0x6c, 0x1d, 0xee, 0x58, 0xb9, 0xa4, 0x95, 0x49, 0x5a, 0x85,
+	0xa4, 0x75, 0x42, 0xbd, 0x63, 0x64, 0xf1, 0x51, 0xe3, 0xea, 0xdb, 0x83, 0x9a, 0x93, 0x27, 0x28,
+	0x5b, 0xd0, 0x24, 0x51, 0xe4, 0x9e, 0xfa, 0xaa, 0xdc, 0x91, 0xcc, 0x35, 0x67, 0x89, 0x44, 0xd1,
+	0xa9, 0xaf, 0xec, 0x41, 0x9b, 0x8f, 0x48, 0xe2, 0x7e, 0xa0, 0xd4, 0x8d, 0x86, 0x61, 0xca, 0xd4,
+	0x86, 0x50, 0x5c, 0xcd, 0xbc, 0x2f, 0x29, 0xed, 0x66, 0x3e, 0xe5, 0x11, 0x6c, 0x44, 0x2c, 0x76,
+	0x43, 0xf4, 0xfa, 0xae, 0x3f, 0x1c, 0x90, 0x94, 0x61, 0xac, 0x2e, 0x75, 0x24, 0x53, 0x76, 0xd6,
+	0x23, 0x16, 0x9f, 0xa3, 0xd7, 0x3f, 0x29, 0xdc, 0xca, 0x2e, 0xac, 0x25, 0x34, 0x26, 0x61, 0x7a,
+	0x59, 0x00, 0x9b, 0x39, 0xb0, 0x70, 0x0a, 0xa0, 0x61, 0xc2, 0xf6, 0x7c, 0xcf, 0x0e, 0xe5, 0x09,
+	0xc6, 0x9c, 0x2a, 0x6d, 0xa8, 0x33, 0xbf, 0x68, 0xbb, 0xce, 0x7c, 0xe3, 0x8b, 0x04, 0xad, 0x2e,
+	0x0f, 0xce, 0x90, 0xc5, 0xb7, 0xcc, 0x46, 0x83, 0x95, 0x04, 0x31, 0x7c, 0x45, 0x22, 0xaa, 0xd6,
+	0xc5, 0x51, 0x65, 0xdf, 0xcc, 0x4d, 0xfe, 0xdb, 0xb9, 0x19, 0xb0, 0x1a, 0xce, 0xb4, 0x27, 0xc6,
+	0x23, 0x3b, 0x73, 0x3e, 0x63, 0x1f, 0x36, 0x67, 0x4a, 0xac, 0x5a, 0xd9, 0x86, 0x26, 0xbf, 0x20,
+	0x03, 0xca, 0x45, 0xa5, 0x0d, 0xa7, 0xb0, 0x8c, 0xf7, 0xa2, 0xa3, 0x17, 0x63, 0x96, 0xfe, 0x47,
+	0x47, 0x37, 0x70, 0x59, 0x54, 0x54, 0xc2, 0xb7, 0x44, 0x2d, 0x25, 0xbc, 0xac, 0xc5, 0x18, 0xc1,
+	0x72, 0x97, 0x07, 0x6f, 0x46, 0x24, 0xf9, 0x47, 0xbd, 0xa7, 0xd0, 0xc8, 0x06, 0x22, 0xd4, 0xee,
+	0x36, 0x40, 0x11, 0x6f, 0x6c, 0xc0, 0x7a, 0x21, 0x5c, 0xd6, 0x72, 0x38, 0xa9, 0x83, 0xdc, 0xe5,
+	0x81, 0xe2, 0x42, 0x6b, 0xf6, 0xd6, 0xef, 0x5a, 0xbf, 0xf9, 0xa9, 0xac, 0xf9, 0x6b, 0xa2, 0x3d,
+	0xbe, 0x43, 0x50, 0xb5, 0x80, 0xb7, 0xb0, 0x52, 0xdd, 0x9b, 0xce, 0xa2, 0xc4, 0x32, 0x42, 0x33,
+	0x6f, 0x8b, 0x98, 0xe5, 0x56, 0xdb, 0x5b, 0xc8, 0x2d, 0x23, 0x16, 0x73, 0x7f, 0x5d, 0x92, 0x72,
+	0x06, 0x0d, 0xb1, 0xa1, 0x9d, 0x45, 0x19, 0xd9, 0xa9, 0xb6, 0xf7, 0xa7, 0xd3, 0x92, 0x75, 0xf4,
+	0xfc, 0x6a, 0xa2, 0x4b, 0xd7, 0x13, 0x5d, 0xfa, 0x3e, 0xd1, 0xa5, 0xcf, 0x53, 0xbd, 0x76, 0x3d,
+	0xd5, 0x6b, 0x5f, 0xa7, 0x7a, 0xed, 0xdd, 0xc3, 0x80, 0xa5, 0x17, 0xc3, 0x9e, 0xe5, 0x61, 0x64,
+	0xe7, 0xa4, 0x7d, 0x9f, 0xa0, 0x9d, 0xa3, 0xec, 0xb1, 0x9d, 0xbd, 0x73, 0x97, 0x09, 0xe5, 0xbd,
+	0xa6, 0x78, 0xa0, 0x9e, 0xfc, 0x0c, 0x00, 0x00, 0xff, 0xff, 0xd3, 0x6c, 0x0a, 0x79, 0xfa, 0x04,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -544,8 +544,8 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	CreateLPool(ctx context.Context, in *MsgCreateLPool, opts ...grpc.CallOption) (*MsgCreateLPoolResponse, error)
-	DepositLPool(ctx context.Context, in *MsgDepositLPool, opts ...grpc.CallOption) (*MsgDepositLPoolResponse, error)
-	WithdrawLPool(ctx context.Context, in *MsgWithdrawLPool, opts ...grpc.CallOption) (*MsgWithdrawLPoolResponse, error)
+	JoinPool(ctx context.Context, in *MsgJoinPool, opts ...grpc.CallOption) (*MsgJoinPoolResponse, error)
+	ExitPool(ctx context.Context, in *MsgExitPool, opts ...grpc.CallOption) (*MsgExitPoolResponse, error)
 	Swap(ctx context.Context, in *MsgSwap, opts ...grpc.CallOption) (*MsgSwapResponse, error)
 }
 
@@ -566,18 +566,18 @@ func (c *msgClient) CreateLPool(ctx context.Context, in *MsgCreateLPool, opts ..
 	return out, nil
 }
 
-func (c *msgClient) DepositLPool(ctx context.Context, in *MsgDepositLPool, opts ...grpc.CallOption) (*MsgDepositLPoolResponse, error) {
-	out := new(MsgDepositLPoolResponse)
-	err := c.cc.Invoke(ctx, "/jackaldao.canine.lp.Msg/DepositLPool", in, out, opts...)
+func (c *msgClient) JoinPool(ctx context.Context, in *MsgJoinPool, opts ...grpc.CallOption) (*MsgJoinPoolResponse, error) {
+	out := new(MsgJoinPoolResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.lp.Msg/JoinPool", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) WithdrawLPool(ctx context.Context, in *MsgWithdrawLPool, opts ...grpc.CallOption) (*MsgWithdrawLPoolResponse, error) {
-	out := new(MsgWithdrawLPoolResponse)
-	err := c.cc.Invoke(ctx, "/jackaldao.canine.lp.Msg/WithdrawLPool", in, out, opts...)
+func (c *msgClient) ExitPool(ctx context.Context, in *MsgExitPool, opts ...grpc.CallOption) (*MsgExitPoolResponse, error) {
+	out := new(MsgExitPoolResponse)
+	err := c.cc.Invoke(ctx, "/jackaldao.canine.lp.Msg/ExitPool", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -596,8 +596,8 @@ func (c *msgClient) Swap(ctx context.Context, in *MsgSwap, opts ...grpc.CallOpti
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	CreateLPool(context.Context, *MsgCreateLPool) (*MsgCreateLPoolResponse, error)
-	DepositLPool(context.Context, *MsgDepositLPool) (*MsgDepositLPoolResponse, error)
-	WithdrawLPool(context.Context, *MsgWithdrawLPool) (*MsgWithdrawLPoolResponse, error)
+	JoinPool(context.Context, *MsgJoinPool) (*MsgJoinPoolResponse, error)
+	ExitPool(context.Context, *MsgExitPool) (*MsgExitPoolResponse, error)
 	Swap(context.Context, *MsgSwap) (*MsgSwapResponse, error)
 }
 
@@ -608,11 +608,11 @@ type UnimplementedMsgServer struct {
 func (*UnimplementedMsgServer) CreateLPool(ctx context.Context, req *MsgCreateLPool) (*MsgCreateLPoolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLPool not implemented")
 }
-func (*UnimplementedMsgServer) DepositLPool(ctx context.Context, req *MsgDepositLPool) (*MsgDepositLPoolResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DepositLPool not implemented")
+func (*UnimplementedMsgServer) JoinPool(ctx context.Context, req *MsgJoinPool) (*MsgJoinPoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method JoinPool not implemented")
 }
-func (*UnimplementedMsgServer) WithdrawLPool(ctx context.Context, req *MsgWithdrawLPool) (*MsgWithdrawLPoolResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method WithdrawLPool not implemented")
+func (*UnimplementedMsgServer) ExitPool(ctx context.Context, req *MsgExitPool) (*MsgExitPoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExitPool not implemented")
 }
 func (*UnimplementedMsgServer) Swap(ctx context.Context, req *MsgSwap) (*MsgSwapResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Swap not implemented")
@@ -640,38 +640,38 @@ func _Msg_CreateLPool_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_DepositLPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgDepositLPool)
+func _Msg_JoinPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgJoinPool)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).DepositLPool(ctx, in)
+		return srv.(MsgServer).JoinPool(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/jackaldao.canine.lp.Msg/DepositLPool",
+		FullMethod: "/jackaldao.canine.lp.Msg/JoinPool",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).DepositLPool(ctx, req.(*MsgDepositLPool))
+		return srv.(MsgServer).JoinPool(ctx, req.(*MsgJoinPool))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_WithdrawLPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgWithdrawLPool)
+func _Msg_ExitPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgExitPool)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).WithdrawLPool(ctx, in)
+		return srv.(MsgServer).ExitPool(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/jackaldao.canine.lp.Msg/WithdrawLPool",
+		FullMethod: "/jackaldao.canine.lp.Msg/ExitPool",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).WithdrawLPool(ctx, req.(*MsgWithdrawLPool))
+		return srv.(MsgServer).ExitPool(ctx, req.(*MsgExitPool))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -703,12 +703,12 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_CreateLPool_Handler,
 		},
 		{
-			MethodName: "DepositLPool",
-			Handler:    _Msg_DepositLPool_Handler,
+			MethodName: "JoinPool",
+			Handler:    _Msg_JoinPool_Handler,
 		},
 		{
-			MethodName: "WithdrawLPool",
-			Handler:    _Msg_WithdrawLPool_Handler,
+			MethodName: "ExitPool",
+			Handler:    _Msg_ExitPool_Handler,
 		},
 		{
 			MethodName: "Swap",
@@ -817,7 +817,7 @@ func (m *MsgCreateLPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDepositLPool) Marshal() (dAtA []byte, err error) {
+func (m *MsgJoinPool) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -827,12 +827,12 @@ func (m *MsgDepositLPool) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgDepositLPool) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgJoinPool) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgDepositLPool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgJoinPool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -873,7 +873,7 @@ func (m *MsgDepositLPool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDepositLPoolResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgJoinPoolResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -883,12 +883,12 @@ func (m *MsgDepositLPoolResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgDepositLPoolResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgJoinPoolResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgDepositLPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgJoinPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -901,7 +901,7 @@ func (m *MsgDepositLPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgWithdrawLPool) Marshal() (dAtA []byte, err error) {
+func (m *MsgExitPool) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -911,12 +911,12 @@ func (m *MsgWithdrawLPool) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgWithdrawLPool) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgExitPool) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgWithdrawLPool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgExitPool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -943,7 +943,7 @@ func (m *MsgWithdrawLPool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgWithdrawLPoolResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgExitPoolResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -953,12 +953,12 @@ func (m *MsgWithdrawLPoolResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgWithdrawLPoolResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgExitPoolResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgWithdrawLPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgExitPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1093,7 +1093,7 @@ func (m *MsgCreateLPoolResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgDepositLPool) Size() (n int) {
+func (m *MsgJoinPool) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1119,7 +1119,7 @@ func (m *MsgDepositLPool) Size() (n int) {
 	return n
 }
 
-func (m *MsgDepositLPoolResponse) Size() (n int) {
+func (m *MsgJoinPoolResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1131,7 +1131,7 @@ func (m *MsgDepositLPoolResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgWithdrawLPool) Size() (n int) {
+func (m *MsgExitPool) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1151,7 +1151,7 @@ func (m *MsgWithdrawLPool) Size() (n int) {
 	return n
 }
 
-func (m *MsgWithdrawLPoolResponse) Size() (n int) {
+func (m *MsgExitPoolResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1494,7 +1494,7 @@ func (m *MsgCreateLPoolResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDepositLPool) Unmarshal(dAtA []byte) error {
+func (m *MsgJoinPool) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1517,10 +1517,10 @@ func (m *MsgDepositLPool) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDepositLPool: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgJoinPool: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDepositLPool: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgJoinPool: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1661,7 +1661,7 @@ func (m *MsgDepositLPool) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDepositLPoolResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgJoinPoolResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1684,10 +1684,10 @@ func (m *MsgDepositLPoolResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDepositLPoolResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgJoinPoolResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDepositLPoolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgJoinPoolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1730,7 +1730,7 @@ func (m *MsgDepositLPoolResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgWithdrawLPool) Unmarshal(dAtA []byte) error {
+func (m *MsgExitPool) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1753,10 +1753,10 @@ func (m *MsgWithdrawLPool) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgWithdrawLPool: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgExitPool: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgWithdrawLPool: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgExitPool: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1863,7 +1863,7 @@ func (m *MsgWithdrawLPool) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgWithdrawLPoolResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgExitPoolResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1886,10 +1886,10 @@ func (m *MsgWithdrawLPoolResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgWithdrawLPoolResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgExitPoolResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgWithdrawLPoolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgExitPoolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

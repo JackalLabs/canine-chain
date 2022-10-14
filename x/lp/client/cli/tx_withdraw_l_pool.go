@@ -12,10 +12,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdWithdrawLPool() *cobra.Command {
+func CmdExitPool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw-l-pool \"Pool Name\" [shares]",
-		Short: "Broadcast message withdrawLPool",
+		Use:   "exit-pool \"Pool Name\" [burn quantity]",
+		Short: "exit from liquidity pool by burning liquidity pool token",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
@@ -29,7 +29,7 @@ func CmdWithdrawLPool() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgWithdrawLPool(
+			msg := types.NewMsgExitPool(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				burnShare,

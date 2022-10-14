@@ -15,10 +15,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdDepositLPool() *cobra.Command {
+func CmdJoinPool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "deposit-l-pool \"Pool Name\" \"{amount0}{denom0},...,{amountN}{denomN} ...\" [lock duration (sec)]",
-		Short: "Broadcast message depositLPool",
+		Use:   "join-pool \"Pool Name\" \"{amount0}{denom0},...,{amountN}{denomN} ...\" [lock duration (sec)]",
+		Short: "join a liquidity pool by depositing pool coins.\n ",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
@@ -37,7 +37,7 @@ func CmdDepositLPool() *cobra.Command {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
 
-			msg := types.NewMsgDepositLPool(
+			msg := types.NewMsgJoinPool(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				deposit,
