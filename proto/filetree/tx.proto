@@ -45,6 +45,7 @@ message MsgAddViewers {
   string address = 4;
   string fileowner = 5;
   string notifyViewers = 6;
+  string notiForViewers = 7;
 }
 
 message MsgAddViewersResponse {

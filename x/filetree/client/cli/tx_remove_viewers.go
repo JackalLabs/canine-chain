@@ -2,9 +2,7 @@ package cli
 
 import (
 	"context"
-	"crypto/sha256"
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -26,7 +24,7 @@ func CmdRemoveViewers() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argViewerIds := args[0]
 			argHashpath := args[1]
-			argOwner := args[2] //may be named to accountAddress
+			argOwner := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -36,15 +34,9 @@ func CmdRemoveViewers() *cobra.Command {
 			fileQueryClient := types.NewQueryClient(clientCtx)
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
-
-			h := sha256.New()
-			h.Write([]byte(argOwner))
-			hash := h.Sum(nil)
-			accountHash := fmt.Sprintf("%x", hash)
-			ownerString := MakeOwnerAddress(merklePath, accountHash)
+			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
-
 			var viewerIds []string
 			var viewersToNotify []string
 
@@ -55,7 +47,7 @@ func CmdRemoveViewers() *cobra.Command {
 
 				params := &types.QueryGetFilesRequest{
 					Address:      merklePath,
-					OwnerAddress: ownerString,
+					OwnerAddress: ownerChainAddress,
 				}
 
 				file, err := fileQueryClient.Files(context.Background(), params)
@@ -79,7 +71,7 @@ func CmdRemoveViewers() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),
 				merklePath,
-				ownerString,
+				ownerChainAddress,
 				string(jsonViewersToNotify),
 			)
 			if err := msg.ValidateBasic(); err != nil {

@@ -41,7 +41,7 @@ func HasEditAccess(file types.Files, user string) bool {
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
-	fmt.Println("@@@@address string is", addressString)
+
 	//if editor exists, body of if statement executes and ok is returned as 'true'
 	if _, ok := jvacc[addressString]; ok {
 		return ok
