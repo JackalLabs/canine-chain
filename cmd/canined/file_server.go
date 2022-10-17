@@ -30,18 +30,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB, w *http.ResponseWriter) error {
-	size := handler.Size
+func writeFileToDisk(clientCtx client.Context, reader io.Reader, file io.ReaderAt, closer io.Closer, size int64) ([]byte, error) {
 	h := sha256.New()
-	io.Copy(h, file)
+	io.Copy(h, reader)
 	hashName := h.Sum(nil)
 
 	// This is path which we want to store the file
 	direrr := os.MkdirAll(fmt.Sprintf("%s/networkfiles/%s/", clientCtx.HomeDir, fmt.Sprintf("%x", hashName)), os.ModePerm)
 	if direrr != nil {
-		fmt.Printf("Error directory can't be made!\n")
-
-		return direrr
+		return hashName, direrr
 	}
 
 	var blocksize int64 = 1024
@@ -49,25 +46,60 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	for i = 0; i < size; i += blocksize {
 		f, err := os.OpenFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, fmt.Sprintf("%x", hashName), i/blocksize, ".jkl"), os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
-			fmt.Printf("Error can't open file!\n")
-			return err
+			return hashName, err
 		}
 
 		firstx := make([]byte, blocksize)
 		read, err := file.ReadAt(firstx, i)
 		fmt.Println(read)
 		if err != nil {
-			fmt.Println(err)
+			return hashName, err
 		}
 		// fmt.Printf(": %s :\n", string(firstx))
 		read, writeerr := f.Write(firstx)
 		fmt.Println(read)
 		if writeerr != nil {
-			fmt.Printf("Error can't write to file!\n")
+			return hashName, err
 		}
 		f.Close()
 	}
-	file.Close()
+	if closer != nil {
+		closer.Close()
+	}
+	return hashName, nil
+}
+
+func downloadFileFromURL(clientCtx client.Context, url string, fid string) ([]byte, error) {
+	resp, err := http.Get(fmt.Sprintf("%s/d/%s", url, fid))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	buff := bytes.NewBuffer([]byte{})
+	size, err := io.Copy(buff, resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	reader := bytes.NewReader(buff.Bytes())
+
+	hashName, err := writeFileToDisk(clientCtx, reader, reader, nil, size)
+	if err != nil {
+		return hashName, err
+	}
+
+	return hashName, nil
+}
+
+func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB, w *http.ResponseWriter) error {
+	size := handler.Size
+
+	hashName, err := writeFileToDisk(clientCtx, file, file, file, size)
+	if err != nil {
+		fmt.Printf("Write To Disk Error: %v\n", err)
+		return err
+	}
 
 	info, ierr := clientCtx.Keyring.Key(clientCtx.From)
 
@@ -278,13 +310,14 @@ func StartFileServer(cmd *cobra.Command) {
 		Locked: false,
 	}
 
-	getRoutes(cmd, router)
+	q.getRoutes(cmd, router)
 	q.postRoutes(cmd, router, db, datedb)
 
 	handler := cors.Default().Handler(router)
 
 	go postProofs(cmd, db, datedb)
 	go q.startListener(clientCtx, cmd)
+	go q.checkStrays(clientCtx, cmd)
 
 	fmt.Printf("🌍 Storage Provider: http://0.0.0.0:3333\n")
 	err := http.ListenAndServe("0.0.0.0:3333", handler)

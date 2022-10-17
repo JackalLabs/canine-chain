@@ -61158,6 +61158,8 @@ definitions:
     type: object
   jackaldao.canine.storage.MsgCancelContractResponse:
     type: object
+  jackaldao.canine.storage.MsgClaimStrayResponse:
+    type: object
   jackaldao.canine.storage.MsgInitProviderResponse:
     type: object
   jackaldao.canine.storage.MsgPostContractResponse:

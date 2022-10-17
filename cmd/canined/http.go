@@ -9,6 +9,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -84,7 +85,7 @@ func listFiles(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps ht
 	json.NewEncoder(w).Encode(v)
 }
 
-func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
+func (q *UploadQueue) getRoutes(cmd *cobra.Command, router *httprouter.Router) {
 	dfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		downfil(cmd, w, r, ps)
 	}
@@ -97,13 +98,20 @@ func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
 		listFiles(cmd, w, r, ps)
 	}
 
+	queue := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		q.listqueue(cmd, w, r, ps)
+	}
+
 	router.GET("/version", checkVersion)
 	router.GET("/v", checkVersion)
 	router.GET("/download/:file", dfil)
 	router.GET("/d/:file", dfil)
 	router.GET("/list", lres)
 	router.GET("/l", lres)
+	router.GET("/queue", queue)
+	router.GET("/q", queue)
 	router.GET("/", ires)
+
 }
 
 func (q *UploadQueue) postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB, datedb *leveldb.DB) {
@@ -115,11 +123,26 @@ func (q *UploadQueue) postRoutes(cmd *cobra.Command, router *httprouter.Router, 
 	router.POST("/u", upfil)
 }
 
+func (q *UploadQueue) listqueue(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	var messages = make([]types.Msg, 0)
+
+	for _, v := range q.Queue {
+		messages = append(messages, v.Message)
+	}
+
+	v := QueueResponse{
+		Messages: messages,
+	}
+
+	json.NewEncoder(w).Encode(v)
+}
+
 // This function returns the filename(to save in database) of the saved file
 // or an error if it occurs
 func (q *UploadQueue) fileUpload(w *http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 	// ParseMultipartForm parses a request body as multipart/form-data
-	r.ParseMultipartForm(32 << 20)
+	r.ParseMultipartForm(MaxFileSize) // MAX file size lives here
 
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 

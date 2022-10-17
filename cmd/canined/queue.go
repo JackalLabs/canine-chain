@@ -1,12 +1,81 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
+
+	"github.com/jackal-dao/canine/x/storage/types"
+	stypes "github.com/jackal-dao/canine/x/storage/types"
 )
+
+func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command) error {
+	for {
+		time.Sleep(time.Second)
+
+		qClient := stypes.NewQueryClient(clientCtx)
+
+		res, err := qClient.StraysAll(cmd.Context(), &stypes.QueryAllStraysRequest{})
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+
+		s := res.Strays
+
+		if len(s) == 0 {
+			continue
+		}
+
+		stray := s[0]
+
+		filesres, err := qClient.FindFile(cmd.Context(), &stypes.QueryFindFileRequest{})
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+
+		var arr []string
+		err = json.Unmarshal([]byte(filesres.ProviderIps), &arr)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+
+		if len(arr) == 0 {
+			err = fmt.Errorf("no providers have the file we want something is wrong")
+			fmt.Println(err)
+			return err
+		}
+
+		_, err = downloadFileFromURL(clientCtx, arr[0], stray.Fid)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+
+		msg := types.NewMsgClaimStray(
+			clientCtx.GetFromAddress().String(),
+			stray.Cid,
+		)
+		if err := msg.ValidateBasic(); err != nil {
+			return err
+		}
+
+		u := Upload{
+			Message:  msg,
+			Callback: nil,
+		}
+
+		q.Queue = append(q.Queue, u)
+
+		fmt.Println(res)
+
+	}
+}
 
 func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command) error {
 	for {
@@ -21,20 +90,20 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 
 			q.Locked = true
 			upload := q.Queue[0]
+			q.Queue = q.Queue[1:]
 
 			res, err := SendTx(clientCtx, cmd.Flags(), upload.Message)
 			if err != nil {
-				return err
+				fmt.Println(err)
+			} else {
+				if res.Code != 0 {
+					fmt.Println(fmt.Errorf(res.RawLog))
+				}
 			}
 
-			if res.Code != 0 {
-				fmt.Println(fmt.Errorf(res.RawLog))
-				return fmt.Errorf(res.RawLog)
+			if upload.Callback != nil {
+				upload.Callback.Done()
 			}
-
-			upload.Callback.Done()
-
-			q.Queue = q.Queue[1:]
 
 			q.Locked = false
 		}
