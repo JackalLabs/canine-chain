@@ -32,9 +32,9 @@ func MerklePath(path string) string { // ex: hello/world/path -> ["hello", "worl
 		b := fmt.Sprintf("%x", h.Sum(nil))
 		k := fmt.Sprintf("%s%s", total, b)
 
-		h = sha256.New()
-		h.Write([]byte(k))
-		total = fmt.Sprintf("%x", h.Sum(nil))
+		h1 := sha256.New()
+		h1.Write([]byte(k))
+		total = fmt.Sprintf("%x", h1.Sum(nil))
 	}
 
 	return total

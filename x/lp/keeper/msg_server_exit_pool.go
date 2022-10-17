@@ -10,7 +10,7 @@ import (
 	"github.com/jackal-dao/canine/x/lp/types"
 )
 
-func (k Keeper) validateWithdrawLPool(ctx sdk.Context, msg *types.MsgWithdrawLPool) error {
+func (k Keeper) validateExitPool(ctx sdk.Context, msg *types.MsgExitPool) error {
 	pool, found := k.GetLPool(ctx, msg.PoolName)
 
 	if !found {
@@ -35,11 +35,11 @@ func (k Keeper) validateWithdrawLPool(ctx sdk.Context, msg *types.MsgWithdrawLPo
 	return nil
 }
 
-func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLPool) (*types.MsgWithdrawLPoolResponse, error) {
+func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*types.MsgExitPoolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	creatorAcc, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	if err := k.validateWithdrawLPool(ctx, msg); err != nil {
+	if err := k.validateExitPool(ctx, msg); err != nil {
 		return nil, err
 	}
 
@@ -48,7 +48,7 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 	totalShares, _ := sdk.NewIntFromString(pool.LPTokenBalance)
 
 	// Calculate tokens to return
-	// If LPToken is still locked, take panelty.
+	// If LPToken is still locked, apply panelty.
 	recordKey := types.LProviderRecordKey(pool.Name, creatorAcc.String())
 	record, _ := k.GetLProviderRecord(ctx, recordKey)
 
@@ -98,7 +98,7 @@ func (k msgServer) WithdrawLPool(goCtx context.Context, msg *types.MsgWithdrawLP
 		return nil, sdkErr
 	}
 
-	// Finally, burn that LPToken :fire:
+	// Burn the LPToken
 	sdkErr = k.bankKeeper.BurnCoins(ctx, types.ModuleName, burningCoins)
 
 	if sdkErr != nil {

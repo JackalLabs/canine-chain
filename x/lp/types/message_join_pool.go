@@ -8,28 +8,28 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgDepositLPool = "deposit_l_pool"
+const TypeMsgJoinPool = "join_pool"
 
-var _ sdk.Msg = &MsgDepositLPool{}
+var _ sdk.Msg = &MsgJoinPool{}
 
-func NewMsgDepositLPool(creator string, poolName string, coins sdk.DecCoins, lockDuration int64) *MsgDepositLPool {
-	return &MsgDepositLPool{
-		Creator:      creator,
-		PoolName:     poolName,
-		Coins:        coins,
-		LockDuration: lockDuration,
+func NewMsgJoinPool(creator string, poolName string, coins sdk.DecCoins, lockDuration int64) *MsgJoinPool {
+	return &MsgJoinPool{
+		Creator:  creator,
+		PoolName: poolName,
+		Coins:    coins,
+		LockDuration: lockDuration, 
 	}
 }
 
-func (msg *MsgDepositLPool) Route() string {
+func (msg *MsgJoinPool) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgDepositLPool) Type() string {
-	return TypeMsgDepositLPool
+func (msg *MsgJoinPool) Type() string {
+	return TypeMsgJoinPool
 }
 
-func (msg *MsgDepositLPool) GetSigners() []sdk.AccAddress {
+func (msg *MsgJoinPool) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -37,12 +37,12 @@ func (msg *MsgDepositLPool) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgDepositLPool) GetSignBytes() []byte {
+func (msg *MsgJoinPool) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgDepositLPool) ValidateBasic() error {
+func (msg *MsgJoinPool) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
