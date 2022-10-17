@@ -34219,10 +34219,6 @@ paths:
                       type: string
                     sender:
                       type: string
-                    hashPath:
-                      type: string
-                    hashPathOwner:
-                      type: string
               pagination:
                 type: object
                 properties:
@@ -34349,10 +34345,6 @@ paths:
                     type: string
                   sender:
                     type: string
-                  hashPath:
-                    type: string
-                  hashPathOwner:
-                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -34394,8 +34386,8 @@ paths:
             type: object
             properties:
               params:
-                description: params holds all the parameters of this module.
                 type: object
+                description: Params defines the parameters for the module.
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -59276,10 +59268,6 @@ definitions:
         type: string
       sender:
         type: string
-      hashPath:
-        type: string
-      hashPathOwner:
-        type: string
   jackaldao.canine.notifications.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -59339,10 +59327,6 @@ definitions:
             address:
               type: string
             sender:
-              type: string
-            hashPath:
-              type: string
-            hashPathOwner:
               type: string
       pagination:
         type: object
@@ -59404,16 +59388,12 @@ definitions:
             type: string
           sender:
             type: string
-          hashPath:
-            type: string
-          hashPathOwner:
-            type: string
   jackaldao.canine.notifications.QueryParamsResponse:
     type: object
     properties:
       params:
-        description: params holds all the parameters of this module.
         type: object
+        description: Params defines the parameters for the module.
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   jackaldao.canine.rns.Bids:
     type: object
