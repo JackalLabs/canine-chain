@@ -22,7 +22,7 @@ import (
 	"github.com/evmos/ethermint/encoding"
 	"github.com/evmos/ethermint/tests"
 	"github.com/evmos/ethermint/testutil"
-	"github.com/evmos/ethermint/x/feemarket/types"
+	"github.com/jackal-dao/canine/x/feemarket/types"
 
 	"github.com/cosmos/cosmos-sdk/simapp"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"

@@ -3,7 +3,7 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/evmos/ethermint/x/feemarket/types"
+	"github.com/jackal-dao/canine/x/feemarket/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"

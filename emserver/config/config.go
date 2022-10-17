@@ -48,7 +48,7 @@ const (
 
 	DefaultHTTPIdleTimeout = 120 * time.Second
 	// DefaultAllowUnprotectedTxs value is false
-	DefaultAllowUnprotectedTxs = false
+	DefaultAllowUnprotectedTxs = true
 )
 
 var evmTracers = []string{"json", "markdown", "struct", "access_list"}

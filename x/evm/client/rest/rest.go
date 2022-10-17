@@ -17,7 +17,7 @@ import (
 	authrest "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 
 	rpctypes "github.com/evmos/ethermint/rpc/types"
-	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
+	feemarkettypes "github.com/jackal-dao/canine/x/feemarket/types"
 
 	"github.com/ethereum/go-ethereum/common"
 )

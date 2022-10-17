@@ -273,8 +273,6 @@ func (e *PublicAPI) Accounts() ([]common.Address, error) {
 // BlockNumber returns the current block number.
 func (e *PublicAPI) BlockNumber() (hexutil.Uint64, error) {
 	e.logger.Error("eth_blockNumber")
-	// e.logger.Error("blocknumber accessed by backend below:")
-	// e.logger.Error(e.backend.BlockNumber())
 	return e.backend.BlockNumber()
 }
 
@@ -301,7 +299,6 @@ func (e *PublicAPI) GetBalance(address common.Address, blockNrOrHash rpctypes.Bl
 		Address: encoded,
 		Denom:   "ujkl",
 	}
-
 	res, err := e.queryClient.BankQueryClient.Balance(rpctypes.ContextWithHeight(blockNum.Int64()), req)
 	if err != nil {
 		return nil, err

@@ -13,10 +13,10 @@ import (
 	"github.com/evmos/ethermint/encoding"
 
 	"github.com/evmos/ethermint/app"
-	v010types "github.com/evmos/ethermint/x/feemarket/migrations/v010/types"
-	v011 "github.com/evmos/ethermint/x/feemarket/migrations/v011"
-	"github.com/evmos/ethermint/x/feemarket/types"
-	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
+	v010types "github.com/jackal-dao/canine/x/feemarket/migrations/v010/types"
+	v011 "github.com/jackal-dao/canine/x/feemarket/migrations/v011"
+	"github.com/jackal-dao/canine/x/feemarket/types"
+	feemarkettypes "github.com/jackal-dao/canine/x/feemarket/types"
 )
 
 func init() {

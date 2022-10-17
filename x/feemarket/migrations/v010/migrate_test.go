@@ -13,11 +13,11 @@ import (
 	"github.com/evmos/ethermint/encoding"
 
 	"github.com/evmos/ethermint/app"
-	feemarketkeeper "github.com/evmos/ethermint/x/feemarket/keeper"
-	v010 "github.com/evmos/ethermint/x/feemarket/migrations/v010"
-	v09types "github.com/evmos/ethermint/x/feemarket/migrations/v09/types"
-	"github.com/evmos/ethermint/x/feemarket/types"
-	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
+	feemarketkeeper "github.com/jackal-dao/canine/x/feemarket/keeper"
+	v010 "github.com/jackal-dao/canine/x/feemarket/migrations/v010"
+	v09types "github.com/jackal-dao/canine/x/feemarket/migrations/v09/types"
+	"github.com/jackal-dao/canine/x/feemarket/types"
+	feemarkettypes "github.com/jackal-dao/canine/x/feemarket/types"
 )
 
 func TestMigrateStore(t *testing.T) {

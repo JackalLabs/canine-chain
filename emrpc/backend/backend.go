@@ -15,9 +15,9 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/evmos/ethermint/server/config"
 	ethermint "github.com/evmos/ethermint/types"
 	emrpctypes "github.com/jackal-dao/canine/emrpc/types"
+	emconfig "github.com/jackal-dao/canine/emserver/config"
 	evmtypes "github.com/jackal-dao/canine/x/evm/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
@@ -98,7 +98,7 @@ type Backend struct {
 	bankQueryClient     banktypes.QueryClient
 	logger              log.Logger
 	chainID             *big.Int
-	cfg                 config.Config
+	cfg                 emconfig.Config
 	allowUnprotectedTxs bool
 }
 
@@ -109,7 +109,7 @@ func NewBackend(ctx *server.Context, logger log.Logger, clientCtx client.Context
 		panic(err)
 	}
 
-	appConf := config.GetConfig(ctx.Viper)
+	appConf := emconfig.GetConfig(ctx.Viper)
 	return &Backend{
 		ctx:                 context.Background(),
 		clientCtx:           clientCtx,

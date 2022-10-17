@@ -55,11 +55,14 @@ func StartJSONRPC(ctx *server.Context, clientCtx client.Context, tmRPCAddr, tmEn
 	r := mux.NewRouter()
 	r.HandleFunc("/", rpcServer.ServeHTTP).Methods("POST")
 
-	handlerWithCors := cors.Default()
-	if config.API.EnableUnsafeCORS {
-		handlerWithCors = cors.AllowAll()
-	}
+	handlerWithCors := cors.AllowAll()
+	// handlerWithCors := cors.Default()
+	// because who needs safety?
+	// if config.API.EnableUnsafeCORS {
+	// 	handlerWithCors = cors.AllowAll()
+	// }
 
+	// creating an http server with a rpc handler
 	httpSrv := &http.Server{
 		Addr:         config.JSONRPC.Address,
 		Handler:      handlerWithCors.Handler(r),

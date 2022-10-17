@@ -12,8 +12,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
 	evmtypes "github.com/jackal-dao/canine/x/evm/types"
+	feemarkettypes "github.com/jackal-dao/canine/x/feemarket/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

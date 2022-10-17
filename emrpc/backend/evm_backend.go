@@ -28,10 +28,10 @@ import (
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	ethermint "github.com/evmos/ethermint/types"
-	feemarkettypes "github.com/evmos/ethermint/x/feemarket/types"
 	"github.com/jackal-dao/canine/emrpc/types"
 	emrpctypes "github.com/jackal-dao/canine/emrpc/types"
 	evmtypes "github.com/jackal-dao/canine/x/evm/types"
+	feemarkettypes "github.com/jackal-dao/canine/x/feemarket/types"
 )
 
 var bAttributeKeyEthereumBloom = []byte(evmtypes.AttributeKeyEthereumBloom)
@@ -86,7 +86,7 @@ func (b *Backend) GetBlockByNumber(blockNum emrpctypes.BlockNumber, fullTx bool)
 	return res, nil
 }
 
-// GetBlockByHash returns the block identified by hash.
+// GetBlockByHash returns the block identified byf hash.
 func (b *Backend) GetBlockByHash(hash common.Hash, fullTx bool) (map[string]interface{}, error) {
 	resBlock, err := b.GetTendermintBlockByHash(hash)
 	if err != nil {
@@ -859,29 +859,36 @@ func (b *Backend) SuggestGasTipCap(baseFee *big.Int) (*big.Int, error) {
 // If the London hard fork is not activated at the current height, the query will
 // return nil.
 func (b *Backend) BaseFee(blockRes *tmrpctypes.ResultBlockResults) (*big.Int, error) {
+	fee := new(big.Int)
+	fee, ok := fee.SetString(b.cfg.BaseConfig.MinGasPrices, 10)
+	if ok {
+		return fee, nil
+	}
+	return nil, nil
+	// ethermint basefee
 	// return BaseFee if London hard fork is activated and feemarket is enabled
-	res, err := b.queryClient.FeeMarket.BaseFee(types.ContextWithHeight(blockRes.Height), &evmtypes.QueryBaseFeeRequest{})
-	if err != nil {
-		// fallback to parsing from begin blocker event, could happen on pruned nodes.
-		// faster to iterate reversely
-		for i := len(blockRes.BeginBlockEvents) - 1; i >= 0; i-- {
-			evt := blockRes.BeginBlockEvents[i]
-			if evt.Type == feemarkettypes.EventTypeFeeMarket && len(evt.Attributes) > 0 {
-				baseFee, err := strconv.ParseInt(string(evt.Attributes[0].Value), 10, 64)
-				if err == nil {
-					return big.NewInt(baseFee), nil
-				}
-				break
-			}
-		}
-		return nil, err
-	}
+	// res, err := b.queryClient.BaseFee(types.ContextWithHeight(blockRes.Height), &evmtypes.QueryBaseFeeRequest{})
+	// if err != nil {
+	// 	// fallback to parsing from begin blocker event, could happen on pruned nodes.
+	// 	// faster to iterate reversely
+	// 	for i := len(blockRes.BeginBlockEvents) - 1; i >= 0; i-- {
+	// 		evt := blockRes.BeginBlockEvents[i]
+	// 		if evt.Type == feemarkettypes.EventTypeFeeMarket && len(evt.Attributes) > 0 {
+	// 			baseFee, err := strconv.ParseInt(string(evt.Attributes[0].Value), 10, 64)
+	// 			if err == nil {
+	// 				return big.NewInt(baseFee), nil
+	// 			}
+	// 			break
+	// 		}
+	// 	}
+	// 	return nil, err
+	// }
 
-	if res.BaseFee == nil {
-		return nil, nil
-	}
+	// if res.BaseFee == nil {
+	// 	return nil, nil
+	// }
 
-	return res.BaseFee.BigInt(), nil
+	// return res.BaseFee.BigInt(), nil
 }
 
 // GlobalMinGasPrice returns MinGasPrice param from FeeMarket
