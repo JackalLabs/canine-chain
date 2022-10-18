@@ -3,10 +3,7 @@ name: Build
 on:
   pull_request:
   push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+" # Push events to matching v*, i.e. v1.0, v20.15.10
-      - "v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+" # Push events to matching alpha releases
-      - "v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+" # Push events to matching beta releases
+    branches: [ "master", "dev" ]
 
 jobs:
   build:
@@ -62,31 +59,3 @@ jobs:
   #       with:
   #         name: canined-MacOS-arm64
   #         path: canined-MacOS-arm64
-
-  Release:
-    needs:
-      [native-build-cli]
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-      - name: Declare Commit Variables
-        id: is_pre_release
-        shell: bash
-        run: |
-          echo "::set-output name=IS_PRE_RELEASE::$(echo "${{ steps.get_version.outputs.VERSION }}" | awk 'BEGIN{prerelease="false"} /beta|alpha/{prerelease="true"} END{print prerelease}')"
-      - uses: actions/download-artifact@v3
-        with:
-          name: canined-Linux
-      - uses: actions/download-artifact@v3
-        with:
-          name: canined-macOS
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
-          files: |
-            canined-macOS
-            canined-Linux
