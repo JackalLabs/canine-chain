@@ -33168,8 +33168,8 @@ paths:
             type: object
             properties:
               params:
-                description: params holds all the parameters of this module.
                 type: object
+                description: Params defines the parameters for the module.
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -58666,6 +58666,8 @@ definitions:
         type: string
       trackingNumber:
         type: string
+  jackaldao.canine.filetree.MsgAddEditorsResponse:
+    type: object
   jackaldao.canine.filetree.MsgAddViewersResponse:
     type: object
   jackaldao.canine.filetree.MsgDeleteFileResponse:
@@ -58836,8 +58838,8 @@ definitions:
     type: object
     properties:
       params:
-        description: params holds all the parameters of this module.
         type: object
+        description: Params defines the parameters for the module.
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   jackaldao.canine.filetree.Tracker:
     type: object

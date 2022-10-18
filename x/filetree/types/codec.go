@@ -16,6 +16,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgInitAll{}, "filetree/InitAll", nil)
 	cdc.RegisterConcrete(&MsgRemoveViewers{}, "filetree/RemoveViewers", nil)
 	cdc.RegisterConcrete(&MsgMakeRoot{}, "filetree/MakeRoot", nil)
+	cdc.RegisterConcrete(&MsgAddEditors{}, "filetree/AddEditors", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -43,6 +44,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgMakeRoot{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgAddEditors{},
 	)
 	// this line is used by starport scaffolding # 3
 

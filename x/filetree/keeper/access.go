@@ -73,6 +73,16 @@ func MakeViewerAddress(trackingNumber string, user string) string {
 	return addressString
 }
 
+func MakeEditorAddress(trackingNumber string, user string) string {
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, user)))
+	hash := h.Sum(nil)
+	addressString := fmt.Sprintf("%x", hash)
+
+	return addressString
+}
+
 // Owner address is whoever owns this file/folder
 func MakeOwnerAddress(merklePath string, user string) string {
 	//make sure that user was already hex(hashed) before it was passed into
