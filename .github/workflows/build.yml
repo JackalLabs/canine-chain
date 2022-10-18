@@ -12,11 +12,15 @@ jobs:
   build:
       name: Build
       runs-on: ubuntu-latest
-      steps:
+      steps:        
       - uses: actions/checkout@v3
-        
-      - name: Build
-        run: make build
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.18.1 # The Go version to download (if necessary) and use.
+      - name: Build CLI
+        shell: bash
+        run: |
+          make build
 
   native-build-cli:
     runs-on: ${{matrix.os}}
