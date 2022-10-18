@@ -10,16 +10,15 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/jackal-dao/canine/x/storage/types"
-	stypes "github.com/jackal-dao/canine/x/storage/types"
 )
 
 func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 	for {
 		time.Sleep(time.Second)
 
-		qClient := stypes.NewQueryClient(clientCtx)
+		qClient := types.NewQueryClient(clientCtx)
 
-		res, err := qClient.StraysAll(cmd.Context(), &stypes.QueryAllStraysRequest{})
+		res, err := qClient.StraysAll(cmd.Context(), &types.QueryAllStraysRequest{})
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -34,7 +33,7 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, 
 
 		stray := s[0]
 
-		filesres, err := qClient.FindFile(cmd.Context(), &stypes.QueryFindFileRequest{Fid: stray.Fid})
+		filesres, err := qClient.FindFile(cmd.Context(), &types.QueryFindFileRequest{Fid: stray.Fid})
 		if err != nil {
 			fmt.Println(err)
 			continue
