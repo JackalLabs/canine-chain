@@ -31,11 +31,11 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	"github.com/jackal-dao/canine/app"
 	"github.com/jackal-dao/canine/app/params"
-	"github.com/jackal-dao/canine/x/wasm"
-	wasmkeeper "github.com/jackal-dao/canine/x/wasm/keeper"
-	wasmtypes "github.com/jackal-dao/canine/x/wasm/types"
 )
 
 // NewRootCmd creates a new root command for wasmd. It is called once in the
