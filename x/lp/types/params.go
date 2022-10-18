@@ -43,17 +43,6 @@ func validateMinInitPoolDeposit(i interface{}) error {
 		)
 	}
 
-	value, _ := i.(uint64)
-
-	if value < 0 {
-		return sdkerrors.Wrapf(
-			ErrInvalidValue,
-			"Parameter validation error at %s module, %s cannot be negative",
-			ModuleName,
-			KeyMinInitPoolDeposit,
-		)
-	}
-
 	return nil
 }
 

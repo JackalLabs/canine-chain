@@ -147,3 +147,39 @@ func newCoinSwappedEvent(
 		sdk.NewAttribute(types.AttrKeySwapFee, swapFee.String()),
 	)
 }
+
+func EmitCoinSwapFailedEvent(
+	ctx sdk.Context,
+	sender sdk.AccAddress,
+	pool types.LPool,
+	coinsIn sdk.Coins,
+	coinsOut sdk.Coins,
+	minCoinsOut sdk.Coins,
+) {
+	if ctx.EventManager() == nil {
+		return
+	}
+
+	ctx.EventManager().EmitEvents(
+		sdk.Events{
+			newCoinSwapFailedEvent(sender, pool, coinsIn, coinsOut, minCoinsOut),
+			newPoolBalanceEvent(pool)},
+	)
+}
+
+func newCoinSwapFailedEvent(
+	sender sdk.AccAddress,
+	pool types.LPool,
+	coinsIn sdk.Coins,
+	coinsOut sdk.Coins,
+	minCoinsOut sdk.Coins,
+) sdk.Event {
+	return sdk.NewEvent(
+		types.TypedEventCoinSwapFailed,
+		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
+		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
+		sdk.NewAttribute(types.AttrKeyCoinsIn, coinsIn.String()),
+		sdk.NewAttribute(types.AttrKeyCoinsOut, coinsOut.String()),
+		sdk.NewAttribute(types.AttrKeyMinCoinsOut, minCoinsOut.String()),
+	)
+}

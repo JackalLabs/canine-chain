@@ -17,16 +17,21 @@ var _ = strconv.Itoa(0)
 
 func CmdSwap() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "swap \"Pool Name\" \"{amount}{denom}\"",
+		Use:   "swap \"Pool Name\" \"[coin-input]\" \"[min-coin-output]\"",
 		Short: "Broadcast message swap",
-		Args:  cobra.ExactArgs(2),
+		Long: "Broadcast message swap.\nCoin input field format: {amount}{denom}",
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
-			decCoin, err := sdk.ParseDecCoin(args[1])
+			coinIn, err := sdk.ParseDecCoin(args[1])
+			if err != nil {
+				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
+			}
+			minCoinOut, err := sdk.ParseDecCoin(args[2])
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
@@ -34,7 +39,8 @@ func CmdSwap() *cobra.Command {
 			msg := types.NewMsgSwap(
 				clientCtx.GetFromAddress().String(),
 				args[0],
-				decCoin,
+				coinIn,
+				minCoinOut,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
