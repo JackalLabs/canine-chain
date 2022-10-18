@@ -7,12 +7,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
+	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/jackal-dao/canine/x/storage/types"
 	stypes "github.com/jackal-dao/canine/x/storage/types"
 )
 
-func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command) error {
+func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 	for {
 		time.Sleep(time.Second)
 
@@ -21,7 +22,8 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command) 
 		res, err := qClient.StraysAll(cmd.Context(), &stypes.QueryAllStraysRequest{})
 		if err != nil {
 			fmt.Println(err)
-			return err
+			continue
+			// return err
 		}
 
 		s := res.Strays
@@ -32,29 +34,34 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command) 
 
 		stray := s[0]
 
-		filesres, err := qClient.FindFile(cmd.Context(), &stypes.QueryFindFileRequest{})
+		filesres, err := qClient.FindFile(cmd.Context(), &stypes.QueryFindFileRequest{Fid: stray.Fid})
 		if err != nil {
 			fmt.Println(err)
-			return err
+			continue
+			// return err
 		}
+		fmt.Println(filesres.ProviderIps)
 
 		var arr []string
 		err = json.Unmarshal([]byte(filesres.ProviderIps), &arr)
 		if err != nil {
 			fmt.Println(err)
-			return err
+			continue
+			// return err
 		}
 
 		if len(arr) == 0 {
 			err = fmt.Errorf("no providers have the file we want something is wrong")
 			fmt.Println(err)
-			return err
+			continue
+			// return err
 		}
 
-		_, err = downloadFileFromURL(clientCtx, arr[0], stray.Fid)
+		_, err = downloadFileFromURL(clientCtx, arr[0], stray.Fid, stray.Cid, db, datedb)
 		if err != nil {
 			fmt.Println(err)
-			return err
+			continue
+			// return err
 		}
 
 		msg := types.NewMsgClaimStray(
@@ -62,7 +69,9 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command) 
 			stray.Cid,
 		)
 		if err := msg.ValidateBasic(); err != nil {
-			return err
+			fmt.Println(err)
+			continue
+			// return err
 		}
 
 		u := Upload{

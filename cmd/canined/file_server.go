@@ -52,7 +52,7 @@ func writeFileToDisk(clientCtx client.Context, reader io.Reader, file io.ReaderA
 		firstx := make([]byte, blocksize)
 		read, err := file.ReadAt(firstx, i)
 		fmt.Println(read)
-		if err != nil {
+		if err != nil && err != io.EOF {
 			return hashName, err
 		}
 		firstx = firstx[:read]
@@ -70,7 +70,7 @@ func writeFileToDisk(clientCtx client.Context, reader io.Reader, file io.ReaderA
 	return hashName, nil
 }
 
-func downloadFileFromURL(clientCtx client.Context, url string, fid string) ([]byte, error) {
+func downloadFileFromURL(clientCtx client.Context, url string, fid string, cid string, db *leveldb.DB, datedb *leveldb.DB) ([]byte, error) {
 	resp, err := http.Get(fmt.Sprintf("%s/d/%s", url, fid))
 	if err != nil {
 		return nil, err
@@ -90,7 +90,37 @@ func downloadFileFromURL(clientCtx client.Context, url string, fid string) ([]by
 		return hashName, err
 	}
 
+	err = saveToDatabase(hashName, cid, db, datedb)
+	if err != nil {
+		return hashName, err
+	}
+
 	return hashName, nil
+}
+
+func saveToDatabase(hashName []byte, strcid string, db *leveldb.DB, datedb *leveldb.DB) error {
+
+	err := datedb.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(fmt.Sprintf("%d", 0)), nil)
+	if err != nil {
+		fmt.Printf("Date Database Error: %v\n", err)
+		return err
+	}
+	derr := db.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(strcid), nil)
+	if derr != nil {
+		fmt.Printf("Database Error: %v\n", derr)
+		return err
+	}
+
+	fmt.Printf("%s %s\n", fmt.Sprintf("%x", hashName), "Added to database")
+
+	_, cerr := db.Get([]byte(fmt.Sprintf("%x", hashName)), nil)
+	if cerr != nil {
+		fmt.Printf("Hash Database Error: %s\n", cerr.Error())
+		return err
+	}
+
+	return nil
+
 }
 
 func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB, w *http.ResponseWriter) error {
@@ -318,7 +348,7 @@ func StartFileServer(cmd *cobra.Command) {
 
 	go postProofs(cmd, db, datedb)
 	go q.startListener(clientCtx, cmd)
-	go q.checkStrays(clientCtx, cmd)
+	go q.checkStrays(clientCtx, cmd, db, datedb)
 
 	fmt.Printf("🌍 Storage Provider: http://0.0.0.0:3333\n")
 	err := http.ListenAndServe("0.0.0.0:3333", handler)
