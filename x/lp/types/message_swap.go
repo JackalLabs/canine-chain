@@ -9,11 +9,12 @@ const TypeMsgSwap = "swap"
 
 var _ sdk.Msg = &MsgSwap{}
 
-func NewMsgSwap(creator string, poolName string, coin sdk.DecCoin) *MsgSwap {
+func NewMsgSwap(creator string, poolName string, coinInput sdk.DecCoin, minCoinOutput sdk.DecCoin) *MsgSwap {
 	return &MsgSwap{
 		Creator:  creator,
 		PoolName: poolName,
-		Coin:     coin,
+		CoinInput:     coinInput,
+		MinCoinOutput: minCoinOutput,
 	}
 }
 
@@ -44,5 +45,20 @@ func (msg *MsgSwap) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
+	// Convert DecCoin to Normalized Coin
+	coin, _ := sdk.NormalizeDecCoin(msg.CoinInput).TruncateDecimal()
+
+	if !coin.IsValid() || coin.IsZero() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins,
+			"coin is invalid or has zero amount")
+	}
+
+	// Convert DecCoin to Normalized MinCoinOutput
+	minCoinOut, _ := sdk.NormalizeDecCoin(msg.MinCoinOutput).TruncateDecimal()
+
+	if !minCoinOut.IsValid() || coin.IsZero() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins,
+			"coin is invalid or has zero amount")
+	}
 	return nil
 }

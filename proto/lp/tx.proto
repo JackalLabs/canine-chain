@@ -66,10 +66,17 @@ message MsgExitPool {
 message MsgExitPoolResponse {
 }
 
+// Swap a coin for other coin in a liquidity pool.
+// Swap fee is deducted from coin input before swap output is computed.
 message MsgSwap {
   string creator = 1;
   string poolName = 2;
-  cosmos.base.v1beta1.DecCoin coin = 3 [(gogoproto.nullable) = false];
+  // Coin input to swap in return for the desired coin. Coin output from swap is
+  // determined by the input amount.
+  cosmos.base.v1beta1.DecCoin coin_input = 3 [(gogoproto.nullable) = false];
+  // Minimum coin output from this swap. Swap will not proceed if computed
+  // swap output is less than this amount.
+  cosmos.base.v1beta1.DecCoin min_coin_output = 4 [(gogoproto.nullable) = false];
 }
 
 message MsgSwapResponse {
