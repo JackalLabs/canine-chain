@@ -28,8 +28,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 // only updated after witdrawal or deposit.
 // It is deleted when the provider burns all of the liquidity pool token.
 // This is stored at KVStore with
-//
-//	{LProviderRecordKeyPrefix}{poolName}{provider} key.
+// 	{LProviderRecordKeyPrefix}{poolName}{provider} key.
 type LProviderRecord struct {
 	// Provider is the account address of the provider.
 	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`

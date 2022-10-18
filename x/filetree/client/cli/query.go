@@ -25,9 +25,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdQueryParams())
-	cmd.AddCommand(CmdEncrypt())
-
-	cmd.AddCommand(CmdDecrypt())
 
 	cmd.AddCommand(CmdListFiles())
 	cmd.AddCommand(CmdShowFiles())

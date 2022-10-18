@@ -106,10 +106,10 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackal-dao/canine/app/params"
-	"github.com/jackal-dao/canine/x/wasm"
-	wasmclient "github.com/jackal-dao/canine/x/wasm/client"
-	wasmkeeper "github.com/jackal-dao/canine/x/wasm/keeper"
 
 	mint "github.com/jackal-dao/canine/x/jklmint"
 	mintkeeper "github.com/jackal-dao/canine/x/jklmint/keeper"
