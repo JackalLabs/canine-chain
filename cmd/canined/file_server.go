@@ -55,6 +55,7 @@ func writeFileToDisk(clientCtx client.Context, reader io.Reader, file io.ReaderA
 		if err != nil {
 			return hashName, err
 		}
+		firstx = firstx[:read]
 		// fmt.Printf(": %s :\n", string(firstx))
 		read, writeerr := f.Write(firstx)
 		fmt.Println(read)
