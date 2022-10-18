@@ -1,24 +1,13 @@
-name: Build
+name: Release
 
 on:
-  pull_request:
   push:
-    branches: [ "master", "dev" ]
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+" # Push events to matching v*, i.e. v1.0, v20.15.10
+      - "v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+" # Push events to matching alpha releases
+      - "v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+" # Push events to matching beta releases
 
 jobs:
-  build:
-      name: Build
-      runs-on: ubuntu-latest
-      steps:        
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.18.1 # The Go version to download (if necessary) and use.
-      - name: Build CLI
-        shell: bash
-        run: |
-          make build
-
   native-build-cli:
     runs-on: ${{matrix.os}}
     strategy:
@@ -59,3 +48,31 @@ jobs:
   #       with:
   #         name: canined-MacOS-arm64
   #         path: canined-MacOS-arm64
+
+  Release:
+    needs:
+      [native-build-cli]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+      - name: Declare Commit Variables
+        id: is_pre_release
+        shell: bash
+        run: |
+          echo "::set-output name=IS_PRE_RELEASE::$(echo "${{ steps.get_version.outputs.VERSION }}" | awk 'BEGIN{prerelease="false"} /beta|alpha/{prerelease="true"} END{print prerelease}')"
+      - uses: actions/download-artifact@v3
+        with:
+          name: canined-Linux
+      - uses: actions/download-artifact@v3
+        with:
+          name: canined-macOS
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
+          files: |
+            canined-macOS
+            canined-Linux
