@@ -80,7 +80,7 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 		return nil, err
 	}
 
-	encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(argKeys))
+	encrypted, err := eciesgo.Encrypt(pkey, []byte(argKeys))
 	if err != nil {
 		return nil, err
 	}

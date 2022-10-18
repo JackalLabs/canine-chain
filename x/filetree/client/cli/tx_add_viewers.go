@@ -103,7 +103,7 @@ func CmdAddViewers() *cobra.Command {
 				}
 
 				//encrypt using viewer's public key
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(decrypt))
+				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
 				if err != nil {
 					return err
 				}
