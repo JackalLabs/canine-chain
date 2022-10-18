@@ -103,7 +103,7 @@ func CmdAddEditors() *cobra.Command {
 				}
 
 				//encrypt using editor's public key
-				encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(decrypt))
+				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
 				if err != nil {
 					return err
 				}

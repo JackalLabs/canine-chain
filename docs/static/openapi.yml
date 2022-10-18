@@ -34946,6 +34946,7 @@ paths:
             type: object
             properties:
               params:
+                description: params holds all the parameters of this module.
                 type: object
                 properties:
                   MinInitPoolDeposit:
@@ -34957,7 +34958,6 @@ paths:
                   LPTokenUnit:
                     type: integer
                     format: int64
-                description: Params defines the parameters for the module.
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -60612,6 +60612,7 @@ definitions:
     type: object
     properties:
       params:
+        description: params holds all the parameters of this module.
         type: object
         properties:
           MinInitPoolDeposit:
@@ -60623,7 +60624,6 @@ definitions:
           LPTokenUnit:
             type: integer
             format: int64
-        description: Params defines the parameters for the module.
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   jackaldao.canine.notifications.MsgAddSendersResponse:
     type: object
