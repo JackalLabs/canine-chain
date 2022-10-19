@@ -11,8 +11,8 @@ var _ sdk.Msg = &MsgSwap{}
 
 func NewMsgSwap(creator string, poolName string, coinInput sdk.DecCoin, minCoinOutput sdk.DecCoin) *MsgSwap {
 	return &MsgSwap{
-		Creator:  creator,
-		PoolName: poolName,
+		Creator:       creator,
+		PoolName:      poolName,
 		CoinInput:     coinInput,
 		MinCoinOutput: minCoinOutput,
 	}

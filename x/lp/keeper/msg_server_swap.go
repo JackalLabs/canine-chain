@@ -117,7 +117,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 			swapOut,
 			sdk.NewCoins(minCoinOut),
 		)
-		return &emptyMsgResponse, nil	
+		return &emptyMsgResponse, nil
 	}
 
 	// Transfer money

@@ -43,9 +43,9 @@ func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) err
 
 		if newUnlockTime.Before(oldUnlockTime) {
 			return errors.New(
-				fmt.Sprintf("new unlock time must be after old." +
-				" new: %s, old %s", TimeToString(newUnlockTime), 
-				TimeToString(oldUnlockTime))) 
+				fmt.Sprintf("new unlock time must be after old."+
+					" new: %s, old %s", TimeToString(newUnlockTime),
+					TimeToString(oldUnlockTime)))
 		}
 	}
 
@@ -60,7 +60,6 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
-
 
 	// Get amount of LPToken to send
 	pool, _ := k.GetLPool(ctx, msg.PoolName)
@@ -125,7 +124,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 	pool.LPTokenBalance = netLPToken.String()
 
 	k.SetLPool(ctx, pool)
-	
+
 	EmitPoolJoinedEvent(ctx, creator, pool, coins, msg.LockDuration)
 
 	return &types.MsgJoinPoolResponse{}, nil

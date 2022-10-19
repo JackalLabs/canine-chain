@@ -14,10 +14,10 @@ var _ sdk.Msg = &MsgJoinPool{}
 
 func NewMsgJoinPool(creator string, poolName string, coins sdk.DecCoins, lockDuration int64) *MsgJoinPool {
 	return &MsgJoinPool{
-		Creator:  creator,
-		PoolName: poolName,
-		Coins:    coins,
-		LockDuration: lockDuration, 
+		Creator:      creator,
+		PoolName:     poolName,
+		Coins:        coins,
+		LockDuration: lockDuration,
 	}
 }
 
