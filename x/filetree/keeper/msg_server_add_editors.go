@@ -34,17 +34,17 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 		jeacc[v] = keys[i]
 	}
 
-	vaccbytes, err := json.Marshal(jeacc)
+	eaccbytes, err := json.Marshal(jeacc)
 	if err != nil {
 		return nil, types.ErrCantMarshall
 	}
-	newEditors := string(vaccbytes)
+	newEditors := string(eaccbytes)
 
 	file.EditAccess = newEditors
 
 	k.SetFiles(ctx, file)
 
-	//notify viewers
+	//notify editors
 	bool, error := notify(k, ctx, msg.NotifyEditors, msg.NotiForEditors, msg.Creator, file.Address, file.Owner)
 	if !bool {
 		return nil, error

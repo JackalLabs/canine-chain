@@ -35,11 +35,11 @@ func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEdit
 		delete(jeacc, v)
 	}
 
-	vaccbytes, err := json.Marshal(jeacc)
+	eaccbytes, err := json.Marshal(jeacc)
 	if err != nil {
 		return nil, types.ErrCantMarshall
 	}
-	newEditors := string(vaccbytes)
+	newEditors := string(eaccbytes)
 
 	file.EditAccess = newEditors
 
