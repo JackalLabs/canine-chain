@@ -46,3 +46,12 @@ type UploadQueue struct {
 	Queue  []Upload
 	Locked bool
 }
+
+type DataBlock struct {
+	Key   string
+	Value string
+}
+
+type DBResponse struct {
+	Data []DataBlock
+}

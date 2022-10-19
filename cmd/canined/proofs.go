@@ -127,7 +127,7 @@ func postProof(cmd *cobra.Command, cid string, block string, db *leveldb.DB) (*s
 	return res, nil
 }
 
-func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
+func postProofs(cmd *cobra.Command, db *leveldb.DB) {
 	debug, err := cmd.Flags().GetBool("debug")
 	if err != nil {
 		return
@@ -168,7 +168,7 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 				fmt.Printf("ERROR: %v\n", verr)
 				fmt.Println(verr.Error())
 
-				val, err := datedb.Get(makeDowntimeKey(cid), nil)
+				val, err := db.Get(makeDowntimeKey(cid), nil)
 				newval := 0
 				if err == nil {
 					newval, err = strconv.Atoi(string(val))
@@ -193,6 +193,7 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 					// if err != nil {
 					// 	continue
 					// }
+					continue
 				}
 
 				err = db.Put(makeDowntimeKey(cid), []byte(fmt.Sprintf("%d", newval)), nil)

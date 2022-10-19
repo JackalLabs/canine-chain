@@ -17,6 +17,19 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "stray contract either no longer is stray, or has been removed by the user")
 	}
 
+	ls := k.ListFiles(ctx, stray.Fid)
+
+	provider, found := k.GetProviders(ctx, msg.Creator)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "not a provider")
+	}
+
+	for _, l := range ls {
+		if l == provider.Ip {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "cannot claim a stray you own.")
+		}
+	}
+
 	deal := types.ActiveDeals{
 		Cid:           stray.Cid,
 		Signee:        stray.Signee,

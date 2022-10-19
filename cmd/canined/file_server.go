@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -70,7 +71,7 @@ func writeFileToDisk(clientCtx client.Context, reader io.Reader, file io.ReaderA
 	return hashName, nil
 }
 
-func downloadFileFromURL(clientCtx client.Context, url string, fid string, cid string, db *leveldb.DB, datedb *leveldb.DB) ([]byte, error) {
+func downloadFileFromURL(clientCtx client.Context, url string, fid string, cid string, db *leveldb.DB) ([]byte, error) {
 	resp, err := http.Get(fmt.Sprintf("%s/d/%s", url, fid))
 	if err != nil {
 		return nil, err
@@ -90,7 +91,7 @@ func downloadFileFromURL(clientCtx client.Context, url string, fid string, cid s
 		return hashName, err
 	}
 
-	err = saveToDatabase(hashName, cid, db, datedb)
+	err = saveToDatabase(hashName, cid, db)
 	if err != nil {
 		return hashName, err
 	}
@@ -98,22 +99,22 @@ func downloadFileFromURL(clientCtx client.Context, url string, fid string, cid s
 	return hashName, nil
 }
 
-func saveToDatabase(hashName []byte, strcid string, db *leveldb.DB, datedb *leveldb.DB) error {
+func saveToDatabase(hashName []byte, strcid string, db *leveldb.DB) error {
 
-	err := datedb.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(fmt.Sprintf("%d", 0)), nil)
+	err := db.Put(makeDowntimeKey(strcid), []byte(fmt.Sprintf("%d", 0)), nil)
 	if err != nil {
-		fmt.Printf("Date Database Error: %v\n", err)
+		fmt.Printf("Downtime Database Error: %v\n", err)
 		return err
 	}
-	derr := db.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(strcid), nil)
+	derr := db.Put(makeFileKey(strcid), []byte(fmt.Sprintf("%x", hashName)), nil)
 	if derr != nil {
-		fmt.Printf("Database Error: %v\n", derr)
+		fmt.Printf("File Database Error: %v\n", derr)
 		return err
 	}
 
 	fmt.Printf("%s %s\n", fmt.Sprintf("%x", hashName), "Added to database")
 
-	_, cerr := db.Get([]byte(fmt.Sprintf("%x", hashName)), nil)
+	_, cerr := db.Get(makeFileKey(strcid), nil)
 	if cerr != nil {
 		fmt.Printf("Hash Database Error: %s\n", cerr.Error())
 		return err
@@ -123,7 +124,7 @@ func saveToDatabase(hashName []byte, strcid string, db *leveldb.DB, datedb *leve
 
 }
 
-func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB, w *http.ResponseWriter) error {
+func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, w *http.ResponseWriter) error {
 	size := handler.Size
 
 	hashName, err := writeFileToDisk(clientCtx, file, file, file, size)
@@ -176,22 +177,8 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	// cidhash := sha256.New()
 	// flags := cmd.Flag("from")
 
-	err = db.Put(makeDowntimeKey(strcid), []byte(fmt.Sprintf("%d", 0)), nil)
+	err = saveToDatabase(hashName, strcid, db)
 	if err != nil {
-		fmt.Printf("Downtime Database Error: %v\n", err)
-		return err
-	}
-	derr := db.Put(makeFileKey(strcid), []byte(fmt.Sprintf("%x", hashName)), nil)
-	if derr != nil {
-		fmt.Printf("File Database Error: %v\n", derr)
-		return err
-	}
-
-	fmt.Printf("%s %s\n", fmt.Sprintf("%x", hashName), "Added to database")
-
-	_, cerr := db.Get(makeFileKey(strcid), nil)
-	if cerr != nil {
-		fmt.Printf("Hash Database Error: %s\n", cerr.Error())
 		return err
 	}
 
@@ -329,11 +316,6 @@ func StartFileServer(cmd *cobra.Command) {
 		fmt.Println(dberr)
 		return
 	}
-	datedb, dberr := leveldb.OpenFile(fmt.Sprintf("%s/contracts/datesdb", clientCtx.HomeDir), nil)
-	if dberr != nil {
-		fmt.Println(dberr)
-		return
-	}
 	router := httprouter.New()
 
 	q := UploadQueue{
@@ -341,14 +323,14 @@ func StartFileServer(cmd *cobra.Command) {
 		Locked: false,
 	}
 
-	q.getRoutes(cmd, router)
-	q.postRoutes(cmd, router, db, datedb)
+	q.getRoutes(cmd, router, db)
+	q.postRoutes(cmd, router, db)
 
 	handler := cors.Default().Handler(router)
 
-	go postProofs(cmd, db, datedb)
+	go postProofs(cmd, db)
 	go q.startListener(clientCtx, cmd)
-	go q.checkStrays(clientCtx, cmd, db, datedb)
+	go q.checkStrays(clientCtx, cmd, db)
 
 	fmt.Printf("🌍 Storage Provider: http://0.0.0.0:3333\n")
 	err := http.ListenAndServe("0.0.0.0:3333", handler)
