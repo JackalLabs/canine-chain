@@ -3,8 +3,10 @@ package main
 import (
 	"sync"
 
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/cosmos/cosmos-sdk/types"
 )
+
+const MaxFileSize = 32 << 30
 
 type IndexResponse struct {
 	Status  string
@@ -28,12 +30,28 @@ type ListResponse struct {
 	Files []string
 }
 
+type QueueResponse struct {
+	Messages []types.Msg
+}
+
+type Message interface {
+}
+
 type Upload struct {
-	Message  *types.MsgPostContract
+	Message  types.Msg
 	Callback *sync.WaitGroup
 }
 
 type UploadQueue struct {
 	Queue  []Upload
 	Locked bool
+}
+
+type DataBlock struct {
+	Key   string
+	Value string
+}
+
+type DBResponse struct {
+	Data []DataBlock
 }

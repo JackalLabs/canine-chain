@@ -9,6 +9,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -84,7 +85,27 @@ func listFiles(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps ht
 	json.NewEncoder(w).Encode(v)
 }
 
-func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
+func dumpdb(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *leveldb.DB) {
+
+	data := make([]DataBlock, 0)
+	iter := db.NewIterator(nil, nil)
+
+	for iter.Next() {
+		d := DataBlock{
+			Key:   string(iter.Key()),
+			Value: string(iter.Value()),
+		}
+		data = append(data, d)
+	}
+
+	v := DBResponse{
+		Data: data,
+	}
+
+	json.NewEncoder(w).Encode(v)
+}
+
+func (q *UploadQueue) getRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB) {
 	dfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		downfil(cmd, w, r, ps)
 	}
@@ -97,29 +118,56 @@ func getRoutes(cmd *cobra.Command, router *httprouter.Router) {
 		listFiles(cmd, w, r, ps)
 	}
 
+	queue := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		q.listqueue(cmd, w, r, ps)
+	}
+
+	dumpdb := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		dumpdb(cmd, w, r, ps, db)
+	}
+
 	router.GET("/version", checkVersion)
 	router.GET("/v", checkVersion)
 	router.GET("/download/:file", dfil)
 	router.GET("/d/:file", dfil)
 	router.GET("/list", lres)
 	router.GET("/l", lres)
+	router.GET("/queue", queue)
+	router.GET("/q", queue)
+	router.GET("/db", dumpdb)
 	router.GET("/", ires)
+
 }
 
-func (q *UploadQueue) postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB, datedb *leveldb.DB) {
+func (q *UploadQueue) postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB) {
 	upfil := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		q.fileUpload(&w, r, ps, cmd, db, datedb)
+		q.fileUpload(&w, r, ps, cmd, db)
 	}
 
 	router.POST("/upload", upfil)
 	router.POST("/u", upfil)
 }
 
+func (q *UploadQueue) listqueue(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	var messages = make([]types.Msg, 0)
+
+	for _, v := range q.Queue {
+		messages = append(messages, v.Message)
+	}
+
+	v := QueueResponse{
+		Messages: messages,
+	}
+
+	json.NewEncoder(w).Encode(v)
+}
+
 // This function returns the filename(to save in database) of the saved file
 // or an error if it occurs
-func (q *UploadQueue) fileUpload(w *http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
+func (q *UploadQueue) fileUpload(w *http.ResponseWriter, r *http.Request, ps httprouter.Params, cmd *cobra.Command, db *leveldb.DB) {
 	// ParseMultipartForm parses a request body as multipart/form-data
-	r.ParseMultipartForm(32 << 20)
+	r.ParseMultipartForm(MaxFileSize) // MAX file size lives here
 
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 
@@ -147,7 +195,7 @@ func (q *UploadQueue) fileUpload(w *http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	err = q.saveFile(clientCtx, file, handler, sender, cmd, db, datedb, w)
+	err = q.saveFile(clientCtx, file, handler, sender, cmd, db, w)
 	if err != nil {
 		v := ErrorResponse{
 			Error: err.Error(),

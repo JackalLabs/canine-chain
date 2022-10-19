@@ -2,11 +2,22 @@ package keeper
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/storage/types"
 )
+
+func ParseIP(ip string) string {
+	u, err := url.ParseRequestURI(ip)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(u)
+
+	return fmt.Sprintf("%s%s%s", u.Scheme, u.Host, u.Path)
+}
 
 const (
 	START_BLOCK_TYPE = "start"
