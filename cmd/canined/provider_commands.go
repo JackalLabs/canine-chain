@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
 	"github.com/spf13/cobra"
@@ -34,9 +36,10 @@ func SubmitProof() *cobra.Command {
 		Long:  `Submit merkle proof of file`,
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
-
-			_, err := postProof(cmd, args)
-			return err
+			fmt.Println("Cannot manually submit proofs.")
+			// _, err := postProof(cmd, args)
+			// return err
+			return nil
 		},
 	}
 	flags.AddTxFlagsToCmd(cmd)

@@ -88,15 +88,23 @@ func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (strin
 
 }
 
-func postProof(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
+func postProof(cmd *cobra.Command, cid string, block string, db *leveldb.DB) (*sdk.TxResponse, error) {
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
 		return nil, err
 	}
 
-	dex, _ := strconv.Atoi(args[1])
+	dex, err := strconv.Atoi(block)
+	if err != nil {
+		return nil, err
+	}
 
-	item, hashlist, err := CreateMerkleForProof(cmd, args[0], dex)
+	data, err := db.Get(makeFileKey(cid), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	item, hashlist, err := CreateMerkleForProof(cmd, string(data), dex)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +113,7 @@ func postProof(cmd *cobra.Command, args []string) (*sdk.TxResponse, error) {
 		clientCtx.GetFromAddress().String(),
 		item,
 		hashlist,
-		args[2],
+		cid,
 	)
 	if err := msg.ValidateBasic(); err != nil {
 		return nil, err
@@ -135,30 +143,32 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 	}
 	for {
 
-		files, _ := os.ReadDir(fmt.Sprintf("%s/networkfiles/", clientCtx.HomeDir))
+		iter := db.NewIterator(nil, nil)
+		for iter.Next() {
+			cid := string(iter.Key())
+			value := string(iter.Value())
 
-		for i := 0; i < len(files); i++ {
-			nm := files[i].Name()
-			if debug {
-				fmt.Printf("filename: %s\n", nm)
-			}
-			cid, cerr := db.Get([]byte(nm), nil)
-			if cerr != nil {
-				fmt.Printf("Database error: %s\n", cerr.Error())
-				os.RemoveAll(fmt.Sprintf("%s/networkfiles/%s", clientCtx.HomeDir, nm))
+			if cid[:len(FILE_KEY)] != FILE_KEY {
 				continue
 			}
+
+			cid = cid[len(FILE_KEY):]
+
 			if debug {
-				fmt.Printf("CID: %s\n", string(cid))
+				fmt.Printf("filename: %s\n", value)
 			}
 
-			ver, verr := checkVerified(cmd, string(cid))
+			if debug {
+				fmt.Printf("CID: %s\n", cid)
+			}
+
+			ver, verr := checkVerified(cmd, cid)
 			if verr != nil {
 				fmt.Println("Verification error")
 				fmt.Printf("ERROR: %v\n", verr)
 				fmt.Println(verr.Error())
 
-				val, err := datedb.Get([]byte(nm), nil)
+				val, err := datedb.Get(makeDowntimeKey(cid), nil)
 				newval := 0
 				if err == nil {
 					newval, err = strconv.Atoi(string(val))
@@ -170,18 +180,22 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 				newval += 1
 
 				if newval > 8 {
-					os.RemoveAll(fmt.Sprintf("%s/networkfiles/%s", clientCtx.HomeDir, nm))
-					err = db.Delete([]byte(nm), nil)
+					os.RemoveAll(fmt.Sprintf("%s/networkfiles/%s", clientCtx.HomeDir, cid))
+					err = db.Delete(makeFileKey(cid), nil)
 					if err != nil {
 						continue
 					}
-					err = datedb.Delete([]byte(nm), nil)
+					err = db.Delete(makeDowntimeKey(cid), nil)
 					if err != nil {
 						continue
 					}
+					// err = db.Delete(makeUptimeKey(cid), nil)
+					// if err != nil {
+					// 	continue
+					// }
 				}
 
-				err = datedb.Put([]byte(nm), []byte(fmt.Sprintf("%d", newval)), nil)
+				err = db.Put(makeDowntimeKey(cid), []byte(fmt.Sprintf("%d", newval)), nil)
 				if err != nil {
 					continue
 				}
@@ -201,9 +215,7 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 				continue
 			}
 
-			var argss = []string{files[i].Name(), block, string(cid)}
-
-			res, err := postProof(cmd, argss)
+			res, err := postProof(cmd, cid, block, db)
 			if err != nil {
 				fmt.Printf("Posting Error: %s\n", err.Error())
 				continue
@@ -214,6 +226,8 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB, datedb *leveldb.DB) {
 				continue
 			}
 		}
+		iter.Release()
+		err = iter.Error()
 
 		time.Sleep(time.Duration(interval) * time.Second)
 	}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -61,7 +60,6 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 			fmt.Println(err)
 		}
 		// fmt.Printf(": %s :\n", string(firstx))
-		firstx = bytes.Trim(firstx, "\x00")
 		read, writeerr := f.Write(firstx)
 		fmt.Println(read)
 		if writeerr != nil {
@@ -115,20 +113,20 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	// cidhash := sha256.New()
 	// flags := cmd.Flag("from")
 
-	err = datedb.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(fmt.Sprintf("%d", 0)), nil)
+	err = db.Put(makeDowntimeKey(strcid), []byte(fmt.Sprintf("%d", 0)), nil)
 	if err != nil {
-		fmt.Printf("Date Database Error: %v\n", err)
+		fmt.Printf("Downtime Database Error: %v\n", err)
 		return err
 	}
-	derr := db.Put([]byte(fmt.Sprintf("%x", hashName)), []byte(strcid), nil)
+	derr := db.Put(makeFileKey(strcid), []byte(fmt.Sprintf("%x", hashName)), nil)
 	if derr != nil {
-		fmt.Printf("Database Error: %v\n", derr)
+		fmt.Printf("File Database Error: %v\n", derr)
 		return err
 	}
 
 	fmt.Printf("%s %s\n", fmt.Sprintf("%x", hashName), "Added to database")
 
-	_, cerr := db.Get([]byte(fmt.Sprintf("%x", hashName)), nil)
+	_, cerr := db.Get(makeFileKey(strcid), nil)
 	if cerr != nil {
 		fmt.Printf("Hash Database Error: %s\n", cerr.Error())
 		return err
