@@ -18,4 +18,5 @@ var (
 	ErrNoViewingAccess    = sdkerrors.Register(ModuleName, 1108, "You do not have viewing access. Failed to decrypt.")
 	ErrTrackerNotFound    = sdkerrors.Register(ModuleName, 1109, "Tracking number not found")
 	ErrCannotDelete       = sdkerrors.Register(ModuleName, 1110, "You are not authorized to delete this file")
+	ErrNotOwner           = sdkerrors.Register(ModuleName, 1111, "Not permitted to remove edit/view access. You are not the owner of this file")
 )

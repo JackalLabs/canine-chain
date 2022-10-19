@@ -51,16 +51,23 @@ func HasEditAccess(file types.Files, user string) bool {
 	return false
 }
 
-// Not currently working
 func IsOwner(file types.Files, user string) bool {
 
+	merklePath := file.Address
+
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", file.Address, user)))
+	h.Write([]byte(user))
 	hash := h.Sum(nil)
+	accountHash := fmt.Sprintf("%x", hash)
 
-	addressString := fmt.Sprintf("%x", hash)
+	//h1 is so named as to differentiate it from h above--else compiler complains
+	h1 := sha256.New()
+	h1.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+	hash1 := h1.Sum(nil)
+	ownerAddress := fmt.Sprintf("%x", hash1)
 
-	return addressString == file.Owner
+	return ownerAddress == file.Owner
+
 }
 
 func MakeViewerAddress(trackingNumber string, user string) string {

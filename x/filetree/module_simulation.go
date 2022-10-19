@@ -56,6 +56,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgAddEditors int = 100
 
+	opWeightMsgRemoveEditors = "op_weight_msg_remove_editors"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgRemoveEditors int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -176,6 +180,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgAddEditors,
 		filetreesimulation.SimulateMsgAddEditors(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgRemoveEditors int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgRemoveEditors, &weightMsgRemoveEditors, nil,
+		func(_ *rand.Rand) {
+			weightMsgRemoveEditors = defaultWeightMsgRemoveEditors
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgRemoveEditors,
+		filetreesimulation.SimulateMsgRemoveEditors(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

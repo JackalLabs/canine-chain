@@ -60075,6 +60075,8 @@ definitions:
         type: string
   jackaldao.canine.filetree.MsgPostkeyResponse:
     type: object
+  jackaldao.canine.filetree.MsgRemoveEditorsResponse:
+    type: object
   jackaldao.canine.filetree.MsgRemoveViewersResponse:
     type: object
   jackaldao.canine.filetree.Params:

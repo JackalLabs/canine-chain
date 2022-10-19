@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// To remove
 func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")

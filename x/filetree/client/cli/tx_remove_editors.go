@@ -17,13 +17,13 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdRemoveViewers() *cobra.Command {
+func CmdRemoveEditors() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "remove-viewers [viewer-ids] [file path] [file owner]",
-		Short: "remove an address from the files viewing permisisons",
+		Use:   "remove-editors [editor-ids] [file path] [file owner]",
+		Short: "remove an address from the files editing permisisons",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argViewerIds := args[0]
+			argEditorIds := args[0]
 			argHashpath := args[1]
 			argOwner := args[2]
 
@@ -37,11 +37,11 @@ func CmdRemoveViewers() *cobra.Command {
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
-			viewerAddresses := strings.Split(argViewerIds, ",")
-			var viewerIds []string
-			var viewersToNotify []string
+			editorAddresses := strings.Split(argEditorIds, ",")
+			var editorIds []string
+			var editorsToNotify []string
 
-			for _, v := range viewerAddresses {
+			for _, v := range editorAddresses {
 				if len(v) < 1 {
 					continue
 				}
@@ -56,27 +56,26 @@ func CmdRemoveViewers() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
-				viewerIds = append(viewerIds, newViewerID)
-				viewersToNotify = append(viewersToNotify, v)
+				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
+				editorIds = append(editorIds, newEditorID)
+				editorsToNotify = append(editorsToNotify, v)
 
 			}
 
-			jsonViewersToNotify, err := json.Marshal(viewersToNotify)
+			jsonEditorsToNotify, err := json.Marshal(editorsToNotify)
 			if err != nil {
 				return err
 			}
 
-			notiForViewers := fmt.Sprintf("%s has removed read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+			notiForEditors := fmt.Sprintf("%s has removed edit access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
-			//viewerIds supposed to be JSON marshalled aswell?
-			msg := types.NewMsgRemoveViewers(
+			msg := types.NewMsgRemoveEditors(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(viewerIds, ","),
+				strings.Join(editorIds, ","),
 				merklePath,
 				ownerChainAddress,
-				string(jsonViewersToNotify),
-				notiForViewers,
+				string(jsonEditorsToNotify),
+				notiForEditors,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
