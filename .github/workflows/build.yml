@@ -60,7 +60,7 @@ jobs:
   #         name: canined-MacOS-arm64
   #         path: canined-MacOS-arm64
 
-  Nightly Release:
+  NightlyRelease:
     needs:
       [native-build-cli]
     runs-on: ubuntu-20.04
