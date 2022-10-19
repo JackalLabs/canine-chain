@@ -149,7 +149,7 @@ func generateLPTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUni
 }
 
 func (k Keeper) registerLPToken(ctx sdk.Context, denom string) {
-	metaData, found := k.bankKeeper.GetDenomMetaData(ctx, denom)
+	_, found := k.bankKeeper.GetDenomMetaData(ctx, denom)
 
 	aliase := "JKLLP"
 
@@ -159,7 +159,7 @@ func (k Keeper) registerLPToken(ctx sdk.Context, denom string) {
 		denomUnits := generateLPTokenDenomUnit(denom, aliase)
 
 		// Step 2: add it to bank's denom meta data store.
-		metaData = banktypes.Metadata{
+		metaData := banktypes.Metadata{
 			Description: "Jackal liquidity pool token",
 			DenomUnits:  denomUnits,
 			Base:        denomUnits[0].Denom,

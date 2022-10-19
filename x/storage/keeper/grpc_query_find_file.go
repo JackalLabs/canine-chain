@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,19 +10,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest) (*types.QueryFindFileResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid request")
-	}
-
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k Keeper) ListFiles(ctx sdk.Context, fid string) []string {
 	allDeals := k.GetAllActiveDeals(ctx)
 
 	var providers []string
 
 	for i := 0; i < len(allDeals); i++ {
-		if allDeals[i].Fid == req.Fid {
+		if allDeals[i].Fid == fid {
 			provider, ok := k.GetProviders(ctx, allDeals[i].Provider)
 			if !ok {
 				continue
@@ -33,8 +26,19 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest)
 		}
 	}
 
-	ProviderIps, err := json.Marshal(providers)
+	return providers
+}
 
+func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest) (*types.QueryFindFileResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	ls := k.ListFiles(ctx, req.Fid)
+
+	ProviderIps, err := json.Marshal(ls)
 	if err != nil {
 		return nil, err
 	}

@@ -1,12 +1,94 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
+	"github.com/syndtr/goleveldb/leveldb"
+
+	"github.com/jackal-dao/canine/x/storage/types"
 )
+
+func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, db *leveldb.DB) {
+	for {
+		time.Sleep(time.Second)
+
+		qClient := types.NewQueryClient(clientCtx)
+
+		res, err := qClient.StraysAll(cmd.Context(), &types.QueryAllStraysRequest{})
+		if err != nil {
+			fmt.Println(err)
+			continue
+			// return err
+		}
+
+		s := res.Strays
+
+		if len(s) == 0 {
+			continue
+		}
+
+		for _, stray := range s {
+			if _, err := os.Stat(fmt.Sprintf("%s/networkfiles/%s", clientCtx.HomeDir, stray.Fid)); !os.IsNotExist(err) {
+				continue
+			}
+
+			filesres, err := qClient.FindFile(cmd.Context(), &types.QueryFindFileRequest{Fid: stray.Fid})
+			if err != nil {
+				fmt.Println(err)
+				continue
+				// return err
+			}
+			fmt.Println(filesres.ProviderIps)
+
+			var arr []string
+			err = json.Unmarshal([]byte(filesres.ProviderIps), &arr)
+			if err != nil {
+				fmt.Println(err)
+				continue
+				// return err
+			}
+
+			if len(arr) == 0 {
+				err = fmt.Errorf("no providers have the file we want something is wrong")
+				fmt.Println(err)
+				continue
+				// return err
+			}
+
+			_, err = downloadFileFromURL(clientCtx, arr[0], stray.Fid, stray.Cid, db)
+			if err != nil {
+				fmt.Println(err)
+				continue
+				// return err
+			}
+
+			msg := types.NewMsgClaimStray(
+				clientCtx.GetFromAddress().String(),
+				stray.Cid,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				fmt.Println(err)
+				continue
+				// return err
+			}
+
+			u := Upload{
+				Message:  msg,
+				Callback: nil,
+			}
+
+			q.Queue = append(q.Queue, u)
+
+			fmt.Println(res)
+		}
+
+	}
+}
 
 func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command) error {
 	for {
@@ -21,20 +103,20 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 
 			q.Locked = true
 			upload := q.Queue[0]
+			q.Queue = q.Queue[1:]
 
 			res, err := SendTx(clientCtx, cmd.Flags(), upload.Message)
 			if err != nil {
-				return err
+				fmt.Println(err)
+			} else {
+				if res.Code != 0 {
+					fmt.Println(fmt.Errorf(res.RawLog))
+				}
 			}
 
-			if res.Code != 0 {
-				fmt.Println(fmt.Errorf(res.RawLog))
-				return fmt.Errorf(res.RawLog)
+			if upload.Callback != nil {
+				upload.Callback.Done()
 			}
-
-			upload.Callback.Done()
-
-			q.Queue = q.Queue[1:]
 
 			q.Locked = false
 		}
