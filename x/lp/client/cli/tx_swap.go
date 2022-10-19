@@ -19,7 +19,7 @@ func CmdSwap() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "swap \"Pool Name\" \"[coin-input]\" \"[min-coin-output]\"",
 		Short: "Broadcast message swap",
-		Long: "Broadcast message swap.\nCoin input field format: {amount}{denom}",
+		Long:  "Broadcast message swap.\nCoin input field format: {amount}{denom}",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 

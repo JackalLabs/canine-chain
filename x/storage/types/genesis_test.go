@@ -78,6 +78,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Cid: "1",
 					},
 				},
+				FidCidList: []types.FidCid{
+					{
+						Fid: "0",
+					},
+					{
+						Fid: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -175,6 +183,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						Cid: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated fidCid",
+			genState: &types.GenesisState{
+				FidCidList: []types.FidCid{
+					{
+						Fid: "0",
+					},
+					{
+						Fid: "0",
 					},
 				},
 			},

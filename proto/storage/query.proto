@@ -12,6 +12,7 @@ import "storage/providers.proto";
 import "storage/pay_blocks.proto";
 import "storage/client_usage.proto";
 import "storage/strays.proto";
+import "storage/fid_cid.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/storage/types";
@@ -106,6 +107,16 @@ service Query {
 // Queries a list of GetClientFreeSpace items.
 	rpc GetClientFreeSpace(QueryGetClientFreeSpaceRequest) returns (QueryGetClientFreeSpaceResponse) {
 		option (google.api.http).get = "/jackal-dao/canine/storage/get_client_free_space/{address}";
+	}
+
+// Queries a FidCid by index.
+	rpc FidCid(QueryGetFidCidRequest) returns (QueryGetFidCidResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/fid_cid/{fid}";
+	}
+
+	// Queries a list of FidCid items.
+	rpc FidCidAll(QueryAllFidCidRequest) returns (QueryAllFidCidResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/fid_cid";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -268,6 +279,24 @@ message QueryGetClientFreeSpaceRequest {
 
 message QueryGetClientFreeSpaceResponse {
   string bytesfree = 1;
+}
+
+message QueryGetFidCidRequest {
+	  string fid = 1;
+
+}
+
+message QueryGetFidCidResponse {
+	FidCid fidCid = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllFidCidRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllFidCidResponse {
+	repeated FidCid fidCid = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

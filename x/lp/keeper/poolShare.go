@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jackal-dao/canine/x/lp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/x/lp/types"
 )
 
 // Calculate amount of pool coins to deposit to get desired amount of LPToken.
@@ -20,7 +20,7 @@ func CoinsToDepositForLPToken(pool types.LPool, desiredAmount sdk.Int) (sdk.Coin
 	if totalLPtoken.IsZero() {
 		return sdk.NewCoins(), errors.New(
 			"pool.LPTokenBalance is zero, will not proceed to prevent" +
-			" division by zero")
+				" division by zero")
 	}
 	// Convert [] coin to sdk.Coins
 	poolCoins := sdk.NewCoins(pool.Coins...)
@@ -51,7 +51,7 @@ func MakeValidPair(pool types.LPool, deposit sdk.Coin) (sdk.Coins, error) {
 	if totalLPToken.IsZero() {
 		return sdk.NewCoins(), errors.New(
 			"pool.LPTokenBalance is zero, will not proceed to prevent" +
-			" division by zero")
+				" division by zero")
 	}
 
 	// Let deposit denom be x.
@@ -60,9 +60,9 @@ func MakeValidPair(pool types.LPool, deposit sdk.Coin) (sdk.Coins, error) {
 	xAmtInPool := poolCoins.AmountOf(xDenom)
 	if xAmtInPool.IsZero() {
 		return sdk.NewCoins(), errors.New(
-			fmt.Sprintf("coin %s in pool is zero, will not proceed to prevent" +
-			" division by zero", 
-			xDenom))
+			fmt.Sprintf("coin %s in pool is zero, will not proceed to prevent"+
+				" division by zero",
+				xDenom))
 	}
 	share := totalLPToken.Mul(deposit.Amount).Quo(xAmtInPool)
 
@@ -78,7 +78,7 @@ func MakeValidPair(pool types.LPool, deposit sdk.Coin) (sdk.Coins, error) {
 	setU := sdk.NewCoins(pool.Coins...)
 	// Removing x from the set to get y.
 	// e.g. setU = {10x, 20b, 30c}
-	// We want a set without x. So, we subtract the amount of x in setU 
+	// We want a set without x. So, we subtract the amount of x in setU
 	// from setU.
 	// setY = {10x, 20b, 30c} - {10x} = {20b, 30c}
 	xCoins := sdk.NewCoins(sdk.NewCoin(xDenom, xAmtInPool))
@@ -126,16 +126,16 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 		totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)
 
 		if !ok {
-			return sdk.ZeroInt(), errors.New("Failed to convert" + 
-				" pool.LPTokenBalance to sdk.Int") 
+			return sdk.ZeroInt(), errors.New("Failed to convert" +
+				" pool.LPTokenBalance to sdk.Int")
 		}
 
 		if !depositCoins.DenomsSubsetOf(poolCoins) {
 			return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins,
-					"Input Coins are not subset of pool coins." + 
+				"Input Coins are not subset of pool coins."+
 					" Pool: %s, Input: %s",
-					poolCoins.String(), depositCoins.String(),
-				) 
+				poolCoins.String(), depositCoins.String(),
+			)
 		}
 
 		// Using Coin type to return precise error
@@ -148,10 +148,10 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 			totalXInPool := poolCoins.AmountOf(x.GetDenom())
 
 			if totalXInPool.IsZero() {
-				return sdk.ZeroInt(), errors.New(fmt.Sprintf("Zero amount of coin %s," +
-						" will not proceed to prevent division by zero",
-						x.GetDenom(),
-					))
+				return sdk.ZeroInt(), errors.New(fmt.Sprintf("Zero amount of coin %s,"+
+					" will not proceed to prevent division by zero",
+					x.GetDenom(),
+				))
 			}
 
 			// share = totalLPToken * xAmtInDeposit / totalXInPool
@@ -163,39 +163,39 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 		// Check if all input coins are same value
 		// If that is true, all share amount of coins should be same
 		// shareX0 == shareX1 == shareX2 ... shareXn
-		for _, x := range coinShares{
-			if !x.Amount.Equal(coinShares[0].Amount){
+		for _, x := range coinShares {
+			if !x.Amount.Equal(coinShares[0].Amount) {
 				return sdk.ZeroInt(), errors.New(
-					fmt.Sprintf("Same value of coin not provided. denom: %s," +
-						" value: %s", 
+					fmt.Sprintf("Same value of coin not provided. denom: %s,"+
+						" value: %s",
 						x.Denom,
 						x.Amount.String(),
 					))
 			}
-		} 
+		}
 
 		return coinShares[0].Amount, nil
 	}
 }
 
 func CalculatePoolShareBurnReturn(pool types.LPool, burnAmt sdk.Int) (sdk.Coins, error) {
-	
+
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
 	totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)
 
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("Failed to convert LPTokenBalance to" +
+		return nil, errors.New(fmt.Sprintf("Failed to convert LPTokenBalance to"+
 			" sdk.Int: %s", pool.LPTokenBalance))
 	}
 
 	if totalLPToken.IsZero() {
-		return nil, errors.New(fmt.Sprintf("Total LPtoken is zero." + 
+		return nil, errors.New(fmt.Sprintf("Total LPtoken is zero." +
 			" Will not proceed to prevent divide by zero"))
 	}
 
 	if burnAmt.GT(totalLPToken) {
-		return nil, errors.New(fmt.Sprint("Burn amount is greater than total" + 
+		return nil, errors.New(fmt.Sprint("Burn amount is greater than total" +
 			" LPtoken that exists"))
 	}
 
@@ -204,7 +204,7 @@ func CalculatePoolShareBurnReturn(pool types.LPool, burnAmt sdk.Int) (sdk.Coins,
 	// Calculate pool coin values in respect to amount of shares burned.
 	// return = burnAmt * coinInPool / totalLPTokens
 	for _, coin := range poolCoins {
-		cAmtInPool := poolCoins.AmountOf(coin.GetDenom())	
+		cAmtInPool := poolCoins.AmountOf(coin.GetDenom())
 		result := burnAmt.Mul(cAmtInPool).Quo(totalLPToken)
 		resultCoin := sdk.NewCoin(coin.GetDenom(), result)
 		returns = returns.Add(resultCoin)

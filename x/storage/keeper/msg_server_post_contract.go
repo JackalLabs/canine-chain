@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/storage/types"
 )
@@ -63,11 +65,18 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	}
 
 	h := sha256.New()
-	io.WriteString(h, msg.Creator+msg.Fid)
+	io.WriteString(h, fmt.Sprintf("%s%s%s", msg.Signee, msg.Creator, msg.Fid))
 	hashName := h.Sum(nil)
 
+	cid := fmt.Sprintf("%x", hashName)
+
+	_, cidtaken := k.GetContracts(ctx, cid)
+	if cidtaken {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot post the same contract twice")
+	}
+
 	newContract := types.Contracts{
-		Cid:        fmt.Sprintf("%x", hashName),
+		Cid:        cid,
 		Priceamt:   msg.Priceamt,
 		Pricedenom: msg.Pricedenom,
 		Signee:     msg.Signee,
