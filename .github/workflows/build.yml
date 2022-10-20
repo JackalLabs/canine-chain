@@ -87,7 +87,7 @@ jobs:
       - name: Create release 📜
         uses: goreleaser/goreleaser-action@v3.2.0
         with:
-          workdir: ./cmd/canine
+          workdir: /home/runner/work/canine-chain/canine-chain/cmd/canine
           args: release --rm-dist --release-notes ./RELEASE_CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
