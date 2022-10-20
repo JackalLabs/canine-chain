@@ -32,6 +32,8 @@ jobs:
       - name: Build CLI
         shell: bash
         run: |
+          export GOPATH=$HOME/go
+          export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
           LINK_STATICALLY=true make build
           cp "build/canined" "canined-$RUNNER_OS"
       - uses: actions/upload-artifact@v3
