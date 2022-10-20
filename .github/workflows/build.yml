@@ -38,6 +38,7 @@ jobs:
           source "$HOME/.cargo/env"
           wget https://github.com/CosmWasm/wasmvm/raw/main/internal/api/libwasmvm.x86_64.so
           sudo cp "libwasmvm.x86_64.so" "/lib/libwasmvm.x86_64.so"
+          export LD_LIBRARY_PATH=/lib/
           ld -lwasmvm.x86_64 --verbose
           export GOPATH=$HOME/go
           export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
