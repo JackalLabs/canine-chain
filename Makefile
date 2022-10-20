@@ -85,6 +85,9 @@ else
 	go build -mod=readonly $(BUILD_FLAGS) -o build/canined ./cmd/canined
 endif
 
+build_cli:
+	go build -o build/canined -mod=readonly -tags "$(GO_TAGS) build/canined" -ldflags '$(LD_FLAGS)' ./cmd/canined
+
 build-contract-tests-hooks:
 ifeq ($(OS),Windows_NT)
 	go build -mod=readonly $(BUILD_FLAGS) -o build/contract_tests.exe ./cmd/contract_tests

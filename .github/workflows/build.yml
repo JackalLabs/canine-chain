@@ -29,12 +29,11 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.18.1 # The Go version to download (if necessary) and use.
+      - uses: actions/setup-rust@v2
       - name: Build CLI
         shell: bash
         run: |
-          wget https://github.com/CosmWasm/wasmvm/releases/download/v1.1.1/libwasmvm_muslc.x86_64.a
-          sudo cp "libwasmvm_muslc.x86_64.a" "/lib/libwasmvm_muslc.a"
-          LEDGER_ENABLED=false BUILD_TAGS=muslc LINK_STATICALLY=true make build
+          make build_cli
           cp "build/canined" "canined-$RUNNER_OS"
       - uses: actions/upload-artifact@v3
         with:
