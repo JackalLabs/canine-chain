@@ -37,6 +37,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.StraysList {
 		k.SetStrays(ctx, elem)
 	}
+	// Set all the fidCid
+	for _, elem := range genState.FidCidList {
+		k.SetFidCid(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -53,6 +57,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.PayBlocksList = k.GetAllPayBlocks(ctx)
 	genesis.ClientUsageList = k.GetAllClientUsage(ctx)
 	genesis.StraysList = k.GetAllStrays(ctx)
+	genesis.FidCidList = k.GetAllFidCid(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -66,22 +67,52 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 	k.SetActiveDeals(ctx, deal)
 	k.RemoveContracts(ctx, contract.Cid)
 
+	ftc, found := k.GetFidCid(ctx, contract.Fid)
+
+	cids := []string{contract.Cid}
+
+	if found {
+		var ncids []string
+		err := json.Unmarshal([]byte(ftc.Cids), &ncids)
+		if err != nil {
+			return nil, err
+		}
+
+		cids = append(cids, ncids...)
+	}
+
 	for i := 0; i < 2; i++ {
 		h := sha256.New()
 		io.WriteString(h, fmt.Sprintf("%s%s%d", contract.Creator, contract.Fid, i))
 		hashName := h.Sum(nil)
 
+		scid := fmt.Sprintf("%x", hashName)
+
 		newContract := types.Strays{
-			Cid:      fmt.Sprintf("%x", hashName),
+			Cid:      scid,
 			Signee:   contract.Signee,
 			Fid:      contract.Fid,
 			Filesize: contract.Filesize,
 			Merkle:   contract.Merkle,
 		}
 
+		cids = append(cids, scid)
+
 		k.SetStrays(ctx, newContract)
 
 	}
+
+	cidarr, err := json.Marshal(cids)
+	if err != nil {
+		return nil, err
+	}
+
+	nftc := types.FidCid{
+		Fid:  contract.Fid,
+		Cids: string(cidarr),
+	}
+
+	k.SetFidCid(ctx, nftc)
 
 	return &types.MsgSignContractResponse{}, nil
 }
