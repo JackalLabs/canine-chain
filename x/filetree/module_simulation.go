@@ -64,6 +64,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgResetEditors int = 100
 
+	opWeightMsgResetViewers = "op_weight_msg_reset_viewers"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgResetViewers int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -206,6 +210,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgResetEditors,
 		filetreesimulation.SimulateMsgResetEditors(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgResetViewers int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResetViewers, &weightMsgResetViewers, nil,
+		func(_ *rand.Rand) {
+			weightMsgResetViewers = defaultWeightMsgResetViewers
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgResetViewers,
+		filetreesimulation.SimulateMsgResetViewers(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

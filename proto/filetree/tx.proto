@@ -19,6 +19,7 @@ service Msg {
   rpc AddEditors(MsgAddEditors) returns (MsgAddEditorsResponse);
   rpc RemoveEditors(MsgRemoveEditors) returns (MsgRemoveEditorsResponse);
   rpc ResetEditors(MsgResetEditors) returns (MsgResetEditorsResponse);
+  rpc ResetViewers(MsgResetViewers) returns (MsgResetViewersResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -149,6 +150,15 @@ message MsgResetEditors {
 }
 
 message MsgResetEditorsResponse {
+}
+
+message MsgResetViewers {
+  string creator = 1;
+  string address = 2;
+  string fileowner = 3;
+}
+
+message MsgResetViewersResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
