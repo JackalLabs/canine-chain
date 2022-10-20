@@ -3,7 +3,7 @@ module github.com/jackal-dao/canine
 go 1.18
 
 require (
-	github.com/CosmWasm/wasmd v0.28.0
+	github.com/CosmWasm/wasmd v0.29.1
 	github.com/cosmos/cosmos-sdk v0.45.9
 	github.com/cosmos/ibc-go/v3 v3.3.0
 	github.com/cosmos/interchain-accounts v0.1.0
@@ -140,7 +140,6 @@ require (
 
 replace (
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
-	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.0.0
 	// Use the cosmos-flavored keyring library
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
