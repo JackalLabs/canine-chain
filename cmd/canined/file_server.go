@@ -147,7 +147,10 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	}
 
 	cidhash := sha256.New()
-	io.WriteString(cidhash, ko.Address+fmt.Sprintf("%x", hashName))
+
+	fid := fmt.Sprintf("%x", hashName)
+
+	io.WriteString(cidhash, fmt.Sprintf("%s%s%s", sender, ko.Address, fid))
 	cid := cidhash.Sum(nil)
 
 	strcid := fmt.Sprintf("%x", cid)
@@ -155,7 +158,7 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	var wg sync.WaitGroup
 	wg.Add(1)
 
-	ctrerr := q.makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"}, &wg)
+	ctrerr := q.makeContract(cmd, []string{fid, sender, "0"}, &wg)
 	if ctrerr != nil {
 		fmt.Printf("CONTRACT ERROR: %v\n", ctrerr)
 		return ctrerr
