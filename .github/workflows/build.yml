@@ -70,23 +70,23 @@ jobs:
   #       with:
   #         name: canined-MacOS-arm64
   #         path: canined-MacOS-arm64
-
   NightlyRelease:
-    needs:
-      [native-build-cli]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Go 🧰
+        uses: actions/setup-go@v3
         with:
-          name: canined-Linux
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: canined-macOS
-      - name: Release
-        uses: softprops/action-gh-release@v1
+          go-version: 1.18
+
+      - name: Unshallow
+        run: git fetch --prune --unshallow --tags --force
+
+      - name: Create release 📜
+        uses: goreleaser/goreleaser-action@v3.2.0
         with:
-          tag_name: "nightly"
-          name: "nightly"
-          prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
-          files: |
-            canined-Linux
+          args: release --rm-dist --release-notes ./RELEASE_CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
