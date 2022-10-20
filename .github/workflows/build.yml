@@ -19,36 +19,36 @@ jobs:
         run: |
           make build
 
-  native-build-cli:
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04] #, macos-latest]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.18.2 # The Go version to download (if necessary) and use.
-      - name: Build CLI
-        shell: bash
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs --output rustup.sh
-          chmod +x rustup.sh
-          ./rustup.sh -y
-          source "$HOME/.cargo/env"
-          rustup target add wasm32-unknown-unknown
-          wget https://github.com/CosmWasm/wasmvm/raw/main/internal/api/libwasmvm.x86_64.so
-          sudo cp "libwasmvm.x86_64.so" "/usr/lib/libwasmvm.x86_64.so"
-          export LD_LIBRARY_PATH=/lib/
-          /usr/bin/ld -lwasmvm.x86_64 --verbose
-          export GOPATH=$HOME/go
-          export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-          LINK_STATICALLY=true make build_cli
-          cp "build/canined" "canined-$RUNNER_OS"
-      - uses: actions/upload-artifact@v3
-        with:
-          name: canined-${{runner.os}}
-          path: canined-${{runner.os}}
+  # native-build-cli:
+  #   runs-on: ${{matrix.os}}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-20.04] #, macos-latest]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-go@v2
+  #       with:
+  #         go-version: 1.18.2 # The Go version to download (if necessary) and use.
+  #     - name: Build CLI
+  #       shell: bash
+  #       run: |
+  #         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs --output rustup.sh
+  #         chmod +x rustup.sh
+  #         ./rustup.sh -y
+  #         source "$HOME/.cargo/env"
+  #         rustup target add wasm32-unknown-unknown
+  #         wget https://github.com/CosmWasm/wasmvm/raw/main/internal/api/libwasmvm.x86_64.so
+  #         sudo cp "libwasmvm.x86_64.so" "/usr/lib/libwasmvm.x86_64.so"
+  #         export LD_LIBRARY_PATH=/lib/
+  #         /usr/bin/ld -lwasmvm.x86_64 --verbose
+  #         export GOPATH=$HOME/go
+  #         export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+  #         LINK_STATICALLY=true make build_cli
+  #         cp "build/canined" "canined-$RUNNER_OS"
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: canined-${{runner.os}}
+  #         path: canined-${{runner.os}}
 
   # MacOS-ARM64-CLI:
   #   runs-on: ubuntu-20.04
@@ -79,7 +79,7 @@ jobs:
       - name: Setup Go 🧰
         uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.18.2
 
       - name: Unshallow
         run: git fetch --prune --unshallow --tags --force
