@@ -35,6 +35,7 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs --output rustup.sh
           chmod +x rustup.sh
           ./rustup.sh -y
+          source "$HOME/.cargo/env"
           wget https://github.com/CosmWasm/wasmvm/raw/main/internal/api/libwasmvm.x86_64.so
           sudo cp "libwasmvm.x86_64.so" "/lib/libwasmvm.x86_64.so"
           ld -lwasmvm.x86_64 --verbose
