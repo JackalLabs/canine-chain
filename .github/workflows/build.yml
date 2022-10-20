@@ -79,9 +79,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: canined-Linux
-      - uses: actions/download-artifact@v3
-        with:
-          name: canined-macOS
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: canined-macOS
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -89,5 +89,4 @@ jobs:
           name: "nightly"
           prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
           files: |
-            canined-macOS
             canined-Linux
