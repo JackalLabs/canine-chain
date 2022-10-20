@@ -36,8 +36,9 @@ jobs:
           chmod +x rustup.sh
           ./rustup.sh -y
           source "$HOME/.cargo/env"
+          rustup target add wasm32-unknown-unknown
           wget https://github.com/CosmWasm/wasmvm/raw/main/internal/api/libwasmvm.x86_64.so
-          sudo cp "libwasmvm.x86_64.so" "/lib/libwasmvm.x86_64.so"
+          sudo cp "libwasmvm.x86_64.so" "/usr/lib/libwasmvm.x86_64.so"
           export LD_LIBRARY_PATH=/lib/
           /usr/bin/ld -lwasmvm.x86_64 --verbose
           export GOPATH=$HOME/go
