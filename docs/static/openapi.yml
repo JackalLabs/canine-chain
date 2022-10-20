@@ -2509,7 +2509,6 @@ paths:
                     signatures required by gogoproto.
                 description: balances is the balances of all the coins.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -2526,6 +2525,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryAllBalancesResponse is the response type for the
               Query/AllBalances RPC
@@ -2761,7 +2770,6 @@ paths:
                   metadata provides the client information for all the
                   registered tokens.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -2778,6 +2786,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryDenomsMetadataResponse is the response type for the
               Query/DenomsMetadata RPC
@@ -3056,7 +3074,6 @@ paths:
                     signatures required by gogoproto.
                 description: balances is the spendable balances of all the coins.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -3073,6 +3090,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QuerySpendableBalancesResponse defines the gRPC response structure
               for querying
@@ -3189,10 +3216,6 @@ paths:
                     signatures required by gogoproto.
                 title: supply is the supply of the coins
               pagination:
-                description: |-
-                  pagination defines the pagination in the response.
-
-                  Since: cosmos-sdk 0.43
                 type: object
                 properties:
                   next_key:
@@ -3209,6 +3232,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             title: >-
               QueryTotalSupplyResponse is the response type for the
               Query/TotalSupply RPC
@@ -3379,7 +3412,6 @@ paths:
                     type: object
                     properties:
                       version:
-                        title: basic block info
                         type: object
                         properties:
                           block:
@@ -3621,7 +3653,6 @@ paths:
                                           type: object
                                           properties:
                                             version:
-                                              title: basic block info
                                               type: object
                                               properties:
                                                 block:
@@ -4133,7 +4164,6 @@ paths:
                     type: object
                     properties:
                       version:
-                        title: basic block info
                         type: object
                         properties:
                           block:
@@ -4375,7 +4405,6 @@ paths:
                                           type: object
                                           properties:
                                             version:
-                                              title: basic block info
                                               type: object
                                               properties:
                                                 block:
@@ -5533,7 +5562,6 @@ paths:
                       format: int64
                   description: Validator is the type for the validator-set.
               pagination:
-                description: pagination defines an pagination for the response.
                 type: object
                 properties:
                   next_key:
@@ -5550,6 +5578,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               GetLatestValidatorSetResponse is the response type for the
               Query/GetValidatorSetByHeight RPC method.
@@ -6000,7 +6038,6 @@ paths:
                       format: int64
                   description: Validator is the type for the validator-set.
               pagination:
-                description: pagination defines an pagination for the response.
                 type: object
                 properties:
                   next_key:
@@ -6017,6 +6054,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               GetValidatorSetByHeightResponse is the response type for the
               Query/GetValidatorSetByHeight RPC method.
@@ -7727,7 +7774,6 @@ paths:
             type: object
             properties:
               allowance:
-                description: allowance is a allowance granted for grantee by granter.
                 type: object
                 properties:
                   granter:
@@ -7741,7 +7787,6 @@ paths:
                       grantee is the address of the user being granted an
                       allowance of another user's funds.
                   allowance:
-                    description: allowance can be any of basic and filtered fee allowance.
                     type: object
                     properties:
                       '@type':
@@ -7803,6 +7848,117 @@ paths:
 
                           used with implementation specific semantics.
                     additionalProperties: {}
+                    description: >-
+                      `Any` contains an arbitrary serialized protocol buffer
+                      message along with a
+
+                      URL that describes the type of the serialized message.
+
+
+                      Protobuf library provides support to pack/unpack Any
+                      values in the form
+
+                      of utility functions or additional generated methods of
+                      the Any type.
+
+
+                      Example 1: Pack and unpack a message in C++.
+
+                          Foo foo = ...;
+                          Any any;
+                          any.PackFrom(foo);
+                          ...
+                          if (any.UnpackTo(&foo)) {
+                            ...
+                          }
+
+                      Example 2: Pack and unpack a message in Java.
+
+                          Foo foo = ...;
+                          Any any = Any.pack(foo);
+                          ...
+                          if (any.is(Foo.class)) {
+                            foo = any.unpack(Foo.class);
+                          }
+
+                       Example 3: Pack and unpack a message in Python.
+
+                          foo = Foo(...)
+                          any = Any()
+                          any.Pack(foo)
+                          ...
+                          if any.Is(Foo.DESCRIPTOR):
+                            any.Unpack(foo)
+                            ...
+
+                       Example 4: Pack and unpack a message in Go
+
+                           foo := &pb.Foo{...}
+                           any, err := anypb.New(foo)
+                           if err != nil {
+                             ...
+                           }
+                           ...
+                           foo := &pb.Foo{}
+                           if err := any.UnmarshalTo(foo); err != nil {
+                             ...
+                           }
+
+                      The pack methods provided by protobuf library will by
+                      default use
+
+                      'type.googleapis.com/full.type.name' as the type URL and
+                      the unpack
+
+                      methods only use the fully qualified type name after the
+                      last '/'
+
+                      in the type URL, for example "foo.bar.com/x/y.z" will
+                      yield type
+
+                      name "y.z".
+
+
+
+                      JSON
+
+                      ====
+
+                      The JSON representation of an `Any` value uses the regular
+
+                      representation of the deserialized, embedded message, with
+                      an
+
+                      additional field `@type` which contains the type URL.
+                      Example:
+
+                          package google.profile;
+                          message Person {
+                            string first_name = 1;
+                            string last_name = 2;
+                          }
+
+                          {
+                            "@type": "type.googleapis.com/google.profile.Person",
+                            "firstName": <string>,
+                            "lastName": <string>
+                          }
+
+                      If the embedded message type is well-known and has a
+                      custom JSON
+
+                      representation, that representation will be embedded
+                      adding a field
+
+                      `value` which holds the custom JSON in addition to the
+                      `@type`
+
+                      field. Example (for message [google.protobuf.Duration][]):
+
+                          {
+                            "@type": "type.googleapis.com/google.protobuf.Duration",
+                            "value": "1.212s"
+                          }
                 title: >-
                   Grant is stored in the KVStore to record a grant with full
                   context
@@ -8037,9 +8193,6 @@ paths:
                         grantee is the address of the user being granted an
                         allowance of another user's funds.
                     allowance:
-                      description: >-
-                        allowance can be any of basic and filtered fee
-                        allowance.
                       type: object
                       properties:
                         '@type':
@@ -8101,12 +8254,124 @@ paths:
 
                             used with implementation specific semantics.
                       additionalProperties: {}
+                      description: >-
+                        `Any` contains an arbitrary serialized protocol buffer
+                        message along with a
+
+                        URL that describes the type of the serialized message.
+
+
+                        Protobuf library provides support to pack/unpack Any
+                        values in the form
+
+                        of utility functions or additional generated methods of
+                        the Any type.
+
+
+                        Example 1: Pack and unpack a message in C++.
+
+                            Foo foo = ...;
+                            Any any;
+                            any.PackFrom(foo);
+                            ...
+                            if (any.UnpackTo(&foo)) {
+                              ...
+                            }
+
+                        Example 2: Pack and unpack a message in Java.
+
+                            Foo foo = ...;
+                            Any any = Any.pack(foo);
+                            ...
+                            if (any.is(Foo.class)) {
+                              foo = any.unpack(Foo.class);
+                            }
+
+                         Example 3: Pack and unpack a message in Python.
+
+                            foo = Foo(...)
+                            any = Any()
+                            any.Pack(foo)
+                            ...
+                            if any.Is(Foo.DESCRIPTOR):
+                              any.Unpack(foo)
+                              ...
+
+                         Example 4: Pack and unpack a message in Go
+
+                             foo := &pb.Foo{...}
+                             any, err := anypb.New(foo)
+                             if err != nil {
+                               ...
+                             }
+                             ...
+                             foo := &pb.Foo{}
+                             if err := any.UnmarshalTo(foo); err != nil {
+                               ...
+                             }
+
+                        The pack methods provided by protobuf library will by
+                        default use
+
+                        'type.googleapis.com/full.type.name' as the type URL and
+                        the unpack
+
+                        methods only use the fully qualified type name after the
+                        last '/'
+
+                        in the type URL, for example "foo.bar.com/x/y.z" will
+                        yield type
+
+                        name "y.z".
+
+
+
+                        JSON
+
+                        ====
+
+                        The JSON representation of an `Any` value uses the
+                        regular
+
+                        representation of the deserialized, embedded message,
+                        with an
+
+                        additional field `@type` which contains the type URL.
+                        Example:
+
+                            package google.profile;
+                            message Person {
+                              string first_name = 1;
+                              string last_name = 2;
+                            }
+
+                            {
+                              "@type": "type.googleapis.com/google.profile.Person",
+                              "firstName": <string>,
+                              "lastName": <string>
+                            }
+
+                        If the embedded message type is well-known and has a
+                        custom JSON
+
+                        representation, that representation will be embedded
+                        adding a field
+
+                        `value` which holds the custom JSON in addition to the
+                        `@type`
+
+                        field. Example (for message
+                        [google.protobuf.Duration][]):
+
+                            {
+                              "@type": "type.googleapis.com/google.protobuf.Duration",
+                              "value": "1.212s"
+                            }
                   title: >-
                     Grant is stored in the KVStore to record a grant with full
                     context
                 description: allowances are allowance's granted for grantee by granter.
               pagination:
-                description: pagination defines an pagination for the response.
                 type: object
                 properties:
                   next_key:
@@ -8123,6 +8388,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryAllowancesResponse is the response type for the
               Query/Allowances RPC method.
@@ -8374,6 +8649,490 @@ paths:
           type: boolean
       tags:
         - Query
+  '/cosmos/feegrant/v1beta1/issued/{granter}':
+    get:
+      summary: |-
+        AllowancesByGranter returns all the grants given by an address
+        Since v0.46
+      operationId: CosmosFeegrantV1Beta1AllowancesByGranter
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              allowances:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    granter:
+                      type: string
+                      description: >-
+                        granter is the address of the user granting an allowance
+                        of their funds.
+                    grantee:
+                      type: string
+                      description: >-
+                        grantee is the address of the user being granted an
+                        allowance of another user's funds.
+                    allowance:
+                      type: object
+                      properties:
+                        '@type':
+                          type: string
+                          description: >-
+                            A URL/resource name that uniquely identifies the
+                            type of the serialized
+
+                            protocol buffer message. This string must contain at
+                            least
+
+                            one "/" character. The last segment of the URL's
+                            path must represent
+
+                            the fully qualified name of the type (as in
+
+                            `path/google.protobuf.Duration`). The name should be
+                            in a canonical form
+
+                            (e.g., leading "." is not accepted).
+
+
+                            In practice, teams usually precompile into the
+                            binary all types that they
+
+                            expect it to use in the context of Any. However, for
+                            URLs which use the
+
+                            scheme `http`, `https`, or no scheme, one can
+                            optionally set up a type
+
+                            server that maps type URLs to message definitions as
+                            follows:
+
+
+                            * If no scheme is provided, `https` is assumed.
+
+                            * An HTTP GET on the URL must yield a
+                            [google.protobuf.Type][]
+                              value in binary format, or produce an error.
+                            * Applications are allowed to cache lookup results
+                            based on the
+                              URL, or have them precompiled into a binary to avoid any
+                              lookup. Therefore, binary compatibility needs to be preserved
+                              on changes to types. (Use versioned type names to manage
+                              breaking changes.)
+
+                            Note: this functionality is not currently available
+                            in the official
+
+                            protobuf release, and it is not used for type URLs
+                            beginning with
+
+                            type.googleapis.com.
+
+
+                            Schemes other than `http`, `https` (or the empty
+                            scheme) might be
+
+                            used with implementation specific semantics.
+                      additionalProperties: {}
+                      description: >-
+                        `Any` contains an arbitrary serialized protocol buffer
+                        message along with a
+
+                        URL that describes the type of the serialized message.
+
+
+                        Protobuf library provides support to pack/unpack Any
+                        values in the form
+
+                        of utility functions or additional generated methods of
+                        the Any type.
+
+
+                        Example 1: Pack and unpack a message in C++.
+
+                            Foo foo = ...;
+                            Any any;
+                            any.PackFrom(foo);
+                            ...
+                            if (any.UnpackTo(&foo)) {
+                              ...
+                            }
+
+                        Example 2: Pack and unpack a message in Java.
+
+                            Foo foo = ...;
+                            Any any = Any.pack(foo);
+                            ...
+                            if (any.is(Foo.class)) {
+                              foo = any.unpack(Foo.class);
+                            }
+
+                         Example 3: Pack and unpack a message in Python.
+
+                            foo = Foo(...)
+                            any = Any()
+                            any.Pack(foo)
+                            ...
+                            if any.Is(Foo.DESCRIPTOR):
+                              any.Unpack(foo)
+                              ...
+
+                         Example 4: Pack and unpack a message in Go
+
+                             foo := &pb.Foo{...}
+                             any, err := anypb.New(foo)
+                             if err != nil {
+                               ...
+                             }
+                             ...
+                             foo := &pb.Foo{}
+                             if err := any.UnmarshalTo(foo); err != nil {
+                               ...
+                             }
+
+                        The pack methods provided by protobuf library will by
+                        default use
+
+                        'type.googleapis.com/full.type.name' as the type URL and
+                        the unpack
+
+                        methods only use the fully qualified type name after the
+                        last '/'
+
+                        in the type URL, for example "foo.bar.com/x/y.z" will
+                        yield type
+
+                        name "y.z".
+
+
+
+                        JSON
+
+                        ====
+
+                        The JSON representation of an `Any` value uses the
+                        regular
+
+                        representation of the deserialized, embedded message,
+                        with an
+
+                        additional field `@type` which contains the type URL.
+                        Example:
+
+                            package google.profile;
+                            message Person {
+                              string first_name = 1;
+                              string last_name = 2;
+                            }
+
+                            {
+                              "@type": "type.googleapis.com/google.profile.Person",
+                              "firstName": <string>,
+                              "lastName": <string>
+                            }
+
+                        If the embedded message type is well-known and has a
+                        custom JSON
+
+                        representation, that representation will be embedded
+                        adding a field
+
+                        `value` which holds the custom JSON in addition to the
+                        `@type`
+
+                        field. Example (for message
+                        [google.protobuf.Duration][]):
+
+                            {
+                              "@type": "type.googleapis.com/google.protobuf.Duration",
+                              "value": "1.212s"
+                            }
+                  title: >-
+                    Grant is stored in the KVStore to record a grant with full
+                    context
+                description: allowances that have been issued by the granter.
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+            description: >-
+              QueryAllowancesByGranterResponse is the response type for the
+              Query/AllowancesByGranter RPC method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                  additionalProperties: {}
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: granter
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
   '/cosmos/gov/v1beta1/params/{params_type}':
     get:
       summary: Params queries all parameters of the gov module.
@@ -8385,14 +9144,15 @@ paths:
             type: object
             properties:
               voting_params:
-                description: voting_params defines the parameters related to voting.
                 type: object
                 properties:
                   voting_period:
                     type: string
                     description: Length of the voting period.
+                description: >-
+                  VotingParams defines the params for voting on governance
+                  proposals.
               deposit_params:
-                description: deposit_params defines the parameters related to deposit.
                 type: object
                 properties:
                   min_deposit:
@@ -8419,8 +9179,10 @@ paths:
                       Maximum period for Atom holders to deposit on a proposal.
                       Initial value: 2
                        months.
+                description: >-
+                  DepositParams defines the params for deposits on governance
+                  proposals.
               tally_params:
-                description: tally_params defines the parameters related to tally.
                 type: object
                 properties:
                   quorum:
@@ -8443,6 +9205,9 @@ paths:
                       Minimum value of Veto votes to Total votes ratio for
                       proposal to be
                        vetoed. Default value: 1/3.
+                description: >-
+                  TallyParams defines the params for tallying votes on
+                  governance proposals.
             description: >-
               QueryParamsResponse is the response type for the Query/Params RPC
               method.
@@ -8909,7 +9674,6 @@ paths:
                     Proposal defines the core field members of a governance
                     proposal.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -8926,6 +9690,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryProposalsResponse is the response type for the
               Query/Proposals RPC
@@ -9712,7 +10486,6 @@ paths:
 
                     proposal.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -9729,6 +10502,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryDepositsResponse is the response type for the Query/Deposits
               RPC method.
@@ -10468,15 +11251,6 @@ paths:
                     voter:
                       type: string
                     option:
-                      description: >-
-                        Deprecated: Prefer to use `options` instead. This field
-                        is set in queries
-
-                        if and only if `len(options) == 1` and that option has
-                        weight 1. In all
-
-                        other cases, this field will default to
-                        VOTE_OPTION_UNSPECIFIED.
                       type: string
                       enum:
                         - VOTE_OPTION_UNSPECIFIED
@@ -10485,6 +11259,15 @@ paths:
                         - VOTE_OPTION_NO
                         - VOTE_OPTION_NO_WITH_VETO
                       default: VOTE_OPTION_UNSPECIFIED
+                      description: >-
+                        VoteOption enumerates the valid vote options for a given
+                        governance proposal.
+
+                         - VOTE_OPTION_UNSPECIFIED: VOTE_OPTION_UNSPECIFIED defines a no-op vote option.
+                         - VOTE_OPTION_YES: VOTE_OPTION_YES defines a yes vote option.
+                         - VOTE_OPTION_ABSTAIN: VOTE_OPTION_ABSTAIN defines an abstain vote option.
+                         - VOTE_OPTION_NO: VOTE_OPTION_NO defines a no vote option.
+                         - VOTE_OPTION_NO_WITH_VETO: VOTE_OPTION_NO_WITH_VETO defines a no with veto vote option.
                     options:
                       type: array
                       items:
@@ -10524,7 +11307,6 @@ paths:
                     option.
                 description: votes defined the queried votes.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -10541,6 +11323,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryVotesResponse is the response type for the Query/Votes RPC
               method.
@@ -10813,15 +11605,6 @@ paths:
                   voter:
                     type: string
                   option:
-                    description: >-
-                      Deprecated: Prefer to use `options` instead. This field is
-                      set in queries
-
-                      if and only if `len(options) == 1` and that option has
-                      weight 1. In all
-
-                      other cases, this field will default to
-                      VOTE_OPTION_UNSPECIFIED.
                     type: string
                     enum:
                       - VOTE_OPTION_UNSPECIFIED
@@ -10830,6 +11613,15 @@ paths:
                       - VOTE_OPTION_NO
                       - VOTE_OPTION_NO_WITH_VETO
                     default: VOTE_OPTION_UNSPECIFIED
+                    description: >-
+                      VoteOption enumerates the valid vote options for a given
+                      governance proposal.
+
+                       - VOTE_OPTION_UNSPECIFIED: VOTE_OPTION_UNSPECIFIED defines a no-op vote option.
+                       - VOTE_OPTION_YES: VOTE_OPTION_YES defines a yes vote option.
+                       - VOTE_OPTION_ABSTAIN: VOTE_OPTION_ABSTAIN defines an abstain vote option.
+                       - VOTE_OPTION_NO: VOTE_OPTION_NO defines a no vote option.
+                       - VOTE_OPTION_NO_WITH_VETO: VOTE_OPTION_NO_WITH_VETO defines a no with veto vote option.
                   options:
                     type: array
                     items:
@@ -11510,7 +12302,6 @@ paths:
                   delegation_responses defines all the delegations' info of a
                   delegator.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -11527,6 +12318,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: |-
               QueryDelegatorDelegationsResponse is response type for the
               Query/DelegatorDelegations RPC method.
@@ -11903,7 +12704,6 @@ paths:
 
                     responses.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -11920,6 +12720,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryRedelegationsResponse is response type for the
               Query/Redelegations RPC
@@ -12250,7 +13060,6 @@ paths:
 
                     for a single validator in an time-ordered list.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -12267,6 +13076,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryUnbondingDelegatorDelegationsResponse is response type for
               the
@@ -12724,9 +13543,6 @@ paths:
                         jailed defined whether the validator has been jailed
                         from bonded status or not.
                     status:
-                      description: >-
-                        status is the validator status
-                        (bonded/unbonding/unbonded).
                       type: string
                       enum:
                         - BOND_STATUS_UNSPECIFIED
@@ -12734,6 +13550,13 @@ paths:
                         - BOND_STATUS_UNBONDING
                         - BOND_STATUS_BONDED
                       default: BOND_STATUS_UNSPECIFIED
+                      description: |-
+                        BondStatus is the status of a validator.
+
+                         - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                         - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                         - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                         - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
                     tokens:
                       type: string
                       description: >-
@@ -12745,9 +13568,6 @@ paths:
                         delegator_shares defines total shares issued to a
                         validator's delegators.
                     description:
-                      description: >-
-                        description defines the description terms for the
-                        validator.
                       type: object
                       properties:
                         moniker:
@@ -12771,6 +13591,7 @@ paths:
                         details:
                           type: string
                           description: details define other optional details.
+                      description: Description defines a validator description.
                     unbonding_height:
                       type: string
                       format: int64
@@ -12784,13 +13605,9 @@ paths:
                         unbonding_time defines, if unbonding, the min time for
                         the validator to complete unbonding.
                     commission:
-                      description: commission defines the commission parameters.
                       type: object
                       properties:
                         commission_rates:
-                          description: >-
-                            commission_rates defines the initial commission
-                            rates to be used for creating a validator.
                           type: object
                           properties:
                             rate:
@@ -12809,12 +13626,20 @@ paths:
                                 max_change_rate defines the maximum daily
                                 increase of the validator commission, as a
                                 fraction.
+                          description: >-
+                            CommissionRates defines the initial commission rates
+                            to be used for creating
+
+                            a validator.
                         update_time:
                           type: string
                           format: date-time
                           description: >-
                             update_time is the last time the commission rate was
                             changed.
+                      description: >-
+                        Commission defines commission parameters for a given
+                        validator.
                     min_self_delegation:
                       type: string
                       description: >-
@@ -12845,7 +13670,6 @@ paths:
                     multiplied by exchange rate.
                 description: validators defines the the validators' info of a delegator.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -12862,6 +13686,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: |-
               QueryDelegatorValidatorsResponse is response type for the
               Query/DelegatorValidators RPC method.
@@ -13313,9 +14147,6 @@ paths:
                       jailed defined whether the validator has been jailed from
                       bonded status or not.
                   status:
-                    description: >-
-                      status is the validator status
-                      (bonded/unbonding/unbonded).
                     type: string
                     enum:
                       - BOND_STATUS_UNSPECIFIED
@@ -13323,6 +14154,13 @@ paths:
                       - BOND_STATUS_UNBONDING
                       - BOND_STATUS_BONDED
                     default: BOND_STATUS_UNSPECIFIED
+                    description: |-
+                      BondStatus is the status of a validator.
+
+                       - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                       - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                       - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                       - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
                   tokens:
                     type: string
                     description: >-
@@ -13334,9 +14172,6 @@ paths:
                       delegator_shares defines total shares issued to a
                       validator's delegators.
                   description:
-                    description: >-
-                      description defines the description terms for the
-                      validator.
                     type: object
                     properties:
                       moniker:
@@ -13360,6 +14195,7 @@ paths:
                       details:
                         type: string
                         description: details define other optional details.
+                    description: Description defines a validator description.
                   unbonding_height:
                     type: string
                     format: int64
@@ -13373,13 +14209,9 @@ paths:
                       unbonding_time defines, if unbonding, the min time for the
                       validator to complete unbonding.
                   commission:
-                    description: commission defines the commission parameters.
                     type: object
                     properties:
                       commission_rates:
-                        description: >-
-                          commission_rates defines the initial commission rates
-                          to be used for creating a validator.
                         type: object
                         properties:
                           rate:
@@ -13397,12 +14229,20 @@ paths:
                             description: >-
                               max_change_rate defines the maximum daily increase
                               of the validator commission, as a fraction.
+                        description: >-
+                          CommissionRates defines the initial commission rates
+                          to be used for creating
+
+                          a validator.
                       update_time:
                         type: string
                         format: date-time
                         description: >-
                           update_time is the last time the commission rate was
                           changed.
+                    description: >-
+                      Commission defines commission parameters for a given
+                      validator.
                   min_self_delegation:
                     type: string
                     description: >-
@@ -13643,14 +14483,12 @@ paths:
             type: object
             properties:
               hist:
-                description: hist defines the historical info at the given height.
                 type: object
                 properties:
                   header:
                     type: object
                     properties:
                       version:
-                        title: basic block info
                         type: object
                         properties:
                           block:
@@ -13676,7 +14514,6 @@ paths:
                         type: string
                         format: date-time
                       last_block_id:
-                        title: prev block info
                         type: object
                         properties:
                           hash:
@@ -13692,6 +14529,7 @@ paths:
                                 type: string
                                 format: byte
                             title: PartsetHeader
+                        title: BlockID
                       last_commit_hash:
                         type: string
                         format: byte
@@ -13915,9 +14753,6 @@ paths:
                             jailed defined whether the validator has been jailed
                             from bonded status or not.
                         status:
-                          description: >-
-                            status is the validator status
-                            (bonded/unbonding/unbonded).
                           type: string
                           enum:
                             - BOND_STATUS_UNSPECIFIED
@@ -13925,6 +14760,13 @@ paths:
                             - BOND_STATUS_UNBONDING
                             - BOND_STATUS_BONDED
                           default: BOND_STATUS_UNSPECIFIED
+                          description: |-
+                            BondStatus is the status of a validator.
+
+                             - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                             - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                             - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                             - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
                         tokens:
                           type: string
                           description: >-
@@ -13936,9 +14778,6 @@ paths:
                             delegator_shares defines total shares issued to a
                             validator's delegators.
                         description:
-                          description: >-
-                            description defines the description terms for the
-                            validator.
                           type: object
                           properties:
                             moniker:
@@ -13962,6 +14801,7 @@ paths:
                             details:
                               type: string
                               description: details define other optional details.
+                          description: Description defines a validator description.
                         unbonding_height:
                           type: string
                           format: int64
@@ -13975,13 +14815,9 @@ paths:
                             unbonding_time defines, if unbonding, the min time
                             for the validator to complete unbonding.
                         commission:
-                          description: commission defines the commission parameters.
                           type: object
                           properties:
                             commission_rates:
-                              description: >-
-                                commission_rates defines the initial commission
-                                rates to be used for creating a validator.
                               type: object
                               properties:
                                 rate:
@@ -14001,12 +14837,20 @@ paths:
                                     max_change_rate defines the maximum daily
                                     increase of the validator commission, as a
                                     fraction.
+                              description: >-
+                                CommissionRates defines the initial commission
+                                rates to be used for creating
+
+                                a validator.
                             update_time:
                               type: string
                               format: date-time
                               description: >-
                                 update_time is the last time the commission rate
                                 was changed.
+                          description: >-
+                            Commission defines commission parameters for a given
+                            validator.
                         min_self_delegation:
                           type: string
                           description: >-
@@ -14035,6 +14879,17 @@ paths:
                         bonded shares
 
                         multiplied by exchange rate.
+                description: >-
+                  HistoricalInfo contains header and validator information for a
+                  given block.
+
+                  It is stored as part of staking module's state, which persists
+                  the `n` most
+
+                  recent HistoricalInfo
+
+                  (`n` is set by the staking module's `historical_entries`
+                  parameter).
             description: >-
               QueryHistoricalInfoResponse is response type for the
               Query/HistoricalInfo RPC
@@ -14245,7 +15100,6 @@ paths:
             type: object
             properties:
               params:
-                description: params holds all the parameters of this module.
                 type: object
                 properties:
                   unbonding_time:
@@ -14270,6 +15124,7 @@ paths:
                   bond_denom:
                     type: string
                     description: bond_denom defines the bondable coin denomination.
+                description: Params defines the parameters for the staking module.
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -14471,13 +15326,17 @@ paths:
             type: object
             properties:
               pool:
-                description: pool defines the pool info.
                 type: object
                 properties:
                   not_bonded_tokens:
                     type: string
                   bonded_tokens:
                     type: string
+                description: >-
+                  Pool is used for tracking bonded and not-bonded token supply
+                  of the bond
+
+                  denomination.
             description: QueryPoolResponse is response type for the Query/Pool RPC method.
         default:
           description: An unexpected error response.
@@ -14867,9 +15726,6 @@ paths:
                         jailed defined whether the validator has been jailed
                         from bonded status or not.
                     status:
-                      description: >-
-                        status is the validator status
-                        (bonded/unbonding/unbonded).
                       type: string
                       enum:
                         - BOND_STATUS_UNSPECIFIED
@@ -14877,6 +15733,13 @@ paths:
                         - BOND_STATUS_UNBONDING
                         - BOND_STATUS_BONDED
                       default: BOND_STATUS_UNSPECIFIED
+                      description: |-
+                        BondStatus is the status of a validator.
+
+                         - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                         - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                         - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                         - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
                     tokens:
                       type: string
                       description: >-
@@ -14888,9 +15751,6 @@ paths:
                         delegator_shares defines total shares issued to a
                         validator's delegators.
                     description:
-                      description: >-
-                        description defines the description terms for the
-                        validator.
                       type: object
                       properties:
                         moniker:
@@ -14914,6 +15774,7 @@ paths:
                         details:
                           type: string
                           description: details define other optional details.
+                      description: Description defines a validator description.
                     unbonding_height:
                       type: string
                       format: int64
@@ -14927,13 +15788,9 @@ paths:
                         unbonding_time defines, if unbonding, the min time for
                         the validator to complete unbonding.
                     commission:
-                      description: commission defines the commission parameters.
                       type: object
                       properties:
                         commission_rates:
-                          description: >-
-                            commission_rates defines the initial commission
-                            rates to be used for creating a validator.
                           type: object
                           properties:
                             rate:
@@ -14952,12 +15809,20 @@ paths:
                                 max_change_rate defines the maximum daily
                                 increase of the validator commission, as a
                                 fraction.
+                          description: >-
+                            CommissionRates defines the initial commission rates
+                            to be used for creating
+
+                            a validator.
                         update_time:
                           type: string
                           format: date-time
                           description: >-
                             update_time is the last time the commission rate was
                             changed.
+                      description: >-
+                        Commission defines commission parameters for a given
+                        validator.
                     min_self_delegation:
                       type: string
                       description: >-
@@ -14988,7 +15853,6 @@ paths:
                     multiplied by exchange rate.
                 description: validators contains all the queried validators.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -15005,6 +15869,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             title: >-
               QueryValidatorsResponse is response type for the Query/Validators
               RPC method
@@ -15454,9 +16328,6 @@ paths:
                       jailed defined whether the validator has been jailed from
                       bonded status or not.
                   status:
-                    description: >-
-                      status is the validator status
-                      (bonded/unbonding/unbonded).
                     type: string
                     enum:
                       - BOND_STATUS_UNSPECIFIED
@@ -15464,6 +16335,13 @@ paths:
                       - BOND_STATUS_UNBONDING
                       - BOND_STATUS_BONDED
                     default: BOND_STATUS_UNSPECIFIED
+                    description: |-
+                      BondStatus is the status of a validator.
+
+                       - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                       - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                       - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                       - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
                   tokens:
                     type: string
                     description: >-
@@ -15475,9 +16353,6 @@ paths:
                       delegator_shares defines total shares issued to a
                       validator's delegators.
                   description:
-                    description: >-
-                      description defines the description terms for the
-                      validator.
                     type: object
                     properties:
                       moniker:
@@ -15501,6 +16376,7 @@ paths:
                       details:
                         type: string
                         description: details define other optional details.
+                    description: Description defines a validator description.
                   unbonding_height:
                     type: string
                     format: int64
@@ -15514,13 +16390,9 @@ paths:
                       unbonding_time defines, if unbonding, the min time for the
                       validator to complete unbonding.
                   commission:
-                    description: commission defines the commission parameters.
                     type: object
                     properties:
                       commission_rates:
-                        description: >-
-                          commission_rates defines the initial commission rates
-                          to be used for creating a validator.
                         type: object
                         properties:
                           rate:
@@ -15538,12 +16410,20 @@ paths:
                             description: >-
                               max_change_rate defines the maximum daily increase
                               of the validator commission, as a fraction.
+                        description: >-
+                          CommissionRates defines the initial commission rates
+                          to be used for creating
+
+                          a validator.
                       update_time:
                         type: string
                         format: date-time
                         description: >-
                           update_time is the last time the commission rate was
                           changed.
+                    description: >-
+                      Commission defines commission parameters for a given
+                      validator.
                   min_self_delegation:
                     type: string
                     description: >-
@@ -15829,7 +16709,6 @@ paths:
                     balance in addition to shares which is more suitable for
                     client responses.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -15846,6 +16725,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             title: |-
               QueryValidatorDelegationsResponse is response type for the
               Query/ValidatorDelegations RPC method
@@ -16683,7 +17572,6 @@ paths:
 
                     for a single validator in an time-ordered list.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -16700,6 +17588,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryValidatorUnbondingDelegationsResponse is response type for
               the
@@ -16965,7 +17863,6 @@ paths:
             type: object
             properties:
               gas_info:
-                description: gas_info is the information about gas used in the simulation.
                 type: object
                 properties:
                   gas_wanted:
@@ -16978,8 +17875,8 @@ paths:
                     type: string
                     format: uint64
                     description: GasUsed is the amount of gas actually consumed.
+                description: GasInfo defines tx execution gas context.
               result:
-                description: result is the result of the simulation.
                 type: object
                 properties:
                   data:
@@ -17032,6 +17929,7 @@ paths:
                       during message
 
                       or handler execution.
+                description: Result is the union of ResponseFormat and ResponseCheckTx.
             description: |-
               SimulateResponse is the response type for the
               Service.SimulateRPC method.
@@ -19656,26 +20554,16 @@ paths:
                             - ACCESS_TYPE_NOBODY
                             - ACCESS_TYPE_ONLY_ADDRESS
                             - ACCESS_TYPE_EVERYBODY
-                            - ACCESS_TYPE_ANY_OF_ADDRESSES
                           default: ACCESS_TYPE_UNSPECIFIED
                           description: >-
                             - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified
                             placeholder for empty value
                              - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-                             - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-                            Deprecated: use AccessTypeAnyOfAddresses instead
+                             - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to an address
                              - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-                             - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
                           title: AccessType permission types
                         address:
                           type: string
-                          title: |-
-                            Address
-                            Deprecated: replaced by addresses
-                        addresses:
-                          type: array
-                          items:
-                            type: string
                       description: AccessConfig access control type.
                   title: CodeInfoResponse contains code meta data from CodeInfo
               pagination:
@@ -19983,26 +20871,16 @@ paths:
                           - ACCESS_TYPE_NOBODY
                           - ACCESS_TYPE_ONLY_ADDRESS
                           - ACCESS_TYPE_EVERYBODY
-                          - ACCESS_TYPE_ANY_OF_ADDRESSES
                         default: ACCESS_TYPE_UNSPECIFIED
                         description: >-
                           - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified
                           placeholder for empty value
                            - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-                           - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-                          Deprecated: use AccessTypeAnyOfAddresses instead
+                           - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to an address
                            - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-                           - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
                         title: AccessType permission types
                       address:
                         type: string
-                        title: |-
-                          Address
-                          Deprecated: replaced by addresses
-                      addresses:
-                        type: array
-                        items:
-                          type: string
                     description: AccessConfig access control type.
                 title: CodeInfoResponse contains code meta data from CodeInfo
               data:
@@ -20496,259 +21374,6 @@ paths:
           in: query
           required: false
           type: boolean
-      tags:
-        - Query
-  /cosmwasm/wasm/v1/codes/params:
-    get:
-      summary: Params gets the module params
-      operationId: CosmwasmWasmV1Params
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                type: object
-                properties:
-                  code_upload_access:
-                    type: object
-                    properties:
-                      permission:
-                        type: string
-                        enum:
-                          - ACCESS_TYPE_UNSPECIFIED
-                          - ACCESS_TYPE_NOBODY
-                          - ACCESS_TYPE_ONLY_ADDRESS
-                          - ACCESS_TYPE_EVERYBODY
-                          - ACCESS_TYPE_ANY_OF_ADDRESSES
-                        default: ACCESS_TYPE_UNSPECIFIED
-                        description: >-
-                          - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified
-                          placeholder for empty value
-                           - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-                           - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-                          Deprecated: use AccessTypeAnyOfAddresses instead
-                           - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-                           - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
-                        title: AccessType permission types
-                      address:
-                        type: string
-                        title: |-
-                          Address
-                          Deprecated: replaced by addresses
-                      addresses:
-                        type: array
-                        items:
-                          type: string
-                    description: AccessConfig access control type.
-                  instantiate_default_permission:
-                    type: string
-                    enum:
-                      - ACCESS_TYPE_UNSPECIFIED
-                      - ACCESS_TYPE_NOBODY
-                      - ACCESS_TYPE_ONLY_ADDRESS
-                      - ACCESS_TYPE_EVERYBODY
-                      - ACCESS_TYPE_ANY_OF_ADDRESSES
-                    default: ACCESS_TYPE_UNSPECIFIED
-                    description: >-
-                      - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified
-                      placeholder for empty value
-                       - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-                       - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-                      Deprecated: use AccessTypeAnyOfAddresses instead
-                       - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-                       - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
-                    title: AccessType permission types
-                description: Params defines the set of wasm parameters.
-            description: >-
-              QueryParamsResponse is the response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                      description: >-
-                        A URL/resource name that uniquely identifies the type of
-                        the serialized
-
-                        protocol buffer message. This string must contain at
-                        least
-
-                        one "/" character. The last segment of the URL's path
-                        must represent
-
-                        the fully qualified name of the type (as in
-
-                        `path/google.protobuf.Duration`). The name should be in
-                        a canonical form
-
-                        (e.g., leading "." is not accepted).
-
-
-                        In practice, teams usually precompile into the binary
-                        all types that they
-
-                        expect it to use in the context of Any. However, for
-                        URLs which use the
-
-                        scheme `http`, `https`, or no scheme, one can optionally
-                        set up a type
-
-                        server that maps type URLs to message definitions as
-                        follows:
-
-
-                        * If no scheme is provided, `https` is assumed.
-
-                        * An HTTP GET on the URL must yield a
-                        [google.protobuf.Type][]
-                          value in binary format, or produce an error.
-                        * Applications are allowed to cache lookup results based
-                        on the
-                          URL, or have them precompiled into a binary to avoid any
-                          lookup. Therefore, binary compatibility needs to be preserved
-                          on changes to types. (Use versioned type names to manage
-                          breaking changes.)
-
-                        Note: this functionality is not currently available in
-                        the official
-
-                        protobuf release, and it is not used for type URLs
-                        beginning with
-
-                        type.googleapis.com.
-
-
-                        Schemes other than `http`, `https` (or the empty scheme)
-                        might be
-
-                        used with implementation specific semantics.
-                  additionalProperties: {}
-                  description: >-
-                    `Any` contains an arbitrary serialized protocol buffer
-                    message along with a
-
-                    URL that describes the type of the serialized message.
-
-
-                    Protobuf library provides support to pack/unpack Any values
-                    in the form
-
-                    of utility functions or additional generated methods of the
-                    Any type.
-
-
-                    Example 1: Pack and unpack a message in C++.
-
-                        Foo foo = ...;
-                        Any any;
-                        any.PackFrom(foo);
-                        ...
-                        if (any.UnpackTo(&foo)) {
-                          ...
-                        }
-
-                    Example 2: Pack and unpack a message in Java.
-
-                        Foo foo = ...;
-                        Any any = Any.pack(foo);
-                        ...
-                        if (any.is(Foo.class)) {
-                          foo = any.unpack(Foo.class);
-                        }
-
-                     Example 3: Pack and unpack a message in Python.
-
-                        foo = Foo(...)
-                        any = Any()
-                        any.Pack(foo)
-                        ...
-                        if any.Is(Foo.DESCRIPTOR):
-                          any.Unpack(foo)
-                          ...
-
-                     Example 4: Pack and unpack a message in Go
-
-                         foo := &pb.Foo{...}
-                         any, err := anypb.New(foo)
-                         if err != nil {
-                           ...
-                         }
-                         ...
-                         foo := &pb.Foo{}
-                         if err := any.UnmarshalTo(foo); err != nil {
-                           ...
-                         }
-
-                    The pack methods provided by protobuf library will by
-                    default use
-
-                    'type.googleapis.com/full.type.name' as the type URL and the
-                    unpack
-
-                    methods only use the fully qualified type name after the
-                    last '/'
-
-                    in the type URL, for example "foo.bar.com/x/y.z" will yield
-                    type
-
-                    name "y.z".
-
-
-
-                    JSON
-
-                    ====
-
-                    The JSON representation of an `Any` value uses the regular
-
-                    representation of the deserialized, embedded message, with
-                    an
-
-                    additional field `@type` which contains the type URL.
-                    Example:
-
-                        package google.profile;
-                        message Person {
-                          string first_name = 1;
-                          string last_name = 2;
-                        }
-
-                        {
-                          "@type": "type.googleapis.com/google.profile.Person",
-                          "firstName": <string>,
-                          "lastName": <string>
-                        }
-
-                    If the embedded message type is well-known and has a custom
-                    JSON
-
-                    representation, that representation will be embedded adding
-                    a field
-
-                    `value` which holds the custom JSON in addition to the
-                    `@type`
-
-                    field. Example (for message [google.protobuf.Duration][]):
-
-                        {
-                          "@type": "type.googleapis.com/google.protobuf.Duration",
-                          "value": "1.212s"
-                        }
       tags:
         - Query
   /cosmwasm/wasm/v1/codes/pinned:
@@ -39689,7 +40314,6 @@ definitions:
             signatures required by gogoproto.
         description: balances is the balances of all the coins.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -39706,6 +40330,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryAllBalancesResponse is the response type for the Query/AllBalances
       RPC
@@ -39878,7 +40510,6 @@ definitions:
           metadata provides the client information for all the registered
           tokens.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -39895,6 +40526,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryDenomsMetadataResponse is the response type for the
       Query/DenomsMetadata RPC
@@ -39945,7 +40584,6 @@ definitions:
             signatures required by gogoproto.
         description: balances is the spendable balances of all the coins.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -39962,6 +40600,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QuerySpendableBalancesResponse defines the gRPC response structure for
       querying
@@ -40004,10 +40650,6 @@ definitions:
             signatures required by gogoproto.
         title: supply is the supply of the coins
       pagination:
-        description: |-
-          pagination defines the pagination in the response.
-
-          Since: cosmos-sdk 0.43
         type: object
         properties:
           next_key:
@@ -40024,6 +40666,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     title: >-
       QueryTotalSupplyResponse is the response type for the Query/TotalSupply
       RPC
@@ -40078,7 +40728,6 @@ definitions:
             type: object
             properties:
               version:
-                title: basic block info
                 type: object
                 properties:
                   block:
@@ -40317,7 +40966,6 @@ definitions:
                                   type: object
                                   properties:
                                     version:
-                                      title: basic block info
                                       type: object
                                       properties:
                                         block:
@@ -40629,7 +41277,6 @@ definitions:
             type: object
             properties:
               version:
-                title: basic block info
                 type: object
                 properties:
                   block:
@@ -40868,7 +41515,6 @@ definitions:
                                   type: object
                                   properties:
                                     version:
-                                      title: basic block info
                                       type: object
                                       properties:
                                         block:
@@ -41341,7 +41987,6 @@ definitions:
               format: int64
           description: Validator is the type for the validator-set.
       pagination:
-        description: pagination defines an pagination for the response.
         type: object
         properties:
           next_key:
@@ -41358,6 +42003,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       GetLatestValidatorSetResponse is the response type for the
       Query/GetValidatorSetByHeight RPC method.
@@ -41632,7 +42285,6 @@ definitions:
               format: int64
           description: Validator is the type for the validator-set.
       pagination:
-        description: pagination defines an pagination for the response.
         type: object
         properties:
           next_key:
@@ -41649,6 +42301,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       GetValidatorSetByHeightResponse is the response type for the
       Query/GetValidatorSetByHeight RPC method.
@@ -41939,7 +42599,6 @@ definitions:
         type: object
         properties:
           version:
-            title: basic block info
             type: object
             properties:
               block:
@@ -42178,7 +42837,6 @@ definitions:
                               type: object
                               properties:
                                 version:
-                                  title: basic block info
                                   type: object
                                   properties:
                                     block:
@@ -42846,7 +43504,6 @@ definitions:
                     type: object
                     properties:
                       version:
-                        title: basic block info
                         type: object
                         properties:
                           block:
@@ -43220,7 +43877,6 @@ definitions:
                           type: object
                           properties:
                             version:
-                              title: basic block info
                               type: object
                               properties:
                                 block:
@@ -43450,7 +44106,6 @@ definitions:
     type: object
     properties:
       version:
-        title: basic block info
         type: object
         properties:
           block:
@@ -43533,7 +44188,6 @@ definitions:
             type: object
             properties:
               version:
-                title: basic block info
                 type: object
                 properties:
                   block:
@@ -43728,7 +44382,6 @@ definitions:
                 type: object
                 properties:
                   version:
-                    title: basic block info
                     type: object
                     properties:
                       block:
@@ -43967,7 +44620,6 @@ definitions:
         type: object
         properties:
           version:
-            title: basic block info
             type: object
             properties:
               block:
@@ -44983,7 +45635,6 @@ definitions:
           grantee is the address of the user being granted an allowance of
           another user's funds.
       allowance:
-        description: allowance can be any of basic and filtered fee allowance.
         type: object
         properties:
           '@type':
@@ -45039,6 +45690,107 @@ definitions:
 
               used with implementation specific semantics.
         additionalProperties: {}
+        description: >-
+          `Any` contains an arbitrary serialized protocol buffer message along
+          with a
+
+          URL that describes the type of the serialized message.
+
+
+          Protobuf library provides support to pack/unpack Any values in the
+          form
+
+          of utility functions or additional generated methods of the Any type.
+
+
+          Example 1: Pack and unpack a message in C++.
+
+              Foo foo = ...;
+              Any any;
+              any.PackFrom(foo);
+              ...
+              if (any.UnpackTo(&foo)) {
+                ...
+              }
+
+          Example 2: Pack and unpack a message in Java.
+
+              Foo foo = ...;
+              Any any = Any.pack(foo);
+              ...
+              if (any.is(Foo.class)) {
+                foo = any.unpack(Foo.class);
+              }
+
+           Example 3: Pack and unpack a message in Python.
+
+              foo = Foo(...)
+              any = Any()
+              any.Pack(foo)
+              ...
+              if any.Is(Foo.DESCRIPTOR):
+                any.Unpack(foo)
+                ...
+
+           Example 4: Pack and unpack a message in Go
+
+               foo := &pb.Foo{...}
+               any, err := anypb.New(foo)
+               if err != nil {
+                 ...
+               }
+               ...
+               foo := &pb.Foo{}
+               if err := any.UnmarshalTo(foo); err != nil {
+                 ...
+               }
+
+          The pack methods provided by protobuf library will by default use
+
+          'type.googleapis.com/full.type.name' as the type URL and the unpack
+
+          methods only use the fully qualified type name after the last '/'
+
+          in the type URL, for example "foo.bar.com/x/y.z" will yield type
+
+          name "y.z".
+
+
+
+          JSON
+
+          ====
+
+          The JSON representation of an `Any` value uses the regular
+
+          representation of the deserialized, embedded message, with an
+
+          additional field `@type` which contains the type URL. Example:
+
+              package google.profile;
+              message Person {
+                string first_name = 1;
+                string last_name = 2;
+              }
+
+              {
+                "@type": "type.googleapis.com/google.profile.Person",
+                "firstName": <string>,
+                "lastName": <string>
+              }
+
+          If the embedded message type is well-known and has a custom JSON
+
+          representation, that representation will be embedded adding a field
+
+          `value` which holds the custom JSON in addition to the `@type`
+
+          field. Example (for message [google.protobuf.Duration][]):
+
+              {
+                "@type": "type.googleapis.com/google.protobuf.Duration",
+                "value": "1.212s"
+              }
     title: Grant is stored in the KVStore to record a grant with full context
   cosmos.feegrant.v1beta1.MsgGrantAllowanceResponse:
     type: object
@@ -45054,7 +45806,6 @@ definitions:
     type: object
     properties:
       allowance:
-        description: allowance is a allowance granted for grantee by granter.
         type: object
         properties:
           granter:
@@ -45068,7 +45819,6 @@ definitions:
               grantee is the address of the user being granted an allowance of
               another user's funds.
           allowance:
-            description: allowance can be any of basic and filtered fee allowance.
             type: object
             properties:
               '@type':
@@ -45127,11 +45877,115 @@ definitions:
 
                   used with implementation specific semantics.
             additionalProperties: {}
+            description: >-
+              `Any` contains an arbitrary serialized protocol buffer message
+              along with a
+
+              URL that describes the type of the serialized message.
+
+
+              Protobuf library provides support to pack/unpack Any values in the
+              form
+
+              of utility functions or additional generated methods of the Any
+              type.
+
+
+              Example 1: Pack and unpack a message in C++.
+
+                  Foo foo = ...;
+                  Any any;
+                  any.PackFrom(foo);
+                  ...
+                  if (any.UnpackTo(&foo)) {
+                    ...
+                  }
+
+              Example 2: Pack and unpack a message in Java.
+
+                  Foo foo = ...;
+                  Any any = Any.pack(foo);
+                  ...
+                  if (any.is(Foo.class)) {
+                    foo = any.unpack(Foo.class);
+                  }
+
+               Example 3: Pack and unpack a message in Python.
+
+                  foo = Foo(...)
+                  any = Any()
+                  any.Pack(foo)
+                  ...
+                  if any.Is(Foo.DESCRIPTOR):
+                    any.Unpack(foo)
+                    ...
+
+               Example 4: Pack and unpack a message in Go
+
+                   foo := &pb.Foo{...}
+                   any, err := anypb.New(foo)
+                   if err != nil {
+                     ...
+                   }
+                   ...
+                   foo := &pb.Foo{}
+                   if err := any.UnmarshalTo(foo); err != nil {
+                     ...
+                   }
+
+              The pack methods provided by protobuf library will by default use
+
+              'type.googleapis.com/full.type.name' as the type URL and the
+              unpack
+
+              methods only use the fully qualified type name after the last '/'
+
+              in the type URL, for example "foo.bar.com/x/y.z" will yield type
+
+              name "y.z".
+
+
+
+              JSON
+
+              ====
+
+              The JSON representation of an `Any` value uses the regular
+
+              representation of the deserialized, embedded message, with an
+
+              additional field `@type` which contains the type URL. Example:
+
+                  package google.profile;
+                  message Person {
+                    string first_name = 1;
+                    string last_name = 2;
+                  }
+
+                  {
+                    "@type": "type.googleapis.com/google.profile.Person",
+                    "firstName": <string>,
+                    "lastName": <string>
+                  }
+
+              If the embedded message type is well-known and has a custom JSON
+
+              representation, that representation will be embedded adding a
+              field
+
+              `value` which holds the custom JSON in addition to the `@type`
+
+              field. Example (for message [google.protobuf.Duration][]):
+
+                  {
+                    "@type": "type.googleapis.com/google.protobuf.Duration",
+                    "value": "1.212s"
+                  }
         title: Grant is stored in the KVStore to record a grant with full context
     description: >-
       QueryAllowanceResponse is the response type for the Query/Allowance RPC
       method.
-  cosmos.feegrant.v1beta1.QueryAllowancesResponse:
+  cosmos.feegrant.v1beta1.QueryAllowancesByGranterResponse:
     type: object
     properties:
       allowances:
@@ -45150,7 +46004,6 @@ definitions:
                 grantee is the address of the user being granted an allowance of
                 another user's funds.
             allowance:
-              description: allowance can be any of basic and filtered fee allowance.
               type: object
               properties:
                 '@type':
@@ -45211,10 +46064,115 @@ definitions:
 
                     used with implementation specific semantics.
               additionalProperties: {}
+              description: >-
+                `Any` contains an arbitrary serialized protocol buffer message
+                along with a
+
+                URL that describes the type of the serialized message.
+
+
+                Protobuf library provides support to pack/unpack Any values in
+                the form
+
+                of utility functions or additional generated methods of the Any
+                type.
+
+
+                Example 1: Pack and unpack a message in C++.
+
+                    Foo foo = ...;
+                    Any any;
+                    any.PackFrom(foo);
+                    ...
+                    if (any.UnpackTo(&foo)) {
+                      ...
+                    }
+
+                Example 2: Pack and unpack a message in Java.
+
+                    Foo foo = ...;
+                    Any any = Any.pack(foo);
+                    ...
+                    if (any.is(Foo.class)) {
+                      foo = any.unpack(Foo.class);
+                    }
+
+                 Example 3: Pack and unpack a message in Python.
+
+                    foo = Foo(...)
+                    any = Any()
+                    any.Pack(foo)
+                    ...
+                    if any.Is(Foo.DESCRIPTOR):
+                      any.Unpack(foo)
+                      ...
+
+                 Example 4: Pack and unpack a message in Go
+
+                     foo := &pb.Foo{...}
+                     any, err := anypb.New(foo)
+                     if err != nil {
+                       ...
+                     }
+                     ...
+                     foo := &pb.Foo{}
+                     if err := any.UnmarshalTo(foo); err != nil {
+                       ...
+                     }
+
+                The pack methods provided by protobuf library will by default
+                use
+
+                'type.googleapis.com/full.type.name' as the type URL and the
+                unpack
+
+                methods only use the fully qualified type name after the last
+                '/'
+
+                in the type URL, for example "foo.bar.com/x/y.z" will yield type
+
+                name "y.z".
+
+
+
+                JSON
+
+                ====
+
+                The JSON representation of an `Any` value uses the regular
+
+                representation of the deserialized, embedded message, with an
+
+                additional field `@type` which contains the type URL. Example:
+
+                    package google.profile;
+                    message Person {
+                      string first_name = 1;
+                      string last_name = 2;
+                    }
+
+                    {
+                      "@type": "type.googleapis.com/google.profile.Person",
+                      "firstName": <string>,
+                      "lastName": <string>
+                    }
+
+                If the embedded message type is well-known and has a custom JSON
+
+                representation, that representation will be embedded adding a
+                field
+
+                `value` which holds the custom JSON in addition to the `@type`
+
+                field. Example (for message [google.protobuf.Duration][]):
+
+                    {
+                      "@type": "type.googleapis.com/google.protobuf.Duration",
+                      "value": "1.212s"
+                    }
           title: Grant is stored in the KVStore to record a grant with full context
-        description: allowances are allowance's granted for grantee by granter.
+        description: allowances that have been issued by the granter.
       pagination:
-        description: pagination defines an pagination for the response.
         type: object
         properties:
           next_key:
@@ -45231,6 +46189,229 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+    description: >-
+      QueryAllowancesByGranterResponse is the response type for the
+      Query/AllowancesByGranter RPC method.
+  cosmos.feegrant.v1beta1.QueryAllowancesResponse:
+    type: object
+    properties:
+      allowances:
+        type: array
+        items:
+          type: object
+          properties:
+            granter:
+              type: string
+              description: >-
+                granter is the address of the user granting an allowance of
+                their funds.
+            grantee:
+              type: string
+              description: >-
+                grantee is the address of the user being granted an allowance of
+                another user's funds.
+            allowance:
+              type: object
+              properties:
+                '@type':
+                  type: string
+                  description: >-
+                    A URL/resource name that uniquely identifies the type of the
+                    serialized
+
+                    protocol buffer message. This string must contain at least
+
+                    one "/" character. The last segment of the URL's path must
+                    represent
+
+                    the fully qualified name of the type (as in
+
+                    `path/google.protobuf.Duration`). The name should be in a
+                    canonical form
+
+                    (e.g., leading "." is not accepted).
+
+
+                    In practice, teams usually precompile into the binary all
+                    types that they
+
+                    expect it to use in the context of Any. However, for URLs
+                    which use the
+
+                    scheme `http`, `https`, or no scheme, one can optionally set
+                    up a type
+
+                    server that maps type URLs to message definitions as
+                    follows:
+
+
+                    * If no scheme is provided, `https` is assumed.
+
+                    * An HTTP GET on the URL must yield a
+                    [google.protobuf.Type][]
+                      value in binary format, or produce an error.
+                    * Applications are allowed to cache lookup results based on
+                    the
+                      URL, or have them precompiled into a binary to avoid any
+                      lookup. Therefore, binary compatibility needs to be preserved
+                      on changes to types. (Use versioned type names to manage
+                      breaking changes.)
+
+                    Note: this functionality is not currently available in the
+                    official
+
+                    protobuf release, and it is not used for type URLs beginning
+                    with
+
+                    type.googleapis.com.
+
+
+                    Schemes other than `http`, `https` (or the empty scheme)
+                    might be
+
+                    used with implementation specific semantics.
+              additionalProperties: {}
+              description: >-
+                `Any` contains an arbitrary serialized protocol buffer message
+                along with a
+
+                URL that describes the type of the serialized message.
+
+
+                Protobuf library provides support to pack/unpack Any values in
+                the form
+
+                of utility functions or additional generated methods of the Any
+                type.
+
+
+                Example 1: Pack and unpack a message in C++.
+
+                    Foo foo = ...;
+                    Any any;
+                    any.PackFrom(foo);
+                    ...
+                    if (any.UnpackTo(&foo)) {
+                      ...
+                    }
+
+                Example 2: Pack and unpack a message in Java.
+
+                    Foo foo = ...;
+                    Any any = Any.pack(foo);
+                    ...
+                    if (any.is(Foo.class)) {
+                      foo = any.unpack(Foo.class);
+                    }
+
+                 Example 3: Pack and unpack a message in Python.
+
+                    foo = Foo(...)
+                    any = Any()
+                    any.Pack(foo)
+                    ...
+                    if any.Is(Foo.DESCRIPTOR):
+                      any.Unpack(foo)
+                      ...
+
+                 Example 4: Pack and unpack a message in Go
+
+                     foo := &pb.Foo{...}
+                     any, err := anypb.New(foo)
+                     if err != nil {
+                       ...
+                     }
+                     ...
+                     foo := &pb.Foo{}
+                     if err := any.UnmarshalTo(foo); err != nil {
+                       ...
+                     }
+
+                The pack methods provided by protobuf library will by default
+                use
+
+                'type.googleapis.com/full.type.name' as the type URL and the
+                unpack
+
+                methods only use the fully qualified type name after the last
+                '/'
+
+                in the type URL, for example "foo.bar.com/x/y.z" will yield type
+
+                name "y.z".
+
+
+
+                JSON
+
+                ====
+
+                The JSON representation of an `Any` value uses the regular
+
+                representation of the deserialized, embedded message, with an
+
+                additional field `@type` which contains the type URL. Example:
+
+                    package google.profile;
+                    message Person {
+                      string first_name = 1;
+                      string last_name = 2;
+                    }
+
+                    {
+                      "@type": "type.googleapis.com/google.profile.Person",
+                      "firstName": <string>,
+                      "lastName": <string>
+                    }
+
+                If the embedded message type is well-known and has a custom JSON
+
+                representation, that representation will be embedded adding a
+                field
+
+                `value` which holds the custom JSON in addition to the `@type`
+
+                field. Example (for message [google.protobuf.Duration][]):
+
+                    {
+                      "@type": "type.googleapis.com/google.protobuf.Duration",
+                      "value": "1.212s"
+                    }
+          title: Grant is stored in the KVStore to record a grant with full context
+        description: allowances are allowance's granted for grantee by granter.
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryAllowancesResponse is the response type for the Query/Allowances RPC
       method.
@@ -45623,7 +46804,6 @@ definitions:
 
             proposal.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -45640,6 +46820,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryDepositsResponse is the response type for the Query/Deposits RPC
       method.
@@ -45647,14 +46835,13 @@ definitions:
     type: object
     properties:
       voting_params:
-        description: voting_params defines the parameters related to voting.
         type: object
         properties:
           voting_period:
             type: string
             description: Length of the voting period.
+        description: VotingParams defines the params for voting on governance proposals.
       deposit_params:
-        description: deposit_params defines the parameters related to deposit.
         type: object
         properties:
           min_deposit:
@@ -45681,8 +46868,8 @@ definitions:
               Maximum period for Atom holders to deposit on a proposal. Initial
               value: 2
                months.
+        description: DepositParams defines the params for deposits on governance proposals.
       tally_params:
-        description: tally_params defines the parameters related to tally.
         type: object
         properties:
           quorum:
@@ -45705,6 +46892,9 @@ definitions:
               Minimum value of Veto votes to Total votes ratio for proposal to
               be
                vetoed. Default value: 1/3.
+        description: >-
+          TallyParams defines the params for tallying votes on governance
+          proposals.
     description: QueryParamsResponse is the response type for the Query/Params RPC method.
   cosmos.gov.v1beta1.QueryProposalResponse:
     type: object
@@ -46192,7 +47382,6 @@ definitions:
               format: date-time
           description: Proposal defines the core field members of a governance proposal.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -46209,6 +47398,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: |-
       QueryProposalsResponse is the response type for the Query/Proposals RPC
       method.
@@ -46242,14 +47439,6 @@ definitions:
           voter:
             type: string
           option:
-            description: >-
-              Deprecated: Prefer to use `options` instead. This field is set in
-              queries
-
-              if and only if `len(options) == 1` and that option has weight 1.
-              In all
-
-              other cases, this field will default to VOTE_OPTION_UNSPECIFIED.
             type: string
             enum:
               - VOTE_OPTION_UNSPECIFIED
@@ -46258,6 +47447,15 @@ definitions:
               - VOTE_OPTION_NO
               - VOTE_OPTION_NO_WITH_VETO
             default: VOTE_OPTION_UNSPECIFIED
+            description: >-
+              VoteOption enumerates the valid vote options for a given
+              governance proposal.
+
+               - VOTE_OPTION_UNSPECIFIED: VOTE_OPTION_UNSPECIFIED defines a no-op vote option.
+               - VOTE_OPTION_YES: VOTE_OPTION_YES defines a yes vote option.
+               - VOTE_OPTION_ABSTAIN: VOTE_OPTION_ABSTAIN defines an abstain vote option.
+               - VOTE_OPTION_NO: VOTE_OPTION_NO defines a no vote option.
+               - VOTE_OPTION_NO_WITH_VETO: VOTE_OPTION_NO_WITH_VETO defines a no with veto vote option.
           options:
             type: array
             items:
@@ -46306,14 +47504,6 @@ definitions:
             voter:
               type: string
             option:
-              description: >-
-                Deprecated: Prefer to use `options` instead. This field is set
-                in queries
-
-                if and only if `len(options) == 1` and that option has weight 1.
-                In all
-
-                other cases, this field will default to VOTE_OPTION_UNSPECIFIED.
               type: string
               enum:
                 - VOTE_OPTION_UNSPECIFIED
@@ -46322,6 +47512,15 @@ definitions:
                 - VOTE_OPTION_NO
                 - VOTE_OPTION_NO_WITH_VETO
               default: VOTE_OPTION_UNSPECIFIED
+              description: >-
+                VoteOption enumerates the valid vote options for a given
+                governance proposal.
+
+                 - VOTE_OPTION_UNSPECIFIED: VOTE_OPTION_UNSPECIFIED defines a no-op vote option.
+                 - VOTE_OPTION_YES: VOTE_OPTION_YES defines a yes vote option.
+                 - VOTE_OPTION_ABSTAIN: VOTE_OPTION_ABSTAIN defines an abstain vote option.
+                 - VOTE_OPTION_NO: VOTE_OPTION_NO defines a no vote option.
+                 - VOTE_OPTION_NO_WITH_VETO: VOTE_OPTION_NO_WITH_VETO defines a no with veto vote option.
             options:
               type: array
               items:
@@ -46357,7 +47556,6 @@ definitions:
             A Vote consists of a proposal ID, the voter, and the vote option.
         description: votes defined the queried votes.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -46374,6 +47572,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: QueryVotesResponse is the response type for the Query/Votes RPC method.
   cosmos.gov.v1beta1.TallyParams:
     type: object
@@ -46418,14 +47624,6 @@ definitions:
       voter:
         type: string
       option:
-        description: >-
-          Deprecated: Prefer to use `options` instead. This field is set in
-          queries
-
-          if and only if `len(options) == 1` and that option has weight 1. In
-          all
-
-          other cases, this field will default to VOTE_OPTION_UNSPECIFIED.
         type: string
         enum:
           - VOTE_OPTION_UNSPECIFIED
@@ -46434,6 +47632,15 @@ definitions:
           - VOTE_OPTION_NO
           - VOTE_OPTION_NO_WITH_VETO
         default: VOTE_OPTION_UNSPECIFIED
+        description: >-
+          VoteOption enumerates the valid vote options for a given governance
+          proposal.
+
+           - VOTE_OPTION_UNSPECIFIED: VOTE_OPTION_UNSPECIFIED defines a no-op vote option.
+           - VOTE_OPTION_YES: VOTE_OPTION_YES defines a yes vote option.
+           - VOTE_OPTION_ABSTAIN: VOTE_OPTION_ABSTAIN defines an abstain vote option.
+           - VOTE_OPTION_NO: VOTE_OPTION_NO defines a no vote option.
+           - VOTE_OPTION_NO_WITH_VETO: VOTE_OPTION_NO_WITH_VETO defines a no with veto vote option.
       options:
         type: array
         items:
@@ -46793,9 +48000,6 @@ definitions:
     type: object
     properties:
       commission_rates:
-        description: >-
-          commission_rates defines the initial commission rates to be used for
-          creating a validator.
         type: object
         properties:
           rate:
@@ -46811,6 +48015,11 @@ definitions:
             description: >-
               max_change_rate defines the maximum daily increase of the
               validator commission, as a fraction.
+        description: >-
+          CommissionRates defines the initial commission rates to be used for
+          creating
+
+          a validator.
       update_time:
         type: string
         format: date-time
@@ -46915,7 +48124,6 @@ definitions:
         type: object
         properties:
           version:
-            title: basic block info
             type: object
             properties:
               block:
@@ -46941,7 +48149,6 @@ definitions:
             type: string
             format: date-time
           last_block_id:
-            title: prev block info
             type: object
             properties:
               hash:
@@ -46957,6 +48164,7 @@ definitions:
                     type: string
                     format: byte
                 title: PartsetHeader
+            title: BlockID
           last_commit_hash:
             type: string
             format: byte
@@ -47171,7 +48379,6 @@ definitions:
                 jailed defined whether the validator has been jailed from bonded
                 status or not.
             status:
-              description: status is the validator status (bonded/unbonding/unbonded).
               type: string
               enum:
                 - BOND_STATUS_UNSPECIFIED
@@ -47179,6 +48386,13 @@ definitions:
                 - BOND_STATUS_UNBONDING
                 - BOND_STATUS_BONDED
               default: BOND_STATUS_UNSPECIFIED
+              description: |-
+                BondStatus is the status of a validator.
+
+                 - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                 - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                 - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                 - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
             tokens:
               type: string
               description: tokens define the delegated tokens (incl. self-delegation).
@@ -47188,7 +48402,6 @@ definitions:
                 delegator_shares defines total shares issued to a validator's
                 delegators.
             description:
-              description: description defines the description terms for the validator.
               type: object
               properties:
                 moniker:
@@ -47210,6 +48423,7 @@ definitions:
                 details:
                   type: string
                   description: details define other optional details.
+              description: Description defines a validator description.
             unbonding_height:
               type: string
               format: int64
@@ -47223,13 +48437,9 @@ definitions:
                 unbonding_time defines, if unbonding, the min time for the
                 validator to complete unbonding.
             commission:
-              description: commission defines the commission parameters.
               type: object
               properties:
                 commission_rates:
-                  description: >-
-                    commission_rates defines the initial commission rates to be
-                    used for creating a validator.
                   type: object
                   properties:
                     rate:
@@ -47247,12 +48457,18 @@ definitions:
                       description: >-
                         max_change_rate defines the maximum daily increase of
                         the validator commission, as a fraction.
+                  description: >-
+                    CommissionRates defines the initial commission rates to be
+                    used for creating
+
+                    a validator.
                 update_time:
                   type: string
                   format: date-time
                   description: >-
                     update_time is the last time the commission rate was
                     changed.
+              description: Commission defines commission parameters for a given validator.
             min_self_delegation:
               type: string
               description: >-
@@ -47455,7 +48671,6 @@ definitions:
             responses.
         description: delegation_responses defines all the delegations' info of a delegator.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -47472,6 +48687,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: |-
       QueryDelegatorDelegationsResponse is response type for the
       Query/DelegatorDelegations RPC method.
@@ -47526,7 +48749,6 @@ definitions:
 
             for a single validator in an time-ordered list.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -47543,6 +48765,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: |-
       QueryUnbondingDelegatorDelegationsResponse is response type for the
       Query/UnbondingDelegatorDelegations RPC method.
@@ -47726,7 +48956,6 @@ definitions:
               jailed defined whether the validator has been jailed from bonded
               status or not.
           status:
-            description: status is the validator status (bonded/unbonding/unbonded).
             type: string
             enum:
               - BOND_STATUS_UNSPECIFIED
@@ -47734,6 +48963,13 @@ definitions:
               - BOND_STATUS_UNBONDING
               - BOND_STATUS_BONDED
             default: BOND_STATUS_UNSPECIFIED
+            description: |-
+              BondStatus is the status of a validator.
+
+               - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+               - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+               - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+               - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
           tokens:
             type: string
             description: tokens define the delegated tokens (incl. self-delegation).
@@ -47743,7 +48979,6 @@ definitions:
               delegator_shares defines total shares issued to a validator's
               delegators.
           description:
-            description: description defines the description terms for the validator.
             type: object
             properties:
               moniker:
@@ -47765,6 +49000,7 @@ definitions:
               details:
                 type: string
                 description: details define other optional details.
+            description: Description defines a validator description.
           unbonding_height:
             type: string
             format: int64
@@ -47778,13 +49014,9 @@ definitions:
               unbonding_time defines, if unbonding, the min time for the
               validator to complete unbonding.
           commission:
-            description: commission defines the commission parameters.
             type: object
             properties:
               commission_rates:
-                description: >-
-                  commission_rates defines the initial commission rates to be
-                  used for creating a validator.
                 type: object
                 properties:
                   rate:
@@ -47802,10 +49034,16 @@ definitions:
                     description: >-
                       max_change_rate defines the maximum daily increase of the
                       validator commission, as a fraction.
+                description: >-
+                  CommissionRates defines the initial commission rates to be
+                  used for creating
+
+                  a validator.
               update_time:
                 type: string
                 format: date-time
                 description: update_time is the last time the commission rate was changed.
+            description: Commission defines commission parameters for a given validator.
           min_self_delegation:
             type: string
             description: >-
@@ -48021,7 +49259,6 @@ definitions:
                 jailed defined whether the validator has been jailed from bonded
                 status or not.
             status:
-              description: status is the validator status (bonded/unbonding/unbonded).
               type: string
               enum:
                 - BOND_STATUS_UNSPECIFIED
@@ -48029,6 +49266,13 @@ definitions:
                 - BOND_STATUS_UNBONDING
                 - BOND_STATUS_BONDED
               default: BOND_STATUS_UNSPECIFIED
+              description: |-
+                BondStatus is the status of a validator.
+
+                 - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                 - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                 - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                 - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
             tokens:
               type: string
               description: tokens define the delegated tokens (incl. self-delegation).
@@ -48038,7 +49282,6 @@ definitions:
                 delegator_shares defines total shares issued to a validator's
                 delegators.
             description:
-              description: description defines the description terms for the validator.
               type: object
               properties:
                 moniker:
@@ -48060,6 +49303,7 @@ definitions:
                 details:
                   type: string
                   description: details define other optional details.
+              description: Description defines a validator description.
             unbonding_height:
               type: string
               format: int64
@@ -48073,13 +49317,9 @@ definitions:
                 unbonding_time defines, if unbonding, the min time for the
                 validator to complete unbonding.
             commission:
-              description: commission defines the commission parameters.
               type: object
               properties:
                 commission_rates:
-                  description: >-
-                    commission_rates defines the initial commission rates to be
-                    used for creating a validator.
                   type: object
                   properties:
                     rate:
@@ -48097,12 +49337,18 @@ definitions:
                       description: >-
                         max_change_rate defines the maximum daily increase of
                         the validator commission, as a fraction.
+                  description: >-
+                    CommissionRates defines the initial commission rates to be
+                    used for creating
+
+                    a validator.
                 update_time:
                   type: string
                   format: date-time
                   description: >-
                     update_time is the last time the commission rate was
                     changed.
+              description: Commission defines commission parameters for a given validator.
             min_self_delegation:
               type: string
               description: >-
@@ -48131,7 +49377,6 @@ definitions:
             multiplied by exchange rate.
         description: validators defines the the validators' info of a delegator.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -48148,6 +49393,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: |-
       QueryDelegatorValidatorsResponse is response type for the
       Query/DelegatorValidators RPC method.
@@ -48155,14 +49408,12 @@ definitions:
     type: object
     properties:
       hist:
-        description: hist defines the historical info at the given height.
         type: object
         properties:
           header:
             type: object
             properties:
               version:
-                title: basic block info
                 type: object
                 properties:
                   block:
@@ -48188,7 +49439,6 @@ definitions:
                 type: string
                 format: date-time
               last_block_id:
-                title: prev block info
                 type: object
                 properties:
                   hash:
@@ -48204,6 +49454,7 @@ definitions:
                         type: string
                         format: byte
                     title: PartsetHeader
+                title: BlockID
               last_commit_hash:
                 type: string
                 format: byte
@@ -48424,7 +49675,6 @@ definitions:
                     jailed defined whether the validator has been jailed from
                     bonded status or not.
                 status:
-                  description: status is the validator status (bonded/unbonding/unbonded).
                   type: string
                   enum:
                     - BOND_STATUS_UNSPECIFIED
@@ -48432,6 +49682,13 @@ definitions:
                     - BOND_STATUS_UNBONDING
                     - BOND_STATUS_BONDED
                   default: BOND_STATUS_UNSPECIFIED
+                  description: |-
+                    BondStatus is the status of a validator.
+
+                     - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                     - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                     - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                     - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
                 tokens:
                   type: string
                   description: tokens define the delegated tokens (incl. self-delegation).
@@ -48441,7 +49698,6 @@ definitions:
                     delegator_shares defines total shares issued to a
                     validator's delegators.
                 description:
-                  description: description defines the description terms for the validator.
                   type: object
                   properties:
                     moniker:
@@ -48463,6 +49719,7 @@ definitions:
                     details:
                       type: string
                       description: details define other optional details.
+                  description: Description defines a validator description.
                 unbonding_height:
                   type: string
                   format: int64
@@ -48476,13 +49733,9 @@ definitions:
                     unbonding_time defines, if unbonding, the min time for the
                     validator to complete unbonding.
                 commission:
-                  description: commission defines the commission parameters.
                   type: object
                   properties:
                     commission_rates:
-                      description: >-
-                        commission_rates defines the initial commission rates to
-                        be used for creating a validator.
                       type: object
                       properties:
                         rate:
@@ -48500,12 +49753,20 @@ definitions:
                           description: >-
                             max_change_rate defines the maximum daily increase
                             of the validator commission, as a fraction.
+                      description: >-
+                        CommissionRates defines the initial commission rates to
+                        be used for creating
+
+                        a validator.
                     update_time:
                       type: string
                       format: date-time
                       description: >-
                         update_time is the last time the commission rate was
                         changed.
+                  description: >-
+                    Commission defines commission parameters for a given
+                    validator.
                 min_self_delegation:
                   type: string
                   description: >-
@@ -48534,6 +49795,16 @@ definitions:
                 shares
 
                 multiplied by exchange rate.
+        description: >-
+          HistoricalInfo contains header and validator information for a given
+          block.
+
+          It is stored as part of staking module's state, which persists the `n`
+          most
+
+          recent HistoricalInfo
+
+          (`n` is set by the staking module's `historical_entries` parameter).
     description: >-
       QueryHistoricalInfoResponse is response type for the Query/HistoricalInfo
       RPC
@@ -48543,7 +49814,6 @@ definitions:
     type: object
     properties:
       params:
-        description: params holds all the parameters of this module.
         type: object
         properties:
           unbonding_time:
@@ -48566,18 +49836,23 @@ definitions:
           bond_denom:
             type: string
             description: bond_denom defines the bondable coin denomination.
+        description: Params defines the parameters for the staking module.
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   cosmos.staking.v1beta1.QueryPoolResponse:
     type: object
     properties:
       pool:
-        description: pool defines the pool info.
         type: object
         properties:
           not_bonded_tokens:
             type: string
           bonded_tokens:
             type: string
+        description: >-
+          Pool is used for tracking bonded and not-bonded token supply of the
+          bond
+
+          denomination.
     description: QueryPoolResponse is response type for the Query/Pool RPC method.
   cosmos.staking.v1beta1.QueryRedelegationsResponse:
     type: object
@@ -48694,7 +49969,6 @@ definitions:
 
             responses.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -48711,6 +49985,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryRedelegationsResponse is response type for the Query/Redelegations
       RPC
@@ -48815,7 +50097,6 @@ definitions:
             balance in addition to shares which is more suitable for client
             responses.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -48832,6 +50113,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     title: |-
       QueryValidatorDelegationsResponse is response type for the
       Query/ValidatorDelegations RPC method
@@ -49015,7 +50304,6 @@ definitions:
               jailed defined whether the validator has been jailed from bonded
               status or not.
           status:
-            description: status is the validator status (bonded/unbonding/unbonded).
             type: string
             enum:
               - BOND_STATUS_UNSPECIFIED
@@ -49023,6 +50311,13 @@ definitions:
               - BOND_STATUS_UNBONDING
               - BOND_STATUS_BONDED
             default: BOND_STATUS_UNSPECIFIED
+            description: |-
+              BondStatus is the status of a validator.
+
+               - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+               - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+               - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+               - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
           tokens:
             type: string
             description: tokens define the delegated tokens (incl. self-delegation).
@@ -49032,7 +50327,6 @@ definitions:
               delegator_shares defines total shares issued to a validator's
               delegators.
           description:
-            description: description defines the description terms for the validator.
             type: object
             properties:
               moniker:
@@ -49054,6 +50348,7 @@ definitions:
               details:
                 type: string
                 description: details define other optional details.
+            description: Description defines a validator description.
           unbonding_height:
             type: string
             format: int64
@@ -49067,13 +50362,9 @@ definitions:
               unbonding_time defines, if unbonding, the min time for the
               validator to complete unbonding.
           commission:
-            description: commission defines the commission parameters.
             type: object
             properties:
               commission_rates:
-                description: >-
-                  commission_rates defines the initial commission rates to be
-                  used for creating a validator.
                 type: object
                 properties:
                   rate:
@@ -49091,10 +50382,16 @@ definitions:
                     description: >-
                       max_change_rate defines the maximum daily increase of the
                       validator commission, as a fraction.
+                description: >-
+                  CommissionRates defines the initial commission rates to be
+                  used for creating
+
+                  a validator.
               update_time:
                 type: string
                 format: date-time
                 description: update_time is the last time the commission rate was changed.
+            description: Commission defines commission parameters for a given validator.
           min_self_delegation:
             type: string
             description: >-
@@ -49173,7 +50470,6 @@ definitions:
 
             for a single validator in an time-ordered list.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -49190,6 +50486,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: |-
       QueryValidatorUnbondingDelegationsResponse is response type for the
       Query/ValidatorUnbondingDelegations RPC method.
@@ -49379,7 +50683,6 @@ definitions:
                 jailed defined whether the validator has been jailed from bonded
                 status or not.
             status:
-              description: status is the validator status (bonded/unbonding/unbonded).
               type: string
               enum:
                 - BOND_STATUS_UNSPECIFIED
@@ -49387,6 +50690,13 @@ definitions:
                 - BOND_STATUS_UNBONDING
                 - BOND_STATUS_BONDED
               default: BOND_STATUS_UNSPECIFIED
+              description: |-
+                BondStatus is the status of a validator.
+
+                 - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+                 - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+                 - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+                 - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
             tokens:
               type: string
               description: tokens define the delegated tokens (incl. self-delegation).
@@ -49396,7 +50706,6 @@ definitions:
                 delegator_shares defines total shares issued to a validator's
                 delegators.
             description:
-              description: description defines the description terms for the validator.
               type: object
               properties:
                 moniker:
@@ -49418,6 +50727,7 @@ definitions:
                 details:
                   type: string
                   description: details define other optional details.
+              description: Description defines a validator description.
             unbonding_height:
               type: string
               format: int64
@@ -49431,13 +50741,9 @@ definitions:
                 unbonding_time defines, if unbonding, the min time for the
                 validator to complete unbonding.
             commission:
-              description: commission defines the commission parameters.
               type: object
               properties:
                 commission_rates:
-                  description: >-
-                    commission_rates defines the initial commission rates to be
-                    used for creating a validator.
                   type: object
                   properties:
                     rate:
@@ -49455,12 +50761,18 @@ definitions:
                       description: >-
                         max_change_rate defines the maximum daily increase of
                         the validator commission, as a fraction.
+                  description: >-
+                    CommissionRates defines the initial commission rates to be
+                    used for creating
+
+                    a validator.
                 update_time:
                   type: string
                   format: date-time
                   description: >-
                     update_time is the last time the commission rate was
                     changed.
+              description: Commission defines commission parameters for a given validator.
             min_self_delegation:
               type: string
               description: >-
@@ -49489,7 +50801,6 @@ definitions:
             multiplied by exchange rate.
         description: validators contains all the queried validators.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -49506,6 +50817,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     title: >-
       QueryValidatorsResponse is response type for the Query/Validators RPC
       method
@@ -49955,7 +51274,6 @@ definitions:
           jailed defined whether the validator has been jailed from bonded
           status or not.
       status:
-        description: status is the validator status (bonded/unbonding/unbonded).
         type: string
         enum:
           - BOND_STATUS_UNSPECIFIED
@@ -49963,6 +51281,13 @@ definitions:
           - BOND_STATUS_UNBONDING
           - BOND_STATUS_BONDED
         default: BOND_STATUS_UNSPECIFIED
+        description: |-
+          BondStatus is the status of a validator.
+
+           - BOND_STATUS_UNSPECIFIED: UNSPECIFIED defines an invalid validator status.
+           - BOND_STATUS_UNBONDED: UNBONDED defines a validator that is not bonded.
+           - BOND_STATUS_UNBONDING: UNBONDING defines a validator that is unbonding.
+           - BOND_STATUS_BONDED: BONDED defines a validator that is bonded.
       tokens:
         type: string
         description: tokens define the delegated tokens (incl. self-delegation).
@@ -49972,7 +51297,6 @@ definitions:
           delegator_shares defines total shares issued to a validator's
           delegators.
       description:
-        description: description defines the description terms for the validator.
         type: object
         properties:
           moniker:
@@ -49992,6 +51316,7 @@ definitions:
           details:
             type: string
             description: details define other optional details.
+        description: Description defines a validator description.
       unbonding_height:
         type: string
         format: int64
@@ -50005,13 +51330,9 @@ definitions:
           unbonding_time defines, if unbonding, the min time for the validator
           to complete unbonding.
       commission:
-        description: commission defines the commission parameters.
         type: object
         properties:
           commission_rates:
-            description: >-
-              commission_rates defines the initial commission rates to be used
-              for creating a validator.
             type: object
             properties:
               rate:
@@ -50029,10 +51350,16 @@ definitions:
                 description: >-
                   max_change_rate defines the maximum daily increase of the
                   validator commission, as a fraction.
+            description: >-
+              CommissionRates defines the initial commission rates to be used
+              for creating
+
+              a validator.
           update_time:
             type: string
             format: date-time
             description: update_time is the last time the commission rate was changed.
+        description: Commission defines commission parameters for a given validator.
       min_self_delegation:
         type: string
         description: >-
@@ -50552,17 +51879,6 @@ definitions:
 
           the fee.
       fee:
-        description: >-
-          Fee is the fee and gas limit for the transaction. The first signer is
-          the
-
-          primary signer and the one which pays the fee. The fee can be
-          calculated
-
-          based on the cost of evaluating the body and doing signature
-          verification
-
-          of the signers. This can be estimated via simulation.
         type: object
         properties:
           amount:
@@ -50612,6 +51928,13 @@ definitions:
               appropriate fee grant does not exist or the chain does
 
               not support fee grants, this will fail
+        description: >-
+          Fee includes the amount of coins paid in fees and the maximum
+
+          gas to be used by the transaction. The ratio yields an effective
+          "gasprice",
+
+          which must be above some miminum to be accepted into the mempool.
     description: |-
       AuthInfo describes the fee and signer modes that are used to sign a
       transaction.
@@ -51062,7 +52385,6 @@ definitions:
             type: object
             properties:
               version:
-                title: basic block info
                 type: object
                 properties:
                   block:
@@ -51301,7 +52623,6 @@ definitions:
                                   type: object
                                   properties:
                                     version:
-                                      title: basic block info
                                       type: object
                                       properties:
                                         block:
@@ -51584,7 +52905,6 @@ definitions:
               Commit contains the evidence that a block was committed by a set
               of validators.
       pagination:
-        description: pagination defines a pagination for the response.
         type: object
         properties:
           next_key:
@@ -51601,6 +52921,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       GetBlockWithTxsResponse is the response type for the
       Service.GetBlockWithTxs method.
@@ -51612,7 +52940,6 @@ definitions:
     properties:
       tx:
         $ref: '#/definitions/cosmos.tx.v1beta1.Tx'
-        description: tx is the queried transaction.
       tx_response:
         type: object
         properties:
@@ -52244,7 +53571,6 @@ definitions:
             tags are stringified and the log is JSON decoded.
         description: tx_responses is the list of queried TxResponses.
       pagination:
-        description: pagination defines a pagination for the response.
         type: object
         properties:
           next_key:
@@ -52261,6 +53587,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: |-
       GetTxsEventResponse is the response type for the Service.TxsByEvents
       RPC method.
@@ -52268,11 +53602,9 @@ definitions:
     type: object
     properties:
       single:
-        title: single represents a single signer
         type: object
         properties:
           mode:
-            title: mode is the signing mode of the single signer
             type: string
             enum:
               - SIGN_MODE_UNSPECIFIED
@@ -52314,15 +53646,21 @@ definitions:
 
 
               Since: cosmos-sdk 0.45.2
+        title: >-
+          Single is the mode info for a single signer. It is structured as a
+          message
+
+          to allow for additional fields such as locale for SIGN_MODE_TEXTUAL in
+          the
+
+          future
       multi:
         $ref: '#/definitions/cosmos.tx.v1beta1.ModeInfo.Multi'
-        title: multi represents a nested multisig signer
     description: ModeInfo describes the signing mode of a single or nested multisig signer.
   cosmos.tx.v1beta1.ModeInfo.Multi:
     type: object
     properties:
       bitarray:
-        title: bitarray specifies which keys within the multisig are signing
         type: object
         properties:
           extra_bits_stored:
@@ -52352,7 +53690,6 @@ definitions:
     type: object
     properties:
       mode:
-        title: mode is the signing mode of the single signer
         type: string
         enum:
           - SIGN_MODE_UNSPECIFIED
@@ -52571,9 +53908,6 @@ definitions:
               }
       mode_info:
         $ref: '#/definitions/cosmos.tx.v1beta1.ModeInfo'
-        title: |-
-          mode_info describes the signing mode of the signer and is a nested
-          structure to support nested multisig pubkey's
       sequence:
         type: string
         format: uint64
@@ -52592,9 +53926,6 @@ definitions:
     properties:
       tx:
         $ref: '#/definitions/cosmos.tx.v1beta1.Tx'
-        description: |-
-          tx is the transaction to simulate.
-          Deprecated. Send raw tx bytes instead.
       tx_bytes:
         type: string
         format: byte
@@ -52609,7 +53940,6 @@ definitions:
     type: object
     properties:
       gas_info:
-        description: gas_info is the information about gas used in the simulation.
         type: object
         properties:
           gas_wanted:
@@ -52622,8 +53952,8 @@ definitions:
             type: string
             format: uint64
             description: GasUsed is the amount of gas actually consumed.
+        description: GasInfo defines tx execution gas context.
       result:
-        description: result is the result of the simulation.
         type: object
         properties:
           data:
@@ -52676,6 +54006,7 @@ definitions:
               message
 
               or handler execution.
+        description: Result is the union of ResponseFormat and ResponseCheckTx.
     description: |-
       SimulateResponse is the response type for the
       Service.SimulateRPC method.
@@ -52683,7 +54014,6 @@ definitions:
     type: object
     properties:
       body:
-        title: body is the processable content of the transaction
         type: object
         properties:
           messages:
@@ -53247,9 +54577,6 @@ definitions:
         description: TxBody is the body of a transaction that all signers sign over.
       auth_info:
         $ref: '#/definitions/cosmos.tx.v1beta1.AuthInfo'
-        title: |-
-          auth_info is the authorization related content of the transaction,
-          specifically signers, signer modes and fee
       signatures:
         type: array
         items:
@@ -54363,26 +55690,16 @@ definitions:
           - ACCESS_TYPE_NOBODY
           - ACCESS_TYPE_ONLY_ADDRESS
           - ACCESS_TYPE_EVERYBODY
-          - ACCESS_TYPE_ANY_OF_ADDRESSES
         default: ACCESS_TYPE_UNSPECIFIED
         description: >-
           - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder for empty
           value
            - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-           - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-          Deprecated: use AccessTypeAnyOfAddresses instead
+           - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to an address
            - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-           - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
         title: AccessType permission types
       address:
         type: string
-        title: |-
-          Address
-          Deprecated: replaced by addresses
-      addresses:
-        type: array
-        items:
-          type: string
     description: AccessConfig access control type.
   cosmwasm.wasm.v1.AccessType:
     type: string
@@ -54391,16 +55708,13 @@ definitions:
       - ACCESS_TYPE_NOBODY
       - ACCESS_TYPE_ONLY_ADDRESS
       - ACCESS_TYPE_EVERYBODY
-      - ACCESS_TYPE_ANY_OF_ADDRESSES
     default: ACCESS_TYPE_UNSPECIFIED
     description: >-
       - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder for empty
       value
        - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-       - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-      Deprecated: use AccessTypeAnyOfAddresses instead
+       - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to an address
        - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-       - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
     title: AccessType permission types
   cosmwasm.wasm.v1.CodeInfoResponse:
     type: object
@@ -54423,26 +55737,16 @@ definitions:
               - ACCESS_TYPE_NOBODY
               - ACCESS_TYPE_ONLY_ADDRESS
               - ACCESS_TYPE_EVERYBODY
-              - ACCESS_TYPE_ANY_OF_ADDRESSES
             default: ACCESS_TYPE_UNSPECIFIED
             description: >-
               - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder for
               empty value
                - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-               - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-              Deprecated: use AccessTypeAnyOfAddresses instead
+               - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to an address
                - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-               - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
             title: AccessType permission types
           address:
             type: string
-            title: |-
-              Address
-              Deprecated: replaced by addresses
-          addresses:
-            type: array
-            items:
-              type: string
         description: AccessConfig access control type.
     title: CodeInfoResponse contains code meta data from CodeInfo
   cosmwasm.wasm.v1.ContractCodeHistoryEntry:
@@ -54724,19 +56028,8 @@ definitions:
       data:
         type: string
         format: byte
-        title: Data contains bytes to returned from the contract
+        title: Data contains base64-encoded bytes to returned from the contract
     description: MsgExecuteContractResponse returns execution result data.
-  cosmwasm.wasm.v1.MsgInstantiateContract2Response:
-    type: object
-    properties:
-      address:
-        type: string
-        description: Address is the bech32 address of the new contract instance.
-      data:
-        type: string
-        format: byte
-        title: Data contains bytes to returned from the contract
-    title: MsgInstantiateContract2Response return instantiation result data
   cosmwasm.wasm.v1.MsgInstantiateContractResponse:
     type: object
     properties:
@@ -54746,7 +56039,7 @@ definitions:
       data:
         type: string
         format: byte
-        title: Data contains bytes to returned from the contract
+        title: Data contains base64-encoded bytes to returned from the contract
     title: MsgInstantiateContractResponse return instantiation result data
   cosmwasm.wasm.v1.MsgMigrateContractResponse:
     type: object
@@ -54765,67 +56058,10 @@ definitions:
         type: string
         format: uint64
         title: CodeID is the reference to the stored WASM code
-      checksum:
-        type: string
-        format: byte
-        title: Checksum is the sha256 hash of the stored code
     description: MsgStoreCodeResponse returns store result data.
   cosmwasm.wasm.v1.MsgUpdateAdminResponse:
     type: object
     title: MsgUpdateAdminResponse returns empty data
-  cosmwasm.wasm.v1.Params:
-    type: object
-    properties:
-      code_upload_access:
-        type: object
-        properties:
-          permission:
-            type: string
-            enum:
-              - ACCESS_TYPE_UNSPECIFIED
-              - ACCESS_TYPE_NOBODY
-              - ACCESS_TYPE_ONLY_ADDRESS
-              - ACCESS_TYPE_EVERYBODY
-              - ACCESS_TYPE_ANY_OF_ADDRESSES
-            default: ACCESS_TYPE_UNSPECIFIED
-            description: >-
-              - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder for
-              empty value
-               - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-               - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-              Deprecated: use AccessTypeAnyOfAddresses instead
-               - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-               - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
-            title: AccessType permission types
-          address:
-            type: string
-            title: |-
-              Address
-              Deprecated: replaced by addresses
-          addresses:
-            type: array
-            items:
-              type: string
-        description: AccessConfig access control type.
-      instantiate_default_permission:
-        type: string
-        enum:
-          - ACCESS_TYPE_UNSPECIFIED
-          - ACCESS_TYPE_NOBODY
-          - ACCESS_TYPE_ONLY_ADDRESS
-          - ACCESS_TYPE_EVERYBODY
-          - ACCESS_TYPE_ANY_OF_ADDRESSES
-        default: ACCESS_TYPE_UNSPECIFIED
-        description: >-
-          - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder for empty
-          value
-           - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-           - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-          Deprecated: use AccessTypeAnyOfAddresses instead
-           - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-           - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
-        title: AccessType permission types
-    description: Params defines the set of wasm parameters.
   cosmwasm.wasm.v1.QueryAllContractStateResponse:
     type: object
     properties:
@@ -54895,26 +56131,16 @@ definitions:
                   - ACCESS_TYPE_NOBODY
                   - ACCESS_TYPE_ONLY_ADDRESS
                   - ACCESS_TYPE_EVERYBODY
-                  - ACCESS_TYPE_ANY_OF_ADDRESSES
                 default: ACCESS_TYPE_UNSPECIFIED
                 description: >-
                   - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder
                   for empty value
                    - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-                   - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-                  Deprecated: use AccessTypeAnyOfAddresses instead
+                   - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to an address
                    - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-                   - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
                 title: AccessType permission types
               address:
                 type: string
-                title: |-
-                  Address
-                  Deprecated: replaced by addresses
-              addresses:
-                type: array
-                items:
-                  type: string
             description: AccessConfig access control type.
         title: CodeInfoResponse contains code meta data from CodeInfo
       data:
@@ -54947,26 +56173,16 @@ definitions:
                     - ACCESS_TYPE_NOBODY
                     - ACCESS_TYPE_ONLY_ADDRESS
                     - ACCESS_TYPE_EVERYBODY
-                    - ACCESS_TYPE_ANY_OF_ADDRESSES
                   default: ACCESS_TYPE_UNSPECIFIED
                   description: >-
                     - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder
                     for empty value
                      - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-                     - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-                    Deprecated: use AccessTypeAnyOfAddresses instead
+                     - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to an address
                      - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-                     - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
                   title: AccessType permission types
                 address:
                   type: string
-                  title: |-
-                    Address
-                    Deprecated: replaced by addresses
-                addresses:
-                  type: array
-                  items:
-                    type: string
               description: AccessConfig access control type.
           title: CodeInfoResponse contains code meta data from CodeInfo
       pagination:
@@ -55326,63 +56542,6 @@ definitions:
     title: |-
       QueryContractsByCodeResponse is the response type for the
       Query/ContractsByCode RPC method
-  cosmwasm.wasm.v1.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        type: object
-        properties:
-          code_upload_access:
-            type: object
-            properties:
-              permission:
-                type: string
-                enum:
-                  - ACCESS_TYPE_UNSPECIFIED
-                  - ACCESS_TYPE_NOBODY
-                  - ACCESS_TYPE_ONLY_ADDRESS
-                  - ACCESS_TYPE_EVERYBODY
-                  - ACCESS_TYPE_ANY_OF_ADDRESSES
-                default: ACCESS_TYPE_UNSPECIFIED
-                description: >-
-                  - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder
-                  for empty value
-                   - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-                   - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-                  Deprecated: use AccessTypeAnyOfAddresses instead
-                   - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-                   - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
-                title: AccessType permission types
-              address:
-                type: string
-                title: |-
-                  Address
-                  Deprecated: replaced by addresses
-              addresses:
-                type: array
-                items:
-                  type: string
-            description: AccessConfig access control type.
-          instantiate_default_permission:
-            type: string
-            enum:
-              - ACCESS_TYPE_UNSPECIFIED
-              - ACCESS_TYPE_NOBODY
-              - ACCESS_TYPE_ONLY_ADDRESS
-              - ACCESS_TYPE_EVERYBODY
-              - ACCESS_TYPE_ANY_OF_ADDRESSES
-            default: ACCESS_TYPE_UNSPECIFIED
-            description: >-
-              - ACCESS_TYPE_UNSPECIFIED: AccessTypeUnspecified placeholder for
-              empty value
-               - ACCESS_TYPE_NOBODY: AccessTypeNobody forbidden
-               - ACCESS_TYPE_ONLY_ADDRESS: AccessTypeOnlyAddress restricted to a single address
-              Deprecated: use AccessTypeAnyOfAddresses instead
-               - ACCESS_TYPE_EVERYBODY: AccessTypeEverybody unrestricted
-               - ACCESS_TYPE_ANY_OF_ADDRESSES: AccessTypeAnyOfAddresses allow any of the addresses
-            title: AccessType permission types
-        description: Params defines the set of wasm parameters.
-    description: QueryParamsResponse is the response type for the Query/Params RPC method.
   cosmwasm.wasm.v1.QueryPinnedCodesResponse:
     type: object
     properties:
