@@ -29,7 +29,6 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.18.1 # The Go version to download (if necessary) and use.
-      - uses: actions/setup-rust@v2
       - name: Build CLI
         shell: bash
         run: |
