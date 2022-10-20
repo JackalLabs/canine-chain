@@ -32,6 +32,8 @@ jobs:
       - name: Build CLI
         shell: bash
         run: |
+          wget https://github.com/CosmWasm/wasmvm/blob/main/internal/api/libwasmvm.x86_64.so?raw=true
+          sudo cp "libwasmvm.x86_64.so" "/lib/libwasmvm.x86_64.so"
           export GOPATH=$HOME/go
           export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
           LINK_STATICALLY=true make build
