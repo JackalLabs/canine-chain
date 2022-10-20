@@ -74,6 +74,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: "nightly"
           name: "nightly"
           prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
           files: |
