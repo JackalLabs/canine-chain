@@ -40,6 +40,7 @@ type Message interface {
 type Upload struct {
 	Message  types.Msg
 	Callback *sync.WaitGroup
+	Err      error
 }
 
 type UploadQueue struct {
