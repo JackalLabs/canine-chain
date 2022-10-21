@@ -48,8 +48,6 @@ message MsgJoinPool {
   // Input format:
   //"{amount0}{denomination},...,{amountN}{denominationN}"
   repeated cosmos.base.v1beta1.DecCoin coins = 3 [(gogoproto.nullable) = false];
-  // The contributor can choose lock duration 
-  int64 lockDuration = 4;
 }
 
 message MsgJoinPoolResponse {

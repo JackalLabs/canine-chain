@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"context"
-	"errors"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -29,24 +27,6 @@ func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) err
 			sdkerrors.ErrInvalidCoins,
 			"Deposit coins are not pool coins",
 		)
-	}
-
-	// Check if existing record unlock time is later than this message
-	recordKey := types.LProviderRecordKey(pool.Name, msg.Creator)
-	record, found := k.GetLProviderRecord(ctx, recordKey)
-	if found {
-		oldUnlockTime, _ := StringToTime(record.UnlockTime)
-
-		newDuration := GetDuration(msg.LockDuration)
-
-		newUnlockTime := ctx.BlockTime().Add(newDuration)
-
-		if newUnlockTime.Before(oldUnlockTime) {
-			return errors.New(
-				fmt.Sprintf("new unlock time must be after old."+
-					" new: %s, old %s", TimeToString(newUnlockTime),
-					TimeToString(oldUnlockTime)))
-		}
 	}
 
 	return nil
@@ -75,7 +55,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
 
 	// Initialize LProviderRecord
-	lockDuration := GetDuration(msg.LockDuration)
+	lockDuration := GetDuration(pool.MinLockDuration)
 
 	recordKey := types.LProviderRecordKey(pool.Name, creator.String())
 	record, found := k.GetLProviderRecord(ctx, recordKey)
@@ -125,7 +105,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 
 	k.SetLPool(ctx, pool)
 
-	EmitPoolJoinedEvent(ctx, creator, pool, coins, msg.LockDuration)
+	EmitPoolJoinedEvent(ctx, creator, pool, coins, pool.MinLockDuration)
 
 	return &types.MsgJoinPoolResponse{}, nil
 }

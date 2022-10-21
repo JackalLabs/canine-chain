@@ -17,9 +17,9 @@ var _ = strconv.Itoa(0)
 
 func CmdJoinPool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "join-pool \"Pool Name\" \"{amount0}{denom0},...,{amountN}{denomN} ...\" [lock duration (sec)]",
+		Use:   "join-pool \"Pool Name\" \"{amount0}{denom0},...,{amountN}{denomN} ...\"",
 		Short: "join a liquidity pool by depositing pool coins.\n ",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -27,7 +27,6 @@ func CmdJoinPool() *cobra.Command {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
 
-			lockDuration, err := strconv.ParseInt(args[2], 10, 64)
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
@@ -41,7 +40,6 @@ func CmdJoinPool() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				deposit,
-				lockDuration,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

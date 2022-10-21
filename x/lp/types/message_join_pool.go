@@ -1,9 +1,6 @@
 package types
 
 import (
-	"errors"
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -12,12 +9,11 @@ const TypeMsgJoinPool = "join_pool"
 
 var _ sdk.Msg = &MsgJoinPool{}
 
-func NewMsgJoinPool(creator string, poolName string, coins sdk.DecCoins, lockDuration int64) *MsgJoinPool {
+func NewMsgJoinPool(creator string, poolName string, coins sdk.DecCoins) *MsgJoinPool {
 	return &MsgJoinPool{
 		Creator:      creator,
 		PoolName:     poolName,
 		Coins:        coins,
-		LockDuration: lockDuration,
 	}
 }
 
@@ -55,11 +51,6 @@ func (msg *MsgJoinPool) ValidateBasic() error {
 
 	if !coins.IsValid() {
 		return sdkerrors.ErrInvalidCoins
-	}
-
-	if msg.LockDuration < 0 {
-		return errors.New(fmt.Sprintf("Lock duration cannot be less than 0: %v",
-			msg.LockDuration))
 	}
 
 	return nil
