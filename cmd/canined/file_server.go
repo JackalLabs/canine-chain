@@ -147,7 +147,10 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	}
 
 	cidhash := sha256.New()
-	io.WriteString(cidhash, ko.Address+fmt.Sprintf("%x", hashName))
+
+	fid := fmt.Sprintf("%x", hashName)
+
+	io.WriteString(cidhash, fmt.Sprintf("%s%s%s", sender, ko.Address, fid))
 	cid := cidhash.Sum(nil)
 
 	strcid := fmt.Sprintf("%x", cid)
@@ -155,7 +158,7 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	var wg sync.WaitGroup
 	wg.Add(1)
 
-	ctrerr := q.makeContract(cmd, []string{fmt.Sprintf("%x", hashName), sender, "0"}, &wg)
+	msg, ctrerr := q.makeContract(cmd, []string{fid, sender, "0"}, &wg)
 	if ctrerr != nil {
 		fmt.Printf("CONTRACT ERROR: %v\n", ctrerr)
 		return ctrerr
@@ -169,7 +172,17 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 		FID: fmt.Sprintf("%x", hashName),
 	}
 
-	err = json.NewEncoder(*w).Encode(v)
+	if msg.Err != nil {
+		fmt.Println(msg.Err)
+		v := ErrorResponse{
+			Error: msg.Err.Error(),
+		}
+		(*w).WriteHeader(http.StatusInternalServerError)
+		err = json.NewEncoder(*w).Encode(v)
+	} else {
+		err = json.NewEncoder(*w).Encode(v)
+	}
+
 	if err != nil {
 		fmt.Printf("Json Encode Error: %v\n", err)
 		return err
@@ -185,13 +198,13 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	return nil
 }
 
-func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.WaitGroup) error {
+func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.WaitGroup) (*Upload, error) {
 
 	merkleroot, filesize, fid := HashData(cmd, args[0])
 
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	msg := types.NewMsgPostContract(
@@ -203,17 +216,20 @@ func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.W
 		merkleroot,
 	)
 	if err := msg.ValidateBasic(); err != nil {
-		return err
+		return nil, err
 	}
 
 	u := Upload{
 		Message:  msg,
 		Callback: wg,
+		Err:      nil,
 	}
 
-	q.Queue = append(q.Queue, u)
+	k := &u
 
-	return nil
+	q.Queue = append(q.Queue, k)
+
+	return k, nil
 }
 
 func HashData(cmd *cobra.Command, filename string) (string, string, string) {
@@ -319,7 +335,7 @@ func StartFileServer(cmd *cobra.Command) {
 	router := httprouter.New()
 
 	q := UploadQueue{
-		Queue:  make([]Upload, 0),
+		Queue:  make([]*Upload, 0),
 		Locked: false,
 	}
 

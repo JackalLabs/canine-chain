@@ -11,6 +11,8 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/jackal-dao/canine/x/storage/types"
+
+	ctypes "github.com/cosmos/cosmos-sdk/types"
 )
 
 func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, db *leveldb.DB) {
@@ -80,9 +82,10 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, 
 			u := Upload{
 				Message:  msg,
 				Callback: nil,
+				Err:      nil,
 			}
 
-			q.Queue = append(q.Queue, u)
+			q.Queue = append(q.Queue, &u)
 
 			fmt.Println(res)
 		}
@@ -98,28 +101,32 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 			continue
 		}
 
-		if len(q.Queue) > 0 {
-			fmt.Println(q.Queue)
+		l := len(q.Queue)
 
-			q.Locked = true
-			upload := q.Queue[0]
-			q.Queue = q.Queue[1:]
-
-			res, err := SendTx(clientCtx, cmd.Flags(), upload.Message)
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				if res.Code != 0 {
-					fmt.Println(fmt.Errorf(res.RawLog))
-				}
-			}
-
-			if upload.Callback != nil {
-				upload.Callback.Done()
-			}
-
-			q.Locked = false
+		if l == 0 {
+			continue
 		}
 
+		msg := make([]ctypes.Msg, 0)
+		uploads := make([]*Upload, 0)
+		for i := 0; i < l; i++ {
+			upload := q.Queue[i]
+			uploads = append(uploads, upload)
+			msg = append(msg, upload.Message)
+		}
+
+		res, err := SendTx(clientCtx, cmd.Flags(), msg...)
+		for _, v := range uploads {
+			if err != nil {
+				v.Err = err
+			} else {
+				if res.Code != 0 {
+					v.Err = fmt.Errorf(res.RawLog)
+				}
+			}
+			v.Callback.Done()
+		}
+
+		q.Queue = q.Queue[l:]
 	}
 }
