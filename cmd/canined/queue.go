@@ -85,7 +85,7 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, 
 				Err:      nil,
 			}
 
-			q.Queue = append(q.Queue, u)
+			q.Queue = append(q.Queue, &u)
 
 			fmt.Println(res)
 		}
@@ -108,7 +108,7 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 		}
 
 		msg := make([]ctypes.Msg, 0)
-		uploads := make([]Upload, 0)
+		uploads := make([]*Upload, 0)
 		for i := 0; i < l; i++ {
 			upload := q.Queue[i]
 			uploads = append(uploads, upload)
@@ -121,7 +121,6 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 				v.Err = err
 			} else {
 				if res.Code != 0 {
-					fmt.Println(fmt.Errorf(res.RawLog))
 					v.Err = fmt.Errorf(res.RawLog)
 				}
 			}

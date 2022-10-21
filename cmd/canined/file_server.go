@@ -173,9 +173,11 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	}
 
 	if msg.Err != nil {
+		fmt.Println(msg.Err)
 		v := ErrorResponse{
 			Error: msg.Err.Error(),
 		}
+		(*w).WriteHeader(http.StatusInternalServerError)
 		err = json.NewEncoder(*w).Encode(v)
 	} else {
 		err = json.NewEncoder(*w).Encode(v)
@@ -223,9 +225,11 @@ func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.W
 		Err:      nil,
 	}
 
-	q.Queue = append(q.Queue, u)
+	k := &u
 
-	return &u, nil
+	q.Queue = append(q.Queue, k)
+
+	return k, nil
 }
 
 func HashData(cmd *cobra.Command, filename string) (string, string, string) {
@@ -331,7 +335,7 @@ func StartFileServer(cmd *cobra.Command) {
 	router := httprouter.New()
 
 	q := UploadQueue{
-		Queue:  make([]Upload, 0),
+		Queue:  make([]*Upload, 0),
 		Locked: false,
 	}
 
