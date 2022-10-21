@@ -40,10 +40,8 @@ require (
 	github.com/creachadair/taskgroup v0.3.2 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/felixge/httpsnoop v1.0.2 // indirect
-	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.12.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/regen-network/cosmos-proto v0.3.1 // indirect
