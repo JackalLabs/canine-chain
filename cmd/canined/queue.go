@@ -103,6 +103,10 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 
 		l := len(q.Queue)
 
+		if l == 0 {
+			continue
+		}
+
 		msg := make([]ctypes.Msg, 0)
 		uploads := make([]Upload, 0)
 		for i := 0; i < l; i++ {
@@ -114,7 +118,6 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 		res, err := SendTx(clientCtx, cmd.Flags(), msg...)
 		for _, v := range uploads {
 			if err != nil {
-				fmt.Println(err)
 				v.Err = err
 			} else {
 				if res.Code != 0 {
