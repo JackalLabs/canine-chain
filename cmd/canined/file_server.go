@@ -172,7 +172,7 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 		FID: fmt.Sprintf("%x", hashName),
 	}
 
-	if msg.Err == nil {
+	if msg.Err != nil {
 		v := ErrorResponse{
 			Error: msg.Err.Error(),
 		}
