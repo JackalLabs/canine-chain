@@ -158,7 +158,7 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	var wg sync.WaitGroup
 	wg.Add(1)
 
-	ctrerr := q.makeContract(cmd, []string{fid, sender, "0"}, &wg)
+	msg, ctrerr := q.makeContract(cmd, []string{fid, sender, "0"}, &wg)
 	if ctrerr != nil {
 		fmt.Printf("CONTRACT ERROR: %v\n", ctrerr)
 		return ctrerr
@@ -172,7 +172,15 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 		FID: fmt.Sprintf("%x", hashName),
 	}
 
-	err = json.NewEncoder(*w).Encode(v)
+	if msg.Err == nil {
+		v := ErrorResponse{
+			Error: msg.Err.Error(),
+		}
+		err = json.NewEncoder(*w).Encode(v)
+	} else {
+		err = json.NewEncoder(*w).Encode(v)
+	}
+
 	if err != nil {
 		fmt.Printf("Json Encode Error: %v\n", err)
 		return err
@@ -188,13 +196,13 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 	return nil
 }
 
-func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.WaitGroup) error {
+func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.WaitGroup) (*Upload, error) {
 
 	merkleroot, filesize, fid := HashData(cmd, args[0])
 
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	msg := types.NewMsgPostContract(
@@ -206,17 +214,18 @@ func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.W
 		merkleroot,
 	)
 	if err := msg.ValidateBasic(); err != nil {
-		return err
+		return nil, err
 	}
 
 	u := Upload{
 		Message:  msg,
 		Callback: wg,
+		Err:      nil,
 	}
 
 	q.Queue = append(q.Queue, u)
 
-	return nil
+	return &u, nil
 }
 
 func HashData(cmd *cobra.Command, filename string) (string, string, string) {
