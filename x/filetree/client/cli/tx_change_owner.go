@@ -13,14 +13,15 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdResetEditors() *cobra.Command {
+func CmdChangeOwner() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "reset-editors [file path] [fileOwner]",
-		Short: "Broadcast message resetEditors",
-		Args:  cobra.ExactArgs(2),
+		Use:   "change-owner [file path] [fileOwner] [newOwner]",
+		Short: "Broadcast message changeOwner",
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argHashpath := args[0]
-			argFileowner := args[1]
+			argFileOwner := args[1]
+			argNewOwner := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -29,12 +30,14 @@ func CmdResetEditors() *cobra.Command {
 
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
-			ownerChainAddress := MakeOwnerAddress(merklePath, argFileowner)
-			//how to notify everyone who is losing edit access?
-			msg := types.NewMsgResetEditors(
+			ownerChainAddress := MakeOwnerAddress(merklePath, argFileOwner)
+			newOwnerChainAddress := MakeOwnerAddress(merklePath, argNewOwner)
+
+			msg := types.NewMsgChangeOwner(
 				clientCtx.GetFromAddress().String(),
 				merklePath,
 				ownerChainAddress,
+				newOwnerChainAddress,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

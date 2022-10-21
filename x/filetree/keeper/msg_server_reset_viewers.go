@@ -47,7 +47,7 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 
 	k.SetFiles(ctx, file)
 
-	logger.Println("The reset viewing Access is", file.EditAccess)
+	logger.Println("The reset viewer Access is", file.ViewingAccess)
 	logger.Println()
 	logFile.Close()
 

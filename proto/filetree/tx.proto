@@ -20,6 +20,7 @@ service Msg {
   rpc RemoveEditors(MsgRemoveEditors) returns (MsgRemoveEditorsResponse);
   rpc ResetEditors(MsgResetEditors) returns (MsgResetEditorsResponse);
   rpc ResetViewers(MsgResetViewers) returns (MsgResetViewersResponse);
+  rpc ChangeOwner(MsgChangeOwner) returns (MsgChangeOwnerResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -159,6 +160,16 @@ message MsgResetViewers {
 }
 
 message MsgResetViewersResponse {
+}
+
+message MsgChangeOwner {
+  string creator = 1;
+  string address = 2;
+  string fileOwner = 3;
+  string newOwner = 4;
+}
+
+message MsgChangeOwnerResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

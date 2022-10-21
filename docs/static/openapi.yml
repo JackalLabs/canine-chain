@@ -60222,6 +60222,8 @@ definitions:
     type: object
   jackaldao.canine.filetree.MsgAddViewersResponse:
     type: object
+  jackaldao.canine.filetree.MsgChangeOwnerResponse:
+    type: object
   jackaldao.canine.filetree.MsgDeleteFileResponse:
     type: object
   jackaldao.canine.filetree.MsgInitAccountResponse:
