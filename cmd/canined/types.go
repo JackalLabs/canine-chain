@@ -44,7 +44,7 @@ type Upload struct {
 }
 
 type UploadQueue struct {
-	Queue  []Upload
+	Queue  []*Upload
 	Locked bool
 }
 
