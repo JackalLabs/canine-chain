@@ -16,7 +16,7 @@ func (k Keeper) ListRecordsFromPool(goCtx context.Context, req *types.QueryListR
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	records := k.GetAllLProviderRecord(ctx)
+	records := k.GetAllRecordOfPool(ctx, req.PoolName)
 
 	return &types.QueryListRecordsFromPoolResponse{Records: records}, nil
 }
