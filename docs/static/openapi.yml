@@ -34741,9 +34741,7 @@ paths:
             type: object
             properties:
               notifications:
-                type: array
-                items:
-                  type: string
+                type: string
         default:
           description: An unexpected error response.
           schema:
@@ -60512,9 +60510,7 @@ definitions:
     type: object
     properties:
       notifications:
-        type: array
-        items:
-          type: string
+        type: string
   jackaldao.canine.notifications.QueryGetNotiCounterResponse:
     type: object
     properties:
