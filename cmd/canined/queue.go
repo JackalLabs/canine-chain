@@ -95,7 +95,7 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, 
 
 func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command) error {
 	for {
-		time.Sleep(time.Second)
+		time.Sleep(time.Second * 2)
 
 		if q.Locked {
 			continue
