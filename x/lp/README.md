@@ -16,7 +16,9 @@ parent:
         + [list-l-pool](#list-l-pool)
         + [show-l-pool](#show-l-pool)
         + [estimate-swap-in](#estimate-swap-in)
-        + [estimate-swap-out](#estimate-return)
+        + [estimate-swap-out](#estimate-swap-out)
+        + [list-records-from-pool](#list-records-from-pool)
+        + [show-l-provider-record](#show-l-provider-record)
         + [params](#params)
     + [Transactions](#transactions)
         + [create-l-pool](#create-l-pool)
@@ -87,6 +89,24 @@ Expected format for `[swap-input-coins]` (omit curly brackets): "{denom0}{amount
 
 ```sh
 canined q estimate-swap-out "pool-name" [swap-input-coins] 
+```
+
+#### list-records-from-pool
+
+The `list-records-from-pool` command allows users to see all liquidity providers
+of a liquidity pool.  
+
+```sh
+canined q list-records-from-pool "pool-name" 
+```
+
+#### show-l-provider-record
+
+The `show-l-provider-record` command allows users to see a liquidity provider
+record.  
+
+```sh
+canined q show-l-provider-record "pool-name" "provider-address"
 ```
 
 #### params
