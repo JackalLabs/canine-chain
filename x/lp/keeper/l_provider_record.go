@@ -139,7 +139,7 @@ func (k Keeper) RemoveLProviderRecord(
 // GetAllLProviderRecord returns all lProviderRecord
 func (k Keeper) GetAllLProviderRecord(ctx sdk.Context) (list []types.LProviderRecord) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefix("stake-token"))
+	iterator := store.Iterator(nil, nil)
 
 	defer iterator.Close()
 
@@ -171,7 +171,9 @@ func (k Keeper) GetAllRecordOfProvider(
 
 		rawRecord := store.Get(iterator.Value())
 
-		k.cdc.MustUnmarshal(rawRecord, &record)
+		if err := k.cdc.Unmarshal(rawRecord, &record); err != nil {
+			ctx.Logger().Error("\nFailed to unmarshal at GetAllLProviderRecord()\n")
+		}
 
 		list = append(list, record)
 	}
@@ -185,19 +187,17 @@ func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
 		types.KeyPrefix(types.LProviderRecordKeyPrefix))
 
-	strKey := poolName
 
-	iterator := sdk.KVStorePrefixIterator(store, []byte(strKey))
+	iterator := sdk.KVStorePrefixIterator(store, []byte("ujkl-ujwl"))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var record types.LProviderRecord
+		var val types.LProviderRecord
 
-		rawRecord := store.Get(iterator.Value())
-
-		k.cdc.MustUnmarshal(rawRecord, &record)
-
-		list = append(list, record)
+		if err := k.cdc.Unmarshal(iterator.Value(), &val); err != nil {
+			ctx.Logger().Error("\nFailed to unmarshal at GetAllLProviderRecord()\n", err)
+		}
+		list = append(list, val)
 	}
 
 	return
@@ -212,7 +212,7 @@ func (k Keeper) AddProviderRef(ctx sdk.Context, record types.LProviderRecord) er
 	refKey := types.GetProviderRefKey(record)
 	recordKey := types.GetProviderKey(record)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RefKeyPrefix))
 
 	if store.Has(refKey) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
@@ -229,7 +229,7 @@ func (k Keeper) RemoveProviderRef(ctx sdk.Context, record types.LProviderRecord)
 	// Generate reference key
 	refKey := types.GetProviderRefKey(record)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RefKeyPrefix))
 
 	store.Delete(refKey)
 }
