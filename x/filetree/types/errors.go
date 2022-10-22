@@ -22,4 +22,5 @@ var (
 	ErrCantGiveAway       = sdkerrors.Register(ModuleName, 1112, "You do not own this file and cannot give it away")
 	ErrAlreadyExists      = sdkerrors.Register(ModuleName, 1113, "Proposed new owner already has a file set with this path name. No duplicates allowed.")
 	ErrCannotAllowEdit    = sdkerrors.Register(ModuleName, 1114, "Unathorized. Only the owner can add an editor.")
+	ErrCannotAllowView    = sdkerrors.Register(ModuleName, 1115, "Unathorized. Only the owner can add a viewer.")
 )

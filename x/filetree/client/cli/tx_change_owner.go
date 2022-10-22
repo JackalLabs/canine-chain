@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -30,14 +32,22 @@ func CmdChangeOwner() *cobra.Command {
 
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
-			ownerChainAddress := MakeOwnerAddress(merklePath, argFileOwner)
-			newOwnerChainAddress := MakeOwnerAddress(merklePath, argNewOwner)
+
+			h := sha256.New()
+			h.Write([]byte(argFileOwner))
+			hash := h.Sum(nil)
+			currentOwnerHash := fmt.Sprintf("%x", hash)
+
+			h1 := sha256.New()
+			h1.Write([]byte(argNewOwner))
+			hash1 := h1.Sum(nil)
+			newOwnerHash := fmt.Sprintf("%x", hash1)
 
 			msg := types.NewMsgChangeOwner(
 				clientCtx.GetFromAddress().String(),
 				merklePath,
-				ownerChainAddress,
-				newOwnerChainAddress,
+				currentOwnerHash,
+				newOwnerHash,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
