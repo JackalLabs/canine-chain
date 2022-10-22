@@ -12,9 +12,6 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		FilesList:  []Files{},
 		PubkeyList: []Pubkey{},
-		Tracker: Tracker{
-			TrackingNumber: uint64(0),
-		},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}

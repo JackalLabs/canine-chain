@@ -17,8 +17,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.PubkeyList {
 		k.SetPubkey(ctx, elem)
 	}
-	// Set if defined
-	k.SetTracker(ctx, genState.Tracker)
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -30,11 +28,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	genesis.FilesList = k.GetAllFiles(ctx)
 	genesis.PubkeyList = k.GetAllPubkey(ctx)
-	// Get all tracker
-	tracker, found := k.GetTracker(ctx)
-	if found {
-		genesis.Tracker = tracker
-	}
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

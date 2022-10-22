@@ -16,9 +16,9 @@ func (k msgServer) DeleteFile(goCtx context.Context, msg *types.MsgDeleteFile) (
 	if !found {
 		return nil, types.ErrFileNotFound
 	}
-
-	hasEdit := HasEditAccess(file, msg.Creator)
-	if !hasEdit {
+	//Only the owner of a file can delete it
+	isOwner := IsOwner(file, msg.Creator)
+	if !isOwner {
 		return nil, types.ErrCannotDelete
 	}
 
