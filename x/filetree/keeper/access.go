@@ -102,30 +102,4 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	return ownerAddress
 }
 
-// Delete these two below?...Not sure what MakeAddress does
-func MakeAddress(path string, user string) string {
-
-	h := sha256.New()
-	h.Write([]byte(path))
-	hash := h.Sum(nil)
-
-	pathString := fmt.Sprintf("%x", hash)
-	return pathString
-}
-
-func MakeChainAddress(path string, user string) string {
-
-	h := sha256.New()
-	h.Write([]byte(path))
-	hash := h.Sum(nil)
-
-	pathString := fmt.Sprintf("%x", hash)
-
-	h = sha256.New()
-	h.Write([]byte(fmt.Sprintf("%s%s", user, pathString)))
-	hash = h.Sum(nil)
-
-	pathString = fmt.Sprintf("%x", hash)
-
-	return pathString
-}
+// Deleted old code: 'MakeAddress' and 'MakeChainAddress'

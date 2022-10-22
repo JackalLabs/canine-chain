@@ -20,4 +20,6 @@ var (
 	ErrCannotDelete       = sdkerrors.Register(ModuleName, 1110, "You are not authorized to delete this file")
 	ErrNotOwner           = sdkerrors.Register(ModuleName, 1111, "Not permitted to remove or reset edit/view access. You are not the owner of this file")
 	ErrCantGiveAway       = sdkerrors.Register(ModuleName, 1112, "You do not own this file and cannot give it away")
+	ErrAlreadyExists      = sdkerrors.Register(ModuleName, 1113, "Proposed new owner already has a file set with this path name. No duplicates allowed.")
+	ErrCannotAllowEdit    = sdkerrors.Register(ModuleName, 1114, "Unathorized. Only the owner can add an editor.")
 )

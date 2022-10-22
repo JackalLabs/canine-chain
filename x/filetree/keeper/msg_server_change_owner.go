@@ -9,17 +9,22 @@ import (
 
 func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner) (*types.MsgChangeOwnerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	log, logfile := createLogger()
 
 	file, found := k.GetFiles(ctx, msg.Address, msg.FileOwner)
 	if !found {
 		return nil, types.ErrFileNotFound
 	}
-	log.Printf("current owner is %s\n", file.Owner)
 	//Only the owner of a file can give it away
 	isOwner := IsOwner(file, msg.Creator)
 	if !isOwner {
 		return nil, types.ErrCantGiveAway
+	}
+
+	//If the new owner already has a file set with this path,do not change
+	//ownership--else their file will be overwridden
+	_, fnd := k.GetFiles(ctx, msg.Address, msg.NewOwner)
+	if fnd {
+		return nil, types.ErrAlreadyExists
 	}
 
 	file.Owner = msg.NewOwner
@@ -27,10 +32,6 @@ func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner)
 	k.SetFiles(ctx, file)
 	//Delete old file
 	k.RemoveFiles(ctx, msg.Address, msg.FileOwner)
-
-	log.Printf("new owner is %s\n", file.Owner)
-
-	logfile.Close()
 
 	return &types.MsgChangeOwnerResponse{}, nil
 }

@@ -11,8 +11,6 @@ import (
 func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditors) (*types.MsgResetEditorsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	logger, logFile := createLogger()
-
 	file, found := k.GetFiles(ctx, msg.Address, msg.Fileowner)
 	if !found {
 		return nil, types.ErrFileNotFound
@@ -22,8 +20,6 @@ func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditor
 	if !isOwner {
 		return nil, types.ErrNotOwner
 	}
-
-	logger.Println("The current editor Access is", file.EditAccess)
 
 	ownerEditorAddress := MakeEditorAddress(file.TrackingNumber, msg.Creator)
 
@@ -46,10 +42,6 @@ func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditor
 	file.EditAccess = newEditors
 
 	k.SetFiles(ctx, file)
-
-	logger.Println("The reset editor Access is", file.EditAccess)
-	logger.Println()
-	logFile.Close()
 
 	return &types.MsgResetEditorsResponse{}, nil
 }

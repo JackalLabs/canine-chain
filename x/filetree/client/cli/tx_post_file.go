@@ -95,7 +95,7 @@ func CmdPostFile() *cobra.Command {
 
 			}
 
-			//Marshall viewers and editors to notify. Last element is the person who is posting this file so we probably don't want them to notify themselves
+			//Trim viewers and editors to notify. Last element is the person who is posting this file so we don't want them to notify themselves
 			if len(viewersToNotify) > 0 {
 				viewersToNotify = viewersToNotify[:len(viewersToNotify)-1]
 			}
@@ -103,13 +103,13 @@ func CmdPostFile() *cobra.Command {
 			if len(editorsToNotify) > 0 {
 				editorsToNotify = editorsToNotify[:len(editorsToNotify)-1]
 			}
-			//Marshall everybody - jsonViewersToNotify and jsonEditorsToNotify currently disabled
+			//Marshall everybody - jsonViewersToNotify and jsonEditorsToNotify currently disabled because notifications not implemented in Jackal.JS yet
 			jsonViewers, jsonEditors, _, _, err := JSONMarshalViewersAndEditors(viewers, editors, viewersToNotify, editorsToNotify)
 			if err != nil {
 				return err
 			}
 			H := sha256.New()
-			H.Write([]byte(fmt.Sprintf("%s", argAccount)))
+			H.Write([]byte(argAccount))
 			hash := H.Sum(nil)
 			accountHash := fmt.Sprintf("%x", hash)
 
@@ -124,8 +124,8 @@ func CmdPostFile() *cobra.Command {
 				argContents,
 				string(jsonViewers),
 				string(jsonEditors),
-				trackingNumber, //UUID
-				"",             //Passing in empty strings to check that Erin can test system while ignoring notifications system
+				trackingNumber,
+				"", //Passing in empty strings to check that Erin can test file posting while ignoring notifications system
 				"",
 				"",
 				"",

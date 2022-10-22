@@ -139,17 +139,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		filetreesimulation.SimulateMsgPostkey(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgInitAccount int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgInitAccount, &weightMsgInitAccount, nil,
-		func(_ *rand.Rand) {
-			weightMsgInitAccount = defaultWeightMsgInitAccount
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgInitAccount,
-		filetreesimulation.SimulateMsgInitAccount(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
 	var weightMsgDeleteFile int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteFile, &weightMsgDeleteFile, nil,
 		func(_ *rand.Rand) {

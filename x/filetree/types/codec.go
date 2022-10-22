@@ -11,7 +11,6 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPostFile{}, "filetree/PostFile", nil)
 	cdc.RegisterConcrete(&MsgAddViewers{}, "filetree/AddViewers", nil)
 	cdc.RegisterConcrete(&MsgPostkey{}, "filetree/Postkey", nil)
-	cdc.RegisterConcrete(&MsgInitAccount{}, "filetree/InitAccount", nil)
 	cdc.RegisterConcrete(&MsgDeleteFile{}, "filetree/DeleteFile", nil)
 	cdc.RegisterConcrete(&MsgInitAll{}, "filetree/InitAll", nil)
 	cdc.RegisterConcrete(&MsgRemoveViewers{}, "filetree/RemoveViewers", nil)
@@ -33,9 +32,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostkey{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgInitAccount{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgDeleteFile{},

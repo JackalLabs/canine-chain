@@ -10,7 +10,6 @@ service Msg {
       rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
   rpc AddViewers(MsgAddViewers) returns (MsgAddViewersResponse);
   rpc Postkey(MsgPostkey) returns (MsgPostkeyResponse);
-  rpc InitAccount(MsgInitAccount) returns (MsgInitAccountResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc InitAll(MsgInitAll) returns (MsgInitAllResponse);
   rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
@@ -62,18 +61,6 @@ message MsgPostkey {
 }
 
 message MsgPostkeyResponse {
-}
-
-message MsgInitAccount {
-  string creator = 1;
-  string account = 2;
-  string rootHashpath = 3;
-  string editors = 4;
-  string key = 5; 
-  string trackingNumber = 6;
-}
-
-message MsgInitAccountResponse {
 }
 
 message MsgDeleteFile {

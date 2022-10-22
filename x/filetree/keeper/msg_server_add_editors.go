@@ -16,10 +16,10 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 	if !found {
 		return nil, types.ErrFileNotFound
 	}
-	//CONSIDER: ONLY THE OWNER CAN ADD EDITORS?
-	hasEdit := HasEditAccess(file, msg.Creator)
-	if !hasEdit {
-		return nil, types.ErrNoAccess
+	//Only the owner can add editors
+	isOwner := IsOwner(file, msg.Creator)
+	if !isOwner {
+		return nil, types.ErrCannotAllowEdit
 	}
 
 	peacc := file.EditAccess

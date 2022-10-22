@@ -11,8 +11,6 @@ import (
 func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewers) (*types.MsgResetViewersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	logger, logFile := createLogger()
-
 	file, found := k.GetFiles(ctx, msg.Address, msg.Fileowner)
 	if !found {
 		return nil, types.ErrFileNotFound
@@ -22,8 +20,6 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 	if !isOwner {
 		return nil, types.ErrNotOwner
 	}
-
-	logger.Println("The current viewer Access is", file.ViewingAccess)
 
 	ownerViewerAddress := MakeViewerAddress(file.TrackingNumber, msg.Creator)
 
@@ -46,10 +42,6 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 	file.ViewingAccess = newViewers
 
 	k.SetFiles(ctx, file)
-
-	logger.Println("The reset viewer Access is", file.ViewingAccess)
-	logger.Println()
-	logFile.Close()
 
 	return &types.MsgResetViewersResponse{}, nil
 }

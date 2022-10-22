@@ -60884,8 +60884,6 @@ definitions:
     type: object
   jackaldao.canine.filetree.MsgDeleteFileResponse:
     type: object
-  jackaldao.canine.filetree.MsgInitAccountResponse:
-    type: object
   jackaldao.canine.filetree.MsgInitAllResponse:
     type: object
     properties:
