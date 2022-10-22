@@ -1,11 +1,12 @@
 package types
 
 const (
-	TypedEventPoolInfo    = "pool_info"
-	TypedEventPoolCreated = "pool_created"
-	TypedEventPoolJoined  = "pool_joined"
-	TypedEventPoolExited  = "pool_exited"
-	TypedEventCoinSwapped = "pool_swapped"
+	TypedEventPoolInfo       = "pool_info"
+	TypedEventPoolCreated    = "pool_created"
+	TypedEventPoolJoined     = "pool_joined"
+	TypedEventPoolExited     = "pool_exited"
+	TypedEventCoinSwapped    = "pool_swapped"
+	TypedEventCoinSwapFailed = "pool_swap_failed"
 
 	AttrValueModule = ModuleName
 
@@ -15,8 +16,9 @@ const (
 	AttrKeyPenaltyFee   = "penalty_fee"
 	AttrKeyCoinsIn      = "coins_in"
 	AttrKeyCoinsOut     = "coins_out"
-	AttrKeySwapFeeMulti = "swap fee multiplier"
-	AttrKeyPenaltyMulti = "penalty multiplier"
-	AttrKeyLPTokenDenom = "liquidity pool token denom"
-	AttrKeyLockDuration = "lock duration"
+	AttrKeyMinCoinsOut  = "minimum_coins_out"
+	AttrKeySwapFeeMulti = "swap_fee_multiplier"
+	AttrKeyPenaltyMulti = "penalty_multiplier"
+	AttrKeyLPTokenDenom = "liquidity_pool_token_denom"
+	AttrKeyLockDuration = "lock_duration"
 )

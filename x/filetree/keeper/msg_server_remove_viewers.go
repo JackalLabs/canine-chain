@@ -16,10 +16,12 @@ func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveView
 	if !found {
 		return nil, types.ErrFileNotFound
 	}
+	//This was previously: 'hasEditAccess', but this means that An editor can remove a viewer? So, in a file owned by Charlie, Alice--if an editor--can remove Bob's
+	//viewing access while Bob is also an editor. Bob could add himself back in as a viewer but it would be so laborous
+	isOwner := IsOwner(file, msg.Creator)
 
-	hasEdit := HasEditAccess(file, msg.Creator)
-	if !hasEdit {
-		return nil, types.ErrNoAccess
+	if !isOwner {
+		return nil, types.ErrNotOwner
 	}
 
 	pvacc := file.ViewingAccess
@@ -43,9 +45,10 @@ func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveView
 	k.SetFiles(ctx, file)
 
 	//notify viewers
-	bool, error := notify(k, ctx, msg.Notifyviewers, string("You can no longer view this file"), msg.Creator, file.Address, file.Owner)
+	bool, error := notify(k, ctx, msg.Notifyviewers, msg.NotiForViewers, msg.Creator, file.Address, file.Owner)
 	if !bool {
 		return nil, error
 	}
+
 	return &types.MsgRemoveViewersResponse{}, nil
 }

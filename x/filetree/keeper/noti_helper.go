@@ -43,12 +43,10 @@ func notify(k msgServer, ctx sdk.Context, recipients string, notification string
 		// }
 
 		var notifications = notiTypes.Notifications{
-			Sender:        sender, //delete this for security?
-			Count:         notiCounter.Counter,
-			Notification:  notification,
-			Address:       v,             //This will be hashed before it enters the keeper
-			HashPath:      hashPath,      // to be removed per discussion with Erin
-			HashPathOwner: hashPathOwner, // to be removed per discussion with Erin
+			Sender:       sender, //delete this for security?
+			Count:        notiCounter.Counter,
+			Notification: notification,
+			Address:      v, //This will be hashed before it enters the keeper
 
 		}
 

@@ -19,6 +19,7 @@ service Msg {
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
+  rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -223,6 +224,14 @@ message MsgBuyStorage {
 }
 
 message MsgBuyStorageResponse {
+}
+
+message MsgClaimStray {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgClaimStrayResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

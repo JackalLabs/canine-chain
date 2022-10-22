@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -43,5 +44,10 @@ func (k Keeper) FilteredNotifications(c context.Context, req *types.QueryFiltere
 		i += 1
 	}
 
-	return &types.QueryFilteredNotificationsResponse{Notifications: notifications}, nil
+	jsonNotifications, err := json.Marshal(notifications)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryFilteredNotificationsResponse{Notifications: string(jsonNotifications)}, nil
 }

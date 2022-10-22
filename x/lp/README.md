@@ -15,8 +15,8 @@ parent:
     + [Query](#query)
         + [list-l-pool](#list-l-pool)
         + [show-l-pool](#show-l-pool)
-        + [estimate-deposit](#estimate-deposit)
-        + [estimate-return](#estimate-return)
+        + [estimate-swap-in](#estimate-swap-in)
+        + [estimate-swap-out](#estimate-return)
         + [params](#params)
     + [Transactions](#transactions)
         + [create-l-pool](#create-l-pool)
@@ -67,26 +67,26 @@ liquidity pool.
 canined q lp show-l-pool [index]
 ```
 
-#### estimate-deposit
+#### estimate-swap-in
 
-The `estimate-deposit` command allows users to estimate deposit amount for
+The `estimate-swap-in` command allows users to estimate deposit amount for
 desired amount of tokens in a swap.  
 Expected format for `[desired-coins]` (omit curly brackets): "{denom0}{amount0}
 ...{denomN}{amountN}"
 
 ```sh
-canined q estimate-deposit "pool-name" [desired-coins] 
+canined q estimate-swap-in "pool-name" [desired-coins] 
 ```
 
-#### estimate-return
+#### estimate-swap-out
 
-The `estimate-return` command allows users to estimate return amount when
+The `estimate-swap-out` command allows users to estimate return amount when
 depositing x amount in a swap.  
-Expected format for `[depositing-coins]` (omit curly brackets): "{denom0}{amount0}
+Expected format for `[swap-input-coins]` (omit curly brackets): "{denom0}{amount0}
 ...{denomN}{amountN}"
 
 ```sh
-canined q estimate-return "pool-name" [depositing-coins] 
+canined q estimate-swap-out "pool-name" [swap-input-coins] 
 ```
 
 #### params
@@ -99,10 +99,10 @@ canined q lp params
 
 ### Transactions
 
-The `tx` commands allow users to interact with the `storage` module.
+The `tx` commands allow users to interact with the `lp` module.
 
 ```sh
-canined tx storage --help
+canined tx lp --help
 ```
 
 #### create-l-pool
@@ -112,8 +112,8 @@ Expected format for `[pool-coins]` (omit curly brackets): "{denom0}{amount0}
 ...{denomN}{amountN}"
 
 ```sh
-canined tx lp create-l-pool [pool-coins] [invariant model id] \
-   "swap-fee-percentage" [pool-lock-time] "withdraw-penalty-percentage"
+canined tx lp create-l-pool [pool-coins] [AMM_Id] \
+   "swap-fee-multiplier" [pool-lock-time (int64)] "withdraw-penalty-multiplier"
 ```
 
 #### join-pool
@@ -140,22 +140,19 @@ canined tx lp exit-pool "pool-name" [burn-amount]
 #### swap
 
 The `swap` command allows users to swap token in a liquidity pool.  
-Expected format for `[swap-in]` (omit curly brackets): "{denom0}{amount0}
+Use `[minimum-swap-out]` to prevent swap if swap output is below that amount.  
+Expected format for `[swap-in]` and `[minimum-swap-out]` (omit curly brackets): "{denom0}{amount0}
 ...{denomN}{amountN}"
 
 ```sh
-canined tx lp swap "pool-name" [swap-in]
+canined tx lp swap "pool-name" [swap-in] [minimum-swap-out]
 ```
 
 # Development
 
 ## Todo
 
-- [ ] Implement withdraw penalty mechanism (in progress).
-- [ ] Change LPool.poolLockTime `uint64` type to `time`.
 - [ ] Implement service fee mechanism.
-- [ ] Add more query to aid liquidity pool creation.
-- [x] Add estimate query regarding liquidity pool tokens.
 
 ## States
 
@@ -172,28 +169,28 @@ token that exists.
 ```proto
 message LPool {
   string index = 1; 
-  // Liquidity pool coins that users can swap.
-  string coins = 2;
-  // AMM model used to balance coins. Valid model id must be used to initialize
-  // the pool.
-  uint32 invariantModelId = 3;
-  // Swap fee that is taken away from deposit. Swap return is calculated after
-  // swap fee is subtracted.
-  float swapFeePerc = 4;
-  // Denoms of pool coins in format: {denom0}-{denom1}...-{denomN}
-  string poolDenoms = 5;
-  // Duration where burning LP token is locked. Panelty is applied when
-  // a user decides to burn the token during lock time.
-  // Note: This type will change to `google.protobuf.duration` in later updates.
-  uint64 poolLockTime = 6;
-  // Portion of coins taken away from pool coins return.
-  float withdrawPaneltyPerc = 7;
-  // Liquidity pool name.
-  string name = 8;
-  // Denom of this LP token.
-  string lPTokenDenom = 9;
-  // Total amount of LP token that exists.
-  string totalLPToken = 10;
+  // Pool's name
+  string name = 2;
+  // Pool coins
+  repeated cosmos.base.v1beta1.Coin coins = 3 [(gogoproto.nullable) = false];
+  // AMM model used to balance the pool
+  uint32 aMM_Id = 4;
+  // sdk.Dec in string format
+  // This is deducted from swap input before swap output is calculated
+  // swap_input = swap_input - (swap_input * swap_fee_multi)
+  string swap_fee_multi = 5;
+  // Duration of LPToken being locked from burning
+  // Penalty is applied when LPToken is burned before lock expires
+  // Duration is in seconds
+  int64 min_lock_duration = 6;
+  // sdk.Dec in string format
+  // Penalty applied to LPToken burn
+  // Full requested amount is burned but penalty is applied before
+  // LP tokens returned is calculated
+  string penalty_multi = 7;
+  string lpToken_denom = 8;
+  // Amount of total LPToken that exists
+  string LPTokenBalance = 9;
 }
 ```
 

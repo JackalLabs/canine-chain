@@ -106,10 +106,10 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackal-dao/canine/app/params"
-	"github.com/jackal-dao/canine/x/wasm"
-	wasmclient "github.com/jackal-dao/canine/x/wasm/client"
-	wasmkeeper "github.com/jackal-dao/canine/x/wasm/keeper"
 
 	mint "github.com/jackal-dao/canine/x/jklmint"
 	mintkeeper "github.com/jackal-dao/canine/x/jklmint/keeper"
@@ -134,10 +134,6 @@ import (
 	notificationsmodule "github.com/jackal-dao/canine/x/notifications"
 	notificationsmodulekeeper "github.com/jackal-dao/canine/x/notifications/keeper"
 	notificationsmoduletypes "github.com/jackal-dao/canine/x/notifications/types"
-
-	lpmodule "github.com/jackal-dao/canine/x/lp"
-	lpmodulekeeper "github.com/jackal-dao/canine/x/lp/keeper"
-	lpmoduletypes "github.com/jackal-dao/canine/x/lp/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -239,7 +235,6 @@ var (
 		storagemodule.AppModuleBasic{},
 		dsigmodule.AppModuleBasic{},
 		filetreemodule.AppModuleBasic{},
-		lpmodule.AppModuleBasic{},
 		notificationsmodule.AppModuleBasic{},
 	)
 
@@ -257,7 +252,6 @@ var (
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
 		dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
-		lpmoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 	}
 )
 
@@ -316,7 +310,6 @@ type WasmApp struct {
 	DsigKeeper     dsigmodulekeeper.Keeper
 	FileTreeKeeper filetreemodulekeeper.Keeper
 
-	LpKeeper lpmodulekeeper.Keeper
 
 	NotificationsKeeper notificationsmodulekeeper.Keeper
 
@@ -359,7 +352,6 @@ func NewWasmApp(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
 		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
-		lpmoduletypes.StoreKey,
 		notificationsmoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -628,16 +620,6 @@ func NewWasmApp(
 	)
 	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.LpKeeper = *lpmodulekeeper.NewKeeper(
-		appCodec,
-		keys[lpmoduletypes.StoreKey],
-		keys[lpmoduletypes.MemStoreKey],
-		app.getSubspace(lpmoduletypes.ModuleName),
-
-		app.bankKeeper,
-	)
-	lpModule := lpmodule.NewAppModule(appCodec, app.LpKeeper, app.accountKeeper, app.bankKeeper)
-
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 
@@ -701,7 +683,6 @@ func NewWasmApp(
 		storageModule,
 		dsigModule,
 		filetreeModule,
-		lpModule,
 		notificationsModule,
 	)
 
@@ -736,7 +717,6 @@ func NewWasmApp(
 		storagemoduletypes.ModuleName,
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
-		lpmoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 	)
 
@@ -767,7 +747,6 @@ func NewWasmApp(
 		storagemoduletypes.ModuleName,
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
-		lpmoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 	)
 
@@ -806,7 +785,6 @@ func NewWasmApp(
 		storagemoduletypes.ModuleName,
 		dsigmoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
-		lpmoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 	)
 
@@ -841,7 +819,6 @@ func NewWasmApp(
 		transferModule,
 		rnsModule,
 		storageModule,
-		lpModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -1047,7 +1024,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
-	paramsKeeper.Subspace(lpmoduletypes.ModuleName)
 
 	return paramsKeeper
 }

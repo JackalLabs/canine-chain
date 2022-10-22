@@ -46,12 +46,17 @@ func merkleHelper(argHashpath string) (string, string) {
 
 // Owner address is whoever owns this file/folder
 func MakeOwnerAddress(merklePath string, user string) string {
-	//make sure that user was already hex(hashed) before it was passed into
-	//this function
+
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, user)))
+	h.Write([]byte(user))
 	hash := h.Sum(nil)
-	ownerAddress := fmt.Sprintf("%x", hash)
+	accountHash := fmt.Sprintf("%x", hash)
+
+	//h1 is so named as to differentiate it from h above--else compiler complains
+	h1 := sha256.New()
+	h1.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+	hash1 := h1.Sum(nil)
+	ownerAddress := fmt.Sprintf("%x", hash1)
 
 	return ownerAddress
 }
@@ -75,7 +80,7 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 		return nil, err
 	}
 
-	encrypted, err := clientCtx.Keyring.Encrypt(pkey.Bytes(false), []byte(argKeys))
+	encrypted, err := eciesgo.Encrypt(pkey, []byte(argKeys))
 	if err != nil {
 		return nil, err
 	}

@@ -8,7 +8,5 @@ message Notifications {
   string notification = 2; 
   string address = 3; 
   string sender = 4;
-  string hashPath = 5;
-  string hashPathOwner = 6;
 }
 
