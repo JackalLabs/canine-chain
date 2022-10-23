@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/cosmos/cosmos-sdk/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const MaxFileSize = 32 << 30
@@ -41,6 +42,7 @@ type Upload struct {
 	Message  types.Msg
 	Callback *sync.WaitGroup
 	Err      error
+	Response *sdk.TxResponse
 }
 
 type UploadQueue struct {
