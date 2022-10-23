@@ -25,7 +25,7 @@ const (
 	TWO_GIGS         = 2000000000
 )
 
-func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int64 {
+func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (int64, bool, *types.PayBlocks) {
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
 
@@ -37,16 +37,22 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int
 
 	eblock, found := k.GetPayBlocks(ctx, fmt.Sprintf(".%s", address))
 	if !found {
-		return TWO_GIGS
+		return TWO_GIGS, true, nil
 	}
 
 	endblock, ok := sdk.NewIntFromString(eblock.Blocknum)
 	if !ok {
-		return TWO_GIGS
+		return TWO_GIGS, true, nil
 	}
 
 	if endblock.Int64() <= blockh {
-		return TWO_GIGS
+		if endblock.Int64() <= blockh+432000 {
+			bytes, ok := sdk.NewIntFromString(eblock.Bytes)
+			if !ok {
+				return bytes.Int64(), true, nil
+			}
+		}
+		return TWO_GIGS, true, &eblock
 	}
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -56,6 +62,11 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int
 		fmt.Printf("BLOCK %s: %s", val.Blocktype, val.Blocknum)
 
 		if val.Blocktype == END_BLOCK_TYPE {
+			continue
+		}
+
+		adr := val.Blockid[:42]
+		if adr != address {
 			continue
 		}
 
@@ -70,27 +81,26 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) int
 
 		if blocknum.Int64() > highestBlock {
 			highestBlock = blocknum.Int64()
-			fmt.Printf("NEW HIGHEST BLOCK: %s", val.Blocknum)
-
+			ctx.Logger().Debug(fmt.Sprintf("NEW HIGHEST BLOCK: %s", val.Blocknum))
 		}
 
 	}
 
 	if highestBlock == 0 {
-		return TWO_GIGS
+		return TWO_GIGS, true, &eblock
 	}
 
 	hblock, found := k.GetPayBlocks(ctx, fmt.Sprintf("%s%d", address, highestBlock))
 	if !found {
-		return TWO_GIGS
+		return TWO_GIGS, true, &eblock
 	}
 
 	bytes, ok := sdk.NewIntFromString(hblock.Bytes)
 	if !ok {
-		return TWO_GIGS
+		return TWO_GIGS, true, &eblock
 	}
 
-	return bytes.Int64()
+	return bytes.Int64(), false, &eblock
 }
 
 func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, bytes int64) error {
@@ -113,9 +123,9 @@ func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, by
 		Blocknum:  fmt.Sprintf("%d", endBlock),
 	}
 
-	paidamt := k.GetPaidAmount(ctx, address, endBlock)
+	amount, trial, _ := k.GetPaidAmount(ctx, address, startBlock)
 
-	if paidamt > 0 {
+	if !trial && bytes <= amount {
 		return fmt.Errorf("can't buy storage within another storage window")
 	}
 

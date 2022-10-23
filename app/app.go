@@ -310,7 +310,6 @@ type WasmApp struct {
 	DsigKeeper     dsigmodulekeeper.Keeper
 	FileTreeKeeper filetreemodulekeeper.Keeper
 
-
 	NotificationsKeeper notificationsmodulekeeper.Keeper
 
 	// the module manager

@@ -36,7 +36,7 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		return nil, fmt.Errorf("not enough space on provider")
 	}
 
-	paidAMT := k.GetPaidAmount(ctx, msg.Signee, ctx.BlockHeight())
+	paidAMT, _, _ := k.GetPaidAmount(ctx, msg.Signee, ctx.BlockHeight())
 
 	if paidAMT <= 0 {
 		return nil, fmt.Errorf("user has not paid for any storage")
