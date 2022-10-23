@@ -30,7 +30,7 @@ func (k Keeper) GetClientFreeSpace(goCtx context.Context, req *types.QueryGetCli
 		return nil, fmt.Errorf("cannot parse client usage")
 	}
 
-	paid := k.GetPaidAmount(ctx, req.Address, ctx.BlockHeight())
+	paid, _, _ := k.GetPaidAmount(ctx, req.Address, ctx.BlockHeight())
 
 	if paid < usage.Int64() {
 		return nil, fmt.Errorf("paid amount cannot be smaller than usage")

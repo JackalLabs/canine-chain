@@ -37168,6 +37168,47 @@ paths:
           type: string
       tags:
         - Query
+  '/jackal-dao/canine/storage/get_pay_data/{address}':
+    get:
+      summary: Queries a list of GetPayData items.
+      operationId: JackaldaoCanineStorageGetPayData
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              blocks_remaining:
+                type: string
+                format: int64
+              bytes:
+                type: string
+                format: int64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: address
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
   /jackal-dao/canine/storage/params:
     get:
       summary: Parameters queries the parameters of the module.
@@ -62323,6 +62364,15 @@ definitions:
             type: string
           blocknum:
             type: string
+  jackaldao.canine.storage.QueryGetPayDataResponse:
+    type: object
+    properties:
+      blocks_remaining:
+        type: string
+        format: int64
+      bytes:
+        type: string
+        format: int64
   jackaldao.canine.storage.QueryGetProofsResponse:
     type: object
     properties:

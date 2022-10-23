@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerr "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
@@ -22,13 +24,25 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	denom := msg.PaymentDenom
+	if denom != "ujkl" {
+		return nil, sdkerr.Wrap(sdkerr.ErrInvalidCoins, "cannot pay with anything other than ujkl")
+	}
+
 	var gb int64 = 1000000000
 
 	gbs := bytes.Int64() / gb
 	if gbs == 0 {
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
-	price := sdk.NewCoin(denom, sdk.NewInt(gbs*8000))
+
+	monthInBlocks := 432000
+	dr := duration.Int64() - (duration.Int64() % int64(monthInBlocks))
+
+	if dr <= 0 {
+		return nil, fmt.Errorf("cannot buy less than a month")
+	}
+
+	price := sdk.NewCoin(denom, sdk.NewInt(gbs*4000*(dr/int64(monthInBlocks))))
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return nil, err
@@ -38,7 +52,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
-	err = k.CreatePayBlock(ctx, msg.ForAddress, duration.Int64(), bytes.Int64())
+	err = k.CreatePayBlock(ctx, msg.ForAddress, dr, bytes.Int64())
 
 	if err != nil {
 		return nil, err
