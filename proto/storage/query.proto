@@ -119,6 +119,11 @@ service Query {
 		option (google.api.http).get = "/jackal-dao/canine/storage/fid_cid";
 	}
 
+// Queries a list of GetPayData items.
+	rpc GetPayData(QueryGetPayDataRequest) returns (QueryGetPayDataResponse) {
+		option (google.api.http).get = "/jackal-dao/canine/storage/get_pay_data/{address}";
+	}
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -297,6 +302,15 @@ message QueryAllFidCidRequest {
 message QueryAllFidCidResponse {
 	repeated FidCid fidCid = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetPayDataRequest {
+  string address = 1;
+}
+
+message QueryGetPayDataResponse {
+  int64 blocks_remaining = 1;
+  int64 bytes = 2;
 }
 
 // this line is used by starport scaffolding # 3
