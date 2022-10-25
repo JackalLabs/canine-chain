@@ -71,11 +71,11 @@ func CmdMakeRoot() *cobra.Command {
 			}
 
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("%s", argAccount)))
+			h.Write([]byte(argAccount))
 			hash := h.Sum(nil)
 
 			accountHash := fmt.Sprintf("%x", hash)
-			//FE will init their own root folders, but w
+			//FE will init their own root folders
 
 			msg := types.NewMsgMakeRoot(
 				clientCtx.GetFromAddress().String(),

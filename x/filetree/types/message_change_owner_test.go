@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgMakeFolder_ValidateBasic(t *testing.T) {
+func TestMsgChangeOwner_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgMakeFolder
+		msg  MsgChangeOwner
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgMakeFolder{
+			msg: MsgChangeOwner{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgMakeFolder{
+			msg: MsgChangeOwner{
 				Creator: sample.AccAddress(),
 			},
 		},

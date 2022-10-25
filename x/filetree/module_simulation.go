@@ -52,6 +52,26 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgMakeFolder int = 100
 
+	opWeightMsgAddEditors = "op_weight_msg_add_editors"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgAddEditors int = 100
+
+	opWeightMsgRemoveEditors = "op_weight_msg_remove_editors"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgRemoveEditors int = 100
+
+	opWeightMsgResetEditors = "op_weight_msg_reset_editors"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgResetEditors int = 100
+
+	opWeightMsgResetViewers = "op_weight_msg_reset_viewers"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgResetViewers int = 100
+
+	opWeightMsgChangeOwner = "op_weight_msg_change_owner"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgChangeOwner int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -119,17 +139,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		filetreesimulation.SimulateMsgPostkey(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgInitAccount int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgInitAccount, &weightMsgInitAccount, nil,
-		func(_ *rand.Rand) {
-			weightMsgInitAccount = defaultWeightMsgInitAccount
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgInitAccount,
-		filetreesimulation.SimulateMsgInitAccount(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
 	var weightMsgDeleteFile int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteFile, &weightMsgDeleteFile, nil,
 		func(_ *rand.Rand) {
@@ -161,6 +170,61 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgMakeFolder,
 		filetreesimulation.SimulateMsgMakeRoot(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgAddEditors int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddEditors, &weightMsgAddEditors, nil,
+		func(_ *rand.Rand) {
+			weightMsgAddEditors = defaultWeightMsgAddEditors
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgAddEditors,
+		filetreesimulation.SimulateMsgAddEditors(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgRemoveEditors int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgRemoveEditors, &weightMsgRemoveEditors, nil,
+		func(_ *rand.Rand) {
+			weightMsgRemoveEditors = defaultWeightMsgRemoveEditors
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgRemoveEditors,
+		filetreesimulation.SimulateMsgRemoveEditors(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgResetEditors int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResetEditors, &weightMsgResetEditors, nil,
+		func(_ *rand.Rand) {
+			weightMsgResetEditors = defaultWeightMsgResetEditors
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgResetEditors,
+		filetreesimulation.SimulateMsgResetEditors(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgResetViewers int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResetViewers, &weightMsgResetViewers, nil,
+		func(_ *rand.Rand) {
+			weightMsgResetViewers = defaultWeightMsgResetViewers
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgResetViewers,
+		filetreesimulation.SimulateMsgResetViewers(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgChangeOwner int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgChangeOwner, &weightMsgChangeOwner, nil,
+		func(_ *rand.Rand) {
+			weightMsgChangeOwner = defaultWeightMsgChangeOwner
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgChangeOwner,
+		filetreesimulation.SimulateMsgChangeOwner(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

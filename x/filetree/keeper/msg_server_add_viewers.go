@@ -17,9 +17,9 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 		return nil, types.ErrFileNotFound
 	}
 
-	hasEdit := HasEditAccess(file, msg.Creator)
-	if !hasEdit {
-		return nil, types.ErrNoAccess
+	isOwner := IsOwner(file, msg.Creator)
+	if !isOwner {
+		return nil, types.ErrCannotAllowView
 	}
 
 	pvacc := file.ViewingAccess
@@ -45,7 +45,7 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 	k.SetFiles(ctx, file)
 
 	//notify viewers
-	bool, error := notify(k, ctx, msg.NotifyViewers, string("you have viewer access from addViewer"), msg.Creator, file.Address, file.Owner)
+	bool, error := notify(k, ctx, msg.NotifyViewers, msg.NotiForViewers, msg.Creator, file.Address, file.Owner)
 	if !bool {
 		return nil, error
 	}

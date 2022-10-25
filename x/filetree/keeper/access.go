@@ -41,7 +41,7 @@ func HasEditAccess(file types.Files, user string) bool {
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
-	fmt.Println("@@@@address string is", addressString)
+
 	//if editor exists, body of if statement executes and ok is returned as 'true'
 	if _, ok := jvacc[addressString]; ok {
 		return ok
@@ -51,22 +51,39 @@ func HasEditAccess(file types.Files, user string) bool {
 	return false
 }
 
-// Not currently working
 func IsOwner(file types.Files, user string) bool {
 
+	merklePath := file.Address
+
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", file.Address, user)))
+	h.Write([]byte(user))
 	hash := h.Sum(nil)
+	accountHash := fmt.Sprintf("%x", hash)
 
-	addressString := fmt.Sprintf("%x", hash)
+	//h1 is so named as to differentiate it from h above--else compiler complains
+	h1 := sha256.New()
+	h1.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+	hash1 := h1.Sum(nil)
+	ownerAddress := fmt.Sprintf("%x", hash1)
 
-	return addressString == file.Owner
+	return ownerAddress == file.Owner
+
 }
 
 func MakeViewerAddress(trackingNumber string, user string) string {
 
 	h := sha256.New()
 	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
+	hash := h.Sum(nil)
+	addressString := fmt.Sprintf("%x", hash)
+
+	return addressString
+}
+
+func MakeEditorAddress(trackingNumber string, user string) string {
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, user)))
 	hash := h.Sum(nil)
 	addressString := fmt.Sprintf("%x", hash)
 
@@ -85,30 +102,4 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	return ownerAddress
 }
 
-// Delete these two below?...Not sure what MakeAddress does
-func MakeAddress(path string, user string) string {
-
-	h := sha256.New()
-	h.Write([]byte(path))
-	hash := h.Sum(nil)
-
-	pathString := fmt.Sprintf("%x", hash)
-	return pathString
-}
-
-func MakeChainAddress(path string, user string) string {
-
-	h := sha256.New()
-	h.Write([]byte(path))
-	hash := h.Sum(nil)
-
-	pathString := fmt.Sprintf("%x", hash)
-
-	h = sha256.New()
-	h.Write([]byte(fmt.Sprintf("%s%s", user, pathString)))
-	hash = h.Sum(nil)
-
-	pathString = fmt.Sprintf("%x", hash)
-
-	return pathString
-}
+// Deleted old code: 'MakeAddress' and 'MakeChainAddress'

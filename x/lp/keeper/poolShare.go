@@ -12,8 +12,9 @@ import (
 // Calculate amount of pool coins to deposit to get desired amount of LPToken.
 // This assumes that pool coins are normalized.
 // Example: pool has coin x and y.
-// 	This function returns amount of x and y coins to deposit in order to get
-// 	desired amount of LPToken.
+//
+//	This function returns amount of x and y coins to deposit in order to get
+//	desired amount of LPToken.
 func CoinsToDepositForLPToken(pool types.LPool, desiredAmount sdk.Int) (sdk.Coins, error) {
 	totalLPtoken, _ := sdk.NewIntFromString(pool.LPTokenBalance)
 
@@ -41,6 +42,7 @@ func CoinsToDepositForLPToken(pool types.LPool, desiredAmount sdk.Int) (sdk.Coin
 
 // Calculate amount of other pool coins to deposit given coin x to deposit same coin values.
 // Example: Pool has coin x and y.
+//
 //	User wants to deposit x but can't figure out how much y to deposit to make valid a
 //	liquidity pair.
 //	This function returns amount of y to make the valid liquidity pair.
