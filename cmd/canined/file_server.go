@@ -223,6 +223,7 @@ func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.W
 		Message:  msg,
 		Callback: wg,
 		Err:      nil,
+		Response: nil,
 	}
 
 	k := &u
@@ -344,7 +345,7 @@ func StartFileServer(cmd *cobra.Command) {
 
 	handler := cors.Default().Handler(router)
 
-	go postProofs(cmd, db)
+	go postProofs(cmd, db, &q)
 	go q.startListener(clientCtx, cmd)
 	go q.checkStrays(clientCtx, cmd, db)
 

@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -88,7 +89,7 @@ func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (strin
 
 }
 
-func postProof(cmd *cobra.Command, cid string, block string, db *leveldb.DB) (*sdk.TxResponse, error) {
+func postProof(cmd *cobra.Command, cid string, block string, db *leveldb.DB, queue *UploadQueue) (*sdk.TxResponse, error) {
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
 		return nil, err
@@ -119,15 +120,23 @@ func postProof(cmd *cobra.Command, cid string, block string, db *leveldb.DB) (*s
 		return nil, err
 	}
 
-	res, err := SendTx(clientCtx, cmd.Flags(), msg)
-	if err != nil {
-		return nil, err
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	u := Upload{
+		Message:  msg,
+		Err:      nil,
+		Callback: &wg,
+		Response: nil,
 	}
 
-	return res, nil
+	queue.append(&u)
+	wg.Wait()
+
+	return u.Response, u.Err
 }
 
-func postProofs(cmd *cobra.Command, db *leveldb.DB) {
+func postProofs(cmd *cobra.Command, db *leveldb.DB, queue *UploadQueue) {
 	debug, err := cmd.Flags().GetBool("debug")
 	if err != nil {
 		return
@@ -216,7 +225,7 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB) {
 				continue
 			}
 
-			res, err := postProof(cmd, cid, block, db)
+			res, err := postProof(cmd, cid, block, db, queue)
 			if err != nil {
 				fmt.Printf("Posting Error: %s\n", err.Error())
 				continue
@@ -229,6 +238,9 @@ func postProofs(cmd *cobra.Command, db *leveldb.DB) {
 		}
 		iter.Release()
 		err = iter.Error()
+		if err != nil {
+			fmt.Printf("Iterator Error: %s\n", err.Error())
+		}
 
 		time.Sleep(time.Duration(interval) * time.Second)
 	}
