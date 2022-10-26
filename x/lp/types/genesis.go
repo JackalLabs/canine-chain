@@ -2,10 +2,25 @@ package types
 
 import (
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // DefaultIndex is the default capability global index
 const DefaultIndex uint64 = 1
+
+// Returns account address that protocol fees are collected to
+// Panics if the address couldn't be converted to sdk.AccAddress
+func ProtocolFeeToAcc() sdk.AccAddress {
+	addr := "jkl1vvjuz20086ujjwk3rmnfhy677lxn7hrvu4zzfr"
+	return sdk.MustAccAddressFromBech32(addr)
+}
+
+// Returns protocol fee rate
+// Panics if the rate couldn't be converted to sdk.Dec
+func ProtocolFeeRate() sdk.Dec {
+	rate := "0.001"
+	return sdk.MustNewDecFromStr(rate)
+}
 
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
