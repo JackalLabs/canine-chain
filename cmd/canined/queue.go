@@ -15,6 +15,10 @@ import (
 	ctypes "github.com/cosmos/cosmos-sdk/types"
 )
 
+func (q *UploadQueue) append(upload *Upload) {
+	q.Queue = append(q.Queue, upload)
+}
+
 func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, db *leveldb.DB) {
 	for {
 		time.Sleep(time.Second)
@@ -83,6 +87,7 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, 
 				Message:  msg,
 				Callback: nil,
 				Err:      nil,
+				Response: nil,
 			}
 
 			q.Queue = append(q.Queue, &u)
@@ -95,7 +100,7 @@ func (q *UploadQueue) checkStrays(clientCtx client.Context, cmd *cobra.Command, 
 
 func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command) error {
 	for {
-		time.Sleep(time.Second)
+		time.Sleep(time.Second * 2)
 
 		if q.Locked {
 			continue
@@ -122,6 +127,8 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 			} else {
 				if res.Code != 0 {
 					v.Err = fmt.Errorf(res.RawLog)
+				} else {
+					v.Response = res
 				}
 			}
 			v.Callback.Done()
