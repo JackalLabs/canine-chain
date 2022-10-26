@@ -127,6 +127,8 @@ func (q *UploadQueue) startListener(clientCtx client.Context, cmd *cobra.Command
 			} else {
 				if res.Code != 0 {
 					v.Err = fmt.Errorf(res.RawLog)
+				} else {
+					v.Response = res
 				}
 			}
 			v.Callback.Done()
