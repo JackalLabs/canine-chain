@@ -119,6 +119,7 @@ func EmitCoinSwappedEvent(
 	coinsIn sdk.Coins,
 	coinsOut sdk.Coins,
 	swapFee sdk.Coins,
+	protocolFee sdk.Coins,
 ) {
 	if ctx.EventManager() == nil {
 		return
@@ -126,7 +127,13 @@ func EmitCoinSwappedEvent(
 
 	ctx.EventManager().EmitEvents(
 		sdk.Events{
-			newCoinSwappedEvent(sender, pool, coinsIn, coinsOut, swapFee),
+			newCoinSwappedEvent(
+				sender, 
+				pool, 
+				coinsIn, 
+				coinsOut, 
+				swapFee, 
+				protocolFee),
 			newPoolBalanceEvent(pool)},
 	)
 }
@@ -137,6 +144,7 @@ func newCoinSwappedEvent(
 	coinsIn sdk.Coins,
 	coinsOut sdk.Coins,
 	swapFee sdk.Coins,
+	protocolFee sdk.Coins,
 ) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventCoinSwapped,
@@ -145,6 +153,7 @@ func newCoinSwappedEvent(
 		sdk.NewAttribute(types.AttrKeyCoinsIn, coinsIn.String()),
 		sdk.NewAttribute(types.AttrKeyCoinsOut, coinsOut.String()),
 		sdk.NewAttribute(types.AttrKeySwapFee, swapFee.String()),
+		sdk.NewAttribute(types.AttrKeyProtocolFee, protocolFee.String()),
 	)
 }
 

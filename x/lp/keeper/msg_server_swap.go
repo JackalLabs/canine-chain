@@ -175,7 +175,8 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 		pool,
 		sdk.NewCoins(swapIn),
 		swapOut,
-		sdk.NewCoins(swapFeeCoin))
+		sdk.NewCoins(swapFee),
+		sdk.NewCoins(protocolFee))
 
 	return &emptyMsgResponse, nil
 }
