@@ -42,14 +42,30 @@ func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
 	return nil
 }
 
-func GetSwapFeeCost(swapFee string, coin sdk.Coin) (sdk.Coin, error) {
-	sfm, err := sdk.NewDecFromStr(swapFee)
+// Returns swap fee
+// Panics if swapFeeRate couldn't be converted to sdk.Dec
+func GetSwapFee(swapFeeRate string, coin sdk.Coin) sdk.Coin {
+	sfm, err := sdk.NewDecFromStr(swapFeeRate)
+
+	// Something went wrong when LPool was initialized
+	// SwapFeeMulti saved in string format that could not be parsed
+	// by sdk.Dec NewDecFromStr()
 	if err != nil {
-		return coin, err
+		panic(fmt.Errorf("Internal error! Location: Swap()"+
+				" Failed to parse SwapFeeMulti: %s, err: %s", swapFeeRate, err))
+
 	}
 
 	feeAmt := sfm.MulInt(coin.Amount)
-	return sdk.NewCoin(coin.GetDenom(), feeAmt.RoundInt()), nil
+	return sdk.NewCoin(coin.GetDenom(), feeAmt.RoundInt())
+}
+
+// Returns protocol fee
+func (k Keeper) GetProtocolFee(ctx sdk.Context, coin sdk.Coin) sdk.Coin {
+	rate := k.ProtocolFeeRate(ctx)
+	fee := rate.MulInt(coin.Amount) 
+
+	return sdk.NewCoin(coin.GetDenom(), fee.RoundInt())
 }
 
 // Creator deposits a coin and receives coin.
@@ -76,16 +92,10 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 		}
 	}
 
-	swapFeeCoin, err := GetSwapFeeCost(pool.SwapFeeMulti, swapIn)
-	// Something went wrong when LPool was initialized
-	// SwapFeeMulti saved in string format that could not be parsed
-	// by sdk.Dec NewDecFromStr()
-	if err != nil {
-		panic(fmt.Errorf("Internal error! Location: Swap()"+
-			" Failed to parse SwapFeeMulti: %s, err: %s", pool.SwapFeeMulti, err))
-	}
+	swapFee := GetSwapFee(pool.SwapFeeMulti, swapIn)
+	protocolFee := k.GetProtocolFee(ctx, swapIn)
 
-	deductedCoinIn := swapIn.Sub(swapFeeCoin)
+	deductedCoinIn := swapIn.Sub(swapFee).Sub(protocolFee)
 
 	AMM, err := types.GetAMM(pool.AMM_Id)
 
@@ -123,7 +133,22 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	// Transfer money
 
 	// Send coin input to pool
-	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAcc, types.ModuleName, sdk.NewCoins(swapIn))
+	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(
+		ctx, 
+		creatorAcc,
+		types.ModuleName, 
+		sdk.NewCoins(swapIn))
+
+	if sdkErr != nil {
+		return &emptyMsgResponse, sdkerrors.Wrap(sdkErr, "swap failed")
+	}
+	
+	// Send protocol fee to protocol fee to account
+	sdkErr = k.bankKeeper.SendCoinsFromModuleToAccount(
+		ctx, 
+		types.ModuleName, 
+		k.ProtocolFeeToAcc(ctx), 
+		sdk.NewCoins(protocolFee))
 
 	if sdkErr != nil {
 		return &emptyMsgResponse, sdkerrors.Wrap(sdkErr, "swap failed")
@@ -150,7 +175,8 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 		pool,
 		sdk.NewCoins(swapIn),
 		swapOut,
-		sdk.NewCoins(swapFeeCoin))
+		sdk.NewCoins(swapFee),
+		sdk.NewCoins(protocolFee))
 
 	return &emptyMsgResponse, nil
 }

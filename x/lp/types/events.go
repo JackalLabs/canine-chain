@@ -13,6 +13,7 @@ const (
 	AttrKeyPoolId       = "pool_id"
 	AttrKeyPoolBalance  = "pool_balance"
 	AttrKeySwapFee      = "swap_fee"
+	AttrKeyProtocolFee  = "protocol_fee"
 	AttrKeyPenaltyFee   = "penalty_fee"
 	AttrKeyCoinsIn      = "coins_in"
 	AttrKeyCoinsOut     = "coins_out"
