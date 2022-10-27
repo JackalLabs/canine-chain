@@ -35769,6 +35769,10 @@ paths:
                   LPTokenUnit:
                     type: integer
                     format: int64
+                  protocol_fee_to_addr:
+                    type: string
+                  protocol_fee_rate:
+                    type: string
                 description: Params defines the parameters for the module.
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
@@ -62063,6 +62067,10 @@ definitions:
       LPTokenUnit:
         type: integer
         format: int64
+      protocol_fee_to_addr:
+        type: string
+      protocol_fee_rate:
+        type: string
     description: Params defines the parameters for the module.
   jackaldao.canine.lp.QueryAllLPoolResponse:
     type: object
@@ -62332,6 +62340,10 @@ definitions:
           LPTokenUnit:
             type: integer
             format: int64
+          protocol_fee_to_addr:
+            type: string
+          protocol_fee_rate:
+            type: string
         description: Params defines the parameters for the module.
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   jackaldao.canine.notifications.MsgAddSendersResponse:

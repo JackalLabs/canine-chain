@@ -61,8 +61,8 @@ func GetSwapFee(swapFeeRate string, coin sdk.Coin) sdk.Coin {
 }
 
 // Returns protocol fee
-func GetProtocolFee(coin sdk.Coin) sdk.Coin {
-	rate := types.ProtocolFeeRate()
+func (k Keeper) GetProtocolFee(ctx sdk.Context, coin sdk.Coin) sdk.Coin {
+	rate := k.ProtocolFeeRate(ctx)
 	fee := rate.MulInt(coin.Amount) 
 
 	return sdk.NewCoin(coin.GetDenom(), fee.RoundInt())
@@ -93,7 +93,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	}
 
 	swapFee := GetSwapFee(pool.SwapFeeMulti, swapIn)
-	protocolFee := GetProtocolFee(swapIn)
+	protocolFee := k.GetProtocolFee(ctx, swapIn)
 
 	deductedCoinIn := swapIn.Sub(swapFee).Sub(protocolFee)
 
@@ -147,7 +147,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	sdkErr = k.bankKeeper.SendCoinsFromModuleToAccount(
 		ctx, 
 		types.ModuleName, 
-		types.ProtocolFeeToAcc(), 
+		k.ProtocolFeeToAcc(ctx), 
 		sdk.NewCoins(protocolFee))
 
 	if sdkErr != nil {

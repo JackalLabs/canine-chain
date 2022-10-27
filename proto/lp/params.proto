@@ -14,4 +14,8 @@ message Params {
 	uint32 MaxPoolDenomCount = 2;
 
 	uint32 LPTokenUnit = 3;
+
+	string protocol_fee_to_addr = 4;
+
+	string protocol_fee_rate = 5;
 }

@@ -1,6 +1,9 @@
 package types
 
 import (
+	"fmt"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
@@ -20,6 +23,8 @@ const (
 	KeyMinInitPoolDeposit = "MinInitPoolDeposit"
 	KeyMaxPoolDenomCount  = "MaxPoolDenomCount"
 	KeyLPTokenUnit        = "LPTokenUnit"
+	KeyProtocolFeeToAddr  = "ProtocolFeeToAddr"
+	KeyProtocolFeeRate  = "ProtocolFeeRate"
 )
 
 // Default values
@@ -27,6 +32,8 @@ var (
 	DefaultInitPoolDeposit   uint64 = 2
 	DefaultMaxPoolDenomCount uint32 = 2
 	DefaultLPTokenUnit       uint32 = 6
+	DefaultProtocolFeeToAddr string = "jkl1vmkyv60rztxhyahrw234l6juty72th8snftpme"
+	DefaultProtocolFeeRate   string = "0.001"
 )
 
 // Validation methods
@@ -89,6 +96,71 @@ func validateLPTokenUnit(i interface{}) error {
 	return nil
 }
 
+func validateProtocolFeeToAddr(i interface{}) error {
+	// Type assertion
+	addr, ok := i.(string)
+	
+	if !ok {
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidType,
+			"Parameter validation error at %s module, %s must be string",
+			ModuleName,
+			KeyProtocolFeeToAddr,
+		)
+	}
+
+	_, err := sdk.AccAddressFromBech32(addr)
+	
+	if err != nil {
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"Parameter validation error at %s module, %s: %s",
+			ModuleName,
+			KeyProtocolFeeToAddr,
+			err.Error(),
+		)
+	}
+
+	return nil
+}
+
+func validateProtocolFeeRate(i interface{}) error {
+	// Type assertion
+	rate, ok := i.(string)
+
+	if !ok {
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidType,
+			"Parameter validation error at %s module, %s must be string",
+			ModuleName,
+			KeyProtocolFeeRate,
+		)
+	}
+
+	decRate, err := sdk.NewDecFromStr(rate)
+
+	if err != nil {
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"Parameter validation error at %s module, %s: %s",
+			ModuleName,
+			KeyProtocolFeeRate,
+			err.Error(),
+		)
+	}
+
+	// 0 <= n < 1
+	if decRate.IsNegative() || decRate.GTE(sdk.OneDec()){
+		return fmt.Errorf("Parameter validation error at %s module, %s must be" +
+			" 0 <= n < 1",
+			ModuleName,
+			KeyProtocolFeeRate,
+		)
+	}
+
+	return nil
+}
+
 // Initialize param keytable at module launch.
 // Default param values are used for initialization.
 // This is used at NewKeeper() in this module.
@@ -108,6 +180,8 @@ func DefaultParams() Params {
 		MinInitPoolDeposit: DefaultInitPoolDeposit,
 		MaxPoolDenomCount:  DefaultMaxPoolDenomCount,
 		LPTokenUnit:        DefaultLPTokenUnit,
+		ProtocolFeeToAddr: DefaultProtocolFeeToAddr,
+		ProtocolFeeRate: DefaultProtocolFeeRate,
 	}
 }
 
@@ -130,6 +204,8 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair([]byte(KeyMinInitPoolDeposit), &p.MinInitPoolDeposit, validateMinInitPoolDeposit),
 		paramtypes.NewParamSetPair([]byte(KeyMaxPoolDenomCount), &p.MaxPoolDenomCount, validateMaxPoolDenomCount),
 		paramtypes.NewParamSetPair([]byte(KeyLPTokenUnit), &p.LPTokenUnit, validateLPTokenUnit),
+		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeToAddr), &p.ProtocolFeeToAddr, validateProtocolFeeToAddr),
+		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeRate), &p.ProtocolFeeRate, validateProtocolFeeRate),
 	}
 }
 
