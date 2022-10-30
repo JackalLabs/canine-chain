@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/x/jklmint/types"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +17,6 @@ func CmdGetInflation() *cobra.Command {
 		Short: "get the inflation rate of the network",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err

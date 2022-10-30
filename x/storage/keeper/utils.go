@@ -6,7 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func ParseIP(ip string) string {
@@ -26,7 +26,6 @@ const (
 )
 
 func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (int64, bool, *types.PayBlocks) {
-
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
 
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
@@ -104,7 +103,6 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 }
 
 func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, bytes int64) error {
-
 	startBlock := ctx.BlockHeight()
 
 	endBlock := startBlock + length

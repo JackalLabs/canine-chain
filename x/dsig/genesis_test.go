@@ -1,13 +1,13 @@
 package dsig_test
 
 import (
+	"dsig/testutil/nullify"
 	"testing"
 
 	keepertest "dsig/testutil/keeper"
-	"dsig/testutil/nullify"
 
-	"github.com/jackal-dao/canine/x/dsig"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 	"github.com/stretchr/testify/require"
 )
 

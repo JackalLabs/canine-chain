@@ -3,10 +3,10 @@ package filetree_test
 import (
 	"testing"
 
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/filetree"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	keepertest "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/testutil/nullify"
+	"github.com/jackalLabs/canine-chain/x/filetree"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/stretchr/testify/require"
 )
 

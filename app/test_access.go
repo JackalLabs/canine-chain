@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 
-	"github.com/jackal-dao/canine/app/params"
+	"github.com/jackalLabs/canine-chain/app/params"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"

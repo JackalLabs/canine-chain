@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 )
 
 type (
@@ -36,7 +36,6 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-
 		cdc:           cdc,
 		storeKey:      storeKey,
 		memKey:        memKey,

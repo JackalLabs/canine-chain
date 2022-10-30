@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 )
 
 // Set unlock time using block time and lock duration.
@@ -16,7 +16,6 @@ func (k Keeper) EngageLock(
 	ctx sdk.Context,
 	recordKey []byte,
 ) error {
-
 	record, found := k.GetLProviderRecord(ctx, recordKey)
 
 	if !found {
@@ -47,7 +46,6 @@ func (k Keeper) InitLProviderRecord(
 	poolName string,
 	lockDuration time.Duration,
 ) error {
-
 	// Find pool
 	_, found := k.GetLPool(ctx, poolName)
 
@@ -181,7 +179,6 @@ func (k Keeper) GetAllRecordOfProvider(
 
 func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
 ) (list []types.LProviderRecord) {
-
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
 		types.KeyPrefix(types.LProviderRecordKeyPrefix))
 

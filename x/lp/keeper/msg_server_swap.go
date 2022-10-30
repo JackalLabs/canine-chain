@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 )
 
 func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
@@ -88,7 +88,6 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	deductedCoinIn := swapIn.Sub(swapFeeCoin)
 
 	AMM, err := types.GetAMM(pool.AMM_Id)
-
 	// Something went wrong when LPool was initialized
 	// Registered invalid AMM
 	if err != nil {
@@ -96,7 +95,6 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	}
 
 	swapOut, err := AMM.EstimateReturn(poolCoins, sdk.NewCoins(deductedCoinIn))
-
 	if err != nil {
 		return &emptyMsgResponse, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,

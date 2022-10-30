@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/lp/keeper"
-	"github.com/jackal-dao/canine/x/lp/types"
+	keepertest "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/testutil/nullify"
+	"github.com/jackalLabs/canine-chain/x/lp/keeper"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,6 +39,7 @@ func TestLProviderRecordGet(t *testing.T) {
 		)
 	}
 }
+
 func TestLProviderRecordRemove(t *testing.T) {
 	keeper, ctx := keepertest.LpKeeper(t)
 	items := createNLProviderRecord(keeper, ctx, 10)

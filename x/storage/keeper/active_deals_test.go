@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/storage/keeper"
-	"github.com/jackal-dao/canine/x/storage/types"
+	keepertest "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/testutil/nullify"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,6 +39,7 @@ func TestActiveDealsGet(t *testing.T) {
 		)
 	}
 }
+
 func TestActiveDealsRemove(t *testing.T) {
 	keeper, ctx := keepertest.StorageKeeper(t)
 	items := createNActiveDeals(keeper, ctx, 10)

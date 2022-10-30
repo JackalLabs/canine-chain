@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/x/notifications/keeper"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	keepertest "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/x/notifications/keeper"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {

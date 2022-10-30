@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +28,6 @@ func CmdEstimateSwapOut() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryEstimateSwapOutRequest{
-
 				PoolName:  reqPoolName,
 				InputCoin: reqDepositCoins,
 			}

@@ -8,7 +8,7 @@ import (
 	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContract) (*types.MsgSignContractResponse, error) {

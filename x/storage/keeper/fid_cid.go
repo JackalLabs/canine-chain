@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // SetFidCid set a specific fidCid in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetFidCid(ctx sdk.Context, fidCid types.FidCid) {
 func (k Keeper) GetFidCid(
 	ctx sdk.Context,
 	fid string,
-
 ) (val types.FidCid, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FidCidKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetFidCid(
 func (k Keeper) RemoveFidCid(
 	ctx sdk.Context,
 	fid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FidCidKeyPrefix))
 	store.Delete(types.FidCidKey(

@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 type msgServer struct {

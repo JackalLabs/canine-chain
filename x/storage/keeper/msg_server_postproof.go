@@ -2,20 +2,19 @@ package keeper
 
 import (
 	"context"
-	"fmt"
-	"io"
-
-	// sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
+	"io"
 	"strings"
+
+	// sdk "github.com/cosmos/cosmos-sdk/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	merkletree "github.com/wealdtech/go-merkletree"
 
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func printProof(proof merkletree.Proof) {
@@ -49,7 +48,6 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	var proof merkletree.Proof
 
 	err := json.Unmarshal([]byte(msg.Hashlist), &proof)
-
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		return nil, err

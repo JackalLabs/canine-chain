@@ -1,6 +1,8 @@
 package cli_test
 
 import (
+	"dsig/testutil/network"
+	"dsig/testutil/nullify"
 	"fmt"
 	"strconv"
 	"testing"
@@ -12,11 +14,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"dsig/testutil/network"
-	"dsig/testutil/nullify"
-
-	"github.com/jackal-dao/canine/x/dsig/client/cli"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/client/cli"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 )
 
 // Prevent strconv unused error

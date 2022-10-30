@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) Postkey(goCtx context.Context, msg *types.MsgPostkey) (*types.MsgPostkeyResponse, error) {

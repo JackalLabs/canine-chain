@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // SetActiveDeals set a specific activeDeals in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetActiveDeals(ctx sdk.Context, activeDeals types.ActiveDeals) {
 func (k Keeper) GetActiveDeals(
 	ctx sdk.Context,
 	cid string,
-
 ) (val types.ActiveDeals, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetActiveDeals(
 func (k Keeper) RemoveActiveDeals(
 	ctx sdk.Context,
 	cid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
 	store.Delete(types.ActiveDealsKey(
