@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/syndtr/goleveldb/leveldb"
 
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 
 	ctypes "github.com/cosmos/cosmos-sdk/types"
 )

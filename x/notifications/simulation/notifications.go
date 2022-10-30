@@ -9,8 +9,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/x/notifications/keeper"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/keeper"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 // Prevent strconv unused error
@@ -25,11 +25,11 @@ func SimulateMsgCreateNotifications(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
-		//i := r.Int()
+		// i := r.Int()
 		msg := &types.MsgCreateNotifications{
 			Creator: simAccount.Address.String(),
 		}
-		//dummy uint64 put below, will error again when updating 'GetNotifications'
+		// dummy uint64 put below, will error again when updating 'GetNotifications'
 		_, found := k.GetNotifications(ctx, uint64(1), msg.Address)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Notifications already exist"), nil, nil

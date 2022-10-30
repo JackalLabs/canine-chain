@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	keepertest "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/testutil/nullify"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,6 +39,7 @@ func TestFilesGet(t *testing.T) {
 		)
 	}
 }
+
 func TestFilesRemove(t *testing.T) {
 	keeper, ctx := keepertest.FiletreeKeeper(t)
 	items := createNFiles(keeper, ctx, 10)

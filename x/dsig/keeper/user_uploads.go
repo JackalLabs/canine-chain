@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 )
 
 // SetUserUploads set a specific userUploads in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetUserUploads(ctx sdk.Context, userUploads types.UserUploads) {
 func (k Keeper) GetUserUploads(
 	ctx sdk.Context,
 	fid string,
-
 ) (val types.UserUploads, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserUploadsKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetUserUploads(
 func (k Keeper) RemoveUserUploads(
 	ctx sdk.Context,
 	fid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.UserUploadsKeyPrefix))
 	store.Delete(types.UserUploadsKey(

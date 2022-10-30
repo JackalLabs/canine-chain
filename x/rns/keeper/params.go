@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 // GetParams get all parameters as types.Params

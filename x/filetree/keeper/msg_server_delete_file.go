@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) DeleteFile(goCtx context.Context, msg *types.MsgDeleteFile) (*types.MsgDeleteFileResponse, error) {
@@ -16,7 +16,7 @@ func (k msgServer) DeleteFile(goCtx context.Context, msg *types.MsgDeleteFile) (
 	if !found {
 		return nil, types.ErrFileNotFound
 	}
-	//Only the owner of a file can delete it
+	// Only the owner of a file can delete it
 	isOwner := IsOwner(file, msg.Creator)
 	if !isOwner {
 		return nil, types.ErrCannotDelete

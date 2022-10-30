@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (*types.MsgAddEditorsResponse, error) {
@@ -16,7 +16,7 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 	if !found {
 		return nil, types.ErrFileNotFound
 	}
-	//Only the owner can add editors
+	// Only the owner can add editors
 	isOwner := IsOwner(file, msg.Creator)
 	if !isOwner {
 		return nil, types.ErrCannotAllowEdit
@@ -44,7 +44,7 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 
 	k.SetFiles(ctx, file)
 
-	//notify editors
+	// notify editors
 	bool, error := notify(k, ctx, msg.NotifyEditors, msg.NotiForEditors, msg.Creator, file.Address, file.Owner)
 	if !bool {
 		return nil, error

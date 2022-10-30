@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner) (*types.MsgChangeOwnerResponse, error) {
@@ -17,7 +17,7 @@ func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner)
 		return nil, types.ErrFileNotFound
 	}
 
-	//Only the owner of a file can give it away
+	// Only the owner of a file can give it away
 	isOwner := IsOwner(file, msg.Creator)
 	if !isOwner {
 		return nil, types.ErrCantGiveAway
@@ -25,8 +25,8 @@ func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner)
 
 	newOwner := MakeOwnerAddress(msg.Address, msg.NewOwner)
 
-	//If the new owner already has a file set with this path,do not change
-	//ownership--else their file will be overwridden
+	// If the new owner already has a file set with this path,do not change
+	// ownership--else their file will be overwridden
 	_, fnd := k.GetFiles(ctx, msg.Address, newOwner)
 	if fnd {
 		return nil, types.ErrAlreadyExists
@@ -35,7 +35,7 @@ func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner)
 	file.Owner = newOwner
 
 	k.SetFiles(ctx, file)
-	//Delete old file
+	// Delete old file
 	k.RemoveFiles(ctx, msg.Address, currentOwner)
 
 	return &types.MsgChangeOwnerResponse{}, nil

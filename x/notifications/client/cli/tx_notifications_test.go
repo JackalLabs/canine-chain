@@ -11,8 +11,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
-	"github.com/jackal-dao/canine/testutil/network"
-	"github.com/jackal-dao/canine/x/notifications/client/cli"
+	"github.com/jackalLabs/canine-chain/testutil/network"
+	"github.com/jackalLabs/canine-chain/x/notifications/client/cli"
 )
 
 // Prevent strconv unused error

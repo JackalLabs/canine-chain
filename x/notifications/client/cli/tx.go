@@ -8,12 +8,10 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
-var (
-	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
-)
+var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 
 const (
 	flagPacketTimeoutTimestamp = "packet-timeout-timestamp"
@@ -31,7 +29,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdCreateNotifications())
-	//cmd.AddCommand(CmdUpdateNotifications())
+	// cmd.AddCommand(CmdUpdateNotifications())
 	cmd.AddCommand(CmdDeleteNotifications())
 	cmd.AddCommand(CmdSetCounter())
 	cmd.AddCommand(CmdAddSenders())

@@ -1,4 +1,4 @@
-module github.com/jackal-dao/canine
+module github.com/jackalLabs/canine-chain
 
 go 1.19
 

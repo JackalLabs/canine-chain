@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (k msgServer) CreateContracts(goCtx context.Context, msg *types.MsgCreateContracts) (*types.MsgCreateContractsResponse, error) {
@@ -20,7 +20,7 @@ func (k msgServer) CreateContracts(goCtx context.Context, msg *types.MsgCreateCo
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	var contracts = types.Contracts{
+	contracts := types.Contracts{
 		Creator:    msg.Creator,
 		Cid:        msg.Cid,
 		Priceamt:   msg.Priceamt,

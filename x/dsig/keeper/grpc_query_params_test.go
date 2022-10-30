@@ -6,7 +6,7 @@ import (
 	testkeeper "dsig/testutil/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 	"github.com/stretchr/testify/require"
 )
 

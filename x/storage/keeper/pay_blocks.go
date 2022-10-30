@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // SetPayBlocks set a specific payBlocks in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetPayBlocks(ctx sdk.Context, payBlocks types.PayBlocks) {
 func (k Keeper) GetPayBlocks(
 	ctx sdk.Context,
 	blockid string,
-
 ) (val types.PayBlocks, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetPayBlocks(
 func (k Keeper) RemovePayBlocks(
 	ctx sdk.Context,
 	blockid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
 	store.Delete(types.PayBlocksKey(

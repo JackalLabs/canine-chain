@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewers) (*types.MsgResetViewersResponse, error) {
@@ -24,7 +24,7 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 	ownerViewerAddress := MakeViewerAddress(file.TrackingNumber, msg.Creator)
 
 	pvacc := file.ViewingAccess
-	//Unmarshall current edit access to this blank map
+	// Unmarshall current edit access to this blank map
 	jvacc := make(map[string]string)
 	json.Unmarshal([]byte(pvacc), &jvacc)
 

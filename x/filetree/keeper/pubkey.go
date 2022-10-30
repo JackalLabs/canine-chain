@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 // SetPubkey set a specific pubkey in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetPubkey(ctx sdk.Context, pubkey types.Pubkey) {
 func (k Keeper) GetPubkey(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.Pubkey, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PubkeyKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetPubkey(
 func (k Keeper) RemovePubkey(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PubkeyKeyPrefix))
 	store.Delete(types.PubkeyKey(

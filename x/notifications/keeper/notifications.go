@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 // SetNotifications set a specific notifications in the store from its index
@@ -21,7 +21,6 @@ func (k Keeper) GetNotifications(
 	ctx sdk.Context,
 	count uint64,
 	address string,
-
 ) (val types.Notifications, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 
@@ -42,7 +41,6 @@ func (k Keeper) RemoveNotifications(
 	ctx sdk.Context,
 	count uint64,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 	store.Delete(types.NotificationsKey(

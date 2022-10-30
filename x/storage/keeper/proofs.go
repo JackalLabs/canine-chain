@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // SetProofs set a specific proofs in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetProofs(ctx sdk.Context, proofs types.Proofs) {
 func (k Keeper) GetProofs(
 	ctx sdk.Context,
 	cid string,
-
 ) (val types.Proofs, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofsKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetProofs(
 func (k Keeper) RemoveProofs(
 	ctx sdk.Context,
 	cid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofsKeyPrefix))
 	store.Delete(types.ProofsKey(

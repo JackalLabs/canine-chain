@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 // SetNames set a specific names in the store from its index
@@ -21,7 +21,6 @@ func (k Keeper) GetNames(
 	ctx sdk.Context,
 	name string,
 	tld string,
-
 ) (val types.Names, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
 

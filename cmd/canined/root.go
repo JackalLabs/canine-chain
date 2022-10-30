@@ -34,8 +34,8 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/jackal-dao/canine/app"
-	"github.com/jackal-dao/canine/app/params"
+	"github.com/jackalLabs/canine-chain/app"
+	"github.com/jackalLabs/canine-chain/app/params"
 )
 
 // NewRootCmd creates a new root command for wasmd. It is called once in the
