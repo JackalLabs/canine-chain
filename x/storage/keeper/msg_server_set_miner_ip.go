@@ -7,7 +7,7 @@ import (
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
-func (k msgServer) SetProviderIp(goCtx context.Context, msg *types.MsgSetProviderIp) (*types.MsgSetProviderIpResponse, error) {
+func (k msgServer) SetProviderIP(goCtx context.Context, msg *types.MsgSetProviderIp) (*types.MsgSetProviderIpResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)

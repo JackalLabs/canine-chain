@@ -83,7 +83,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 
 	for i := 0; i < 2; i++ {
 		h := sha256.New()
-		io.WriteString(h, fmt.Sprintf("%s%s%d", contract.Creator, contract.Fid, i))
+		io.WriteString(h, fmt.Sprintf("%s%s%d", contract.Creator, contract.Fid, i)) //nolint:errcheck
 		hashName := h.Sum(nil)
 
 		scid := fmt.Sprintf("%x", hashName)

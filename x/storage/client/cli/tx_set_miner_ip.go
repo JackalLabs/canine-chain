@@ -18,7 +18,7 @@ func CmdSetProviderIp() *cobra.Command {
 		Short: "Broadcast message set-provider-ip",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argIp := args[0]
+			argIP := args[0]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -27,7 +27,7 @@ func CmdSetProviderIp() *cobra.Command {
 
 			msg := types.NewMsgSetProviderIp(
 				clientCtx.GetFromAddress().String(),
-				argIp,
+				argIP,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

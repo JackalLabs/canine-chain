@@ -54,7 +54,7 @@ func CmdUpdateProviders() *cobra.Command {
 			indexAddress := args[0]
 
 			// Get value arguments
-			argIp := args[1]
+			argIP := args[1]
 			argTotalspace := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -65,7 +65,7 @@ func CmdUpdateProviders() *cobra.Command {
 			msg := types.NewMsgUpdateProviders(
 				clientCtx.GetFromAddress().String(),
 				indexAddress,
-				argIp,
+				argIP,
 				argTotalspace,
 			)
 			if err := msg.ValidateBasic(); err != nil {

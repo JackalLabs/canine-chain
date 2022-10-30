@@ -23,6 +23,7 @@ var (
 	_ = baseapp.Paramspace
 )
 
+//nolint:gosec // these aren't hard coded credentials.
 const (
 	opWeightMsgCreateLPool = "op_weight_msg_create_l_pool"
 	// TODO: Determine the simulation weight value

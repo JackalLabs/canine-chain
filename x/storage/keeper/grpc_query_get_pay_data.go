@@ -25,7 +25,7 @@ func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryGetPayDataRequ
 		}
 	}
 
-	blocks = blocks - ctx.BlockHeight()
+	blocks -= ctx.BlockHeight()
 
 	return &types.QueryGetPayDataResponse{BlocksRemaining: blocks, Bytes: paid}, nil
 }

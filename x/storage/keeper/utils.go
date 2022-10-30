@@ -32,7 +32,7 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 
 	defer iterator.Close()
 
-	var highestBlock int64 = 0
+	var highestBlock int64
 
 	eblock, found := k.GetPayBlocks(ctx, fmt.Sprintf(".%s", address))
 	if !found {
@@ -136,7 +136,7 @@ func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, by
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 	allDeals := k.GetAllActiveDeals(ctx)
 
-	var space int64 = 0
+	var space int64
 	for i := 0; i < len(allDeals); i++ {
 		deal := allDeals[i]
 		if deal.Provider != provider {

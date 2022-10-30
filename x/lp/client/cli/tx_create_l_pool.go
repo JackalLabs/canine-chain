@@ -28,7 +28,7 @@ func CmdCreateLPool() *cobra.Command {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
 
-			invModelId, err := strconv.ParseUint(args[1], 10, 32)
+			invModelID, err := strconv.ParseUint(args[1], 10, 32)
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
@@ -56,7 +56,7 @@ func CmdCreateLPool() *cobra.Command {
 			msg := types.NewMsgCreateLPool(
 				clientCtx.GetFromAddress().String(),
 				argCoins,
-				uint32(invModelId),
+				uint32(invModelID),
 				sfm,
 				lockDuration,
 				wpm,

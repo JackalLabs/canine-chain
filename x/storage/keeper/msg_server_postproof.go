@@ -40,7 +40,7 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	num := nn.Int64()
 
 	h := sha256.New()
-	io.WriteString(h, fmt.Sprintf("%d%s", num, msg.Item))
+	io.WriteString(h, fmt.Sprintf("%d%s", num, msg.Item)) //nolint:errcheck
 	hashName := h.Sum(nil)
 
 	fmt.Printf("%v\n", hashes)

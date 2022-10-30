@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgSetProviderIp = "set_provider_ip"
+const TypeMsgSetProviderIP = "set_provider_ip"
 
 var _ sdk.Msg = &MsgSetProviderIp{}
 
@@ -21,7 +21,7 @@ func (msg *MsgSetProviderIp) Route() string {
 }
 
 func (msg *MsgSetProviderIp) Type() string {
-	return TypeMsgSetProviderIp
+	return TypeMsgSetProviderIP
 }
 
 func (msg *MsgSetProviderIp) GetSigners() []sdk.AccAddress {
