@@ -34,7 +34,7 @@ func (k Keeper) Inflation(c context.Context, _ *types.QueryInflationRequest) (*t
 		return nil, types.ErrCannotParseFloat
 	}
 
-	var tokens float64 = 10
+	var tokens float64 = 4 // TODO: Update to 10 when storage goes live
 
 	if famt <= 0 {
 		return nil, types.ErrZeroDivision
