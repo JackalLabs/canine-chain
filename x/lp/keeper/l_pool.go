@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 )
 
 func SortDenoms(denoms []string) []string {
@@ -32,8 +32,8 @@ func (k Keeper) MintAndSendLPToken(
 	ctx sdk.Context,
 	pool types.LPool,
 	toAddr sdk.AccAddress,
-	amount sdk.Int) error {
-
+	amount sdk.Int,
+) error {
 	lPToken := sdk.NewCoin(pool.LptokenDenom, amount)
 	lPTokens := sdk.NewCoins(lPToken)
 
@@ -55,11 +55,10 @@ func (k Keeper) MintAndSendLPToken(
 // Returns a LPool with passed values.
 // It does not validate the message.
 func (k Keeper) NewLPool(ctx sdk.Context, msg *types.MsgCreateLPool) types.LPool {
-
 	normCoins := sdk.NormalizeCoins(msg.Coins)
 	poolName := generatePoolName(normCoins)
 
-	var pool = types.LPool{
+	pool := types.LPool{
 		Index:           poolName,
 		Name:            poolName,
 		Coins:           normCoins,
@@ -69,7 +68,8 @@ func (k Keeper) NewLPool(ctx sdk.Context, msg *types.MsgCreateLPool) types.LPool
 		PenaltyMulti:    msg.PenaltyMulti,
 		// NOTE: use chain token alias
 		LptokenDenom:   generatePoolName(normCoins) + "-JKL",
-		LPTokenBalance: ""}
+		LPTokenBalance: "",
+	}
 
 	return pool
 }
@@ -87,7 +87,6 @@ func (k Keeper) SetLPool(ctx sdk.Context, lPool types.LPool) {
 func (k Keeper) GetLPool(
 	ctx sdk.Context,
 	index string,
-
 ) (val types.LPool, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LPoolKeyPrefix))
 
@@ -106,7 +105,6 @@ func (k Keeper) GetLPool(
 func (k Keeper) RemoveLPool(
 	ctx sdk.Context,
 	index string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LPoolKeyPrefix))
 	store.Delete(types.LPoolKey(

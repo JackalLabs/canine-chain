@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,6 @@ func CmdJoinPool() *cobra.Command {
 		Short: "join a liquidity pool by depositing pool coins.\n ",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())

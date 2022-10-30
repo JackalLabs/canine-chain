@@ -2,8 +2,8 @@ package notifications
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/notifications/keeper"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/keeper"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

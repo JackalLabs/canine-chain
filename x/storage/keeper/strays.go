@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // SetStrays set a specific strays in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetStrays(ctx sdk.Context, strays types.Strays) {
 func (k Keeper) GetStrays(
 	ctx sdk.Context,
 	cid string,
-
 ) (val types.Strays, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StraysKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetStrays(
 func (k Keeper) RemoveStrays(
 	ctx sdk.Context,
 	cid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StraysKeyPrefix))
 	store.Delete(types.StraysKey(

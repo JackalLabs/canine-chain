@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
@@ -22,7 +22,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		return nil, types.ErrCannotWrite
 	}
 
-	//Make the full path
+	// Make the full path
 	fullMerklePath := types.AddToMerkle(msg.HashParent, msg.HashChild)
 
 	owner := MakeOwnerAddress(fullMerklePath, msg.Account)
@@ -38,13 +38,13 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	k.SetFiles(ctx, file)
 
-	//notify viewers
+	// notify viewers
 	bool, error := notify(k, ctx, msg.ViewersToNotify, msg.NotiForViewers, msg.Creator, fullMerklePath, owner)
 	if !bool {
 		return nil, error
 	}
 
-	//notify editors
+	// notify editors
 	ok, err := notify(k, ctx, msg.EditorsToNotify, msg.NotiForEditors, msg.Creator, fullMerklePath, owner)
 	if !ok {
 		return nil, err

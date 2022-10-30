@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCreateNotifications) (*types.MsgCreateNotificationsResponse, error) {
@@ -32,18 +32,18 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "notification already set")
 	}
 
-	//Check if sender is permitted to notify
+	// Check if sender is permitted to notify
 
 	if !isSender(notiCounter, msg.Creator) {
 		return nil, types.ErrCannotAddSenders
 	}
 
-	var notifications = types.Notifications{
+	notifications := types.Notifications{
 		Sender:       msg.Creator,
 		Count:        notiCounter.Counter,
 		Notification: msg.Notification,
 		Address:      msg.Address,
-		//hashPath and hashPathOwner not needed in this module. Will be used in filetree
+		// hashPath and hashPathOwner not needed in this module. Will be used in filetree
 	}
 
 	k.SetNotifications(
@@ -62,7 +62,6 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 }
 
 func isSender(notiCounter types.NotiCounter, user string) bool {
-
 	currentSenders := notiCounter.PermittedSenders
 
 	placeholderMap := make([]string, 0, 1000)
@@ -72,13 +71,11 @@ func isSender(notiCounter types.NotiCounter, user string) bool {
 	fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ USER IS", user)
 
 	for _, v := range placeholderMap {
-
 		if string(v) == user {
 			return true
 		}
 	}
 	return false
-
 }
 
 // DOES NOT WORK
@@ -89,7 +86,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 	valFound, isFound := k.GetNotifications(
 		ctx,
 		msg.Count,
-		msg.Creator, //this needs to be fleshed out with permissions checking
+		msg.Creator, // this needs to be fleshed out with permissions checking
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -103,7 +100,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 	k.RemoveNotifications(
 		ctx,
 		msg.Count,
-		msg.Creator, //this needs to be fleshed out with permissions checking
+		msg.Creator, // this needs to be fleshed out with permissions checking
 	)
 
 	return &types.MsgDeleteNotificationsResponse{}, nil
@@ -129,7 +126,7 @@ func (k msgServer) UpdateNotifications(goCtx context.Context, msg *types.MsgUpda
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	var notifications = types.Notifications{
+	notifications := types.Notifications{
 		Sender:       msg.Creator,
 		Count:        msg.Count,
 		Notification: msg.Notification,

@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 )
 
 // SetForm set a specific form in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetForm(ctx sdk.Context, form types.Form) {
 func (k Keeper) GetForm(
 	ctx sdk.Context,
 	ffid string,
-
 ) (val types.Form, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FormKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetForm(
 func (k Keeper) RemoveForm(
 	ctx sdk.Context,
 	ffid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FormKeyPrefix))
 	store.Delete(types.FormKey(

@@ -1,15 +1,15 @@
 package keeper_test
 
 import (
+	"dsig/testutil/nullify"
 	"strconv"
 	"testing"
 
 	keepertest "dsig/testutil/keeper"
-	"dsig/testutil/nullify"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/dsig/keeper"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/keeper"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -40,6 +40,7 @@ func TestUserUploadsGet(t *testing.T) {
 		)
 	}
 }
+
 func TestUserUploadsRemove(t *testing.T) {
 	keeper, ctx := keepertest.DsigKeeper(t)
 	items := createNUserUploads(keeper, ctx, 10)

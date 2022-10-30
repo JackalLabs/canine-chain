@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	eciesgo "github.com/ecies/go/v2"
-	filetypes "github.com/jackal-dao/canine/x/filetree/types"
+	filetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -27,8 +27,7 @@ func MakePrivateKey(clientCtx client.Context) (*eciesgo.PrivateKey, error) {
 }
 
 func merkleHelper(argHashpath string) (string, string) {
-
-	//Cut out the / at the end for compatibility with types/merkle-paths.go
+	// Cut out the / at the end for compatibility with types/merkle-paths.go
 	trimPath := strings.TrimSuffix(argHashpath, "/")
 	chunks := strings.Split(trimPath, "/")
 
@@ -41,18 +40,16 @@ func merkleHelper(argHashpath string) (string, string) {
 	childHash := fmt.Sprintf("%x", h.Sum(nil))
 
 	return parentHash, childHash
-
 }
 
 // Owner address is whoever owns this file/folder
 func MakeOwnerAddress(merklePath string, user string) string {
-
 	h := sha256.New()
 	h.Write([]byte(user))
 	hash := h.Sum(nil)
 	accountHash := fmt.Sprintf("%x", hash)
 
-	//h1 is so named as to differentiate it from h above--else compiler complains
+	// h1 is so named as to differentiate it from h above--else compiler complains
 	h1 := sha256.New()
 	h1.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
 	hash1 := h1.Sum(nil)
@@ -62,7 +59,6 @@ func MakeOwnerAddress(merklePath string, user string) string {
 }
 
 func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, error) {
-
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
 		return nil, err
@@ -85,18 +81,14 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 		return nil, err
 	}
 	return encrypted, nil
-
 }
 
 func getCallerAddress(ctx client.Context, cmd *cobra.Command) (*string, error) {
-
 	fromAddress := ctx.GetFromAddress().String()
 	return &fromAddress, nil
-
 }
 
 func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]string, viewersToNotify []string, editorsToNotify []string) ([]byte, []byte, []byte, []byte, error) {
-
 	jsonViewers, err := json.Marshal(viewers)
 	if err != nil {
 		return nil, nil, nil, nil, err
@@ -118,5 +110,4 @@ func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]
 	}
 
 	return jsonViewers, jsonEditors, jsonViewersToNotify, jsonEditorsToNotify, nil
-
 }

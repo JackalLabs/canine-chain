@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +56,7 @@ func CmdRemoveViewers() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
+				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
 				viewersToNotify = append(viewersToNotify, v)
 
@@ -69,7 +69,7 @@ func CmdRemoveViewers() *cobra.Command {
 
 			notiForViewers := fmt.Sprintf("%s has removed read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
-			//viewerIds supposed to be JSON marshalled aswell?
+			// viewerIds supposed to be JSON marshalled aswell?
 			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),

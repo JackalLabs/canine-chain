@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 )
 
 func (k Keeper) validateExitPool(ctx sdk.Context, msg *types.MsgExitPool) error {
@@ -73,7 +73,6 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 	burningAmt = burningAmt.Sub(penaltyAmt)
 
 	coinsOut, err := CalculatePoolShareBurnReturn(pool, burningAmt)
-
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,

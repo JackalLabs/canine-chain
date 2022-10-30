@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/jackal-dao/canine/x/rns/keeper"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func SimulateMsgBid(

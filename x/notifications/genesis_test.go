@@ -3,10 +3,10 @@ package notifications_test
 import (
 	"testing"
 
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/notifications"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	keepertest "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/testutil/nullify"
+	"github.com/jackalLabs/canine-chain/x/notifications"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 	"github.com/stretchr/testify/require"
 )
 

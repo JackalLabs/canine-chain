@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*types.MsgDelRecordResponse, error) {
@@ -27,7 +27,6 @@ func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*t
 
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "cannot find name")
-
 	}
 
 	if msg.Creator != val.Value {

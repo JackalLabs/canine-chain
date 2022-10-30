@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/x/jklmint/types"
 	"github.com/spf13/cobra"
 )
 
