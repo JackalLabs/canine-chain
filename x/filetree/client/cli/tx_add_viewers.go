@@ -11,7 +11,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
@@ -90,7 +89,6 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-
 				ownerPrivateKey, err := MakePrivateKey(clientCtx)
 				if err != nil {
 					return err
@@ -101,7 +99,6 @@ func CmdAddViewers() *cobra.Command {
 					fmt.Printf("%v\n", hexMessage)
 					return err
 				}
-
 
 				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
 				if err != nil {

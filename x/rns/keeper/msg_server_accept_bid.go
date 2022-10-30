@@ -21,11 +21,11 @@ func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*t
 
 	whois, isFound := k.GetNames(ctx, n, tld)
 
-	block_height := ctx.BlockHeight()
+	blockHeight := ctx.BlockHeight()
 
 	if isFound {
 
-		if block_height > whois.Expires {
+		if blockHeight > whois.Expires {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 		}
 
@@ -33,7 +33,7 @@ func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*t
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You are not the owner of that name.")
 		}
 
-		if whois.Locked > block_height {
+		if whois.Locked > blockHeight {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot transfer free name")
 		}
 
