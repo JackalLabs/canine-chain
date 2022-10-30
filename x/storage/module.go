@@ -175,7 +175,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.V
 
 	const fchunks int64 = 1024
 
-	dayBlocks := 10 * 5
+	dayBlocks := int64(10 * 5) // really no idea what a dayblock is
 
 	fmt.Printf("blockdiff : %d\n", height%dayBlocks)
 	if height%dayBlocks == 0 {
@@ -242,7 +242,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.V
 					continue
 				}
 
-				if sb.Int64() >= height-dayBlocks {
+				if sb.Int64() >= height-int64(dayBlocks) {
 					continue
 				}
 
@@ -353,6 +353,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.V
 
 		}
 	}
+	return nil
 }
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It

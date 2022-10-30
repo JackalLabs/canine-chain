@@ -120,7 +120,7 @@ func (k msgServer) CreateLPool(
 	// Engage lock
 	if err := k.EngageLock(ctx, recordKey); err != nil {
 		k.RemoveLPool(ctx, pool.Index)
-		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name)
+		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name) //nolint:errcheck
 
 		return nil, sdkerrors.Wrapf(
 			err,
@@ -135,7 +135,7 @@ func (k msgServer) CreateLPool(
 
 	if sdkError != nil {
 		k.RemoveLPool(ctx, pool.Index)
-		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name)
+		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name) //nolint:errcheck
 
 		return nil, sdkerrors.Wrapf(
 			sdkError,

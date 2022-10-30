@@ -16,7 +16,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set all the lProviderRecord
 	for _, elem := range genState.LProviderRecordList {
 		k.SetLProviderRecord(ctx, elem)
-		k.AddProviderRef(ctx, elem)
+		k.AddProviderRef(ctx, elem) //nolint:errcheck
 	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)

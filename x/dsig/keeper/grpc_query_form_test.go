@@ -4,14 +4,15 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/jackal-dao/canine/testutil/nullify"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "dsig/testutil/keeper"
-	"dsig/testutil/nullify"
+	keepertest "github.com/jackal-dao/canine/testutil/keeper"
 
 	"github.com/jackal-dao/canine/x/dsig/types"
 )

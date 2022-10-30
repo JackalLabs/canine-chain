@@ -34,9 +34,9 @@ func (k msgServer) Createform(goCtx context.Context, msg *types.MsgCreateform) (
 	binary.BigEndian.PutUint64(bd, uint64(filedata.CreatedAt))
 	// creating the ffid of the form type
 	// seed is the concatenation of the fid, blockheight, and cid
-	seed := append(bd, []byte(filedata.Fid)...)
+	seed := append(bd, []byte(filedata.Fid)...) //nolint:gocritic
 	seed = append(seed, []byte(filedata.Cid)...)
-	ffid := md5.Sum(seed)
+	ffid := md5.Sum(seed) //nolint:gosec // NOTE: THIS IS FLAGGED AS A WEAK CRYPTOGRAPHIC PRIMITIVE.
 
 	// formatting the signees
 	// signees delimited as "uid1 uid2 uid3 uid4"

@@ -25,7 +25,7 @@ func CmdSetProviderIP() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgSetProviderIp(
+			msg := types.NewMsgSetProviderIP(
 				clientCtx.GetFromAddress().String(),
 				argIP,
 			)

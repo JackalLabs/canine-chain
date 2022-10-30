@@ -31,7 +31,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdPostContract())
 	cmd.AddCommand(CmdPostproof())
 	cmd.AddCommand(CmdSignContract())
-	cmd.AddCommand(CmdSetProviderIp())
+	cmd.AddCommand(CmdSetProviderIP())
 	cmd.AddCommand(CmdSetProviderTotalspace())
 	cmd.AddCommand(CmdInitProvider())
 	cmd.AddCommand(CmdCancelContract())
