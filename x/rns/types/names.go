@@ -47,5 +47,4 @@ func MakeName(index int, blockHeight int64) string {
 	s := fmt.Sprintf("%s-%s-%03d", strings.ToLower(a), strings.ReplaceAll(strings.ToLower(n), " ", "-"), blockHeight%1000)
 
 	return s
-
 }
