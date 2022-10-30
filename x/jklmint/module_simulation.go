@@ -10,9 +10,6 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	//	"github.com/ignite/modules/testutil/sample"
-
-	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	jklmintsimulation "github.com/jackalLabs/canine-chain/x/jklmint/simulation"
 	"github.com/jackalLabs/canine-chain/x/jklmint/types"
 )
