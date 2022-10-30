@@ -31,7 +31,6 @@ func (k Keeper) PubkeyAll(c context.Context, req *types.QueryAllPubkeyRequest) (
 		pubkeys = append(pubkeys, pubkey)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

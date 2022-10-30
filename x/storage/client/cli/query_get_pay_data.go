@@ -27,7 +27,6 @@ func CmdGetPayData() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryGetPayDataRequest{
-
 				Address: reqAddress,
 			}
 

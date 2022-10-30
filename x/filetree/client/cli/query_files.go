@@ -95,13 +95,13 @@ func CmdShowFileFromPath() *cobra.Command {
 			trimMerklePath := strings.TrimSuffix(argAddress, "/")
 			merklePath := types.MerklePath(trimMerklePath)
 
-			//hash the owner address alone
+
 			h := sha256.New()
 			h.Write([]byte(fmt.Sprintf("%s", argOwnerAddress)))
 			hash := h.Sum(nil)
 			accountHash := fmt.Sprintf("%x", hash)
 
-			//make the full OwnerAddress
+
 			H := sha256.New()
 			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
 			Hash := H.Sum(nil)

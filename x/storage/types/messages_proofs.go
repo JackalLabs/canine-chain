@@ -18,7 +18,6 @@ func NewMsgCreateProofs(
 	cid string,
 	item string,
 	hashes string,
-
 ) *MsgCreateProofs {
 	return &MsgCreateProofs{
 		Creator: creator,
@@ -64,7 +63,6 @@ func NewMsgUpdateProofs(
 	cid string,
 	item string,
 	hashes string,
-
 ) *MsgUpdateProofs {
 	return &MsgUpdateProofs{
 		Creator: creator,
@@ -108,13 +106,13 @@ var _ sdk.Msg = &MsgDeleteProofs{}
 func NewMsgDeleteProofs(
 	creator string,
 	cid string,
-
 ) *MsgDeleteProofs {
 	return &MsgDeleteProofs{
 		Creator: creator,
 		Cid:     cid,
 	}
 }
+
 func (msg *MsgDeleteProofs) Route() string {
 	return RouterKey
 }

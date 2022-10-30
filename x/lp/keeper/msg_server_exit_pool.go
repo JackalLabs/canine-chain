@@ -73,7 +73,6 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 	burningAmt = burningAmt.Sub(penaltyAmt)
 
 	coinsOut, err := CalculatePoolShareBurnReturn(pool, burningAmt)
-
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,

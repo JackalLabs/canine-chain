@@ -31,7 +31,6 @@ func (k Keeper) FormAll(c context.Context, req *types.QueryAllFormRequest) (*typ
 		forms = append(forms, form)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

@@ -35,8 +35,7 @@ type QueueResponse struct {
 	Messages []types.Msg
 }
 
-type Message interface {
-}
+type Message interface{}
 
 type Upload struct {
 	Message  types.Msg

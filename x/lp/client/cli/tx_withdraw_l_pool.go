@@ -18,7 +18,6 @@ func CmdExitPool() *cobra.Command {
 		Short: "exit from liquidity pool by burning liquidity pool token",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err

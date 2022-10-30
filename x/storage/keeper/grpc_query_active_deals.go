@@ -31,7 +31,6 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 		activeDealss = append(activeDealss, activeDeals)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

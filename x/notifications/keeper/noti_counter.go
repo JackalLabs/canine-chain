@@ -19,7 +19,6 @@ func (k Keeper) SetNotiCounter(ctx sdk.Context, notiCounter types.NotiCounter) {
 func (k Keeper) GetNotiCounter(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.NotiCounter, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotiCounterKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetNotiCounter(
 func (k Keeper) RemoveNotiCounter(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotiCounterKeyPrefix))
 	store.Delete(types.NotiCounterKey(

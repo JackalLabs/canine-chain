@@ -31,7 +31,6 @@ func (k Keeper) PayBlocksAll(c context.Context, req *types.QueryAllPayBlocksRequ
 		payBlockss = append(payBlockss, payBlocks)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

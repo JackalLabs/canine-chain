@@ -22,7 +22,6 @@ func NewMsgCreateContracts(
 	duration string,
 	filesize string,
 	fid string,
-
 ) *MsgCreateContracts {
 	return &MsgCreateContracts{
 		Creator:  creator,
@@ -76,7 +75,6 @@ func NewMsgUpdateContracts(
 	duration string,
 	filesize string,
 	fid string,
-
 ) *MsgUpdateContracts {
 	return &MsgUpdateContracts{
 		Creator:  creator,
@@ -124,13 +122,13 @@ var _ sdk.Msg = &MsgDeleteContracts{}
 func NewMsgDeleteContracts(
 	creator string,
 	cid string,
-
 ) *MsgDeleteContracts {
 	return &MsgDeleteContracts{
 		Creator: creator,
 		Cid:     cid,
 	}
 }
+
 func (msg *MsgDeleteContracts) Route() string {
 	return RouterKey
 }

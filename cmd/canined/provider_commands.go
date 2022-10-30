@@ -9,7 +9,6 @@ import (
 )
 
 func StartServer() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "start-provider",
 		Short: "start jackal storage provider",
@@ -29,7 +28,6 @@ func StartServer() *cobra.Command {
 }
 
 func SubmitProof() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "submit-proof [filename] [index] [contract-id]",
 		Short: "Submit merkle proof of file",

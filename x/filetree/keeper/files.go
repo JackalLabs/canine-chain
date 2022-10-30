@@ -16,7 +16,6 @@ func (k Keeper) SetFiles(ctx sdk.Context, files types.Files) {
 		files.Address,
 		files.Owner,
 	), b)
-
 }
 
 // GetFiles returns a files from its index
@@ -24,7 +23,6 @@ func (k Keeper) GetFiles(
 	ctx sdk.Context,
 	address string,
 	ownerAddress string,
-
 ) (val types.Files, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilesKeyPrefix))
 
@@ -45,7 +43,6 @@ func (k Keeper) RemoveFiles(
 	ctx sdk.Context,
 	address string,
 	ownerAddress string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilesKeyPrefix))
 	store.Delete(types.FilesKey(

@@ -27,7 +27,6 @@ func (k Keeper) MakeValidPair(
 	}
 
 	deposit, err := sdk.ParseCoinNormalized(req.Coin)
-
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidCoins,
@@ -36,11 +35,10 @@ func (k Keeper) MakeValidPair(
 	}
 
 	result, err := MakeValidPair(pool, deposit)
-
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,
-			"Error occured while estimating other coins to deposit",
+			"Error occurred while estimating other coins to deposit",
 		)
 	}
 

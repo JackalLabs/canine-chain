@@ -19,7 +19,6 @@ func (k Keeper) SetContracts(ctx sdk.Context, contracts types.Contracts) {
 func (k Keeper) GetContracts(
 	ctx sdk.Context,
 	cid string,
-
 ) (val types.Contracts, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ContractsKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetContracts(
 func (k Keeper) RemoveContracts(
 	ctx sdk.Context,
 	cid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ContractsKeyPrefix))
 	store.Delete(types.ContractsKey(

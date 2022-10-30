@@ -24,7 +24,6 @@ func NewMsgCreateActiveDeals(
 	proofverified string,
 	proofsmissed string,
 	blocktoprove string,
-
 ) *MsgCreateActiveDeals {
 	return &MsgCreateActiveDeals{
 		Creator:       creator,
@@ -82,7 +81,6 @@ func NewMsgUpdateActiveDeals(
 	proofverified string,
 	proofsmissed string,
 	blocktoprove string,
-
 ) *MsgUpdateActiveDeals {
 	return &MsgUpdateActiveDeals{
 		Creator:       creator,
@@ -132,13 +130,13 @@ var _ sdk.Msg = &MsgDeleteActiveDeals{}
 func NewMsgDeleteActiveDeals(
 	creator string,
 	cid string,
-
 ) *MsgDeleteActiveDeals {
 	return &MsgDeleteActiveDeals{
 		Creator: creator,
 		Cid:     cid,
 	}
 }
+
 func (msg *MsgDeleteActiveDeals) Route() string {
 	return RouterKey
 }

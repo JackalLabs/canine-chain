@@ -28,7 +28,6 @@ func CmdEstimateSwapOut() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryEstimateSwapOutRequest{
-
 				PoolName:  reqPoolName,
 				InputCoin: reqDepositCoins,
 			}

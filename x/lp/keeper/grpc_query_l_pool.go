@@ -31,7 +31,6 @@ func (k Keeper) LPoolAll(c context.Context, req *types.QueryAllLPoolRequest) (*t
 		lPools = append(lPools, lPool)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

@@ -55,7 +55,8 @@ func EmitPoolJoinedEvent(
 	ctx.EventManager().EmitEvents(
 		sdk.Events{
 			newPoolJoinedEvent(sender, pool, coins, lockDuration),
-			newPoolBalanceEvent(pool)},
+			newPoolBalanceEvent(pool),
+		},
 	)
 }
 
@@ -90,7 +91,8 @@ func EmitPoolExitedEvent(
 	ctx.EventManager().EmitEvents(
 		sdk.Events{
 			newPoolExitedEvent(sender, pool, amount, coinsOut, penaltyFee),
-			newPoolBalanceEvent(pool)},
+			newPoolBalanceEvent(pool),
+		},
 	)
 }
 
@@ -127,7 +129,8 @@ func EmitCoinSwappedEvent(
 	ctx.EventManager().EmitEvents(
 		sdk.Events{
 			newCoinSwappedEvent(sender, pool, coinsIn, coinsOut, swapFee),
-			newPoolBalanceEvent(pool)},
+			newPoolBalanceEvent(pool),
+		},
 	)
 }
 
@@ -163,7 +166,8 @@ func EmitCoinSwapFailedEvent(
 	ctx.EventManager().EmitEvents(
 		sdk.Events{
 			newCoinSwapFailedEvent(sender, pool, coinsIn, coinsOut, minCoinsOut),
-			newPoolBalanceEvent(pool)},
+			newPoolBalanceEvent(pool),
+		},
 	)
 }
 

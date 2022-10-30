@@ -21,7 +21,6 @@ func (k Keeper) GetNames(
 	ctx sdk.Context,
 	name string,
 	tld string,
-
 ) (val types.Names, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
 

@@ -21,7 +21,6 @@ func CmdCreateLPool() *cobra.Command {
 		Short: "Broadcast message createLPool",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			// Parse args
 
 			argCoins, err := sdk.ParseDecCoins(args[0])

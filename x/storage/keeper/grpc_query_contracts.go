@@ -31,7 +31,6 @@ func (k Keeper) ContractsAll(c context.Context, req *types.QueryAllContractsRequ
 		contractss = append(contractss, contracts)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

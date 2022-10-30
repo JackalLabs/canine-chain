@@ -16,7 +16,7 @@ func (k msgServer) InitAll(goCtx context.Context, msg *types.MsgInitAll) (*types
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	pubKey := types.Pubkey{
-		Address: msg.Creator, //create public key for message caller
+
 		Key:     msg.Pubkey,
 	}
 
@@ -46,17 +46,15 @@ func (k msgServer) InitAll(goCtx context.Context, msg *types.MsgInitAll) (*types
 	}
 
 	whois, isFound := k.rnsKeeper.GetNames(ctx, name, "jkl")
-	var block_height = ctx.BlockHeight()
+	block_height := ctx.BlockHeight()
 
 	if isFound {
-
 		if block_height < whois.Expires {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 		}
-
 	}
 
-	var time = 6311520 + block_height
+	time := 6311520 + block_height
 
 	emptySubdomains := []*rnsTypes.Names{}
 

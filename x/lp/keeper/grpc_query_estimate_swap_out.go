@@ -36,7 +36,6 @@ func (k Keeper) EstimateSwapOut(
 	AMM, _ := types.GetAMM(pool.AMM_Id)
 
 	returnAmt, err := AMM.EstimateReturn(poolCoins, depositCoins)
-
 	if err != nil {
 		// TODO: return better msg
 		return nil, status.Error(codes.InvalidArgument, "invalid request")

@@ -20,7 +20,7 @@ func (k msgServer) CreateContracts(goCtx context.Context, msg *types.MsgCreateCo
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	var contracts = types.Contracts{
+	contracts := types.Contracts{
 		Creator:    msg.Creator,
 		Cid:        msg.Cid,
 		Priceamt:   msg.Priceamt,

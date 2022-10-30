@@ -31,7 +31,6 @@ func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*t
 		namess = append(namess, names)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

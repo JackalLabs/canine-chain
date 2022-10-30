@@ -22,7 +22,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		return nil, types.ErrCannotWrite
 	}
 
-	//Make the full path
+
 	fullMerklePath := types.AddToMerkle(msg.HashParent, msg.HashChild)
 
 	owner := MakeOwnerAddress(fullMerklePath, msg.Account)
@@ -38,13 +38,13 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	k.SetFiles(ctx, file)
 
-	//notify viewers
+
 	bool, error := notify(k, ctx, msg.ViewersToNotify, msg.NotiForViewers, msg.Creator, fullMerklePath, owner)
 	if !bool {
 		return nil, error
 	}
 
-	//notify editors
+
 	ok, err := notify(k, ctx, msg.EditorsToNotify, msg.NotiForEditors, msg.Creator, fullMerklePath, owner)
 	if !ok {
 		return nil, err

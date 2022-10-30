@@ -10,7 +10,6 @@ import (
 )
 
 func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEditors) (*types.MsgRemoveEditorsResponse, error) {
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	file, found := k.GetFiles(ctx, msg.Address, msg.Fileowner)
@@ -24,7 +23,7 @@ func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEdit
 		return nil, types.ErrNotOwner
 	}
 
-	//Continue
+
 	peacc := file.EditAccess
 
 	jeacc := make(map[string]string)
@@ -45,7 +44,7 @@ func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEdit
 
 	k.SetFiles(ctx, file)
 
-	//notify editors
+
 	bool, error := notify(k, ctx, msg.NotifyEditors, msg.NotiForEditors, msg.Creator, file.Address, file.Owner)
 	if !bool {
 		return nil, error

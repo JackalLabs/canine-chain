@@ -88,7 +88,6 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	deductedCoinIn := swapIn.Sub(swapFeeCoin)
 
 	AMM, err := types.GetAMM(pool.AMM_Id)
-
 	// Something went wrong when LPool was initialized
 	// Registered invalid AMM
 	if err != nil {
@@ -96,7 +95,6 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	}
 
 	swapOut, err := AMM.EstimateReturn(poolCoins, sdk.NewCoins(deductedCoinIn))
-
 	if err != nil {
 		return &emptyMsgResponse, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,

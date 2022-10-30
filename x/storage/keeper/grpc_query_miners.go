@@ -31,7 +31,6 @@ func (k Keeper) ProvidersAll(c context.Context, req *types.QueryAllProvidersRequ
 		providerss = append(providerss, providers)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

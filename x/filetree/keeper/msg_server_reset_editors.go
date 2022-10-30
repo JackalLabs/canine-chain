@@ -24,7 +24,7 @@ func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditor
 	ownerEditorAddress := MakeEditorAddress(file.TrackingNumber, msg.Creator)
 
 	peacc := file.EditAccess
-	//Unmarshall current edit access to this blank map
+
 	jeacc := make(map[string]string)
 	json.Unmarshal([]byte(peacc), &jeacc)
 

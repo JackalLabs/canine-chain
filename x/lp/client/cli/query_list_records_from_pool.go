@@ -27,7 +27,6 @@ func CmdListRecordsFromPool() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryListRecordsFromPoolRequest{
-
 				PoolName: reqPoolName,
 			}
 

@@ -29,7 +29,7 @@ func CmdDeleteFile() *cobra.Command {
 				return err
 			}
 
-			//Cut out the / at the end for compatibility with types/merkle-paths.go
+
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 

@@ -17,7 +17,6 @@ func NewMsgCreateNotifications(
 	creator string,
 	notification string,
 	address string,
-
 ) *MsgCreateNotifications {
 	return &MsgCreateNotifications{
 		Creator:      creator,
@@ -62,7 +61,6 @@ func NewMsgUpdateNotifications(
 	count uint64,
 	notification string,
 	address string,
-
 ) *MsgUpdateNotifications {
 	return &MsgUpdateNotifications{
 		Creator:      creator,
@@ -106,13 +104,13 @@ var _ sdk.Msg = &MsgDeleteNotifications{}
 func NewMsgDeleteNotifications(
 	creator string,
 	count uint64,
-
 ) *MsgDeleteNotifications {
 	return &MsgDeleteNotifications{
 		Creator: creator,
 		Count:   count,
 	}
 }
+
 func (msg *MsgDeleteNotifications) Route() string {
 	return RouterKey
 }

@@ -19,7 +19,6 @@ func (k Keeper) SetPayBlocks(ctx sdk.Context, payBlocks types.PayBlocks) {
 func (k Keeper) GetPayBlocks(
 	ctx sdk.Context,
 	blockid string,
-
 ) (val types.PayBlocks, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetPayBlocks(
 func (k Keeper) RemovePayBlocks(
 	ctx sdk.Context,
 	blockid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
 	store.Delete(types.PayBlocksKey(

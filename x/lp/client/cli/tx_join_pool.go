@@ -21,7 +21,6 @@ func CmdJoinPool() *cobra.Command {
 		Short: "join a liquidity pool by depositing pool coins.\n ",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())

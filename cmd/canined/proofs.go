@@ -24,7 +24,6 @@ import (
 )
 
 func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (string, string, error) {
-
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 	if qerr != nil {
 		return "", "", qerr
@@ -86,7 +85,6 @@ func CreateMerkleForProof(cmd *cobra.Command, filename string, index int) (strin
 	}
 
 	return fmt.Sprintf("%x", item), string(jproof), nil
-
 }
 
 func postProof(cmd *cobra.Command, cid string, block string, db *leveldb.DB, queue *UploadQueue) (*sdk.TxResponse, error) {

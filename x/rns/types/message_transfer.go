@@ -9,11 +9,11 @@ const TypeMsgTransfer = "transfer"
 
 var _ sdk.Msg = &MsgTransfer{}
 
-func NewMsgTransfer(creator string, name string, reciever string) *MsgTransfer {
+func NewMsgTransfer(creator string, name string, receiver string) *MsgTransfer {
 	return &MsgTransfer{
 		Creator:  creator,
 		Name:     name,
-		Reciever: reciever,
+		Receiver: receiver,
 	}
 }
 

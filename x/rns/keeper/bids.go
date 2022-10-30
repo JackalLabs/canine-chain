@@ -19,7 +19,6 @@ func (k Keeper) SetBids(ctx sdk.Context, bids types.Bids) {
 func (k Keeper) GetBids(
 	ctx sdk.Context,
 	index string,
-
 ) (val types.Bids, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BidsKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetBids(
 func (k Keeper) RemoveBids(
 	ctx sdk.Context,
 	index string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BidsKeyPrefix))
 	store.Delete(types.BidsKey(

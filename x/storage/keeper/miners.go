@@ -19,7 +19,6 @@ func (k Keeper) SetProviders(ctx sdk.Context, providers types.Providers) {
 func (k Keeper) GetProviders(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.Providers, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetProviders(
 func (k Keeper) RemoveProviders(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 	store.Delete(types.ProvidersKey(

@@ -31,7 +31,6 @@ func (k Keeper) ForsaleAll(c context.Context, req *types.QueryAllForsaleRequest)
 		forsales = append(forsales, forsale)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

@@ -8,7 +8,6 @@ import (
 )
 
 func getTLD(name string) (string, error) {
-
 	for _, tld := range types.SUPPORTED_TLDS {
 		tldSize := len(tld)
 
@@ -34,7 +33,6 @@ func getSubdomain(name string) (string, string, bool) {
 	s := strings.Split(name, ".")
 
 	return s[0], s[1], true
-
 }
 
 func removeTLD(name string, tld string) (string, error) {

@@ -27,7 +27,6 @@ func CmdFindFile() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryFindFileRequest{
-
 				Fid: reqFid,
 			}
 

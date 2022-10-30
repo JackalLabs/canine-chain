@@ -31,7 +31,6 @@ func (k Keeper) ProofsAll(c context.Context, req *types.QueryAllProofsRequest) (
 		proofss = append(proofss, proofs)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

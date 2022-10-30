@@ -16,7 +16,6 @@ func (k Keeper) EngageLock(
 	ctx sdk.Context,
 	recordKey []byte,
 ) error {
-
 	record, found := k.GetLProviderRecord(ctx, recordKey)
 
 	if !found {
@@ -47,7 +46,6 @@ func (k Keeper) InitLProviderRecord(
 	poolName string,
 	lockDuration time.Duration,
 ) error {
-
 	// Find pool
 	_, found := k.GetLPool(ctx, poolName)
 
@@ -181,7 +179,6 @@ func (k Keeper) GetAllRecordOfProvider(
 
 func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
 ) (list []types.LProviderRecord) {
-
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
 		types.KeyPrefix(types.LProviderRecordKeyPrefix))
 

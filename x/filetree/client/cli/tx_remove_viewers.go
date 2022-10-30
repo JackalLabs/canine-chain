@@ -20,7 +20,7 @@ var _ = strconv.Itoa(0)
 func CmdRemoveViewers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-viewers [viewer-ids] [file path] [file owner]",
-		Short: "remove an address from the files viewing permisisons",
+		Short: "remove an address from the files viewing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argViewerIds := args[0]
@@ -56,7 +56,7 @@ func CmdRemoveViewers() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
+
 				viewerIds = append(viewerIds, newViewerID)
 				viewersToNotify = append(viewersToNotify, v)
 
@@ -69,7 +69,7 @@ func CmdRemoveViewers() *cobra.Command {
 
 			notiForViewers := fmt.Sprintf("%s has removed read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
-			//viewerIds supposed to be JSON marshalled aswell?
+
 			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),

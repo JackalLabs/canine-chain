@@ -32,7 +32,6 @@ func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*t
 		filess = append(filess, files)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

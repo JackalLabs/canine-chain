@@ -30,12 +30,10 @@ func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedN
 
 		if names.Value == req.Address {
 			namess = append(namess, names)
-
 		}
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

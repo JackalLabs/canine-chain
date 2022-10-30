@@ -53,14 +53,13 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	num_years, _ := sdk.NewIntFromString(msg.Years)
 
-	var block_height = ctx.BlockHeight()
+	block_height := ctx.BlockHeight()
 
-	var time = num_years.Int64() * 6311520
+	time := num_years.Int64() * 6311520
 
 	owner, _ := sdk.AccAddressFromBech32(msg.Creator)
 	// If a name is found in store
 	if isFound {
-
 		if whois.Value == owner.String() {
 			time = whois.Expires + time
 		} else {
@@ -68,7 +67,6 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 				return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 			}
 		}
-
 	} else {
 		time = time + block_height
 	}
@@ -93,5 +91,4 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 	// Write whois information to the store
 	k.SetNames(ctx, newWhois)
 	return &types.MsgRegisterResponse{}, nil
-
 }

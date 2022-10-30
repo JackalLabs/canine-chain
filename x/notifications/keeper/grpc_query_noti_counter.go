@@ -31,7 +31,6 @@ func (k Keeper) NotiCounterAll(c context.Context, req *types.QueryAllNotiCounter
 		notiCounters = append(notiCounters, notiCounter)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

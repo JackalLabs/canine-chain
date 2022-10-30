@@ -40,7 +40,6 @@ func (k Keeper) EstimateContribution(
 	}
 
 	result, err := CoinsToDepositForLPToken(pool, desiredAmt)
-
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,

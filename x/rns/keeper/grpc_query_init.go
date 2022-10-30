@@ -31,7 +31,6 @@ func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitRequest) (*typ
 		inits = append(inits, init)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

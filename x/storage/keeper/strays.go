@@ -19,7 +19,6 @@ func (k Keeper) SetStrays(ctx sdk.Context, strays types.Strays) {
 func (k Keeper) GetStrays(
 	ctx sdk.Context,
 	cid string,
-
 ) (val types.Strays, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StraysKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetStrays(
 func (k Keeper) RemoveStrays(
 	ctx sdk.Context,
 	cid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StraysKeyPrefix))
 	store.Delete(types.StraysKey(

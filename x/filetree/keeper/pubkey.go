@@ -19,7 +19,6 @@ func (k Keeper) SetPubkey(ctx sdk.Context, pubkey types.Pubkey) {
 func (k Keeper) GetPubkey(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.Pubkey, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PubkeyKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetPubkey(
 func (k Keeper) RemovePubkey(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PubkeyKeyPrefix))
 	store.Delete(types.PubkeyKey(

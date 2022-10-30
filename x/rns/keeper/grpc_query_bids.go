@@ -31,7 +31,6 @@ func (k Keeper) BidsAll(c context.Context, req *types.QueryAllBidsRequest) (*typ
 		bidss = append(bidss, bids)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

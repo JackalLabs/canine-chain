@@ -19,14 +19,12 @@ func CmdPostkey() *cobra.Command {
 		Short: "Posts a users generated public key for the encryption model",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
 			newKey, err := MakePrivateKey(clientCtx)
-
 			if err != nil {
 				return err
 			}

@@ -18,7 +18,6 @@ func NewMsgCreateProviders(
 	address string,
 	ip string,
 	totalspace string,
-
 ) *MsgCreateProviders {
 	return &MsgCreateProviders{
 		Creator:    creator,
@@ -64,7 +63,6 @@ func NewMsgUpdateProviders(
 	address string,
 	ip string,
 	totalspace string,
-
 ) *MsgUpdateProviders {
 	return &MsgUpdateProviders{
 		Creator:    creator,
@@ -108,13 +106,13 @@ var _ sdk.Msg = &MsgDeleteProviders{}
 func NewMsgDeleteProviders(
 	creator string,
 	address string,
-
 ) *MsgDeleteProviders {
 	return &MsgDeleteProviders{
 		Creator: creator,
 		Address: address,
 	}
 }
+
 func (msg *MsgDeleteProviders) Route() string {
 	return RouterKey
 }

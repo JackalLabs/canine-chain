@@ -31,7 +31,6 @@ func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (
 		fidCids = append(fidCids, fidCid)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

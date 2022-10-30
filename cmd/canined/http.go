@@ -17,7 +17,6 @@ import (
 )
 
 func indexres(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
 	clientCtx, err := client.GetClientTxContext(cmd)
 	if err != nil {
 		fmt.Println(err)
@@ -86,7 +85,6 @@ func listFiles(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps ht
 }
 
 func dumpdb(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *leveldb.DB) {
-
 	data := make([]DataBlock, 0)
 	iter := db.NewIterator(nil, nil)
 
@@ -136,7 +134,6 @@ func (q *UploadQueue) getRoutes(cmd *cobra.Command, router *httprouter.Router, d
 	router.GET("/q", queue)
 	router.GET("/db", dumpdb)
 	router.GET("/", ires)
-
 }
 
 func (q *UploadQueue) postRoutes(cmd *cobra.Command, router *httprouter.Router, db *leveldb.DB) {
@@ -149,8 +146,7 @@ func (q *UploadQueue) postRoutes(cmd *cobra.Command, router *httprouter.Router, 
 }
 
 func (q *UploadQueue) listqueue(cmd *cobra.Command, w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	var messages = make([]types.Msg, 0)
+	messages := make([]types.Msg, 0)
 
 	for _, v := range q.Queue {
 		messages = append(messages, v.Message)
@@ -203,5 +199,4 @@ func (q *UploadQueue) fileUpload(w *http.ResponseWriter, r *http.Request, ps htt
 		(*w).WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(*w).Encode(v)
 	}
-
 }

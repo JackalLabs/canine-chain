@@ -19,7 +19,6 @@ func (k Keeper) SetInit(ctx sdk.Context, init types.Init) {
 func (k Keeper) GetInit(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.Init, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.InitKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetInit(
 func (k Keeper) RemoveInit(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.InitKeyPrefix))
 	store.Delete(types.InitKey(

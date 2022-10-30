@@ -19,7 +19,6 @@ func (k Keeper) SetProofs(ctx sdk.Context, proofs types.Proofs) {
 func (k Keeper) GetProofs(
 	ctx sdk.Context,
 	cid string,
-
 ) (val types.Proofs, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofsKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetProofs(
 func (k Keeper) RemoveProofs(
 	ctx sdk.Context,
 	cid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofsKeyPrefix))
 	store.Delete(types.ProofsKey(

@@ -45,7 +45,7 @@ func writeFileToDisk(clientCtx client.Context, reader io.Reader, file io.ReaderA
 	var blocksize int64 = 1024
 	var i int64 = 0
 	for i = 0; i < size; i += blocksize {
-		f, err := os.OpenFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, fmt.Sprintf("%x", hashName), i/blocksize, ".jkl"), os.O_WRONLY|os.O_CREATE, 0666)
+		f, err := os.OpenFile(fmt.Sprintf("%s/networkfiles/%s/%d%s", clientCtx.HomeDir, fmt.Sprintf("%x", hashName), i/blocksize, ".jkl"), os.O_WRONLY|os.O_CREATE, 0o666)
 		if err != nil {
 			return hashName, err
 		}
@@ -100,7 +100,6 @@ func downloadFileFromURL(clientCtx client.Context, url string, fid string, cid s
 }
 
 func saveToDatabase(hashName []byte, strcid string, db *leveldb.DB) error {
-
 	err := db.Put(makeDowntimeKey(strcid), []byte(fmt.Sprintf("%d", 0)), nil)
 	if err != nil {
 		fmt.Printf("Downtime Database Error: %v\n", err)
@@ -121,7 +120,6 @@ func saveToDatabase(hashName []byte, strcid string, db *leveldb.DB) error {
 	}
 
 	return nil
-
 }
 
 func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, handler *multipart.FileHeader, sender string, cmd *cobra.Command, db *leveldb.DB, w *http.ResponseWriter) error {
@@ -199,7 +197,6 @@ func (q *UploadQueue) saveFile(clientCtx client.Context, file multipart.File, ha
 }
 
 func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.WaitGroup) (*Upload, error) {
-
 	merkleroot, filesize, fid := HashData(cmd, args[0])
 
 	clientCtx, err := client.GetClientTxContext(cmd)
@@ -234,7 +231,6 @@ func (q *UploadQueue) makeContract(cmd *cobra.Command, args []string, wg *sync.W
 }
 
 func HashData(cmd *cobra.Command, filename string) (string, string, string) {
-
 	clientCtx, qerr := client.GetClientTxContext(cmd)
 	if qerr != nil {
 		fmt.Printf("%s\n", "can't get client context")
@@ -246,7 +242,7 @@ func HashData(cmd *cobra.Command, filename string) (string, string, string) {
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
-	var size = 0
+	size := 0
 	var list [][]byte
 
 	for i := 0; i < len(files); i++ {

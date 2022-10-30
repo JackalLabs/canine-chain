@@ -20,7 +20,6 @@ func LProviderRecordKey(
 	poolName string,
 	provider string,
 ) []byte {
-
 	poolBytes := []byte(poolName)
 	addrBytes := []byte(provider)
 
@@ -48,7 +47,6 @@ func GetProviderKey(record LProviderRecord) []byte {
 // Takes LProviderRecord struct to generate reference key.
 // Key format is: {provider}{provider}
 func GetProviderRefKey(record LProviderRecord) []byte {
-
 	poolBytes := []byte(record.PoolName)
 	addrBytes := []byte(record.Provider)
 

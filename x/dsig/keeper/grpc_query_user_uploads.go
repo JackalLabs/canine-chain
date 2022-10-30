@@ -31,7 +31,6 @@ func (k Keeper) UserUploadsAll(c context.Context, req *types.QueryAllUserUploads
 		userUploadss = append(userUploadss, userUploads)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

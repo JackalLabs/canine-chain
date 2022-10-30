@@ -16,17 +16,17 @@ func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (
 		return nil, types.ErrNotiCounterNotFound
 	}
 
-	//This message is already set to only allow the msg.Creator to add to their own notiCounter, but add this in just in case
+
 	if !(notiCounter.Address == msg.Creator) {
 		return nil, types.ErrCannotAddSenders
 	}
 
 	currentSenders := notiCounter.PermittedSenders
 
-	placeholderMap := make([]string, 0, 1000) //Perhaps I could just use an array
+
 	json.Unmarshal([]byte(currentSenders), &placeholderMap)
 
-	temporaryMap := make([]string, 0, 1000) //Perhaps I could just use an array
+
 	json.Unmarshal([]byte(msg.SenderIds), &temporaryMap)
 
 	placeholderMap = append(placeholderMap, temporaryMap...)

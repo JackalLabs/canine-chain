@@ -32,7 +32,6 @@ func NewKeeper(
 	ps paramtypes.Subspace,
 	rnsKeeper rnsKeeper.Keeper,
 	notiKeeper notiKeeper.Keeper,
-
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -40,7 +39,6 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,

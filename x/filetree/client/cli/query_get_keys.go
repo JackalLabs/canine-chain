@@ -37,16 +37,16 @@ func CmdGetKeys() *cobra.Command {
 			trimPath := strings.TrimSuffix(reqHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 
-			//hash the owner address alone
+
 			h := sha256.New()
 			h.Write([]byte(fmt.Sprintf("%s", reqOwner)))
 			hash := h.Sum(nil)
 			accountHash := fmt.Sprintf("%x", hash)
 
 			H := sha256.New()
-			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash))) //May not need this in future
+
 			Hash := H.Sum(nil)
-			ownerString := fmt.Sprintf("%x", Hash) //Make the owner string to find the file
+
 
 			params := &types.QueryGetFilesRequest{
 				Address:      merklePath,
@@ -67,7 +67,7 @@ func CmdGetKeys() *cobra.Command {
 				fmt.Println("cannot unmarshall viewers")
 				return jerr
 			}
-			//fix something here for it to work
+
 			addressString := keeper.MakeViewerAddress(res.Files.TrackingNumber, clientCtx.GetFromAddress().String())
 
 			todec := m[addressString]

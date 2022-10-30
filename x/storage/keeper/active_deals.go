@@ -19,7 +19,6 @@ func (k Keeper) SetActiveDeals(ctx sdk.Context, activeDeals types.ActiveDeals) {
 func (k Keeper) GetActiveDeals(
 	ctx sdk.Context,
 	cid string,
-
 ) (val types.ActiveDeals, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetActiveDeals(
 func (k Keeper) RemoveActiveDeals(
 	ctx sdk.Context,
 	cid string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
 	store.Delete(types.ActiveDealsKey(

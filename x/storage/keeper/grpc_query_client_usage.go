@@ -31,7 +31,6 @@ func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsage
 		clientUsages = append(clientUsages, clientUsage)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

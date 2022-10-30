@@ -24,7 +24,7 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 	ownerViewerAddress := MakeViewerAddress(file.TrackingNumber, msg.Creator)
 
 	pvacc := file.ViewingAccess
-	//Unmarshall current edit access to this blank map
+
 	jvacc := make(map[string]string)
 	json.Unmarshal([]byte(pvacc), &jvacc)
 

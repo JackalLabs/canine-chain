@@ -15,7 +15,6 @@ func CmdCreateNotifications() *cobra.Command {
 		Short: "Create a new notifications",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			// Get value arguments
 			argNotification := args[0]
 			argAddress := args[1]

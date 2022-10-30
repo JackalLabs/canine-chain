@@ -20,7 +20,7 @@ func (k msgServer) CreateProviders(goCtx context.Context, msg *types.MsgCreatePr
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	var providers = types.Providers{
+	providers := types.Providers{
 		Creator:    msg.Creator,
 		Address:    msg.Address,
 		Ip:         msg.Ip,
@@ -51,7 +51,7 @@ func (k msgServer) UpdateProviders(goCtx context.Context, msg *types.MsgUpdatePr
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	var providers = types.Providers{
+	providers := types.Providers{
 		Creator:    msg.Creator,
 		Address:    msg.Address,
 		Ip:         msg.Ip,

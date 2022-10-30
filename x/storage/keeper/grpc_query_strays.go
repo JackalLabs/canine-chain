@@ -31,7 +31,6 @@ func (k Keeper) StraysAll(c context.Context, req *types.QueryAllStraysRequest) (
 		strayss = append(strayss, strays)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

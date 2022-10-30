@@ -20,7 +20,7 @@ func (k msgServer) CreateProofs(goCtx context.Context, msg *types.MsgCreateProof
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	var proofs = types.Proofs{
+	proofs := types.Proofs{
 		Creator: msg.Creator,
 		Cid:     msg.Cid,
 		Item:    msg.Item,
@@ -51,7 +51,7 @@ func (k msgServer) UpdateProofs(goCtx context.Context, msg *types.MsgUpdateProof
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	var proofs = types.Proofs{
+	proofs := types.Proofs{
 		Creator: msg.Creator,
 		Cid:     msg.Cid,
 		Item:    msg.Item,

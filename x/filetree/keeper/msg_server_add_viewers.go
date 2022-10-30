@@ -44,7 +44,7 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 
 	k.SetFiles(ctx, file)
 
-	//notify viewers
+
 	bool, error := notify(k, ctx, msg.NotifyViewers, msg.NotiForViewers, msg.Creator, file.Address, file.Owner)
 	if !bool {
 		return nil, error

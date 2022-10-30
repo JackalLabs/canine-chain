@@ -27,7 +27,6 @@ func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*t
 
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "cannot find name")
-
 	}
 
 	if msg.Creator != val.Value {

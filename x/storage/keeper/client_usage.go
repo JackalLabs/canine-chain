@@ -19,7 +19,6 @@ func (k Keeper) SetClientUsage(ctx sdk.Context, clientUsage types.ClientUsage) {
 func (k Keeper) GetClientUsage(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.ClientUsage, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClientUsageKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetClientUsage(
 func (k Keeper) RemoveClientUsage(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClientUsageKeyPrefix))
 	store.Delete(types.ClientUsageKey(

@@ -31,7 +31,6 @@ func (k Keeper) WhoisAll(c context.Context, req *types.QueryAllWhoisRequest) (*t
 		whoiss = append(whoiss, whois)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
