@@ -37,7 +37,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	}
 
 	// mint coins, update supply
-	providerCoin := sdk.NewCoin(denom, sdk.NewInt(provider_ratio*1000000))
+	providerCoin := sdk.NewCoin(denom, sdk.NewInt(providerRatio*1000000))
 	providerCoins := sdk.NewCoins(providerCoin)
 
 	err = k.SendToProviders(ctx, providerCoins)
