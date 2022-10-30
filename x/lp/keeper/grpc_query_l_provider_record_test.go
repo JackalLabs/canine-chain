@@ -31,14 +31,16 @@ func TestLProviderRecordQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetLProviderRecordRequest{
-				Index: msgs[0].Index,
+				Provider: msgs[0].Provider,
+				PoolName: msgs[0].PoolName,
 			},
 			response: &types.QueryGetLProviderRecordResponse{LProviderRecord: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryGetLProviderRecordRequest{
-				Index: msgs[1].Index,
+				Provider: msgs[1].Provider,
+				PoolName: msgs[1].PoolName,
 			},
 			response: &types.QueryGetLProviderRecordResponse{LProviderRecord: msgs[1]},
 		},

@@ -11,11 +11,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
-	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -57,13 +54,13 @@ func CmdAddEditors() *cobra.Command {
 					return err
 				}
 
-				queryClient := filetypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
-				if err != nil {
-					return types.ErrPubKeyNotFound
-				}
+				//			queryClient := filetypes.NewQueryClient(clientCtx)
+				//			res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
+				//			if err != nil {
+				//				return types.ErrPubKeyNotFound
+				//			}
 
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+				//			pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
 				if err != nil {
 					return err
 				}
@@ -90,27 +87,26 @@ func CmdAddEditors() *cobra.Command {
 					return err
 				}
 
-
-				ownerPrivateKey, err := MakePrivateKey(clientCtx)
+				//	ownerPrivateKey, err := MakePrivateKey(clientCtx)
 				if err != nil {
 					return err
 				}
 
-				decrypt, err := eciesgo.Decrypt(ownerPrivateKey, hexMessage)
+				//	decrypt, err := eciesgo.Decrypt(ownerPrivateKey, hexMessage)
 				if err != nil {
 					fmt.Printf("%v\n", hexMessage)
 					return err
 				}
 
-
-				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
-				if err != nil {
-					return err
-				}
+				// is a pkey private or public?
+				//	encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
+				//	if err != nil {
+				//		return err
+				//	}
 
 				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v)
 				editorIds = append(editorIds, newEditorID)
-				editorKeys = append(editorKeys, fmt.Sprintf("%x", encrypted))
+				//	editorKeys = append(editorKeys, fmt.Sprintf("%x", encrypted))
 				editorsToNotify = append(editorsToNotify, v)
 
 			}

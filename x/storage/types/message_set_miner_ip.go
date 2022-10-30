@@ -7,24 +7,24 @@ import (
 
 const TypeMsgSetProviderIP = "set_provider_ip"
 
-var _ sdk.Msg = &MsgSetProviderIp{}
+var _ sdk.Msg = &MsgSetProviderIP{}
 
-func NewMsgSetProviderIP(creator string, ip string) *MsgSetProviderIp {
-	return &MsgSetProviderIp{
+func NewMsgSetProviderIP(creator string, ip string) *MsgSetProviderIP {
+	return &MsgSetProviderIP{
 		Creator: creator,
 		Ip:      ip,
 	}
 }
 
-func (msg *MsgSetProviderIp) Route() string {
+func (msg *MsgSetProviderIP) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgSetProviderIp) Type() string {
+func (msg *MsgSetProviderIP) Type() string {
 	return TypeMsgSetProviderIP
 }
 
-func (msg *MsgSetProviderIp) GetSigners() []sdk.AccAddress {
+func (msg *MsgSetProviderIP) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -32,12 +32,12 @@ func (msg *MsgSetProviderIp) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgSetProviderIp) GetSignBytes() []byte {
+func (msg *MsgSetProviderIP) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgSetProviderIp) ValidateBasic() error {
+func (msg *MsgSetProviderIP) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

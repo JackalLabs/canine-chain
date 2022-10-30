@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -11,10 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
-	filetypes "github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -56,16 +53,17 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-				queryClient := filetypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
-				if err != nil {
-					return types.ErrPubKeyNotFound
-				}
+				// COMMENTED OUT BECAUSE IT DOESN'T WORK.
+				//		queryClient := filetypes.NewQueryClient(clientCtx)
+				//		res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
+				//		if err != nil {
+				//			return types.ErrPubKeyNotFound
+				//		}
 
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
-				if err != nil {
-					return err
-				}
+				// pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+				//if err != nil {
+				//	return err
+				//}
 
 				params := &types.QueryGetFilesRequest{
 					Address:      merklePath,
@@ -82,32 +80,33 @@ func CmdAddViewers() *cobra.Command {
 
 				json.Unmarshal([]byte(viewers), &m)
 
-				ownerViewingAddress := keeper.MakeViewerAddress(file.Files.TrackingNumber, argOwner)
+				// COMMENTED OUT BECAUSE DUNNO
+				//			ownerViewingAddress := keeper.MakeViewerAddress(file.Files.TrackingNumber, argOwner)
 
-				hexMessage, err := hex.DecodeString(m[ownerViewingAddress])
-				if err != nil {
-					return err
-				}
+				//			hexMessage, err := hex.DecodeString(m[ownerViewingAddress])
+				//			if err != nil {
+				//				return err
+				//			}
 
-				ownerPrivateKey, err := MakePrivateKey(clientCtx)
-				if err != nil {
-					return err
-				}
+				//			ownerPrivateKey, err := MakePrivateKey(clientCtx)
+				//			if err != nil {
+				//				return err
+				//			}
 
-				decrypt, err := eciesgo.Decrypt(ownerPrivateKey, hexMessage)
-				if err != nil {
-					fmt.Printf("%v\n", hexMessage)
-					return err
-				}
+				//			decrypt, err := eciesgo.Decrypt(ownerPrivateKey, hexMessage)
+				//			if err != nil {
+				//				fmt.Printf("%v\n", hexMessage)
+				//				return err
+				//			}
 
-				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
+				//			encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
 				if err != nil {
 					return err
 				}
 
 				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v)
 				viewerIds = append(viewerIds, newViewerID)
-				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
+				//			viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 				viewersToNotify = append(viewersToNotify, v)
 
 			}

@@ -30,9 +30,7 @@ func TestGenesis(t *testing.T) {
 				Address: "1",
 			},
 		},
-		Tracker: &types.Tracker{
-			TrackingNumber: 92,
-		},
+
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -46,6 +44,5 @@ func TestGenesis(t *testing.T) {
 
 	require.ElementsMatch(t, genesisState.FilesList, got.FilesList)
 	require.ElementsMatch(t, genesisState.PubkeyList, got.PubkeyList)
-	require.Equal(t, genesisState.Tracker, got.Tracker)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

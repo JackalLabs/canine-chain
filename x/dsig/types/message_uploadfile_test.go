@@ -3,8 +3,8 @@ package types
 import (
 	"testing"
 
-	"dsig/testutil/sample"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 

@@ -37,20 +37,18 @@ func CmdGetKeys() *cobra.Command {
 			trimPath := strings.TrimSuffix(reqHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 
-
 			h := sha256.New()
 			h.Write([]byte(fmt.Sprintf("%s", reqOwner)))
-			hash := h.Sum(nil)
-			accountHash := fmt.Sprintf("%x", hash)
+			//		hash := h.Sum(nil)
+			//		accountHash := fmt.Sprintf("%x", hash)
 
-			H := sha256.New()
+			//		H := sha256.New()
 
-			Hash := H.Sum(nil)
-
+			//		Hash := H.Sum(nil)
 
 			params := &types.QueryGetFilesRequest{
-				Address:      merklePath,
-				OwnerAddress: ownerString,
+				Address: merklePath,
+				//			OwnerAddress: ownerString,
 			}
 
 			res, err := queryClient.Files(context.Background(), params)

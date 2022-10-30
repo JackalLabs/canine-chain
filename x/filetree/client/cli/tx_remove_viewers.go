@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -10,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +30,7 @@ func CmdRemoveViewers() *cobra.Command {
 				return err
 			}
 
-			fileQueryClient := types.NewQueryClient(clientCtx)
+			//		fileQueryClient := types.NewQueryClient(clientCtx)
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
@@ -46,18 +44,17 @@ func CmdRemoveViewers() *cobra.Command {
 					continue
 				}
 
-				params := &types.QueryGetFilesRequest{
-					Address:      merklePath,
-					OwnerAddress: ownerChainAddress,
-				}
+				//		params := &types.QueryGetFilesRequest{
+				//			Address:      merklePath,
+				//			OwnerAddress: ownerChainAddress,
+				//		}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
-				if err != nil {
-					return types.ErrFileNotFound
-				}
+				//		file, err := fileQueryClient.Files(context.Background(), params)
+				//		if err != nil {
+				//			return types.ErrFileNotFound
+				//		}
 
-
-				viewerIds = append(viewerIds, newViewerID)
+				//		viewerIds = append(viewerIds, newViewerID)
 				viewersToNotify = append(viewersToNotify, v)
 
 			}
@@ -68,7 +65,6 @@ func CmdRemoveViewers() *cobra.Command {
 			}
 
 			notiForViewers := fmt.Sprintf("%s has removed read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
-
 
 			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),

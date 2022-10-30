@@ -11,18 +11,18 @@ import (
 func TestMsgSetProviderIp_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgSetProviderIp
+		msg  MsgSetProviderIP
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgSetProviderIp{
+			msg: MsgSetProviderIP{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgSetProviderIp{
+			msg: MsgSetProviderIP{
 				Creator: sample.AccAddress(),
 			},
 		},

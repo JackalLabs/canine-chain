@@ -181,7 +181,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.V
 	if height%dayBlocks == 0 {
 		fmt.Printf("%s\n", "checking blocks")
 
-		var networkSize int64 = 0
+		var networkSize int64
 		for i := 0; i < len(allDeals); i++ {
 			deal := allDeals[i]
 			ss, ok := sdk.NewIntFromString(deal.Filesize)

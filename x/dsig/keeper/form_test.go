@@ -11,6 +11,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
+//nolint:unused
 func createNForm(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Form {
 	items := make([]types.Form, n)
 	for i := range items {
