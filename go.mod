@@ -46,6 +46,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/spf13/viper v1.13.0 // indirect
+	github.com/zondax/ledger-go v0.12.2 // indirect
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
 )
 
@@ -65,7 +66,7 @@ require (
 	github.com/cosmos/btcutil v1.0.4 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
-	github.com/cosmos/ledger-cosmos-go v0.11.1 // indirect
+	github.com/cosmos/ledger-cosmos-go v0.11.2-0.20220811092532-036a277666f3 // indirect
 	github.com/cosmos/ledger-go v0.9.3 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
