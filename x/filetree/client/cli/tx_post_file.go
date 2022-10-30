@@ -95,7 +95,6 @@ func CmdPostFile() *cobra.Command {
 
 			}
 
-
 			if len(viewersToNotify) > 0 {
 				viewersToNotify = viewersToNotify[:len(viewersToNotify)-1]
 			}
@@ -126,6 +125,7 @@ func CmdPostFile() *cobra.Command {
 				string(jsonEditors),
 				trackingNumber,
 
+				"",
 				"",
 				"",
 				"",

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	keepertest "dsig/testutil/keeper"
+	keepertest "github.com/jackal-dao/canine/testutil/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/dsig/keeper"

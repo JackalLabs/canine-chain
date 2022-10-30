@@ -2,16 +2,10 @@ package keeper_test
 
 import (
 	"strconv"
-	"testing"
-
-	"github.com/jackal-dao/canine/testutil/nullify"
-
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackal-dao/canine/x/dsig/keeper"
 	"github.com/jackal-dao/canine/x/dsig/types"
-	"github.com/stretchr/testify/require"
 )
 
 // Prevent strconv unused error
@@ -27,6 +21,7 @@ func createNForm(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Form {
 	return items
 }
 
+/*
 func TestFormGet(t *testing.T) {
 	keeper, ctx := keepertest.DsigKeeper(t)
 	items := createNForm(keeper, ctx, 10)
@@ -41,7 +36,9 @@ func TestFormGet(t *testing.T) {
 		)
 	}
 }
+*/
 
+/*
 func TestFormRemove(t *testing.T) {
 	keeper, ctx := keepertest.DsigKeeper(t)
 	items := createNForm(keeper, ctx, 10)
@@ -55,6 +52,9 @@ func TestFormRemove(t *testing.T) {
 		require.False(t, found)
 	}
 }
+*/
+
+/*
 
 func TestFormGetAll(t *testing.T) {
 	keeper, ctx := keepertest.DsigKeeper(t)
@@ -64,3 +64,5 @@ func TestFormGetAll(t *testing.T) {
 		nullify.Fill(keeper.GetAllForm(ctx)),
 	)
 }
+
+*/

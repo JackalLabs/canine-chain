@@ -28,7 +28,7 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	chars := strings.Count(name, "")
 
-	var baseCost int64 = getCost(tld)
+	baseCost := getCost(tld)
 
 	var cost int64
 

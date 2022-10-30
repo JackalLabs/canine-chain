@@ -38,7 +38,6 @@ func CmdMakeRoot() *cobra.Command {
 				return err
 			}
 
-
 			trimMerklePath := strings.TrimSuffix(argRootHashPath, "/")
 			merklePath := types.MerklePath(trimMerklePath)
 
@@ -53,15 +52,16 @@ func CmdMakeRoot() *cobra.Command {
 					continue
 				}
 
-
-				//Of the list of editors is to allow a user to invite others to write to their root folder.
+				// Of the list of editors is to allow a user to invite others to write to their root folder.
 
 				h := sha256.New()
 				h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
-				hash := h.Sum(nil)
 
-				addressString := fmt.Sprintf("%x", hash)
+				// have commented out hash and addressString because they're unused.
 
+				//			hash := h.Sum(nil)
+
+				//			addressString := fmt.Sprintf("%x", hash)
 
 			}
 
@@ -75,7 +75,6 @@ func CmdMakeRoot() *cobra.Command {
 			hash := h.Sum(nil)
 
 			accountHash := fmt.Sprintf("%x", hash)
-
 
 			msg := types.NewMsgMakeRoot(
 				clientCtx.GetFromAddress().String(),

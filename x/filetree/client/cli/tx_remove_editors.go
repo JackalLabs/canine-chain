@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -10,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
 	"github.com/jackal-dao/canine/x/filetree/types"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +30,7 @@ func CmdRemoveEditors() *cobra.Command {
 				return err
 			}
 
-			fileQueryClient := types.NewQueryClient(clientCtx)
+			//		fileQueryClient := types.NewQueryClient(clientCtx) //commented out because unused.
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
@@ -41,23 +39,23 @@ func CmdRemoveEditors() *cobra.Command {
 			var editorIds []string
 			var editorsToNotify []string
 
+			// note: in this for loop I've commented out logic because it's not used.
 			for _, v := range editorAddresses {
 				if len(v) < 1 {
 					continue
 				}
 
-				params := &types.QueryGetFilesRequest{
-					Address:      merklePath,
-					OwnerAddress: ownerChainAddress,
-				}
+				//				params := &types.QueryGetFilesRequest{
+				//					Address:      merklePath,
+				//					OwnerAddress: ownerChainAddress,
+				//				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
-				if err != nil {
-					return types.ErrFileNotFound
-				}
+				//				file, err := fileQueryClient.Files(context.Background(), params)
+				//				if err != nil {
+				//					return types.ErrFileNotFound
+				//				}
 
-
-				editorIds = append(editorIds, newEditorID)
+				//				editorIds = append(editorIds, newEditorID)
 				editorsToNotify = append(editorsToNotify, v)
 
 			}

@@ -30,9 +30,9 @@ func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyR
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name does not exist or has expired.")
 	}
 
-	block_height := ctx.BlockHeight()
+	blockHeight := ctx.BlockHeight()
 
-	if block_height > name.Expires {
+	if blockHeight > name.Expires {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 	}
 

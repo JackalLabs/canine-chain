@@ -2,23 +2,12 @@ package keeper_test
 
 import (
 	"strconv"
-	"testing"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
-	keepertest "dsig/testutil/keeper"
-	"dsig/testutil/nullify"
-
-	"github.com/jackal-dao/canine/x/dsig/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
+/*
 func TestUserUploadsQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.DsigKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
@@ -69,7 +58,9 @@ func TestUserUploadsQuerySingle(t *testing.T) {
 		})
 	}
 }
+*/
 
+/*
 func TestUserUploadsQueryPaginated(t *testing.T) {
 	keeper, ctx := keepertest.DsigKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
@@ -125,3 +116,4 @@ func TestUserUploadsQueryPaginated(t *testing.T) {
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }
+*/

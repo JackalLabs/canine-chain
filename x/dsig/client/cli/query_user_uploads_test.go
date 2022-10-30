@@ -12,8 +12,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"dsig/testutil/network"
-	"dsig/testutil/nullify"
+	"github.com/jackal-dao/canine/testutil/network"
+	"github.com/jackal-dao/canine/testutil/nullify"
 
 	"github.com/jackal-dao/canine/x/dsig/client/cli"
 	"github.com/jackal-dao/canine/x/dsig/types"

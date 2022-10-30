@@ -23,6 +23,7 @@ var (
 	_ = baseapp.Paramspace
 )
 
+//nolint:unused,gosec // these aren't hard coded credentials and are used for tests...
 const (
 	opWeightMsgRegister = "op_weight_msg_register"
 	// TODO: Determine the simulation weight value
