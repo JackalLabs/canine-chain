@@ -6,7 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 )
 
 // Calculate amount of pool coins to deposit to get desired amount of LPToken.
@@ -47,7 +47,6 @@ func CoinsToDepositForLPToken(pool types.LPool, desiredAmount sdk.Int) (sdk.Coin
 //	liquidity pair.
 //	This function returns amount of y to make the valid liquidity pair.
 func MakeValidPair(pool types.LPool, deposit sdk.Coin) (sdk.Coins, error) {
-
 	poolCoins := sdk.NewCoins(pool.Coins...)
 	totalLPToken, _ := sdk.NewIntFromString(pool.LPTokenBalance)
 	if totalLPToken.IsZero() {
@@ -101,7 +100,6 @@ func MakeValidPair(pool types.LPool, deposit sdk.Coin) (sdk.Coins, error) {
 // Calculate amount of LPToken (sdk.Int) to be given out based on deposits.
 // If provided deposits are not same value, it'll return error.
 func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, error) {
-
 	// Check if pool is being initiated
 	if pool.LPTokenBalance == "" {
 
@@ -114,7 +112,6 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 		}
 
 		amount, err := x.ApproxSqrt()
-
 		if err != nil {
 			return sdk.ZeroInt(), err
 		}
@@ -181,7 +178,6 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 }
 
 func CalculatePoolShareBurnReturn(pool types.LPool, burnAmt sdk.Int) (sdk.Coins, error) {
-
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
 	totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)

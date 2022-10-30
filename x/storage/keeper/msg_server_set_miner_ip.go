@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (k msgServer) SetProviderIp(goCtx context.Context, msg *types.MsgSetProviderIp) (*types.MsgSetProviderIpResponse, error) {

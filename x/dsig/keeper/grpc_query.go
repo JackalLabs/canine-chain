@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 )
 
 var _ types.QueryServer = Keeper{}

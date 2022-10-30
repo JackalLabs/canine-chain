@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func SimulateMsgRemoveViewers(

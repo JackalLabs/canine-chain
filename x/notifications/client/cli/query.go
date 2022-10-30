@@ -10,7 +10,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -24,14 +24,14 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	//Commenting out some useless queries for now
+	// Commenting out some useless queries for now
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdListNotifications())
-	//cmd.AddCommand(CmdShowNotifications())
+	// cmd.AddCommand(CmdShowNotifications())
 	cmd.AddCommand(CmdFilteredNotifications())
 
 	cmd.AddCommand(CmdListNotiCounter())
-	//cmd.AddCommand(CmdShowNotiCounter())
+	// cmd.AddCommand(CmdShowNotiCounter())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

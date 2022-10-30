@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +56,7 @@ func CmdRemoveEditors() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
+				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
 				editorIds = append(editorIds, newEditorID)
 				editorsToNotify = append(editorsToNotify, v)
 

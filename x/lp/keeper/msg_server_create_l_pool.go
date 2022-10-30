@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 )
 
 /*
@@ -22,7 +22,6 @@ import (
 			7. Swap fee, lock duration and penalty percentage are non-negative
 */
 func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPool) error {
-
 	if err := msg.ValidateBasic(); err != nil {
 		return err
 	}
@@ -59,7 +58,6 @@ func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPoo
 
 	// Validate AMM id
 	_, err := types.GetAMM(msg.Amm_Id)
-
 	if err != nil {
 		return sdkerrors.Wrapf(err, "AMM with id %v does not exist",
 			msg.Amm_Id)
@@ -79,7 +77,6 @@ func (k msgServer) CreateLPool(
 	*types.MsgCreateLPoolResponse,
 	error,
 ) {
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if err := k.ValidateCreateLPoolMsg(ctx, msg); err != nil {
@@ -94,7 +91,6 @@ func (k msgServer) CreateLPool(
 	normCoins := sdk.NormalizeCoins(msg.Coins)
 
 	shareAmount, err := CalculatePoolShare(pool, normCoins)
-
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
 			err,

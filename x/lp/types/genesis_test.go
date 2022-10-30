@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,7 +21,6 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-
 				LPoolList: []types.LPool{
 					{
 						Index: "0",

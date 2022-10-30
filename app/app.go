@@ -109,36 +109,36 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmappparams "github.com/jackal-dao/canine/app/params"
+	wasmappparams "github.com/jackalLabs/canine-chain/app/params"
 
-	mint "github.com/jackal-dao/canine/x/jklmint"
-	mintkeeper "github.com/jackal-dao/canine/x/jklmint/keeper"
-	minttypes "github.com/jackal-dao/canine/x/jklmint/types"
+	mint "github.com/jackalLabs/canine-chain/x/jklmint"
+	mintkeeper "github.com/jackalLabs/canine-chain/x/jklmint/keeper"
+	minttypes "github.com/jackalLabs/canine-chain/x/jklmint/types"
 
-	rnsmodule "github.com/jackal-dao/canine/x/rns"
-	rnsmodulekeeper "github.com/jackal-dao/canine/x/rns/keeper"
-	rnsmoduletypes "github.com/jackal-dao/canine/x/rns/types"
+	rnsmodule "github.com/jackalLabs/canine-chain/x/rns"
+	rnsmodulekeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 
-	storagemodule "github.com/jackal-dao/canine/x/storage"
-	storagemodulekeeper "github.com/jackal-dao/canine/x/storage/keeper"
-	storagemoduletypes "github.com/jackal-dao/canine/x/storage/types"
+	storagemodule "github.com/jackalLabs/canine-chain/x/storage"
+	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
-	dsigmodule "github.com/jackal-dao/canine/x/dsig"
-	dsigmodulekeeper "github.com/jackal-dao/canine/x/dsig/keeper"
-	dsigmoduletypes "github.com/jackal-dao/canine/x/dsig/types"
+	dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
+	dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
+	dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
 
-	filetreemodule "github.com/jackal-dao/canine/x/filetree"
-	filetreemodulekeeper "github.com/jackal-dao/canine/x/filetree/keeper"
-	filetreemoduletypes "github.com/jackal-dao/canine/x/filetree/types"
+	filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 
-	notificationsmodule "github.com/jackal-dao/canine/x/notifications"
-	notificationsmodulekeeper "github.com/jackal-dao/canine/x/notifications/keeper"
-	notificationsmoduletypes "github.com/jackal-dao/canine/x/notifications/types"
+	notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
+	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
-	docs "github.com/jackal-dao/canine/docs"
+	docs "github.com/jackalLabs/canine-chain/docs"
 )
 
 const appName = "WasmApp"
@@ -153,7 +153,7 @@ var (
 	ProposalsEnabled = "false"
 	// If set to non-empty string it must be comma-separated list of values that are all a subset
 	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
-	// https://github.com/jackal-dao/canine/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
+	// https://github.com/jackalLabs/canine-chain/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 )
 

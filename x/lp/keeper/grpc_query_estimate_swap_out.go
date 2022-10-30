@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -36,7 +36,6 @@ func (k Keeper) EstimateSwapOut(
 	AMM, _ := types.GetAMM(pool.AMM_Id)
 
 	returnAmt, err := AMM.EstimateReturn(poolCoins, depositCoins)
-
 	if err != nil {
 		// TODO: return better msg
 		return nil, status.Error(codes.InvalidArgument, "invalid request")

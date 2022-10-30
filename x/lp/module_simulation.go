@@ -9,9 +9,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/testutil/sample"
-	lpsimulation "github.com/jackal-dao/canine/x/lp/simulation"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/testutil/sample"
+	lpsimulation "github.com/jackalLabs/canine-chain/x/lp/simulation"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 )
 
 // avoid unused import issue
@@ -63,7 +63,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 

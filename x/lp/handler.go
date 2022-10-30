@@ -3,8 +3,8 @@ package lp
 import (
 	"fmt"
 
-	"github.com/jackal-dao/canine/x/lp/keeper"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/keeper"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"

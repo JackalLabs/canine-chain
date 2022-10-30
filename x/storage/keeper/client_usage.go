@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // SetClientUsage set a specific clientUsage in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetClientUsage(ctx sdk.Context, clientUsage types.ClientUsage) {
 func (k Keeper) GetClientUsage(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.ClientUsage, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClientUsageKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetClientUsage(
 func (k Keeper) RemoveClientUsage(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClientUsageKeyPrefix))
 	store.Delete(types.ClientUsageKey(

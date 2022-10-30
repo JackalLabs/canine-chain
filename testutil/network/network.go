@@ -18,7 +18,7 @@ import (
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmdb "github.com/tendermint/tm-db"
 
-	"github.com/jackal-dao/canine/app"
+	"github.com/jackalLabs/canine-chain/app"
 )
 
 type (

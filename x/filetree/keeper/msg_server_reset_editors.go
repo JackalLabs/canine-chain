@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditors) (*types.MsgResetEditorsResponse, error) {
@@ -24,7 +24,7 @@ func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditor
 	ownerEditorAddress := MakeEditorAddress(file.TrackingNumber, msg.Creator)
 
 	peacc := file.EditAccess
-	//Unmarshall current edit access to this blank map
+	// Unmarshall current edit access to this blank map
 	jeacc := make(map[string]string)
 	json.Unmarshal([]byte(peacc), &jeacc)
 

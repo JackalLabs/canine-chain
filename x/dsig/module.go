@@ -16,9 +16,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackal-dao/canine/x/dsig/client/cli"
-	"github.com/jackal-dao/canine/x/dsig/keeper"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/client/cli"
+	"github.com/jackalLabs/canine-chain/x/dsig/keeper"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 )
 
 var (

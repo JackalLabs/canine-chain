@@ -4,7 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +15,6 @@ func CmdCreateNotifications() *cobra.Command {
 		Short: "Create a new notifications",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			// Get value arguments
 			argNotification := args[0]
 			argAddress := args[1]

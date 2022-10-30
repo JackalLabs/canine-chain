@@ -2,8 +2,8 @@ package dsig
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/dsig/keeper"
-	"github.com/jackal-dao/canine/x/dsig/types"
+	"github.com/jackalLabs/canine-chain/x/dsig/keeper"
+	"github.com/jackalLabs/canine-chain/x/dsig/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

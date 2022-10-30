@@ -10,8 +10,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	"github.com/jackal-dao/canine/testutil/network"
-	"github.com/jackal-dao/canine/x/storage/client/cli"
+	"github.com/jackalLabs/canine-chain/testutil/network"
+	"github.com/jackalLabs/canine-chain/x/storage/client/cli"
 )
 
 // Prevent strconv unused error

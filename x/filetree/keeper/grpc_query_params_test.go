@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testkeeper "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	testkeeper "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/stretchr/testify/require"
 )
 

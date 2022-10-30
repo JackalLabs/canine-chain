@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/lp/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -32,7 +32,6 @@ func (k Keeper) EstimateSwapIn(
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
 	desiredCoins, err := sdk.ParseCoinNormalized(req.OutputCoins)
-
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, sdkerrors.ErrInvalidRequest.Error())
 	}
@@ -46,7 +45,6 @@ func (k Keeper) EstimateSwapIn(
 	AMM, _ := types.GetAMM(pool.AMM_Id)
 
 	estDeposit, err := AMM.EstimateDeposit(poolCoins, sdk.NewCoins(desiredCoins))
-
 	if err != nil {
 		return nil, err
 	}

@@ -6,8 +6,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/jklmint/keeper"
-	"github.com/jackal-dao/canine/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/x/jklmint/keeper"
+	"github.com/jackalLabs/canine-chain/x/jklmint/types"
 )
 
 // BeginBlocker mints new tokens for the previous block.

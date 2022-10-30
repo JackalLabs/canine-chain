@@ -7,7 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgInitResponse, error) {
@@ -38,17 +38,15 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 	}
 
 	whois, isFound := k.GetNames(ctx, name, "jkl")
-	var block_height = ctx.BlockHeight()
+	block_height := ctx.BlockHeight()
 
 	if isFound {
-
 		if block_height < whois.Expires {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 		}
-
 	}
 
-	var time = 6311520 + block_height
+	time := 6311520 + block_height
 
 	emptySubdomains := []*types.Names{}
 

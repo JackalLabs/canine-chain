@@ -18,9 +18,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackal-dao/canine/x/storage/client/cli"
-	"github.com/jackal-dao/canine/x/storage/keeper"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/client/cli"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 var (
@@ -168,7 +168,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
-func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Every x blocks we check for prooved deals
+func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // Every x blocks we check for prooved deals
 
 	allDeals := am.keeper.GetAllActiveDeals(ctx)
 
@@ -176,7 +176,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 
 	const fchunks int64 = 1024
 
-	var dayBlocks int64 = 14400 //10 blocks is about 1 minute
+	var dayBlocks int64 = 14400 // 10 blocks is about 1 minute
 	dayBlocks = 10 * 5
 
 	fmt.Printf("blockdiff : %d\n", height%dayBlocks)
@@ -264,7 +264,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 					provider.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
 					am.keeper.SetProviders(ctx, provider)
 
-					//Creating new stray file from the burned active deal
+					// Creating new stray file from the burned active deal
 					stray_deal := types.Strays{
 						Cid:      deal.Cid,
 						Fid:      deal.Fid,
@@ -356,7 +356,6 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { //Ev
 
 		}
 	}
-
 }
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
