@@ -6,7 +6,7 @@ package keeper_test
 
 // TODO: rewrite tests without ignite
 
-//func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {
+// func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {
 // k, ctx := keepertest.JklmintKeeper(t)
 // return keeper.NewMsgServerImpl(*k), sdk.WrapSDKContext(ctx)
-//}
+// }
