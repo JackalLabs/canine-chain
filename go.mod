@@ -22,7 +22,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
-	github.com/tendermint/spm v0.1.8
+	github.com/tendermint/spm v0.1.8 //note: this is a severe security risk
 	github.com/tendermint/starport v0.19.5 //note: this is a severe security risk
 	github.com/tendermint/tendermint v0.34.22
 	github.com/tendermint/tm-db v0.6.7
