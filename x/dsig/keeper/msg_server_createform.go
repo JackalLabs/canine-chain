@@ -67,7 +67,7 @@ func (k msgServer) Createform(goCtx context.Context, msg *types.MsgCreateform) (
 		Cid:     msg.Creator,
 		Fid:     msg.Fid,
 		Signees: signeejson,
-		Ffid:    string(hex.EncodeToString(ffid[:])),
+		Ffid:    hex.EncodeToString(ffid[:]),
 	}
 
 	// checking if form exists
@@ -77,5 +77,5 @@ func (k msgServer) Createform(goCtx context.Context, msg *types.MsgCreateform) (
 	}
 	k.SetForm(ctx, newForm)
 
-	return &types.MsgCreateformResponse{newForm.Ffid}, nil
+	return &types.MsgCreateformResponse{Ffid: newForm.Ffid}, nil
 }

@@ -22,7 +22,8 @@ func (k msgServer) SetCounter(goCtx context.Context, msg *types.MsgSetCounter) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "counter already set")
 	}
 
-	placeholderMap = append(placeholderMap, msg.Creator)
+	var placeholderMap []string
+	placeholderMap = append(placeholderMap, msg.Creator) // note: idk
 	marshalledSenders, err := json.Marshal(placeholderMap)
 	if err != nil {
 		return nil, types.ErrCantUnmarshall

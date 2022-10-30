@@ -39,11 +39,12 @@ func JklmintKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	k := keeper.NewKeeper(
 		cdc,
 		storeKey,
-		memStoreKey,
 		paramsSubspace,
+		memStoreKey,
 		nil,
 		nil,
-		nil,
+		"",
+		"",
 	)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
