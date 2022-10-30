@@ -1,7 +1,6 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -23,7 +22,7 @@ func GetAMM(id uint32) (AMM, error) {
 	case 0:
 		return backup{}, nil
 	default:
-		return backup{}, errors.New(fmt.Sprintf("AMM model id not found: %v", id))
+		return backup{}, fmt.Errorf("AMM model id not found: %v", id)
 	}
 }
 

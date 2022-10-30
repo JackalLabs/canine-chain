@@ -1,13 +1,6 @@
 package keeper
 
-import (
-	"context"
-	"encoding/json"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/notifications/types"
-)
-
+/*
 func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (*types.MsgAddSendersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -44,6 +37,7 @@ func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (
 
 	return &types.MsgAddSendersResponse{}, nil
 }
+*/
 
 // func isSender(currentSenders []string, user string) bool {
 

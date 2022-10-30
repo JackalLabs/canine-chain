@@ -3,10 +3,11 @@ package lp_test
 import (
 	"testing"
 
-	keepertest "canine-LP/testutil/keeper"
-	"canine-LP/testutil/nullify"
-	"canine-LP/x/lp"
-	"canine-LP/x/lp/types"
+	"github.com/jackal-dao/canine/testutil/nullify"
+	"github.com/jackal-dao/canine/x/lp"
+	"github.com/jackal-dao/canine/x/lp/types"
+
+	keepertest "github.com/jackal-dao/canine/testutil/keeper"
 	"github.com/stretchr/testify/require"
 )
 

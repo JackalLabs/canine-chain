@@ -23,8 +23,8 @@ func TestNotificationsMsgServerCreate(t *testing.T) {
 	creator := "A"
 	for i := 0; i < 5; i++ {
 		expected := &types.MsgCreateNotifications{
-			Creator: creator,
-			Count:   uint64(i),
+			Creator:      creator,
+			Notification: notification,
 		}
 		_, err := srv.CreateNotifications(wctx, expected)
 		require.NoError(t, err)

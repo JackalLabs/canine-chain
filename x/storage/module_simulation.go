@@ -23,7 +23,7 @@ var (
 	_ = baseapp.Paramspace
 )
 
-//nolint:gosec these aren't hard-coded credentials.
+//nolint:gosec // these aren't hard-coded credentials.
 const (
 	opWeightMsgPostContract = "op_weight_msg_post_contract"
 	// TODO: Determine the simulation weight value
@@ -89,9 +89,9 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteProviders int = 100
 
-	opWeightMsgSetProviderIp = "op_weight_msg_set_provider_ip"
+	opWeightMsgSetProviderIP = "op_weight_msg_set_provider_ip"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetProviderIp int = 100
+	defaultWeightMsgSetProviderIP int = 100
 
 	opWeightMsgSetProviderTotalspace = "op_weight_msg_set_provider_totalspace"
 	// TODO: Determine the simulation weight value
@@ -357,15 +357,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		storagesimulation.SimulateMsgDeleteProviders(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgSetProviderIp int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetProviderIp, &weightMsgSetProviderIp, nil,
+	var weightMsgSetProviderIP int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetProviderIP, &weightMsgSetProviderIP, nil,
 		func(_ *rand.Rand) {
-			weightMsgSetProviderIp = defaultWeightMsgSetProviderIp
+			weightMsgSetProviderIP = defaultWeightMsgSetProviderIP
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgSetProviderIp,
-		storagesimulation.SimulateMsgSetProviderIp(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgSetProviderIP,
+		storagesimulation.SimulateMsgSetProviderIP(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgSetProviderTotalspace int

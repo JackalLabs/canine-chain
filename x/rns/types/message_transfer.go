@@ -13,7 +13,7 @@ func NewMsgTransfer(creator string, name string, receiver string) *MsgTransfer {
 	return &MsgTransfer{
 		Creator:  creator,
 		Name:     name,
-		Reciever: receiver, //nolint:misspell note: there's a spelling issue here.
+		Receiver: receiver, //nolint:misspell note: there's a spelling issue here.
 	}
 }
 

@@ -65,7 +65,7 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	}
 
 	h := sha256.New()
-	io.WriteString(h, fmt.Sprintf("%s%s%s", msg.Signee, msg.Creator, msg.Fid))
+	io.WriteString(h, fmt.Sprintf("%s%s%s", msg.Signee, msg.Creator, msg.Fid)) //nolint:errcheck
 	hashName := h.Sum(nil)
 
 	cid := fmt.Sprintf("%x", hashName)

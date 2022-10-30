@@ -10,7 +10,7 @@ import (
 	"github.com/jackal-dao/canine/x/storage/types"
 )
 
-func SimulateMsgSetProviderIp(
+func SimulateMsgSetProviderIP(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,

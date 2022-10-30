@@ -79,7 +79,7 @@ func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Rout
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx))
+	types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)) //nolint:errcheck
 }
 
 // GetTxCmd returns the capability module's root tx command.
@@ -242,14 +242,14 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.V
 					continue
 				}
 
-				if sb.Int64() >= height-int64(dayBlocks) {
+				if sb.Int64() >= height-dayBlocks {
 					continue
 				}
 
 				misses := intt.Int64() + 1
-				const misses_to_burn int64 = 3
+				const missesToBurn int64 = 3
 
-				if misses > misses_to_burn {
+				if misses > missesToBurn {
 					provider, ok := am.keeper.GetProviders(ctx, deal.Provider)
 					if !ok {
 						continue
@@ -262,14 +262,14 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.V
 					provider.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
 					am.keeper.SetProviders(ctx, provider)
 
-					stray_deal := types.Strays{
+					strayDeal := types.Strays{
 						Cid:      deal.Cid,
 						Fid:      deal.Fid,
 						Signee:   deal.Signee,
 						Filesize: deal.Filesize,
 						Merkle:   deal.Merkle,
 					}
-					am.keeper.SetStrays(ctx, stray_deal)
+					am.keeper.SetStrays(ctx, strayDeal)
 					am.keeper.RemoveActiveDeals(ctx, deal.Cid)
 					continue
 				}
@@ -344,7 +344,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.V
 
 			balance := am.bankKeeper.GetBalance(ctx, am.accountKeeper.GetModuleAddress(types.ModuleName), "ujkl")
 
-			am.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(balance))
+			am.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(balance)) //nolint:errcheck
 
 			fmt.Printf("%s\n", deal.Cid)
 
