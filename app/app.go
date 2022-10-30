@@ -119,22 +119,23 @@ import (
 	rnsmodulekeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 
-	storagemodule "github.com/jackalLabs/canine-chain/x/storage"
-	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	/*
+		storagemodule "github.com/jackalLabs/canine-chain/x/storage"
+		storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+		storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
-	dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
-	dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
-	dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
+		dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
+		dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
+		dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
 
-	filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
-	filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+		filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
+		filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
+		filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 
-	notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
-	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
-
+		notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
+		notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
+		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
+	*/
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
@@ -232,10 +233,12 @@ var (
 		ica.AppModuleBasic{},
 		intertx.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
-		storagemodule.AppModuleBasic{},
-		dsigmodule.AppModuleBasic{},
-		filetreemodule.AppModuleBasic{},
-		notificationsmodule.AppModuleBasic{},
+		/*
+			storagemodule.AppModuleBasic{},
+			dsigmodule.AppModuleBasic{},
+			filetreemodule.AppModuleBasic{},
+			notificationsmodule.AppModuleBasic{},
+		*/
 	)
 
 	// module account permissions
@@ -250,8 +253,10 @@ var (
 		icatypes.ModuleName:            nil,
 		wasm.ModuleName:                {authtypes.Burner},
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
-		dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
+		/*
+			storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
+			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
+		*/
 	}
 )
 
@@ -305,12 +310,14 @@ type WasmApp struct {
 
 	RnsKeeper rnsmodulekeeper.Keeper
 
-	StorageKeeper storagemodulekeeper.Keeper
+	/*
+		StorageKeeper storagemodulekeeper.Keeper
 
-	DsigKeeper     dsigmodulekeeper.Keeper
-	FileTreeKeeper filetreemodulekeeper.Keeper
+		DsigKeeper     dsigmodulekeeper.Keeper
+		FileTreeKeeper filetreemodulekeeper.Keeper
 
-	NotificationsKeeper notificationsmodulekeeper.Keeper
+		NotificationsKeeper notificationsmodulekeeper.Keeper
+	*/
 
 	// the module manager
 	mm *module.Manager
@@ -350,8 +357,11 @@ func NewWasmApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
-		notificationsmoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey,
+		/*
+			storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
+			notificationsmoduletypes.StoreKey,
+		*/
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -423,6 +433,8 @@ func NewWasmApp(
 		app.bankKeeper,
 		app.getSubspace(stakingtypes.ModuleName),
 	)
+
+	// mintkeeper needs to be made to not reply on the storage module.
 	app.mintKeeper = mintkeeper.NewKeeper(
 		appCodec,
 		keys[minttypes.StoreKey],
@@ -431,8 +443,9 @@ func NewWasmApp(
 		app.accountKeeper,
 		app.bankKeeper,
 		authtypes.FeeCollectorName,
-		storagemoduletypes.ModuleName,
+	//	storagemoduletypes.ModuleName,
 	)
+
 	app.distrKeeper = distrkeeper.NewKeeper(
 		appCodec,
 		keys[distrtypes.StoreKey],
@@ -582,43 +595,44 @@ func NewWasmApp(
 	)
 	rnsModule := rnsmodule.NewAppModule(appCodec, app.RnsKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
-		appCodec,
-		keys[storagemoduletypes.StoreKey],
-		keys[storagemoduletypes.MemStoreKey],
-		app.getSubspace(storagemoduletypes.ModuleName),
-		app.bankKeeper,
-	)
-	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.accountKeeper, app.bankKeeper)
+	/*
+		app.StorageKeeper = *storagemodulekeeper.NewKeeper(
+			appCodec,
+			keys[storagemoduletypes.StoreKey],
+			keys[storagemoduletypes.MemStoreKey],
+			app.getSubspace(storagemoduletypes.ModuleName),
+			app.bankKeeper,
+		)
+		storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.DsigKeeper = *dsigmodulekeeper.NewKeeper(
-		appCodec,
-		keys[dsigmoduletypes.StoreKey],
-		keys[dsigmoduletypes.MemStoreKey],
-		app.getSubspace(dsigmoduletypes.ModuleName),
+		app.DsigKeeper = *dsigmodulekeeper.NewKeeper(
+			appCodec,
+			keys[dsigmoduletypes.StoreKey],
+			keys[dsigmoduletypes.MemStoreKey],
+			app.getSubspace(dsigmoduletypes.ModuleName),
 
-		app.accountKeeper,
-	)
-	dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.accountKeeper, app.bankKeeper)
+			app.accountKeeper,
+		)
+		dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
-		appCodec,
-		keys[notificationsmoduletypes.StoreKey],
-		keys[notificationsmoduletypes.MemStoreKey],
-		app.getSubspace(notificationsmoduletypes.ModuleName),
-	)
-	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.accountKeeper, app.bankKeeper)
+		app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
+			appCodec,
+			keys[notificationsmoduletypes.StoreKey],
+			keys[notificationsmoduletypes.MemStoreKey],
+			app.getSubspace(notificationsmoduletypes.ModuleName),
+		)
+		notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
-		appCodec,
-		keys[filetreemoduletypes.StoreKey],
-		keys[filetreemoduletypes.MemStoreKey],
-		app.getSubspace(filetreemoduletypes.ModuleName),
-		app.RnsKeeper,
-		app.NotificationsKeeper,
-	)
-	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
-
+		app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
+			appCodec,
+			keys[filetreemoduletypes.StoreKey],
+			keys[filetreemoduletypes.MemStoreKey],
+			app.getSubspace(filetreemoduletypes.ModuleName),
+			app.RnsKeeper,
+			app.NotificationsKeeper,
+		)
+		filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
+	*/
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 
@@ -679,10 +693,12 @@ func NewWasmApp(
 		interTxModule,
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 		rnsModule,
-		storageModule,
-		dsigModule,
-		filetreeModule,
-		notificationsModule,
+		/*
+			storageModule,
+			dsigModule,
+			filetreeModule,
+			notificationsModule,
+		*/
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -713,10 +729,12 @@ func NewWasmApp(
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
-		storagemoduletypes.ModuleName,
-		dsigmoduletypes.ModuleName,
-		filetreemoduletypes.ModuleName,
-		notificationsmoduletypes.ModuleName,
+		/*
+			storagemoduletypes.ModuleName,
+			dsigmoduletypes.ModuleName,
+			filetreemoduletypes.ModuleName,
+			notificationsmoduletypes.ModuleName,
+		*/
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -743,10 +761,12 @@ func NewWasmApp(
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
-		storagemoduletypes.ModuleName,
-		dsigmoduletypes.ModuleName,
-		filetreemoduletypes.ModuleName,
-		notificationsmoduletypes.ModuleName,
+		/*
+			storagemoduletypes.ModuleName,
+			dsigmoduletypes.ModuleName,
+			filetreemoduletypes.ModuleName,
+			notificationsmoduletypes.ModuleName,
+		*/
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -781,10 +801,12 @@ func NewWasmApp(
 		// wasm after ibc transfer
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
-		storagemoduletypes.ModuleName,
-		dsigmoduletypes.ModuleName,
-		filetreemoduletypes.ModuleName,
-		notificationsmoduletypes.ModuleName,
+		/*
+			storagemoduletypes.ModuleName,
+			dsigmoduletypes.ModuleName,
+			filetreemoduletypes.ModuleName,
+			notificationsmoduletypes.ModuleName,
+		*/
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -817,7 +839,7 @@ func NewWasmApp(
 		ibc.NewAppModule(app.ibcKeeper),
 		transferModule,
 		rnsModule,
-		storageModule,
+		// storageModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -968,7 +990,6 @@ func (app *WasmApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APICo
 	// register app's  routes.
 	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
 	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(appName, "/static/openapi.yml"))
-
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
