@@ -31,6 +31,7 @@ func TestFilesGet(t *testing.T) {
 	for _, item := range items {
 		rst, found := keeper.GetFiles(ctx,
 			item.Address,
+			item.Owner,
 		)
 		require.True(t, found)
 		require.Equal(t,
@@ -39,15 +40,18 @@ func TestFilesGet(t *testing.T) {
 		)
 	}
 }
+
 func TestFilesRemove(t *testing.T) {
 	keeper, ctx := keepertest.FiletreeKeeper(t)
 	items := createNFiles(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveFiles(ctx,
 			item.Address,
+			item.Owner,
 		)
 		_, found := keeper.GetFiles(ctx,
 			item.Address,
+			item.Owner,
 		)
 		require.False(t, found)
 	}

@@ -53,7 +53,7 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	num_years, _ := sdk.NewIntFromString(msg.Years)
 
-	block_height := ctx.BlockHeight()
+	blockHeight := ctx.BlockHeight()
 
 	time := num_years.Int64() * 6311520
 
@@ -63,12 +63,12 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 		if whois.Value == owner.String() {
 			time = whois.Expires + time
 		} else {
-			if block_height < whois.Expires {
+			if blockHeight < whois.Expires {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 			}
 		}
 	} else {
-		time = time + block_height
+		time += blockHeight // this is a bit confusing.
 	}
 
 	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)
