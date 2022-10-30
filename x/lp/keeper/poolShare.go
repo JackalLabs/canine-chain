@@ -60,10 +60,9 @@ func MakeValidPair(pool types.LPool, deposit sdk.Coin) (sdk.Coins, error) {
 	// Then, share = totalLPToken * xAmtInDeposit / xAmtInPool
 	xAmtInPool := poolCoins.AmountOf(xDenom)
 	if xAmtInPool.IsZero() {
-		return sdk.NewCoins(), errors.New(
-			fmt.Sprintf("coin %s in pool is zero, will not proceed to prevent"+
-				" division by zero",
-				xDenom))
+		return sdk.NewCoins(), fmt.Errorf("coin %s in pool is zero, will not proceed to prevent"+
+			" division by zero",
+			xDenom)
 	}
 	share := totalLPToken.Mul(deposit.Amount).Quo(xAmtInPool)
 
@@ -125,7 +124,7 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 	totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)
 
 	if !ok {
-		return sdk.ZeroInt(), errors.New("Failed to convert" +
+		return sdk.ZeroInt(), errors.New("failed to convert" +
 			" pool.LPTokenBalance to sdk.Int")
 	}
 
@@ -138,8 +137,7 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 	}
 
 	// Using Coin type to return precise error
-	var coinShares []sdk.Coin
-	coinShares = make([]sdk.Coin, 0)
+	coinShares := make([]sdk.Coin, 0)
 
 	for _, x := range depositCoins {
 		// Calculate shares and append it.
@@ -147,10 +145,10 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 		totalXInPool := poolCoins.AmountOf(x.GetDenom())
 
 		if totalXInPool.IsZero() {
-			return sdk.ZeroInt(), errors.New(fmt.Sprintf("Zero amount of coin %s,"+
+			return sdk.ZeroInt(), fmt.Errorf("zero amount of coin %s,"+
 				" will not proceed to prevent division by zero",
 				x.GetDenom(),
-			))
+			)
 		}
 
 		// share = totalLPToken * xAmtInDeposit / totalXInPool
@@ -164,12 +162,12 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 	// shareX0 == shareX1 == shareX2 ... shareXn
 	for _, x := range coinShares {
 		if !x.Amount.Equal(coinShares[0].Amount) {
-			return sdk.ZeroInt(), errors.New(
-				fmt.Sprintf("Same value of coin not provided. denom: %s,"+
+			return sdk.ZeroInt(),
+				fmt.Errorf("same value of coin not provided. denom: %s,"+
 					" value: %s",
 					x.Denom,
 					x.Amount.String(),
-				))
+				)
 		}
 	}
 
@@ -182,13 +180,13 @@ func CalculatePoolShareBurnReturn(pool types.LPool, burnAmt sdk.Int) (sdk.Coins,
 	totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)
 
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("Failed to convert LPTokenBalance to"+
-			" sdk.Int: %s", pool.LPTokenBalance))
+		return nil, fmt.Errorf("failed to convert LPTokenBalance to"+
+			" sdk.Int: %s", pool.LPTokenBalance)
 	}
 
 	if totalLPToken.IsZero() {
-		return nil, errors.New(fmt.Sprintf("Total LPtoken is zero." +
-			" Will not proceed to prevent divide by zero"))
+		return nil, fmt.Errorf("total LPtoken is zero." +
+			" Will not proceed to prevent divide by zero")
 	}
 
 	if burnAmt.GT(totalLPToken) {

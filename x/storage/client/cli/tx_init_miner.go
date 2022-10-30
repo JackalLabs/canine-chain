@@ -18,7 +18,7 @@ func CmdInitProvider() *cobra.Command {
 		Short: "Broadcast message init-provider",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argIp := args[0]
+			argIP := args[0]
 			argTotalspace := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -28,7 +28,7 @@ func CmdInitProvider() *cobra.Command {
 
 			msg := types.NewMsgInitProvider(
 				clientCtx.GetFromAddress().String(),
-				argIp,
+				argIP,
 				argTotalspace,
 			)
 			if err := msg.ValidateBasic(); err != nil {

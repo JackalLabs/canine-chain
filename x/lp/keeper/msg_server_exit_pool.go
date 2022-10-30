@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -61,9 +60,9 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 
 	pm, err := sdk.NewDecFromStr(pool.PenaltyMulti)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Failed to convert penalty"+
+		return nil, fmt.Errorf("failed to convert penalty"+
 			" multiplier; saved in invalid format: %s err: %s",
-			pool.PenaltyMulti, err))
+			pool.PenaltyMulti, err)
 	}
 
 	if ctx.BlockTime().Before(unlockTime) {

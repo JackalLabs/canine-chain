@@ -12,7 +12,7 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetProviderIp() *cobra.Command {
+func CmdSetProviderIP() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-provider-ip [ip]",
 		Short: "Broadcast message set-provider-ip",

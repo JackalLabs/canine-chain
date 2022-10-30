@@ -17,7 +17,7 @@ func SortDenoms(denoms []string) []string {
 
 // Return unsorted list of coin denoms
 func GetAllDenoms(coins sdk.Coins) []string {
-	var denoms []string
+	var denoms []string //nolint:prealloc
 
 	for _, coin := range coins {
 		denoms = append(denoms, coin.GetDenom())
@@ -136,6 +136,8 @@ func generatePoolName(coins sdk.Coins) string {
 }
 
 // Generate a denom unit for LPToken with itself as smallest unit.
+//
+//nolint:unused
 func generateLPTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUnit {
 	// More info about denom units:
 	// https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.46.0/x/bank/types#DenomUnit
@@ -146,6 +148,7 @@ func generateLPTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUni
 	return []*banktypes.DenomUnit{&tokenDenomUnit}
 }
 
+//nolint:unused
 func (k Keeper) registerLPToken(ctx sdk.Context, denom string) {
 	_, found := k.bankKeeper.GetDenomMetaData(ctx, denom)
 

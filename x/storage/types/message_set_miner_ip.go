@@ -9,7 +9,7 @@ const TypeMsgSetProviderIP = "set_provider_ip"
 
 var _ sdk.Msg = &MsgSetProviderIp{}
 
-func NewMsgSetProviderIp(creator string, ip string) *MsgSetProviderIp {
+func NewMsgSetProviderIP(creator string, ip string) *MsgSetProviderIp {
 	return &MsgSetProviderIp{
 		Creator: creator,
 		Ip:      ip,

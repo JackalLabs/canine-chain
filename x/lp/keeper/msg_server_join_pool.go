@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -42,10 +41,9 @@ func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) err
 		newUnlockTime := ctx.BlockTime().Add(newDuration)
 
 		if newUnlockTime.Before(oldUnlockTime) {
-			return errors.New(
-				fmt.Sprintf("new unlock time must be after old."+
-					" new: %s, old %s", TimeToString(newUnlockTime),
-					TimeToString(oldUnlockTime)))
+			return fmt.Errorf("new unlock time must be after old."+
+				" new: %s, old %s", TimeToString(newUnlockTime),
+				TimeToString(oldUnlockTime))
 		}
 	}
 

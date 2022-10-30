@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -34,8 +33,8 @@ func (k Keeper) ValidateCreateLPoolMsg(ctx sdk.Context, msg *types.MsgCreateLPoo
 	coins := sdk.NormalizeCoins(msg.Coins)
 
 	if uint32(coins.Len()) > maxPoolDenomCount {
-		return sdkerrors.Wrap(errors.New(fmt.Sprintf(
-			"pool can only balance %d coins", maxPoolDenomCount)),
+		return sdkerrors.Wrap(fmt.Errorf(
+			"pool can only balance %d coins", maxPoolDenomCount),
 			sdkerrors.ErrInvalidRequest.Error())
 	}
 
@@ -148,7 +147,7 @@ func (k msgServer) CreateLPool(
 
 	if sdkError != nil {
 		k.RemoveLPool(ctx, pool.Index)
-		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name)
+		k.EraseLProviderRecord(ctx, creatorAccAddr, pool.Name) //nolint:errcheck
 
 		return &types.MsgCreateLPoolResponse{}, sdkerrors.Wrapf(
 			sdkError,
