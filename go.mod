@@ -3,9 +3,9 @@ module github.com/jackal-dao/canine
 go 1.18
 
 require (
-	github.com/CosmWasm/wasmd v0.29.1
-	github.com/cosmos/cosmos-sdk v0.45.9
-	github.com/cosmos/ibc-go/v3 v3.3.0
+	github.com/CosmWasm/wasmd v0.28.0
+	github.com/cosmos/cosmos-sdk v0.45.6
+	github.com/cosmos/ibc-go/v3 v3.0.0
 	github.com/cosmos/interchain-accounts v0.1.0
 	github.com/ecies/go/v2 v2.0.4
 	github.com/gogo/protobuf v1.3.3
@@ -18,13 +18,13 @@ require (
 	github.com/rs/cors v1.8.2
 	github.com/snikch/goodman v0.0.0-20171125024755-10e37e294daa
 	github.com/spf13/cast v1.5.0
-	github.com/spf13/cobra v1.5.0
+	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.1
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/tendermint/spm v0.1.8
 	github.com/tendermint/starport v0.19.5
-	github.com/tendermint/tendermint v0.34.21
+	github.com/tendermint/tendermint v0.34.19
 	github.com/tendermint/tm-db v0.6.7
 	github.com/wealdtech/go-merkletree v1.0.0
 	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a
@@ -34,10 +34,7 @@ require (
 
 require (
 	github.com/CosmWasm/wasmvm v1.1.1 // indirect
-	github.com/cosmos/cosmos-proto v1.0.0-alpha7 // indirect
-	github.com/cosmos/gogoproto v1.4.2 // indirect
-	github.com/cosmos/iavl v0.19.3 // indirect
-	github.com/creachadair/taskgroup v0.3.2 // indirect
+	github.com/cosmos/iavl v0.19.0 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/golang/glog v1.0.0 // indirect
@@ -46,7 +43,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/spf13/viper v1.13.0 // indirect
-	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
 )
 
 require (
@@ -98,7 +94,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hdevalence/ed25519consensus v0.0.0-20210204194344-59a8610d2b87 // indirect
 	github.com/improbable-eng/grpc-web v0.14.1 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/keybase/go-keychain v0.0.0-20190712205309-48d3d31d256d // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
