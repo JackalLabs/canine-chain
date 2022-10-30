@@ -7,15 +7,13 @@ require (
 	github.com/cosmos/cosmos-sdk v0.45.10
 	github.com/cosmos/ibc-go/v3 v3.3.1
 	github.com/cosmos/interchain-accounts v0.1.0
-	github.com/ecies/go/v2 v2.0.4
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/julienschmidt/httprouter v1.3.0
 	github.com/prometheus/client_golang v1.13.0
 	github.com/rakyll/statik v0.1.7
-	github.com/rs/cors v1.8.2
+	github.com/rs/cors v1.8.2 // indirect
 	github.com/snikch/goodman v0.0.0-20171125024755-10e37e294daa
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.5.0
@@ -23,10 +21,8 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/tendermint/spm v0.1.8 //note: this is a severe security risk
-	github.com/tendermint/starport v0.19.5 //note: this is a severe security risk
 	github.com/tendermint/tendermint v0.34.22
 	github.com/tendermint/tm-db v0.6.7
-	github.com/wealdtech/go-merkletree v1.0.0
 	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a
 	google.golang.org/grpc v1.50.1
 	gopkg.in/yaml.v2 v2.4.0
@@ -69,13 +65,11 @@ require (
 	github.com/cosmos/ledger-cosmos-go v0.11.2-0.20220811092532-036a277666f3 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f // indirect
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
 	github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac // indirect
-	github.com/ethereum/go-ethereum v1.10.17 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
@@ -85,7 +79,6 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/orderedcode v0.0.1 // indirect
-	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
