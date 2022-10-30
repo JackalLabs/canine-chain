@@ -1,0 +1,237 @@
+syntax = "proto3";
+package jackaldao.canine.storage;
+
+import "canine-chain/storage/contracts.proto";
+import "canine-chain/storage/proofs.proto";
+import "canine-chain/storage/active_deals.proto";
+import "canine-chain/storage/providers.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/jackal-dao/canine/x/storage/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
+  rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
+  rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
+  rpc SetProviderIp(MsgSetProviderIp) returns (MsgSetProviderIpResponse);
+  rpc SetProviderTotalspace(MsgSetProviderTotalspace) returns (MsgSetProviderTotalspaceResponse);
+  rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
+  rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
+  rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
+  rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgPostContract {
+  string creator = 1;
+  string priceamt = 2;
+  string pricedenom = 3;
+  string merkle = 4;
+  string signee = 5;
+  string duration = 6;
+  string filesize = 7;
+  string fid = 8;
+}
+
+message MsgPostContractResponse {
+}
+
+message MsgCreateContracts {
+  string creator = 1;
+  string cid = 2;
+
+  string priceamt = 3;
+  string pricedenom = 4;
+  string chunks = 5;
+  string merkle = 6;
+  string signee = 7;
+  string duration = 8;
+  string filesize = 9;
+  string fid = 10;
+}
+message MsgCreateContractsResponse {}
+
+message MsgUpdateContracts {
+  string creator = 1;
+  string cid = 2;
+
+  string chunks = 5;
+  string merkle = 6;
+  string signee = 7;
+  string duration = 8;
+  string filesize = 4;
+  string fid = 3;
+}
+message MsgUpdateContractsResponse {}
+
+message MsgDeleteContracts {
+  string creator = 1;
+  string cid = 2;
+}
+message MsgDeleteContractsResponse {}
+
+message MsgCreateProofs {
+  string creator = 1;
+  string cid = 2;
+
+  string item = 3;
+  string hashes = 4;
+}
+message MsgCreateProofsResponse {}
+
+message MsgUpdateProofs {
+  string creator = 1;
+  string cid = 2;
+
+  string item = 3;
+  string hashes = 4;
+}
+message MsgUpdateProofsResponse {}
+
+message MsgDeleteProofs {
+  string creator = 1;
+  string cid = 2;
+}
+message MsgDeleteProofsResponse {}
+
+message MsgItem {
+  string creator = 1;
+  string hashlist = 2;
+}
+
+message MsgItemResponse {
+}
+
+message MsgPostproof {
+  string creator = 1;
+  string item = 2;
+  string hashlist = 3;
+  string cid = 4;
+}
+
+message MsgPostproofResponse {
+  string merkle = 1;
+}
+
+message MsgCreateActiveDeals {
+  string creator = 1;
+  string cid = 2;
+
+  string signee = 3;
+  string provider = 4;
+  string startblock = 5;
+  string endblock = 6;
+  string filesize = 7;
+  string proofverified = 8;
+  string proofsmissed = 9;
+  string blocktoprove = 10;
+}
+message MsgCreateActiveDealsResponse {}
+
+message MsgUpdateActiveDeals {
+  string creator = 1;
+  string cid = 2;
+
+  string signee = 3;
+  string provider = 4;
+  string startblock = 5;
+  string endblock = 6;
+  string filesize = 7;
+  string proofverified = 8;
+  string proofsmissed = 9;
+  string blocktoprove = 10;
+}
+message MsgUpdateActiveDealsResponse {}
+
+message MsgDeleteActiveDeals {
+  string creator = 1;
+  string cid = 2;
+}
+message MsgDeleteActiveDealsResponse {}
+
+message MsgSignContract {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgSignContractResponse {
+}
+
+message MsgCreateProviders {
+  string creator = 1;
+  string address = 2;
+
+  string ip = 3;
+  string totalspace = 4;
+}
+message MsgCreateProvidersResponse {}
+
+message MsgUpdateProviders {
+  string creator = 1;
+  string address = 2;
+
+  string ip = 3;
+  string totalspace = 4;
+}
+message MsgUpdateProvidersResponse {}
+
+message MsgDeleteProviders {
+  string creator = 1;
+  string address = 2;
+}
+message MsgDeleteProvidersResponse {}
+
+message MsgSetProviderIp {
+  string creator = 1;
+  string ip = 2;
+}
+
+message MsgSetProviderIpResponse {
+}
+
+message MsgSetProviderTotalspace {
+  string creator = 1;
+  string space = 2;
+}
+
+message MsgSetProviderTotalspaceResponse {
+}
+
+message MsgInitProvider {
+  string creator = 1;
+  string ip = 2;
+  string totalspace = 3;
+}
+
+message MsgInitProviderResponse {
+}
+
+message MsgCancelContract {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgCancelContractResponse {
+}
+
+message MsgBuyStorage {
+  string creator = 1;
+  string forAddress = 2;
+  string duration = 3;
+  string bytes = 4;
+  string paymentDenom = 5;
+}
+
+message MsgBuyStorageResponse {
+}
+
+message MsgClaimStray {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgClaimStrayResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message

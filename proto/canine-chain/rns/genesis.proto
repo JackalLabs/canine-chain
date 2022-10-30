@@ -1,0 +1,24 @@
+syntax = "proto3";
+package jackaldao.canine.rns;
+
+import "gogoproto/gogo.proto";
+import "canine-chain/rns/params.proto";
+import "canine-chain/rns/whois.proto";
+import "canine-chain/rns/names.proto";
+import "canine-chain/rns/bids.proto";
+import "canine-chain/rns/forsale.proto";
+import "canine-chain/rns/init.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/jackal-dao/canine/x/rns/types";
+
+// GenesisState defines the rns module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated Whois whoisList = 2 [(gogoproto.nullable) = false];
+  repeated Names namesList = 3 [(gogoproto.nullable) = false];
+  repeated Bids bidsList = 4 [(gogoproto.nullable) = false];
+  repeated Forsale forsaleList = 5 [(gogoproto.nullable) = false];
+  repeated Init initList = 6 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
