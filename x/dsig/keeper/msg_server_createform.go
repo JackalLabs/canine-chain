@@ -2,7 +2,7 @@ package keeper
 
 import (
 	"context"
-	"crypto/md5"
+	"crypto/md5" //nolint:gosec // NOTE: THIS IS FLAGGED AS A WEAK CRYPTOGRAPHIC PRIMITIVE.
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"

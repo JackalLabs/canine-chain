@@ -168,16 +168,14 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
-
-
+func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 	allDeals := am.keeper.GetAllActiveDeals(ctx)
 
 	height := ctx.BlockHeight()
 
 	const fchunks int64 = 1024
 
-
-	dayBlocks = 10 * 5
+	dayBlocks := 10 * 5
 
 	fmt.Printf("blockdiff : %d\n", height%dayBlocks)
 	if height%dayBlocks == 0 {
@@ -263,7 +261,6 @@ func (AppModule) ConsensusVersion() uint64 { return 2 }
 					}
 					provider.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
 					am.keeper.SetProviders(ctx, provider)
-
 
 					stray_deal := types.Strays{
 						Cid:      deal.Cid,

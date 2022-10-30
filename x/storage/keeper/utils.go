@@ -20,9 +20,9 @@ func ParseIP(ip string) string {
 }
 
 const (
-	START_BLOCK_TYPE = "start"
-	END_BLOCK_TYPE   = "end"
-	TWO_GIGS         = 2000000000
+	StartBlockType = "start"
+	EndBlockType   = "end"
+	TwoGigs        = 2000000000
 )
 
 func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (int64, bool, *types.PayBlocks) {
@@ -36,12 +36,12 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 
 	eblock, found := k.GetPayBlocks(ctx, fmt.Sprintf(".%s", address))
 	if !found {
-		return TWO_GIGS, true, nil
+		return TwoGigs, true, nil
 	}
 
 	endblock, ok := sdk.NewIntFromString(eblock.Blocknum)
 	if !ok {
-		return TWO_GIGS, true, nil
+		return TwoGigs, true, nil
 	}
 
 	if endblock.Int64() <= blockh {
@@ -51,7 +51,7 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 				return bytes.Int64(), true, nil
 			}
 		}
-		return TWO_GIGS, true, &eblock
+		return TwoGigs, true, &eblock
 	}
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -60,7 +60,7 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 
 		fmt.Printf("BLOCK %s: %s", val.Blocktype, val.Blocknum)
 
-		if val.Blocktype == END_BLOCK_TYPE {
+		if val.Blocktype == EndBlockType {
 			continue
 		}
 
@@ -86,17 +86,17 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 	}
 
 	if highestBlock == 0 {
-		return TWO_GIGS, true, &eblock
+		return TwoGigs, true, &eblock
 	}
 
 	hblock, found := k.GetPayBlocks(ctx, fmt.Sprintf("%s%d", address, highestBlock))
 	if !found {
-		return TWO_GIGS, true, &eblock
+		return TwoGigs, true, &eblock
 	}
 
 	bytes, ok := sdk.NewIntFromString(hblock.Bytes)
 	if !ok {
-		return TWO_GIGS, true, &eblock
+		return TwoGigs, true, &eblock
 	}
 
 	return bytes.Int64(), false, &eblock
@@ -110,14 +110,14 @@ func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, by
 	sBlock := types.PayBlocks{
 		Blockid:   fmt.Sprintf("%s%d", address, startBlock),
 		Bytes:     fmt.Sprintf("%d", bytes),
-		Blocktype: START_BLOCK_TYPE,
+		Blocktype: StartBlockType,
 		Blocknum:  fmt.Sprintf("%d", startBlock),
 	}
 
 	eBlock := types.PayBlocks{
 		Blockid:   fmt.Sprintf(".%s", address),
 		Bytes:     fmt.Sprintf("%d", bytes),
-		Blocktype: END_BLOCK_TYPE,
+		Blocktype: StartBlockType,
 		Blocknum:  fmt.Sprintf("%d", endBlock),
 	}
 

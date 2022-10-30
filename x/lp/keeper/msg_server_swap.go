@@ -36,7 +36,7 @@ func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
 
 	// Check if msg denoms match pool coin denoms.
 	if !sdk.NewCoins(coin, minCoinOut).DenomsSubsetOf(poolCoins) {
-		return errors.New("Provided coin denoms does not match pool denoms")
+		return errors.New("provided coin denoms does not match pool denoms")
 	}
 
 	return nil
@@ -81,7 +81,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	// SwapFeeMulti saved in string format that could not be parsed
 	// by sdk.Dec NewDecFromStr()
 	if err != nil {
-		panic(fmt.Errorf("Internal error! Location: Swap()"+
+		panic(fmt.Errorf("internal error! Location: Swap()"+
 			" Failed to parse SwapFeeMulti: %s, err: %s", pool.SwapFeeMulti, err))
 	}
 

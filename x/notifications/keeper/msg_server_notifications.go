@@ -32,8 +32,6 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "notification already set")
 	}
 
-
-
 	if !isSender(notiCounter, msg.Creator) {
 		return nil, types.ErrCannotAddSenders
 	}
@@ -43,7 +41,6 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		Count:        notiCounter.Counter,
 		Notification: msg.Notification,
 		Address:      msg.Address,
-
 	}
 
 	k.SetNotifications(
@@ -86,7 +83,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 	valFound, isFound := k.GetNotifications(
 		ctx,
 		msg.Count,
-
+		msg.Address,
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -100,7 +97,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 	k.RemoveNotifications(
 		ctx,
 		msg.Count,
-
+		msg.Creator, // TODO: is this correct? -  NOT CERTAIN THAT "CREATOR IS ADDRESS."
 	)
 
 	return &types.MsgDeleteNotificationsResponse{}, nil

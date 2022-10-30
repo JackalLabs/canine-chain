@@ -118,63 +118,62 @@ func CalculatePoolShare(pool types.LPool, depositCoins sdk.Coins) (sdk.Int, erro
 
 		return amount.TruncateInt(), nil
 
-	} else {
-		poolCoins := sdk.NewCoins(pool.Coins...)
-
-		// Get total LPTokens and convert it to sdk.Dec
-		totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)
-
-		if !ok {
-			return sdk.ZeroInt(), errors.New("Failed to convert" +
-				" pool.LPTokenBalance to sdk.Int")
-		}
-
-		if !depositCoins.DenomsSubsetOf(poolCoins) {
-			return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins,
-				"Input Coins are not subset of pool coins."+
-					" Pool: %s, Input: %s",
-				poolCoins.String(), depositCoins.String(),
-			)
-		}
-
-		// Using Coin type to return precise error
-		var coinShares []sdk.Coin
-		coinShares = make([]sdk.Coin, 0)
-
-		for _, x := range depositCoins {
-			// Calculate shares and append it.
-			// Get amount of coin x.
-			totalXInPool := poolCoins.AmountOf(x.GetDenom())
-
-			if totalXInPool.IsZero() {
-				return sdk.ZeroInt(), errors.New(fmt.Sprintf("Zero amount of coin %s,"+
-					" will not proceed to prevent division by zero",
-					x.GetDenom(),
-				))
-			}
-
-			// share = totalLPToken * xAmtInDeposit / totalXInPool
-			share := totalLPToken.Mul(depositCoins.AmountOf(x.GetDenom())).Quo(totalXInPool)
-			coinShare := sdk.NewCoin(x.GetDenom(), share)
-			coinShares = append(coinShares, coinShare)
-		}
-
-		// Check if all input coins are same value
-		// If that is true, all share amount of coins should be same
-		// shareX0 == shareX1 == shareX2 ... shareXn
-		for _, x := range coinShares {
-			if !x.Amount.Equal(coinShares[0].Amount) {
-				return sdk.ZeroInt(), errors.New(
-					fmt.Sprintf("Same value of coin not provided. denom: %s,"+
-						" value: %s",
-						x.Denom,
-						x.Amount.String(),
-					))
-			}
-		}
-
-		return coinShares[0].Amount, nil
 	}
+	poolCoins := sdk.NewCoins(pool.Coins...)
+
+	// Get total LPTokens and convert it to sdk.Dec
+	totalLPToken, ok := sdk.NewIntFromString(pool.LPTokenBalance)
+
+	if !ok {
+		return sdk.ZeroInt(), errors.New("Failed to convert" +
+			" pool.LPTokenBalance to sdk.Int")
+	}
+
+	if !depositCoins.DenomsSubsetOf(poolCoins) {
+		return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins,
+			"Input Coins are not subset of pool coins."+
+				" Pool: %s, Input: %s",
+			poolCoins.String(), depositCoins.String(),
+		)
+	}
+
+	// Using Coin type to return precise error
+	var coinShares []sdk.Coin
+	coinShares = make([]sdk.Coin, 0)
+
+	for _, x := range depositCoins {
+		// Calculate shares and append it.
+		// Get amount of coin x.
+		totalXInPool := poolCoins.AmountOf(x.GetDenom())
+
+		if totalXInPool.IsZero() {
+			return sdk.ZeroInt(), errors.New(fmt.Sprintf("Zero amount of coin %s,"+
+				" will not proceed to prevent division by zero",
+				x.GetDenom(),
+			))
+		}
+
+		// share = totalLPToken * xAmtInDeposit / totalXInPool
+		share := totalLPToken.Mul(depositCoins.AmountOf(x.GetDenom())).Quo(totalXInPool)
+		coinShare := sdk.NewCoin(x.GetDenom(), share)
+		coinShares = append(coinShares, coinShare)
+	}
+
+	// Check if all input coins are same value
+	// If that is true, all share amount of coins should be same
+	// shareX0 == shareX1 == shareX2 ... shareXn
+	for _, x := range coinShares {
+		if !x.Amount.Equal(coinShares[0].Amount) {
+			return sdk.ZeroInt(), errors.New(
+				fmt.Sprintf("Same value of coin not provided. denom: %s,"+
+					" value: %s",
+					x.Denom,
+					x.Amount.String(),
+				))
+		}
+	}
+
+	return coinShares[0].Amount, nil
 }
 
 func CalculatePoolShareBurnReturn(pool types.LPool, burnAmt sdk.Int) (sdk.Coins, error) {

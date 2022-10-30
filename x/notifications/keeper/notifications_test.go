@@ -31,6 +31,7 @@ func TestNotificationsGet(t *testing.T) {
 	for _, item := range items {
 		rst, found := keeper.GetNotifications(ctx,
 			item.Count,
+			item.Address,
 		)
 		require.True(t, found)
 		require.Equal(t,
@@ -39,15 +40,18 @@ func TestNotificationsGet(t *testing.T) {
 		)
 	}
 }
+
 func TestNotificationsRemove(t *testing.T) {
 	keeper, ctx := keepertest.NotificationsKeeper(t)
 	items := createNNotifications(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveNotifications(ctx,
 			item.Count,
+			item.Address,
 		)
 		_, found := keeper.GetNotifications(ctx,
 			item.Count,
+			item.Address,
 		)
 		require.False(t, found)
 	}
