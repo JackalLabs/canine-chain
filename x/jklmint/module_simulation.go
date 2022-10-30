@@ -9,14 +9,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/testutil/sample"
+
+	//	"github.com/ignite/modules/testutil/sample"
+
+	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	jklmintsimulation "github.com/jackalLabs/canine-chain/x/jklmint/simulation"
 	"github.com/jackalLabs/canine-chain/x/jklmint/types"
 )
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	//	_ = sample.AccAddress
 	_ = jklmintsimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
