@@ -39,7 +39,7 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 		}
 
 		whois.Data = "{}"
-		whois.Value = msg.Reciever
+		whois.Value = msg.Receiver
 
 		// Write whois information to the store
 		k.SetNames(ctx, whois)

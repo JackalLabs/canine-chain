@@ -192,7 +192,6 @@ paths:
                         }
                 title: accounts are the existing accounts
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -209,6 +208,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryAccountsResponse is the response type for the Query/Accounts
               RPC method.
@@ -834,6 +843,380 @@ paths:
           type: string
       tags:
         - Query
+  '/cosmos/auth/v1beta1/module_accounts/{name}':
+    get:
+      summary: ModuleAccountByName returns the module account info by module name
+      operationId: CosmosAuthV1Beta1ModuleAccountByName
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              account:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                    description: >-
+                      A URL/resource name that uniquely identifies the type of
+                      the serialized
+
+                      protocol buffer message. This string must contain at least
+
+                      one "/" character. The last segment of the URL's path must
+                      represent
+
+                      the fully qualified name of the type (as in
+
+                      `path/google.protobuf.Duration`). The name should be in a
+                      canonical form
+
+                      (e.g., leading "." is not accepted).
+
+
+                      In practice, teams usually precompile into the binary all
+                      types that they
+
+                      expect it to use in the context of Any. However, for URLs
+                      which use the
+
+                      scheme `http`, `https`, or no scheme, one can optionally
+                      set up a type
+
+                      server that maps type URLs to message definitions as
+                      follows:
+
+
+                      * If no scheme is provided, `https` is assumed.
+
+                      * An HTTP GET on the URL must yield a
+                      [google.protobuf.Type][]
+                        value in binary format, or produce an error.
+                      * Applications are allowed to cache lookup results based
+                      on the
+                        URL, or have them precompiled into a binary to avoid any
+                        lookup. Therefore, binary compatibility needs to be preserved
+                        on changes to types. (Use versioned type names to manage
+                        breaking changes.)
+
+                      Note: this functionality is not currently available in the
+                      official
+
+                      protobuf release, and it is not used for type URLs
+                      beginning with
+
+                      type.googleapis.com.
+
+
+                      Schemes other than `http`, `https` (or the empty scheme)
+                      might be
+
+                      used with implementation specific semantics.
+                additionalProperties: {}
+                description: >-
+                  `Any` contains an arbitrary serialized protocol buffer message
+                  along with a
+
+                  URL that describes the type of the serialized message.
+
+
+                  Protobuf library provides support to pack/unpack Any values in
+                  the form
+
+                  of utility functions or additional generated methods of the
+                  Any type.
+
+
+                  Example 1: Pack and unpack a message in C++.
+
+                      Foo foo = ...;
+                      Any any;
+                      any.PackFrom(foo);
+                      ...
+                      if (any.UnpackTo(&foo)) {
+                        ...
+                      }
+
+                  Example 2: Pack and unpack a message in Java.
+
+                      Foo foo = ...;
+                      Any any = Any.pack(foo);
+                      ...
+                      if (any.is(Foo.class)) {
+                        foo = any.unpack(Foo.class);
+                      }
+
+                   Example 3: Pack and unpack a message in Python.
+
+                      foo = Foo(...)
+                      any = Any()
+                      any.Pack(foo)
+                      ...
+                      if any.Is(Foo.DESCRIPTOR):
+                        any.Unpack(foo)
+                        ...
+
+                   Example 4: Pack and unpack a message in Go
+
+                       foo := &pb.Foo{...}
+                       any, err := anypb.New(foo)
+                       if err != nil {
+                         ...
+                       }
+                       ...
+                       foo := &pb.Foo{}
+                       if err := any.UnmarshalTo(foo); err != nil {
+                         ...
+                       }
+
+                  The pack methods provided by protobuf library will by default
+                  use
+
+                  'type.googleapis.com/full.type.name' as the type URL and the
+                  unpack
+
+                  methods only use the fully qualified type name after the last
+                  '/'
+
+                  in the type URL, for example "foo.bar.com/x/y.z" will yield
+                  type
+
+                  name "y.z".
+
+
+
+                  JSON
+
+                  ====
+
+                  The JSON representation of an `Any` value uses the regular
+
+                  representation of the deserialized, embedded message, with an
+
+                  additional field `@type` which contains the type URL. Example:
+
+                      package google.profile;
+                      message Person {
+                        string first_name = 1;
+                        string last_name = 2;
+                      }
+
+                      {
+                        "@type": "type.googleapis.com/google.profile.Person",
+                        "firstName": <string>,
+                        "lastName": <string>
+                      }
+
+                  If the embedded message type is well-known and has a custom
+                  JSON
+
+                  representation, that representation will be embedded adding a
+                  field
+
+                  `value` which holds the custom JSON in addition to the `@type`
+
+                  field. Example (for message [google.protobuf.Duration][]):
+
+                      {
+                        "@type": "type.googleapis.com/google.protobuf.Duration",
+                        "value": "1.212s"
+                      }
+            description: >-
+              QueryModuleAccountByNameResponse is the response type for the
+              Query/ModuleAccountByName RPC method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                  additionalProperties: {}
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
   /cosmos/auth/v1beta1/params:
     get:
       summary: Params queries all parameters.
@@ -845,7 +1228,6 @@ paths:
             type: object
             properties:
               params:
-                description: params defines the parameters of the module.
                 type: object
                 properties:
                   max_memo_characters:
@@ -863,6 +1245,7 @@ paths:
                   sig_verify_cost_secp256k1:
                     type: string
                     format: uint64
+                description: Params defines the parameters for the auth module.
             description: >-
               QueryParamsResponse is the response type for the Query/Params RPC
               method.
@@ -1253,7 +1636,6 @@ paths:
                   authorizations is a list of grants granted for grantee by
                   granter.
               pagination:
-                description: pagination defines an pagination for the response.
                 type: object
                 properties:
                   next_key:
@@ -1270,6 +1652,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryGrantsResponse is the response type for the
               Query/Authorizations RPC method.
@@ -1738,7 +2130,6 @@ paths:
                     It is used in genesis.proto and query.proto
                 description: grants is a list of grants granted to the grantee.
               pagination:
-                description: pagination defines an pagination for the response.
                 type: object
                 properties:
                   next_key:
@@ -1755,6 +2146,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryGranteeGrantsResponse is the response type for the
               Query/GranteeGrants RPC method.
@@ -2212,7 +2613,6 @@ paths:
                     It is used in genesis.proto and query.proto
                 description: grants is a list of grants granted by the granter.
               pagination:
-                description: pagination defines an pagination for the response.
                 type: object
                 properties:
                   next_key:
@@ -2229,6 +2629,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryGranterGrantsResponse is the response type for the
               Query/GranterGrants RPC method.
@@ -6621,7 +7031,6 @@ paths:
             type: object
             properties:
               params:
-                description: params defines the parameters of the module.
                 type: object
                 properties:
                   community_tax:
@@ -6632,6 +7041,7 @@ paths:
                     type: string
                   withdraw_addr_enabled:
                     type: boolean
+                description: Params defines the set of params for the distribution module.
             description: >-
               QueryParamsResponse is the response type for the Query/Params RPC
               method.
@@ -6666,7 +7076,6 @@ paths:
             type: object
             properties:
               commission:
-                description: commission defines the commision the validator received.
                 type: object
                 properties:
                   commission:
@@ -6687,6 +7096,12 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                description: >-
+                  ValidatorAccumulatedCommission represents accumulated
+                  commission
+
+                  for a validator kept as a running counter, can be withdrawn at
+                  any time.
             title: |-
               QueryValidatorCommissionResponse is the response type for the
               Query/ValidatorCommission RPC method
@@ -6816,7 +7231,6 @@ paths:
                     occurred.
                 description: slashes defines the slashes the validator received.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -6833,6 +7247,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: |-
               QueryValidatorSlashesResponse is the response type for the
               Query/ValidatorSlashes RPC method.
@@ -7121,7 +7545,6 @@ paths:
                         }
                 description: evidence returns all evidences.
               pagination:
-                description: pagination defines the pagination in the response.
                 type: object
                 properties:
                   next_key:
@@ -7138,6 +7561,16 @@ paths:
                       PageRequest.count_total
 
                       was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
             description: >-
               QueryAllEvidenceResponse is the response type for the
               Query/AllEvidence RPC
@@ -11874,7 +12307,6 @@ paths:
             type: object
             properties:
               param:
-                description: param defines the queried parameter.
                 type: object
                 properties:
                   subspace:
@@ -11883,6 +12315,9 @@ paths:
                     type: string
                   value:
                     type: string
+                description: |-
+                  ParamChange defines an individual parameter change, for use in
+                  ParameterChangeProposal.
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -12202,9 +12637,6 @@ paths:
                   monitoring their
 
                   liveness activity.
-                title: >-
-                  val_signing_info is the signing info of requested val cons
-                  address
             title: >-
               QuerySigningInfoResponse is the response type for the
               Query/SigningInfo RPC
@@ -19647,7 +20079,6 @@ paths:
             type: object
             properties:
               plan:
-                description: plan is the current upgrade plan.
                 type: object
                 properties:
                   name:
@@ -19869,6 +20300,9 @@ paths:
                             "@type": "type.googleapis.com/google.protobuf.Duration",
                             "value": "1.212s"
                           }
+                description: >-
+                  Plan specifies information about a planned upgrade and when it
+                  should occur.
             description: >-
               QueryCurrentPlanResponse is the response type for the
               Query/CurrentPlan RPC
@@ -34170,3781 +34604,6 @@ paths:
           format: uint64
       tags:
         - Query
-  /dsig/dsig/form:
-    get:
-      summary: Queries a list of Form items.
-      operationId: JackaldaoCanineDsigFormAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              form:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    ffid:
-                      type: string
-                    cid:
-                      type: string
-                    fid:
-                      type: string
-                    signees:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/dsig/dsig/form/{ffid}':
-    get:
-      summary: Queries a Form by index.
-      operationId: JackaldaoCanineDsigForm
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              form:
-                type: object
-                properties:
-                  ffid:
-                    type: string
-                  cid:
-                    type: string
-                  fid:
-                    type: string
-                  signees:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: ffid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /dsig/dsig/params:
-    get:
-      summary: Parameters queries the parameters of the module.
-      operationId: JackaldaoCanineDsigParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                description: params holds all the parameters of this module.
-                type: object
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /dsig/dsig/user_uploads:
-    get:
-      summary: Queries a list of UserUploads items.
-      operationId: JackaldaoCanineDsigUserUploadsAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              userUploads:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    fid:
-                      type: string
-                    cid:
-                      type: string
-                    createdAt:
-                      type: string
-                      format: int64
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/dsig/dsig/user_uploads/{fid}':
-    get:
-      summary: Queries a UserUploads by index.
-      operationId: JackaldaoCanineDsigUserUploads
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              userUploads:
-                type: object
-                properties:
-                  fid:
-                    type: string
-                  cid:
-                    type: string
-                  createdAt:
-                    type: string
-                    format: int64
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: fid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/filetree/decrypt/{message}':
-    get:
-      summary: Queries a list of Decrypt items.
-      operationId: JackaldaoCanineFiletreeDecrypt
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              data:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: message
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/filetree/encrypt/{address}/{message}':
-    get:
-      summary: Queries a list of Encrypt items.
-      operationId: JackaldaoCanineFiletreeEncrypt
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              encryptionData:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-        - name: message
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/filetree/files:
-    get:
-      summary: Queries a list of Files items.
-      operationId: JackaldaoCanineFiletreeFilesAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              files:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    address:
-                      type: string
-                    contents:
-                      type: string
-                    owner:
-                      type: string
-                    viewingAccess:
-                      type: string
-                    editAccess:
-                      type: string
-                    trackingNumber:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/filetree/files/{address}/{ownerAddress}':
-    get:
-      summary: Queries a Files by index.
-      operationId: JackaldaoCanineFiletreeFiles
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              files:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  contents:
-                    type: string
-                  owner:
-                    type: string
-                  viewingAccess:
-                    type: string
-                  editAccess:
-                    type: string
-                  trackingNumber:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-        - name: ownerAddress
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/filetree/get_keys/{hashpath}':
-    get:
-      summary: Queries a list of GetKeys items.
-      operationId: JackaldaoCanineFiletreeGetKeys
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              keys:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: hashpath
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/filetree/pubkey:
-    get:
-      summary: Queries a list of Pubkey items.
-      operationId: JackaldaoCanineFiletreePubkeyAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              pubkey:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    address:
-                      type: string
-                    key:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/filetree/pubkey/{address}':
-    get:
-      summary: Queries a Pubkey by index.
-      operationId: JackaldaoCanineFiletreePubkey
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              pubkey:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  key:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackaldao/canine/filetree/params:
-    get:
-      summary: Parameters queries the parameters of the module.
-      operationId: JackaldaoCanineFiletreeParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                type: object
-                description: Params defines the parameters for the module.
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /cosmos/mint/v1beta1/inflation:
-    get:
-      summary: Inflation returns the current minting inflation value.
-      operationId: JackaldaoCanineJklmintInflation
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              inflation:
-                type: string
-                format: byte
-                description: inflation is the current minting inflation value.
-            description: "QueryInflationResponse is the response type for the Query/Inflation RPC\r\nmethod."
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /cosmos/mint/v1beta1/params:
-    get:
-      summary: Parameters queries the parameters of the module.
-      operationId: JackaldaoCanineJklmintParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                description: params holds all the parameters of this module.
-                type: object
-                properties:
-                  mintDenom:
-                    type: string
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /jackal-dao/canine/jklmint/get_inflation:
-    get:
-      summary: Queries a list of GetInflation items.
-      operationId: JackaldaoCanineJklmintGetInflation
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              inflation:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  '/jackal-dao/canine/notifications/filtered_notifications/{address}':
-    get:
-      summary: Queries a list of FilteredNotifications items.
-      operationId: JackaldaoCanineNotificationsFilteredNotifications
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              notifications:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/notifications/noti_counter:
-    get:
-      summary: Queries a list of NotiCounter items.
-      operationId: JackaldaoCanineNotificationsNotiCounterAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              notiCounter:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    address:
-                      type: string
-                    counter:
-                      type: string
-                      format: uint64
-                    permittedSenders:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/notifications/noti_counter/{address}':
-    get:
-      summary: Queries a NotiCounter by index.
-      operationId: JackaldaoCanineNotificationsNotiCounter
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              notiCounter:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  counter:
-                    type: string
-                    format: uint64
-                  permittedSenders:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/notifications/notifications:
-    get:
-      summary: Queries a list of Notifications items.
-      operationId: JackaldaoCanineNotificationsNotificationsAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              notifications:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    count:
-                      type: string
-                      format: uint64
-                    notification:
-                      type: string
-                    address:
-                      type: string
-                    sender:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/notifications/notifications/{count}/{address}':
-    get:
-      summary: Queries a Notifications by index.
-      operationId: JackaldaoCanineNotificationsNotifications
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              notifications:
-                type: object
-                properties:
-                  count:
-                    type: string
-                    format: uint64
-                  notification:
-                    type: string
-                  address:
-                    type: string
-                  sender:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: count
-          in: path
-          required: true
-          type: string
-          format: uint64
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/notifications/params:
-    get:
-      summary: Parameters queries the parameters of the module.
-      operationId: JackaldaoCanineNotificationsParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                type: object
-                description: Params defines the parameters for the module.
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /jackal-dao/canine/rns/init:
-    get:
-      summary: Queries a list of Init items.
-      operationId: JackaldaoCanineRnsInitAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              init:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    address:
-                      type: string
-                    complete:
-                      type: boolean
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/rns/init/{address}':
-    get:
-      summary: Queries a Init by index.
-      operationId: JackaldaoCanineRnsInit
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              init:
-                type: boolean
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/rns/list_owned_names/{address}':
-    get:
-      summary: Queries a list of ListOwnedNames items.
-      operationId: JackaldaoCanineRnsListOwnedNames
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/jackaldao.canine.rns.QueryListOwnedNamesResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  /jackal-dao/canine/rnsbids:
-    get:
-      summary: Queries a list of Bids.
-      operationId: JackaldaoCanineRnsBidsAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              bids:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    index:
-                      type: string
-                    name:
-                      type: string
-                    bidder:
-                      type: string
-                    price:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/rnsbids/{index}':
-    get:
-      summary: Queries a Bid by index.
-      operationId: JackaldaoCanineRnsBids
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              bids:
-                type: object
-                properties:
-                  index:
-                    type: string
-                  name:
-                    type: string
-                  bidder:
-                    type: string
-                  price:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: index
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/rnsforsale:
-    get:
-      summary: Queries all Listings.
-      operationId: JackaldaoCanineRnsForsaleAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              forsale:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    price:
-                      type: string
-                    owner:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/rnsforsale/{name}':
-    get:
-      summary: Queries a Listing by index.
-      operationId: JackaldaoCanineRnsForsale
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              forsale:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  price:
-                    type: string
-                  owner:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: name
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/rnsnames:
-    get:
-      summary: Queries a list of Names.
-      operationId: JackaldaoCanineRnsNamesAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/jackaldao.canine.rns.QueryAllNamesResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/rnsnames/{index}':
-    get:
-      summary: Queries a Name by index.
-      operationId: JackaldaoCanineRnsNames
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/jackaldao.canine.rns.QueryGetNamesResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: index
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/rnsparams:
-    get:
-      summary: Parameters queries the parameters of the module.
-      operationId: JackaldaoCanineRnsParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                description: params holds all the parameters of this module.
-                type: object
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /jackal-dao/canine/storage/active_deals:
-    get:
-      summary: Queries a list of ActiveDeals items.
-      operationId: JackaldaoCanineStorageActiveDealsAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              activeDeals:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    cid:
-                      type: string
-                    signee:
-                      type: string
-                    provider:
-                      type: string
-                    startblock:
-                      type: string
-                    endblock:
-                      type: string
-                    filesize:
-                      type: string
-                    proofverified:
-                      type: string
-                    proofsmissed:
-                      type: string
-                    blocktoprove:
-                      type: string
-                    creator:
-                      type: string
-                    merkle:
-                      type: string
-                    fid:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/active_deals/{cid}':
-    get:
-      summary: Queries a ActiveDeals by index.
-      operationId: JackaldaoCanineStorageActiveDeals
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              activeDeals:
-                type: object
-                properties:
-                  cid:
-                    type: string
-                  signee:
-                    type: string
-                  provider:
-                    type: string
-                  startblock:
-                    type: string
-                  endblock:
-                    type: string
-                  filesize:
-                    type: string
-                  proofverified:
-                    type: string
-                  proofsmissed:
-                    type: string
-                  blocktoprove:
-                    type: string
-                  creator:
-                    type: string
-                  merkle:
-                    type: string
-                  fid:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: cid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/client_usage:
-    get:
-      summary: Queries a list of ClientUsage items.
-      operationId: JackaldaoCanineStorageClientUsageAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              clientUsage:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    address:
-                      type: string
-                    usage:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/client_usage/{address}':
-    get:
-      summary: Queries a ClientUsage by index.
-      operationId: JackaldaoCanineStorageClientUsage
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              clientUsage:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  usage:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/contracts:
-    get:
-      summary: Queries a list of Contracts items.
-      operationId: JackaldaoCanineStorageContractsAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              contracts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    cid:
-                      type: string
-                    priceamt:
-                      type: string
-                    pricedenom:
-                      type: string
-                    merkle:
-                      type: string
-                    signee:
-                      type: string
-                    duration:
-                      type: string
-                    filesize:
-                      type: string
-                    fid:
-                      type: string
-                    creator:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/contracts/{cid}':
-    get:
-      summary: Queries a Contracts by index.
-      operationId: JackaldaoCanineStorageContracts
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              contracts:
-                type: object
-                properties:
-                  cid:
-                    type: string
-                  priceamt:
-                    type: string
-                  pricedenom:
-                    type: string
-                  merkle:
-                    type: string
-                  signee:
-                    type: string
-                  duration:
-                    type: string
-                  filesize:
-                    type: string
-                  fid:
-                    type: string
-                  creator:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: cid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/fid_cid:
-    get:
-      summary: Queries a list of FidCid items.
-      operationId: JackaldaoCanineStorageFidCidAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              fidCid:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    fid:
-                      type: string
-                    cids:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/fid_cid/{fid}':
-    get:
-      summary: Queries a FidCid by index.
-      operationId: JackaldaoCanineStorageFidCid
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              fidCid:
-                type: object
-                properties:
-                  fid:
-                    type: string
-                  cids:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: fid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/find_file/{fid}':
-    get:
-      summary: Queries a list of FindFile items.
-      operationId: JackaldaoCanineStorageFindFile
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              providerIps:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: fid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/freespace/{address}':
-    get:
-      summary: Queries a list of Freespace items.
-      operationId: JackaldaoCanineStorageFreespace
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              space:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/get_client_free_space/{address}':
-    get:
-      summary: Queries a list of GetClientFreeSpace items.
-      operationId: JackaldaoCanineStorageGetClientFreeSpace
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              bytesfree:
-                type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/get_pay_data/{address}':
-    get:
-      summary: Queries a list of GetPayData items.
-      operationId: JackaldaoCanineStorageGetPayData
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              blocks_remaining:
-                type: string
-                format: int64
-              bytes:
-                type: string
-                format: int64
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/params:
-    get:
-      summary: Parameters queries the parameters of the module.
-      operationId: JackaldaoCanineStorageParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                type: object
-                description: Params defines the parameters for the module.
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /jackal-dao/canine/storage/pay_blocks:
-    get:
-      summary: Queries a list of PayBlocks items.
-      operationId: JackaldaoCanineStoragePayBlocksAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              payBlocks:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    blockid:
-                      type: string
-                    bytes:
-                      type: string
-                    blocktype:
-                      type: string
-                    blocknum:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/pay_blocks/{blockid}':
-    get:
-      summary: Queries a PayBlocks by index.
-      operationId: JackaldaoCanineStoragePayBlocks
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              payBlocks:
-                type: object
-                properties:
-                  blockid:
-                    type: string
-                  bytes:
-                    type: string
-                  blocktype:
-                    type: string
-                  blocknum:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: blockid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/proofs:
-    get:
-      summary: Queries a list of Proofs items.
-      operationId: JackaldaoCanineStorageProofsAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              proofs:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    cid:
-                      type: string
-                    item:
-                      type: string
-                    hashes:
-                      type: string
-                    creator:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/proofs/{cid}':
-    get:
-      summary: Queries a Proofs by index.
-      operationId: JackaldaoCanineStorageProofs
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              proofs:
-                type: object
-                properties:
-                  cid:
-                    type: string
-                  item:
-                    type: string
-                  hashes:
-                    type: string
-                  creator:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: cid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/providers:
-    get:
-      summary: Queries a list of Providers items.
-      operationId: JackaldaoCanineStorageProvidersAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              providers:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    address:
-                      type: string
-                    ip:
-                      type: string
-                    totalspace:
-                      type: string
-                    burned_contracts:
-                      type: string
-                    creator:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/providers/{address}':
-    get:
-      summary: Queries a Providers by index.
-      operationId: JackaldaoCanineStorageProviders
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              providers:
-                type: object
-                properties:
-                  address:
-                    type: string
-                  ip:
-                    type: string
-                  totalspace:
-                    type: string
-                  burned_contracts:
-                    type: string
-                  creator:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: address
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /jackal-dao/canine/storage/strays:
-    get:
-      summary: Queries a list of Strays items.
-      operationId: JackaldaoCanineStorageStraysAll
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              strays:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    cid:
-                      type: string
-                    fid:
-                      type: string
-                    signee:
-                      type: string
-                    filesize:
-                      type: string
-                    merkle:
-                      type: string
-              pagination:
-                type: object
-                properties:
-                  next_key:
-                    type: string
-                    format: byte
-                    title: |-
-                      next_key is the key to be passed to PageRequest.key to
-                      query the next page most efficiently
-                  total:
-                    type: string
-                    format: uint64
-                    title: >-
-                      total is total number of results available if
-                      PageRequest.count_total
-
-                      was set, its value is undefined otherwise
-                description: >-
-                  PageResponse is to be embedded in gRPC response messages where
-                  the
-
-                  corresponding request message has used PageRequest.
-
-                   message SomeResponse {
-                           repeated Bar results = 1;
-                           PageResponse page = 2;
-                   }
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: pagination.key
-          description: |-
-            key is a value returned in PageResponse.next_key to begin
-            querying the next page most efficiently. Only one of offset or key
-            should be set.
-          in: query
-          required: false
-          type: string
-          format: byte
-        - name: pagination.offset
-          description: >-
-            offset is a numeric offset that can be used when key is unavailable.
-
-            It is less efficient than using key. Only one of offset or key
-            should
-
-            be set.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.limit
-          description: >-
-            limit is the total number of results to be returned in the result
-            page.
-
-            If left empty it will default to a value to be set by each app.
-          in: query
-          required: false
-          type: string
-          format: uint64
-        - name: pagination.count_total
-          description: >-
-            count_total is set to true  to indicate that the result set should
-            include
-
-            a count of the total number of items available for pagination in
-            UIs.
-
-            count_total is only respected when offset is used. It is ignored
-            when key
-
-            is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
-      tags:
-        - Query
-  '/jackal-dao/canine/storage/strays/{cid}':
-    get:
-      summary: Queries a Strays by index.
-      operationId: JackaldaoCanineStorageStrays
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              strays:
-                type: object
-                properties:
-                  cid:
-                    type: string
-                  fid:
-                    type: string
-                  signee:
-                    type: string
-                  filesize:
-                    type: string
-                  merkle:
-                    type: string
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: cid
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
 definitions:
   cosmos.auth.v1beta1.Params:
     type: object
@@ -38295,7 +34954,6 @@ definitions:
                 }
         title: accounts are the existing accounts
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -38312,17 +34970,187 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryAccountsResponse is the response type for the Query/Accounts RPC
       method.
 
 
       Since: cosmos-sdk 0.43
+  cosmos.auth.v1beta1.QueryModuleAccountByNameResponse:
+    type: object
+    properties:
+      account:
+        type: object
+        properties:
+          '@type':
+            type: string
+            description: >-
+              A URL/resource name that uniquely identifies the type of the
+              serialized
+
+              protocol buffer message. This string must contain at least
+
+              one "/" character. The last segment of the URL's path must
+              represent
+
+              the fully qualified name of the type (as in
+
+              `path/google.protobuf.Duration`). The name should be in a
+              canonical form
+
+              (e.g., leading "." is not accepted).
+
+
+              In practice, teams usually precompile into the binary all types
+              that they
+
+              expect it to use in the context of Any. However, for URLs which
+              use the
+
+              scheme `http`, `https`, or no scheme, one can optionally set up a
+              type
+
+              server that maps type URLs to message definitions as follows:
+
+
+              * If no scheme is provided, `https` is assumed.
+
+              * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                value in binary format, or produce an error.
+              * Applications are allowed to cache lookup results based on the
+                URL, or have them precompiled into a binary to avoid any
+                lookup. Therefore, binary compatibility needs to be preserved
+                on changes to types. (Use versioned type names to manage
+                breaking changes.)
+
+              Note: this functionality is not currently available in the
+              official
+
+              protobuf release, and it is not used for type URLs beginning with
+
+              type.googleapis.com.
+
+
+              Schemes other than `http`, `https` (or the empty scheme) might be
+
+              used with implementation specific semantics.
+        additionalProperties: {}
+        description: >-
+          `Any` contains an arbitrary serialized protocol buffer message along
+          with a
+
+          URL that describes the type of the serialized message.
+
+
+          Protobuf library provides support to pack/unpack Any values in the
+          form
+
+          of utility functions or additional generated methods of the Any type.
+
+
+          Example 1: Pack and unpack a message in C++.
+
+              Foo foo = ...;
+              Any any;
+              any.PackFrom(foo);
+              ...
+              if (any.UnpackTo(&foo)) {
+                ...
+              }
+
+          Example 2: Pack and unpack a message in Java.
+
+              Foo foo = ...;
+              Any any = Any.pack(foo);
+              ...
+              if (any.is(Foo.class)) {
+                foo = any.unpack(Foo.class);
+              }
+
+           Example 3: Pack and unpack a message in Python.
+
+              foo = Foo(...)
+              any = Any()
+              any.Pack(foo)
+              ...
+              if any.Is(Foo.DESCRIPTOR):
+                any.Unpack(foo)
+                ...
+
+           Example 4: Pack and unpack a message in Go
+
+               foo := &pb.Foo{...}
+               any, err := anypb.New(foo)
+               if err != nil {
+                 ...
+               }
+               ...
+               foo := &pb.Foo{}
+               if err := any.UnmarshalTo(foo); err != nil {
+                 ...
+               }
+
+          The pack methods provided by protobuf library will by default use
+
+          'type.googleapis.com/full.type.name' as the type URL and the unpack
+
+          methods only use the fully qualified type name after the last '/'
+
+          in the type URL, for example "foo.bar.com/x/y.z" will yield type
+
+          name "y.z".
+
+
+
+          JSON
+
+          ====
+
+          The JSON representation of an `Any` value uses the regular
+
+          representation of the deserialized, embedded message, with an
+
+          additional field `@type` which contains the type URL. Example:
+
+              package google.profile;
+              message Person {
+                string first_name = 1;
+                string last_name = 2;
+              }
+
+              {
+                "@type": "type.googleapis.com/google.profile.Person",
+                "firstName": <string>,
+                "lastName": <string>
+              }
+
+          If the embedded message type is well-known and has a custom JSON
+
+          representation, that representation will be embedded adding a field
+
+          `value` which holds the custom JSON in addition to the `@type`
+
+          field. Example (for message [google.protobuf.Duration][]):
+
+              {
+                "@type": "type.googleapis.com/google.protobuf.Duration",
+                "value": "1.212s"
+              }
+    description: >-
+      QueryModuleAccountByNameResponse is the response type for the
+      Query/ModuleAccountByName RPC method.
   cosmos.auth.v1beta1.QueryParamsResponse:
     type: object
     properties:
       params:
-        description: params defines the parameters of the module.
         type: object
         properties:
           max_memo_characters:
@@ -38340,6 +35168,7 @@ definitions:
           sig_verify_cost_secp256k1:
             type: string
             format: uint64
+        description: Params defines the parameters for the auth module.
     description: QueryParamsResponse is the response type for the Query/Params RPC method.
   cosmos.base.query.v1beta1.PageRequest:
     type: object
@@ -39284,7 +36113,6 @@ definitions:
             It is used in genesis.proto and query.proto
         description: grants is a list of grants granted to the grantee.
       pagination:
-        description: pagination defines an pagination for the response.
         type: object
         properties:
           next_key:
@@ -39301,6 +36129,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryGranteeGrantsResponse is the response type for the
       Query/GranteeGrants RPC method.
@@ -39494,7 +36330,6 @@ definitions:
             It is used in genesis.proto and query.proto
         description: grants is a list of grants granted by the granter.
       pagination:
-        description: pagination defines an pagination for the response.
         type: object
         properties:
           next_key:
@@ -39511,6 +36346,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryGranterGrantsResponse is the response type for the
       Query/GranterGrants RPC method.
@@ -39697,7 +36540,6 @@ definitions:
             the provide method with expiration time.
         description: authorizations is a list of grants granted for grantee by granter.
       pagination:
-        description: pagination defines an pagination for the response.
         type: object
         properties:
           next_key:
@@ -39714,6 +36556,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryGrantsResponse is the response type for the Query/Authorizations RPC
       method.
@@ -44678,7 +41528,6 @@ definitions:
     type: object
     properties:
       params:
-        description: params defines the parameters of the module.
         type: object
         properties:
           community_tax:
@@ -44689,12 +41538,12 @@ definitions:
             type: string
           withdraw_addr_enabled:
             type: boolean
+        description: Params defines the set of params for the distribution module.
     description: QueryParamsResponse is the response type for the Query/Params RPC method.
   cosmos.distribution.v1beta1.QueryValidatorCommissionResponse:
     type: object
     properties:
       commission:
-        description: commission defines the commision the validator received.
         type: object
         properties:
           commission:
@@ -44715,6 +41564,11 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+        description: >-
+          ValidatorAccumulatedCommission represents accumulated commission
+
+          for a validator kept as a running counter, can be withdrawn at any
+          time.
     title: |-
       QueryValidatorCommissionResponse is the response type for the
       Query/ValidatorCommission RPC method
@@ -44770,7 +41624,6 @@ definitions:
             for delegations which are withdrawn after a slash has occurred.
         description: slashes defines the slashes the validator received.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -44787,6 +41640,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: |-
       QueryValidatorSlashesResponse is the response type for the
       Query/ValidatorSlashes RPC method.
@@ -45018,7 +41879,6 @@ definitions:
                 }
         description: evidence returns all evidences.
       pagination:
-        description: pagination defines the pagination in the response.
         type: object
         properties:
           next_key:
@@ -45035,6 +41895,14 @@ definitions:
               PageRequest.count_total
 
               was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
     description: >-
       QueryAllEvidenceResponse is the response type for the Query/AllEvidence
       RPC
@@ -47324,7 +44192,6 @@ definitions:
     type: object
     properties:
       param:
-        description: param defines the queried parameter.
         type: object
         properties:
           subspace:
@@ -47333,6 +44200,9 @@ definitions:
             type: string
           value:
             type: string
+        description: |-
+          ParamChange defines an individual parameter change, for use in
+          ParameterChangeProposal.
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   cosmos.slashing.v1beta1.MsgUnjailResponse:
     type: object
@@ -47427,7 +44297,6 @@ definitions:
           their
 
           liveness activity.
-        title: val_signing_info is the signing info of requested val cons address
     title: >-
       QuerySigningInfoResponse is the response type for the Query/SigningInfo
       RPC
@@ -54981,7 +51850,6 @@ definitions:
     type: object
     properties:
       plan:
-        description: plan is the current upgrade plan.
         type: object
         properties:
           name:
@@ -55192,6 +52060,9 @@ definitions:
                     "@type": "type.googleapis.com/google.protobuf.Duration",
                     "value": "1.212s"
                   }
+        description: >-
+          Plan specifies information about a planned upgrade and when it should
+          occur.
     description: >-
       QueryCurrentPlanResponse is the response type for the Query/CurrentPlan
       RPC
@@ -60972,1470 +57843,3 @@ definitions:
     title: >-
       QueryInterchainAccountFromAddressResponse the response type for the
       Query/InterchainAccountAddress RPC
-  jackaldao.canine.dsig.Form:
-    type: object
-    properties:
-      ffid:
-        type: string
-      cid:
-        type: string
-      fid:
-        type: string
-      signees:
-        type: string
-  jackaldao.canine.dsig.MsgCreateformResponse:
-    type: object
-    properties:
-      ffid:
-        type: string
-  jackaldao.canine.dsig.MsgSignformResponse:
-    type: object
-  jackaldao.canine.dsig.MsgUploadfileResponse:
-    type: object
-  jackaldao.canine.dsig.Params:
-    type: object
-    description: Params defines the parameters for the module.
-  jackaldao.canine.dsig.QueryAllFormResponse:
-    type: object
-    properties:
-      form:
-        type: array
-        items:
-          type: object
-          properties:
-            ffid:
-              type: string
-            cid:
-              type: string
-            fid:
-              type: string
-            signees:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.dsig.QueryAllUserUploadsResponse:
-    type: object
-    properties:
-      userUploads:
-        type: array
-        items:
-          type: object
-          properties:
-            fid:
-              type: string
-            cid:
-              type: string
-            createdAt:
-              type: string
-              format: int64
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.dsig.QueryGetFormResponse:
-    type: object
-    properties:
-      form:
-        type: object
-        properties:
-          ffid:
-            type: string
-          cid:
-            type: string
-          fid:
-            type: string
-          signees:
-            type: string
-  jackaldao.canine.dsig.QueryGetUserUploadsResponse:
-    type: object
-    properties:
-      userUploads:
-        type: object
-        properties:
-          fid:
-            type: string
-          cid:
-            type: string
-          createdAt:
-            type: string
-            format: int64
-  jackaldao.canine.dsig.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        description: params holds all the parameters of this module.
-        type: object
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
-  jackaldao.canine.dsig.UserUploads:
-    type: object
-    properties:
-      fid:
-        type: string
-      cid:
-        type: string
-      createdAt:
-        type: string
-        format: int64
-  jackaldao.canine.filetree.Files:
-    type: object
-    properties:
-      address:
-        type: string
-      contents:
-        type: string
-      owner:
-        type: string
-      viewingAccess:
-        type: string
-      editAccess:
-        type: string
-      trackingNumber:
-        type: string
-  jackaldao.canine.filetree.MsgAddEditorsResponse:
-    type: object
-  jackaldao.canine.filetree.MsgAddViewersResponse:
-    type: object
-  jackaldao.canine.filetree.MsgChangeOwnerResponse:
-    type: object
-  jackaldao.canine.filetree.MsgDeleteFileResponse:
-    type: object
-  jackaldao.canine.filetree.MsgInitAllResponse:
-    type: object
-    properties:
-      name:
-        type: string
-  jackaldao.canine.filetree.MsgMakeRootResponse:
-    type: object
-  jackaldao.canine.filetree.MsgPostFileResponse:
-    type: object
-    properties:
-      path:
-        type: string
-  jackaldao.canine.filetree.MsgPostkeyResponse:
-    type: object
-  jackaldao.canine.filetree.MsgRemoveEditorsResponse:
-    type: object
-  jackaldao.canine.filetree.MsgRemoveViewersResponse:
-    type: object
-  jackaldao.canine.filetree.MsgResetEditorsResponse:
-    type: object
-  jackaldao.canine.filetree.MsgResetViewersResponse:
-    type: object
-  jackaldao.canine.filetree.Params:
-    type: object
-    description: Params defines the parameters for the module.
-  jackaldao.canine.filetree.Pubkey:
-    type: object
-    properties:
-      address:
-        type: string
-      key:
-        type: string
-  jackaldao.canine.filetree.QueryAllFilesResponse:
-    type: object
-    properties:
-      files:
-        type: array
-        items:
-          type: object
-          properties:
-            address:
-              type: string
-            contents:
-              type: string
-            owner:
-              type: string
-            viewingAccess:
-              type: string
-            editAccess:
-              type: string
-            trackingNumber:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.filetree.QueryAllPubkeyResponse:
-    type: object
-    properties:
-      pubkey:
-        type: array
-        items:
-          type: object
-          properties:
-            address:
-              type: string
-            key:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.filetree.QueryDecryptResponse:
-    type: object
-    properties:
-      data:
-        type: string
-  jackaldao.canine.filetree.QueryEncryptResponse:
-    type: object
-    properties:
-      encryptionData:
-        type: string
-  jackaldao.canine.filetree.QueryGetFilesResponse:
-    type: object
-    properties:
-      files:
-        type: object
-        properties:
-          address:
-            type: string
-          contents:
-            type: string
-          owner:
-            type: string
-          viewingAccess:
-            type: string
-          editAccess:
-            type: string
-          trackingNumber:
-            type: string
-  jackaldao.canine.filetree.QueryGetKeysResponse:
-    type: object
-    properties:
-      keys:
-        type: string
-  jackaldao.canine.filetree.QueryGetPubkeyResponse:
-    type: object
-    properties:
-      pubkey:
-        type: object
-        properties:
-          address:
-            type: string
-          key:
-            type: string
-  jackaldao.canine.filetree.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        type: object
-        description: Params defines the parameters for the module.
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
-  jackaldao.canine.jklmint.Params:
-    type: object
-    properties:
-      mintDenom:
-        type: string
-    description: Params defines the parameters for the module.
-  jackaldao.canine.jklmint.QueryGetInflationResponse:
-    type: object
-    properties:
-      inflation:
-        type: string
-  jackaldao.canine.jklmint.QueryInflationResponse:
-    type: object
-    properties:
-      inflation:
-        type: string
-        format: byte
-        description: inflation is the current minting inflation value.
-    description: "QueryInflationResponse is the response type for the Query/Inflation RPC\r\nmethod."
-  jackaldao.canine.jklmint.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        description: params holds all the parameters of this module.
-        type: object
-        properties:
-          mintDenom:
-            type: string
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
-  jackaldao.canine.notifications.MsgAddSendersResponse:
-    type: object
-  jackaldao.canine.notifications.MsgCreateNotificationsResponse:
-    type: object
-  jackaldao.canine.notifications.MsgDeleteNotificationsResponse:
-    type: object
-  jackaldao.canine.notifications.MsgSetCounterResponse:
-    type: object
-  jackaldao.canine.notifications.MsgUpdateNotificationsResponse:
-    type: object
-  jackaldao.canine.notifications.NotiCounter:
-    type: object
-    properties:
-      address:
-        type: string
-      counter:
-        type: string
-        format: uint64
-      permittedSenders:
-        type: string
-  jackaldao.canine.notifications.Notifications:
-    type: object
-    properties:
-      count:
-        type: string
-        format: uint64
-      notification:
-        type: string
-      address:
-        type: string
-      sender:
-        type: string
-  jackaldao.canine.notifications.Params:
-    type: object
-    description: Params defines the parameters for the module.
-  jackaldao.canine.notifications.QueryAllNotiCounterResponse:
-    type: object
-    properties:
-      notiCounter:
-        type: array
-        items:
-          type: object
-          properties:
-            address:
-              type: string
-            counter:
-              type: string
-              format: uint64
-            permittedSenders:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.notifications.QueryAllNotificationsResponse:
-    type: object
-    properties:
-      notifications:
-        type: array
-        items:
-          type: object
-          properties:
-            count:
-              type: string
-              format: uint64
-            notification:
-              type: string
-            address:
-              type: string
-            sender:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.notifications.QueryFilteredNotificationsResponse:
-    type: object
-    properties:
-      notifications:
-        type: string
-  jackaldao.canine.notifications.QueryGetNotiCounterResponse:
-    type: object
-    properties:
-      notiCounter:
-        type: object
-        properties:
-          address:
-            type: string
-          counter:
-            type: string
-            format: uint64
-          permittedSenders:
-            type: string
-  jackaldao.canine.notifications.QueryGetNotificationsResponse:
-    type: object
-    properties:
-      notifications:
-        type: object
-        properties:
-          count:
-            type: string
-            format: uint64
-          notification:
-            type: string
-          address:
-            type: string
-          sender:
-            type: string
-  jackaldao.canine.notifications.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        type: object
-        description: Params defines the parameters for the module.
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
-  jackaldao.canine.rns.Bids:
-    type: object
-    properties:
-      index:
-        type: string
-      name:
-        type: string
-      bidder:
-        type: string
-      price:
-        type: string
-  jackaldao.canine.rns.Forsale:
-    type: object
-    properties:
-      name:
-        type: string
-      price:
-        type: string
-      owner:
-        type: string
-  jackaldao.canine.rns.Init:
-    type: object
-    properties:
-      address:
-        type: string
-      complete:
-        type: boolean
-  jackaldao.canine.rns.MsgAcceptBidResponse:
-    type: object
-  jackaldao.canine.rns.MsgAddRecordResponse:
-    type: object
-  jackaldao.canine.rns.MsgBidResponse:
-    type: object
-  jackaldao.canine.rns.MsgBuyResponse:
-    type: object
-  jackaldao.canine.rns.MsgCancelBidResponse:
-    type: object
-  jackaldao.canine.rns.MsgDelRecordResponse:
-    type: object
-  jackaldao.canine.rns.MsgDelistResponse:
-    type: object
-  jackaldao.canine.rns.MsgInitResponse:
-    type: object
-  jackaldao.canine.rns.MsgListResponse:
-    type: object
-  jackaldao.canine.rns.MsgRegisterResponse:
-    type: object
-  jackaldao.canine.rns.MsgTransferResponse:
-    type: object
-  jackaldao.canine.rns.Names:
-    type: object
-    properties:
-      name:
-        type: string
-      expires:
-        type: string
-        format: int64
-      value:
-        type: string
-      data:
-        type: string
-      subdomains:
-        type: array
-        items:
-          $ref: '#/definitions/jackaldao.canine.rns.Names'
-      tld:
-        type: string
-      locked:
-        type: string
-        format: int64
-  jackaldao.canine.rns.Params:
-    type: object
-    description: Params defines the parameters for the module.
-  jackaldao.canine.rns.QueryAllBidsResponse:
-    type: object
-    properties:
-      bids:
-        type: array
-        items:
-          type: object
-          properties:
-            index:
-              type: string
-            name:
-              type: string
-            bidder:
-              type: string
-            price:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.rns.QueryAllForsaleResponse:
-    type: object
-    properties:
-      forsale:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: string
-            price:
-              type: string
-            owner:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.rns.QueryAllInitResponse:
-    type: object
-    properties:
-      init:
-        type: array
-        items:
-          type: object
-          properties:
-            address:
-              type: string
-            complete:
-              type: boolean
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.rns.QueryAllNamesResponse:
-    type: object
-    properties:
-      names:
-        type: array
-        items:
-          $ref: '#/definitions/jackaldao.canine.rns.Names'
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.rns.QueryGetBidsResponse:
-    type: object
-    properties:
-      bids:
-        type: object
-        properties:
-          index:
-            type: string
-          name:
-            type: string
-          bidder:
-            type: string
-          price:
-            type: string
-  jackaldao.canine.rns.QueryGetForsaleResponse:
-    type: object
-    properties:
-      forsale:
-        type: object
-        properties:
-          name:
-            type: string
-          price:
-            type: string
-          owner:
-            type: string
-  jackaldao.canine.rns.QueryGetInitResponse:
-    type: object
-    properties:
-      init:
-        type: boolean
-  jackaldao.canine.rns.QueryGetNamesResponse:
-    type: object
-    properties:
-      names:
-        $ref: '#/definitions/jackaldao.canine.rns.Names'
-  jackaldao.canine.rns.QueryListOwnedNamesResponse:
-    type: object
-    properties:
-      names:
-        type: array
-        items:
-          $ref: '#/definitions/jackaldao.canine.rns.Names'
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.rns.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        description: params holds all the parameters of this module.
-        type: object
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
-  jackaldao.canine.storage.ActiveDeals:
-    type: object
-    properties:
-      cid:
-        type: string
-      signee:
-        type: string
-      provider:
-        type: string
-      startblock:
-        type: string
-      endblock:
-        type: string
-      filesize:
-        type: string
-      proofverified:
-        type: string
-      proofsmissed:
-        type: string
-      blocktoprove:
-        type: string
-      creator:
-        type: string
-      merkle:
-        type: string
-      fid:
-        type: string
-  jackaldao.canine.storage.ClientUsage:
-    type: object
-    properties:
-      address:
-        type: string
-      usage:
-        type: string
-  jackaldao.canine.storage.Contracts:
-    type: object
-    properties:
-      cid:
-        type: string
-      priceamt:
-        type: string
-      pricedenom:
-        type: string
-      merkle:
-        type: string
-      signee:
-        type: string
-      duration:
-        type: string
-      filesize:
-        type: string
-      fid:
-        type: string
-      creator:
-        type: string
-  jackaldao.canine.storage.FidCid:
-    type: object
-    properties:
-      fid:
-        type: string
-      cids:
-        type: string
-  jackaldao.canine.storage.MsgBuyStorageResponse:
-    type: object
-  jackaldao.canine.storage.MsgCancelContractResponse:
-    type: object
-  jackaldao.canine.storage.MsgClaimStrayResponse:
-    type: object
-  jackaldao.canine.storage.MsgInitProviderResponse:
-    type: object
-  jackaldao.canine.storage.MsgPostContractResponse:
-    type: object
-  jackaldao.canine.storage.MsgPostproofResponse:
-    type: object
-    properties:
-      merkle:
-        type: string
-  jackaldao.canine.storage.MsgSetProviderIpResponse:
-    type: object
-  jackaldao.canine.storage.MsgSetProviderTotalspaceResponse:
-    type: object
-  jackaldao.canine.storage.MsgSignContractResponse:
-    type: object
-  jackaldao.canine.storage.Params:
-    type: object
-    description: Params defines the parameters for the module.
-  jackaldao.canine.storage.PayBlocks:
-    type: object
-    properties:
-      blockid:
-        type: string
-      bytes:
-        type: string
-      blocktype:
-        type: string
-      blocknum:
-        type: string
-  jackaldao.canine.storage.Proofs:
-    type: object
-    properties:
-      cid:
-        type: string
-      item:
-        type: string
-      hashes:
-        type: string
-      creator:
-        type: string
-  jackaldao.canine.storage.Providers:
-    type: object
-    properties:
-      address:
-        type: string
-      ip:
-        type: string
-      totalspace:
-        type: string
-      burned_contracts:
-        type: string
-      creator:
-        type: string
-  jackaldao.canine.storage.QueryAllActiveDealsResponse:
-    type: object
-    properties:
-      activeDeals:
-        type: array
-        items:
-          type: object
-          properties:
-            cid:
-              type: string
-            signee:
-              type: string
-            provider:
-              type: string
-            startblock:
-              type: string
-            endblock:
-              type: string
-            filesize:
-              type: string
-            proofverified:
-              type: string
-            proofsmissed:
-              type: string
-            blocktoprove:
-              type: string
-            creator:
-              type: string
-            merkle:
-              type: string
-            fid:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryAllClientUsageResponse:
-    type: object
-    properties:
-      clientUsage:
-        type: array
-        items:
-          type: object
-          properties:
-            address:
-              type: string
-            usage:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryAllContractsResponse:
-    type: object
-    properties:
-      contracts:
-        type: array
-        items:
-          type: object
-          properties:
-            cid:
-              type: string
-            priceamt:
-              type: string
-            pricedenom:
-              type: string
-            merkle:
-              type: string
-            signee:
-              type: string
-            duration:
-              type: string
-            filesize:
-              type: string
-            fid:
-              type: string
-            creator:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryAllFidCidResponse:
-    type: object
-    properties:
-      fidCid:
-        type: array
-        items:
-          type: object
-          properties:
-            fid:
-              type: string
-            cids:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryAllPayBlocksResponse:
-    type: object
-    properties:
-      payBlocks:
-        type: array
-        items:
-          type: object
-          properties:
-            blockid:
-              type: string
-            bytes:
-              type: string
-            blocktype:
-              type: string
-            blocknum:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryAllProofsResponse:
-    type: object
-    properties:
-      proofs:
-        type: array
-        items:
-          type: object
-          properties:
-            cid:
-              type: string
-            item:
-              type: string
-            hashes:
-              type: string
-            creator:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryAllProvidersResponse:
-    type: object
-    properties:
-      providers:
-        type: array
-        items:
-          type: object
-          properties:
-            address:
-              type: string
-            ip:
-              type: string
-            totalspace:
-              type: string
-            burned_contracts:
-              type: string
-            creator:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryAllStraysResponse:
-    type: object
-    properties:
-      strays:
-        type: array
-        items:
-          type: object
-          properties:
-            cid:
-              type: string
-            fid:
-              type: string
-            signee:
-              type: string
-            filesize:
-              type: string
-            merkle:
-              type: string
-      pagination:
-        type: object
-        properties:
-          next_key:
-            type: string
-            format: byte
-            title: |-
-              next_key is the key to be passed to PageRequest.key to
-              query the next page most efficiently
-          total:
-            type: string
-            format: uint64
-            title: >-
-              total is total number of results available if
-              PageRequest.count_total
-
-              was set, its value is undefined otherwise
-        description: |-
-          PageResponse is to be embedded in gRPC response messages where the
-          corresponding request message has used PageRequest.
-
-           message SomeResponse {
-                   repeated Bar results = 1;
-                   PageResponse page = 2;
-           }
-  jackaldao.canine.storage.QueryFindFileResponse:
-    type: object
-    properties:
-      providerIps:
-        type: string
-  jackaldao.canine.storage.QueryFreespaceResponse:
-    type: object
-    properties:
-      space:
-        type: string
-  jackaldao.canine.storage.QueryGetActiveDealsResponse:
-    type: object
-    properties:
-      activeDeals:
-        type: object
-        properties:
-          cid:
-            type: string
-          signee:
-            type: string
-          provider:
-            type: string
-          startblock:
-            type: string
-          endblock:
-            type: string
-          filesize:
-            type: string
-          proofverified:
-            type: string
-          proofsmissed:
-            type: string
-          blocktoprove:
-            type: string
-          creator:
-            type: string
-          merkle:
-            type: string
-          fid:
-            type: string
-  jackaldao.canine.storage.QueryGetClientFreeSpaceResponse:
-    type: object
-    properties:
-      bytesfree:
-        type: string
-  jackaldao.canine.storage.QueryGetClientUsageResponse:
-    type: object
-    properties:
-      clientUsage:
-        type: object
-        properties:
-          address:
-            type: string
-          usage:
-            type: string
-  jackaldao.canine.storage.QueryGetContractsResponse:
-    type: object
-    properties:
-      contracts:
-        type: object
-        properties:
-          cid:
-            type: string
-          priceamt:
-            type: string
-          pricedenom:
-            type: string
-          merkle:
-            type: string
-          signee:
-            type: string
-          duration:
-            type: string
-          filesize:
-            type: string
-          fid:
-            type: string
-          creator:
-            type: string
-  jackaldao.canine.storage.QueryGetFidCidResponse:
-    type: object
-    properties:
-      fidCid:
-        type: object
-        properties:
-          fid:
-            type: string
-          cids:
-            type: string
-  jackaldao.canine.storage.QueryGetPayBlocksResponse:
-    type: object
-    properties:
-      payBlocks:
-        type: object
-        properties:
-          blockid:
-            type: string
-          bytes:
-            type: string
-          blocktype:
-            type: string
-          blocknum:
-            type: string
-  jackaldao.canine.storage.QueryGetPayDataResponse:
-    type: object
-    properties:
-      blocks_remaining:
-        type: string
-        format: int64
-      bytes:
-        type: string
-        format: int64
-  jackaldao.canine.storage.QueryGetProofsResponse:
-    type: object
-    properties:
-      proofs:
-        type: object
-        properties:
-          cid:
-            type: string
-          item:
-            type: string
-          hashes:
-            type: string
-          creator:
-            type: string
-  jackaldao.canine.storage.QueryGetProvidersResponse:
-    type: object
-    properties:
-      providers:
-        type: object
-        properties:
-          address:
-            type: string
-          ip:
-            type: string
-          totalspace:
-            type: string
-          burned_contracts:
-            type: string
-          creator:
-            type: string
-  jackaldao.canine.storage.QueryGetStraysResponse:
-    type: object
-    properties:
-      strays:
-        type: object
-        properties:
-          cid:
-            type: string
-          fid:
-            type: string
-          signee:
-            type: string
-          filesize:
-            type: string
-          merkle:
-            type: string
-  jackaldao.canine.storage.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        type: object
-        description: Params defines the parameters for the module.
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
-  jackaldao.canine.storage.Strays:
-    type: object
-    properties:
-      cid:
-        type: string
-      fid:
-        type: string
-      signee:
-        type: string
-      filesize:
-        type: string
-      merkle:
-        type: string

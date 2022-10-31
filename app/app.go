@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/prometheus/client_golang/prometheus"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
@@ -98,7 +100,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
-	"github.com/tendermint/spm/openapiconsole"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
@@ -119,22 +120,23 @@ import (
 	rnsmodulekeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 
-	storagemodule "github.com/jackalLabs/canine-chain/x/storage"
-	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	/*
+		storagemodule "github.com/jackalLabs/canine-chain/x/storage"
+		storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+		storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
-	dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
-	dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
-	dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
+		dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
+		dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
+		dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
 
-	filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
-	filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+		filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
+		filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
+		filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 
-	notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
-	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
-
+		notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
+		notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
+		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
+	*/
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
@@ -232,10 +234,12 @@ var (
 		ica.AppModuleBasic{},
 		intertx.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
-		storagemodule.AppModuleBasic{},
-		dsigmodule.AppModuleBasic{},
-		filetreemodule.AppModuleBasic{},
-		notificationsmodule.AppModuleBasic{},
+		/*
+			storagemodule.AppModuleBasic{},
+			dsigmodule.AppModuleBasic{},
+			filetreemodule.AppModuleBasic{},
+			notificationsmodule.AppModuleBasic{},
+		*/
 	)
 
 	// module account permissions
@@ -250,8 +254,10 @@ var (
 		icatypes.ModuleName:            nil,
 		wasm.ModuleName:                {authtypes.Burner},
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
-		dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
+		/*
+			storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
+			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
+		*/
 	}
 )
 
@@ -265,7 +271,7 @@ type WasmApp struct {
 	*baseapp.BaseApp
 	legacyAmino       *codec.LegacyAmino //nolint:staticcheck
 	appCodec          codec.Codec
-	interfaceRegistry types.InterfaceRegistry
+	InterfaceRegistry types.InterfaceRegistry
 
 	invCheckPeriod uint
 
@@ -280,7 +286,7 @@ type WasmApp struct {
 	capabilityKeeper    *capabilitykeeper.Keeper
 	stakingKeeper       stakingkeeper.Keeper
 	slashingKeeper      slashingkeeper.Keeper
-	mintKeeper          mintkeeper.Keeper
+	MintKeeper          mintkeeper.Keeper
 	distrKeeper         distrkeeper.Keeper
 	govKeeper           govkeeper.Keeper
 	crisisKeeper        crisiskeeper.Keeper
@@ -305,12 +311,14 @@ type WasmApp struct {
 
 	RnsKeeper rnsmodulekeeper.Keeper
 
-	StorageKeeper storagemodulekeeper.Keeper
+	/*
+		StorageKeeper storagemodulekeeper.Keeper
 
-	DsigKeeper     dsigmodulekeeper.Keeper
-	FileTreeKeeper filetreemodulekeeper.Keeper
+		DsigKeeper     dsigmodulekeeper.Keeper
+		FileTreeKeeper filetreemodulekeeper.Keeper
 
-	NotificationsKeeper notificationsmodulekeeper.Keeper
+		NotificationsKeeper notificationsmodulekeeper.Keeper
+	*/
 
 	// the module manager
 	mm *module.Manager
@@ -350,8 +358,11 @@ func NewWasmApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
-		notificationsmoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey,
+		/*
+			storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
+			notificationsmoduletypes.StoreKey,
+		*/
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -360,7 +371,7 @@ func NewWasmApp(
 		BaseApp:           bApp,
 		legacyAmino:       legacyAmino,
 		appCodec:          appCodec,
-		interfaceRegistry: interfaceRegistry,
+		InterfaceRegistry: interfaceRegistry,
 		invCheckPeriod:    invCheckPeriod,
 		keys:              keys,
 		tkeys:             tkeys,
@@ -423,7 +434,9 @@ func NewWasmApp(
 		app.bankKeeper,
 		app.getSubspace(stakingtypes.ModuleName),
 	)
-	app.mintKeeper = mintkeeper.NewKeeper(
+
+	// mintkeeper needs to be made to not reply on the storage module.
+	app.MintKeeper = mintkeeper.NewKeeper(
 		appCodec,
 		keys[minttypes.StoreKey],
 		app.getSubspace(minttypes.ModuleName),
@@ -431,8 +444,9 @@ func NewWasmApp(
 		app.accountKeeper,
 		app.bankKeeper,
 		authtypes.FeeCollectorName,
-		storagemoduletypes.ModuleName,
+	//	storagemoduletypes.ModuleName,
 	)
+
 	app.distrKeeper = distrkeeper.NewKeeper(
 		appCodec,
 		keys[distrtypes.StoreKey],
@@ -582,43 +596,44 @@ func NewWasmApp(
 	)
 	rnsModule := rnsmodule.NewAppModule(appCodec, app.RnsKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
-		appCodec,
-		keys[storagemoduletypes.StoreKey],
-		keys[storagemoduletypes.MemStoreKey],
-		app.getSubspace(storagemoduletypes.ModuleName),
-		app.bankKeeper,
-	)
-	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.accountKeeper, app.bankKeeper)
+	/*
+		app.StorageKeeper = *storagemodulekeeper.NewKeeper(
+			appCodec,
+			keys[storagemoduletypes.StoreKey],
+			keys[storagemoduletypes.MemStoreKey],
+			app.getSubspace(storagemoduletypes.ModuleName),
+			app.bankKeeper,
+		)
+		storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.DsigKeeper = *dsigmodulekeeper.NewKeeper(
-		appCodec,
-		keys[dsigmoduletypes.StoreKey],
-		keys[dsigmoduletypes.MemStoreKey],
-		app.getSubspace(dsigmoduletypes.ModuleName),
+		app.DsigKeeper = *dsigmodulekeeper.NewKeeper(
+			appCodec,
+			keys[dsigmoduletypes.StoreKey],
+			keys[dsigmoduletypes.MemStoreKey],
+			app.getSubspace(dsigmoduletypes.ModuleName),
 
-		app.accountKeeper,
-	)
-	dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.accountKeeper, app.bankKeeper)
+			app.accountKeeper,
+		)
+		dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
-		appCodec,
-		keys[notificationsmoduletypes.StoreKey],
-		keys[notificationsmoduletypes.MemStoreKey],
-		app.getSubspace(notificationsmoduletypes.ModuleName),
-	)
-	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.accountKeeper, app.bankKeeper)
+		app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
+			appCodec,
+			keys[notificationsmoduletypes.StoreKey],
+			keys[notificationsmoduletypes.MemStoreKey],
+			app.getSubspace(notificationsmoduletypes.ModuleName),
+		)
+		notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.accountKeeper, app.bankKeeper)
 
-	app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
-		appCodec,
-		keys[filetreemoduletypes.StoreKey],
-		keys[filetreemoduletypes.MemStoreKey],
-		app.getSubspace(filetreemoduletypes.ModuleName),
-		app.RnsKeeper,
-		app.NotificationsKeeper,
-	)
-	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
-
+		app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
+			appCodec,
+			keys[filetreemoduletypes.StoreKey],
+			keys[filetreemoduletypes.MemStoreKey],
+			app.getSubspace(filetreemoduletypes.ModuleName),
+			app.RnsKeeper,
+			app.NotificationsKeeper,
+		)
+		filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.accountKeeper, app.bankKeeper)
+	*/
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 
@@ -663,15 +678,15 @@ func NewWasmApp(
 		bank.NewAppModule(appCodec, app.bankKeeper, app.accountKeeper),
 		capability.NewAppModule(appCodec, *app.capabilityKeeper),
 		gov.NewAppModule(appCodec, app.govKeeper, app.accountKeeper, app.bankKeeper),
-		mint.NewAppModule(appCodec, app.mintKeeper, app.accountKeeper, app.bankKeeper),
+		mint.NewAppModule(appCodec, app.MintKeeper, app.accountKeeper, app.bankKeeper),
 		slashing.NewAppModule(appCodec, app.slashingKeeper, app.accountKeeper, app.bankKeeper, app.stakingKeeper),
 		distr.NewAppModule(appCodec, app.distrKeeper, app.accountKeeper, app.bankKeeper, app.stakingKeeper),
 		staking.NewAppModule(appCodec, app.stakingKeeper, app.accountKeeper, app.bankKeeper),
 		upgrade.NewAppModule(app.upgradeKeeper),
 		wasm.NewAppModule(appCodec, &app.wasmKeeper, app.stakingKeeper, app.accountKeeper, app.bankKeeper),
 		evidence.NewAppModule(app.evidenceKeeper),
-		feegrantmodule.NewAppModule(appCodec, app.accountKeeper, app.bankKeeper, app.feeGrantKeeper, app.interfaceRegistry),
-		authzmodule.NewAppModule(appCodec, app.authzKeeper, app.accountKeeper, app.bankKeeper, app.interfaceRegistry),
+		feegrantmodule.NewAppModule(appCodec, app.accountKeeper, app.bankKeeper, app.feeGrantKeeper, app.InterfaceRegistry),
+		authzmodule.NewAppModule(appCodec, app.authzKeeper, app.accountKeeper, app.bankKeeper, app.InterfaceRegistry),
 		ibc.NewAppModule(app.ibcKeeper),
 		params.NewAppModule(app.paramsKeeper),
 		transferModule,
@@ -679,10 +694,12 @@ func NewWasmApp(
 		interTxModule,
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 		rnsModule,
-		storageModule,
-		dsigModule,
-		filetreeModule,
-		notificationsModule,
+		/*
+			storageModule,
+			dsigModule,
+			filetreeModule,
+			notificationsModule,
+		*/
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -713,10 +730,12 @@ func NewWasmApp(
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
-		storagemoduletypes.ModuleName,
-		dsigmoduletypes.ModuleName,
-		filetreemoduletypes.ModuleName,
-		notificationsmoduletypes.ModuleName,
+		/*
+			storagemoduletypes.ModuleName,
+			dsigmoduletypes.ModuleName,
+			filetreemoduletypes.ModuleName,
+			notificationsmoduletypes.ModuleName,
+		*/
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -743,10 +762,12 @@ func NewWasmApp(
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
-		storagemoduletypes.ModuleName,
-		dsigmoduletypes.ModuleName,
-		filetreemoduletypes.ModuleName,
-		notificationsmoduletypes.ModuleName,
+		/*
+			storagemoduletypes.ModuleName,
+			dsigmoduletypes.ModuleName,
+			filetreemoduletypes.ModuleName,
+			notificationsmoduletypes.ModuleName,
+		*/
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -781,10 +802,12 @@ func NewWasmApp(
 		// wasm after ibc transfer
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
-		storagemoduletypes.ModuleName,
-		dsigmoduletypes.ModuleName,
-		filetreemoduletypes.ModuleName,
-		notificationsmoduletypes.ModuleName,
+		/*
+			storagemoduletypes.ModuleName,
+			dsigmoduletypes.ModuleName,
+			filetreemoduletypes.ModuleName,
+			notificationsmoduletypes.ModuleName,
+		*/
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -804,10 +827,10 @@ func NewWasmApp(
 		auth.NewAppModule(appCodec, app.accountKeeper, authsims.RandomGenesisAccounts),
 		bank.NewAppModule(appCodec, app.bankKeeper, app.accountKeeper),
 		capability.NewAppModule(appCodec, *app.capabilityKeeper),
-		feegrantmodule.NewAppModule(appCodec, app.accountKeeper, app.bankKeeper, app.feeGrantKeeper, app.interfaceRegistry),
-		authzmodule.NewAppModule(appCodec, app.authzKeeper, app.accountKeeper, app.bankKeeper, app.interfaceRegistry),
+		feegrantmodule.NewAppModule(appCodec, app.accountKeeper, app.bankKeeper, app.feeGrantKeeper, app.InterfaceRegistry),
+		authzmodule.NewAppModule(appCodec, app.authzKeeper, app.accountKeeper, app.bankKeeper, app.InterfaceRegistry),
 		gov.NewAppModule(appCodec, app.govKeeper, app.accountKeeper, app.bankKeeper),
-		mint.NewAppModule(appCodec, app.mintKeeper, app.accountKeeper, app.bankKeeper),
+		mint.NewAppModule(appCodec, app.MintKeeper, app.accountKeeper, app.bankKeeper),
 		staking.NewAppModule(appCodec, app.stakingKeeper, app.accountKeeper, app.bankKeeper),
 		distr.NewAppModule(appCodec, app.distrKeeper, app.accountKeeper, app.bankKeeper, app.stakingKeeper),
 		slashing.NewAppModule(appCodec, app.slashingKeeper, app.accountKeeper, app.bankKeeper, app.stakingKeeper),
@@ -817,7 +840,7 @@ func NewWasmApp(
 		ibc.NewAppModule(app.ibcKeeper),
 		transferModule,
 		rnsModule,
-		storageModule,
+		// storageModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -966,19 +989,19 @@ func (app *WasmApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APICo
 	}
 
 	// register app's  routes.
+	// TODO: THIS MIGHT NEED TO BE CLEANED FURTHER.
 	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
-	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(appName, "/static/openapi.yml"))
-
+	// apiSvr.Router.HandleFunc("/", openapiconsole.Handler(appName, "/static/openapi.yml"))
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
 func (app *WasmApp) RegisterTxService(clientCtx client.Context) {
-	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
+	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.InterfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
 func (app *WasmApp) RegisterTendermintService(clientCtx client.Context) {
-	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.interfaceRegistry)
+	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
 }
 
 func (app *WasmApp) AppCodec() codec.Codec {
@@ -1025,4 +1048,15 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
 
 	return paramsKeeper
+}
+
+func GetWasmOpts(appOpts servertypes.AppOptions) []wasm.Option {
+	var wasmOpts []wasm.Option
+	if cast.ToBool(appOpts.Get("telemetry.enabled")) {
+		wasmOpts = append(wasmOpts, wasmkeeper.WithVMCacheMetrics(prometheus.DefaultRegisterer))
+	}
+
+	wasmOpts = append(wasmOpts, wasmkeeper.WithGasRegister(NewJackalWasmGasRegister()))
+
+	return wasmOpts
 }

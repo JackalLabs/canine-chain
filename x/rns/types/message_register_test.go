@@ -4,9 +4,11 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/testutil/sample"
+	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
+
+// TODO: rewrite tests without ignite
 
 func TestMsgRegister_ValidateBasic(t *testing.T) {
 	tests := []struct {
@@ -22,8 +24,8 @@ func TestMsgRegister_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgRegister{
-				Creator: sample.AccAddress(),
+			msg:  MsgRegister{
+				//			Creator: sample.AccAddress(),
 			},
 		},
 	}

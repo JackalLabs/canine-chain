@@ -9,20 +9,24 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/testutil/sample"
+
+	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	rnssimulation "github.com/jackalLabs/canine-chain/x/rns/simulation"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
+// TODO: rewrite tests but don't use ignite
+
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	//	_ = sample.AccAddress
 	_ = rnssimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
 	_ = baseapp.Paramspace
 )
 
+//nolint:gosec // these aren't hard-coded credentials
 const (
 	opWeightMsgRegister = "op_weight_msg_register"
 	// TODO: Determine the simulation weight value
