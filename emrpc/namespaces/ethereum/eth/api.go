@@ -309,7 +309,11 @@ func (e *PublicAPI) GetBalance(address common.Address, blockNrOrHash rpctypes.Bl
 		return nil, errors.New("invalid balance")
 	}
 
-	return (*hexutil.Big)(val.BigInt()), nil
+	// rounding up
+	rounding := sdk.NewInt(1000000000000000000)
+	nval := val.Mul(rounding)
+	e.logger.Error(rounding.String())
+	return (*hexutil.Big)(nval.BigInt()), nil
 }
 
 // Not needed?
@@ -496,6 +500,7 @@ func (e *PublicAPI) SendTransaction(args evmtypes.TransactionArgs) (common.Hash,
 // on a given unsigned transaction, and returns it to the caller for further
 // processing (signing + broadcast).
 func (e *PublicAPI) FillTransaction(args evmtypes.TransactionArgs) (*rpctypes.SignTransactionResult, error) {
+	e.logger.Error("FillTransaction")
 	// Set some sanity defaults and terminate on failure
 	args, err := e.backend.SetTxDefaults(args)
 	if err != nil {

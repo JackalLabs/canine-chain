@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"math/big"
 	"strconv"
 	"time"
@@ -66,7 +67,6 @@ func (b *Backend) GetBlockByNumber(blockNum emrpctypes.BlockNumber, fullTx bool)
 	if err != nil {
 		return nil, err
 	}
-
 	// return if requested block height is greater than the current one
 	if resBlock == nil || resBlock.Block == nil {
 		return nil, nil
@@ -83,6 +83,9 @@ func (b *Backend) GetBlockByNumber(blockNum emrpctypes.BlockNumber, fullTx bool)
 		b.logger.Debug("EthBlockFromTendermint failed", "height", blockNum, "error", err.Error())
 		return nil, err
 	}
+	file, _ := json.Marshal(res)
+	_ = ioutil.WriteFile("blockdump.json", file, 0644)
+
 	return res, nil
 }
 

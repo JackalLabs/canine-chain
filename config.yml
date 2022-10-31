@@ -22,7 +22,7 @@ init:
     api:
       swagger: "true"
   client:
-    chain-id: "canine_9002-1"
+    chain-id: "canine_9000-1"
 genesis:
   app_state:
     staking:
@@ -31,6 +31,6 @@ genesis:
     mint:
       params:
         mint_denom: "ujkl"
-  chain_id: "canine_9002-1"
+  chain_id: "canine_9000-1"
 build:
   main: "cmd/canined"

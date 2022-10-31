@@ -44,6 +44,7 @@ func (api *PublicAPI) Inspect() (map[string]map[string]map[string]string, error)
 // Status returns the number of pending and queued transaction in the pool.
 func (api *PublicAPI) Status() map[string]hexutil.Uint {
 	api.logger.Debug("txpool_status")
+	api.logger.Error("txpool_status")
 	return map[string]hexutil.Uint{
 		"pending": hexutil.Uint(0),
 		"queued":  hexutil.Uint(0),

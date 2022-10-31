@@ -38,7 +38,8 @@ func StartJSONRPC(ctx *server.Context, clientCtx client.Context, tmRPCAddr, tmEn
 
 	rpcServer := ethrpc.NewServer()
 
-	allowUnprotectedTxs := config.JSONRPC.AllowUnprotectedTxs
+	// allowUnprotectedTxs := config.JSONRPC.AllowUnprotectedTxs
+	allowUnprotectedTxs := true
 	rpcAPIArr := config.JSONRPC.API
 
 	apis := rpc.GetRPCAPIs(ctx, clientCtx, tmWsClient, allowUnprotectedTxs, rpcAPIArr)
@@ -55,8 +56,8 @@ func StartJSONRPC(ctx *server.Context, clientCtx client.Context, tmRPCAddr, tmEn
 	r := mux.NewRouter()
 	r.HandleFunc("/", rpcServer.ServeHTTP).Methods("POST")
 
-	handlerWithCors := cors.AllowAll()
-	// handlerWithCors := cors.Default()
+	handlerWithCors := cors.Default()
+	// handlerWithCors = cors.AllowAll()
 	// because who needs safety?
 	// if config.API.EnableUnsafeCORS {
 	// 	handlerWithCors = cors.AllowAll()
