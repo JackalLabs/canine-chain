@@ -2,18 +2,23 @@ package main
 
 import "fmt"
 
-const UPTIME_LEFT_KEY = "UPTL-"
-const FILE_KEY = "FILE-"
-const DOWNTIME_KEY = "DWNT-"
+const (
+	UptimeLeftKey = "UPTL-"
+	FileKey       = "FILE-"
+	DowntimeKey   = "DWNT-"
+)
 
+//nolint:unused
 func makeUptimeKey(cid string) []byte {
-	return []byte(fmt.Sprintf("%s%s", UPTIME_LEFT_KEY, cid))
+	return []byte(fmt.Sprintf("%s%s", UptimeLeftKey, cid))
 }
 
+//nolint:unused
 func makeFileKey(cid string) []byte {
-	return []byte(fmt.Sprintf("%s%s", FILE_KEY, cid))
+	return []byte(fmt.Sprintf("%s%s", FileKey, cid))
 }
 
+//nolint:unused
 func makeDowntimeKey(cid string) []byte {
-	return []byte(fmt.Sprintf("%s%s", DOWNTIME_KEY, cid))
+	return []byte(fmt.Sprintf("%s%s", DowntimeKey, cid))
 }

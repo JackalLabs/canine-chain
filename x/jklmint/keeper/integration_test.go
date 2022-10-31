@@ -17,6 +17,8 @@ import (
 )
 
 // returns context and an app with updated mint keeper
+//
+//nolint:unused
 func createTestApp(isCheckTx bool) (*jklapp.WasmApp, sdk.Context) {
 	app := setup(isCheckTx)
 

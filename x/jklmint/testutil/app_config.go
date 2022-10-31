@@ -1,8 +1,10 @@
 package testutil
 
+// NOTE: THIS IS COSMOS-SDK V0.47.* STYLE.
+
 import (
 	"cosmossdk.io/core/appconfig"
-	_ "github.com/cosmos/cosmos-sdk/x/auth"
+	_ "github.com/cosmos/cosmos-sdk/x/auth" //nolint:revive // this is a test
 	_ "github.com/cosmos/cosmos-sdk/x/bank"
 	_ "github.com/cosmos/cosmos-sdk/x/genutil"
 	_ "github.com/cosmos/cosmos-sdk/x/params"

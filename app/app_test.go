@@ -15,7 +15,7 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 )
 
-var emptyWasmOpts []wasm.Option = nil
+var emptyWasmOpts []wasm.Option
 
 func TestWasmdExport(t *testing.T) {
 	db := db.NewMemDB()
@@ -90,7 +90,7 @@ func TestGetEnabledProposals(t *testing.T) {
 	}
 }
 
-func setGenesis(gapp *WasmApp) error {
+func setGenesis(gapp *WasmApp) error { //nolint:unused
 	genesisState := NewDefaultGenesisState()
 	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
 	if err != nil {
