@@ -8,8 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TODO: rewrite tests without ignite
-
 func TestMsgAddRecord_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
@@ -20,12 +18,30 @@ func TestMsgAddRecord_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgAddRecord{
 				Creator: "invalid_address",
+				Name:    "validname.jkl",
+				Value:   "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Data:    "{}",
+				Record:  "app",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid name",
+			msg: MsgAddRecord{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "invalidname",
+				Value:   "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Data:    "{}",
+				Record:  "app",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
 			name: "valid address",
-			msg:  MsgAddRecord{
-				//			Creator: sample.AccAddress(),
+			msg: MsgAddRecord{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "validname.jkl",
+				Value:   "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Data:    "{}",
+				Record:  "app",
 			},
 		},
 	}
