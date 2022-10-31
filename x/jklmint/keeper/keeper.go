@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"math/big"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -66,6 +67,53 @@ func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
 	}
 
 	return k.bankKeeper.MintCoins(ctx, types.ModuleName, newCoins)
+}
+
+func FloatToBigInt(val float64) *big.Int {
+	bigval := new(big.Float)
+	bigval.SetFloat64(val)
+
+	coin := new(big.Float)
+	coin.SetInt(big.NewInt(1000000000000000000))
+
+	bigval.Mul(bigval, coin)
+
+	result := new(big.Int)
+	bigval.Int(result)
+
+	return result
+}
+
+func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
+	coins := k.bankKeeper.GetSupply(ctx, k.GetParams(ctx).MintDenom)
+	zeroDec, err := sdk.NewDecFromStr("0")
+	if err != nil {
+		return zeroDec, types.ErrCannotParseFloat
+	}
+
+	amt := coins.Amount.ToDec()
+	famt, err := amt.Float64()
+	if err != nil {
+		return zeroDec, types.ErrCannotParseFloat
+	}
+
+	var tokens float64 = 4 // TODO: Update to 10 when storage goes live
+	highDec, err := sdk.NewDecFromStr("1.0")
+	if err != nil {
+		return zeroDec, types.ErrCannotParseFloat
+	}
+
+	if famt <= 0 {
+		return highDec, nil
+	}
+
+	ratio := tokens / famt
+
+	ratioDec := FloatToBigInt(ratio)
+
+	ratioSDK := sdk.NewDecFromBigInt(ratioDec)
+
+	return ratioSDK, nil
 }
 
 // AddCollectedFees implements an alias call to the underlying supply keeper's
