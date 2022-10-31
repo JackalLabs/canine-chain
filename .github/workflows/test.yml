@@ -3,18 +3,17 @@ name: Test
 on:
   pull_request:
   push:
-    branches: [ "master", "dev" ]
+    branches: ["master", "dev"]
 
 jobs:
   test:
-      name: Test
-      runs-on: ubuntu-latest
-      steps:        
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v3.1.0
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19 # The Go version to download (if necessary) and use.
-      - name: Build CLI
+      - name: Test
         shell: bash
         run: go test ./...
-
