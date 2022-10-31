@@ -202,7 +202,7 @@ func GenSequenceOfTxs(b testing.TB, info *AppInfo, msgGen func(*AppInfo) ([]sdk.
 			info.MinterKey,
 		)
 		require.NoError(b, err)
-		info.SeqNum += 1
+		info.SeqNum++
 	}
 
 	return txs

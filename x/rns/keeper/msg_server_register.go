@@ -19,7 +19,7 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 		return nil, err
 	}
 
-	if types.IS_RESERVED[tld] {
+	if types.IsReserved[tld] {
 		return nil, types.ErrReserved
 	}
 
@@ -28,7 +28,7 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	chars := strings.Count(name, "")
 
-	var baseCost int64 = getCost(tld)
+	baseCost := getCost(tld)
 
 	var cost int64
 
@@ -51,24 +51,22 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost)}
 
-	num_years, _ := sdk.NewIntFromString(msg.Years)
+	numYears, _ := sdk.NewIntFromString(msg.Years)
 
-	block_height := ctx.BlockHeight()
+	blockHeight := ctx.BlockHeight()
 
-	time := num_years.Int64() * 6311520
+	time := numYears.Int64() * 6311520
 
 	owner, _ := sdk.AccAddressFromBech32(msg.Creator)
 	// If a name is found in store
 	if isFound {
 		if whois.Value == owner.String() {
 			time = whois.Expires + time
-		} else {
-			if block_height < whois.Expires {
-				return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
-			}
+		} else if blockHeight < whois.Expires {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 		}
 	} else {
-		time = time + block_height
+		time += blockHeight
 	}
 
 	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)
