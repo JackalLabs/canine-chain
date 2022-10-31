@@ -87,7 +87,7 @@ message MsgDelistResponse {
 message MsgTransfer {
   string creator = 1;
   string name = 2;
-  string reciever = 3;
+  string receiver = 3;
 }
 
 message MsgTransferResponse {

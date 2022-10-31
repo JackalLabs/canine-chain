@@ -2,12 +2,12 @@ syntax = "proto3";
 package jackaldao.canine.rns;
 
 import "gogoproto/gogo.proto";
-import "rns/params.proto";
-import "rns/whois.proto";
-import "rns/names.proto";
-import "rns/bids.proto";
-import "rns/forsale.proto";
-import "rns/init.proto";
+import "canine-chain/rns/params.proto";
+import "canine-chain/rns/whois.proto";
+import "canine-chain/rns/names.proto";
+import "canine-chain/rns/bids.proto";
+import "canine-chain/rns/forsale.proto";
+import "canine-chain/rns/init.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/jackal-dao/canine/x/rns/types";

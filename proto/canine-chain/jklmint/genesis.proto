@@ -2,7 +2,7 @@ syntax = "proto3";
 package jackaldao.canine.jklmint;
 
 import "gogoproto/gogo.proto";
-import "jklmint/params.proto";
+import "canine-chain/jklmint/params.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/jackal-dao/canine/x/jklmint/types";

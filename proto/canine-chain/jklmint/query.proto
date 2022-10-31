@@ -4,7 +4,7 @@ package jackaldao.canine.jklmint;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "jklmint/params.proto";
+import "canine-chain/jklmint/params.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine/x/jklmint/types";
@@ -20,10 +20,6 @@ service Query {
   rpc Inflation(QueryInflationRequest) returns (QueryInflationResponse) {
     option (google.api.http).get = "/cosmos/mint/v1beta1/inflation";
   }
-  // Queries a list of GetInflation items.
-	rpc GetInflation(QueryGetInflationRequest) returns (QueryGetInflationResponse) {
-		option (google.api.http).get = "/jackal-dao/canine/jklmint/get_inflation";
-	}
 
 // this line is used by starport scaffolding # 2
 }
@@ -47,11 +43,5 @@ message QueryInflationResponse {
   bytes inflation = 1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
 }
 
-message QueryGetInflationRequest {
-}
-
-message QueryGetInflationResponse {
-  string inflation = 1;
-}
 
 // this line is used by starport scaffolding # 3

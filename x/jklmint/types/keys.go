@@ -17,6 +17,10 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_jklmint"
+
+	// Query endpoints supported by the minting querier
+	QueryParameters = "parameters"
+	QueryInflation  = "inflation"
 )
 
 func KeyPrefix(p string) []byte {
