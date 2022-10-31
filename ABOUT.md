@@ -6,6 +6,8 @@
     + [jackallabs.io](https://jackallabs.io)
 + Marston Connell
     + [marston@jackallabs.io](mailto:marston@jackallabs.io)
++ Jacob Gadkian
+    + [jacob@notional.ventures](twitter.com/gadikian)
 
 ## Report Bugs
 [https://github.com/JackalLabs/canine-chain/issues](https://github.com/JackalLabs/canine-chain/issues)
