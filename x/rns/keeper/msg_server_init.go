@@ -38,15 +38,15 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 	}
 
 	whois, isFound := k.GetNames(ctx, name, "jkl")
-	block_height := ctx.BlockHeight()
+	blockHeight := ctx.BlockHeight()
 
 	if isFound {
-		if block_height < whois.Expires {
+		if blockHeight < whois.Expires {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 		}
 	}
 
-	time := 6311520 + block_height
+	time := 6311520 + blockHeight
 
 	emptySubdomains := []*types.Names{}
 

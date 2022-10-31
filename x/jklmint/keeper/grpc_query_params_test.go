@@ -48,7 +48,6 @@ func (suite *MintTestSuite) TestGRPCParams() {
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(inflation.Inflation, appInflation)
-
 }
 
 func TestMintTestSuite(t *testing.T) {

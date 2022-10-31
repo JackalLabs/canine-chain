@@ -8,7 +8,7 @@ import (
 )
 
 func getTLD(name string) (string, error) {
-	for _, tld := range types.SUPPORTED_TLDS {
+	for _, tld := range types.SupportedTLDs {
 		tldSize := len(tld)
 
 		if tldSize+1 >= len(name) {
@@ -62,7 +62,7 @@ func getNameAndTLD(full string) (string, string, error) {
 }
 
 func getCost(tld string) int64 {
-	cost := types.TLD_COST[tld]
+	cost := types.TLDCost[tld]
 	fmt.Printf("COST: %d\n", cost)
 	return cost
 }
