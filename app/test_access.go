@@ -56,7 +56,7 @@ func (s TestSupport) StakingKeeper() stakingkeeper.Keeper {
 }
 
 func (s TestSupport) BankKeeper() bankkeeper.Keeper {
-	return s.app.bankKeeper
+	return s.app.BankKeeper
 }
 
 func (s TestSupport) TransferKeeper() ibctransferkeeper.Keeper {
