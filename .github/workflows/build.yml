@@ -18,23 +18,3 @@ jobs:
         shell: bash
         run: |
           make build
-
-  native-build-cli:
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, macos-latest]
-    steps:
-      - uses: actions/checkout@v3.1.0
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.19 # The Go version to download (if necessary) and use.
-      - name: Build CLI
-        shell: bash
-        run: |
-          make build
-          cp "build/canined" "canined-$RUNNER_OS"
-      - uses: actions/upload-artifact@v3
-        with:
-          name: canined-${{runner.os}}
-          path: canined-${{runner.os}}
