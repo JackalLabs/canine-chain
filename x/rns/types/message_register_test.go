@@ -20,12 +20,36 @@ func TestMsgRegister_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgRegister{
 				Creator: "invalid_address",
+				Name:    "validname.jkl",
+				Years:   "10",
+				Data:    "{}",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid name",
+			msg: MsgRegister{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "invalidname",
+				Years:   "10",
+				Data:    "{}",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
+			name: "invalid years",
+			msg: MsgRegister{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "validname.jkl",
+				Years:   "s",
+				Data:    "{}",
+			},
+			err: sdkerrors.ErrInvalidType,
+		}, {
 			name: "valid address",
-			msg:  MsgRegister{
-				//			Creator: sample.AccAddress(),
+			msg: MsgRegister{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "validname.jkl",
+				Years:   "10",
+				Data:    "{}",
 			},
 		},
 	}

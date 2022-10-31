@@ -24,8 +24,8 @@ func TestMsgInit_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg:  MsgInit{
-				//			Creator: sample.AccAddress(),
+			msg: MsgInit{
+				Creator: "cosmos1k3qu47ycrut4sr73vv6uqtuhyyfewymu34gju2",
 			},
 		},
 	}
