@@ -137,6 +137,10 @@ import (
 		notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
+
+	store "github.com/cosmos/cosmos-sdk/store/types"
+	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
@@ -664,6 +668,8 @@ func NewWasmApp(
 	// we prefer to be more strict in what arguments the modules expect.
 	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
 
+	app.setupUpgradeHandlers()
+
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
 	app.mm = module.NewManager(
@@ -1002,6 +1008,43 @@ func (app *WasmApp) RegisterTxService(clientCtx client.Context) {
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
 func (app *WasmApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
+}
+
+// Add new modules store loader
+func (app *WasmApp) setupUpgradeHandlers() {
+	// version 2 upgrade keeper
+	app.upgradeKeeper.SetUpgradeHandler(
+		v2.UpgradeName,
+		v2.CreateUpgradeHandler(
+			app.mm,
+			app.configurator,
+		),
+	)
+
+	// When a planned update height is reached, the old binary will panic
+	// writing on disk the height and name of the update that triggered it
+	// This will read that value, and execute the preparations for the upgrade.
+	upgradeInfo, err := app.upgradeKeeper.ReadUpgradeInfoFromDisk()
+	if err != nil {
+		panic(fmt.Errorf("failed to read upgrade info from disk: %w", err))
+	}
+
+	if app.upgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+		return
+	}
+
+	var storeUpgrades *store.StoreUpgrades
+
+	if upgradeInfo.Name == v2.UpgradeName {
+		storeUpgrades = &store.StoreUpgrades{
+			Deleted: []string{"storage", "sdig", "notifications", "filetreekeeper"},
+		}
+	}
+
+	if storeUpgrades != nil {
+		// configure store loader that checks if version == upgradeHeight and applies store upgrades
+		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, storeUpgrades))
+	}
 }
 
 func (app *WasmApp) AppCodec() codec.Codec {
