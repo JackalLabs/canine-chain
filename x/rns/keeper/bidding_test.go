@@ -7,6 +7,8 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
+const TestName = "test.jkl"
+
 func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.SetupSuite()
 	err := suite.setupNames()
@@ -17,8 +19,6 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	nameAddress, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
 	suite.Require().NoError(err)
 
-	name := "test.jkl"
-
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
 	coins := sdk.NewCoins(coin)
 
@@ -28,16 +28,16 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameAddress, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameAddress.String(), name, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameAddress.String(), TestName, "{}", "2")
 	suite.Require().NoError(err)
 
 	bidderBalBefore := suite.bankKeeper.GetAllBalances(suite.ctx, address)
 	biddeeBalBefore := suite.bankKeeper.GetAllBalances(suite.ctx, nameAddress)
 
-	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), name, "1000ujkl")
+	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), TestName, "1000ujkl")
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.AcceptOneBid(suite.ctx, nameAddress.String(), name, address.String())
+	err = suite.rnsKeeper.AcceptOneBid(suite.ctx, nameAddress.String(), TestName, address.String())
 	suite.Require().NoError(err)
 
 	bidderBalAfter := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -58,7 +58,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.Require().Equal(eamt.Int64(), biddee) //cost them the amount they bid
 
 	nameReq := types.QueryGetNamesRequest{
-		Index: name,
+		Index: TestName,
 	}
 
 	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
@@ -72,7 +72,6 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	suite.Require().NoError(err)
 	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
-	name := "test.jkl"
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000))
 	coins := sdk.NewCoins(coin)
@@ -83,11 +82,11 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	beforebal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
 	amt := beforebal.AmountOf("ujkl")
 
-	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), name, "1000ujkl")
+	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), TestName, "1000ujkl")
 	suite.Require().NoError(err)
 
 	bidReq := types.QueryGetBidsRequest{
-		Index: fmt.Sprintf("%s%s", address.String(), name),
+		Index: fmt.Sprintf("%s%s", address.String(), TestName),
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -99,5 +98,53 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 
 	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
+
+}
+
+func (suite *KeeperTestSuite) TestMsgCancelBid() {
+	suite.SetupSuite()
+	err := suite.setupNames()
+	suite.Require().NoError(err)
+	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, address, coins)
+	suite.Require().NoError(err)
+
+	beforebal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
+	amt := beforebal.AmountOf("ujkl")
+
+	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), TestName, "1000ujkl")
+	suite.Require().NoError(err)
+
+	bidReq := types.QueryGetBidsRequest{
+		Index: fmt.Sprintf("%s%s", address.String(), TestName),
+	}
+
+	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
+	newamt := afterbal.AmountOf("ujkl")
+
+	newamt = amt.Sub(newamt)
+	var leftover int64 = 1000                       // they spent 1000ujkl so they should have 1000ujkl less
+	suite.Require().Equal(newamt.Int64(), leftover) //cost them the amount they bid
+
+	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.CancelOneBid(suite.ctx, address.String(), TestName)
+	suite.Require().NoError(err)
+
+	afterbal = suite.bankKeeper.GetAllBalances(suite.ctx, address)
+	newamt = afterbal.AmountOf("ujkl")
+
+	newamt = amt.Sub(newamt)
+	leftover = 0                                    // they cancelled the bid and thus should recieve their money back
+	suite.Require().Equal(newamt.Int64(), leftover) //cost them the amount they bid
+
+	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	suite.Require().Error(err)
 
 }
