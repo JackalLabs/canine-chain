@@ -2,32 +2,44 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
+func (k Keeper) CancelOneBid(ctx sdk.Context, sender string, name string) error {
+	bidder, err := sdk.AccAddressFromBech32(sender)
+	if err != nil {
+		return err
+	}
+
+	bid, bidFound := k.GetBids(ctx, fmt.Sprintf("%s%s", sender, name))
+
+	if !bidFound {
+		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Bid does not exist or has expired.")
+	}
+
+	price, err := sdk.ParseCoinsNormalized(bid.Price)
+	if err != nil {
+		return err
+	}
+
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidder, price)
+	if err != nil {
+		return err
+	}
+
+	k.RemoveBids(ctx, fmt.Sprintf("%s%s", sender, name))
+
+	return nil
+}
+
 func (k msgServer) CancelBid(goCtx context.Context, msg *types.MsgCancelBid) (*types.MsgCancelBidResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	bidder, _ := sdk.AccAddressFromBech32(msg.Creator)
+	err := k.CancelOneBid(ctx, msg.Creator, msg.Name)
 
-	bid, bidFound := k.GetBids(ctx, msg.Creator+msg.Name)
-
-	if bidFound {
-
-		cost, _ := sdk.NewIntFromString(bid.Price)
-		price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
-		err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidder, price)
-		if err != nil {
-			return nil, err
-		}
-
-		k.RemoveBids(ctx, msg.Creator+msg.Name)
-	} else {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Bid does not exist or has expired.")
-	}
-
-	return &types.MsgCancelBidResponse{}, nil
+	return &types.MsgCancelBidResponse{}, err
 }

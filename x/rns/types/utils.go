@@ -1,17 +1,15 @@
-package keeper
+package types
 
 import (
 	"strings"
-
-	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func getTLD(name string) (string, error) {
-	for _, tld := range types.SupportedTLDs {
+func GetTLD(name string) (string, error) {
+	for _, tld := range SupportedTLDs {
 		tldSize := len(tld)
 
 		if tldSize+1 >= len(name) {
-			return "", types.ErrNoTLD
+			return "", ErrNoTLD
 		}
 
 		checkingName := name[len(name)-tldSize:]
@@ -21,10 +19,10 @@ func getTLD(name string) (string, error) {
 		}
 	}
 
-	return "", types.ErrNoTLD
+	return "", ErrNoTLD
 }
 
-func getSubdomain(name string) (string, string, bool) {
+func GetSubdomain(name string) (string, string, bool) {
 	if !strings.Contains(name, ".") {
 		return "", name, false
 	}
@@ -38,7 +36,7 @@ func removeTLD(name string, tld string) (string, error) {
 	tldSize := len(tld)
 
 	if tldSize+1 >= len(name) {
-		return "", types.ErrNoTLD
+		return "", ErrNoTLD
 	}
 
 	checkingName := name[:len(name)-tldSize-1]
@@ -46,8 +44,8 @@ func removeTLD(name string, tld string) (string, error) {
 	return checkingName, nil
 }
 
-func getNameAndTLD(full string) (string, string, error) {
-	tld, err := getTLD(full)
+func GetNameAndTLD(full string) (string, string, error) {
+	tld, err := GetTLD(full)
 	if err != nil {
 		return "", "", err
 	}
@@ -60,7 +58,7 @@ func getNameAndTLD(full string) (string, string, error) {
 	return name, tld, nil
 }
 
-func getCost(tld string) int64 {
-	cost := types.TLDCost[tld]
+func GetCost(tld string) int64 {
+	cost := TLDCost[tld]
 	return cost
 }

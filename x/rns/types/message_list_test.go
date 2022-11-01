@@ -20,12 +20,32 @@ func TestMsgList_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgList{
 				Creator: "invalid_address",
+				Name:    "validname.jkl",
+				Price:   "1000ujkl",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid name",
+			msg: MsgList{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "invalidname",
+				Price:   "1000ujkl",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
+			name: "invalid price",
+			msg: MsgList{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "validname.jkl",
+				Price:   "10",
+			},
+			err: sdkerrors.ErrInvalidCoins,
+		}, {
 			name: "valid address",
-			msg:  MsgList{
-				//			Creator: sample.AccAddress(),
+			msg: MsgList{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "validname.jkl",
+				Price:   "1000ujkl",
 			},
 		},
 	}

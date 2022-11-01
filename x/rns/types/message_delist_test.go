@@ -20,12 +20,21 @@ func TestMsgDelist_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgDelist{
 				Creator: "invalid_address",
+				Name:    "validname.jkl",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid name",
+			msg: MsgDelist{
+				Creator: "cosmos1k3qu47ycrut4sr73vv6uqtuhyyfewymu34gju2",
+				Name:    "invalidname",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
 			name: "valid address",
-			msg:  MsgDelist{
-				//				Creator: sample.AccAddress(),
+			msg: MsgDelist{
+				Creator: "cosmos1k3qu47ycrut4sr73vv6uqtuhyyfewymu34gju2",
+				Name:    "validname.jkl",
 			},
 		},
 	}

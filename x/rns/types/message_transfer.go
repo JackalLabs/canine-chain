@@ -43,5 +43,13 @@ func (msg *MsgTransfer) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+	_, err = sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+	}
+	_, _, err = GetNameAndTLD(msg.Name)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid name/tld (%s)", err)
+	}
 	return nil
 }
