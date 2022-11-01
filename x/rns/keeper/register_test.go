@@ -2,12 +2,20 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgRegisterName() {
+
+	logger, logFile := testutil.CreateLogger()
+
 	suite.SetupSuite()
+
+	logger.Println("The suite is:", suite)
+
 	err := suite.setupNames()
+
 	suite.Require().NoError(err)
 	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
@@ -38,4 +46,5 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
+	logFile.Close()
 }
