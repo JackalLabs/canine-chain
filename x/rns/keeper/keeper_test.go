@@ -23,10 +23,8 @@ type KeeperTestSuite struct {
 	cdc         codec.Codec
 	ctx         sdk.Context
 	rnsKeeper   *keeper.Keeper
-	acctKeeper  *rnstestutil.MockAccountKeeper
 	bankKeeper  *rnstestutil.MockBankKeeper
 	queryClient types.QueryClient
-	addrs       []sdk.AccAddress
 	msgSrvr     types.MsgServer
 }
 
@@ -53,7 +51,6 @@ func (suite *KeeperTestSuite) reset() {
 	suite.cdc = encCfg.Codec
 	suite.queryClient = queryClient
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.rnsKeeper)
-
 }
 
 func (suite *KeeperTestSuite) setupNames() error {
@@ -104,7 +101,6 @@ func (suite *KeeperTestSuite) TestMakeBid() {
 
 	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
-
 }
 
 func (suite *KeeperTestSuite) TestUpdateName() {
@@ -141,7 +137,6 @@ func (suite *KeeperTestSuite) TestUpdateName() {
 	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Names.Data, newData)
-
 }
 
 func (suite *KeeperTestSuite) TestRemoveName() {
@@ -174,7 +169,6 @@ func (suite *KeeperTestSuite) TestRemoveName() {
 
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().Error(err)
-
 }
 
 func (suite *KeeperTestSuite) TestSetName() {
@@ -219,7 +213,6 @@ func (suite *KeeperTestSuite) TestSetName() {
 	}
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().Error(err)
-
 }
 
 func (suite *KeeperTestSuite) TestGRPCParams() {
@@ -227,7 +220,6 @@ func (suite *KeeperTestSuite) TestGRPCParams() {
 	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParamsRequest{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(params.Params, suite.rnsKeeper.GetParams(suite.ctx))
-
 }
 
 func TestRnsTestSuite(t *testing.T) {

@@ -34,9 +34,8 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 
 	newamt = amt.Sub(newamt)
 	var leftover int64 = 15000000
-	suite.Require().Equal(newamt.Int64(), leftover) //cost them the amount they bid
+	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
-
 }

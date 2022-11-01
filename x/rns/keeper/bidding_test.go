@@ -54,8 +54,8 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 
 	var bidder int64 = 1000
 	var biddee int64 = -1000
-	suite.Require().Equal(ramt.Int64(), bidder) //cost them the amount they bid
-	suite.Require().Equal(eamt.Int64(), biddee) //cost them the amount they bid
+	suite.Require().Equal(ramt.Int64(), bidder) // cost them the amount they bid
+	suite.Require().Equal(eamt.Int64(), biddee) // cost them the amount they bid
 
 	nameReq := types.QueryGetNamesRequest{
 		Index: TestName,
@@ -94,11 +94,10 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 
 	newamt = amt.Sub(newamt)
 	var leftover int64 = 1000
-	suite.Require().Equal(newamt.Int64(), leftover) //cost them the amount they bid
+	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
 	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
-
 }
 
 func (suite *KeeperTestSuite) TestMsgCancelBid() {
@@ -129,7 +128,7 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 
 	newamt = amt.Sub(newamt)
 	var leftover int64 = 1000                       // they spent 1000ujkl so they should have 1000ujkl less
-	suite.Require().Equal(newamt.Int64(), leftover) //cost them the amount they bid
+	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
 	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
@@ -141,10 +140,9 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	newamt = afterbal.AmountOf("ujkl")
 
 	newamt = amt.Sub(newamt)
-	leftover = 0                                    // they cancelled the bid and thus should recieve their money back
-	suite.Require().Equal(newamt.Int64(), leftover) //cost them the amount they bid
+	leftover = 0                                    // they cancelled the bid and thus should receive their money back
+	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
 	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
 	suite.Require().Error(err)
-
 }
