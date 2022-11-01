@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/jackalLabs/canine-chain/x/rns/types"
@@ -63,6 +62,5 @@ func getNameAndTLD(full string) (string, string, error) {
 
 func getCost(tld string) int64 {
 	cost := types.TLDCost[tld]
-	fmt.Printf("COST: %d\n", cost)
 	return cost
 }

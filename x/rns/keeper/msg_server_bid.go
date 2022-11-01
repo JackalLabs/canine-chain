@@ -28,7 +28,7 @@ func (k Keeper) AddBid(ctx sdk.Context, sender string, name string, bid string) 
 		Index:  fmt.Sprintf("%s%s", bidder.String(), name),
 		Name:   name,
 		Bidder: bidder.String(),
-		Price:  name,
+		Price:  bid,
 	}
 	k.SetBids(ctx, newBid)
 
