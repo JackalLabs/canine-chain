@@ -2,30 +2,43 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func (k msgServer) Bid(goCtx context.Context, msg *types.MsgBid) (*types.MsgBidResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	bidder, _ := sdk.AccAddressFromBech32(msg.Creator)
-
-	cost, _ := sdk.NewIntFromString(msg.Bid)
-	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost.Int64())}
-	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidder, types.ModuleName, price)
+func (k Keeper) AddBid(ctx sdk.Context, sender string, name string, bid string) error {
+	bidder, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {
-		return nil, err
+		return err
+	}
+
+	price, err := sdk.ParseCoinsNormalized(bid)
+	if err != nil {
+		return err
+	}
+
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidder, types.ModuleName, price)
+	if err != nil {
+		return err
 	}
 
 	newBid := types.Bids{
-		Index:  bidder.String() + msg.Name,
-		Name:   msg.Name,
+		Index:  fmt.Sprintf("%s%s", bidder.String(), name),
+		Name:   name,
 		Bidder: bidder.String(),
-		Price:  msg.Bid,
+		Price:  name,
 	}
 	k.SetBids(ctx, newBid)
 
-	return &types.MsgBidResponse{}, nil
+	return nil
+}
+
+func (k msgServer) Bid(goCtx context.Context, msg *types.MsgBid) (*types.MsgBidResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.AddBid(ctx, msg.Creator, msg.Name, msg.Bid)
+
+	return &types.MsgBidResponse{}, err
 }

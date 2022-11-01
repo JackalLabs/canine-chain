@@ -48,6 +48,7 @@ require (
 require (
 	cosmossdk.io/api v0.2.3
 	cosmossdk.io/core v0.3.2
+	github.com/golang/mock v1.6.0
 )
 
 require (

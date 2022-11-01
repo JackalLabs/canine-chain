@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -61,6 +60,5 @@ func GetNameAndTLD(full string) (string, string, error) {
 
 func GetCost(tld string) int64 {
 	cost := TLDCost[tld]
-	fmt.Printf("COST: %d\n", cost)
 	return cost
 }
