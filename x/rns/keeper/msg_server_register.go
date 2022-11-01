@@ -10,17 +10,14 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*types.MsgRegisterResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	// Try getting a name from the store
-
-	name, tld, err := getNameAndTLD(msg.Name)
+func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data string, years string) error {
+	name, tld, err := getNameAndTLD(nm)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if types.IsReserved[tld] {
-		return nil, types.ErrReserved
+		return types.ErrReserved
 	}
 
 	whois, isFound := k.GetNames(ctx, name, tld)
@@ -34,7 +31,7 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	switch chars {
 	case 0:
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Must be 1 or more characters.")
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Must be 1 or more characters.")
 	case 1:
 		cost = baseCost * 32
 	case 2:
@@ -51,19 +48,19 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost)}
 
-	numYears, _ := sdk.NewIntFromString(msg.Years)
+	numYears, _ := sdk.NewIntFromString(years)
 
 	blockHeight := ctx.BlockHeight()
 
 	time := numYears.Int64() * 6311520
 
-	owner, _ := sdk.AccAddressFromBech32(msg.Creator)
+	owner, _ := sdk.AccAddressFromBech32(sender)
 	// If a name is found in store
 	if isFound {
 		if whois.Value == owner.String() {
 			time = whois.Expires + time
 		} else if blockHeight < whois.Expires {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
+			return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 		}
 	} else {
 		time += blockHeight
@@ -71,7 +68,7 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 
 	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	emptySubdomains := []*types.Names{}
@@ -81,12 +78,22 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 		Name:       name,
 		Expires:    time,
 		Value:      owner.String(),
-		Data:       msg.Data,
+		Data:       data,
 		Subdomains: emptySubdomains,
 		Tld:        tld,
 		Locked:     0,
 	}
 	// Write whois information to the store
 	k.SetNames(ctx, newWhois)
-	return &types.MsgRegisterResponse{}, nil
+
+	return nil
+}
+
+func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*types.MsgRegisterResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	// Try getting a name from the store
+
+	err := k.RegisterName(ctx, msg.Creator, msg.Name, msg.Data, msg.Years)
+
+	return &types.MsgRegisterResponse{}, err
 }
