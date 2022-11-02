@@ -9,10 +9,10 @@ const TypeMsgInit = "init"
 
 var _ sdk.Msg = &MsgInit{}
 
-func NewMsgInit(creator string) *MsgInit {
+func NewMsgInit(creator string) (*MsgInit, error) {
 	return &MsgInit{
 		Creator: creator,
-	}
+	}, nil
 }
 
 func (msg *MsgInit) Route() string {
