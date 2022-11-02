@@ -54,7 +54,6 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
-				//suite.Require().EqualValues(suite, types.MsgInitResponse{}, res)
 			}
 		})
 	}
@@ -67,3 +66,5 @@ func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, rnsKeeper.Keeper, 
 	ctx := sdk.WrapSDKContext(suite.ctx)
 	return rnsKeeper.NewMsgServerImpl(*k), *k, ctx
 }
+
+//suite.Require().EqualValues(suite, types.MsgInitResponse{}, res)
