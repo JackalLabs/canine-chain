@@ -15,7 +15,7 @@ import (
 type MintTestSuite struct {
 	suite.Suite
 
-	app         *app.WasmApp
+	app         *app.JackalApp
 	ctx         sdk.Context
 	queryClient types.QueryClient
 }

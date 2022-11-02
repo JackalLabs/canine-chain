@@ -19,7 +19,7 @@ import (
 // returns context and an app with updated mint keeper
 //
 //nolint:unused
-func createTestApp(isCheckTx bool) (*jklapp.WasmApp, sdk.Context) {
+func createTestApp(isCheckTx bool) (*jklapp.JackalApp, sdk.Context) {
 	app := setup(isCheckTx)
 
 	ctx := app.BaseApp.NewContext(isCheckTx, tmproto.Header{})
@@ -29,7 +29,7 @@ func createTestApp(isCheckTx bool) (*jklapp.WasmApp, sdk.Context) {
 	return app, ctx
 }
 
-func setup(isCheckTx bool) *jklapp.WasmApp {
+func setup(isCheckTx bool) *jklapp.JackalApp {
 	app, genesisState := genApp(!isCheckTx, 5)
 	if !isCheckTx {
 		// init chain must be called to stop deliverState from being nil
@@ -51,10 +51,10 @@ func setup(isCheckTx bool) *jklapp.WasmApp {
 	return app
 }
 
-func genApp(withGenesis bool, invCheckPeriod uint) (*jklapp.WasmApp, jklapp.GenesisState) {
+func genApp(withGenesis bool, invCheckPeriod uint) (*jklapp.JackalApp, jklapp.GenesisState) {
 	db := dbm.NewMemDB()
 	encCdc := jklapp.MakeEncodingConfig()
-	app := jklapp.NewWasmApp(
+	app := jklapp.NewJackalApp(
 		log.NewNopLogger(),
 		db,
 		nil,
