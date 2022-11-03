@@ -17,7 +17,8 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	rnsName := "Nuggie.jkl"
 
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
+	suite.Require().NoError(err)
 
 	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: rnsName, Price: "200ujkl"})
 
