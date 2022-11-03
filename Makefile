@@ -153,11 +153,10 @@ test-sim-multi-seed-short: runsim
 
 format-tools:
 	go install mvdan.cc/gofumpt@v0.3.1
-	go install github.com/client9/misspell/cmd/misspell@v0.3.4
+	gofumpt -l -w .
 
 lint: format-tools
-	golangci-lint run --tests=false
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "*_test.go" | xargs gofumpt -d -s
+	golangci-lint run
 
 format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gofumpt -w -s

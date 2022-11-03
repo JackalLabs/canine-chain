@@ -40,7 +40,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	newamt := afterbal.AmountOf("ujkl")
 
 	newamt = amt.Sub(newamt)
-	var leftover int64 = 2 * cost
+	leftover := 2 * cost
 	suite.Require().Equal(leftover, newamt.Int64()) // cost them the price of the registration
 
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
