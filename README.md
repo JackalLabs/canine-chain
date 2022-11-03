@@ -12,11 +12,11 @@
 ## Installing the Canine CLI
 To install `canined` on your Linux machine:
 
-go install ./...
+`go install ./...`
 
 ## Testing this chain
 
-go test ./...
+`go test ./...`
 
 ## License
 
