@@ -41,10 +41,17 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.TransferName(suite.ctx, address.String(), receiver.String(), name)
+	err = suite.rnsKeeper.TransferName(suite.ctx, address.String(), receiver.String(), name) // will pass as the user owns the name
 	suite.Require().NoError(err)
 
 	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	suite.Require().NoError(err)
+	suite.Require().Equal(res.Names.Value, receiver.String())
+
+	err = suite.rnsKeeper.TransferName(suite.ctx, address.String(), receiver.String(), name) // should fail sending a name from an address that doesn't have ownership
+	suite.Require().Error(err)
+
+	res, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Names.Value, receiver.String())
 }
