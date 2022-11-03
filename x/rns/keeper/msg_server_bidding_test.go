@@ -14,6 +14,12 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
 	suite.Require().NoError(err)
 
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	suite.Require().NoError(err)
+
 	rnsName := "Nuggie.jkl"
 
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
@@ -25,8 +31,8 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000))
-	coins := sdk.NewCoins(coin)
+	coin = sdk.NewCoin("ujkl", sdk.NewInt(1000))
+	coins = sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
 	suite.Require().NoError(err)
@@ -40,7 +46,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
-					"Nuggie.jkl",
+					rnsName,
 					"1000ujkl",
 				)
 			},
@@ -50,7 +56,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
-					"Nuggie.jkl",
+					rnsName,
 					"1000000ujkl",
 				)
 			},
