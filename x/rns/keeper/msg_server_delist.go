@@ -18,7 +18,7 @@ func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.M
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name isn't listed.")
 	}
 
-	n, tld, err := getNameAndTLD(msg.Name)
+	n, tld, err := GetNameAndTLD(msg.Name)
 	if err != nil {
 		return nil, err
 	}

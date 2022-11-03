@@ -25,7 +25,7 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 
 	k.SetInit(ctx, i)
 
-	bh := ctx.BlockHeight()
+	bh := ctx.BlockTime().Unix()
 
 	name := types.MakeName(int(bh), bh)
 
@@ -38,15 +38,14 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 	}
 
 	whois, isFound := k.GetNames(ctx, name, "jkl")
-	blockHeight := ctx.BlockHeight()
 
 	if isFound {
-		if blockHeight < whois.Expires {
+		if bh < whois.Expires {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
 		}
 	}
 
-	time := 6311520 + blockHeight
+	time := 86400*365 + bh
 
 	emptySubdomains := []*types.Names{}
 

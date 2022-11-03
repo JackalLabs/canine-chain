@@ -12,7 +12,7 @@ import (
 func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*types.MsgAddRecordResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	name, tld, err := getNameAndTLD(msg.Name)
+	name, tld, err := GetNameAndTLD(msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +23,7 @@ func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "name does not exist or has expired")
 	}
 
-	if ctx.BlockHeight() > whois.Expires {
+	if ctx.BlockTime().Unix() > whois.Expires {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "name does not exist or has expired")
 	}
 

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,7 +10,7 @@ import (
 )
 
 func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data string, years string) error {
-	name, tld, err := getNameAndTLD(nm)
+	name, tld, err := GetNameAndTLD(nm)
 	if err != nil {
 		return err
 	}
@@ -23,47 +22,36 @@ func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data str
 	whois, isFound := k.GetNames(ctx, name, tld)
 	// Set the price at which the name has to be bought if it didn't have an owner before
 
-	chars := strings.Count(name, "")
-
-	baseCost := getCost(tld)
-
-	var cost int64
-
-	switch chars {
-	case 0:
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Must be 1 or more characters.")
-	case 1:
-		cost = baseCost * 32
-	case 2:
-		cost = baseCost * 16
-	case 3:
-		cost = baseCost * 8
-	case 4:
-		cost = baseCost * 4
-	case 5:
-		cost = baseCost * 2
-	default:
-		cost = baseCost
+	numYears, ok := sdk.NewIntFromString(years)
+	if !ok {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidHeight, "cannot parse years")
 	}
 
-	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost)}
+	cost, err := GetCostOfName(name, tld)
+	if err != nil {
+		return sdkerrors.Wrap(err, "failed to get cost")
+	}
 
-	numYears, _ := sdk.NewIntFromString(years)
+	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost*numYears.Int64())}
 
-	blockHeight := ctx.BlockHeight()
+	blockHeight := ctx.BlockTime()
 
-	time := numYears.Int64() * 6311520
+	time := numYears.Int64() * 86400 * 365
 
-	owner, _ := sdk.AccAddressFromBech32(sender)
+	owner, err := sdk.AccAddressFromBech32(sender)
+	if err != nil {
+		return sdkerrors.Wrap(err, "cannot parse sender")
+	}
+
 	// If a name is found in store
 	if isFound {
 		if whois.Value == owner.String() {
 			time = whois.Expires + time
-		} else if blockHeight < whois.Expires {
-			return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already registered")
+		} else if blockHeight.Unix() < whois.Expires {
+			return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "name already registered")
 		}
 	} else {
-		time += blockHeight
+		time += blockHeight.Unix()
 	}
 
 	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)

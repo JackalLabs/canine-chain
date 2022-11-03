@@ -12,12 +12,12 @@ import (
 func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*types.MsgDelRecordResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	n, tld, err := getNameAndTLD(msg.Name)
+	n, tld, err := GetNameAndTLD(msg.Name)
 	if err != nil {
 		return nil, err
 	}
 
-	sub, n, hasSub := getSubdomain(n)
+	sub, n, hasSub := GetSubdomain(n)
 
 	if !hasSub {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "name does not contain records")
@@ -27,6 +27,10 @@ func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*t
 
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "cannot find name")
+	}
+
+	if ctx.BlockTime().Unix() > val.Expires {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "name does not exist or has expired")
 	}
 
 	if msg.Creator != val.Value {
