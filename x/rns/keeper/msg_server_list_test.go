@@ -62,7 +62,7 @@ func (suite *KeeperTestSuite) TestListMsg () {
 			preRun: func() *types.MsgList {
 				blockHeight := suite.ctx.BlockHeight()
 				name := types.Names {
-					Name: "free_name_",
+					Name: "free_name_jkl",
 					Locked: blockHeight + 1,
 					Expires: blockHeight + 1,
 					Value: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
@@ -70,7 +70,9 @@ func (suite *KeeperTestSuite) TestListMsg () {
 					Tld: "jkl",
 				}
 				keeper.SetNames(suite.ctx, name)
-				_, found := keeper.GetNames(suite.ctx, name.Name, name.Tld)
+				n, tld, err := types.GetNameAndTLD("free_name_jkl")
+				suite.Require().NoError(err)
+				_, found := keeper.GetNames(suite.ctx, n, tld)
 				suite.Require().True(found)
 				return &types.MsgList{
 					Creator: "wrong_account",
@@ -80,7 +82,7 @@ func (suite *KeeperTestSuite) TestListMsg () {
 			},
 			postRun: func() error {
 				// Clean up name
-				name, found := keeper.GetNames(suite.ctx, "free_name_", "jkl")
+				name, found := keeper.GetNames(suite.ctx, "free_name_jkl", "jkl")
 				suite.Require().True(found)
 				keeper.RemoveNames(suite.ctx, name.Name, name.Tld)
 				_, found = keeper.GetNames(suite.ctx, name.Name, name.Tld)
