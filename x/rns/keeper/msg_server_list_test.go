@@ -60,34 +60,11 @@ func (suite *KeeperTestSuite) TestListMsg () {
 
 		"wrong_owner": {
 			preRun: func() *types.MsgList {
-				blockHeight := suite.ctx.BlockHeight()
-				name := types.Names {
-					Name: "free_name_jkl",
-					Locked: blockHeight + 1,
-					Expires: blockHeight + 1,
-					Value: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
-					Data: "{}",
-					Tld: "jkl",
-				}
-				keeper.SetNames(suite.ctx, name)
-				n, tld, err := types.GetNameAndTLD("free_name_jkl")
-				suite.Require().NoError(err)
-				_, found := keeper.GetNames(suite.ctx, n, tld)
-				suite.Require().True(found)
 				return &types.MsgList{
 					Creator: "wrong_account",
-					Name: "free_name_jkl", 
+					Name: "name1.jkl", 
 					Price: "100ujkl",
  				}
-			},
-			postRun: func() error {
-				// Clean up name
-				name, found := keeper.GetNames(suite.ctx, "free_name_jkl", "jkl")
-				suite.Require().True(found)
-				keeper.RemoveNames(suite.ctx, name.Name, name.Tld)
-				_, found = keeper.GetNames(suite.ctx, name.Name, name.Tld)
-				suite.Require().False(found)
-				return nil
 			},
 			expErr: true,
 			expErrMsg: "You do not own this name.",
@@ -96,12 +73,29 @@ func (suite *KeeperTestSuite) TestListMsg () {
 		"cannot_transfer_free_name": {
 			preRun: func() *types.MsgList {
 				blockHeight := suite.ctx.BlockHeight()
+				names, found := keeper.GetNames(suite.ctx, "name1", "jkl")
+				suite.Require().True(found)
+				names.Locked = blockHeight + 20
+				keeper.SetNames(suite.ctx, names)
+				return &types.MsgList{
+					Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+					Name: "name1.jkl",
+					Price: "100ujkl",
+				}
+			},
+			expErr: true,
+			expErrMsg: "cannot transfer free name",
+		},
+
+		"expired_name": {
+			preRun: func() *types.MsgList{
+				blockHeight := suite.ctx.BlockHeight()
 				freeName := types.Names {
-					Name: "free_name",
-					Locked: blockHeight + 1,
-					Expires: blockHeight + 1,
+					Name: "free_name_jkl",
+					Locked: blockHeight - 20,
+					Expires: blockHeight - 20,
 					Value: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
-					Data: "_",
+					Data: "{}",
 					Tld: "jkl",
 				}
 				keeper.SetNames(suite.ctx, freeName)
@@ -112,7 +106,7 @@ func (suite *KeeperTestSuite) TestListMsg () {
 				}
 			},
 			expErr: true,
-			expErrMsg: "cannot transfer free name",
+			expErrMsg: "Name does not exist or has expired.",
 		},
 	}
 
