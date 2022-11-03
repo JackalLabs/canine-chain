@@ -8,14 +8,15 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*types.MsgTransferResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	sender, _ := sdk.AccAddressFromBech32(msg.Creator)
-
-	name, tld, err := getNameAndTLD(msg.Name)
+func (k Keeper) TransferName(ctx sdk.Context, creator string, receiever string, name string) error {
+	sender, err := sdk.AccAddressFromBech32(creator)
 	if err != nil {
-		return nil, err
+		return err
+	}
+
+	name, tld, err := getNameAndTLD(name)
+	if err != nil {
+		return err
 	}
 
 	whois, isFound := k.GetNames(ctx, name, tld)
@@ -24,29 +25,34 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 
 	blockHeight := ctx.BlockHeight()
 
-	if isFound {
-
-		if blockHeight > whois.Expires {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
-		}
-
-		if admin != sender.String() {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You are not the owner of that name.")
-		}
-
-		if whois.Locked > blockHeight {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot transfer free name")
-		}
-
-		whois.Data = "{}"
-		whois.Value = msg.Receiver
-
-		// Write whois information to the store
-		k.SetNames(ctx, whois)
-
-	} else {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
+	if !isFound {
+		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 	}
 
-	return &types.MsgTransferResponse{}, nil
+	if blockHeight > whois.Expires {
+		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
+	}
+
+	if admin != sender.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You are not the owner of that name.")
+	}
+
+	if whois.Locked > blockHeight {
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot transfer free name")
+	}
+
+	whois.Data = "{}"
+	whois.Value = receiever
+
+	// Write whois information to the store
+	k.SetNames(ctx, whois)
+	return nil
+}
+
+func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*types.MsgTransferResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.TransferName(ctx, msg.Creator, msg.Receiver, msg.Name)
+
+	return &types.MsgTransferResponse{}, err
 }
