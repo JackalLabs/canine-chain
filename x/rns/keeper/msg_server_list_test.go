@@ -1,28 +1,25 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/testutil"
 	types "github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestListMsg () {
 	suite.reset()
 	keeper := suite.rnsKeeper
-	names := types.Names {}
-
+	msgSrvr, _, ctx := setupMsgServer(suite)
 
 	cases := map[string]struct {
-		preRun func() (*types.MsgList, error)
+		preRun func() *types.MsgList
 		expErr bool
 		expErrMsg string
 	}{
 		"name_already_listed": {
-			preRun: func() (*types.MsgList, error) {
+			preRun: func() *types.MsgList {
 				err := suite.setupNames()
-				return nil, err
+				suite.Require().NoError(err)
 
-				name, found := keeper.GetNames(suite.ctx, "1", "jkl") 
+				name, found := keeper.GetNames(suite.ctx, "name1", "jkl")
 				suite.Require().True(found)
 				newsale := types.Forsale{
 					Name: name.Name,
@@ -34,10 +31,24 @@ func (suite *KeeperTestSuite) TestListMsg () {
 					Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
 					Name: name.Name,
 					Price: "123123453819283ujkl",
-				}, nil
+				}
 			},
 			expErr: true,
 			expErrMsg: "Name already listed.",
 		},
+	}
+
+	for name, tc := range cases {
+		suite.Run(name, func(){
+			msg := tc.preRun()
+
+			_, err := msgSrvr.List(ctx, msg)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+			}
+		})
 	}
 }
