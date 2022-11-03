@@ -1,6 +1,6 @@
 package keeper_test
 
-//msg server tests for all the bidding msg server files
+// msg server tests for all the bidding msg server files
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -85,6 +85,21 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", "2")
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
+	suite.Require().NoError(err)
+
 	cases := map[string]struct {
 		preRun    func() *types.MsgAcceptBid
 		expErr    bool
@@ -94,11 +109,21 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 			preRun: func() *types.MsgAcceptBid {
 				return &types.MsgAcceptBid{
 					Creator: nameOwner.String(),
-					Name:    "Nuggie.jkl",
+					Name:    TestName,
 					From:    bidder.String(),
 				}
 			},
 			expErr: false,
+		},
+		"bid failed to be accepted": {
+			preRun: func() *types.MsgAcceptBid {
+				return &types.MsgAcceptBid{
+					Creator: nameOwner.String(),
+					Name:    TestName,
+					From:    bidder.String(),
+				}
+			},
+			expErr: true,
 		},
 	}
 
@@ -119,4 +144,4 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	}
 }
 
-//Cancel bid goes here
+// Cancel bid goes here

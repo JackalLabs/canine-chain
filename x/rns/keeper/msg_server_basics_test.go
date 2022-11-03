@@ -63,7 +63,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
-	//suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: user.String(), Complete: true})
+	// suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: user.String(), Complete: true})
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
 	coins := sdk.NewCoins(coin)
@@ -152,10 +152,15 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 	receiver, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
 	suite.Require().NoError(err)
 
+	successfulName := "BiPhan.jkl"
+
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", "2")
 	suite.Require().NoError(err)
 
 	cases := map[string]struct {
@@ -167,11 +172,21 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 			preRun: func() *types.MsgTransfer {
 				return types.NewMsgTransfer(
 					owner.String(),
-					"BiPhan.jkl",
+					successfulName,
 					receiver.String(),
 				)
 			},
 			expErr: false,
+		},
+		"failed transfer": {
+			preRun: func() *types.MsgTransfer {
+				return types.NewMsgTransfer(
+					owner.String(),
+					successfulName,
+					receiver.String(),
+				)
+			},
+			expErr: true,
 		},
 	}
 
