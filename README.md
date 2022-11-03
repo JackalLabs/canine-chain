@@ -1,6 +1,6 @@
 ![canine banner](banner.png)
 # Canine Chain by Jackal
-**Canine** is a blockchain built using Cosmos SDK and Tendermint and created with [Starport](https://starport.com).
+**Canine** is a blockchain built using Cosmos SDK and Tendermint.
 
 ## Pages
 
@@ -12,11 +12,11 @@
 ## Installing the Canine CLI
 To install `canined` on your Linux machine:
 
-go install ./...
+`go install ./...`
 
 ## Testing this chain
 
-go test ./...
+`go test ./...`
 
 ## License
 
