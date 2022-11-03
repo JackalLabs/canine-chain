@@ -1,7 +1,6 @@
 syntax = "proto3";
 package jackaldao.canine.rns;
 
-// this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/jackal-dao/canine/x/rns/types";
 
@@ -18,7 +17,6 @@ service Msg {
   rpc AddRecord(MsgAddRecord) returns (MsgAddRecordResponse);
   rpc DelRecord(MsgDelRecord) returns (MsgDelRecordResponse);
   rpc Init(MsgInit) returns (MsgInitResponse);
-// this line is used by starport scaffolding # proto/tx/rpc
 }
 
 
@@ -118,5 +116,3 @@ message MsgInit {
 
 message MsgInitResponse {
 }
-
-// this line is used by starport scaffolding # proto/tx/message
