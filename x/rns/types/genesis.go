@@ -15,8 +15,7 @@ func DefaultGenesis() *GenesisState {
 		BidsList:    []Bids{},
 		ForsaleList: []Forsale{},
 		InitList:    []Init{},
-		// this line is used by starport scaffolding # genesis/types/default
-		Params: DefaultParams(),
+		Params:      DefaultParams(),
 	}
 }
 
@@ -73,7 +72,6 @@ func (gs GenesisState) Validate() error {
 		}
 		initIndexMap[index] = struct{}{}
 	}
-	// this line is used by starport scaffolding # genesis/types/validate
 
 	return gs.Params.Validate()
 }
