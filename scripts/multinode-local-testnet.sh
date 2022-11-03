@@ -89,9 +89,9 @@ sed -i -E "s|persistent_peers = \"\"|persistent_peers = \"$(canined tendermint s
 
 
 # start all three validators
-screen -S validator1 canined start --home=$HOME/.canine/validator1
-screen -S validator2 canined start --home=$HOME/.canine/validator2
-screen -S validator3 canined start --home=$HOME/.canine/validator3
+screen -S validator1 -d -m canined start --home=$HOME/.canine/validator1
+screen -S validator2 -d -m canined start --home=$HOME/.canine/validator2
+screen -S validator3 -d -m canined start --home=$HOME/.canine/validator3
 
 
 # send ujkl from first validator to second validator
