@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/x/rns/keeper"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -34,8 +35,14 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
 	newamt := afterbal.AmountOf("ujkl")
 
+	n, t, err := keeper.GetNameAndTLD(name)
+	suite.Require().NoError(err)
+
+	cost, err := keeper.GetCostOfName(n, t)
+	suite.Require().NoError(err)
+
 	newamt = amt.Sub(newamt)
-	var leftover int64 = 15000000
+	var leftover int64 = cost * 2
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)

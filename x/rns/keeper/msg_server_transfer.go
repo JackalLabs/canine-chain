@@ -14,7 +14,7 @@ func (k Keeper) TransferName(ctx sdk.Context, creator string, receiever string, 
 		return err
 	}
 
-	name, tld, err := getNameAndTLD(name)
+	name, tld, err := GetNameAndTLD(name)
 	if err != nil {
 		return err
 	}
@@ -23,7 +23,7 @@ func (k Keeper) TransferName(ctx sdk.Context, creator string, receiever string, 
 
 	admin := whois.Value
 
-	blockHeight := ctx.BlockHeight()
+	blockHeight := ctx.BlockTime().Unix()
 
 	if !isFound {
 		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")

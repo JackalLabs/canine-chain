@@ -16,14 +16,14 @@ func (k Keeper) AcceptOneBid(ctx sdk.Context, sender string, name string, bidder
 		return err
 	}
 
-	n, tld, err := getNameAndTLD(name)
+	n, tld, err := GetNameAndTLD(name)
 	if err != nil {
 		return err
 	}
 
 	whois, isFound := k.GetNames(ctx, n, tld)
 
-	blockHeight := ctx.BlockHeight()
+	blockHeight := ctx.BlockTime().Unix()
 
 	if !isFound {
 		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")

@@ -44,12 +44,12 @@ func (k Keeper) Names(c context.Context, req *types.QueryGetNamesRequest) (*type
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	n, tld, err := getNameAndTLD(req.Index)
+	n, tld, err := GetNameAndTLD(req.Index)
 	if err != nil {
 		return nil, err
 	}
 
-	sub, name, hasSub := getSubdomain(n)
+	sub, name, hasSub := GetSubdomain(n)
 	if hasSub {
 		n = name
 	}

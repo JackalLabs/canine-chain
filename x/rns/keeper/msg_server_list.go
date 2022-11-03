@@ -18,7 +18,7 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already listed.")
 	}
 
-	n, tld, err := getNameAndTLD(msg.Name)
+	n, tld, err := GetNameAndTLD(msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You do not own this name.")
 	}
 
-	blockHeight := ctx.BlockHeight()
+	blockHeight := ctx.BlockTime().Unix()
 
 	if name.Locked > blockHeight {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot transfer free name")

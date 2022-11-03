@@ -22,7 +22,7 @@ func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
 		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name not for sale.")
 	}
 
-	n, tld, err := getNameAndTLD(nm)
+	n, tld, err := GetNameAndTLD(nm)
 	if err != nil {
 		return err
 	}
@@ -32,7 +32,7 @@ func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
 		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name does not exist or has expired.")
 	}
 
-	blockHeight := ctx.BlockHeight()
+	blockHeight := ctx.BlockTime().Unix()
 
 	if blockHeight > name.Expires {
 		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
