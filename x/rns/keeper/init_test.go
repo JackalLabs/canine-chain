@@ -1,13 +1,11 @@
 package keeper_test
 
 import (
-	"context"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	rns "github.com/jackalLabs/canine-chain/x/rns"
-	rnsKeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
+
+//Combine testing of init.go and msg_server_init.go
 
 // testing the msg server
 func (suite *KeeperTestSuite) TestMsgInit() {
@@ -48,23 +46,16 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 		suite.Run(name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
-			_, err := msgSrvr.Init(context, msg)
+			res, err := msgSrvr.Init(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
+				suite.Require().EqualValues(types.MsgInitResponse{}, *res)
+
 			}
 		})
 	}
 
 }
-
-func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, rnsKeeper.Keeper, context.Context) {
-	k := suite.rnsKeeper
-	rns.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
-	ctx := sdk.WrapSDKContext(suite.ctx)
-	return rnsKeeper.NewMsgServerImpl(*k), *k, ctx
-}
-
-//suite.Require().EqualValues(suite, types.MsgInitResponse{}, res)
