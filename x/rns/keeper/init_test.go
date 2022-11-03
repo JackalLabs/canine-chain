@@ -5,16 +5,15 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-//Combine testing of init.go and msg_server_init.go
+// Combine testing of init.go and msg_server_init.go
 
 // testing the msg server
 func (suite *KeeperTestSuite) TestMsgInit() {
-
 	suite.SetupSuite()
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	//Need to add mock random addresses
+	// Need to add mock random addresses
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
@@ -57,5 +56,4 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 			}
 		})
 	}
-
 }
