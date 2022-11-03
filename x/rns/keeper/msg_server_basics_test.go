@@ -15,20 +15,22 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	cases := []struct {
 		preRun    func() *types.MsgInit
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"successful init": {
+		{
 			preRun: func() *types.MsgInit {
 				return types.NewMsgInit(
 					user.String(),
 				)
 			},
 			expErr: false,
+			name:   "init success",
 		},
-		"cannot init twice": {
+		{
 			preRun: func() *types.MsgInit {
 				return types.NewMsgInit(
 					user.String(),
@@ -36,11 +38,12 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 			},
 			expErr:    true,
 			expErrMsg: "cannot initialize more than once: invalid request",
+			name:      "cannot init twice",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.Init(context, msg)

@@ -31,18 +31,19 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	coin = sdk.NewCoin("ujkl", sdk.NewInt(1000))
+	coin = sdk.NewCoin("ujkl", sdk.NewInt(10000))
 	coins = sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	cases := []struct {
 		preRun    func() *types.MsgBid
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"bid successfully posted": {
+		{
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
@@ -51,22 +52,24 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 				)
 			},
 			expErr: false,
+			name:   "bid successfully posted",
 		},
-		"you don't have enough money": {
+		{
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
 					rnsName,
-					"1000000ujkl",
+					"100000000ujkl",
 				)
 			},
 			expErr:    true,
 			expErrMsg: "not enough balance",
+			name:      "you don't have enough money",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.Bid(context, msg)
