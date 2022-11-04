@@ -139,6 +139,29 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 			expErrMsg: "You are not the owner of that name.: unauthorized",
 			name:      "bid failed to be accepted",
 		},
+		{
+			preRun: func() *types.MsgAcceptBid {
+				freeName := "freeBi.jkl"
+				blockHeight := suite.ctx.BlockHeight()
+				err := suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), freeName, "{}", "2")
+				suite.Require().NoError(err)
+				name, _ := suite.rnsKeeper.GetNames(suite.ctx, "freeBi", "jkl")
+				name.Locked = blockHeight + 1
+
+				suite.rnsKeeper.SetNames(suite.ctx, name)
+				err1 := suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), freeName, "2000ujkl")
+				suite.Require().NoError(err1)
+
+				return types.NewMsgAcceptBid(
+					nameOwner.String(),
+					"freeBi.jkl",
+					bidder.String(),
+				)
+			},
+			expErr:    true,
+			expErrMsg: "cannot transfer free name: unauthorized",
+			name:      "cannot transfer free name",
+		},
 	}
 
 	for _, tc := range cases {

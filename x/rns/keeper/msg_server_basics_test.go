@@ -211,6 +211,27 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 			expErrMsg: "Name does not exist or has expired.: not found",
 			name:      "cannot transfer name that doesn't exist",
 		},
+		{
+			preRun: func() *types.MsgTransfer {
+				freeName := "freeBi.jkl"
+				blockHeight := suite.ctx.BlockHeight()
+				err := suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), freeName, "{}", "2")
+				suite.Require().NoError(err)
+				name, _ := suite.rnsKeeper.GetNames(suite.ctx, "freeBi", "jkl")
+				name.Locked = blockHeight + 1
+
+				suite.rnsKeeper.SetNames(suite.ctx, name)
+
+				return types.NewMsgTransfer(
+					owner.String(),
+					"freeBi.jkl",
+					receiver.String(),
+				)
+			},
+			expErr:    true,
+			expErrMsg: "cannot transfer free name: unauthorized",
+			name:      "cannot transfer free name",
+		},
 	}
 
 	for _, tc := range cases {
