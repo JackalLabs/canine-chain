@@ -1,8 +1,6 @@
 package keeper_test
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	types "github.com/jackalLabs/canine-chain/x/rns/types"
 )
@@ -10,7 +8,6 @@ import (
 func (suite *KeeperTestSuite) TestListMsg() {
 	suite.SetupSuite()
 	msgSrvr, _, ctx := setupMsgServer(suite)
-	// ctx = suite.ctx.WithBlockHeight(100)
 
 	// Create name owner account
 	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
@@ -41,18 +38,16 @@ func (suite *KeeperTestSuite) TestListMsg() {
 			testName: "Name_already_listed",
 			preRun: func() *types.MsgList {
 				// Check if name is actually saved
-				name, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
+				_, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
 				// Set the name for sale in KVStore
 				newsale := types.Forsale{
-					Name:  fmt.Sprintf("%s,%s", name.Name, name.Tld),
 					Price: "100000000ujkl",
 					Owner: nameOwner.String(),
 				}
 				keeper.SetForsale(suite.ctx, newsale)
 				return &types.MsgList{
 					Creator: nameOwner.String(),
-					Name:    fmt.Sprintf("%s,%s", name.Name, name.Tld),
 					Price:   "100000000ujkl",
 				}
 			},
