@@ -38,12 +38,11 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 	salePrice := "1000000"
 	msgList := types.MsgList{
 		Creator: nameOwner.String(),
-		Name: fullName,
-		Price: salePrice,
+		Name:    fullName,
+		Price:   salePrice,
 	}
 	_, err = msgSrvr.List(ctx, &msgList)
 	suite.Require().NoError(err)
-
 
 	// Test cases
 	cases := []struct {
@@ -57,24 +56,24 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 			testName: "name_not_for_sale",
 			preRun: func() *types.MsgBuy {
 				return &types.MsgBuy{
-					Name: "not_for_sale.jkl",
+					Name:    "not_for_sale.jkl",
 					Creator: buyer.String(),
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "Name not for sale.",
 		},
 
 		{
 			testName: "name_not_found",
-			preRun: func() *types.MsgBuy{
+			preRun: func() *types.MsgBuy {
 				// Delete name from KVStore
 				names, found := keeper.GetNames(suite.ctx, rnsName, rnsTLD)
 				keeper.RemoveNames(suite.ctx, names.Name, names.Tld)
 				_, found = keeper.GetNames(suite.ctx, rnsName, rnsTLD)
 				suite.Require().False(found)
 				return &types.MsgBuy{
-					Name: fullName,
+					Name:    fullName,
 					Creator: buyer.String(),
 				}
 			},
@@ -84,7 +83,7 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 				_, found = keeper.GetNames(suite.ctx, rnsName, rnsTLD)
 				suite.Require().True(found)
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "Name does not exist",
 		},
 
@@ -97,7 +96,7 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 				names.Expires = suite.ctx.BlockHeight() - 1
 				keeper.SetNames(suite.ctx, names)
 				return &types.MsgBuy{
-					Name: fullName,
+					Name:    fullName,
 					Creator: buyer.String(),
 				}
 			},
@@ -107,7 +106,7 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 				names.Expires++
 				keeper.SetNames(suite.ctx, names)
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "expired",
 		},
 
@@ -116,10 +115,10 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 			preRun: func() *types.MsgBuy {
 				return &types.MsgBuy{
 					Creator: nameOwner.String(),
-					Name: fullName,
+					Name:    fullName,
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "cannot buy your own name",
 		},
 
@@ -128,13 +127,12 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 			preRun: func() *types.MsgBuy {
 				return &types.MsgBuy{
 					Creator: buyer.String(),
-					Name: fullName,
+					Name:    fullName,
 				}
 			},
-			expErr: true,
-			expErrMsg: "092809808",
+			expErr:    true,
+			expErrMsg: "not enough balance",
 		},
-	
 	}
 
 	for _, tc := range cases {
