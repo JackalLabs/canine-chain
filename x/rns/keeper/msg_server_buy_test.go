@@ -69,6 +69,9 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 			preRun: func() *types.MsgBuy {
 				// Delete name from KVStore
 				names, found := keeper.GetNames(suite.ctx, rnsName, rnsTLD)
+				if !found {
+					return nil
+				}
 				keeper.RemoveNames(suite.ctx, names.Name, names.Tld)
 				_, found = keeper.GetNames(suite.ctx, rnsName, rnsTLD)
 				suite.Require().False(found)
