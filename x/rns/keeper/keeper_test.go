@@ -11,6 +11,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	rns "github.com/jackalLabs/canine-chain/x/rns"
 	"github.com/jackalLabs/canine-chain/x/rns/keeper"
 	rnstestutil "github.com/jackalLabs/canine-chain/x/rns/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
@@ -51,6 +52,13 @@ func (suite *KeeperTestSuite) reset() {
 	suite.cdc = encCfg.Codec
 	suite.queryClient = queryClient
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.rnsKeeper)
+}
+
+func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
+	k := suite.rnsKeeper
+	rns.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
+	ctx := sdk.WrapSDKContext(suite.ctx)
+	return keeper.NewMsgServerImpl(*k), *k, ctx
 }
 
 func (suite *KeeperTestSuite) setupNames() error {

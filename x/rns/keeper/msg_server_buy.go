@@ -2,7 +2,7 @@ package keeper
 
 import (
 	"context"
-	"fmt"
+	"strings"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -11,6 +11,8 @@ import (
 )
 
 func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
+	nm = strings.ToLower(nm)
+
 	buyer, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {
 		return err
@@ -22,7 +24,7 @@ func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
 		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name not for sale.")
 	}
 
-	n, tld, err := getNameAndTLD(nm)
+	n, tld, err := GetNameAndTLD(nm)
 	if err != nil {
 		return err
 	}
@@ -53,9 +55,11 @@ func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
 	coin := sdk.NewCoin("ujkl", price)
 	coins := sdk.NewCoins(coin)
 
-	ctx.Logger().Error(fmt.Sprintf("%s %s", "coins available: ", k.bankKeeper.SpendableCoins(ctx, buyer).String()))
-
-	err = k.bankKeeper.SendCoins(ctx, buyer, seller, coins)
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, buyer, types.ModuleName, coins)
+	if err != nil {
+		return err
+	}
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, seller, coins)
 	if err != nil {
 		return err
 	}

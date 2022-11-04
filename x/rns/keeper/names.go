@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"strings"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
@@ -22,6 +24,9 @@ func (k Keeper) GetNames(
 	name string,
 	tld string,
 ) (val types.Names, found bool) {
+	name = strings.ToLower(name)
+	tld = strings.ToLower(tld)
+
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
 
 	b := store.Get(types.NamesKey(
