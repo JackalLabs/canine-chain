@@ -8,6 +8,7 @@ import (
 func (suite *KeeperTestSuite) TestListMsg () {
 	suite.SetupSuite()
 	msgSrvr, _, ctx := setupMsgServer(suite)
+	//ctx = suite.ctx.WithBlockHeight(100)
 
 	// Create name owner account
 	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
@@ -94,10 +95,10 @@ func (suite *KeeperTestSuite) TestListMsg () {
 		{
 			testName: "cannot_transfer_free_name",
 			preRun: func() *types.MsgList {
-				blockHeight := ctx.BlockHeight()
+				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
-				names.Locked = blockHeight
+				names.Locked = blockHeight + 1
 				keeper.SetNames(suite.ctx, names)
 				return &types.MsgList{
 					Creator: nameOwner.String(),
@@ -109,7 +110,7 @@ func (suite *KeeperTestSuite) TestListMsg () {
 				// Turn back to original
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
-				names.Locked = 0
+				names.Locked = suite.ctx.BlockHeight() - 1
 				keeper.SetNames(suite.ctx, names)
 			},
 			expErr: true,
@@ -122,7 +123,7 @@ func (suite *KeeperTestSuite) TestListMsg () {
 				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
-				names.Expires = blockHeight - 20
+				names.Expires = blockHeight - 1
 				keeper.SetNames(suite.ctx, names)
 				return &types.MsgList{
 					Creator: nameOwner.String(),
@@ -134,7 +135,7 @@ func (suite *KeeperTestSuite) TestListMsg () {
 				// Turn back to original
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
-				names.Expires = names.Expires + 20
+				names.Expires = names.Expires + 1
 				keeper.SetNames(suite.ctx, names)
 			},
 			expErr: true,
