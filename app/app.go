@@ -1037,7 +1037,7 @@ func (app *JackalApp) setupUpgradeHandlers() {
 
 	if upgradeInfo.Name == v2.UpgradeName {
 		storeUpgrades = &store.StoreUpgrades{
-			Deleted: []string{"storage", "sdig", "notifications", "filetreekeeper"},
+			Deleted: []string{"storage", "dsig", "notifications", "filetree"},
 		}
 	}
 
