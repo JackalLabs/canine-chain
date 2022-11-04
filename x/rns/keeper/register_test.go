@@ -13,6 +13,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 	name := "test.jkl"
+	capname := "Test.jkl"
 
 	n, t, err := keeper.GetNameAndTLD(name)
 	suite.Require().NoError(err)
@@ -46,7 +47,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", "2") // adding time to registration
+	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), capname, "{}", "2") // adding time to registration
 	suite.Require().NoError(err)
 
 	afterbal = suite.bankKeeper.GetAllBalances(suite.ctx, address)
