@@ -110,6 +110,17 @@ func (suite *KeeperTestSuite) TestMsgDelRecord() {
 			expErr: false,
 			name:   "successfully deleted record",
 		},
+		{
+			preRun: func() *types.MsgDelRecord {
+				return types.NewMsgDelRecord(
+					owner.String(),
+					"juno.BiPhan.jkl",
+				)
+			},
+			expErr:    true,
+			expErrMsg: "error message goes here",
+			name:      "can't delete a record that doesn't exist",
+		},
 	}
 
 	for _, tc := range cases {
