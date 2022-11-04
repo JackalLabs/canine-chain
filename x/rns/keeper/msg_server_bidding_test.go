@@ -1,6 +1,6 @@
 package keeper_test
 
-// msg server tests for all the bidding msg server files
+// testing msg server files for: bid, accept_bid, cancel_bid
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -135,8 +135,9 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 					From:    bidder.String(),
 				}
 			},
-			expErr: true,
-			name:   "bid failed to be accepted",
+			expErr:    true,
+			expErrMsg: "You are not the owner of that name.: unauthorized",
+			name:      "bid failed to be accepted",
 		},
 	}
 
@@ -157,4 +158,73 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	}
 }
 
-// Cancel bid goes here
+func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
+	suite.SetupSuite()
+	msgSrvr, _, context := setupMsgServer(suite)
+
+	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	suite.Require().NoError(err)
+
+	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", "2")
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
+	suite.Require().NoError(err)
+
+	cases := []struct {
+		preRun    func() *types.MsgCancelBid
+		expErr    bool
+		expErrMsg string
+		name      string
+	}{
+		{
+			preRun: func() *types.MsgCancelBid {
+				return &types.MsgCancelBid{
+					Creator: bidder.String(),
+					Name:    TestName,
+				}
+			},
+			expErr: false,
+			name:   "bid successfully canceled",
+		},
+		{
+			preRun: func() *types.MsgCancelBid {
+				return &types.MsgCancelBid{
+					Creator: bidder.String(),
+					Name:    TestName,
+				}
+			},
+			expErr:    true,
+			expErrMsg: "Bid does not exist or has expired.: not found",
+			name:      "bid unsuccessfully canceled",
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			msg := tc.preRun()
+			suite.Require().NoError(err)
+			res, err := msgSrvr.CancelBid(context, msg)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+				suite.Require().EqualValues(types.MsgBidResponse{}, *res)
+
+			}
+		})
+	}
+}

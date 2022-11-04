@@ -66,7 +66,6 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
-	// suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: user.String(), Complete: true})
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
 	coins := sdk.NewCoins(coin)
@@ -199,6 +198,18 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 			expErr:    true,
 			expErrMsg: "You are not the owner of that name.: unauthorized",
 			name:      "failed transfer",
+		},
+		{
+			preRun: func() *types.MsgTransfer {
+				return types.NewMsgTransfer(
+					owner.String(),
+					"nonExistentName.jkl",
+					receiver.String(),
+				)
+			},
+			expErr:    true,
+			expErrMsg: "Name does not exist or has expired.: not found",
+			name:      "cannot transfer name that doesn't exist",
 		},
 	}
 
