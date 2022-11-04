@@ -15,20 +15,22 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	cases := []struct {
 		preRun    func() *types.MsgInit
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"successful init": {
+		{
 			preRun: func() *types.MsgInit {
 				return types.NewMsgInit(
 					user.String(),
 				)
 			},
 			expErr: false,
+			name:   "init success",
 		},
-		"cannot init twice": {
+		{
 			preRun: func() *types.MsgInit {
 				return types.NewMsgInit(
 					user.String(),
@@ -36,11 +38,12 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 			},
 			expErr:    true,
 			expErrMsg: "cannot initialize more than once: invalid request",
+			name:      "cannot init twice",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.Init(context, msg)
@@ -63,7 +66,6 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
-	//suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: user.String(), Complete: true})
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
 	coins := sdk.NewCoins(coin)
@@ -71,12 +73,13 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, user, coins)
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	cases := []struct {
 		preRun    func() *types.MsgRegister
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"successful register": {
+		{
 			preRun: func() *types.MsgRegister {
 				return types.NewMsgRegister(
 					user.String(),
@@ -86,8 +89,9 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 				)
 			},
 			expErr: false,
+			name:   "successful register",
 		},
-		"invalid address": {
+		{
 			preRun: func() *types.MsgRegister {
 				return types.NewMsgRegister(
 					"invalid address",
@@ -98,8 +102,9 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 			},
 			expErr:    true,
 			expErrMsg: "cannot parse sender: decoding bech32 failed: invalid character in string:",
+			name:      "invalid address",
 		},
-		"invalid name": {
+		{
 			preRun: func() *types.MsgRegister {
 				return types.NewMsgRegister(
 					user.String(),
@@ -110,8 +115,9 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 			},
 			expErr:    true,
 			expErrMsg: "could not extract the tld from the name provided",
+			name:      "invalid name",
 		},
-		"invalid years": {
+		{
 			preRun: func() *types.MsgRegister {
 				return types.NewMsgRegister(
 					user.String(),
@@ -122,11 +128,12 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 			},
 			expErr:    true,
 			expErrMsg: "cannot parse years: invalid height",
+			name:      "invalid years",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.Register(context, msg)
@@ -135,7 +142,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
-				suite.Require().EqualValues(types.MsgInitResponse{}, *res)
+				suite.Require().EqualValues(types.MsgRegisterResponse{}, *res)
 
 			}
 		})
@@ -152,31 +159,62 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 	receiver, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
 	suite.Require().NoError(err)
 
+	successfulName := "BiPhan.jkl"
+
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", "2")
+	suite.Require().NoError(err)
+
+	cases := []struct {
 		preRun    func() *types.MsgTransfer
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"successful transfer": {
+		{
 			preRun: func() *types.MsgTransfer {
 				return types.NewMsgTransfer(
 					owner.String(),
-					"BiPhan.jkl",
+					successfulName,
 					receiver.String(),
 				)
 			},
 			expErr: false,
+			name:   "successful transfer",
+		},
+		{
+			preRun: func() *types.MsgTransfer {
+				return types.NewMsgTransfer(
+					owner.String(),
+					successfulName,
+					receiver.String(),
+				)
+			},
+			expErr:    true,
+			expErrMsg: "You are not the owner of that name.: unauthorized",
+			name:      "failed transfer",
+		},
+		{
+			preRun: func() *types.MsgTransfer {
+				return types.NewMsgTransfer(
+					owner.String(),
+					"nonExistentName.jkl",
+					receiver.String(),
+				)
+			},
+			expErr:    true,
+			expErrMsg: "Name does not exist or has expired.: not found",
+			name:      "cannot transfer name that doesn't exist",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.Transfer(context, msg)
@@ -185,14 +223,9 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
-				suite.Require().EqualValues(types.MsgInitResponse{}, *res)
+				suite.Require().EqualValues(types.MsgRegisterResponse{}, *res)
 
 			}
 		})
 	}
 }
-
-/*
-	receiver, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
-	suite.Require().NoError(err)
-*/

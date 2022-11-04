@@ -1,6 +1,6 @@
 package keeper_test
 
-//msg server tests for all the bidding msg server files
+// testing msg server files for: bid, accept_bid, cancel_bid
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -14,52 +14,62 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
 	suite.Require().NoError(err)
 
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	suite.Require().NoError(err)
+
 	rnsName := "Nuggie.jkl"
 
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
+	suite.Require().NoError(err)
 
 	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: rnsName, Price: "200ujkl"})
 
 	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000))
-	coins := sdk.NewCoins(coin)
+	coin = sdk.NewCoin("ujkl", sdk.NewInt(10000))
+	coins = sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	cases := []struct {
 		preRun    func() *types.MsgBid
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"bid successfully posted": {
+		{
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
-					"Nuggie.jkl",
+					rnsName,
 					"1000ujkl",
 				)
 			},
 			expErr: false,
+			name:   "bid successfully posted",
 		},
-		"you don't have enough money": {
+		{
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
-					"Nuggie.jkl",
-					"1000000ujkl",
+					rnsName,
+					"100000000ujkl",
 				)
 			},
 			expErr:    true,
 			expErrMsg: "not enough balance",
+			name:      "you don't have enough money",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.Bid(context, msg)
@@ -85,25 +95,54 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", "2")
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
+	suite.Require().NoError(err)
+
+	cases := []struct {
 		preRun    func() *types.MsgAcceptBid
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"bid successfully accepted": {
+		{
 			preRun: func() *types.MsgAcceptBid {
 				return &types.MsgAcceptBid{
 					Creator: nameOwner.String(),
-					Name:    "Nuggie.jkl",
+					Name:    TestName,
 					From:    bidder.String(),
 				}
 			},
 			expErr: false,
+			name:   "big successfully accepted",
+		},
+		{
+			preRun: func() *types.MsgAcceptBid {
+				return &types.MsgAcceptBid{
+					Creator: nameOwner.String(),
+					Name:    TestName,
+					From:    bidder.String(),
+				}
+			},
+			expErr:    true,
+			expErrMsg: "You are not the owner of that name.: unauthorized",
+			name:      "bid failed to be accepted",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.AcceptBid(context, msg)
@@ -119,4 +158,73 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	}
 }
 
-//Cancel bid goes here
+func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
+	suite.SetupSuite()
+	msgSrvr, _, context := setupMsgServer(suite)
+
+	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	suite.Require().NoError(err)
+
+	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", "2")
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
+	suite.Require().NoError(err)
+
+	cases := []struct {
+		preRun    func() *types.MsgCancelBid
+		expErr    bool
+		expErrMsg string
+		name      string
+	}{
+		{
+			preRun: func() *types.MsgCancelBid {
+				return &types.MsgCancelBid{
+					Creator: bidder.String(),
+					Name:    TestName,
+				}
+			},
+			expErr: false,
+			name:   "bid successfully canceled",
+		},
+		{
+			preRun: func() *types.MsgCancelBid {
+				return &types.MsgCancelBid{
+					Creator: bidder.String(),
+					Name:    TestName,
+				}
+			},
+			expErr:    true,
+			expErrMsg: "Bid does not exist or has expired.: not found",
+			name:      "bid unsuccessfully canceled",
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			msg := tc.preRun()
+			suite.Require().NoError(err)
+			res, err := msgSrvr.CancelBid(context, msg)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+				suite.Require().EqualValues(types.MsgBidResponse{}, *res)
+
+			}
+		})
+	}
+}
