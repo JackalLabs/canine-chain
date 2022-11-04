@@ -33,7 +33,7 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You do not own this name.")
 	}
 
-	blockHeight := ctx.BlockHeight()
+	blockHeight := ctx.BlockTime().Unix()
 
 	if name.Locked > blockHeight {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot transfer free name")
