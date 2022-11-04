@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -9,6 +10,8 @@ import (
 )
 
 func (k Keeper) TransferName(ctx sdk.Context, creator string, receiever string, name string) error {
+	name = strings.ToLower(name)
+
 	sender, err := sdk.AccAddressFromBech32(creator)
 	if err != nil {
 		return err

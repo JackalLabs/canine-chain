@@ -7,7 +7,7 @@ import (
 	types "github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func (suite *KeeperTestSuite) TestListMsg() {
+func (suite *KeeperTestSuite) TestDelistMsg() {
 	suite.SetupSuite()
 	msgSrvr, _, ctx := setupMsgServer(suite)
 	// ctx = suite.ctx.WithBlockHeight(100)
@@ -32,14 +32,14 @@ func (suite *KeeperTestSuite) TestListMsg() {
 	// Use postRun to return it to original state
 	cases := []struct {
 		testName  string
-		preRun    func() *types.MsgList
+		preRun    func() *types.MsgDelist
 		postRun   func()
 		expErr    bool
 		expErrMsg string
 	}{
 		{
-			testName: "Name_already_listed",
-			preRun: func() *types.MsgList {
+			testName: "Name_listed",
+			preRun: func() *types.MsgDelist {
 				// Check if name is actually saved
 				name, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
@@ -50,10 +50,9 @@ func (suite *KeeperTestSuite) TestListMsg() {
 					Owner: nameOwner.String(),
 				}
 				keeper.SetForsale(suite.ctx, newsale)
-				return &types.MsgList{
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    fmt.Sprintf("%s,%s", name.Name, name.Tld),
-					Price:   "100000000ujkl",
 				}
 			},
 			postRun: func() {
@@ -64,48 +63,45 @@ func (suite *KeeperTestSuite) TestListMsg() {
 				_, found = keeper.GetForsale(suite.ctx, name.Name)
 				suite.Require().False(found)
 			},
-			expErr:    true,
-			expErrMsg: "Name already listed.",
+			expErr:    false,
+			expErrMsg: "Name is listed and can be delisted.",
 		},
 
 		{
 			testName: "name_not_found",
-			preRun: func() *types.MsgList {
-				return &types.MsgList{
+			preRun: func() *types.MsgDelist {
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    "nonexistent.jkl",
-					Price:   "100ujkl",
 				}
 			},
 			expErr:    true,
-			expErrMsg: "Name does not exist or has expired.",
+			expErrMsg: "Name isn't listed.: unauthorized",
 		},
 
 		{
 			testName: "wrong_onwer",
-			preRun: func() *types.MsgList {
-				return &types.MsgList{
+			preRun: func() *types.MsgDelist {
+				return &types.MsgDelist{
 					Creator: "wrong_account",
 					Name:    "Nuggie.jkl",
-					Price:   "100ujkl",
 				}
 			},
 			expErr:    true,
-			expErrMsg: "You do not own this name.",
+			expErrMsg: "Name isn't listed.: unauthorized",
 		},
 
 		{
 			testName: "cannot_transfer_free_name",
-			preRun: func() *types.MsgList {
+			preRun: func() *types.MsgDelist {
 				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
 				names.Locked = blockHeight + 1
 				keeper.SetNames(suite.ctx, names)
-				return &types.MsgList{
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    "Nuggie.jkl",
-					Price:   "100ujkl",
 				}
 			},
 			postRun: func() {
@@ -116,21 +112,20 @@ func (suite *KeeperTestSuite) TestListMsg() {
 				keeper.SetNames(suite.ctx, names)
 			},
 			expErr:    true,
-			expErrMsg: "cannot transfer free name",
+			expErrMsg: "Name isn't listed.: unauthorized",
 		},
 
 		{
 			testName: "expired_name",
-			preRun: func() *types.MsgList {
+			preRun: func() *types.MsgDelist {
 				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
 				names.Expires = blockHeight - 1
 				keeper.SetNames(suite.ctx, names)
-				return &types.MsgList{
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    "Nuggie.jkl",
-					Price:   "100ujkl",
 				}
 			},
 			postRun: func() {
@@ -141,7 +136,7 @@ func (suite *KeeperTestSuite) TestListMsg() {
 				keeper.SetNames(suite.ctx, names)
 			},
 			expErr:    true,
-			expErrMsg: "Name does not exist or has expired.",
+			expErrMsg: "Name isn't listed.: unauthorized",
 		},
 	}
 
@@ -149,7 +144,7 @@ func (suite *KeeperTestSuite) TestListMsg() {
 		suite.Run(tc.testName, func() {
 			msg := tc.preRun()
 
-			_, err := msgSrvr.List(ctx, msg)
+			_, err := msgSrvr.Delist(ctx, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)

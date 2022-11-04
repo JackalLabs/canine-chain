@@ -7,6 +7,8 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
+const nuggieName = "Nuggie.jkl"
+
 func (suite *KeeperTestSuite) TestMsgAddBid() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
@@ -20,13 +22,11 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
 	suite.Require().NoError(err)
 
-	rnsName := "Nuggie.jkl"
-
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), nuggieName, "{}", "2")
 	suite.Require().NoError(err)
 
-	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: rnsName, Price: "200ujkl"})
+	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: nuggieName, Price: "200ujkl"})
 
 	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
@@ -47,7 +47,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
-					rnsName,
+					nuggieName,
 					"1000ujkl",
 				)
 			},
@@ -58,7 +58,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 			preRun: func() *types.MsgBid {
 				return types.NewMsgBid(
 					bidder.String(),
-					rnsName,
+					nuggieName,
 					"100000000ujkl",
 				)
 			},

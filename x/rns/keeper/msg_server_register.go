@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -10,6 +11,7 @@ import (
 )
 
 func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data string, years string) error {
+	nm = strings.ToLower(nm)
 	name, tld, err := GetNameAndTLD(nm)
 	if err != nil {
 		return err

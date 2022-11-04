@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -11,6 +12,8 @@ import (
 )
 
 func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
+	nm = strings.ToLower(nm)
+
 	buyer, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {
 		return err

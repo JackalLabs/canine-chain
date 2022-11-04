@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,14 +12,15 @@ import (
 
 func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgListResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	mname := strings.ToLower(msg.Name)
 
-	_, found := k.GetForsale(ctx, msg.Name)
+	_, found := k.GetForsale(ctx, mname)
 
 	if found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already listed.")
 	}
 
-	n, tld, err := GetNameAndTLD(msg.Name)
+	n, tld, err := GetNameAndTLD(mname)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +46,7 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 	}
 
 	newsale := types.Forsale{
-		Name:  msg.Name,
+		Name:  mname,
 		Price: msg.Price,
 		Owner: msg.Creator,
 	}

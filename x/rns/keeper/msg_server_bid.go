@@ -3,12 +3,15 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (k Keeper) AddBid(ctx sdk.Context, sender string, name string, bid string) error {
+	name = strings.ToLower(name)
+
 	bidder, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {
 		return err

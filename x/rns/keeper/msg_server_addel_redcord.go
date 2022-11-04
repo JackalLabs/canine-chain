@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,8 +12,9 @@ import (
 
 func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*types.MsgDelRecordResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	mname := strings.ToLower(msg.Name)
 
-	n, tld, err := GetNameAndTLD(msg.Name)
+	n, tld, err := GetNameAndTLD(mname)
 	if err != nil {
 		return nil, err
 	}

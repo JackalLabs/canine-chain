@@ -12,7 +12,9 @@ import (
 func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*types.MsgAddRecordResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	name, tld, err := GetNameAndTLD(msg.Name)
+	mname := strings.ToLower(msg.Name)
+
+	name, tld, err := GetNameAndTLD(mname)
 	if err != nil {
 		return nil, err
 	}
