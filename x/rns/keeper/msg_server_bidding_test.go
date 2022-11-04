@@ -110,12 +110,13 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
 	suite.Require().NoError(err)
 
-	cases := map[string]struct {
+	cases := []struct {
 		preRun    func() *types.MsgAcceptBid
 		expErr    bool
 		expErrMsg string
+		name      string
 	}{
-		"bid successfully accepted": {
+		{
 			preRun: func() *types.MsgAcceptBid {
 				return &types.MsgAcceptBid{
 					Creator: nameOwner.String(),
@@ -124,8 +125,9 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 				}
 			},
 			expErr: false,
+			name:   "big successfully accepted",
 		},
-		"bid failed to be accepted": {
+		{
 			preRun: func() *types.MsgAcceptBid {
 				return &types.MsgAcceptBid{
 					Creator: nameOwner.String(),
@@ -134,11 +136,12 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 				}
 			},
 			expErr: true,
+			name:   "bid failed to be accepted",
 		},
 	}
 
-	for name, tc := range cases {
-		suite.Run(name, func() {
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.AcceptBid(context, msg)
