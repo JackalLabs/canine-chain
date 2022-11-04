@@ -196,9 +196,9 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 					receiver.String(),
 				)
 			},
-			expErr: true,
-			//need msg here
-			name: "failed transfer",
+			expErr:    true,
+			expErrMsg: "You are not the owner of that name.: unauthorized",
+			name:      "failed transfer",
 		},
 	}
 
