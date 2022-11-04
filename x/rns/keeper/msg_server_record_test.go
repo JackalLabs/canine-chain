@@ -118,7 +118,7 @@ func (suite *KeeperTestSuite) TestMsgDelRecord() {
 				)
 			},
 			expErr:    true,
-			expErrMsg: "error message goes here",
+			expErrMsg: "record does not exist for this name: unauthorized",
 			name:      "can't delete a record that doesn't exist",
 		},
 	}
