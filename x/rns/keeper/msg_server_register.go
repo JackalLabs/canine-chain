@@ -36,7 +36,7 @@ func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data str
 
 	blockHeight := ctx.BlockTime()
 
-	time := numYears.Int64() * 86400 * 365
+	time := numYears.Int64() * 5733818
 
 	owner, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {

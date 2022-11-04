@@ -95,7 +95,7 @@ func (suite *KeeperTestSuite) TestListMsg() {
 		{
 			testName: "cannot_transfer_free_name",
 			preRun: func() *types.MsgList {
-				blockHeight := suite.ctx.BlockTime().Unix()
+				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
 				names.Locked = blockHeight + 1
@@ -120,7 +120,7 @@ func (suite *KeeperTestSuite) TestListMsg() {
 		{
 			testName: "expired_name",
 			preRun: func() *types.MsgList {
-				blockHeight := suite.ctx.BlockTime().Unix()
+				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
 				names.Expires = blockHeight - 1

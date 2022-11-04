@@ -23,7 +23,7 @@ func (k Keeper) AcceptOneBid(ctx sdk.Context, sender string, name string, bidder
 
 	whois, isFound := k.GetNames(ctx, n, tld)
 
-	blockHeight := ctx.BlockTime().Unix()
+	blockHeight := ctx.BlockHeight()
 
 	if !isFound {
 		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")

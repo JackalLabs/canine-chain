@@ -23,7 +23,7 @@ func (k Keeper) TransferName(ctx sdk.Context, creator string, receiever string, 
 
 	admin := whois.Value
 
-	blockHeight := ctx.BlockTime().Unix()
+	blockHeight := ctx.BlockHeight()
 
 	if !isFound {
 		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")

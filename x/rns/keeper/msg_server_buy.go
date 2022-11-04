@@ -32,7 +32,7 @@ func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
 		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name does not exist or has expired.")
 	}
 
-	blockHeight := ctx.BlockTime().Unix()
+	blockHeight := ctx.BlockHeight()
 
 	if blockHeight > name.Expires {
 		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")

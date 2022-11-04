@@ -23,7 +23,7 @@ func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "name does not exist or has expired")
 	}
 
-	if ctx.BlockTime().Unix() > whois.Expires {
+	if ctx.BlockHeight() > whois.Expires {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "name does not exist or has expired")
 	}
 

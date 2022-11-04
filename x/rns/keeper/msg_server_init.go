@@ -25,7 +25,7 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 
 	k.SetInit(ctx, i)
 
-	bh := ctx.BlockTime().Unix()
+	bh := ctx.BlockHeight()
 
 	name := types.MakeName(int(bh), bh)
 
@@ -45,7 +45,7 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 		}
 	}
 
-	time := 86400*365 + bh
+	time := 5733818 + bh
 
 	emptySubdomains := []*types.Names{}
 

@@ -29,7 +29,7 @@ func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "cannot find name")
 	}
 
-	if ctx.BlockTime().Unix() > val.Expires {
+	if ctx.BlockHeight() > val.Expires {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "name does not exist or has expired")
 	}
 
