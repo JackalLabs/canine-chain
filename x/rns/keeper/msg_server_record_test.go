@@ -92,7 +92,7 @@ func (suite *KeeperTestSuite) TestMsgDelRecord() {
 	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), "BiPhan.jkl", "{}", "2")
 	suite.Require().NoError(err)
 
-	_, _ = msgSrvr.AddRecord(context, types.NewMsgAddRecord(owner.String(), "BiPhan.jkl", "app.BiPhan.jkl", owner.String(), "{}"))
+	_, _ = msgSrvr.AddRecord(context, types.NewMsgAddRecord(owner.String(), "BiPhan.jkl", "app", owner.String(), "{}"))
 
 	cases := []struct {
 		preRun    func() *types.MsgDelRecord

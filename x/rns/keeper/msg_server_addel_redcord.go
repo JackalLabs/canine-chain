@@ -39,11 +39,17 @@ func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "you do not own this name")
 	}
 
+	removed := false
 	dms := []*types.Names{}
 	for _, domain := range val.Subdomains {
 		if domain.Name != sub {
 			dms = append(dms, domain)
+			continue
 		}
+		removed = true
+	}
+	if !removed {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "record does not exist for this name")
 	}
 
 	val.Subdomains = dms
