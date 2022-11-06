@@ -2,6 +2,10 @@
 # Canine Chain by Jackal
 **Canine** is a blockchain built using Cosmos SDK and Tendermint.
 
+[![golangci-lint](https://github.com/JackalLabs/canine-chain/actions/workflows/golangci.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/golangci.yml)
+[![Test](https://github.com/JackalLabs/canine-chain/actions/workflows/test.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/test.yml)
+[![Build](https://github.com/JackalLabs/canine-chain/actions/workflows/build.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/build.yml)
+
 ## Pages
 
 1. [Modules](x/README.md)
