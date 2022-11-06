@@ -31,5 +31,9 @@ You may also need to run `sudo chmod +x canined` inside the executables director
 
 Canine by Jackal uses the [MIT License](/LICENSE.md).
 
+## Bug Bounty
+
+Refer to the bug bounty program proposed by Jackal Labs [Here](https://jackaldao.medium.com/announcement-jackal-bug-bounty-program-31d4e03ab7e2)
+
 ### [Developer Contact](/ABOUT.md)
 
