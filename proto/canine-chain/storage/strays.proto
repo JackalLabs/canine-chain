@@ -1,0 +1,12 @@
+syntax = "proto3";
+package jackaldao.canine.storage;
+
+option go_package = "github.com/jackal-dao/canine/x/storage/types";
+
+message Strays {
+  string cid = 1;
+  string fid = 2;
+  string signee = 3;
+  string filesize = 4;
+  string merkle = 5;
+}

@@ -1,9 +1,7 @@
 syntax = "proto3";
 package jackaldao.canine.jklmint;
 
-
 option go_package = "github.com/jackal-dao/canine/x/jklmint/types";
 
 // Msg defines the Msg service.
-service Msg {
-}
+service Msg {}

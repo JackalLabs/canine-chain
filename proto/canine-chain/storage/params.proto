@@ -1,0 +1,9 @@
+syntax = "proto3";
+package jackaldao.canine.storage;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/jackal-dao/canine/x/storage/types";
+
+// Params defines the parameters for the module.
+message Params { option (gogoproto.goproto_stringer) = false; }

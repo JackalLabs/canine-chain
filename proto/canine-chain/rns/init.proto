@@ -4,8 +4,6 @@ package jackaldao.canine.rns;
 option go_package = "github.com/jackal-dao/canine/x/rns/types";
 
 message Init {
-  string address = 1; 
-  bool complete = 2; 
-  
+  string address = 1;
+  bool complete = 2;
 }
-
