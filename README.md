@@ -31,6 +31,13 @@ You may also need to run `sudo chmod +x canined` inside the executables director
 
 `go test ./...`
 
+## Version Map
+
+|block height|canined version|
+|------------|---------------|
+|45381       |1.1.2          |
+|0           |1.1.0          |
+
 ## License
 
 Canine by Jackal uses the [MIT License](/LICENSE.md).
