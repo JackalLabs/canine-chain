@@ -1,0 +1,11 @@
+syntax = "proto3";
+package jackaldao.canine.storage;
+
+option go_package = "github.com/jackal-dao/canine/x/storage/types";
+
+message PayBlocks {
+  string blockid = 1;
+  string bytes = 2;
+  string blocktype = 3;
+  string blocknum = 4;
+}

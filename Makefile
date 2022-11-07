@@ -10,9 +10,9 @@ SIMAPP = ./app
 
 # for dockerized protobuf tools
 DOCKER := $(shell which docker)
-BUF_IMAGE=bufbuild/buf@sha256:3cb1f8a4b48bd5ad8f09168f10f607ddc318af202f5c057d52a45216793d85e5 #v1.4.0
-DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(BUF_IMAGE)
-HTTPS_GIT := https://github.com/jackal-dao/canine.git
+BUF_IMAGE=bufbuild/buf #@sha256:3cb1f8a4b48bd5ad8f09168f10f607ddc318af202f5c057d52a45216793d85e5 #v1.4.0
+DOCKER_BUF := $(DOCKER) run --platform="linux/amd64" --rm -v $(CURDIR):/workspace --workdir /workspace $(BUF_IMAGE)
+HTTPS_GIT := https://github.com/jackalLabs/canine-chain.git
 
 export GO111MODULE = on
 
@@ -59,7 +59,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=canine \
 		  -X github.com/cosmos/cosmos-sdk/version.AppName=canined \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		  -X github.com/jackal-dao/canine/app.Bech32Prefix=jkl \
+		  -X github.com/jackalLabs/canine-chain/app.Bech32Prefix=jkl \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
 
 ifeq ($(WITH_CLEVELDB),yes)
@@ -161,7 +161,7 @@ lint: format-tools
 format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gofumpt -w -s
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs misspell -w
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs goimports -w -local github.com/jackal-dao/canine
+	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs goimports -w -local github.com/jackalLabs/canine-chain
 
 
 ###############################################################################
@@ -181,7 +181,7 @@ proto-format:
 	@echo "Formatting Protobuf files"
 	$(DOCKER) run --rm -v $(CURDIR):/workspace \
 	--workdir /workspace $(PROTO_FORMATTER_IMAGE) \
-	find ./ -not -path "./third_party/*" -name *.proto -exec clang-format -i {} \;
+	find ./ -name *.proto -exec clang-format -i {} \;
 
 proto-swagger-gen:
 	@./scripts/protoc-swagger-gen.sh
