@@ -17,37 +17,37 @@ option go_package = "github.com/jackal-dao/canine/x/rns/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rnsparams";
+    option (google.api.http).get = "/jackal-dao/canine/rns/params";
   }
 
   // Queries a Name by index.
   rpc Names(QueryGetNamesRequest) returns (QueryGetNamesResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rnsnames/{index}";
+    option (google.api.http).get = "/jackal-dao/canine/rns/names/{index}";
   }
 
   // Queries a list of Names.
   rpc NamesAll(QueryAllNamesRequest) returns (QueryAllNamesResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rnsnames";
+    option (google.api.http).get = "/jackal-dao/canine/rns/names";
   }
 
   // Queries a Bid by index.
   rpc Bids(QueryGetBidsRequest) returns (QueryGetBidsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rnsbids/{index}";
+    option (google.api.http).get = "/jackal-dao/canine/rns/bids/{index}";
   }
 
   // Queries a list of Bids.
   rpc BidsAll(QueryAllBidsRequest) returns (QueryAllBidsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rnsbids";
+    option (google.api.http).get = "/jackal-dao/canine/rns/bids";
   }
 
   // Queries a Listing by index.
   rpc Forsale(QueryGetForsaleRequest) returns (QueryGetForsaleResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rnsforsale/{name}";
+    option (google.api.http).get = "/jackal-dao/canine/rns/forsale/{name}";
   }
 
   // Queries all Listings.
   rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryAllForsaleResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rnsforsale";
+    option (google.api.http).get = "/jackal-dao/canine/rns/forsale";
   }
 
   // Queries a Init by index.
