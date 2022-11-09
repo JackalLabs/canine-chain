@@ -29,8 +29,8 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 					"10000",
 				)
 			},
-			expErr: false,
-			name:   "init success",
+			expErr: true,
+			name:   "init provider success",
 		},
 	}
 
