@@ -52,6 +52,11 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
+	_, err = sdk.AccAddressFromBech32(msg.ForAddress)
+	if err != nil {
+		return nil, err
+	}
+
 	err = k.CreatePayBlock(ctx, msg.ForAddress, dr, bytes.Int64())
 
 	if err != nil {
