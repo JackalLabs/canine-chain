@@ -23,10 +23,10 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		expErrMsg string
 	}{
 		{
-			testName: "buy 1gb for 2 month",
+			testName: "buy 2gb for 1 month",
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
-				ForAddress:   "testAccount.String()",
+				ForAddress:   testAccount.String(),
 				Duration:     "432000",
 				Bytes:        "2000000000",
 				PaymentDenom: "ujkl",
@@ -59,6 +59,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			expErrMsg: "cannot buy less than a month",
 		},
 		{
+			// TODO: update this when we allow alt payments
 			testName: "payment with uatom",
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
@@ -71,9 +72,21 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			expErrMsg: "cannot pay with anything other than ujkl: invalid coins",
 		},
 		{
-			testName: "invalid address",
+			testName: "invalid creator address",
 			msg: types.MsgBuyStorage{
 				Creator:      "invalid_address",
+				ForAddress:   testAccount.String(),
+				Duration:     "432000",
+				Bytes:        "1000000000",
+				PaymentDenom: "ujkl",
+			},
+			expErr:    true,
+			expErrMsg: "decoding bech32 failed: invalid separator index -1",
+		},
+		{
+			testName: "invalid for address",
+			msg: types.MsgBuyStorage{
+				Creator:      testAccount.String(),
 				ForAddress:   "invalid_address",
 				Duration:     "432000",
 				Bytes:        "1000000000",
