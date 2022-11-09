@@ -13,13 +13,7 @@ func (k msgServer) SetProviderIP(goCtx context.Context, msg *types.MsgSetProvide
 	provider, found := k.GetProviders(ctx, msg.Creator)
 
 	if !found {
-		provider = types.Providers{
-			Address:         msg.Creator,
-			Ip:              "",
-			Totalspace:      "0",
-			Creator:         msg.Creator,
-			BurnedContracts: "0",
-		}
+		return nil, types.ErrProviderNotFound
 	}
 
 	provider.Ip = msg.Ip

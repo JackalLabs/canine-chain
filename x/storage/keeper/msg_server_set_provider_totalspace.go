@@ -13,13 +13,7 @@ func (k msgServer) SetProviderTotalspace(goCtx context.Context, msg *types.MsgSe
 	provider, found := k.GetProviders(ctx, msg.Creator)
 
 	if !found {
-		provider = types.Providers{
-			Address:         msg.Creator,
-			Ip:              "",
-			Totalspace:      "0",
-			Creator:         msg.Creator,
-			BurnedContracts: "0",
-		}
+		return nil, types.ErrProviderNotFound
 	}
 
 	provider.Totalspace = msg.Space
