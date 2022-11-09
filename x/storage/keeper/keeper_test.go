@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"testing"
 	gocontext "context"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -55,4 +56,8 @@ func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, goc
 	storage.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
 	ctx := sdk.WrapSDKContext(suite.ctx)
 	return keeper.NewMsgServerImpl(*k), *k, ctx
+}
+
+func TestStorageTestSuite(t *testing.T) {
+	suite.Run(t, new(KeeperTestSuite))
 }
