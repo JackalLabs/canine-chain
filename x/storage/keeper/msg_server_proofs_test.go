@@ -44,7 +44,10 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 	item := f
 
 	h := sha256.New()
-	io.WriteString(h, fmt.Sprintf("%d%x", index, f))
+	_, err := io.WriteString(h, fmt.Sprintf("%d%x", index, f))
+	if err != nil {
+		fmt.Println(err)
+	}
 	hashName := h.Sum(nil)
 
 	data = append(data, hashName)
@@ -55,7 +58,10 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 	}
 
 	h = sha256.New()
-	io.WriteString(h, fmt.Sprintf("%d%x", index, item))
+	_, err = io.WriteString(h, fmt.Sprintf("%d%x", index, item))
+	if err != nil {
+		fmt.Println(err)
+	}
 	ditem := h.Sum(nil)
 
 	proof, err := tree.GenerateProof(ditem)
@@ -89,10 +95,13 @@ func makeContract(file TestFile) (string, string) {
 	size := 0
 	var list [][]byte
 
-	size = size + len(f)
+	size += len(f)
 
 	h := sha256.New()
-	io.WriteString(h, fmt.Sprintf("%d%x", 0, f))
+	_, err := io.WriteString(h, fmt.Sprintf("%d%x", 0, f))
+	if err != nil {
+		fmt.Println(err)
+	}
 	hashName := h.Sum(nil)
 
 	list = append(list, hashName)
@@ -196,7 +205,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		postRun   func()
 	}{
 		{
-			testName: "proof sucessfully verified",
+			testName: "proof successfully verified",
 			msg: types.MsgPostproof{
 				Creator:  testProvider.String(),
 				Cid:      CID,
