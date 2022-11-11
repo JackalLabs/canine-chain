@@ -12,16 +12,36 @@ import (
 	merkletree "github.com/wealdtech/go-merkletree"
 )
 
-const CID = "6ef1cf960c0b1e257049645ff13ed890c2d4ef69c62165bf4e090ec480770d67"
+type TestFile struct {
+	Name string
+	Data string
+}
 
-// filename := []byte(fmt.Sprintf("%s%s", "FILE-", CID))
+var originalFile = TestFile{
+	Name: "jackal_file",
+	Data: "jackal maxi",
+}
 
-func CreateMerkleForProof() (string, string, error) {
-	// example file
-	f := []byte("jackal maxi")
+var fileFromSP = TestFile{
+	Name: "jackal_file",
+	Data: "jackal maxi",
+}
+
+var randomFile = TestFile{
+	Name: "random_file",
+	Data: "hello world",
+}
+
+const (
+	CID  = "6ef1cf960c0b1e257049645ff13ed890c2d4ef69c62165bf4e090ec480770d67"
+	CID2 = "a257645c433288e20c23d4fc8ce823c66558e5398c98b140d7ccfb39e8a3c70e"
+)
+
+func CreateMerkleForProof(file TestFile) (string, string, error) {
+	f := []byte(file.Data)
 	index := 0
 	var data [][]byte
-	var item []byte = f
+	item := f
 
 	h := sha256.New()
 	io.WriteString(h, fmt.Sprintf("%d%x", index, f))
@@ -64,9 +84,8 @@ func CreateMerkleForProof() (string, string, error) {
 	return fmt.Sprintf("%x", item), string(jproof), nil
 }
 
-func makeContract() (string, string) {
-	// example file
-	f := []byte("jackal maxi")
+func makeContract(file TestFile) (string, string) {
+	f := []byte(file.Data)
 	size := 0
 	var list [][]byte
 
@@ -89,6 +108,8 @@ func makeContract() (string, string) {
 func (suite *KeeperTestSuite) TestPostProof() {
 	suite.SetupSuite()
 
+	msgSrvr, keeper, context := setupMsgServer(suite)
+
 	// Create user account
 	user, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
 	suite.Require().NoError(err)
@@ -96,8 +117,6 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	// Create provider account
 	testProvider, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
-
-	msgSrvr, keeper, context := setupMsgServer(suite)
 
 	// Init Provider
 	_, err = msgSrvr.InitProvider(context, &types.MsgInitProvider{
@@ -109,10 +128,8 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		fmt.Println(err)
 	}
 
-	// run makeContract
-	merkleroot, filesize := makeContract()
-	// fmt.Println(merkleroot)
-	// fmt.Println(filesize)
+	// Storage Provider receives file and make merkleroot for contract
+	merkleroot, filesize := makeContract(originalFile)
 
 	// Post Contract
 	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
@@ -127,6 +144,19 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		fmt.Println(err)
 	}
 
+	// Post Contract #2
+	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
+		Creator:  testProvider.String(),
+		Signee:   user.String(),
+		Duration: "10",
+		Filesize: "1000",
+		Fid:      "fid2",
+		Merkle:   "invalid_merkleroot",
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	// Sign Contract for active deal
 	_, err = msgSrvr.SignContract(context, &types.MsgSignContract{
 		Creator: user.String(),
@@ -136,9 +166,26 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		fmt.Println(err)
 	}
 
-	item, hashlist, err := CreateMerkleForProof()
+	// Sign Contract #2 for active deal
+	_, err = msgSrvr.SignContract(context, &types.MsgSignContract{
+		Creator: user.String(),
+		Cid:     CID2,
+	})
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	// Storage Provider get file and create merkle for proof
+	// for tc 1 and 2
+	item, hashlist, err := CreateMerkleForProof(fileFromSP)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// for tc 3: post proof from a different file
+	item2, hashlist2, err2 := CreateMerkleForProof(randomFile)
+	if err != nil {
+		fmt.Println(err2)
 	}
 
 	cases := []struct {
@@ -146,9 +193,10 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		msg       types.MsgPostproof
 		expErr    bool
 		expErrMsg string
+		postRun   func()
 	}{
 		{
-			testName: "create 1 proof",
+			testName: "proof sucessfully verified",
 			msg: types.MsgPostproof{
 				Creator:  testProvider.String(),
 				Cid:      CID,
@@ -158,15 +206,73 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			expErr:    false,
 			expErrMsg: "",
 		},
+		{
+			testName: "postproof for the same file again",
+			msg: types.MsgPostproof{
+				Creator:  testProvider.String(),
+				Cid:      CID,
+				Item:     item,
+				Hashlist: hashlist,
+			},
+			expErr:    true,
+			expErrMsg: "proof already verified",
+			postRun: func() {
+				// Set Proofverified back to false
+				contract, _ := keeper.GetActiveDeals(suite.ctx, CID)
+				contract.Proofverified = "false"
+				keeper.SetActiveDeals(suite.ctx, contract)
+			},
+		},
+		{
+			testName: "proof fail to verify",
+			msg: types.MsgPostproof{
+				Creator:  testProvider.String(),
+				Cid:      CID,
+				Item:     item2,
+				Hashlist: hashlist2,
+			},
+			expErr:    true,
+			expErrMsg: "file chunk was not verified",
+		},
+		{
+			testName: "nonexisting contract",
+			msg: types.MsgPostproof{
+				Creator:  testProvider.String(),
+				Cid:      "fakecontractid",
+				Item:     item,
+				Hashlist: hashlist,
+			},
+			expErr:    true,
+			expErrMsg: "contract not found",
+		},
+		{
+			testName: "contract with invalid merkleroot",
+			msg: types.MsgPostproof{
+				Creator:  testProvider.String(),
+				Cid:      CID2,
+				Item:     item2,
+				Hashlist: hashlist2,
+			},
+			expErr:    true,
+			expErrMsg: "could not build merkle tree",
+		},
 	}
 
 	for _, tc := range cases {
 		suite.Run(
 			tc.testName, func() {
 				_, err := msgSrvr.Postproof(context, &tc.msg)
-				fmt.Println(err)
+				if tc.expErr {
+					suite.Require().EqualError(err, tc.expErrMsg)
+				} else {
+					contract, _ := keeper.GetActiveDeals(suite.ctx, CID)
+					suite.Require().Equal("true", contract.Proofverified)
+					suite.Require().NoError(err)
+				}
+				if tc.postRun != nil {
+					tc.postRun()
+				}
 			},
 		)
-		fmt.Println(keeper.GetAllActiveDeals(suite.ctx)[0].Proofverified)
 	}
 }
