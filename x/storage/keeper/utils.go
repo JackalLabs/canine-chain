@@ -54,6 +54,8 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 		return TwoGigs, true, &eblock
 	}
 
+	highestBlock = 0
+
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.PayBlocks
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
@@ -64,7 +66,7 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 			continue
 		}
 
-		adr := val.Blockid[:42]
+		adr := val.Blockid[:len(address)]
 		if adr != address {
 			continue
 		}
@@ -123,7 +125,8 @@ func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, by
 
 	amount, trial, _ := k.GetPaidAmount(ctx, address, startBlock)
 
-	if !trial && bytes <= amount {
+	if !trial && bytes <= amount { // Not in trial and new storage space is
+		// smaller than already paid amount
 		return fmt.Errorf("can't buy storage within another storage window")
 	}
 
