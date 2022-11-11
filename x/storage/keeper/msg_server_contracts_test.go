@@ -1,13 +1,11 @@
 package keeper_test
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func (suite *KeeperTestSuite) TestCreateContracts () {
+func (suite *KeeperTestSuite) TestCreateContracts() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
 	creator, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
@@ -16,56 +14,55 @@ func (suite *KeeperTestSuite) TestCreateContracts () {
 	buyer, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	cases := []struct{
-		name string
-		preRun func() *types.MsgPostContract
-		postRun func()
-		expResp types.MsgPostContractResponse
-		expErr bool
+	cases := []struct {
+		name      string
+		preRun    func() *types.MsgPostContract
+		postRun   func()
+		expResp   types.MsgPostContractResponse
+		expErr    bool
 		expErrMsg string
 	}{
 		{
 			name: "provider_doesn't_exist",
-			preRun: func() *types.MsgPostContract{
+			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator: creator.String(),
-					Priceamt: "1",
+					Creator:    creator.String(),
+					Priceamt:   "1",
 					Pricedenom: "1",
-					Merkle: "1",
-					Signee: "1",
-					Duration: "1",
-					Filesize: "1",
-					Fid: "1",
+					Merkle:     "1",
+					Signee:     "1",
+					Duration:   "1",
+					Filesize:   "1",
+					Fid:        "1",
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "can't find provider",
 		},
 
 		{
 			name: "invalid_provider_total_space_format",
-			preRun: func() *types.MsgPostContract{
+			preRun: func() *types.MsgPostContract {
 				// Set provider with invalid totalspace string
 				p := types.Providers{
-						Address: creator.String(),
-						Ip: "123.0.0.0",
-						Totalspace: "bad_content",
-						BurnedContracts: "",
-						Creator: creator.String(),
-					}
+					Address:         creator.String(),
+					Ip:              "123.0.0.0",
+					Totalspace:      "bad_content",
+					BurnedContracts: "",
+					Creator:         creator.String(),
+				}
 				sKeeper.SetProviders(suite.ctx, p)
 				_, found := sKeeper.GetProviders(suite.ctx, creator.String())
 				suite.Require().True(found)
-				return &types.MsgPostContract {
-					Creator: creator.String(),
-					Priceamt: "1",
+				return &types.MsgPostContract{
+					Creator:    creator.String(),
+					Priceamt:   "1",
 					Pricedenom: "1",
-					Merkle: "1",
-					Signee: "1",
-					Duration: "1",
-					Filesize: "1",
-					Fid: "1",
-
+					Merkle:     "1",
+					Signee:     "1",
+					Duration:   "1",
+					Filesize:   "1",
+					Fid:        "1",
 				}
 			},
 			postRun: func() {
@@ -75,71 +72,71 @@ func (suite *KeeperTestSuite) TestCreateContracts () {
 				p.Totalspace = "100000"
 				sKeeper.SetProviders(suite.ctx, p)
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "error parsing total space",
 		},
 
 		{
 			name: "bad_filesize_format",
-			preRun: func() *types.MsgPostContract{
+			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator: creator.String(),
-					Priceamt: "1",
+					Creator:    creator.String(),
+					Priceamt:   "1",
 					Pricedenom: "1",
-					Merkle: "1",
-					Signee: "1",
-					Duration: "1",
-					Filesize: "bad_filesize",
-					Fid: "1",
+					Merkle:     "1",
+					Signee:     "1",
+					Duration:   "1",
+					Filesize:   "bad_filesize",
+					Fid:        "1",
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "error parsing file size",
 		},
 
 		{
 			name: "not_enough_storage",
-			preRun: func() *types.MsgPostContract{
+			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator: creator.String(),
-					Priceamt: "1",
+					Creator:    creator.String(),
+					Priceamt:   "1",
 					Pricedenom: "1",
-					Merkle: "1",
-					Signee: "1",
-					Duration: "1",
-					Filesize: "1000001",
-					Fid: "1",
+					Merkle:     "1",
+					Signee:     "1",
+					Duration:   "1",
+					Filesize:   "1000001",
+					Fid:        "1",
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "not enough space on provider",
 		},
 
 		{
 			name: "user_didn't_pay_for_storage",
-			preRun: func() *types.MsgPostContract{
+			preRun: func() *types.MsgPostContract {
 				// Start free trial
 				suite.ctx = suite.ctx.WithBlockHeight(0)
-				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100, 100000000)	
+				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100, 100000000)
 				suite.Require().NoError(err)
 				// end free trial and create "not paid" condition
 				suite.ctx = suite.ctx.WithBlockHeight(100)
-				err = sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100000, 0)	
+				err = sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100000, 0)
 				suite.Require().NoError(err)
 				suite.ctx = suite.ctx.WithBlockHeight(500)
 				goCtx = sdk.WrapSDKContext(suite.ctx)
 				return &types.MsgPostContract{
-					Creator: creator.String(),
-					Priceamt: "1",
+					Creator:    creator.String(),
+					Priceamt:   "1",
 					Pricedenom: "1",
-					Merkle: "1",
-					Signee: buyer.String(),
-					Duration: "1",
-					Filesize: "10000",
-					Fid: "1",
+					Merkle:     "1",
+					Signee:     buyer.String(),
+					Duration:   "1",
+					Filesize:   "10000",
+					Fid:        "1",
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "user has not paid for any storage",
 		},
 	}
