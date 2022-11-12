@@ -17,8 +17,8 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func printProof(proof merkletree.Proof) {
-	fmt.Printf("Hashes: %v\nIndex: %d\n", proof.Hashes, proof.Index)
+func printProof(ctx sdk.Context, proof merkletree.Proof) {
+	ctx.Logger().Info("Hashes: %v\nIndex: %d\n", proof.Hashes, proof.Index)
 }
 
 func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*types.MsgPostproofResponse, error) {
@@ -52,18 +52,18 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	}
 	hashName := h.Sum(nil)
 
-	fmt.Printf("%v\n", hashes)
+	ctx.Logger().Debug("%v\n", hashes)
 
 	var proof merkletree.Proof
 
 	err = json.Unmarshal([]byte(msg.Hashlist), &proof)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		ctx.Logger().Debug("%v\n", err)
 		return nil, err
 	}
 
-	fmt.Printf("proof: %v\n", proof)
-	printProof(proof)
+	ctx.Logger().Debug("proof: %v\n", proof)
+	printProof(ctx, proof)
 
 	m, err := hex.DecodeString(contract.Merkle)
 	if err != nil {
@@ -72,13 +72,13 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	}
 	verified, err := merkletree.VerifyProof(hashName, &proof, m)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		ctx.Logger().Error("%v\n", err)
 
 		return nil, fmt.Errorf("could not build merkle tree")
 	}
 
 	if !verified {
-		fmt.Printf("%s\n", "Cannot verify")
+		ctx.Logger().Debug("%s\n", "Cannot verify")
 
 		return nil, fmt.Errorf("file chunk was not verified")
 	}

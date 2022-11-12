@@ -181,9 +181,9 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 
 	var dayBlocks int64 = 10 * 5 // 10 blocks is about 1 minute
 
-	fmt.Printf("blockdiff : %d\n", height%dayBlocks)
+	ctx.Logger().Debug("blockdiff : %d\n", height%dayBlocks)
 	if height%dayBlocks == 0 {
-		fmt.Printf("%s\n", "checking blocks")
+		ctx.Logger().Debug("%s\n", "checking blocks")
 
 		var networkSize int64
 		for i := 0; i < len(allDeals); i++ {
@@ -203,7 +203,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 
 			toprove, ok := sdk.NewIntFromString(deal.Blocktoprove)
 			if !ok {
-				fmt.Printf("Int Parse Failed!\n")
+				ctx.Logger().Debug("Int Parse Failed!\n")
 				continue
 			}
 
@@ -211,7 +211,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 
 			totalSize, ok := sdk.NewIntFromString(deal.Filesize)
 			if !ok {
-				fmt.Printf("Int Parse Failed!\n")
+				ctx.Logger().Debug("Int Parse Failed!\n")
 				continue
 			}
 
@@ -228,21 +228,21 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 			verified, errb := strconv.ParseBool(deal.Proofverified)
 
 			if errb != nil {
-				fmt.Printf("ERR %v\n", errb)
+				ctx.Logger().Debug("ERR %v\n", errb)
 				continue
 			}
 
 			if !verified {
-				fmt.Printf("%s\n", "Not verified!")
+				ctx.Logger().Debug("%s\n", "Not verified!")
 				intt, ok := sdk.NewIntFromString(deal.Proofsmissed)
 				if !ok {
-					fmt.Printf("Int Parse Failed!\n")
+					ctx.Logger().Debug("Int Parse Failed!\n")
 					continue
 				}
 
 				sb, ok := sdk.NewIntFromString(deal.Startblock)
 				if !ok {
-					fmt.Printf("Int Parse Failed!\n")
+					ctx.Logger().Debug("Int Parse Failed!\n")
 					continue
 				}
 
@@ -314,7 +314,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 
 			ratio := siv / div
 
-			fmt.Printf("Ratio: %f\n", ratio)
+			ctx.Logger().Debug("Ratio: %f\n", ratio)
 
 			ff, err := sdk.NewDec(balance.Amount.Int64()).Float64()
 			if err != nil {
@@ -322,7 +322,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 				continue
 			}
 			coinfloat := ratio * ff
-			fmt.Printf("Coins: %f * %f = %f\n", ratio, ff, coinfloat)
+			ctx.Logger().Debug("Coins: %f * %f = %f\n", ratio, ff, coinfloat)
 
 			dd, err := sdk.NewDecFromStr(fmt.Sprintf("%f", coinfloat))
 			if err != nil {
@@ -330,7 +330,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 				continue
 			}
 
-			fmt.Printf("%f\n", dd)
+			ctx.Logger().Debug("%f\n", dd)
 			coin := sdk.NewInt64Coin("ujkl", dd.TruncateInt64())
 			coins := sdk.NewCoins(coin)
 
@@ -339,15 +339,15 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) { // E
 				ctx.Logger().Error(err.Error())
 				continue
 			}
-			fmt.Printf("Sending coins to %s\n", provider.String())
+			ctx.Logger().Debug("Sending coins to %s\n", provider.String())
 			errorr := am.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, provider, coins)
 			if errorr != nil {
-				fmt.Printf("ERR: %v\n", errorr)
+				ctx.Logger().Debug("ERR: %v\n", errorr)
 				ctx.Logger().Error(errorr.Error())
 				continue
 			}
 
-			fmt.Printf("%s\n", deal.Cid)
+			ctx.Logger().Debug("%s\n", deal.Cid)
 
 			deal.Proofverified = "false"
 			am.keeper.SetActiveDeals(ctx, deal)
