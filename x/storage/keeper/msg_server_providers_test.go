@@ -164,11 +164,12 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 			preRun: func() *types.MsgSetProviderTotalspace {
 				return types.NewMsgSetProviderTotalspace(
 					user.String(),
-					"aa0215ass", //this should fail
+					"9@!0",
 				)
 			},
-			expErr: false,
-			name:   "invalid space param",
+			expErr:    true,
+			expErrMsg: "Not a valid total space. Please enter total number of bytes to provide.",
+			name:      "invalid space param",
 		},
 	}
 
