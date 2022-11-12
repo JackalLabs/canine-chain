@@ -5,7 +5,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func (suite *KeeperTestSuite) TestCreateContracts() {
+func (suite *KeeperTestSuite) TestPostContracts() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
 	creator, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
