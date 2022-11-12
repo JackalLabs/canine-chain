@@ -95,7 +95,7 @@ func (suite *KeeperTestSuite) TestCreateContracts() {
 		},
 
 		{
-			name: "not_enough_storage",
+			name: "not_enough_provider_storage",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
 					Creator:    creator.String(),
@@ -110,6 +110,41 @@ func (suite *KeeperTestSuite) TestCreateContracts() {
 			},
 			expErr:    true,
 			expErrMsg: "not enough space on provider",
+		},
+
+		{
+			name: "not_enough_user_storage",
+			preRun: func() *types.MsgPostContract {
+				// Setup provider storag
+				p := types.Providers{
+					Address:         creator.String(),
+					Ip:              "123.0.0.0",
+					Totalspace:      "1000000000000000",
+					BurnedContracts: "",
+					Creator:         creator.String(),
+				}
+				sKeeper.SetProviders(suite.ctx, p)
+				// start free two gig trial
+				suite.ctx = suite.ctx.WithBlockHeight(0)
+				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 1, 0)
+				suite.Require().NoError(err)
+				sKeeper.SetClientUsage(suite.ctx, types.ClientUsage{
+					Usage: "1900000000",
+					Address: buyer.String(),
+				})
+				return &types.MsgPostContract{
+					Creator:    creator.String(),
+					Priceamt:   "1",
+					Pricedenom: "1",
+					Merkle:     "1",
+					Signee:     "1",
+					Duration:   "1",
+					Filesize:   "20000000000",
+					Fid:        "1",
+				}
+			},
+			expErr: true,
+			expErrMsg: "not enough storage on the users account",
 		},
 
 		{
@@ -138,6 +173,43 @@ func (suite *KeeperTestSuite) TestCreateContracts() {
 			},
 			expErr:    true,
 			expErrMsg: "user has not paid for any storage",
+		},
+
+		{
+			name: "successful_post_contract",
+			preRun: func() *types.MsgPostContract {
+				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100000, 10000000000)
+				suite.Require().NoError(err)
+				return &types.MsgPostContract{
+					Creator:    creator.String(),
+					Priceamt:   "1",
+					Pricedenom: "ujkl",
+					Merkle:     "1",
+					Signee:     buyer.String(),
+					Duration:   "10000",
+					Filesize:   "10000",
+					Fid:        "123",
+				}
+			},
+			expErr: false,
+		},
+
+		{
+			name: "cannot_duplicate_contract",
+			preRun: func() *types.MsgPostContract {
+				return &types.MsgPostContract{
+					Creator:    creator.String(),
+					Priceamt:   "1",
+					Pricedenom: "ujkl",
+					Merkle:     "1",
+					Signee:     buyer.String(),
+					Duration:   "10000",
+					Filesize:   "10000",
+					Fid:        "123",
+				}
+			},
+			expErr: true,
+			expErrMsg: "cannot post the same contract twice",
 		},
 	}
 
