@@ -173,9 +173,8 @@ PROTO_FORMATTER_IMAGE=tendermintdev/docker-build-proto
 proto-all: proto-format proto-lint proto-gen format
 
 proto-gen:
-	
 	@echo "Generating Protobuf files"
-	$(DOCKER) run --platform="linux/amd64" --rm -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) sh ./scripts/protocgen.sh 
+	./scripts/protocgen.sh
 
 proto-format:
 	@echo "Formatting Protobuf files"
