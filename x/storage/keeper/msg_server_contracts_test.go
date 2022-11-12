@@ -232,3 +232,90 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 		})
 	}
 }
+
+func (suite *KeeperTestSuite) TestSignContract() {
+	suite.SetupSuite()
+	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
+	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	suite.Require().NoError(err)
+
+	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	cases := []struct {
+		name      string
+		preRun    func() *types.MsgSignContract
+		postRun   func()
+		expResp   types.MsgSignContractResponse
+		expErr    bool
+		expErrMsg string
+	}{
+		{
+			name: "contract_not_found",
+			preRun: func() *types.MsgSignContract {
+				return &types.MsgSignContract{
+					Cid: "contract_that_doesn't_exist",
+					Creator: provider.String(),
+				}
+			},
+			expErr: true,
+			expErrMsg: "contract not found",
+		},
+
+		{
+			name: "invalid_permission_to_sign_contract",
+			preRun: func() *types.MsgSignContract {
+				c := types.Contracts {
+					Cid: 		"123",
+					Creator:	provider.String(),
+					Priceamt:   "1",
+					Pricedenom: "ujkl",
+					Merkle:     "1",
+					Signee: 	user.String(),
+					Duration:   "10000",
+					Filesize:   "10000",
+					Fid:        "123",
+				}
+				sKeeper.SetContracts(suite.ctx, c)
+				_, found := sKeeper.GetContracts(suite.ctx, c.Cid)
+				suite.Require().True(found)
+				return &types.MsgSignContract{
+					Cid: c.Cid,
+					Creator: "invalid_creator",
+				}
+			},
+			expErr: true,
+			expErrMsg: "you do not have permission to approve this contract",
+		},
+
+		{
+			name: "successful_contract_signed",
+			preRun: func() *types.MsgSignContract {
+				return &types.MsgSignContract{
+					Cid: "123",
+					Creator: user.String(),
+				}
+			},
+			expErr: false,
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			// preRun must be defined to get MsgPostContract
+			suite.Require().NotNil(tc.preRun)
+			c := tc.preRun()
+			_, err := msgSrvr.SignContract(goCtx, c)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+			}
+
+			if tc.postRun != nil {
+				tc.postRun()
+			}
+		})
+	}
+}
