@@ -86,6 +86,17 @@ func (suite *KeeperTestSuite) TestRemoveProviders() {
 	foundProvider, found := suite.storageKeeper.GetProviders(suite.ctx, user.String())
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)
-	suite.Require().Equal(nil, foundProvider)
+
+	ghostProvider := types.Providers{
+		Address:         "",
+		Ip:              "",
+		Totalspace:      "",
+		BurnedContracts: "",
+		Creator:         "",
+	}
+
+	suite.Require().Equal(foundProvider, ghostProvider)
 
 }
+
+//Get all providers goes here
