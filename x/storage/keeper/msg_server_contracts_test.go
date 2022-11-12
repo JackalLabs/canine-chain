@@ -129,7 +129,7 @@ func (suite *KeeperTestSuite) TestCreateContracts() {
 				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 1, 0)
 				suite.Require().NoError(err)
 				sKeeper.SetClientUsage(suite.ctx, types.ClientUsage{
-					Usage: "1900000000",
+					Usage:   "1900000000",
 					Address: buyer.String(),
 				})
 				return &types.MsgPostContract{
@@ -143,7 +143,7 @@ func (suite *KeeperTestSuite) TestCreateContracts() {
 					Fid:        "1",
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "not enough storage on the users account",
 		},
 
@@ -208,7 +208,7 @@ func (suite *KeeperTestSuite) TestCreateContracts() {
 					Fid:        "123",
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "cannot post the same contract twice",
 		},
 	}
