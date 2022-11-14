@@ -31,11 +31,14 @@ func (suite *KeeperTestSuite) SetupSuite() {
 }
 
 func (suite *KeeperTestSuite) reset() {
-	storageKeeper, bankKeeper, encCfg, ctx := setupStorageKeeper(suite.T())
+	storageKeeper, bankKeeper, accountKeeper, encCfg, ctx := setupStorageKeeper(suite.T())
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, encCfg.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, storageKeeper)
 	queryClient := types.NewQueryClient(queryHelper)
+
+	// TODO: make accounts in account keeper
+	_ = accountKeeper
 
 	coins := sdk.NewCoins(sdk.NewCoin("stake", sdk.NewInt(1000000000)))
 	err := bankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)

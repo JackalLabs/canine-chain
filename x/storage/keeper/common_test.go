@@ -29,6 +29,7 @@ import (
 func setupStorageKeeper(t *testing.T) (
 	*keeper.Keeper,
 	*storagetestutil.MockBankKeeper,
+	*storagetestutil.MockAccountKeeper,
 	moduletestutil.TestEncodingConfig,
 	sdk.Context,
 ) {
@@ -47,6 +48,7 @@ func setupStorageKeeper(t *testing.T) (
 	// gomock initializations
 	ctrl := gomock.NewController(t)
 	bankKeeper := storagetestutil.NewMockBankKeeper(ctrl)
+	accountKeeper := storagetestutil.NewMockAccountKeeper(ctrl)
 	trackMockBalances(bankKeeper)
 
 	paramsSubspace := typesparams.NewSubspace(encCfg.Codec,
@@ -57,7 +59,7 @@ func setupStorageKeeper(t *testing.T) (
 	)
 
 	// storage keeper initializations
-	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace, bankKeeper)
+	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace, bankKeeper, accountKeeper)
 	storageKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.
@@ -65,7 +67,7 @@ func setupStorageKeeper(t *testing.T) (
 	types.RegisterMsgServer(msr, keeper.NewMsgServerImpl(*storageKeeper))
 	banktypes.RegisterMsgServer(msr, nil) // Nil is fine here as long as we never execute the proposal's Msgs.
 
-	return storageKeeper, bankKeeper, encCfg, ctx
+	return storageKeeper, bankKeeper, accountKeeper, encCfg, ctx
 }
 
 // trackMockBalances sets up expected calls on the Mock BankKeeper, and also
