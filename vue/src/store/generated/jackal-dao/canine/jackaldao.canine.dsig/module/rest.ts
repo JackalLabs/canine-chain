@@ -71,7 +71,7 @@ export interface DsigQueryGetUserUploadsResponse {
  * QueryParamsResponse is response type for the Query/Params RPC method.
  */
 export interface DsigQueryParamsResponse {
-  /** Params defines the parameters for the module. */
+  /** params holds all the parameters of this module. */
   params?: DsigParams;
 }
 

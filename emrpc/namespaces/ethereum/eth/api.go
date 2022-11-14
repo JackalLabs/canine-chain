@@ -392,21 +392,20 @@ func (e *PublicAPI) GetUncleCountByBlockNumber(blockNum rpctypes.BlockNumber) he
 func (e *PublicAPI) GetCode(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (hexutil.Bytes, error) {
 	e.logger.Error("eth_getCode", "address", address.Hex(), "block number or hash", blockNrOrHash)
 
-	blockNum, err := e.getBlockNumber(blockNrOrHash)
-	if err != nil {
-		return nil, err
-	}
+	// returning a blank keccak 256 code
+	var emptyCodeHash = crypto.Keccak256(nil)
+	return emptyCodeHash, nil
 
-	req := &evmtypes.QueryCodeRequest{
-		Address: address.String(),
-	}
+	// req := &evmtypes.QueryCodeRequest{
+	// 	Address: address.String(),
+	// }
 
-	res, err := e.queryClient.QueryClient.Code(rpctypes.ContextWithHeight(blockNum.Int64()), req)
-	if err != nil {
-		return nil, err
-	}
+	// res, err := e.queryClient.QueryClient.Code(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return res.Code, nil
+	// return res.Code, nil
 }
 
 // GetTransactionLogs returns the logs given a transaction hash.
