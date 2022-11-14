@@ -99,4 +99,51 @@ func (suite *KeeperTestSuite) TestRemoveProviders() {
 
 }
 
-//Get all providers goes here
+func (suite *KeeperTestSuite) TestGetAllProviders() {
+	suite.SetupSuite()
+	alice, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	bob, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	suite.Require().NoError(err)
+
+	provider := types.Providers{
+		Address:         alice.String(),
+		Ip:              "192.158.1.38",
+		Totalspace:      "9000",
+		BurnedContracts: "0",
+		Creator:         alice.String(),
+	}
+
+	suite.storageKeeper.SetProviders(suite.ctx, provider)
+	suite.Require().NoError(err)
+
+	provider1 := types.Providers{
+		Address:         bob.String(),
+		Ip:              "127.159.2.39",
+		Totalspace:      "18000",
+		BurnedContracts: "0",
+		Creator:         bob.String(),
+	}
+
+	suite.storageKeeper.SetProviders(suite.ctx, provider1)
+	suite.Require().NoError(err)
+
+	allProviders := suite.storageKeeper.GetAllProviders(suite.ctx)
+	suite.Require().NoError(err)
+
+	providerAlice := allProviders[1]
+	suite.Require().Equal(providerAlice.Address, provider.Address)
+	suite.Require().Equal(providerAlice.Ip, provider.Ip)
+	suite.Require().Equal(providerAlice.Totalspace, provider.Totalspace)
+	suite.Require().Equal(providerAlice.BurnedContracts, provider.BurnedContracts)
+	suite.Require().Equal(providerAlice.Creator, provider.Creator)
+
+	providerBob := allProviders[0]
+	suite.Require().Equal(providerBob.Address, provider1.Address)
+	suite.Require().Equal(providerBob.Ip, provider1.Ip)
+	suite.Require().Equal(providerBob.Totalspace, provider1.Totalspace)
+	suite.Require().Equal(providerBob.BurnedContracts, provider1.BurnedContracts)
+	suite.Require().Equal(providerBob.Creator, provider1.Creator)
+
+}
