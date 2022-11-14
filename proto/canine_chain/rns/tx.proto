@@ -1,7 +1,7 @@
 syntax = "proto3";
-package jackaldao.canine.rns;
+package canine_chain.rns;
 
-option go_package = "github.com/jackal-dao/canine/x/rns/types";
+option go_package = "github.com/jackal-dao/canine-chain/x/rns/types";
 
 // Msg defines the Msg service.
 service Msg {

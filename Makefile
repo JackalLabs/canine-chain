@@ -186,7 +186,7 @@ proto-swagger-gen:
 	@./scripts/protoc-swagger-gen.sh
 
 proto-lint:
-	@$(DOCKER_BUF) lint --error-format=json
+	@$(DOCKER_BUF) lint proto --error-format=json
 
 proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main

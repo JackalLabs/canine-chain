@@ -1,23 +1,23 @@
 syntax = "proto3";
-package jackaldao.canine.jklmint;
+package canine_chain.jklmint;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "canine-chain/jklmint/params.proto";
+import "canine_chain/jklmint/params.proto";
 
-option go_package = "github.com/jackal-dao/canine/x/jklmint/types";
+option go_package = "github.com/jackal-dao/canine-chain/x/jklmint/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/jklmint/params";
+    option (google.api.http).get = "/jackal-dao/canine-chain/jklmint/params";
   }
 
   // Inflation returns the current minting inflation value.
   rpc Inflation(QueryInflationRequest) returns (QueryInflationResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/jklmint/inflation";
+    option (google.api.http).get = "/jackal-dao/canine-chain/jklmint/inflation";
   }
 }
 

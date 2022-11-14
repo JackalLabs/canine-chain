@@ -1,141 +1,141 @@
 syntax = "proto3";
-package jackaldao.canine.storage;
+package canine_chain.storage;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "canine-chain/storage/params.proto";
-import "canine-chain/storage/contracts.proto";
-import "canine-chain/storage/proofs.proto";
-import "canine-chain/storage/active_deals.proto";
-import "canine-chain/storage/providers.proto";
-import "canine-chain/storage/pay_blocks.proto";
-import "canine-chain/storage/client_usage.proto";
-import "canine-chain/storage/strays.proto";
-import "canine-chain/storage/fid_cid.proto";
+import "canine_chain/storage/params.proto";
+import "canine_chain/storage/contracts.proto";
+import "canine_chain/storage/proofs.proto";
+import "canine_chain/storage/active_deals.proto";
+import "canine_chain/storage/providers.proto";
+import "canine_chain/storage/pay_blocks.proto";
+import "canine_chain/storage/client_usage.proto";
+import "canine_chain/storage/strays.proto";
+import "canine_chain/storage/fid_cid.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "github.com/jackal-dao/canine/x/storage/types";
+option go_package = "github.com/jackal-dao/canine-chain/x/storage/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/params";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/params";
   }
   // Queries a Contracts by index.
   rpc Contracts(QueryGetContractsRequest) returns (QueryGetContractsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/contracts/{cid}";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/contracts/{cid}";
   }
 
   // Queries a list of Contracts items.
   rpc ContractsAll(QueryAllContractsRequest)
       returns (QueryAllContractsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/contracts";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/contracts";
   }
 
   // Queries a Proofs by index.
   rpc Proofs(QueryGetProofsRequest) returns (QueryGetProofsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/proofs/{cid}";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/proofs/{cid}";
   }
 
   // Queries a list of Proofs items.
   rpc ProofsAll(QueryAllProofsRequest) returns (QueryAllProofsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/proofs";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/proofs";
   }
 
   // Queries a ActiveDeals by index.
   rpc ActiveDeals(QueryGetActiveDealsRequest)
       returns (QueryGetActiveDealsResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/storage/active_deals/{cid}";
+        "/jackal-dao/canine-chain/storage/active_deals/{cid}";
   }
 
   // Queries a list of ActiveDeals items.
   rpc ActiveDealsAll(QueryAllActiveDealsRequest)
       returns (QueryAllActiveDealsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/active_deals";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/active_deals";
   }
 
   // Queries a Providers by index.
   rpc Providers(QueryGetProvidersRequest) returns (QueryGetProvidersResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/storage/providers/{address}";
+        "/jackal-dao/canine-chain/storage/providers/{address}";
   }
 
   // Queries a list of Providers items.
   rpc ProvidersAll(QueryAllProvidersRequest)
       returns (QueryAllProvidersResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/providers";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/providers";
   }
 
   // Queries a list of Freespace items.
   rpc Freespace(QueryFreespaceRequest) returns (QueryFreespaceResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/storage/freespace/{address}";
+        "/jackal-dao/canine-chain/storage/freespace/{address}";
   }
 
   // Queries a list of FindFile items.
   rpc FindFile(QueryFindFileRequest) returns (QueryFindFileResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/find_file/{fid}";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/find_file/{fid}";
   }
 
   // Queries a PayBlocks by index.
   rpc PayBlocks(QueryGetPayBlocksRequest) returns (QueryGetPayBlocksResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/storage/pay_blocks/{blockid}";
+        "/jackal-dao/canine-chain/storage/pay_blocks/{blockid}";
   }
 
   // Queries a list of PayBlocks items.
   rpc PayBlocksAll(QueryAllPayBlocksRequest)
       returns (QueryAllPayBlocksResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/pay_blocks";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/pay_blocks";
   }
 
   // Queries a ClientUsage by index.
   rpc ClientUsage(QueryGetClientUsageRequest)
       returns (QueryGetClientUsageResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/storage/client_usage/{address}";
+        "/jackal-dao/canine-chain/storage/client_usage/{address}";
   }
 
   // Queries a list of ClientUsage items.
   rpc ClientUsageAll(QueryAllClientUsageRequest)
       returns (QueryAllClientUsageResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/client_usage";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/client_usage";
   }
 
   // Queries a Strays by index.
   rpc Strays(QueryGetStraysRequest) returns (QueryGetStraysResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/strays/{cid}";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/strays/{cid}";
   }
 
   // Queries a list of Strays items.
   rpc StraysAll(QueryAllStraysRequest) returns (QueryAllStraysResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/strays";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/strays";
   }
 
   // Queries a list of GetClientFreeSpace items.
   rpc GetClientFreeSpace(QueryGetClientFreeSpaceRequest)
       returns (QueryGetClientFreeSpaceResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/storage/get_client_free_space/{address}";
+        "/jackal-dao/canine-chain/storage/get_client_free_space/{address}";
   }
 
   // Queries a FidCid by index.
   rpc FidCid(QueryGetFidCidRequest) returns (QueryGetFidCidResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/fid_cid/{fid}";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/fid_cid/{fid}";
   }
 
   // Queries a list of FidCid items.
   rpc FidCidAll(QueryAllFidCidRequest) returns (QueryAllFidCidResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/storage/fid_cid";
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/fid_cid";
   }
 
   // Queries a list of GetPayData items.
   rpc GetPayData(QueryGetPayDataRequest) returns (QueryGetPayDataResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/storage/get_pay_data/{address}";
+        "/jackal-dao/canine-chain/storage/get_pay_data/{address}";
   }
 
   // this line is used by starport scaffolding # 2
