@@ -14,8 +14,6 @@ func ParseIP(ip string) string {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(u)
-
 	return fmt.Sprintf("%s%s%s", u.Scheme, u.Host, u.Path)
 }
 
@@ -60,7 +58,7 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 		var val types.PayBlocks
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 
-		fmt.Printf("BLOCK %s: %s", val.Blocktype, val.Blocknum)
+		ctx.Logger().Debug("BLOCK %s: %s", val.Blocktype, val.Blocknum)
 
 		if val.Blocktype == EndBlockType {
 			continue

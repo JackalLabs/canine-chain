@@ -33,6 +33,8 @@ You may also need to run `sudo chmod +x canined` inside the executables director
 
 ## Version Map
 
+When Syncing, you **MUST** use the flag `--unsafe-skip-upgrades 118040` after `canined start` or else you will crash at height 118040.
+
 |block height|canined version|
 |------------|---------------|
 |45381       |1.1.2          |
