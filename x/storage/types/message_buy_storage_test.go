@@ -14,15 +14,53 @@ func TestMsgBuyStorage_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "invalid for address",
 			msg: MsgBuyStorage{
-				Creator: "invalid_address",
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "invalid_address",
+				Duration:     "10000",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid from address",
+			msg: MsgBuyStorage{
+				Creator:      "invalid_address",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "10000",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		}, {
+			name: "invalid duration",
+			msg: MsgBuyStorage{
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "x",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidType,
+		}, {
+			name: "invalid btyes",
+			msg: MsgBuyStorage{
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "10000",
+				Bytes:        "c",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidType,
+		}, {
 			name: "valid address",
-			msg:  MsgBuyStorage{
-				// Creator: sample.AccAddress(),
+			msg: MsgBuyStorage{
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "10000",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
 			},
 		},
 	}
