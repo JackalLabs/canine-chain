@@ -39,21 +39,6 @@ const (
 	defaultWeightMsgSignContract int = 100
 
 	//nolint:all
-	opWeightMsgCreateProviders = "op_weight_msg_providers"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateProviders int = 100
-
-	//nolint:all
-	opWeightMsgUpdateProviders = "op_weight_msg_providers"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateProviders int = 100
-
-	//nolint:all
-	opWeightMsgDeleteProviders = "op_weight_msg_providers"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteProviders int = 100
-
-	//nolint:all
 	opWeightMsgSetProviderIP = "op_weight_msg_set_provider_ip"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgSetProviderIP int = 100
@@ -171,39 +156,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgSignContract,
 		storagesimulation.SimulateMsgSignContract(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgCreateProviders int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateProviders, &weightMsgCreateProviders, nil,
-		func(_ *rand.Rand) {
-			weightMsgCreateProviders = defaultWeightMsgCreateProviders
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCreateProviders,
-		storagesimulation.SimulateMsgCreateProviders(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpdateProviders int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateProviders, &weightMsgUpdateProviders, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateProviders = defaultWeightMsgUpdateProviders
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateProviders,
-		storagesimulation.SimulateMsgUpdateProviders(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgDeleteProviders int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteProviders, &weightMsgDeleteProviders, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteProviders = defaultWeightMsgDeleteProviders
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteProviders,
-		storagesimulation.SimulateMsgDeleteProviders(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgSetProviderIP int
