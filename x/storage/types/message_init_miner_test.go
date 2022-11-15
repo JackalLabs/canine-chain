@@ -30,7 +30,7 @@ func TestMsgInitProvider_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.ErrInvalidType,
 		}, {
-			name: "invalid ip",
+			name: "invalid totalspace",
 			msg: MsgInitProvider{
 				Creator:    "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				Ip:         "https://node.jackalprotocol.com",
