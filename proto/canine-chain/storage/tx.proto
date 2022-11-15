@@ -20,13 +20,10 @@ service Msg {
 
 message MsgPostContract {
   string creator = 1;
-  string priceamt = 2;
-  string pricedenom = 3;
-  string merkle = 4;
-  string signee = 5;
-  string duration = 6;
-  string filesize = 7;
-  string fid = 8;
+  string merkle = 2;
+  string signee = 3;
+  string filesize = 4;
+  string fid = 5;
 }
 
 message MsgPostContractResponse {}
