@@ -44,26 +44,6 @@ const (
 	defaultWeightMsgDeleteContracts int = 100
 
 	//nolint:all
-	opWeightMsgCreateProofs = "op_weight_msg_proofs"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateProofs int = 100
-
-	//nolint:all
-	opWeightMsgUpdateProofs = "op_weight_msg_proofs"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateProofs int = 100
-
-	//nolint:all
-	opWeightMsgDeleteProofs = "op_weight_msg_proofs"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteProofs int = 100
-
-	//nolint:all
-	opWeightMsgItem = "op_weight_msg_item"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgItem int = 100
-
-	//nolint:all
 	opWeightMsgPostproof = "op_weight_msg_postproof"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPostproof int = 100
@@ -232,17 +212,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgDeleteContracts,
 		storagesimulation.SimulateMsgDeleteContracts(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgItem int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgItem, &weightMsgItem, nil,
-		func(_ *rand.Rand) {
-			weightMsgItem = defaultWeightMsgItem
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgItem,
-		storagesimulation.SimulateMsgItem(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgPostproof int
