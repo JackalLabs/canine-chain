@@ -440,3 +440,113 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		})
 	}
 }
+
+func (suite *KeeperTestSuite) TestClaimStray() {
+	suite.SetupSuite()
+	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
+	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	suite.Require().NoError(err)
+
+	provider2, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	cases := []struct {
+		name      string
+		preRun    func() *types.MsgClaimStray
+		postRun   func()
+		expResp   types.MsgClaimStrayResponse
+		expErr    bool
+		expErrMsg string
+	}{
+		{
+			name: "stray_not_found",
+			preRun: func() *types.MsgClaimStray {
+				return &types.MsgClaimStray{
+					Creator: provider.String(),
+					Cid:     "foo",
+				}
+			},
+			expErr:    true,
+			expErrMsg: "stray contract either no longer is stray, or has been removed by the user",
+		},
+
+		{
+			name: "not_a_provider",
+			preRun: func() *types.MsgClaimStray {
+				s := types.Strays{
+					Cid: "foo",
+				}
+				sKeeper.SetStrays(suite.ctx, s)
+				return &types.MsgClaimStray{
+					Cid:     s.Cid,
+					Creator: provider.String(),
+				}
+			},
+			expErr:    true,
+			expErrMsg: "not a provider",
+		},
+
+		{
+			name: "cannot_claim_your_own_stray",
+			preRun: func() *types.MsgClaimStray {
+				s, found := sKeeper.GetStrays(suite.ctx, "foo")
+				suite.Require().True(found)
+				s.Fid = "some_fid"
+				sKeeper.SetStrays(suite.ctx, s)
+				p := types.Providers{
+					Ip:      "0.0.0.0",
+					Address: provider.String(),
+					Creator: provider.String(),
+				}
+				sKeeper.SetProviders(suite.ctx, p)
+				ad := types.ActiveDeals{
+					Fid:      s.Fid,
+					Provider: p.Address,
+				}
+				sKeeper.SetActiveDeals(suite.ctx, ad)
+				return &types.MsgClaimStray{
+					Cid:     s.Cid,
+					Creator: provider.String(),
+				}
+			},
+			expErr:    true,
+			expErrMsg: "cannot claim a stray you own.",
+		},
+
+		{
+			name: "successfully_claimed_stray",
+			preRun: func() *types.MsgClaimStray {
+				p := types.Providers{
+					Ip:      "123.0.0.0",
+					Address: provider2.String(),
+					Creator: provider.String(),
+				}
+				sKeeper.SetProviders(suite.ctx, p)
+				return &types.MsgClaimStray{
+					Cid:     "foo",
+					Creator: provider2.String(),
+				}
+			},
+			expErr: false,
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			// preRun must be defined to get MsgPostContract
+			suite.Require().NotNil(tc.preRun)
+			c := tc.preRun()
+			_, err := msgSrvr.ClaimStray(goCtx, c)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+			}
+
+			if tc.postRun != nil {
+				tc.postRun()
+			}
+		})
+	}
+}
