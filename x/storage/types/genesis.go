@@ -11,7 +11,6 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		ContractsList:   []Contracts{},
-		ProofsList:      []Proofs{},
 		ActiveDealsList: []ActiveDeals{},
 		ProvidersList:   []Providers{},
 		PayBlocksList:   []PayBlocks{},
@@ -36,16 +35,7 @@ func (gs GenesisState) Validate() error {
 		}
 		contractsIndexMap[index] = struct{}{}
 	}
-	// Check for duplicated index in proofs
-	proofsIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.ProofsList {
-		index := string(ProofsKey(elem.Cid))
-		if _, ok := proofsIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for proofs")
-		}
-		proofsIndexMap[index] = struct{}{}
-	}
 	// Check for duplicated index in activeDeals
 	activeDealsIndexMap := make(map[string]struct{})
 
