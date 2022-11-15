@@ -9,14 +9,6 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func ParseIP(ip string) string {
-	u, err := url.ParseRequestURI(ip)
-	if err != nil {
-		panic(err)
-	}
-	return fmt.Sprintf("%s%s%s", u.Scheme, u.Host, u.Path)
-}
-
 const (
 	StartBlockType = "start"
 	EndBlockType   = "end"
