@@ -17,12 +17,21 @@ func TestMsgClaimStray_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgClaimStray{
 				Creator: "invalid_address",
+				Cid:     "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid cid",
+			msg: MsgClaimStray{
+				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Cid:     "invalid_cid",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
 			name: "valid address",
-			msg:  MsgClaimStray{
-				// Creator: sample.AccAddress(),
+			msg: MsgClaimStray{
+				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Cid:     "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
 			},
 		},
 	}
