@@ -317,3 +317,32 @@ func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
 	suite.Require().Equal(foundDeal, ghostDeal)
 
 }
+
+func (suite *KeeperTestSuite) TestSetStrays() {
+	suite.SetupSuite()
+	// user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	// suite.Require().NoError(err)
+
+	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	suite.Require().NoError(err)
+
+	stray := types.Strays{
+		Cid:      "549",
+		Fid:      "5789",
+		Signee:   provider.String(),
+		Filesize: "1000",
+		Merkle:   "",
+	}
+	suite.storageKeeper.SetStrays(suite.ctx, stray)
+	suite.Require().NoError(err)
+
+	strayRequest := types.QueryGetStraysRequest{
+		Cid: "549",
+	}
+
+	res, err := suite.queryClient.Strays(suite.ctx.Context(), &strayRequest)
+	suite.Require().NoError(err)
+	suite.Require().Equal(res.Strays.Cid, stray.Cid)
+	suite.Require().Equal(res.Strays.Fid, stray.Fid)
+
+}
