@@ -29,39 +29,9 @@ const (
 	defaultWeightMsgPostContract int = 100
 
 	//nolint:all
-	opWeightMsgCreateContracts = "op_weight_msg_contracts"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateContracts int = 100
-
-	//nolint:all
-	opWeightMsgUpdateContracts = "op_weight_msg_contracts"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateContracts int = 100
-
-	//nolint:all
-	opWeightMsgDeleteContracts = "op_weight_msg_contracts"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteContracts int = 100
-
-	//nolint:all
 	opWeightMsgPostproof = "op_weight_msg_postproof"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPostproof int = 100
-
-	//nolint:all
-	opWeightMsgCreateActiveDeals = "op_weight_msg_active_deals"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateActiveDeals int = 100
-
-	//nolint:all
-	opWeightMsgUpdateActiveDeals = "op_weight_msg_active_deals"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateActiveDeals int = 100
-
-	//nolint:all
-	opWeightMsgDeleteActiveDeals = "op_weight_msg_active_deals"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteActiveDeals int = 100
 
 	//nolint:all
 	opWeightMsgSignContract = "op_weight_msg_sign_contract"
@@ -181,39 +151,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		storagesimulation.SimulateMsgPostContract(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgCreateContracts int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateContracts, &weightMsgCreateContracts, nil,
-		func(_ *rand.Rand) {
-			weightMsgCreateContracts = defaultWeightMsgCreateContracts
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCreateContracts,
-		storagesimulation.SimulateMsgCreateContracts(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpdateContracts int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateContracts, &weightMsgUpdateContracts, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateContracts = defaultWeightMsgUpdateContracts
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateContracts,
-		storagesimulation.SimulateMsgUpdateContracts(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgDeleteContracts int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteContracts, &weightMsgDeleteContracts, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteContracts = defaultWeightMsgDeleteContracts
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteContracts,
-		storagesimulation.SimulateMsgDeleteContracts(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
 	var weightMsgPostproof int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPostproof, &weightMsgPostproof, nil,
 		func(_ *rand.Rand) {
@@ -223,39 +160,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgPostproof,
 		storagesimulation.SimulateMsgPostproof(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgCreateActiveDeals int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateActiveDeals, &weightMsgCreateActiveDeals, nil,
-		func(_ *rand.Rand) {
-			weightMsgCreateActiveDeals = defaultWeightMsgCreateActiveDeals
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCreateActiveDeals,
-		storagesimulation.SimulateMsgCreateActiveDeals(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpdateActiveDeals int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateActiveDeals, &weightMsgUpdateActiveDeals, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateActiveDeals = defaultWeightMsgUpdateActiveDeals
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateActiveDeals,
-		storagesimulation.SimulateMsgUpdateActiveDeals(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgDeleteActiveDeals int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteActiveDeals, &weightMsgDeleteActiveDeals, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteActiveDeals = defaultWeightMsgDeleteActiveDeals
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteActiveDeals,
-		storagesimulation.SimulateMsgDeleteActiveDeals(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgSignContract int
