@@ -1,6 +1,8 @@
 package keeper_test
 
 import (
+	"encoding/json"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -254,24 +256,24 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			name: "contract_not_found",
 			preRun: func() *types.MsgSignContract {
 				return &types.MsgSignContract{
-					Cid: "contract_that_doesn't_exist",
+					Cid:     "contract_that_doesn't_exist",
 					Creator: provider.String(),
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "contract not found",
 		},
 
 		{
 			name: "invalid_permission_to_sign_contract",
 			preRun: func() *types.MsgSignContract {
-				c := types.Contracts {
-					Cid: 		"123",
-					Creator:	provider.String(),
+				c := types.Contracts{
+					Cid:        "123",
+					Creator:    provider.String(),
 					Priceamt:   "1",
 					Pricedenom: "ujkl",
 					Merkle:     "1",
-					Signee: 	user.String(),
+					Signee:     user.String(),
 					Duration:   "10000",
 					Filesize:   "10000",
 					Fid:        "123",
@@ -280,11 +282,11 @@ func (suite *KeeperTestSuite) TestSignContract() {
 				_, found := sKeeper.GetContracts(suite.ctx, c.Cid)
 				suite.Require().True(found)
 				return &types.MsgSignContract{
-					Cid: c.Cid,
+					Cid:     c.Cid,
 					Creator: "invalid_creator",
 				}
 			},
-			expErr: true,
+			expErr:    true,
 			expErrMsg: "you do not have permission to approve this contract",
 		},
 
@@ -292,7 +294,7 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			name: "successful_contract_signed",
 			preRun: func() *types.MsgSignContract {
 				return &types.MsgSignContract{
-					Cid: "123",
+					Cid:     "123",
 					Creator: user.String(),
 				}
 			},
@@ -306,6 +308,125 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			suite.Require().NotNil(tc.preRun)
 			c := tc.preRun()
 			_, err := msgSrvr.SignContract(goCtx, c)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+			}
+
+			if tc.postRun != nil {
+				tc.postRun()
+			}
+		})
+	}
+}
+
+func (suite *KeeperTestSuite) TestCancelContract() {
+	suite.SetupSuite()
+	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
+
+	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	cases := []struct {
+		name      string
+		preRun    func() *types.MsgCancelContract
+		postRun   func()
+		expResp   types.MsgCancelContractResponse
+		expErr    bool
+		expErrMsg string
+	}{
+		{
+			name: "active_deal_not_found",
+			preRun: func() *types.MsgCancelContract {
+				return &types.MsgCancelContract{
+					Creator: user.String(),
+					Cid:     "foo",
+				}
+			},
+			expErr:    true,
+			expErrMsg: "can't find contract",
+		},
+
+		{
+			name: "invalid_deal_owner",
+			preRun: func() *types.MsgCancelContract {
+				d := types.ActiveDeals{
+					Cid:     "100",
+					Creator: user.String(),
+				}
+				sKeeper.SetActiveDeals(suite.ctx, d)
+				_, found := sKeeper.GetActiveDeals(suite.ctx, "100")
+				suite.Require().True(found)
+				return &types.MsgCancelContract{
+					Creator: "foo",
+					Cid:     d.Cid,
+				}
+			},
+			expErr:    true,
+			expErrMsg: "you don't own this deal",
+		},
+
+		{
+			name: "fid_not_found",
+			preRun: func() *types.MsgCancelContract {
+				d, found := sKeeper.GetActiveDeals(suite.ctx, "100")
+				suite.Require().True(found)
+				d.Fid = "100"
+				sKeeper.SetActiveDeals(suite.ctx, d)
+				return &types.MsgCancelContract{
+					Creator: user.String(),
+					Cid:     d.Cid,
+				}
+			},
+			expErr:    true,
+			expErrMsg: "no fid found",
+		},
+
+		{
+			name: "invalid_cid_json",
+			preRun: func() *types.MsgCancelContract {
+				ftc := types.FidCid{
+					Fid:  "100",
+					Cids: "100",
+				}
+				sKeeper.SetFidCid(suite.ctx, ftc)
+				return &types.MsgCancelContract{
+					Creator: user.String(),
+					Cid:     ftc.Cids,
+				}
+			},
+			expErr:    true,
+			expErrMsg: "cannot unmarshal number into Go value of type []string",
+		},
+
+		{
+			name: "successfully_cancelled_contract",
+			preRun: func() *types.MsgCancelContract {
+				ncids := []string{"abc", "def", "foo", "123_bar"}
+				b, err := json.Marshal(ncids)
+				suite.Require().NoError(err)
+				ftc := types.FidCid{
+					Fid:  "100",
+					Cids: string(b),
+				}
+				sKeeper.SetFidCid(suite.ctx, ftc)
+				return &types.MsgCancelContract{
+					Creator: user.String(),
+					Cid:     "100",
+				}
+			},
+			expErr: false,
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			// preRun must be defined to get MsgPostContract
+			suite.Require().NotNil(tc.preRun)
+			c := tc.preRun()
+			_, err := msgSrvr.CancelContract(goCtx, c)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
