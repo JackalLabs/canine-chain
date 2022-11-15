@@ -143,7 +143,6 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
 		Creator:  testProvider.String(),
 		Signee:   user.String(),
-		Duration: "1",
 		Filesize: filesize,
 		Fid:      "fid",
 		Merkle:   merkleroot,
@@ -154,7 +153,6 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
 		Creator:  testProvider.String(),
 		Signee:   user.String(),
-		Duration: "10",
 		Filesize: "1000",
 		Fid:      "fid2",
 		Merkle:   "invalid_merkleroot",
