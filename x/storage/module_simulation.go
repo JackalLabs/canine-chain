@@ -148,16 +148,6 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 			// 	Cid:     "1",
 			// },
 		},
-		ProofsList: []types.Proofs{
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Cid:     "0",
-			// },
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Cid:     "1",
-			// },
-		},
 		ActiveDealsList: []types.ActiveDeals{
 			// {
 			// 	Creator: sample.AccAddress(),
@@ -242,39 +232,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgDeleteContracts,
 		storagesimulation.SimulateMsgDeleteContracts(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgCreateProofs int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateProofs, &weightMsgCreateProofs, nil,
-		func(_ *rand.Rand) {
-			weightMsgCreateProofs = defaultWeightMsgCreateProofs
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCreateProofs,
-		storagesimulation.SimulateMsgCreateProofs(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpdateProofs int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateProofs, &weightMsgUpdateProofs, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateProofs = defaultWeightMsgUpdateProofs
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateProofs,
-		storagesimulation.SimulateMsgUpdateProofs(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgDeleteProofs int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteProofs, &weightMsgDeleteProofs, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteProofs = defaultWeightMsgDeleteProofs
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteProofs,
-		storagesimulation.SimulateMsgDeleteProofs(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgItem int

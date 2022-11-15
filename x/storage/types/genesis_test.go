@@ -29,14 +29,6 @@ func TestGenesisState_Validate(t *testing.T) {
 						Cid: "1",
 					},
 				},
-				ProofsList: []types.Proofs{
-					{
-						Cid: "0",
-					},
-					{
-						Cid: "1",
-					},
-				},
 				ActiveDealsList: []types.ActiveDeals{
 					{
 						Cid: "0",
@@ -93,20 +85,6 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated contracts",
 			genState: &types.GenesisState{
 				ContractsList: []types.Contracts{
-					{
-						Cid: "0",
-					},
-					{
-						Cid: "0",
-					},
-				},
-			},
-			valid: false,
-		},
-		{
-			desc: "duplicated proofs",
-			genState: &types.GenesisState{
-				ProofsList: []types.Proofs{
 					{
 						Cid: "0",
 					},
