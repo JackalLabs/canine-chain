@@ -64,41 +64,6 @@ func (suite *KeeperTestSuite) TestGetProviders() {
 
 }
 
-func (suite *KeeperTestSuite) TestRemoveProviders() {
-	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
-
-	provider := types.Providers{
-		Address:         user.String(),
-		Ip:              "192.158.1.38",
-		Totalspace:      "9000",
-		BurnedContracts: "0",
-		Creator:         user.String(),
-	}
-
-	suite.storageKeeper.SetProviders(suite.ctx, provider)
-	suite.Require().NoError(err)
-
-	suite.storageKeeper.RemoveProviders(suite.ctx, user.String())
-	suite.Require().NoError(err)
-
-	foundProvider, found := suite.storageKeeper.GetProviders(suite.ctx, user.String())
-	suite.Require().NoError(err)
-	suite.Require().Equal(found, false)
-
-	ghostProvider := types.Providers{
-		Address:         "",
-		Ip:              "",
-		Totalspace:      "",
-		BurnedContracts: "",
-		Creator:         "",
-	}
-
-	suite.Require().Equal(foundProvider, ghostProvider)
-
-}
-
 func (suite *KeeperTestSuite) TestGetAllProviders() {
 	suite.SetupSuite()
 	alice, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
@@ -145,5 +110,40 @@ func (suite *KeeperTestSuite) TestGetAllProviders() {
 	suite.Require().Equal(providerBob.Totalspace, provider1.Totalspace)
 	suite.Require().Equal(providerBob.BurnedContracts, provider1.BurnedContracts)
 	suite.Require().Equal(providerBob.Creator, provider1.Creator)
+
+}
+
+func (suite *KeeperTestSuite) TestRemoveProviders() {
+	suite.SetupSuite()
+	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	provider := types.Providers{
+		Address:         user.String(),
+		Ip:              "192.158.1.38",
+		Totalspace:      "9000",
+		BurnedContracts: "0",
+		Creator:         user.String(),
+	}
+
+	suite.storageKeeper.SetProviders(suite.ctx, provider)
+	suite.Require().NoError(err)
+
+	suite.storageKeeper.RemoveProviders(suite.ctx, user.String())
+	suite.Require().NoError(err)
+
+	foundProvider, found := suite.storageKeeper.GetProviders(suite.ctx, user.String())
+	suite.Require().NoError(err)
+	suite.Require().Equal(found, false)
+
+	ghostProvider := types.Providers{
+		Address:         "",
+		Ip:              "",
+		Totalspace:      "",
+		BurnedContracts: "",
+		Creator:         "",
+	}
+
+	suite.Require().Equal(foundProvider, ghostProvider)
 
 }
