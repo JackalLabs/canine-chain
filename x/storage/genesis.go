@@ -13,10 +13,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.ContractsList {
 		k.SetContracts(ctx, elem)
 	}
-	// Set all the proofs
-	for _, elem := range genState.ProofsList {
-		k.SetProofs(ctx, elem)
-	}
 	// Set all the activeDeals
 	for _, elem := range genState.ActiveDealsList {
 		k.SetActiveDeals(ctx, elem)
@@ -51,7 +47,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.ContractsList = k.GetAllContracts(ctx)
-	genesis.ProofsList = k.GetAllProofs(ctx)
 	genesis.ActiveDealsList = k.GetAllActiveDeals(ctx)
 	genesis.ProvidersList = k.GetAllProviders(ctx)
 	genesis.PayBlocksList = k.GetAllPayBlocks(ctx)

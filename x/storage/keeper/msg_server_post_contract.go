@@ -79,15 +79,12 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	}
 
 	newContract := types.Contracts{
-		Cid:        cid,
-		Priceamt:   msg.Priceamt,
-		Pricedenom: msg.Pricedenom,
-		Signee:     msg.Signee,
-		Duration:   msg.Duration,
-		Fid:        msg.Fid,
-		Filesize:   msg.Filesize,
-		Creator:    msg.Creator,
-		Merkle:     msg.Merkle,
+		Cid:      cid,
+		Signee:   msg.Signee,
+		Fid:      msg.Fid,
+		Filesize: msg.Filesize,
+		Creator:  msg.Creator,
+		Merkle:   msg.Merkle,
 	}
 
 	k.SetContracts(ctx, newContract)
