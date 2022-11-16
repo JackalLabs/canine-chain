@@ -2,20 +2,11 @@ package keeper
 
 import (
 	"fmt"
-	"net/url"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
-
-func ParseIP(ip string) string {
-	u, err := url.ParseRequestURI(ip)
-	if err != nil {
-		panic(err)
-	}
-	return fmt.Sprintf("%s%s%s", u.Scheme, u.Host, u.Path)
-}
 
 const (
 	StartBlockType = "start"
@@ -43,15 +34,19 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 	}
 
 	if endblock.Int64() <= blockh {
-		if endblock.Int64() <= blockh+432000 {
+		// one month grace period
+		if blockh-endblock.Int64() <= 432000 {
 			bytes, ok := sdk.NewIntFromString(eblock.Bytes)
-			if !ok {
+			if ok {
 				return bytes.Int64(), true, nil
 			}
 		}
 		return TwoGigs, true, &eblock
 	}
 
+	highestBlock = 0
+
+	// Look for highest start block
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.PayBlocks
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
@@ -62,7 +57,7 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 			continue
 		}
 
-		adr := val.Blockid[:42]
+		adr := val.Blockid[:len(address)]
 		if adr != address {
 			continue
 		}
@@ -121,7 +116,8 @@ func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, by
 
 	amount, trial, _ := k.GetPaidAmount(ctx, address, startBlock)
 
-	if !trial && bytes <= amount {
+	if !trial && bytes <= amount { // Not in trial and new storage space is
+		// smaller than already paid amount
 		return fmt.Errorf("can't buy storage within another storage window")
 	}
 
