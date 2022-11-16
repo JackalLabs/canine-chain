@@ -17,12 +17,27 @@ func TestMsgSetProviderIP_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgSetProviderIP{
 				Creator: "invalid_address",
+				Ip:      "http://localhost:3333",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "valid address",
-			msg:  MsgSetProviderIP{
-				// Creator: sample.AccAddress(),
+			name: "invalid ip",
+			msg: MsgSetProviderIP{
+				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Ip:      "fake/localhost:3333",
+			},
+			err: sdkerrors.ErrInvalidType,
+		}, {
+			name: "valid ip",
+			msg: MsgSetProviderIP{
+				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Ip:      "https://node.jackalprotocol.com",
+			},
+		}, {
+			name: "valid ip localhost",
+			msg: MsgSetProviderIP{
+				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Ip:      "localhost:3333",
 			},
 		},
 	}

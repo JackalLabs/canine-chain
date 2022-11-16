@@ -90,11 +90,15 @@ func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
 
 	amt := coins.Amount.ToDec()
 
+	if amt.IsZero() {
+		return sdk.NewDec(0), nil
+	}
+
 	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
 
 	printedPerYear := blocksPerYearEstiamte * 4_000_000
 
-	inflate := sdk.NewDec(printedPerYear * 100)
+	inflate := sdk.NewDec(printedPerYear)
 
 	quo := inflate.Quo(amt)
 

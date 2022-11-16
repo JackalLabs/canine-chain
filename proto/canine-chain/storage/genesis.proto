@@ -4,7 +4,6 @@ package jackaldao.canine.storage;
 import "gogoproto/gogo.proto";
 import "canine-chain/storage/params.proto";
 import "canine-chain/storage/contracts.proto";
-import "canine-chain/storage/proofs.proto";
 import "canine-chain/storage/active_deals.proto";
 import "canine-chain/storage/providers.proto";
 import "canine-chain/storage/pay_blocks.proto";
@@ -19,12 +18,11 @@ option go_package = "github.com/jackal-dao/canine/x/storage/types";
 message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   repeated Contracts contractsList = 2 [ (gogoproto.nullable) = false ];
-  repeated Proofs proofsList = 3 [ (gogoproto.nullable) = false ];
   repeated ActiveDeals activeDealsList = 4 [ (gogoproto.nullable) = false ];
   repeated Providers providersList = 5 [ (gogoproto.nullable) = false ];
   repeated PayBlocks payBlocksList = 6 [ (gogoproto.nullable) = false ];
   repeated ClientUsage clientUsageList = 7 [ (gogoproto.nullable) = false ];
   repeated Strays straysList = 8 [ (gogoproto.nullable) = false ];
-  repeated FidCid fidCidList = 9 [ (gogoproto.nullable) = false ];
+  repeated FidCid fidCidList = 3 [ (gogoproto.nullable) = false ];
   // this line is used by starport scaffolding # genesis/proto/state
 }
