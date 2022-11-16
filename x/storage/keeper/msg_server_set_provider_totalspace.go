@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -13,13 +14,13 @@ func (k msgServer) SetProviderTotalspace(goCtx context.Context, msg *types.MsgSe
 	provider, found := k.GetProviders(ctx, msg.Creator)
 
 	if !found {
-		provider = types.Providers{
-			Address:         msg.Creator,
-			Ip:              "",
-			Totalspace:      "0",
-			Creator:         msg.Creator,
-			BurnedContracts: "0",
-		}
+		return nil, types.ErrProviderNotFound
+	}
+
+	validTotalSpace := isValidTotalSpace(msg.Space)
+
+	if !validTotalSpace {
+		return nil, types.ErrNotValidTotalSpace
 	}
 
 	provider.Totalspace = msg.Space
@@ -27,4 +28,13 @@ func (k msgServer) SetProviderTotalspace(goCtx context.Context, msg *types.MsgSe
 	k.SetProviders(ctx, provider)
 
 	return &types.MsgSetProviderTotalspaceResponse{}, nil
+}
+
+func isValidTotalSpace(totalSpace string) bool {
+	var isNumber bool
+
+	if _, err := strconv.Atoi(totalSpace); err == nil {
+		isNumber = true
+	}
+	return isNumber
 }
