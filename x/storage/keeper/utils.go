@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"fmt"
-	"net/url"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
