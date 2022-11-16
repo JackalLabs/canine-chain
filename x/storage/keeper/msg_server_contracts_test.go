@@ -28,14 +28,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "provider_doesn't_exist",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "1",
-					Merkle:     "1",
-					Signee:     "1",
-					Duration:   "1",
-					Filesize:   "1",
-					Fid:        "1",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   "1",
+					Filesize: "1",
+					Fid:      "1",
 				}
 			},
 			expErr:    true,
@@ -57,14 +54,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 				_, found := sKeeper.GetProviders(suite.ctx, creator.String())
 				suite.Require().True(found)
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "1",
-					Merkle:     "1",
-					Signee:     "1",
-					Duration:   "1",
-					Filesize:   "1",
-					Fid:        "1",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   "1",
+					Filesize: "1",
+					Fid:      "1",
 				}
 			},
 			postRun: func() {
@@ -82,14 +76,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "bad_filesize_format",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "1",
-					Merkle:     "1",
-					Signee:     "1",
-					Duration:   "1",
-					Filesize:   "bad_filesize",
-					Fid:        "1",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   "1",
+					Filesize: "bad_filesize",
+					Fid:      "1",
 				}
 			},
 			expErr:    true,
@@ -100,14 +91,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "not_enough_provider_storage",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "1",
-					Merkle:     "1",
-					Signee:     "1",
-					Duration:   "1",
-					Filesize:   "1000001",
-					Fid:        "1",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   "1",
+					Filesize: "1000001",
+					Fid:      "1",
 				}
 			},
 			expErr:    true,
@@ -135,14 +123,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 					Address: buyer.String(),
 				})
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "1",
-					Merkle:     "1",
-					Signee:     "1",
-					Duration:   "1",
-					Filesize:   "20000000000",
-					Fid:        "1",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   "1",
+					Filesize: "20000000000",
+					Fid:      "1",
 				}
 			},
 			expErr:    true,
@@ -163,14 +148,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 				suite.ctx = suite.ctx.WithBlockHeight(500)
 				goCtx = sdk.WrapSDKContext(suite.ctx)
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "1",
-					Merkle:     "1",
-					Signee:     buyer.String(),
-					Duration:   "1",
-					Filesize:   "10000",
-					Fid:        "1",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   buyer.String(),
+					Filesize: "10000",
+					Fid:      "1",
 				}
 			},
 			expErr:    true,
@@ -183,14 +165,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100000, 10000000000)
 				suite.Require().NoError(err)
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "ujkl",
-					Merkle:     "1",
-					Signee:     buyer.String(),
-					Duration:   "10000",
-					Filesize:   "10000",
-					Fid:        "123",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   buyer.String(),
+					Filesize: "10000",
+					Fid:      "123",
 				}
 			},
 			expErr: false,
@@ -200,14 +179,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "cannot_duplicate_contract",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:    creator.String(),
-					Priceamt:   "1",
-					Pricedenom: "ujkl",
-					Merkle:     "1",
-					Signee:     buyer.String(),
-					Duration:   "10000",
-					Filesize:   "10000",
-					Fid:        "123",
+					Creator:  creator.String(),
+					Merkle:   "1",
+					Signee:   buyer.String(),
+					Filesize: "10000",
+					Fid:      "123",
 				}
 			},
 			expErr:    true,
