@@ -1,8 +1,8 @@
 package keeper_test
 
 import (
-	"github.com/jackalLabs/canine-chain/x/storage/types"
 	module "github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestGetPaidAmount() {
@@ -10,10 +10,10 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 	_, sKeeper, _ := setupMsgServer(suite)
 
 	cases := []struct {
-		name string
-		preRun func() (string, int64)
-		paidAmt int64
-		free bool
+		name     string
+		preRun   func() (string, int64)
+		paidAmt  int64
+		free     bool
 		payBlock *types.PayBlocks
 	}{
 		{
@@ -22,8 +22,8 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 				suite.ctx = suite.ctx.WithBlockHeight(100)
 				return "cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl", 1
 			},
-			paidAmt: module.TwoGigs, 
-			free: true, 
+			paidAmt:  module.TwoGigs,
+			free:     true,
 			payBlock: nil,
 		},
 
@@ -31,27 +31,27 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 			name: "Invalid_endblock_blocknum",
 			preRun: func() (string, int64) {
 				pbs := types.PayBlocks{
-					Blockid: "123",
-					Bytes: "100000000000",
+					Blockid:   "123",
+					Bytes:     "100000000000",
 					Blocktype: module.StartBlockType,
-					Blocknum: "aabbcc",
+					Blocknum:  "aabbcc",
 				}
 				pbe := types.PayBlocks{
 					// endblock blockid starts with '.'
-					Blockid: ".123",
-					Bytes: "100000000000",
+					Blockid:   ".123",
+					Bytes:     "100000000000",
 					Blocktype: module.EndBlockType,
-					Blocknum: "aabbcc",
+					Blocknum:  "aabbcc",
 				}
 				sKeeper.SetPayBlocks(suite.ctx, pbs)
 				sKeeper.SetPayBlocks(suite.ctx, pbe)
 				return "123", 0
 			},
-			paidAmt: module.TwoGigs,
-			free: true,
+			paidAmt:  module.TwoGigs,
+			free:     true,
 			payBlock: nil,
 		},
-		
+
 		{
 			name: "invalid_eblock_bytes",
 			preRun: func() (string, int64) {
@@ -62,13 +62,13 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 				sKeeper.SetPayBlocks(suite.ctx, eBlock)
 				return "123", 100
 			},
-			paidAmt: module.TwoGigs, 
-			free: true, 
+			paidAmt: module.TwoGigs,
+			free:    true,
 			payBlock: &types.PayBlocks{
-				Blockid: ".123",
-				Bytes: "aabbcc",
+				Blockid:   ".123",
+				Bytes:     "aabbcc",
 				Blocktype: module.EndBlockType,
-				Blocknum: "10",
+				Blocknum:  "10",
 			},
 		},
 
@@ -81,8 +81,8 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 				sKeeper.SetPayBlocks(suite.ctx, eBlock)
 				return "123", 100
 			},
-			paidAmt: 10000000000,
-			free: true,
+			paidAmt:  10000000000,
+			free:     true,
 			payBlock: nil,
 		},
 
@@ -93,12 +93,12 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 				return "123", 1
 			},
 			paidAmt: module.TwoGigs,
-			free: true,
+			free:    true,
 			payBlock: &types.PayBlocks{
-				Blockid: ".123",
-				Bytes: "10000000000",
+				Blockid:   ".123",
+				Bytes:     "10000000000",
 				Blocktype: module.EndBlockType,
-				Blocknum: "10",
+				Blocknum:  "10",
 			},
 		},
 
@@ -107,28 +107,28 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 			preRun: func() (string, int64) {
 				suite.ctx = suite.ctx.WithBlockHeight(1000)
 				pbs := types.PayBlocks{
-					Blockid: "123100",
-					Bytes: "aabbcc",
+					Blockid:   "123100",
+					Bytes:     "aabbcc",
 					Blocktype: module.StartBlockType,
-					Blocknum: "100",
+					Blocknum:  "100",
 				}
 				pbe := types.PayBlocks{
-					Blockid: ".123",
-					Bytes: "100000000000",
+					Blockid:   ".123",
+					Bytes:     "100000000000",
 					Blocktype: module.EndBlockType,
-					Blocknum: "200000",
+					Blocknum:  "200000",
 				}
 				sKeeper.SetPayBlocks(suite.ctx, pbs)
 				sKeeper.SetPayBlocks(suite.ctx, pbe)
 				return "123", 10000
 			},
 			paidAmt: module.TwoGigs,
-			free: true,
+			free:    true,
 			payBlock: &types.PayBlocks{
-					Blockid: ".123",
-					Bytes: "100000000000",
-					Blocktype: module.EndBlockType,
-					Blocknum: "200000",
+				Blockid:   ".123",
+				Bytes:     "100000000000",
+				Blocktype: module.EndBlockType,
+				Blocknum:  "200000",
 			},
 		},
 
@@ -142,14 +142,13 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 				return "123", 10000
 			},
 			paidAmt: 100000000000,
-			free: false,
+			free:    false,
 			payBlock: &types.PayBlocks{
-					Blockid: ".123",
-					Bytes: "100000000000",
-					Blocktype: module.EndBlockType,
-					Blocknum: "200000",
+				Blockid:   ".123",
+				Bytes:     "100000000000",
+				Blocktype: module.EndBlockType,
+				Blocknum:  "200000",
 			},
-
 		},
 	}
 
