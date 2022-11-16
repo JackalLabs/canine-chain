@@ -320,16 +320,13 @@ func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
 
 func (suite *KeeperTestSuite) TestSetStrays() {
 	suite.SetupSuite()
-	// user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	// suite.Require().NoError(err)
-
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
 	stray := types.Strays{
 		Cid:      "549",
 		Fid:      "5789",
-		Signee:   provider.String(),
+		Signee:   user.String(),
 		Filesize: "1000",
 		Merkle:   "",
 	}
@@ -344,5 +341,154 @@ func (suite *KeeperTestSuite) TestSetStrays() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Strays.Cid, stray.Cid)
 	suite.Require().Equal(res.Strays.Fid, stray.Fid)
+
+}
+
+func (suite *KeeperTestSuite) TestGetStrays() {
+	suite.SetupSuite()
+	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	stray := types.Strays{
+		Cid:      "549",
+		Fid:      "5789",
+		Signee:   user.String(),
+		Filesize: "1000",
+		Merkle:   "",
+	}
+	suite.storageKeeper.SetStrays(suite.ctx, stray)
+	suite.Require().NoError(err)
+
+	foundStray, found := suite.storageKeeper.GetStrays(suite.ctx, "549")
+
+	suite.Require().NoError(err)
+	suite.Require().Equal(found, true)
+	suite.Require().Equal(foundStray.Cid, stray.Cid)
+	suite.Require().Equal(foundStray.Fid, stray.Fid)
+
+}
+
+func (suite *KeeperTestSuite) TestGetAllStrays() {
+	suite.SetupSuite()
+	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	stray := types.Strays{
+		Cid:      "549",
+		Fid:      "5789",
+		Signee:   user.String(),
+		Filesize: "1000",
+		Merkle:   "",
+	}
+	suite.storageKeeper.SetStrays(suite.ctx, stray)
+	suite.Require().NoError(err)
+
+	stray1 := types.Strays{
+		Cid:      "649",
+		Fid:      "5789",
+		Signee:   user.String(),
+		Filesize: "1000",
+		Merkle:   "",
+	}
+	suite.storageKeeper.SetStrays(suite.ctx, stray1)
+	suite.Require().NoError(err)
+
+	foundStrays := suite.storageKeeper.GetAllStrays(suite.ctx)
+	foundStayZero := foundStrays[0]
+	foundStayOne := foundStrays[1]
+
+	suite.Require().NoError(err)
+	suite.Require().Equal(foundStayZero, stray)
+	suite.Require().Equal(foundStayOne, stray1)
+
+}
+
+func (suite *KeeperTestSuite) TestRemoveStrays() {
+	suite.SetupSuite()
+	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	suite.Require().NoError(err)
+
+	stray := types.Strays{
+		Cid:      "549",
+		Fid:      "5789",
+		Signee:   user.String(),
+		Filesize: "1000",
+		Merkle:   "",
+	}
+	suite.storageKeeper.SetStrays(suite.ctx, stray)
+	suite.Require().NoError(err)
+
+	suite.storageKeeper.RemoveStrays(suite.ctx, "549")
+
+	foundStray, found := suite.storageKeeper.GetStrays(suite.ctx, "549")
+	ghostStray := types.Strays{}
+
+	suite.Require().NoError(err)
+	suite.Require().Equal(found, false)
+	suite.Require().Equal(foundStray, ghostStray)
+
+}
+
+func (suite *KeeperTestSuite) TestSetFidCid() {
+	suite.SetupSuite()
+
+	FidCid := types.FidCid{Fid: "549", Cids: "['628', '629', '630']"}
+
+	suite.storageKeeper.SetFidCid(suite.ctx, FidCid)
+
+	FidCidRequest := types.QueryGetFidCidRequest{
+		Fid: "549",
+	}
+
+	res, err := suite.queryClient.FidCid(suite.ctx.Context(), &FidCidRequest)
+	suite.Require().NoError(err)
+	suite.Require().Equal(res.FidCid.Fid, FidCid.Fid)
+
+}
+
+func (suite *KeeperTestSuite) TestGetFidCid() {
+	suite.SetupSuite()
+
+	FidCid := types.FidCid{Fid: "549", Cids: "['628', '629', '630']"}
+
+	suite.storageKeeper.SetFidCid(suite.ctx, FidCid)
+
+	foundFidCid, found := suite.storageKeeper.GetFidCid(suite.ctx, "549")
+
+	suite.Require().Equal(found, true)
+	suite.Require().Equal(foundFidCid.Fid, FidCid.Fid)
+
+}
+
+func (suite *KeeperTestSuite) TestGetAllFidCid() {
+	suite.SetupSuite()
+
+	FidCid := types.FidCid{Fid: "549", Cids: "['628', '629', '630']"}
+
+	suite.storageKeeper.SetFidCid(suite.ctx, FidCid)
+
+	FidCid1 := types.FidCid{Fid: "649", Cids: "['728', '729', '730']"}
+
+	suite.storageKeeper.SetFidCid(suite.ctx, FidCid1)
+
+	foundAllFidCid := suite.storageKeeper.GetAllFidCid(suite.ctx)
+
+	suite.Require().Equal(foundAllFidCid[0], FidCid)
+	suite.Require().Equal(foundAllFidCid[1], FidCid1)
+
+}
+
+func (suite *KeeperTestSuite) TestRemoveFidCid() {
+	suite.SetupSuite()
+
+	FidCid := types.FidCid{Fid: "549", Cids: "['628', '629', '630']"}
+	suite.storageKeeper.SetFidCid(suite.ctx, FidCid)
+
+	suite.storageKeeper.RemoveFidCid(suite.ctx, "549")
+
+	foundFidCid, found := suite.storageKeeper.GetFidCid(suite.ctx, "549")
+	ghostFidCid := types.FidCid{}
+	suite.Require().Equal(found, false)
+	suite.Require().Equal(foundFidCid, ghostFidCid)
 
 }
