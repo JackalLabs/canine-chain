@@ -5,8 +5,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-//testing: contracts.go active_deals.go...
-
+// testing: contracts.go active_deals.go...
 func (suite *KeeperTestSuite) TestSetContracts() {
 	suite.SetupSuite()
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
@@ -36,7 +35,6 @@ func (suite *KeeperTestSuite) TestSetContracts() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Contracts.Cid, contract.Cid)
 	suite.Require().Equal(res.Contracts.Signee, contract.Signee)
-
 }
 
 func (suite *KeeperTestSuite) TestGetContracts() {
@@ -66,7 +64,6 @@ func (suite *KeeperTestSuite) TestGetContracts() {
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundContract.Cid, contract.Cid)
 	suite.Require().Equal(foundContract.Signee, contract.Signee)
-
 }
 
 func (suite *KeeperTestSuite) TestGetAllContracts() {
@@ -114,7 +111,6 @@ func (suite *KeeperTestSuite) TestGetAllContracts() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(aliceContract, contract)
 	suite.Require().Equal(charlieContract, contract1)
-
 }
 
 func (suite *KeeperTestSuite) TestRemoveContracts() {
@@ -147,7 +143,6 @@ func (suite *KeeperTestSuite) TestRemoveContracts() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)
 	suite.Require().Equal(foundContract, ghostContract)
-
 }
 
 func (suite *KeeperTestSuite) TestSetActiveDeals() {
@@ -184,7 +179,6 @@ func (suite *KeeperTestSuite) TestSetActiveDeals() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.ActiveDeals.Cid, deal.Cid)
 	suite.Require().Equal(res.ActiveDeals.Signee, deal.Signee)
-
 }
 
 func (suite *KeeperTestSuite) TestGetActiveDeals() {
@@ -219,7 +213,6 @@ func (suite *KeeperTestSuite) TestGetActiveDeals() {
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundDeal.Cid, deal.Cid)
 	suite.Require().Equal(foundDeal.Signee, deal.Signee)
-
 }
 
 func (suite *KeeperTestSuite) TestGetAllActiveDeals() {
@@ -277,7 +270,6 @@ func (suite *KeeperTestSuite) TestGetAllActiveDeals() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(aliceDeal, deal)
 	suite.Require().Equal(charleDeal, deal1)
-
 }
 
 func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
@@ -315,7 +307,6 @@ func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)
 	suite.Require().Equal(foundDeal, ghostDeal)
-
 }
 
 func (suite *KeeperTestSuite) TestSetStrays() {
@@ -341,7 +332,6 @@ func (suite *KeeperTestSuite) TestSetStrays() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Strays.Cid, stray.Cid)
 	suite.Require().Equal(res.Strays.Fid, stray.Fid)
-
 }
 
 func (suite *KeeperTestSuite) TestGetStrays() {
@@ -365,7 +355,6 @@ func (suite *KeeperTestSuite) TestGetStrays() {
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundStray.Cid, stray.Cid)
 	suite.Require().Equal(foundStray.Fid, stray.Fid)
-
 }
 
 func (suite *KeeperTestSuite) TestGetAllStrays() {
@@ -400,7 +389,6 @@ func (suite *KeeperTestSuite) TestGetAllStrays() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(foundStayZero, stray)
 	suite.Require().Equal(foundStayOne, stray1)
-
 }
 
 func (suite *KeeperTestSuite) TestRemoveStrays() {
@@ -426,7 +414,6 @@ func (suite *KeeperTestSuite) TestRemoveStrays() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)
 	suite.Require().Equal(foundStray, ghostStray)
-
 }
 
 func (suite *KeeperTestSuite) TestSetFidCid() {
@@ -443,7 +430,6 @@ func (suite *KeeperTestSuite) TestSetFidCid() {
 	res, err := suite.queryClient.FidCid(suite.ctx.Context(), &FidCidRequest)
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.FidCid.Fid, FidCid.Fid)
-
 }
 
 func (suite *KeeperTestSuite) TestGetFidCid() {
@@ -457,7 +443,6 @@ func (suite *KeeperTestSuite) TestGetFidCid() {
 
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundFidCid.Fid, FidCid.Fid)
-
 }
 
 func (suite *KeeperTestSuite) TestGetAllFidCid() {
@@ -475,7 +460,6 @@ func (suite *KeeperTestSuite) TestGetAllFidCid() {
 
 	suite.Require().Equal(foundAllFidCid[0], FidCid)
 	suite.Require().Equal(foundAllFidCid[1], FidCid1)
-
 }
 
 func (suite *KeeperTestSuite) TestRemoveFidCid() {
@@ -490,5 +474,4 @@ func (suite *KeeperTestSuite) TestRemoveFidCid() {
 	ghostFidCid := types.FidCid{}
 	suite.Require().Equal(found, false)
 	suite.Require().Equal(foundFidCid, ghostFidCid)
-
 }

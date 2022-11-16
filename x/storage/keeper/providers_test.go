@@ -5,8 +5,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-//testing providers.go file
-
+// testing providers.go file
 func (suite *KeeperTestSuite) TestSetProviders() {
 	suite.SetupSuite()
 	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
@@ -34,7 +33,6 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 	suite.Require().Equal(res.Providers.Totalspace, provider.Totalspace)
 	suite.Require().Equal(res.Providers.BurnedContracts, provider.BurnedContracts)
 	suite.Require().Equal(res.Providers.Creator, provider.Creator)
-
 }
 
 func (suite *KeeperTestSuite) TestGetProviders() {
@@ -61,7 +59,6 @@ func (suite *KeeperTestSuite) TestGetProviders() {
 	suite.Require().Equal(foundProvider.Totalspace, provider.Totalspace)
 	suite.Require().Equal(foundProvider.BurnedContracts, provider.BurnedContracts)
 	suite.Require().Equal(foundProvider.Creator, provider.Creator)
-
 }
 
 func (suite *KeeperTestSuite) TestGetAllProviders() {
@@ -110,7 +107,6 @@ func (suite *KeeperTestSuite) TestGetAllProviders() {
 	suite.Require().Equal(providerBob.Totalspace, provider1.Totalspace)
 	suite.Require().Equal(providerBob.BurnedContracts, provider1.BurnedContracts)
 	suite.Require().Equal(providerBob.Creator, provider1.Creator)
-
 }
 
 func (suite *KeeperTestSuite) TestRemoveProviders() {
@@ -145,5 +141,4 @@ func (suite *KeeperTestSuite) TestRemoveProviders() {
 	}
 
 	suite.Require().Equal(foundProvider, ghostProvider)
-
 }

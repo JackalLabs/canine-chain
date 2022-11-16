@@ -31,12 +31,10 @@ func (k msgServer) SetProviderTotalspace(goCtx context.Context, msg *types.MsgSe
 }
 
 func isValidTotalSpace(totalSpace string) bool {
-
 	var isNumber bool
 
 	if _, err := strconv.Atoi(totalSpace); err == nil {
 		isNumber = true
 	}
 	return isNumber
-
 }
