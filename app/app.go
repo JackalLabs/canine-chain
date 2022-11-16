@@ -120,10 +120,11 @@ import (
 	rnsmodulekeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 
+	storagemodule "github.com/jackalLabs/canine-chain/x/storage"
+	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+
 	/*
-		storagemodule "github.com/jackalLabs/canine-chain/x/storage"
-		storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
-		storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
 		dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
 		dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
@@ -238,8 +239,9 @@ var (
 		ica.AppModuleBasic{},
 		intertx.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
+		storagemodule.AppModuleBasic{},
+
 		/*
-			storagemodule.AppModuleBasic{},
 			dsigmodule.AppModuleBasic{},
 			filetreemodule.AppModuleBasic{},
 			notificationsmodule.AppModuleBasic{},
@@ -258,8 +260,9 @@ var (
 		icatypes.ModuleName:            nil,
 		wasm.ModuleName:                {authtypes.Burner},
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
+
 		/*
-			storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		*/
 	}
@@ -313,10 +316,10 @@ type JackalApp struct {
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
-	RnsKeeper rnsmodulekeeper.Keeper
+	RnsKeeper     rnsmodulekeeper.Keeper
+	StorageKeeper storagemodulekeeper.Keeper
 
 	/*
-		StorageKeeper storagemodulekeeper.Keeper
 
 		DsigKeeper     dsigmodulekeeper.Keeper
 		FileTreeKeeper filetreemodulekeeper.Keeper
@@ -362,9 +365,9 @@ func NewJackalApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey,
 		/*
-			storagemoduletypes.StoreKey, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
+			, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
 			notificationsmoduletypes.StoreKey,
 		*/
 	)
@@ -450,6 +453,7 @@ func NewJackalApp(
 		authtypes.FeeCollectorName,
 		//	storagemoduletypes.ModuleName,
 	)
+	mintModule := mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper)
 
 	app.distrKeeper = distrkeeper.NewKeeper(
 		appCodec,
@@ -600,15 +604,18 @@ func NewJackalApp(
 	)
 	rnsModule := rnsmodule.NewAppModule(appCodec, app.RnsKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
+		appCodec,
+		keys[storagemoduletypes.StoreKey],
+		keys[storagemoduletypes.MemStoreKey],
+		app.getSubspace(storagemoduletypes.ModuleName),
+		app.BankKeeper,
+		app.AccountKeeper,
+	)
+	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper)
+
 	/*
-		app.StorageKeeper = *storagemodulekeeper.NewKeeper(
-			appCodec,
-			keys[storagemoduletypes.StoreKey],
-			keys[storagemoduletypes.MemStoreKey],
-			app.getSubspace(storagemoduletypes.ModuleName),
-			app.BankKeeper,
-		)
-		storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper)
+
 
 		app.DsigKeeper = *dsigmodulekeeper.NewKeeper(
 			appCodec,
@@ -684,7 +691,7 @@ func NewJackalApp(
 		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper),
 		capability.NewAppModule(appCodec, *app.capabilityKeeper),
 		gov.NewAppModule(appCodec, app.govKeeper, app.AccountKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper),
+		mintModule,
 		slashing.NewAppModule(appCodec, app.slashingKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
 		distr.NewAppModule(appCodec, app.distrKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
 		staking.NewAppModule(appCodec, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
@@ -700,8 +707,8 @@ func NewJackalApp(
 		interTxModule,
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 		rnsModule,
+		storageModule,
 		/*
-			storageModule,
 			dsigModule,
 			filetreeModule,
 			notificationsModule,
@@ -736,8 +743,8 @@ func NewJackalApp(
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 		/*
-			storagemoduletypes.ModuleName,
 			dsigmoduletypes.ModuleName,
 			filetreemoduletypes.ModuleName,
 			notificationsmoduletypes.ModuleName,
@@ -768,8 +775,8 @@ func NewJackalApp(
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 		/*
-			storagemoduletypes.ModuleName,
 			dsigmoduletypes.ModuleName,
 			filetreemoduletypes.ModuleName,
 			notificationsmoduletypes.ModuleName,
@@ -808,12 +815,40 @@ func NewJackalApp(
 		// wasm after ibc transfer
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 		/*
-			storagemoduletypes.ModuleName,
 			dsigmoduletypes.ModuleName,
 			filetreemoduletypes.ModuleName,
 			notificationsmoduletypes.ModuleName,
 		*/
+	)
+
+	app.mm.SetOrderExportGenesis(
+		capabilitytypes.ModuleName,
+		authtypes.ModuleName,
+		banktypes.ModuleName,
+		distrtypes.ModuleName,
+		stakingtypes.ModuleName,
+		slashingtypes.ModuleName,
+		govtypes.ModuleName,
+		minttypes.ModuleName,
+		crisistypes.ModuleName,
+		genutiltypes.ModuleName,
+		evidencetypes.ModuleName,
+		authz.ModuleName,
+		feegrant.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
+		vestingtypes.ModuleName,
+		// additional non simd modules
+		ibctransfertypes.ModuleName,
+		ibchost.ModuleName,
+		icatypes.ModuleName,
+		intertxtypes.ModuleName,
+		// wasm after ibc transfer
+		wasm.ModuleName,
+		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -846,7 +881,7 @@ func NewJackalApp(
 		ibc.NewAppModule(app.ibcKeeper),
 		transferModule,
 		rnsModule,
-		// storageModule,
+		storageModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
