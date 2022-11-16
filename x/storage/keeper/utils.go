@@ -34,9 +34,10 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 	}
 
 	if endblock.Int64() <= blockh {
-		if endblock.Int64() <= blockh+432000 {
+		// one month grace period
+		if blockh - endblock.Int64() <= 432000 {
 			bytes, ok := sdk.NewIntFromString(eblock.Bytes)
-			if !ok {
+			if ok {
 				return bytes.Int64(), true, nil
 			}
 		}
