@@ -46,6 +46,7 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (in
 
 	highestBlock = 0
 
+	// Look for highest start block
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.PayBlocks
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
