@@ -854,6 +854,7 @@ func NewJackalApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		filetreemoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
