@@ -8,9 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
-
-	rnsKeeper "github.com/jackal-dao/canine/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
+	rnsKeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 )
 
 type (

@@ -16,9 +16,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackal-dao/canine/x/filetree/client/cli"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/client/cli"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 var (

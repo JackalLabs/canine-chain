@@ -9,14 +9,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/testutil/sample"
-	filetreesimulation "github.com/jackal-dao/canine/x/filetree/simulation"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	filetreesimulation "github.com/jackalLabs/canine-chain/x/filetree/simulation"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	//_ = sample.AccAddress
 	_ = filetreesimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind

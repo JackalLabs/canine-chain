@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveViewers) (*types.MsgRemoveViewersResponse, error) {
@@ -43,12 +43,6 @@ func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveView
 	file.ViewingAccess = newviewers
 
 	k.SetFiles(ctx, file)
-
-	//notify viewers
-	bool, error := notify(k, ctx, msg.Notifyviewers, msg.NotiForViewers, msg.Creator, file.Address, file.Owner)
-	if !bool {
-		return nil, error
-	}
 
 	return &types.MsgRemoveViewersResponse{}, nil
 }

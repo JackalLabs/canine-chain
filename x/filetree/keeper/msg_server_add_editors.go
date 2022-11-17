@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (*types.MsgAddEditorsResponse, error) {
@@ -43,12 +43,6 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 	file.EditAccess = newEditors
 
 	k.SetFiles(ctx, file)
-
-	//notify editors
-	bool, error := notify(k, ctx, msg.NotifyEditors, msg.NotiForEditors, msg.Creator, file.Address, file.Owner)
-	if !bool {
-		return nil, error
-	}
 
 	return &types.MsgAddEditorsResponse{}, nil
 }

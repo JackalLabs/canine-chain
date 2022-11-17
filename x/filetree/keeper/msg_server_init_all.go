@@ -7,9 +7,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 
-	rnsTypes "github.com/jackal-dao/canine/x/rns/types"
+	rnsTypes "github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (k msgServer) InitAll(goCtx context.Context, msg *types.MsgInitAll) (*types.MsgInitAllResponse, error) {
