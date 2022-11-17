@@ -171,10 +171,10 @@ func (suite *KeeperTestSuite) TestCreatePayBlock() {
 	_, sKeeper, _ := setupMsgServer(suite)
 
 	cases := []struct {
-		name string
-		preRun func() (string, int64, int64)
-		check func()
-		expErr bool
+		name      string
+		preRun    func() (string, int64, int64)
+		check     func()
+		expErr    bool
 		expErrMsg string
 	}{
 		{
@@ -196,7 +196,6 @@ func (suite *KeeperTestSuite) TestCreatePayBlock() {
 				suite.Require().Equal("10000", pbe.Bytes)
 				suite.Require().Equal(module.EndBlockType, pbe.Blocktype)
 				suite.Require().Equal("10001", pbe.Blocknum)
-
 			},
 			expErr: false,
 		},
@@ -206,8 +205,8 @@ func (suite *KeeperTestSuite) TestCreatePayBlock() {
 			preRun: func() (string, int64, int64) {
 				return "a", 10000, 10000
 			},
-			check: func() {},
-			expErr: true,
+			check:     func() {},
+			expErr:    true,
 			expErrMsg: "can't buy storage within another storage window",
 		},
 	}
@@ -225,6 +224,63 @@ func (suite *KeeperTestSuite) TestCreatePayBlock() {
 			} else {
 				suite.Require().NoError(err)
 			}
+		})
+	}
+}
+
+func (suite *KeeperTestSuite) TestGetProviderUsing() {
+	suite.SetupSuite()
+	_, sKeeper, _ := setupMsgServer(suite)
+
+	cases := []struct {
+		name      string
+		preRun    func() string
+		expReturn int64
+	}{
+		{
+			name: "No_provider_found",
+			preRun: func() string {
+				return "a"
+			},
+			expReturn: 0,
+		},
+
+		{
+			name: "invalid_active_deal_file_size",
+			preRun: func() string {
+				ad := types.ActiveDeals{
+					Provider: "a",
+					Filesize: "aaaaa",
+					Cid:      "abc",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, ad)
+				return "a"
+			},
+			expReturn: 0,
+		},
+
+		{
+			name: "valid_active_deal_file_size",
+			preRun: func() string {
+				ad := types.ActiveDeals{
+					Provider: "a",
+					Filesize: "100000",
+					Cid:      "bbb",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, ad)
+				return "a"
+			},
+			expReturn: 100000,
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			suite.Require().NotNil(tc.preRun)
+			provider := tc.preRun()
+			result := sKeeper.GetProviderUsing(suite.ctx, provider)
+
+			suite.Require().Equal(tc.expReturn, result)
 		})
 	}
 }
