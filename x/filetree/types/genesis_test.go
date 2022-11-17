@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -37,9 +37,6 @@ func TestGenesisState_Validate(t *testing.T) {
 					{
 						Address: "1",
 					},
-				},
-				Tracker: &types.Tracker{
-					TrackingNumber: 51,
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},

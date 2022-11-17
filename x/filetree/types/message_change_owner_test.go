@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
+	//"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,8 +22,8 @@ func TestMsgChangeOwner_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgChangeOwner{
-				Creator: sample.AccAddress(),
+			msg:  MsgChangeOwner{
+				//Creator: sample.AccAddress(),
 			},
 		},
 	}
