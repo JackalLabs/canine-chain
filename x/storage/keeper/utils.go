@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -13,6 +14,14 @@ const (
 	EndBlockType   = "end"
 	TwoGigs        = 2000000000
 )
+
+func MakeFid(data []byte) (string, error) {
+	return bech32.ConvertAndEncode(types.FidPrefix, data)
+}
+
+func MakeCid(data []byte) (string, error) {
+	return bech32.ConvertAndEncode(types.CidPrefix, data)
+}
 
 func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (int64, bool, *types.PayBlocks) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
