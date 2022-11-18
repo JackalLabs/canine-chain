@@ -47,6 +47,7 @@ func setupStorageKeeper(t *testing.T) (
 	// gomock initializations
 	ctrl := gomock.NewController(t)
 	bankKeeper := storagetestutil.NewMockBankKeeper(ctrl)
+	accountKeeper := storagetestutil.NewMockAccountKeeper(ctrl)
 	trackMockBalances(bankKeeper)
 
 	paramsSubspace := typesparams.NewSubspace(encCfg.Codec,
@@ -57,7 +58,7 @@ func setupStorageKeeper(t *testing.T) (
 	)
 
 	// storage keeper initializations
-	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace, bankKeeper)
+	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace, bankKeeper, accountKeeper)
 	storageKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.
