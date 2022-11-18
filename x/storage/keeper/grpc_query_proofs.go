@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ProofsAll(c context.Context, req *types.QueryAllProofsRequest) (*types.QueryAllProofsResponse, error) {
+func (k Keeper) ProofsAll(c context.Context, req *types.QueryAllProofsRequest) (*types.QueryProofsAllResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,10 +35,10 @@ func (k Keeper) ProofsAll(c context.Context, req *types.QueryAllProofsRequest) (
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllProofsResponse{Proofs: proofss, Pagination: pageRes}, nil
+	return &types.QueryProofsAllResponse{Proofs: proofss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Proofs(c context.Context, req *types.QueryGetProofsRequest) (*types.QueryGetProofsResponse, error) {
+func (k Keeper) Proofs(c context.Context, req *types.QueryGetProofsRequest) (*types.QueryProofsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) Proofs(c context.Context, req *types.QueryGetProofsRequest) (*ty
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetProofsResponse{Proofs: val}, nil
+	return &types.QueryProofsResponse{Proofs: val}, nil
 }

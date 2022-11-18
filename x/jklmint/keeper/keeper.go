@@ -85,20 +85,35 @@ func FloatToBigInt(val float64) *big.Int {
 }
 
 func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
-	denom := k.GetParams(ctx).MintDenom
-	coins := k.bankKeeper.GetSupply(ctx, denom)
+	coins := k.bankKeeper.GetSupply(ctx, k.GetParams(ctx).MintDenom)
+	zeroDec, err := sdk.NewDecFromStr("0")
+	if err != nil {
+		return zeroDec, types.ErrCannotParseFloat
+	}
 
 	amt := coins.Amount.ToDec()
+	famt, err := amt.Float64()
+	if err != nil {
+		return zeroDec, types.ErrCannotParseFloat
+	}
 
-	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
+	var tokens float64 = 4 // TODO: Update to 10 when storage goes live
+	highDec, err := sdk.NewDecFromStr("1.0")
+	if err != nil {
+		return zeroDec, types.ErrCannotParseFloat
+	}
 
-	printedPerYear := blocksPerYearEstiamte * 4_000_000
+	if famt <= 0 {
+		return highDec, nil
+	}
 
-	inflate := sdk.NewDec(printedPerYear * 100)
+	ratio := tokens / famt
 
-	quo := inflate.Quo(amt)
+	ratioDec := FloatToBigInt(ratio)
 
-	return quo, nil
+	ratioSDK := sdk.NewDecFromBigInt(ratioDec)
+
+	return ratioSDK, nil
 }
 
 // AddCollectedFees implements an alias call to the underlying supply keeper's

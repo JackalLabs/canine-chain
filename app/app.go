@@ -610,7 +610,6 @@ func NewJackalApp(
 		keys[storagemoduletypes.MemStoreKey],
 		app.getSubspace(storagemoduletypes.ModuleName),
 		app.BankKeeper,
-		app.AccountKeeper,
 	)
 	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper)
 

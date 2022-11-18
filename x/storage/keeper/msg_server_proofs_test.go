@@ -37,7 +37,7 @@ const (
 	CID2 = "a257645c433288e20c23d4fc8ce823c66558e5398c98b140d7ccfb39e8a3c70e"
 )
 
-func CreateMerkleForProof(ctx sdk.Context, file TestFile) (string, string, error) {
+func CreateMerkleForProof(file TestFile) (string, string, error) {
 	f := []byte(file.Data)
 	index := 0
 	var data [][]byte
@@ -80,17 +80,17 @@ func CreateMerkleForProof(ctx sdk.Context, file TestFile) (string, string, error
 
 	verified, err := merkletree.VerifyProof(ditem, proof, k)
 	if err != nil {
-		ctx.Logger().Error("%v\n", err)
+		fmt.Printf("%v\n", err)
 	}
 
 	if !verified {
-		ctx.Logger().Error("%s\n", "Cannot verify")
+		fmt.Printf("%s\n", "Cannot verify")
 	}
 
 	return fmt.Sprintf("%x", item), string(jproof), nil
 }
 
-func makeContract(ctx sdk.Context, file TestFile) (string, string, error) {
+func makeContract(file TestFile) (string, string, error) {
 	f := []byte(file.Data)
 	size := 0
 	var list [][]byte
@@ -108,7 +108,7 @@ func makeContract(ctx sdk.Context, file TestFile) (string, string, error) {
 
 	t, err := merkletree.New(list)
 	if err != nil {
-		ctx.Logger().Debug("%v\n", err)
+		fmt.Printf("%v\n", err)
 	}
 
 	return hex.EncodeToString(t.Root()), fmt.Sprintf("%d", size), nil
@@ -136,7 +136,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	suite.Require().NoError(err)
 
 	// Storage Provider receives file and make merkleroot for contract
-	merkleroot, filesize, err := makeContract(suite.ctx, originalFile)
+	merkleroot, filesize, err := makeContract(originalFile)
 	suite.Require().NoError(err)
 
 	// Post Contract
@@ -177,11 +177,11 @@ func (suite *KeeperTestSuite) TestPostProof() {
 
 	// Storage Provider get file and create merkle for proof
 	// for tc 1 and 2
-	item, hashlist, err := CreateMerkleForProof(suite.ctx, fileFromSP)
+	item, hashlist, err := CreateMerkleForProof(fileFromSP)
 	suite.Require().NoError(err)
 
 	// for tc 3: post proof from a different file
-	item2, hashlist2, err2 := CreateMerkleForProof(suite.ctx, randomFile)
+	item2, hashlist2, err2 := CreateMerkleForProof(randomFile)
 	suite.Require().NoError(err2)
 
 	cases := []struct {

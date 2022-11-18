@@ -77,6 +77,8 @@ BUILD_FLAGS := -tags "$(build_tags_comma_sep)" -ldflags '$(ldflags)' -trimpath
 # include contrib/devtools/Makefile
 
 all: install lint test
+	
+
 
 build: go.sum
 ifeq ($(OS),Windows_NT)
@@ -87,6 +89,8 @@ endif
 
 build_cli:
 	go build -o build/canined -mod=readonly -tags "$(GO_TAGS) build/canined" -ldflags '$(LD_FLAGS)' ./cmd/canined
+	
+
 
 build-contract-tests-hooks:
 ifeq ($(OS),Windows_NT)

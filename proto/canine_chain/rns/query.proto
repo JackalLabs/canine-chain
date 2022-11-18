@@ -21,42 +21,42 @@ service Query {
   }
 
   // Queries a Name by index.
-  rpc Names(QueryGetNamesRequest) returns (QueryGetNamesResponse) {
+  rpc Names(QueryGetNamesRequest) returns (QueryNamesResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/names/{index}";
   }
 
   // Queries a list of Names.
-  rpc NamesAll(QueryAllNamesRequest) returns (QueryAllNamesResponse) {
+  rpc NamesAll(QueryAllNamesRequest) returns (QueryNamesAllResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/names";
   }
 
   // Queries a Bid by index.
-  rpc Bids(QueryGetBidsRequest) returns (QueryGetBidsResponse) {
+  rpc Bids(QueryGetBidsRequest) returns (QueryBidsResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/bids/{index}";
   }
 
   // Queries a list of Bids.
-  rpc BidsAll(QueryAllBidsRequest) returns (QueryAllBidsResponse) {
+  rpc BidsAll(QueryAllBidsRequest) returns (QueryBidsAllResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/bids";
   }
 
   // Queries a Listing by index.
-  rpc Forsale(QueryGetForsaleRequest) returns (QueryGetForsaleResponse) {
+  rpc Forsale(QueryGetForsaleRequest) returns (QueryForsaleResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/forsale/{name}";
   }
 
   // Queries all Listings.
-  rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryAllForsaleResponse) {
+  rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryForsaleAllResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/forsale";
   }
 
   // Queries a Init by index.
-  rpc Init(QueryGetInitRequest) returns (QueryGetInitResponse) {
+  rpc Init(QueryGetInitRequest) returns (QueryInitResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/init/{address}";
   }
 
   // Queries a list of Init items.
-  rpc InitAll(QueryAllInitRequest) returns (QueryAllInitResponse) {
+  rpc InitAll(QueryAllInitRequest) returns (QueryInitAllResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/init";
   }
 
@@ -94,7 +94,7 @@ message QueryAllWhoisResponse {
 
 message QueryGetNamesRequest { string index = 1; }
 
-message QueryGetNamesResponse {
+message QueryNamesResponse {
   Names names = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -102,27 +102,27 @@ message QueryAllNamesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllNamesResponse {
+message QueryNamesAllResponse {
   repeated Names names = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetBidsRequest { string index = 1; }
 
-message QueryGetBidsResponse { Bids bids = 1 [ (gogoproto.nullable) = false ]; }
+message QueryBidsResponse { Bids bids = 1 [ (gogoproto.nullable) = false ]; }
 
 message QueryAllBidsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllBidsResponse {
+message QueryBidsAllResponse {
   repeated Bids bids = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetForsaleRequest { string name = 1; }
 
-message QueryGetForsaleResponse {
+message QueryForsaleResponse {
   Forsale forsale = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -130,20 +130,20 @@ message QueryAllForsaleRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllForsaleResponse {
+message QueryForsaleAllResponse {
   repeated Forsale forsale = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetInitRequest { string address = 1; }
 
-message QueryGetInitResponse { bool init = 1; }
+message QueryInitResponse { bool init = 1; }
 
 message QueryAllInitRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllInitResponse {
+message QueryInitAllResponse {
   repeated Init init = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

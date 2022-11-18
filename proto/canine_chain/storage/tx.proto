@@ -203,10 +203,10 @@ message MsgCancelContractResponse {}
 
 message MsgBuyStorage {
   string creator = 1;
-  string forAddress = 2;
+  string for_address = 2;
   string duration = 3;
   string bytes = 4;
-  string paymentDenom = 5;
+  string payment_denom = 5;
 }
 
 message MsgBuyStorageResponse {}

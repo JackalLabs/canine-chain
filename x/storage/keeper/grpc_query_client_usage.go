@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsageRequest) (*types.QueryAllClientUsageResponse, error) {
+func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsageRequest) (*types.QueryClientUsageAllResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,10 +35,10 @@ func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsage
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllClientUsageResponse{ClientUsage: clientUsages, Pagination: pageRes}, nil
+	return &types.QueryClientUsageAllResponse{ClientUsage: clientUsages, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ClientUsage(c context.Context, req *types.QueryGetClientUsageRequest) (*types.QueryGetClientUsageResponse, error) {
+func (k Keeper) ClientUsage(c context.Context, req *types.QueryGetClientUsageRequest) (*types.QueryClientUsageResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) ClientUsage(c context.Context, req *types.QueryGetClientUsageReq
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetClientUsageResponse{ClientUsage: val}, nil
+	return &types.QueryClientUsageResponse{ClientUsage: val}, nil
 }
