@@ -3,6 +3,7 @@ package cli
 import (
 	"strconv"
 
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 )
 
@@ -15,10 +16,19 @@ func CmdProvider() *cobra.Command {
 		Long:  "The provider category for the canine cli tool.",
 	}
 
-	cmd.AddCommand(CmdSetProviderIP())
-	cmd.AddCommand(CmdSetProviderTotalspace())
-	cmd.AddCommand(CmdInitProvider())
-	cmd.AddCommand(CmdSetProviderKeybase())
+	cmds := []*cobra.Command{
+		CmdSetProviderTotalspace(),
+		CmdSetProviderIP(),
+		CmdSetProviderKeybase(),
+		CmdInitProvider(),
+	}
+
+	for _, c := range cmds {
+		flags.AddTxFlagsToCmd(c)
+		cmd.AddCommand(c)
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
 }

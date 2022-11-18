@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/spf13/cobra"
@@ -40,8 +39,6 @@ func CmdInitProvider() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-
-	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
 }
