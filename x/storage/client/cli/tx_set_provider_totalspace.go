@@ -14,7 +14,7 @@ var _ = strconv.Itoa(0)
 
 func CmdSetProviderTotalspace() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-provider-totalspace [space]",
+		Use:   "set-totalspace [space]",
 		Short: "Broadcast message set-provider-totalspace",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {

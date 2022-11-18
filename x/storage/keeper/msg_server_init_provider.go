@@ -16,6 +16,7 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 		Totalspace:      msg.Totalspace,
 		Creator:         msg.Creator,
 		BurnedContracts: "0",
+		KeybaseIdentity: msg.Keybase,
 	}
 
 	k.SetProviders(ctx, provider)

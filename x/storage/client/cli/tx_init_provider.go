@@ -14,12 +14,14 @@ var _ = strconv.Itoa(0)
 
 func CmdInitProvider() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "init-provider [ip] [totalspace]",
-		Short: "Broadcast message init-provider",
-		Args:  cobra.ExactArgs(2),
+		Use:   "init [ip] [totalspace] [keybase-identity]",
+		Short: "init provider",
+		Long:  "Initialize a provider with given parameters.",
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argIP := args[0]
 			argTotalspace := args[1]
+			argKeybase := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -30,6 +32,7 @@ func CmdInitProvider() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				argIP,
 				argTotalspace,
+				argKeybase,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

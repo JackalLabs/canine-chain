@@ -27,6 +27,7 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 					user.String(),
 					"127.0.0.1",
 					"1000000000",
+					"test-key",
 				)
 			},
 			expErr: false,
