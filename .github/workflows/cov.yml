@@ -19,8 +19,9 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v3
-
-    # Runs djdefi/cloc-action
+    - uses: actions/setup-go@v3
+      with:
+        go-version: 1.19 # The Go version to download (if necessary) and use.
     - name: Get Coverage
       run: |
         go test ./... -cover -coverprofile coverage.out
