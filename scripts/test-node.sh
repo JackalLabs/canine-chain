@@ -19,6 +19,7 @@ echo "brief enhance flee chest rabbit matter chaos clever lady enable luggage ar
 canined add-genesis-account $(canined keys show -a $ALIAS --keyring-backend=test --home=$JKL_HOME) 500000000ujkl --home=$JKL_HOME
 canined add-genesis-account $(canined keys show -a charlie --keyring-backend=test --home=$JKL_HOME) 500000000ujkl --home=$JKL_HOME
 canined add-genesis-account $(canined keys show -a danny --keyring-backend=test --home=$JKL_HOME) 500000000ujkl --home=$JKL_HOME
+canined add-genesis-account jkl1j6hsmmnxp2jjjad8xs07lxpy78z2rx58aqr6l2 500000000ujkl --home=$JKL_HOME
 
 canined gentx $ALIAS 200000000ujkl \
 --chain-id=$CHAIN \
