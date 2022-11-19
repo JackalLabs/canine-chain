@@ -11,22 +11,22 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetProviderIP() *cobra.Command {
+func CmdSetProviderKeybase() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-ip [ip]",
-		Short: "Set provider ip",
+		Use:   "set-key [keybase-identity]",
+		Short: "Broadcast message set-provider-ip",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argIP := args[0]
+			argKey := args[0]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgSetProviderIP(
+			msg := types.NewMsgSetProviderKeybase(
 				clientCtx.GetFromAddress().String(),
-				argIP,
+				argKey,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

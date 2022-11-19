@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/spf13/cobra"
@@ -14,7 +13,7 @@ var _ = strconv.Itoa(0)
 
 func CmdSetProviderTotalspace() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-provider-totalspace [space]",
+		Use:   "set-totalspace [space]",
 		Short: "Broadcast message set-provider-totalspace",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -35,8 +34,6 @@ func CmdSetProviderTotalspace() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-
-	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
 }

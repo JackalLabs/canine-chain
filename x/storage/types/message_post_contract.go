@@ -49,7 +49,7 @@ func (msg *MsgPostContract) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
-	if prefix != addressPrefix {
+	if prefix != AddressPrefix {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
@@ -57,7 +57,7 @@ func (msg *MsgPostContract) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid signee address (%s)", err)
 	}
-	if prefix != addressPrefix {
+	if prefix != AddressPrefix {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid signee prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
@@ -65,7 +65,7 @@ func (msg *MsgPostContract) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid fid (%s)", err)
 	}
-	if prefix != fidPrefix {
+	if prefix != FidPrefix {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid fid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklf`", prefix))
 	}
 
