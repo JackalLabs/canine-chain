@@ -42,7 +42,8 @@ service Query {
 
   // Queries a Listing by index.
   rpc Forsale(QueryGetForsaleRequest) returns (QueryForsaleResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/rns/forsale/{name}";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/rns/forsale/{name}";
   }
 
   // Queries all Listings.
@@ -52,7 +53,8 @@ service Query {
 
   // Queries a Init by index.
   rpc Init(QueryGetInitRequest) returns (QueryInitResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/rns/init/{address}";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/rns/init/{address}";
   }
 
   // Queries a list of Init items.
@@ -94,9 +96,7 @@ message QueryAllWhoisResponse {
 
 message QueryGetNamesRequest { string index = 1; }
 
-message QueryNamesResponse {
-  Names names = 1 [ (gogoproto.nullable) = false ];
-}
+message QueryNamesResponse { Names names = 1 [ (gogoproto.nullable) = false ]; }
 
 message QueryAllNamesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;

@@ -24,7 +24,8 @@ service Query {
   }
   // Queries a Contracts by index.
   rpc Contracts(QueryGetContractsRequest) returns (QueryContractsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/contracts/{cid}";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/contracts/{cid}";
   }
 
   // Queries a list of Contracts items.
@@ -43,7 +44,8 @@ service Query {
   // Queries a list of ActiveDeals items.
   rpc ActiveDealsAll(QueryAllActiveDealsRequest)
       returns (QueryActiveDealsAllResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/active_deals";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/active_deals";
   }
 
   // Queries a Providers by index.
@@ -66,7 +68,8 @@ service Query {
 
   // Queries a list of FindFile items.
   rpc FindFile(QueryFindFileRequest) returns (QueryFindFileResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/find_file/{fid}";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/find_file/{fid}";
   }
 
   // Queries a PayBlocks by index.
@@ -78,7 +81,8 @@ service Query {
   // Queries a list of PayBlocks items.
   rpc PayBlocksAll(QueryAllPayBlocksRequest)
       returns (QueryPayBlocksAllResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/pay_blocks";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/pay_blocks";
   }
 
   // Queries a ClientUsage by index.
@@ -91,12 +95,14 @@ service Query {
   // Queries a list of ClientUsage items.
   rpc ClientUsageAll(QueryAllClientUsageRequest)
       returns (QueryClientUsageAllResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/client_usage";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/client_usage";
   }
 
   // Queries a Strays by index.
   rpc Strays(QueryGetStraysRequest) returns (QueryStraysResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/strays/{cid}";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/strays/{cid}";
   }
 
   // Queries a list of Strays items.
@@ -113,7 +119,8 @@ service Query {
 
   // Queries a FidCid by index.
   rpc FidCid(QueryGetFidCidRequest) returns (QueryFidCidResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/fid_cid/{fid}";
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/fid_cid/{fid}";
   }
 
   // Queries a list of FidCid items.

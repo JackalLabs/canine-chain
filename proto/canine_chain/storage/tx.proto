@@ -9,7 +9,8 @@ service Msg {
   rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
   rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
-  rpc SetProviderKeybase(MsgSetProviderKeybase) returns (MsgSetProviderKeybaseResponse);
+  rpc SetProviderKeybase(MsgSetProviderKeybase)
+      returns (MsgSetProviderKeybaseResponse);
   rpc SetProviderTotalspace(MsgSetProviderTotalspace)
       returns (MsgSetProviderTotalspaceResponse);
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
@@ -52,14 +53,12 @@ message MsgSetProviderIP {
 
 message MsgSetProviderIPResponse {}
 
-
 message MsgSetProviderKeybase {
   string creator = 1;
   string keybase = 2;
 }
 
 message MsgSetProviderKeybaseResponse {}
-
 
 message MsgSetProviderTotalspace {
   string creator = 1;
