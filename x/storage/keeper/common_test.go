@@ -29,6 +29,7 @@ import (
 func setupStorageKeeper(t *testing.T) (
 	*keeper.Keeper,
 	*storagetestutil.MockBankKeeper,
+	*storagetestutil.MockAccountKeeper,
 	moduletestutil.TestEncodingConfig,
 	sdk.Context,
 ) {
@@ -66,7 +67,7 @@ func setupStorageKeeper(t *testing.T) (
 	types.RegisterMsgServer(msr, keeper.NewMsgServerImpl(*storageKeeper))
 	banktypes.RegisterMsgServer(msr, nil) // Nil is fine here as long as we never execute the proposal's Msgs.
 
-	return storageKeeper, bankKeeper, encCfg, ctx
+	return storageKeeper, bankKeeper, accountKeeper, encCfg, ctx
 }
 
 // trackMockBalances sets up expected calls on the Mock BankKeeper, and also

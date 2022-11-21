@@ -48,13 +48,13 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	}
 	hashName := h.Sum(nil)
 
-	fmt.Printf("%v\n", hashes)
+	ctx.Logger().Debug("%v\n", hashes)
 
 	var proof merkletree.Proof
 
 	err = json.Unmarshal([]byte(msg.Hashlist), &proof)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		ctx.Logger().Debug("%v\n", err)
 		return nil, err
 	}
 
@@ -67,13 +67,13 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	}
 	verified, err := merkletree.VerifyProof(hashName, &proof, m)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		ctx.Logger().Error("%v\n", err)
 
 		return nil, fmt.Errorf("could not build merkle tree")
 	}
 
 	if !verified {
-		fmt.Printf("%s\n", "Cannot verify")
+		ctx.Logger().Debug("%s\n", "Cannot verify")
 
 		return nil, fmt.Errorf("file chunk was not verified")
 	}
