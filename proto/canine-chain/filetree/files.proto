@@ -1,0 +1,15 @@
+syntax = "proto3";
+package jackaldao.canine.filetree;
+
+option go_package = "github.com/jackal-dao/canine/x/filetree/types";
+
+message Files {
+  string address = 1; 
+  string contents = 2; 
+  string owner = 3; 
+  string viewingAccess = 4; 
+  string editAccess = 5; 
+  string trackingNumber = 6;
+  
+}
+

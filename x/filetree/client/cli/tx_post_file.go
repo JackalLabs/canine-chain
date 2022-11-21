@@ -107,10 +107,6 @@ func CmdPostFile() *cobra.Command {
 				string(jsonViewers),
 				string(jsonEditors),
 				trackingNumber,
-				"", //disabling notifications
-				"",
-				"",
-				"",
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
