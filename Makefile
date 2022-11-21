@@ -171,7 +171,7 @@ format: format-tools
 ###############################################################################
 ###                                Protobuf                                 ###
 ###############################################################################
-PROTO_BUILDER_IMAGE=tendermintdev/sdk-proto-gen
+PROTO_BUILDER_IMAGE=tendermintdev/sdk-proto-gen:v0.7
 PROTO_BUILDER_CONTAINER=jackal-proto-gen
 PROTO_FORMATTER_IMAGE=tendermintdev/docker-build-proto
 

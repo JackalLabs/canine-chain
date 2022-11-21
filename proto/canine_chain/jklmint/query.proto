@@ -3,7 +3,6 @@ package canine_chain.jklmint;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "cosmos/base/query/v1beta1/pagination.proto";
 import "canine_chain/jklmint/params.proto";
 
 option go_package = "github.com/jackal-dao/canine-chain/x/jklmint/types";

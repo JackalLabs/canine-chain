@@ -3,7 +3,7 @@
 #
 # This module represents the "proto" root found in
 # the previous configuration.
-version: v1beta1
+version: v1
 name: buf.build/jackal-dao/canine-chain
 deps:
   - buf.build/cosmos/cosmos-sdk
@@ -16,11 +16,11 @@ breaking:
 lint:
   use:
     - DEFAULT
+    - FIELD_LOWER_SNAKE_CASE
   except:
     - UNARY_RPC
     - SERVICE_SUFFIX
     - PACKAGE_VERSION_SUFFIX
     - RPC_REQUEST_STANDARD_NAME
-    - FIELD_LOWER_SNAKE_CASE
   ignore:
     - tendermint

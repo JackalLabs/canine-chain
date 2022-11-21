@@ -4,7 +4,6 @@ package canine_chain.storage;
 import "gogoproto/gogo.proto";
 import "canine_chain/storage/params.proto";
 import "canine_chain/storage/contracts.proto";
-import "canine_chain/storage/proofs.proto";
 import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
 import "canine_chain/storage/pay_blocks.proto";
