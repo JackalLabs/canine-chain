@@ -141,6 +141,7 @@ import (
 
 	store "github.com/cosmos/cosmos-sdk/store/types"
 	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
+	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -1079,6 +1080,12 @@ func (app *JackalApp) setupUpgradeHandlers() {
 	if upgradeInfo.Name == v2.UpgradeName {
 		storeUpgrades = &store.StoreUpgrades{
 			Deleted: []string{"storage", "dsig", "notifications", "filetree"},
+		}
+	}
+
+	if upgradeInfo.Name == v3.UpgradeName {
+		storeUpgrades = &store.StoreUpgrades{
+			Added: []string{"storage"},
 		}
 	}
 
