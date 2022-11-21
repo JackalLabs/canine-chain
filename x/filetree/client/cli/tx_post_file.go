@@ -52,9 +52,6 @@ func CmdPostFile() *cobra.Command {
 			viewerAddresses = append(viewerAddresses, *fromAddress)
 			editorAddresses = append(editorAddresses, *fromAddress)
 
-			var viewersToNotify []string
-			var editorsToNotify []string
-
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
 					continue
@@ -71,8 +68,6 @@ func CmdPostFile() *cobra.Command {
 				addressString := fmt.Sprintf("%x", hash)
 
 				viewers[addressString] = fmt.Sprintf("%x", encrypted)
-				viewersToNotify = append(viewersToNotify, v)
-
 			}
 
 			for _, v := range editorAddresses {
@@ -91,20 +86,10 @@ func CmdPostFile() *cobra.Command {
 				addressString := fmt.Sprintf("%x", hash)
 
 				editors[addressString] = fmt.Sprintf("%x", encrypted)
-				editorsToNotify = append(editorsToNotify, v)
-
 			}
 
-			//Trim viewers and editors to notify. Last element is the person who is posting this file so we don't want them to notify themselves
-			if len(viewersToNotify) > 0 {
-				viewersToNotify = viewersToNotify[:len(viewersToNotify)-1]
-			}
-
-			if len(editorsToNotify) > 0 {
-				editorsToNotify = editorsToNotify[:len(editorsToNotify)-1]
-			}
-			//Marshall everybody - jsonViewersToNotify and jsonEditorsToNotify currently disabled because notifications not implemented in Jackal.JS yet
-			jsonViewers, jsonEditors, _, _, err := JSONMarshalViewersAndEditors(viewers, editors, viewersToNotify, editorsToNotify)
+			//Marshall everybody
+			jsonViewers, jsonEditors, err := JSONMarshalViewersAndEditors(viewers, editors)
 			if err != nil {
 				return err
 			}
@@ -112,9 +97,6 @@ func CmdPostFile() *cobra.Command {
 			H.Write([]byte(argAccount))
 			hash := H.Sum(nil)
 			accountHash := fmt.Sprintf("%x", hash)
-
-			// notiForViewers := fmt.Sprintf("6: %s has given you read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
-			// notiForEditors := fmt.Sprintf("6: %s has given you editor access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
 			msg := filetypes.NewMsgPostFile(
 				clientCtx.GetFromAddress().String(),
@@ -125,7 +107,7 @@ func CmdPostFile() *cobra.Command {
 				string(jsonViewers),
 				string(jsonEditors),
 				trackingNumber,
-				"", //Passing in empty strings to check that Erin can test file posting while ignoring notifications system
+				"", //disabling notifications
 				"",
 				"",
 				"",

@@ -67,7 +67,7 @@ func CmdGetKeys() *cobra.Command {
 				fmt.Println("cannot unmarshall viewers")
 				return jerr
 			}
-			//fix something here for it to work
+
 			addressString := keeper.MakeViewerAddress(res.Files.TrackingNumber, clientCtx.GetFromAddress().String())
 
 			todec := m[addressString]

@@ -95,28 +95,18 @@ func getCallerAddress(ctx client.Context, cmd *cobra.Command) (*string, error) {
 
 }
 
-func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]string, viewersToNotify []string, editorsToNotify []string) ([]byte, []byte, []byte, []byte, error) {
+func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]string) ([]byte, []byte, error) {
 
 	jsonViewers, err := json.Marshal(viewers)
 	if err != nil {
-		return nil, nil, nil, nil, err
+		return nil, nil, err
 	}
 
 	jsonEditors, err := json.Marshal(editors)
 	if err != nil {
-		return nil, nil, nil, nil, err
+		return nil, nil, err
 	}
 
-	jsonViewersToNotify, err := json.Marshal(viewersToNotify)
-	if err != nil {
-		return nil, nil, nil, nil, err
-	}
-
-	jsonEditorsToNotify, err := json.Marshal(editorsToNotify)
-	if err != nil {
-		return nil, nil, nil, nil, err
-	}
-
-	return jsonViewers, jsonEditors, jsonViewersToNotify, jsonEditorsToNotify, nil
+	return jsonViewers, jsonEditors, nil
 
 }
