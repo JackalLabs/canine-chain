@@ -71,7 +71,10 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	}
 	hashName := h.Sum(nil)
 
-	cid := fmt.Sprintf("%x", hashName)
+	cid, err := MakeCid(hashName)
+	if err != nil {
+		return nil, err
+	}
 
 	_, cidtaken := k.GetContracts(ctx, cid)
 	if cidtaken {
@@ -79,15 +82,12 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	}
 
 	newContract := types.Contracts{
-		Cid:        cid,
-		Priceamt:   msg.Priceamt,
-		Pricedenom: msg.Pricedenom,
-		Signee:     msg.Signee,
-		Duration:   msg.Duration,
-		Fid:        msg.Fid,
-		Filesize:   msg.Filesize,
-		Creator:    msg.Creator,
-		Merkle:     msg.Merkle,
+		Cid:      cid,
+		Signee:   msg.Signee,
+		Fid:      msg.Fid,
+		Filesize: msg.Filesize,
+		Creator:  msg.Creator,
+		Merkle:   msg.Merkle,
 	}
 
 	k.SetContracts(ctx, newContract)

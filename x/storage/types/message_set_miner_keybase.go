@@ -8,26 +8,26 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgClaimStray = "claim_stray"
+const TypeMsgSetProviderKeybase = "set_provider_keybase"
 
-var _ sdk.Msg = &MsgClaimStray{}
+var _ sdk.Msg = &MsgSetProviderKeybase{}
 
-func NewMsgClaimStray(creator string, cid string) *MsgClaimStray {
-	return &MsgClaimStray{
+func NewMsgSetProviderKeybase(creator string, key string) *MsgSetProviderKeybase {
+	return &MsgSetProviderKeybase{
 		Creator: creator,
-		Cid:     cid,
+		Keybase: key,
 	}
 }
 
-func (msg *MsgClaimStray) Route() string {
+func (msg *MsgSetProviderKeybase) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgClaimStray) Type() string {
-	return TypeMsgClaimStray
+func (msg *MsgSetProviderKeybase) Type() string {
+	return TypeMsgSetProviderKeybase
 }
 
-func (msg *MsgClaimStray) GetSigners() []sdk.AccAddress {
+func (msg *MsgSetProviderKeybase) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -35,12 +35,12 @@ func (msg *MsgClaimStray) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgClaimStray) GetSignBytes() []byte {
+func (msg *MsgSetProviderKeybase) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgClaimStray) ValidateBasic() error {
+func (msg *MsgSetProviderKeybase) ValidateBasic() error {
 	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -49,12 +49,5 @@ func (msg *MsgClaimStray) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	prefix, _, err = bech32.DecodeAndConvert(msg.Cid)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid (%s)", err)
-	}
-	if prefix != CidPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklc`", prefix))
-	}
 	return nil
 }

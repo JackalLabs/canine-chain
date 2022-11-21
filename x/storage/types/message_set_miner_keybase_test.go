@@ -7,22 +7,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgItem_ValidateBasic(t *testing.T) {
+func TestMsgSetProviderKeybase_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgItem
+		msg  MsgSetProviderKeybase
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgItem{
+			msg: MsgSetProviderKeybase{
 				Creator: "invalid_address",
+				Keybase: "test-key",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "valid address",
-			msg:  MsgItem{
-				// Creator: sample.AccAddress(),
+			name: "valid key & address",
+			msg: MsgSetProviderKeybase{
+				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Keybase: "test-key",
 			},
 		},
 	}

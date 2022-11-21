@@ -33,8 +33,8 @@ var randomFile = TestFile{
 }
 
 const (
-	CID  = "6ef1cf960c0b1e257049645ff13ed890c2d4ef69c62165bf4e090ec480770d67"
-	CID2 = "a257645c433288e20c23d4fc8ce823c66558e5398c98b140d7ccfb39e8a3c70e"
+	CID  = "jklc1dmcul9svpv0z2uzfv30lz0kcjrpdfmmfccskt06wpy8vfqrhp4nsgvgz32"
+	CID2 = "jklc15ftkghzrx2ywyrpr6n7ge6prcej43efe3jvtzsxhenann69rcu8q7jl5uh"
 )
 
 func CreateMerkleForProof(file TestFile) (string, string, error) {
@@ -143,7 +143,6 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
 		Creator:  testProvider.String(),
 		Signee:   user.String(),
-		Duration: "1",
 		Filesize: filesize,
 		Fid:      "fid",
 		Merkle:   merkleroot,
@@ -154,7 +153,6 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
 		Creator:  testProvider.String(),
 		Signee:   user.String(),
-		Duration: "10",
 		Filesize: "1000",
 		Fid:      "fid2",
 		Merkle:   "invalid_merkleroot",

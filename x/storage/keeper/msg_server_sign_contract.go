@@ -23,17 +23,12 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		return nil, fmt.Errorf("you do not have permission to approve this contract")
 	}
 
-	eblock, ok := sdk.NewIntFromString(contract.Duration)
-	if !ok {
-		return nil, fmt.Errorf("duration failed to convert to int")
-	}
-
 	deal := types.ActiveDeals{
 		Cid:           contract.Cid,
 		Signee:        contract.Signee,
 		Provider:      contract.Creator,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      fmt.Sprintf("%d", ctx.BlockHeight()+eblock.Int64()),
+		Endblock:      fmt.Sprintf("%d", ctx.BlockHeight()),
 		Filesize:      contract.Filesize,
 		Proofverified: "false",
 		Blocktoprove:  fmt.Sprintf("%d", ctx.BlockHeight()/1024),

@@ -7,7 +7,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func (k msgServer) SetProviderIP(goCtx context.Context, msg *types.MsgSetProviderIP) (*types.MsgSetProviderIPResponse, error) {
+func (k msgServer) SetProviderKeybase(goCtx context.Context, msg *types.MsgSetProviderKeybase) (*types.MsgSetProviderKeybaseResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)
@@ -16,9 +16,9 @@ func (k msgServer) SetProviderIP(goCtx context.Context, msg *types.MsgSetProvide
 		return nil, types.ErrProviderNotFound
 	}
 
-	provider.Ip = msg.Ip
+	provider.KeybaseIdentity = msg.Keybase
 
 	k.SetProviders(ctx, provider)
 
-	return &types.MsgSetProviderIPResponse{}, nil
+	return &types.MsgSetProviderKeybaseResponse{}, nil
 }

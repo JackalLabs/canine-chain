@@ -107,4 +107,5 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			}
 		})
 	}
+	suite.reset()
 }

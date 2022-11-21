@@ -17,10 +17,6 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func printProof(proof merkletree.Proof) {
-	fmt.Printf("Hashes: %v\nIndex: %d\n", proof.Hashes, proof.Index)
-}
-
 func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*types.MsgPostproofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -62,8 +58,7 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 		return nil, err
 	}
 
-	fmt.Printf("proof: %v\n", proof)
-	printProof(proof)
+	ctx.Logger().Debug("proof: %v\n", proof)
 
 	m, err := hex.DecodeString(contract.Merkle)
 	if err != nil {

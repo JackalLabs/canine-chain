@@ -103,13 +103,15 @@ func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
 		return zeroDec, types.ErrCannotParseFloat
 	}
 
-	if famt <= 0 {
-		return highDec, nil
+	if amt.IsZero() {
+		return sdk.NewDec(0), nil
 	}
+
+	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
 
 	ratio := tokens / famt
 
-	ratioDec := FloatToBigInt(ratio)
+	inflate := sdk.NewDec(printedPerYear)
 
 	ratioSDK := sdk.NewDecFromBigInt(ratioDec)
 

@@ -141,6 +141,7 @@ import (
 
 	store "github.com/cosmos/cosmos-sdk/store/types"
 	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
+	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -822,6 +823,34 @@ func NewJackalApp(
 		*/
 	)
 
+	app.mm.SetOrderExportGenesis(
+		capabilitytypes.ModuleName,
+		authtypes.ModuleName,
+		banktypes.ModuleName,
+		distrtypes.ModuleName,
+		stakingtypes.ModuleName,
+		slashingtypes.ModuleName,
+		govtypes.ModuleName,
+		minttypes.ModuleName,
+		crisistypes.ModuleName,
+		genutiltypes.ModuleName,
+		evidencetypes.ModuleName,
+		authz.ModuleName,
+		feegrant.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
+		vestingtypes.ModuleName,
+		// additional non simd modules
+		ibctransfertypes.ModuleName,
+		ibchost.ModuleName,
+		icatypes.ModuleName,
+		intertxtypes.ModuleName,
+		// wasm after ibc transfer
+		wasm.ModuleName,
+		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
+	)
+
 	// Uncomment if you want to set a custom migration order here.
 	// app.mm.SetOrderMigrations(custom order)
 
@@ -1044,6 +1073,12 @@ func (app *JackalApp) setupUpgradeHandlers() {
 	if upgradeInfo.Name == v2.UpgradeName {
 		storeUpgrades = &store.StoreUpgrades{
 			Deleted: []string{"storage", "dsig", "notifications", "filetree"},
+		}
+	}
+
+	if upgradeInfo.Name == v3.UpgradeName {
+		storeUpgrades = &store.StoreUpgrades{
+			Added: []string{"storage"},
 		}
 	}
 

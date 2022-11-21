@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/spf13/cobra"
@@ -12,22 +11,22 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetProviderTotalspace() *cobra.Command {
+func CmdSetProviderKeybase() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-provider-totalspace [space]",
-		Short: "Broadcast message set-provider-totalspace",
+		Use:   "set-key [keybase-identity]",
+		Short: "Broadcast message set-provider-ip",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argSpace := args[0]
+			argKey := args[0]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgSetProviderTotalspace(
+			msg := types.NewMsgSetProviderKeybase(
 				clientCtx.GetFromAddress().String(),
-				argSpace,
+				argKey,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -35,8 +34,6 @@ func CmdSetProviderTotalspace() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-
-	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
 }

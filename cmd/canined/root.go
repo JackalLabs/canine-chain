@@ -24,6 +24,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	storage "github.com/jackalLabs/canine-chain/x/storage/client/cli"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
@@ -104,6 +105,8 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		// testnetCmd(app.ModuleBasics, banktypes.GenesisBalancesIterator{}),
 		debug.Cmd(),
 		config.Cmd(),
+
+		storage.CmdProvider(),
 	)
 
 	ac := appCreator{
@@ -171,10 +174,6 @@ func txCommand() *cobra.Command {
 	)
 
 	app.ModuleBasics.AddTxCommands(cmd)
-	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
-	cmd.Flags().String(flags.FlagGasPrices, "0.002ujkl", "Gas prices in decimal format to determine the transaction fee (e.g. 0.002ujkl)")
-	cmd.Flags().Float64(flags.FlagGasAdjustment, 1.5, "adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored ")
-
 	return cmd
 }
 

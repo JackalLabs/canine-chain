@@ -6,7 +6,6 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "canine_chain/storage/params.proto";
 import "canine_chain/storage/contracts.proto";
-import "canine_chain/storage/proofs.proto";
 import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
 import "canine_chain/storage/pay_blocks.proto";
@@ -32,16 +31,6 @@ service Query {
   rpc ContractsAll(QueryAllContractsRequest)
       returns (QueryContractsAllResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/contracts";
-  }
-
-  // Queries a Proofs by index.
-  rpc Proofs(QueryGetProofsRequest) returns (QueryProofsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/proofs/{cid}";
-  }
-
-  // Queries a list of Proofs items.
-  rpc ProofsAll(QueryAllProofsRequest) returns (QueryProofsAllResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/storage/proofs";
   }
 
   // Queries a ActiveDeals by index.
@@ -162,21 +151,6 @@ message QueryAllContractsRequest {
 
 message QueryContractsAllResponse {
   repeated Contracts contracts = 1 [ (gogoproto.nullable) = false ];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
-message QueryGetProofsRequest { string cid = 1; }
-
-message QueryProofsResponse {
-  Proofs proofs = 1 [ (gogoproto.nullable) = false ];
-}
-
-message QueryAllProofsRequest {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
-
-message QueryProofsAllResponse {
-  repeated Proofs proofs = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/spf13/cobra"
@@ -12,22 +11,27 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetProviderIP() *cobra.Command {
+func CmdInitProvider() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-provider-ip [ip]",
-		Short: "Broadcast message set-provider-ip",
-		Args:  cobra.ExactArgs(1),
+		Use:   "init [ip] [totalspace] [keybase-identity]",
+		Short: "init provider",
+		Long:  "Initialize a provider with given parameters.",
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argIP := args[0]
+			argTotalspace := args[1]
+			argKeybase := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgSetProviderIP(
+			msg := types.NewMsgInitProvider(
 				clientCtx.GetFromAddress().String(),
 				argIP,
+				argTotalspace,
+				argKeybase,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -35,8 +39,6 @@ func CmdSetProviderIP() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-
-	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
 }
