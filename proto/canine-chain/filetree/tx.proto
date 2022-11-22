@@ -67,8 +67,6 @@ message MsgRemoveViewers {
   string viewerIds = 2;
   string address = 3;
   string fileowner = 4;
-  string notifyviewers = 5;
-  string notiForViewers = 6;
 }
 
 message MsgRemoveViewersResponse {
