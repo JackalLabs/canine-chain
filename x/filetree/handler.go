@@ -26,9 +26,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgPostkey:
 			res, err := msgServer.Postkey(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgInitAll:
-			res, err := msgServer.InitAll(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgDeleteFile:
 			res, err := msgServer.DeleteFile(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

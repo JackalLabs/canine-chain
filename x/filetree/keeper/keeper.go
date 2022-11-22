@@ -9,7 +9,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
-	rnsKeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 )
 
 type (
@@ -18,7 +17,6 @@ type (
 		storeKey   sdk.StoreKey
 		memKey     sdk.StoreKey
 		paramstore paramtypes.Subspace
-		rnsKeeper  rnsKeeper.Keeper
 	}
 )
 
@@ -27,7 +25,6 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
-	rnsKeeper rnsKeeper.Keeper,
 
 ) *Keeper {
 	// set KeyTable if it has not already been set
@@ -41,7 +38,6 @@ func NewKeeper(
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
-		rnsKeeper:  rnsKeeper,
 	}
 }
 

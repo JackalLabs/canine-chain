@@ -643,7 +643,6 @@ func NewJackalApp(
 		keys[filetreemoduletypes.StoreKey],
 		keys[filetreemoduletypes.MemStoreKey],
 		app.getSubspace(filetreemoduletypes.ModuleName),
-		app.RnsKeeper,
 	)
 	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.AccountKeeper, app.BankKeeper)
 

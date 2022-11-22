@@ -9,7 +9,6 @@ service Msg {
   rpc AddViewers(MsgAddViewers) returns (MsgAddViewersResponse);
   rpc Postkey(MsgPostkey) returns (MsgPostkeyResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
-  rpc InitAll(MsgInitAll) returns (MsgInitAllResponse);
   rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
   rpc MakeRoot(MsgMakeRoot) returns (MsgMakeRootResponse);
 
@@ -63,15 +62,6 @@ message MsgDeleteFile {
 }
 
 message MsgDeleteFileResponse {
-}
-
-message MsgInitAll {
-  string creator = 1;
-  string pubkey = 3;
-}
-
-message MsgInitAllResponse {
-  string name = 1;
 }
 
 message MsgRemoveViewers {
