@@ -8,13 +8,15 @@ import (
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
-func HasEditAccess(file types.Files, user string) bool {
-	//I believe pvacc above stands for 'private viewing access' so we should use peacc for 'private editing access'?
+func HasEditAccess(file types.Files, user string) (bool, error) {
 	peacc := file.EditAccess
 	trackingNumber := file.TrackingNumber
 
-	jvacc := make(map[string]string)
-	json.Unmarshal([]byte(peacc), &jvacc)
+	jeacc := make(map[string]string)
+
+	if err := json.Unmarshal([]byte(peacc), &jeacc); err != nil {
+		return false, err	
+	}
 
 	h := sha256.New()
 	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, user)))
@@ -22,13 +24,12 @@ func HasEditAccess(file types.Files, user string) bool {
 
 	addressString := fmt.Sprintf("%x", hash)
 
-	//if editor exists, body of if statement executes and ok is returned as 'true'
-	if _, ok := jvacc[addressString]; ok {
-		return ok
+	if _, ok := jeacc[addressString]; ok {
+		return ok, nil
 	}
 
 	//During sandbox testing, if editor doesn't exist, the body of the if statement never executes, so we need to return false
-	return false
+	return false, nil
 }
 
 func IsOwner(file types.Files, user string) bool {
@@ -82,4 +83,3 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	return ownerAddress
 }
 
-// Deleted old code: 'MakeAddress' and 'MakeChainAddress'

@@ -9,18 +9,20 @@ import (
 //	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func (suite *KeeperTestSuite) HasEditAccess(){
+func (suite *KeeperTestSuite) TestHasEditAccess(){
 
 	cases := map[string]struct{
 		editAccess string
 		trackingNum string
 		user string 
+		expErr bool
 		expResult bool 
 	}{
 		"invalid viewing access format": {
 			editAccess: "aaaaaaaa",
 			trackingNum: "111111111",
 			user: "",
+			expErr: true,
 			expResult: false,
 		},
 	}
@@ -32,8 +34,12 @@ func (suite *KeeperTestSuite) HasEditAccess(){
 				EditAccess: tc.editAccess,
 				TrackingNumber: tc.trackingNum,
 			}
-			result := keeper.HasEditAccess(file, tc.user)
 
+			result, err := keeper.HasEditAccess(file, tc.user)
+
+			if tc.expErr {
+				suite.Require().Error(err)
+			}
 			suite.Require().Equal(tc.expResult, result)
 		})
 	}
