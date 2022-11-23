@@ -8,26 +8,6 @@ import (
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
-func HasViewingAccess(file types.Files, user string) bool {
-	pvacc := file.ViewingAccess
-	trackingNumber := file.TrackingNumber
-
-	jvacc := make(map[string]string)
-	json.Unmarshal([]byte(pvacc), &jvacc)
-
-	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
-	hash := h.Sum(nil)
-
-	addressString := fmt.Sprintf("%x", hash)
-
-	if _, ok := jvacc[addressString]; ok {
-		return ok
-	}
-
-	return true
-}
-
 func HasEditAccess(file types.Files, user string) bool {
 	//I believe pvacc above stands for 'private viewing access' so we should use peacc for 'private editing access'?
 	peacc := file.EditAccess
