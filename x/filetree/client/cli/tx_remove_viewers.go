@@ -2,8 +2,6 @@ package cli
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -39,7 +37,6 @@ func CmdRemoveViewers() *cobra.Command {
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
 			var viewerIds []string
-			var viewersToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
@@ -58,16 +55,8 @@ func CmdRemoveViewers() *cobra.Command {
 
 				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
-				viewersToNotify = append(viewersToNotify, v)
 
 			}
-
-			jsonViewersToNotify, err := json.Marshal(viewersToNotify)
-			if err != nil {
-				return err
-			}
-
-			notiForViewers := fmt.Sprintf("%s has removed read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
 			//viewerIds supposed to be JSON marshalled aswell?
 			msg := types.NewMsgRemoveViewers(
@@ -75,8 +64,6 @@ func CmdRemoveViewers() *cobra.Command {
 				strings.Join(viewerIds, ","),
 				merklePath,
 				ownerChainAddress,
-				string(jsonViewersToNotify),
-				notiForViewers,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

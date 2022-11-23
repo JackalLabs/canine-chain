@@ -2,8 +2,6 @@ package cli
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -39,7 +37,6 @@ func CmdRemoveEditors() *cobra.Command {
 
 			editorAddresses := strings.Split(argEditorIds, ",")
 			var editorIds []string
-			var editorsToNotify []string
 
 			for _, v := range editorAddresses {
 				if len(v) < 1 {
@@ -58,24 +55,14 @@ func CmdRemoveEditors() *cobra.Command {
 
 				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
 				editorIds = append(editorIds, newEditorID)
-				editorsToNotify = append(editorsToNotify, v)
 
 			}
-
-			jsonEditorsToNotify, err := json.Marshal(editorsToNotify)
-			if err != nil {
-				return err
-			}
-
-			notiForEditors := fmt.Sprintf("%s has removed edit access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
 			msg := types.NewMsgRemoveEditors(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(editorIds, ","),
 				merklePath,
 				ownerChainAddress,
-				string(jsonEditorsToNotify),
-				notiForEditors,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

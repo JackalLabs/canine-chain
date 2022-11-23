@@ -9,14 +9,12 @@ const TypeMsgRemoveViewers = "remove_viewers"
 
 var _ sdk.Msg = &MsgRemoveViewers{}
 
-func NewMsgRemoveViewers(creator string, viewerIds string, address string, fileowner string, notifyViewers string, notiForViewers string) *MsgRemoveViewers {
+func NewMsgRemoveViewers(creator string, viewerIds string, address string, fileowner string) *MsgRemoveViewers {
 	return &MsgRemoveViewers{
-		Creator:        creator,
-		ViewerIds:      viewerIds,
-		Address:        address,
-		Fileowner:      fileowner,
-		Notifyviewers:  notifyViewers,
-		NotiForViewers: notiForViewers,
+		Creator:   creator,
+		ViewerIds: viewerIds,
+		Address:   address,
+		Fileowner: fileowner,
 	}
 }
 

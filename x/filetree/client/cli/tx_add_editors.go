@@ -13,6 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
+	testUtil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	filetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
@@ -46,8 +47,7 @@ func CmdAddEditors() *cobra.Command {
 
 			var editorIds []string
 			var editorKeys []string
-			var editorsToNotify []string
-
+			logger, logFile := testUtil.CreateLogger()
 			for _, v := range editorAddresses {
 				if len(v) < 1 {
 					continue
@@ -84,11 +84,13 @@ func CmdAddEditors() *cobra.Command {
 				json.Unmarshal([]byte(editors), &m)
 
 				ownerEditorAddress := keeper.MakeEditorAddress(file.Files.TrackingNumber, argOwner)
+				logger.Println("m[ownerEditorAddress] =", m[ownerEditorAddress])
 
 				hexMessage, err := hex.DecodeString(m[ownerEditorAddress])
 				if err != nil {
 					return err
 				}
+				logger.Println("hex message is", hexMessage)
 
 				//May need to use "clientCtx.from?"
 				ownerPrivateKey, err := MakePrivateKey(clientCtx)
@@ -99,9 +101,10 @@ func CmdAddEditors() *cobra.Command {
 				decrypt, err := eciesgo.Decrypt(ownerPrivateKey, hexMessage)
 				if err != nil {
 					fmt.Printf("%v\n", hexMessage)
+					logger.Println("error is", err)
 					return err
 				}
-
+				logFile.Close()
 				//encrypt using editor's public key
 				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
 				if err != nil {
@@ -111,16 +114,8 @@ func CmdAddEditors() *cobra.Command {
 				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v)
 				editorIds = append(editorIds, newEditorID)
 				editorKeys = append(editorKeys, fmt.Sprintf("%x", encrypted))
-				editorsToNotify = append(editorsToNotify, v)
 
 			}
-
-			jsonEditorsToNotify, err := json.Marshal(editorsToNotify)
-			if err != nil {
-				return err
-			}
-
-			notiForEditors := fmt.Sprintf("%s has given you edit access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
 			msg := types.NewMsgAddEditors(
 				clientCtx.GetFromAddress().String(),
@@ -128,8 +123,6 @@ func CmdAddEditors() *cobra.Command {
 				strings.Join(editorKeys, ","),
 				merklePath,
 				ownerChainAddress,
-				string(jsonEditorsToNotify),
-				notiForEditors,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
