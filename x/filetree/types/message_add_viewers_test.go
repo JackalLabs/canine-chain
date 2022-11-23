@@ -15,15 +15,26 @@ func TestMsgAddViewers_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "invalid creator address",
 			msg: MsgAddViewers{
-				Creator: "invalid_address",
+				Creator:   "invalid_address",
+				Fileowner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg:  MsgAddViewers{
-				//Creator: sample.AccAddress(),
+		},
+		{
+			name: "invalid fileowner address",
+			msg: MsgAddViewers{
+				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Fileowner: "invalid_address",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		},
+		{
+			name: "valid creator, valid fileowner",
+			msg: MsgAddViewers{
+				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Fileowner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 			},
 		},
 	}
