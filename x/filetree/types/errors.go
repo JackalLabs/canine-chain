@@ -23,4 +23,5 @@ var (
 	ErrAlreadyExists      = sdkerrors.Register(ModuleName, 1113, "Proposed new owner already has a file set with this path name. No duplicates allowed.")
 	ErrCannotAllowEdit    = sdkerrors.Register(ModuleName, 1114, "Unathorized. Only the owner can add an editor.")
 	ErrCannotAllowView    = sdkerrors.Register(ModuleName, 1115, "Unathorized. Only the owner can add a viewer.")
+	ErrMissingAESKey      = sdkerrors.Register(ModuleName, 1116, "AES IV and key required")
 )
