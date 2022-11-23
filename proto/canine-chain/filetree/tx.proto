@@ -67,6 +67,7 @@ message MsgRemoveViewers {
   string viewerIds = 2;
   string address = 3;
   string fileowner = 4;
+
 }
 
 message MsgRemoveViewersResponse {
@@ -91,8 +92,6 @@ message MsgAddEditors {
   string editorKeys = 3;
   string address = 4;
   string fileowner = 5;
-  string notifyEditors = 6;
-  string notiForEditors = 7;
 }
 
 message MsgAddEditorsResponse {
@@ -103,8 +102,6 @@ message MsgRemoveEditors {
   string editorIds = 2;
   string address = 3;
   string fileowner = 4;
-  string notifyEditors = 5;
-  string notiForEditors = 6;
 }
 
 message MsgRemoveEditorsResponse {

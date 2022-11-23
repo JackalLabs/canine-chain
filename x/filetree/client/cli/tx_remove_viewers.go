@@ -37,7 +37,6 @@ func CmdRemoveViewers() *cobra.Command {
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
 			var viewerIds []string
-			var viewersToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
@@ -56,7 +55,6 @@ func CmdRemoveViewers() *cobra.Command {
 
 				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
-				viewersToNotify = append(viewersToNotify, v)
 
 			}
 

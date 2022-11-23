@@ -39,6 +39,10 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
+			if argKeys == "" {
+				return filetypes.ErrMissingAESKey
+			}
+
 			viewerAddresses := strings.Split(argViewers, ",")
 			editorAddresses := strings.Split(argEditors, ",")
 
