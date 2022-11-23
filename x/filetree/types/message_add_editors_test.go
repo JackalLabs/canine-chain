@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	//"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,15 +14,26 @@ func TestMsgAddEditors_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "invalid creator address",
 			msg: MsgAddEditors{
-				Creator: "invalid_address",
+				Creator:   "invalid_address",
+				Fileowner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg:  MsgAddEditors{
-				//Creator: sample.AccAddress(),
+		},
+		{
+			name: "invalid fileowner address",
+			msg: MsgAddEditors{
+				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Fileowner: "invalid_address",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		},
+		{
+			name: "valid creator, valid fileowner",
+			msg: MsgAddEditors{
+				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Fileowner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 			},
 		},
 	}

@@ -1,7 +1,10 @@
 package types
 
 import (
+	fmt "fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -40,9 +43,28 @@ func (msg *MsgChangeOwner) GetSignBytes() []byte {
 }
 
 func (msg *MsgChangeOwner) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+	if prefix != AddressPrefix {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("`%s` is not a valid prefix here. Expected `jkl`", prefix))
+	}
+
+	prefix, _, err = bech32.DecodeAndConvert(msg.FileOwner)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid Fileowner address (%s)", err)
+	}
+	if prefix != AddressPrefix {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid Fileowner prefix (%s)", fmt.Errorf("`%s` is not a valid prefix here. Expected `jkl`", prefix))
+	}
+
+	prefix, _, err = bech32.DecodeAndConvert(msg.NewOwner)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid Fileowner address (%s)", err)
+	}
+	if prefix != AddressPrefix {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid Fileowner prefix (%s)", fmt.Errorf("`%s` is not a valid prefix here. Expected `jkl`", prefix))
 	}
 	return nil
 }
