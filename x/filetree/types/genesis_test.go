@@ -21,6 +21,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
+
 				FilesList: []types.Files{
 					{
 						Address: "0",
