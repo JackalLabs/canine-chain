@@ -15,6 +15,8 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_filetree"
+
+	AddressPrefix = "jkl"
 )
 
 func KeyPrefix(p string) []byte {
