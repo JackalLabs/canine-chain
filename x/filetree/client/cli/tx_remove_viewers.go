@@ -2,6 +2,8 @@ package cli
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -60,12 +62,21 @@ func CmdRemoveViewers() *cobra.Command {
 
 			}
 
+			jsonViewersToNotify, err := json.Marshal(viewersToNotify)
+			if err != nil {
+				return err
+			}
+
+			notiForViewers := fmt.Sprintf("%s has removed read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
+
 			//viewerIds supposed to be JSON marshalled aswell?
 			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),
 				merklePath,
 				ownerChainAddress,
+				string(jsonViewersToNotify),
+				notiForViewers,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
