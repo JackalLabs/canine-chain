@@ -15,15 +15,38 @@ func TestMsgChangeOwner_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "invalid creator",
 			msg: MsgChangeOwner{
-				Creator: "invalid_address",
+				Creator:   "invalid_address",
+				FileOwner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				NewOwner:  "jkl1x8xtzujl8pgcvnecuztcyv9fzzule2h5rv7knv",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
+		},
+		{
+			name: "invalid file owner",
+			msg: MsgChangeOwner{
+				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				FileOwner: "invalid_address",
+				NewOwner:  "jkl1x8xtzujl8pgcvnecuztcyv9fzzule2h5rv7knv",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		},
+		{
+			name: "invalid new owner",
+			msg: MsgChangeOwner{
+				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				FileOwner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				NewOwner:  "invalid_address",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		},
+		{
 			name: "valid address",
-			msg:  MsgChangeOwner{
-				//Creator: sample.AccAddress(),
+			msg: MsgChangeOwner{
+				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				FileOwner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				NewOwner:  "jkl1x8xtzujl8pgcvnecuztcyv9fzzule2h5rv7knv",
 			},
 		},
 	}
