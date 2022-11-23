@@ -14,26 +14,15 @@ func TestMsgAddEditors_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid creator address",
+			name: "invalid address",
 			msg: MsgAddEditors{
-				Creator:   "invalid_address",
-				Fileowner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		},
-		{
-			name: "invalid fileowner address",
-			msg: MsgAddEditors{
-				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Fileowner: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		},
-		{
-			name: "valid creator, valid fileowner",
-			msg: MsgAddEditors{
-				Creator:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Fileowner: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+		}, {
+			name: "valid address",
+			msg:  MsgAddEditors{
+				//Creator: sample.AccAddress(),
 			},
 		},
 	}
