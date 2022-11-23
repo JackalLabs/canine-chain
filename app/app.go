@@ -676,8 +676,6 @@ func NewJackalApp(
 	// we prefer to be more strict in what arguments the modules expect.
 	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
 
-	app.setupUpgradeHandlers()
-
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
 	app.mm = module.NewManager(
@@ -860,6 +858,8 @@ func NewJackalApp(
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
+
+	app.setupUpgradeHandlers()
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	//
@@ -1052,6 +1052,15 @@ func (app *JackalApp) setupUpgradeHandlers() {
 	app.upgradeKeeper.SetUpgradeHandler(
 		v2.UpgradeName,
 		v2.CreateUpgradeHandler(
+			app.mm,
+			app.configurator,
+		),
+	)
+
+	// version 3 upgrade keeper
+	app.upgradeKeeper.SetUpgradeHandler(
+		v3.UpgradeName,
+		v3.CreateUpgradeHandler(
 			app.mm,
 			app.configurator,
 		),
