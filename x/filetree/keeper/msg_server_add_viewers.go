@@ -25,7 +25,9 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 	pvacc := file.ViewingAccess
 
 	jvacc := make(map[string]string)
-	json.Unmarshal([]byte(pvacc), &jvacc)
+	if err := json.Unmarshal([]byte(pvacc), &jvacc); err != nil {
+		ctx.Logger().Error(err.Error())
+	}
 
 	ids := strings.Split(msg.ViewerIds, ",")
 	keys := strings.Split(msg.ViewerKeys, ",")
