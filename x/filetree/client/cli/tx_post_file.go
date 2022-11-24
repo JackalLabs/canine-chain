@@ -92,7 +92,7 @@ func CmdPostFile() *cobra.Command {
 				editors[addressString] = fmt.Sprintf("%x", encrypted)
 			}
 
-			//Marshall everybody
+			// Marshall everybody
 			jsonViewers, jsonEditors, err := JSONMarshalViewersAndEditors(viewers, editors)
 			if err != nil {
 				return err

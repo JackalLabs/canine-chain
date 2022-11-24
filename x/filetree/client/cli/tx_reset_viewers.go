@@ -30,7 +30,7 @@ func CmdResetViewers() *cobra.Command {
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argFileowner)
-			//how to notify everyone who is losing viewing access?
+			// how to notify everyone who is losing viewing access?
 			msg := types.NewMsgResetViewers(
 				clientCtx.GetFromAddress().String(),
 				merklePath,

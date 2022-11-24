@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	//"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 
@@ -23,7 +22,7 @@ func TestMsgAddEditors_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg:  MsgAddEditors{
-				//Creator: sample.AccAddress(),
+				// Creator: sample.AccAddress(),
 			},
 		},
 	}

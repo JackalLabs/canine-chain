@@ -15,7 +15,6 @@ import (
 	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
-	filetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +23,7 @@ var _ = strconv.Itoa(0)
 func CmdAddViewers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add-viewers [viewer-ids] [file path] [file owner]",
-		Short: "add an address to the files viewing permisisons",
+		Short: "add an address to the files viewing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argViewerIds := args[0]
@@ -51,13 +50,13 @@ func CmdAddViewers() *cobra.Command {
 				if len(v) < 1 {
 					continue
 				}
-				key, err := sdk.AccAddressFromBech32(v) //I think this isn't needed
+				key, err := sdk.AccAddressFromBech32(v) // I think this isn't needed
 				if err != nil {
 					return err
 				}
 
-				queryClient := filetypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
+				queryClient := types.NewQueryClient(clientCtx)
+				res, err := queryClient.Pubkey(cmd.Context(), &types.QueryGetPubkeyRequest{Address: key.String()})
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}
@@ -66,7 +65,7 @@ func CmdAddViewers() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				//Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
+				// Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
 				params := &types.QueryGetFilesRequest{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
@@ -80,7 +79,10 @@ func CmdAddViewers() *cobra.Command {
 				viewers := file.Files.ViewingAccess
 				var m map[string]string
 
-				json.Unmarshal([]byte(viewers), &m)
+				error := json.Unmarshal([]byte(viewers), &m)
+				if error != nil {
+					return types.ErrCantUnmarshall
+				}
 
 				ownerViewingAddress := keeper.MakeViewerAddress(file.Files.TrackingNumber, argOwner)
 
@@ -89,7 +91,7 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-				//May need to use "clientCtx.from?"
+				// May need to use "clientCtx.from?"
 				ownerPrivateKey, err := MakePrivateKey(clientCtx)
 				if err != nil {
 					return err
@@ -101,8 +103,8 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-				//encrypt using viewer's public key
-				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
+				// encrypt using viewer's public key
+				encrypted, err := eciesgo.Encrypt(pkey, decrypt)
 				if err != nil {
 					return err
 				}

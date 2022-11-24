@@ -30,7 +30,7 @@ func CmdResetEditors() *cobra.Command {
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argFileowner)
-			//how to notify everyone who is losing edit access?
+			// how to notify everyone who is losing edit access?
 			msg := types.NewMsgResetEditors(
 				clientCtx.GetFromAddress().String(),
 				merklePath,

@@ -18,7 +18,7 @@ var _ = strconv.Itoa(0)
 func CmdRemoveEditors() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-editors [editor-ids] [file path] [file owner]",
-		Short: "remove an address from the files editing permisisons",
+		Short: "remove an address from the files editing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argEditorIds := args[0]
@@ -53,7 +53,7 @@ func CmdRemoveEditors() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
+				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
 				editorIds = append(editorIds, newEditorID)
 
 			}
