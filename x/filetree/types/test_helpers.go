@@ -1,12 +1,17 @@
 package types
 
 import (
+	"crypto/sha256"
+	"encoding/json"
+	fmt "fmt"
+
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	keyring "github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
+	"github.com/google/uuid"
 )
 
 // generate a mock private key using mock keyring
@@ -32,4 +37,40 @@ func MakePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 	newKey := eciesgo.NewPrivateKeyFromBytes(k.Bytes())
 
 	return newKey, nil
+}
+
+func CreateMsgMakeRoot(creator string) (*MsgMakeRoot, error) {
+	merklePath := MerklePath("s/")
+	editors := make(map[string]string)
+
+	trackingNumber := uuid.NewString()
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, creator)))
+	hash := h.Sum(nil)
+	addressString := fmt.Sprintf("%x", hash)
+
+	editors[addressString] = fmt.Sprintf("%x", "Placeholder Keys") // need helper function to generate a placeholder key
+	jsonEditors, err := json.Marshal(editors)
+	if err != nil {
+		return nil, ErrCantMarshall
+	}
+
+	h1 := sha256.New()
+	h1.Write([]byte(creator))
+	hash1 := h1.Sum(nil)
+
+	accountHash := fmt.Sprintf("%x", hash1)
+
+	msg := NewMsgMakeRoot(
+		creator,
+		accountHash,
+		merklePath,
+		"Contents",
+		string(jsonEditors),
+		"Viewers",
+		trackingNumber,
+	)
+
+	return msg, nil
 }
