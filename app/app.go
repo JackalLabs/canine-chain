@@ -124,15 +124,15 @@ import (
 	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
+	filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+
 	/*
 
 		dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
 		dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
 		dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
-
-		filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
-		filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
-		filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 
 		notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
 		notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
@@ -241,10 +241,10 @@ var (
 		intertx.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
 		storagemodule.AppModuleBasic{},
+		filetreemodule.AppModuleBasic{},
 
 		/*
 			dsigmodule.AppModuleBasic{},
-			filetreemodule.AppModuleBasic{},
 			notificationsmodule.AppModuleBasic{},
 		*/
 	)
@@ -317,13 +317,13 @@ type JackalApp struct {
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
-	RnsKeeper     rnsmodulekeeper.Keeper
-	StorageKeeper storagemodulekeeper.Keeper
+	RnsKeeper      rnsmodulekeeper.Keeper
+	StorageKeeper  storagemodulekeeper.Keeper
+	FileTreeKeeper filetreemodulekeeper.Keeper
 
 	/*
 
 		DsigKeeper     dsigmodulekeeper.Keeper
-		FileTreeKeeper filetreemodulekeeper.Keeper
 
 		NotificationsKeeper notificationsmodulekeeper.Keeper
 	*/
@@ -366,9 +366,9 @@ func NewJackalApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey,
 		/*
-			, dsigmoduletypes.StoreKey, filetreemoduletypes.StoreKey,
+			, dsigmoduletypes.StoreKey, f
 			notificationsmoduletypes.StoreKey,
 		*/
 	)
@@ -636,16 +636,16 @@ func NewJackalApp(
 		)
 		notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
 
-		app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
-			appCodec,
-			keys[filetreemoduletypes.StoreKey],
-			keys[filetreemoduletypes.MemStoreKey],
-			app.getSubspace(filetreemoduletypes.ModuleName),
-			app.RnsKeeper,
-			app.NotificationsKeeper,
-		)
-		filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.AccountKeeper, app.BankKeeper)
 	*/
+
+	app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
+		appCodec,
+		keys[filetreemoduletypes.StoreKey],
+		keys[filetreemoduletypes.MemStoreKey],
+		app.getSubspace(filetreemoduletypes.ModuleName),
+	)
+	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 
@@ -709,9 +709,10 @@ func NewJackalApp(
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 		rnsModule,
 		storageModule,
+		filetreeModule,
+
 		/*
 			dsigModule,
-			filetreeModule,
 			notificationsModule,
 		*/
 	)
@@ -745,9 +746,10 @@ func NewJackalApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		filetreemoduletypes.ModuleName,
+
 		/*
 			dsigmoduletypes.ModuleName,
-			filetreemoduletypes.ModuleName,
 			notificationsmoduletypes.ModuleName,
 		*/
 	)
@@ -777,9 +779,10 @@ func NewJackalApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		filetreemoduletypes.ModuleName,
+
 		/*
 			dsigmoduletypes.ModuleName,
-			filetreemoduletypes.ModuleName,
 			notificationsmoduletypes.ModuleName,
 		*/
 	)
@@ -817,9 +820,10 @@ func NewJackalApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		filetreemoduletypes.ModuleName,
+
 		/*
 			dsigmoduletypes.ModuleName,
-			filetreemoduletypes.ModuleName,
 			notificationsmoduletypes.ModuleName,
 		*/
 	)
@@ -850,6 +854,7 @@ func NewJackalApp(
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
+		filetreemoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
