@@ -23,51 +23,51 @@ var (
 )
 
 const (
-	opWeightMsgPostFile = "op_weight_msg_post_file"
+	// opWeightMsgPostFile = "op_weight_msg_post_file"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPostFile int = 100
 
-	opWeightMsgAddViewers = "op_weight_msg_add_viewers"
+	// opWeightMsgAddViewers = "op_weight_msg_add_viewers"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgAddViewers int = 100
 
-	opWeightMsgPostkey = "op_weight_msg_postkey"
+	// opWeightMsgPostkey = "op_weight_msg_postkey"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPostkey int = 100
 
-	opWeightMsgInitAccount = "op_weight_msg_init_account"
+	// opWeightMsgInitAccount = "op_weight_msg_init_account"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgInitAccount int = 100
+	// defaultWeightMsgInitAccount int = 100
 
-	opWeightMsgDeleteFile = "op_weight_msg_delete_file"
+	// opWeightMsgDeleteFile = "op_weight_msg_delete_file"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteFile int = 100
 
-	opWeightMsgRemoveViewers = "op_weight_msg_remove_viewers"
+	// opWeightMsgRemoveViewers = "op_weight_msg_remove_viewers"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgRemoveViewers int = 100
 
-	opWeightMsgMakeFolder = "op_weight_msg_make_folder"
+	// opWeightMsgMakeRoot = "op_weight_msg_make_root"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgMakeFolder int = 100
+	defaultWeightMsgMakeRoot int = 100
 
-	opWeightMsgAddEditors = "op_weight_msg_add_editors"
+	// opWeightMsgAddEditors = "op_weight_msg_add_editors"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgAddEditors int = 100
 
-	opWeightMsgRemoveEditors = "op_weight_msg_remove_editors"
+	// opWeightMsgRemoveEditors = "op_weight_msg_remove_editors"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgRemoveEditors int = 100
 
-	opWeightMsgResetEditors = "op_weight_msg_reset_editors"
+	// opWeightMsgResetEditors = "op_weight_msg_reset_editors"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgResetEditors int = 100
 
-	opWeightMsgResetViewers = "op_weight_msg_reset_viewers"
+	// opWeightMsgResetViewers = "op_weight_msg_reset_viewers"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgResetViewers int = 100
 
-	opWeightMsgChangeOwner = "op_weight_msg_change_owner"
+	// opWeightMsgChangeOwner = "op_weight_msg_change_owner"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgChangeOwner int = 100
 
@@ -94,7 +94,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 
@@ -106,7 +105,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations := make([]simtypes.WeightedOperation, 0)
 
 	var weightMsgPostFile int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPostFile, &weightMsgPostFile, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "opWeightMsgPostFile", &weightMsgPostFile, nil,
 		func(_ *rand.Rand) {
 			weightMsgPostFile = defaultWeightMsgPostFile
 		},
@@ -117,7 +116,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgAddViewers int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddViewers, &weightMsgAddViewers, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_post_file", &weightMsgAddViewers, nil,
 		func(_ *rand.Rand) {
 			weightMsgAddViewers = defaultWeightMsgAddViewers
 		},
@@ -128,7 +127,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgPostkey int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPostkey, &weightMsgPostkey, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_postkey", &weightMsgPostkey, nil,
 		func(_ *rand.Rand) {
 			weightMsgPostkey = defaultWeightMsgPostkey
 		},
@@ -139,7 +138,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgDeleteFile int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteFile, &weightMsgDeleteFile, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_delete_file", &weightMsgDeleteFile, nil,
 		func(_ *rand.Rand) {
 			weightMsgDeleteFile = defaultWeightMsgDeleteFile
 		},
@@ -150,7 +149,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgRemoveViewers int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgRemoveViewers, &weightMsgRemoveViewers, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_remove_viewers", &weightMsgRemoveViewers, nil,
 		func(_ *rand.Rand) {
 			weightMsgRemoveViewers = defaultWeightMsgRemoveViewers
 		},
@@ -161,9 +160,9 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgMakeFolder int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgMakeFolder, &weightMsgMakeFolder, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_make_root", &weightMsgMakeFolder, nil,
 		func(_ *rand.Rand) {
-			weightMsgMakeFolder = defaultWeightMsgMakeFolder
+			weightMsgMakeFolder = defaultWeightMsgMakeRoot
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
@@ -172,7 +171,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgAddEditors int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddEditors, &weightMsgAddEditors, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_add_editors", &weightMsgAddEditors, nil,
 		func(_ *rand.Rand) {
 			weightMsgAddEditors = defaultWeightMsgAddEditors
 		},
@@ -183,7 +182,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgRemoveEditors int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgRemoveEditors, &weightMsgRemoveEditors, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_remove_editors", &weightMsgRemoveEditors, nil,
 		func(_ *rand.Rand) {
 			weightMsgRemoveEditors = defaultWeightMsgRemoveEditors
 		},
@@ -194,7 +193,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgResetEditors int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResetEditors, &weightMsgResetEditors, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_reset_editors", &weightMsgResetEditors, nil,
 		func(_ *rand.Rand) {
 			weightMsgResetEditors = defaultWeightMsgResetEditors
 		},
@@ -205,7 +204,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgResetViewers int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResetViewers, &weightMsgResetViewers, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_reset_viewers", &weightMsgResetViewers, nil,
 		func(_ *rand.Rand) {
 			weightMsgResetViewers = defaultWeightMsgResetViewers
 		},
@@ -216,7 +215,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgChangeOwner int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgChangeOwner, &weightMsgChangeOwner, nil,
+	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_change_owner", &weightMsgChangeOwner, nil,
 		func(_ *rand.Rand) {
 			weightMsgChangeOwner = defaultWeightMsgChangeOwner
 		},
