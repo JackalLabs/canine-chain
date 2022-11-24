@@ -26,8 +26,5 @@ func (k msgServer) MakeRoot(goCtx context.Context, msg *types.MsgMakeRoot) (*typ
 
 	k.SetFiles(ctx, file)
 
-	// placeholderMap := make([]string, 0, 2000)
-	// placeholderMap = append(placeholderMap, msg.Creator)
-
 	return &types.MsgMakeRootResponse{}, nil
 }

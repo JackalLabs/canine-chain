@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	fmt "fmt"
+	"strings"
 
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
@@ -73,4 +74,68 @@ func CreateMsgMakeRoot(creator string) (*MsgMakeRoot, error) {
 	)
 
 	return msg, nil
+}
+
+func CreateRootFolder(creator string) (*Files, error) {
+	merklePath := MerklePath("s/")
+	editors := make(map[string]string)
+
+	trackingNumber := uuid.NewString()
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, creator)))
+	hash := h.Sum(nil)
+	addressString := fmt.Sprintf("%x", hash)
+
+	editors[addressString] = fmt.Sprintf("%x", "Placeholder Keys") // need helper function to generate a placeholder key
+	jsonEditors, err := json.Marshal(editors)
+	if err != nil {
+		return nil, ErrCantMarshall
+	}
+
+	h1 := sha256.New()
+	h1.Write([]byte(creator))
+	hash1 := h1.Sum(nil)
+
+	accountHash := fmt.Sprintf("%x", hash1)
+	ownerAddress := MakeOwnerAddress(merklePath, accountHash)
+
+	rootFolder := Files{
+		Contents:       "Contents", // This won't be used for now, but we're leaving it in as a stub in case it's needed
+		Owner:          ownerAddress,
+		ViewingAccess:  "NONE", // This won't be used for now, but we're leaving it in as a stub in case it's needed
+		EditAccess:     string(jsonEditors),
+		Address:        merklePath,
+		TrackingNumber: trackingNumber,
+	}
+
+	return &rootFolder, nil
+}
+
+// Owner address is whoever owns this file/folder
+func MakeOwnerAddress(merklePath string, user string) string {
+	// make sure that user was already hex(hashed) before it was passed into
+	// this function
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, user)))
+	hash := h.Sum(nil)
+	ownerAddress := fmt.Sprintf("%x", hash)
+
+	return ownerAddress
+}
+
+func MerkleHelper(argHashpath string) (string, string) {
+	// Cut out the / at the end for compatibility with types/merkle-paths.go
+	trimPath := strings.TrimSuffix(argHashpath, "/")
+	chunks := strings.Split(trimPath, "/")
+
+	parentString := strings.Join(chunks[0:len(chunks)-1], "/")
+	childString := (chunks[len(chunks)-1])
+	parentHash := MerklePath(parentString)
+
+	h := sha256.New()
+	h.Write([]byte(childString))
+	childHash := fmt.Sprintf("%x", h.Sum(nil))
+
+	return parentHash, childHash
 }
