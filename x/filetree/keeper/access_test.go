@@ -26,19 +26,19 @@ func (suite *KeeperTestSuite) TestHasEditAccess() {
 		},
 
 		"has edit access": {
-			editAccess: "",
+			editAccess:  "",
 			trackingNum: "someNum",
-			user: "someUser",
-			expErr: false,
-			expResult: true,
+			user:        "someUser",
+			expErr:      false,
+			expResult:   true,
 		},
 
 		"no edit access": {
-			editAccess: `"diff_addr_str": "a"`,
+			editAccess:  `"diff_addr_str": "a"`,
 			trackingNum: "someNum",
-			user: "someUser",
-			expErr: false,
-			expResult: false,
+			user:        "someUser",
+			expErr:      false,
+			expResult:   false,
 		},
 	}
 
@@ -49,7 +49,7 @@ func (suite *KeeperTestSuite) TestHasEditAccess() {
 				h := sha256.New()
 				h.Write([]byte(fmt.Sprintf("e%s%s", tc.trackingNum, tc.user)))
 				hash := h.Sum(nil)
-				
+
 				jeacc := make(map[string]string)
 				jeacc[fmt.Sprintf("%x", hash)] = "a"
 				eaccBytes, err := json.Marshal(jeacc)

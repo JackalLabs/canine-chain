@@ -10,7 +10,6 @@ import (
 )
 
 func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEditors) (*types.MsgRemoveEditorsResponse, error) {
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	file, found := k.GetFiles(ctx, msg.Address, msg.Fileowner)
@@ -24,11 +23,13 @@ func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEdit
 		return nil, types.ErrNotOwner
 	}
 
-	//Continue
+	// Continue
 	peacc := file.EditAccess
 
 	jeacc := make(map[string]string)
-	json.Unmarshal([]byte(peacc), &jeacc)
+	if err := json.Unmarshal([]byte(peacc), &jeacc); err != nil {
+		ctx.Logger().Error(err.Error())
+	}
 
 	ids := strings.Split(msg.EditorIds, ",")
 	for _, v := range ids {

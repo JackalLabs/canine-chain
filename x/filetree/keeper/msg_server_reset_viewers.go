@@ -24,9 +24,11 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 	ownerViewerAddress := MakeViewerAddress(file.TrackingNumber, msg.Creator)
 
 	pvacc := file.ViewingAccess
-	//Unmarshall current edit access to this blank map
+	// Unmarshall current edit access to this blank map
 	jvacc := make(map[string]string)
-	json.Unmarshal([]byte(pvacc), &jvacc)
+	if err := json.Unmarshal([]byte(pvacc), &jvacc); err != nil {
+		ctx.Logger().Error(err.Error())
+	}
 
 	ownerKey := jvacc[ownerViewerAddress]
 

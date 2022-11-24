@@ -20,7 +20,7 @@ func (suite *KeeperTestSuite) TestMsgPostKey() {
 	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
 	suite.Require().NoError(err)
 
-	privateKey, err := makePrivateKey("alice") //clientCtx.FromName in the CLI will be alice's keyring name (alice), not the full account address
+	privateKey, err := makePrivateKey("alice") // clientCtx.FromName in the CLI will be alice's keyring name (alice), not the full account address
 	suite.Require().NoError(err)
 
 	pubKey := privateKey.PublicKey.Bytes(false)
@@ -58,7 +58,6 @@ func (suite *KeeperTestSuite) TestMsgPostKey() {
 			}
 		})
 	}
-
 }
 
 // generate a mock private key using mock keyring
@@ -84,5 +83,4 @@ func makePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 	newKey := eciesgo.NewPrivateKeyFromBytes(k.Bytes())
 
 	return newKey, nil
-
 }

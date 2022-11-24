@@ -18,17 +18,16 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	}
 
 	hasEdit, err := HasEditAccess(parentFile, msg.Creator)
-
 	if err != nil {
 		// Error raised when json unmarshalling is failed
 		ctx.Logger().Error(err.Error())
 	}
-	
+
 	if !hasEdit {
 		return nil, types.ErrCannotWrite
 	}
 
-	//Make the full path
+	// Make the full path
 	fullMerklePath := types.AddToMerkle(msg.HashParent, msg.HashChild)
 
 	owner := MakeOwnerAddress(fullMerklePath, msg.Account)
