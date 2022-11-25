@@ -6,9 +6,101 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/google/uuid"
+
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
+
+func FuzzMakeViewerAddress(f *testing.F){
+	bobPrivateK := secp256k1.GenPrivKey()
+	bobPublicK := bobPrivateK.PubKey()
+	hb := sha256.New()
+	hb.Write(bobPublicK.Bytes())
+	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	ha := sha256.New()
+	ha.Write(alicePublicK.Bytes())
+	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
+
+	cases := []struct {
+		trackingNum string
+		user string
+	}{
+		{
+			trackingNum: uuid.NewString(),
+			user: aliceHash,
+		},
+
+		{
+			trackingNum: uuid.NewString(),
+			user: bobHash,
+		},
+	}
+
+	for _, tc := range cases {
+		f.Add(tc.trackingNum, tc.user)
+	}
+
+	f.Fuzz(func(t *testing.T, track, user string){
+		out := keeper.MakeViewerAddress(track, user)
+
+		eh := sha256.New()
+		eh.Write([]byte(fmt.Sprintf("v%s%s", track, user)))
+		expHash := fmt.Sprintf("%x", eh.Sum(nil))
+
+		if out != expHash {
+			t.Errorf("Expected: %s, Result: %s", expHash, out)
+		}
+	})
+}
+
+func (suite *KeeperTestSuite) TestMakeViewerAddress(){
+	suite.SetupSuite()
+	bobPrivateK := secp256k1.GenPrivKey()
+	bobPublicK := bobPrivateK.PubKey()
+	hb := sha256.New()
+	hb.Write(bobPublicK.Bytes())
+	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	ha := sha256.New()
+	ha.Write(alicePublicK.Bytes())
+	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
+
+
+	cases := []struct {
+		trackingNum string
+		user string
+	}{
+		{
+			trackingNum: uuid.NewString(),
+			user: aliceHash,
+		},
+
+		{
+			trackingNum: uuid.NewString(),
+			user: bobHash,
+		},
+	}
+
+	for _, tc := range cases {
+		suite.reset()
+
+		suite.Run(fmt.Sprintf("trackingNum: %s, user: %s", tc.trackingNum, tc.user), func() {
+			h := sha256.New()
+			h.Write([]byte(fmt.Sprintf("v%s%s", tc.trackingNum, tc.user)))
+			hash := h.Sum(nil)
+
+			out := keeper.MakeViewerAddress(tc.trackingNum, tc.user)
+			suite.Require().Equal(fmt.Sprintf("%x", hash), out)
+		})
+	}
+}
 
 func (suite *KeeperTestSuite) TestIsOwner(){
 	suite.SetupSuite()
