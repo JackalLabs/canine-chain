@@ -87,6 +87,30 @@ func CreateRootFolder(creator string) (*Files, error) {
 	return &rootFolder, nil
 }
 
+func CreateFolderOrFile(creator string, readablePath string) (*Files, error) {
+	merklePath := MerklePath(readablePath)
+	trackingNumber := uuid.NewString()
+
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, creator, "place holder key")
+	if err != nil {
+		return nil, err
+	}
+
+	accountHash := HashThenHex(creator)
+	ownerAddress := MakeOwnerAddress(merklePath, accountHash)
+
+	File := Files{
+		Contents:       "Contents: FID goes here",
+		Owner:          ownerAddress,
+		ViewingAccess:  "Viewers",
+		EditAccess:     string(jsonEditors),
+		Address:        merklePath,
+		TrackingNumber: trackingNumber,
+	}
+
+	return &File, nil
+}
+
 // Owner address is whoever owns this file/folder
 func MakeOwnerAddress(merklePath string, user string) string {
 	// make sure that user was already hex(hashed) before it was passed into
