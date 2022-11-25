@@ -27,9 +27,17 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 	suite.filetreeKeeper.SetFiles(suite.ctx, *bobRootFolder)
 
 	// arguments for home folder
+	// alice and bob can both have merkelPath("s/home/") as the address of their home folder. File structs are indexed by both path address
+	// and owner address so collisions are prevented
 	parentHash, childHash := types.MerkleHelper("s/home/")
+
 	aliceHomeTrackingNumber := uuid.NewString()
+	aliceEditorAccess, err := types.MakeEditorAccessMap(aliceHomeTrackingNumber, alice.String(), "place holder key")
+	suite.Require().NoError(err)
+
 	bobHomeTrackingNumber := uuid.NewString()
+	bobEditorAccess, err := types.MakeEditorAccessMap(bobHomeTrackingNumber, bob.String(), "place holder key")
+	suite.Require().NoError(err)
 
 	// hash alice account address
 	aliceAccountHash := types.HashThenHex(alice.String())
@@ -55,7 +63,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 					childHash,
 					"contents: FID goes here",
 					"viewers",
-					"editors",
+					string(aliceEditorAccess),
 					aliceHomeTrackingNumber,
 				)
 			},
@@ -71,13 +79,40 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 					ghostChildHash,
 					"contents: FID goes here",
 					"viewers",
-					"editors",
+					string(aliceEditorAccess),
 					"none",
 				)
 			},
 			expErr:    true,
 			name:      "post file fail",
 			expErrMsg: "Parent folder does not exist",
+		},
+		{ // alice makes pepe.jpg inside of her home folder
+			preRun: func() *types.MsgPostFile {
+				pepeTrackingNumber := uuid.NewString()
+				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, alice.String(), "place holder key")
+				suite.Require().NoError(err)
+
+				msg, err := types.CreateMsgPostFile(alice.String(), "s/home/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
+				suite.Require().NoError(err)
+				return msg
+			},
+			expErr: false,
+			name:   "alice successfully puts pepe in home",
+		},
+		{ // alice can't put pepe.jpg inside of s/videos/ because this folder doesn't exist
+			preRun: func() *types.MsgPostFile {
+				pepeTrackingNumber := uuid.NewString()
+				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, alice.String(), "place holder key")
+				suite.Require().NoError(err)
+
+				msg, err := types.CreateMsgPostFile(alice.String(), "s/videos/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
+				suite.Require().NoError(err)
+				return msg
+			},
+			expErr:    true,
+			expErrMsg: "Parent folder does not exist",
+			name:      "alice fails to put pepe in videos",
 		},
 		{ // bob fails to make a home folder inside of alice's root folder, i.e., inside of alice's account
 			preRun: func() *types.MsgPostFile {
@@ -88,7 +123,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 					childHash,
 					"contents: FID goes here",
 					"viewers",
-					"editors",
+					string(bobEditorAccess),
 					"none",
 				)
 			},
@@ -105,7 +140,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 					childHash,
 					"contents: FID goes here",
 					"viewers",
-					"editors",
+					string(bobEditorAccess),
 					bobHomeTrackingNumber,
 				)
 			},

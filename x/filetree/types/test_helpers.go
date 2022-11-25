@@ -42,26 +42,13 @@ func MakePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 
 func CreateMsgMakeRoot(creator string) (*MsgMakeRoot, error) {
 	merklePath := MerklePath("s/")
-	editors := make(map[string]string)
-
 	trackingNumber := uuid.NewString()
-
-	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, creator)))
-	hash := h.Sum(nil)
-	addressString := fmt.Sprintf("%x", hash)
-
-	editors[addressString] = fmt.Sprintf("%x", "Placeholder Keys") // need helper function to generate a placeholder key
-	jsonEditors, err := json.Marshal(editors)
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, creator, "place holder key")
 	if err != nil {
-		return nil, ErrCantMarshall
+		return nil, err
 	}
 
-	h1 := sha256.New()
-	h1.Write([]byte(creator))
-	hash1 := h1.Sum(nil)
-
-	accountHash := fmt.Sprintf("%x", hash1)
+	accountHash := HashThenHex(creator)
 
 	msg := NewMsgMakeRoot(
 		creator,
@@ -78,26 +65,14 @@ func CreateMsgMakeRoot(creator string) (*MsgMakeRoot, error) {
 
 func CreateRootFolder(creator string) (*Files, error) {
 	merklePath := MerklePath("s/")
-	editors := make(map[string]string)
-
 	trackingNumber := uuid.NewString()
 
-	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, creator)))
-	hash := h.Sum(nil)
-	addressString := fmt.Sprintf("%x", hash)
-
-	editors[addressString] = fmt.Sprintf("%x", "Placeholder Keys") // need helper function to generate a placeholder key
-	jsonEditors, err := json.Marshal(editors)
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, creator, "place holder key")
 	if err != nil {
-		return nil, ErrCantMarshall
+		return nil, err
 	}
 
-	h1 := sha256.New()
-	h1.Write([]byte(creator))
-	hash1 := h1.Sum(nil)
-
-	accountHash := fmt.Sprintf("%x", hash1)
+	accountHash := HashThenHex(creator)
 	ownerAddress := MakeOwnerAddress(merklePath, accountHash)
 
 	rootFolder := Files{
@@ -146,4 +121,39 @@ func HashThenHex(any string) string {
 	H.Write([]byte(any))
 	hash := H.Sum(nil)
 	return fmt.Sprintf("%x", hash)
+}
+
+func MakeEditorAccessMap(trackingNumber string, creator string, aesKey string) ([]byte, error) {
+	editors := make(map[string]string)
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, creator)))
+	hash := h.Sum(nil)
+	addressString := fmt.Sprintf("%x", hash)
+
+	editors[addressString] = fmt.Sprintf("%x", aesKey) // need helper function to generate a placeholder key
+	jsonEditors, err := json.Marshal(editors)
+	if err != nil {
+		return nil, ErrCantMarshall
+	}
+	return jsonEditors, nil
+}
+
+func CreateMsgPostFile(creator string, readablePath string, jsonEditAccess []byte, trackingNumber string) (*MsgPostFile, error) {
+	accountHash := HashThenHex(creator)
+
+	parentHash, childHash := MerkleHelper(readablePath)
+
+	msg := NewMsgPostFile(
+		creator,
+		accountHash,
+		parentHash,
+		childHash,
+		"contents: FID goes here",
+		"viewers",
+		string(jsonEditAccess),
+		trackingNumber,
+	)
+
+	return msg, nil
 }
