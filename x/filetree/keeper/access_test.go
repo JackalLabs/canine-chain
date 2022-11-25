@@ -13,6 +13,96 @@ import (
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
+func FuzzMakeEditorAddress(f *testing.F){
+	bobPrivateK := secp256k1.GenPrivKey()
+	bobPublicK := bobPrivateK.PubKey()
+	hb := sha256.New()
+	hb.Write(bobPublicK.Bytes())
+	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	ha := sha256.New()
+	ha.Write(alicePublicK.Bytes())
+	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
+
+	cases := []struct {
+		trackingNum string
+		user string
+	}{
+		{
+			trackingNum: uuid.NewString(),
+			user: aliceHash,
+		},
+
+		{
+			trackingNum: uuid.NewString(),
+			user: bobHash,
+		},
+	}
+
+	for _, tc := range cases {
+		f.Add(tc.trackingNum, tc.user)
+	}
+
+	f.Fuzz(func(t *testing.T, track, user string){
+		out := keeper.MakeEditorAddress(track, user)
+
+		eh := sha256.New()
+		eh.Write([]byte(fmt.Sprintf("e%s%s", track, user)))
+		expHash := fmt.Sprintf("%x", eh.Sum(nil))
+
+		if out != expHash {
+			t.Errorf("Expected: %s, Result: %s", expHash, out)
+		}
+	})
+}
+
+func FuzzMakeOwnerAddress(f *testing.F){
+	bobPrivateK := secp256k1.GenPrivKey()
+	bobPublicK := bobPrivateK.PubKey()
+	hb := sha256.New()
+	hb.Write(bobPublicK.Bytes())
+	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	ha := sha256.New()
+	ha.Write(alicePublicK.Bytes())
+	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
+
+	cases := []struct {
+		trackingNum string
+		user string
+	}{
+		{
+			trackingNum: uuid.NewString(),
+			user: aliceHash,
+		},
+
+		{
+			trackingNum: uuid.NewString(),
+			user: bobHash,
+		},
+	}
+
+	for _, tc := range cases {
+		f.Add(tc.trackingNum, tc.user)
+	}
+
+	f.Fuzz(func(t *testing.T, track, user string){
+		out := keeper.MakeOwnerAddress(track, user)
+
+		eh := sha256.New()
+		eh.Write([]byte(fmt.Sprintf("o%s%s", track, user)))
+		expHash := fmt.Sprintf("%x", eh.Sum(nil))
+
+		if out != expHash {
+			t.Errorf("Expected: %s, Result: %s", expHash, out)
+		}
+	})
+}
+
 func FuzzMakeViewerAddress(f *testing.F){
 	bobPrivateK := secp256k1.GenPrivKey()
 	bobPublicK := bobPrivateK.PubKey()
