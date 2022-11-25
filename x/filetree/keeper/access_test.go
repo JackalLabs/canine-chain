@@ -10,6 +10,58 @@ import (
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
+func (suite *KeeperTestSuite) TestIsOwner(){
+	suite.SetupSuite()
+
+	cases := map[string]struct {
+		addr string
+		owner string
+		user string
+		expOut bool
+	}{
+		"true": {
+			addr: "aaaaaaaa",
+			owner: "",
+			user: "alice",
+			expOut: true,
+		},
+
+		"false": {
+			addr: "aaaaaaaa",
+			owner: "---------",
+			user: "alice",
+			expOut: false,
+		},
+	}
+
+	for name, tc := range cases {
+		suite.Run(name, func(){
+			suite.reset()
+
+			if tc.owner == "" {
+				h := sha256.New()
+				h.Write([]byte(tc.user))
+				hash := h.Sum(nil)
+				accountHash := fmt.Sprintf("%x", hash)
+
+				// h1 is so named as to differentiate it from h above--else compiler complains
+				h1 := sha256.New()
+				h1.Write([]byte(fmt.Sprintf("o%s%s", tc.addr, accountHash)))
+				hash1 := h1.Sum(nil)
+				tc.owner = fmt.Sprintf("%x", hash1)
+			}
+
+			f := types.Files{
+				Address: tc.addr,
+				Owner: tc.owner,
+			}
+
+			out := keeper.IsOwner(f, tc.user)
+			suite.Require().Equal(tc.expOut, out)
+		})
+	}
+}
+
 func FuzzHasEditAccess(f *testing.F) {
 	cases := []struct {
 		editAccess  string
@@ -69,6 +121,8 @@ func FuzzHasEditAccess(f *testing.F) {
 }
 
 func (suite *KeeperTestSuite) TestHasEditAccess() {
+	suite.SetupSuite()
+
 	cases := map[string]struct {
 		editAccess  string
 		trackingNum string
