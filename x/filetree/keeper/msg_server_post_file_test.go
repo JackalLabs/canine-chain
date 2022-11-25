@@ -1,9 +1,6 @@
 package keeper_test
 
 import (
-	"crypto/sha256"
-	"fmt"
-
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
@@ -35,16 +32,10 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 	bobHomeTrackingNumber := uuid.NewString()
 
 	// hash alice account address
-	H := sha256.New()
-	H.Write([]byte(alice.String()))
-	hash := H.Sum(nil)
-	aliceAccountHash := fmt.Sprintf("%x", hash)
+	aliceAccountHash := types.HashThenHex(alice.String())
 
 	// hash bob account address
-	H1 := sha256.New()
-	H1.Write([]byte(bob.String()))
-	hash1 := H1.Sum(nil)
-	bobAccountHash := fmt.Sprintf("%x", hash1)
+	bobAccountHash := types.HashThenHex(bob.String())
 
 	// arguments for non existent root
 	ghostParentHash, ghostChildHash := types.MerkleHelper("g/home/")

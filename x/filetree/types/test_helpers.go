@@ -139,3 +139,11 @@ func MerkleHelper(argHashpath string) (string, string) {
 
 	return parentHash, childHash
 }
+
+// helper function to hash then hex any given string
+func HashThenHex(any string) string {
+	H := sha256.New()
+	H.Write([]byte(any))
+	hash := H.Sum(nil)
+	return fmt.Sprintf("%x", hash)
+}
