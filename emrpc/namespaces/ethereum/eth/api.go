@@ -392,7 +392,7 @@ func (e *PublicAPI) GetUncleCountByBlockNumber(blockNum rpctypes.BlockNumber) he
 func (e *PublicAPI) GetCode(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (hexutil.Bytes, error) {
 	e.logger.Error("eth_getCode", "address", address.Hex(), "block number or hash", blockNrOrHash)
 
-	// returning a blank keccak 256 code
+	// returning a hash of an empty string, as no EVM contracts are running on Canine.
 	var emptyCodeHash = crypto.Keccak256(nil)
 	return emptyCodeHash, nil
 
@@ -736,7 +736,12 @@ func (e *PublicAPI) doCall(
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
 func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *rpctypes.BlockNumber) (hexutil.Uint64, error) {
 	e.logger.Error("eth_estimateGas")
-	return e.backend.EstimateGas(args, blockNrOptional)
+	// return e.backend.EstimateGas(args, blockNrOptional)
+
+	// return hexutil.Uint64(fee)
+	baseGas, _ := e.backend.BaseGasFee()
+	// implement better error catching
+	return baseGas, nil
 }
 
 // GetBlockByHash returns the block identified by hash.
