@@ -7,37 +7,34 @@ import (
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
-func FuzzMakeEditorAddress(f *testing.F){
+func FuzzMakeEditorAddress(f *testing.F) {
 	bobPrivateK := secp256k1.GenPrivKey()
 	bobPublicK := bobPrivateK.PubKey()
-	hb := sha256.New()
-	hb.Write(bobPublicK.Bytes())
-	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+	bobAddr := sdk.AccAddress(bobPublicK.Address())
 
 	alicePrivateK := secp256k1.GenPrivKey()
 	alicePublicK := alicePrivateK.PubKey()
-	ha := sha256.New()
-	ha.Write(alicePublicK.Bytes())
-	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	cases := []struct {
 		trackingNum string
-		user string
+		user        string
 	}{
 		{
 			trackingNum: uuid.NewString(),
-			user: aliceHash,
+			user:        aliceAddr.String(),
 		},
 
 		{
 			trackingNum: uuid.NewString(),
-			user: bobHash,
+			user:        bobAddr.String(),
 		},
 	}
 
@@ -45,7 +42,7 @@ func FuzzMakeEditorAddress(f *testing.F){
 		f.Add(tc.trackingNum, tc.user)
 	}
 
-	f.Fuzz(func(t *testing.T, track, user string){
+	f.Fuzz(func(t *testing.T, track, user string) {
 		out := keeper.MakeEditorAddress(track, user)
 
 		eh := sha256.New()
@@ -58,31 +55,27 @@ func FuzzMakeEditorAddress(f *testing.F){
 	})
 }
 
-func FuzzMakeOwnerAddress(f *testing.F){
+func FuzzMakeOwnerAddress(f *testing.F) {
 	bobPrivateK := secp256k1.GenPrivKey()
 	bobPublicK := bobPrivateK.PubKey()
-	hb := sha256.New()
-	hb.Write(bobPublicK.Bytes())
-	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+	bobAddr := sdk.AccAddress(bobPublicK.Address())
 
 	alicePrivateK := secp256k1.GenPrivKey()
 	alicePublicK := alicePrivateK.PubKey()
-	ha := sha256.New()
-	ha.Write(alicePublicK.Bytes())
-	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	cases := []struct {
 		trackingNum string
-		user string
+		user        string
 	}{
 		{
 			trackingNum: uuid.NewString(),
-			user: aliceHash,
+			user:        aliceAddr.String(),
 		},
 
 		{
 			trackingNum: uuid.NewString(),
-			user: bobHash,
+			user:        bobAddr.String(),
 		},
 	}
 
@@ -90,7 +83,7 @@ func FuzzMakeOwnerAddress(f *testing.F){
 		f.Add(tc.trackingNum, tc.user)
 	}
 
-	f.Fuzz(func(t *testing.T, track, user string){
+	f.Fuzz(func(t *testing.T, track, user string) {
 		out := keeper.MakeOwnerAddress(track, user)
 
 		eh := sha256.New()
@@ -103,31 +96,27 @@ func FuzzMakeOwnerAddress(f *testing.F){
 	})
 }
 
-func FuzzMakeViewerAddress(f *testing.F){
+func FuzzMakeViewerAddress(f *testing.F) {
 	bobPrivateK := secp256k1.GenPrivKey()
 	bobPublicK := bobPrivateK.PubKey()
-	hb := sha256.New()
-	hb.Write(bobPublicK.Bytes())
-	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+	bobAddr := sdk.AccAddress(bobPublicK.Address())
 
 	alicePrivateK := secp256k1.GenPrivKey()
 	alicePublicK := alicePrivateK.PubKey()
-	ha := sha256.New()
-	ha.Write(alicePublicK.Bytes())
-	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	cases := []struct {
 		trackingNum string
-		user string
+		user        string
 	}{
 		{
 			trackingNum: uuid.NewString(),
-			user: aliceHash,
+			user:        aliceAddr.String(),
 		},
 
 		{
 			trackingNum: uuid.NewString(),
-			user: bobHash,
+			user:        bobAddr.String(),
 		},
 	}
 
@@ -135,7 +124,7 @@ func FuzzMakeViewerAddress(f *testing.F){
 		f.Add(tc.trackingNum, tc.user)
 	}
 
-	f.Fuzz(func(t *testing.T, track, user string){
+	f.Fuzz(func(t *testing.T, track, user string) {
 		out := keeper.MakeViewerAddress(track, user)
 
 		eh := sha256.New()
@@ -148,33 +137,28 @@ func FuzzMakeViewerAddress(f *testing.F){
 	})
 }
 
-func (suite *KeeperTestSuite) TestMakeViewerAddress(){
+func (suite *KeeperTestSuite) TestMakeViewerAddress() {
 	suite.SetupSuite()
 	bobPrivateK := secp256k1.GenPrivKey()
 	bobPublicK := bobPrivateK.PubKey()
-	hb := sha256.New()
-	hb.Write(bobPublicK.Bytes())
-	bobHash := fmt.Sprintf("%x", hb.Sum(nil))
+	bobAddr := sdk.AccAddress(bobPublicK.Address())
 
 	alicePrivateK := secp256k1.GenPrivKey()
 	alicePublicK := alicePrivateK.PubKey()
-	ha := sha256.New()
-	ha.Write(alicePublicK.Bytes())
-	aliceHash := fmt.Sprintf("%x", ha.Sum(nil))
-
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	cases := []struct {
 		trackingNum string
-		user string
+		user        string
 	}{
 		{
 			trackingNum: uuid.NewString(),
-			user: aliceHash,
+			user:        aliceAddr.String(),
 		},
 
 		{
 			trackingNum: uuid.NewString(),
-			user: bobHash,
+			user:        bobAddr.String(),
 		},
 	}
 
@@ -192,32 +176,36 @@ func (suite *KeeperTestSuite) TestMakeViewerAddress(){
 	}
 }
 
-func (suite *KeeperTestSuite) TestIsOwner(){
+func (suite *KeeperTestSuite) TestIsOwner() {
 	suite.SetupSuite()
 
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
+
 	cases := map[string]struct {
-		addr string
-		owner string
-		user string
+		addr   string
+		owner  string
+		user   string
 		expOut bool
 	}{
 		"true": {
-			addr: "aaaaaaaa",
-			owner: "",
-			user: "alice",
+			addr:   uuid.NewString(),
+			owner:  "",
+			user:   aliceAddr.String(),
 			expOut: true,
 		},
 
 		"false": {
-			addr: "aaaaaaaa",
-			owner: "---------",
-			user: "alice",
+			addr:   uuid.NewString(),
+			owner:  "---------",
+			user:   aliceAddr.String(),
 			expOut: false,
 		},
 	}
 
 	for name, tc := range cases {
-		suite.Run(name, func(){
+		suite.Run(name, func() {
 			suite.reset()
 
 			if tc.owner == "" {
@@ -235,7 +223,7 @@ func (suite *KeeperTestSuite) TestIsOwner(){
 
 			f := types.Files{
 				Address: tc.addr,
-				Owner: tc.owner,
+				Owner:   tc.owner,
 			}
 
 			out := keeper.IsOwner(f, tc.user)
@@ -245,6 +233,10 @@ func (suite *KeeperTestSuite) TestIsOwner(){
 }
 
 func FuzzHasEditAccess(f *testing.F) {
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
+
 	cases := []struct {
 		editAccess  string
 		trackingNum string
@@ -252,30 +244,30 @@ func FuzzHasEditAccess(f *testing.F) {
 	}{
 		{
 			editAccess:  "aaaaaaaa",
-			trackingNum: "111111111",
+			trackingNum: uuid.NewString(),
 			user:        "",
 		},
 
 		{
 			editAccess:  "",
-			trackingNum: "someNum",
-			user:        "someUser",
+			trackingNum: uuid.NewString(),
+			user:        aliceAddr.String(),
 		},
 
 		{
 			editAccess:  `"diff_addr_str": "a"`,
-			trackingNum: "someNum",
-			user:        "someUser",
+			trackingNum: uuid.NewString(),
+			user:        aliceAddr.String(),
 		},
 	}
 
 	for _, tc := range cases {
 		f.Add(tc.editAccess, tc.trackingNum, tc.user)
 	}
-	
-	f.Fuzz(func(t *testing.T, edit, track, user string){
+
+	f.Fuzz(func(t *testing.T, edit, track, user string) {
 		f := types.Files{
-			EditAccess: edit,
+			EditAccess:     edit,
 			TrackingNumber: track,
 		}
 
@@ -304,6 +296,9 @@ func FuzzHasEditAccess(f *testing.F) {
 
 func (suite *KeeperTestSuite) TestHasEditAccess() {
 	suite.SetupSuite()
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	cases := map[string]struct {
 		editAccess  string
@@ -314,7 +309,7 @@ func (suite *KeeperTestSuite) TestHasEditAccess() {
 	}{
 		"invalid viewing access format": {
 			editAccess:  "aaaaaaaa",
-			trackingNum: "111111111",
+			trackingNum: uuid.NewString(),
 			user:        "",
 			expErr:      true,
 			expResult:   false,
@@ -322,16 +317,16 @@ func (suite *KeeperTestSuite) TestHasEditAccess() {
 
 		"has edit access": {
 			editAccess:  "",
-			trackingNum: "someNum",
-			user:        "someUser",
+			trackingNum: uuid.NewString(),
+			user:        aliceAddr.String(),
 			expErr:      false,
 			expResult:   true,
 		},
 
 		"no edit access": {
 			editAccess:  `"diff_addr_str": "a"`,
-			trackingNum: "someNum",
-			user:        "someUser",
+			trackingNum: uuid.NewString(),
+			user:        aliceAddr.String(),
 			expErr:      false,
 			expResult:   false,
 		},
