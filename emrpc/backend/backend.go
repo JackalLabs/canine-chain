@@ -73,7 +73,6 @@ type EVMBackend interface {
 	GetTxByTxIndex(height int64, txIndex uint) (*tmrpctypes.ResultTx, error)
 	EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *emrpctypes.BlockNumber) (hexutil.Uint64, error)
 	BaseFee(blockRes *tmrpctypes.ResultBlockResults) (*big.Int, error)
-	BaseGasFee() (hexutil.Uint64, error)
 	GlobalMinGasPrice() (sdk.Dec, error)
 
 	// Fee API

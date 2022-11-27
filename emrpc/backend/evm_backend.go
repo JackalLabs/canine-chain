@@ -857,21 +857,6 @@ func (b *Backend) SuggestGasTipCap(baseFee *big.Int) (*big.Int, error) {
 	return big.NewInt(maxDelta), nil
 }
 
-func (b *Backend) BaseGasFee() (hexutil.Uint64, error) {
-	fee := new(big.Int)
-	fee, ok := fee.SetString(b.ctx.MinGasPrices, 10)
-
-	b.logger.Error("Printing the fees")
-	b.logger.Error(fee.String())
-	if ok {
-		hexfeestring := hexutil.EncodeBig(fee)
-		hexfeeuint, _ := hexutil.DecodeUint64(hexfeestring)
-		hexfee := hexutil.Uint64(hexfeeuint)
-		return hexfee, nil
-	}
-	return hexutil.Uint64(200), nil
-}
-
 // BaseFee returns the base fee tracked by the Fee Market module.
 // If the base fee is not enabled globally, the query returns nil.
 // If the London hard fork is not activated at the current height, the query will

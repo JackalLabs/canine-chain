@@ -25,6 +25,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	sdktx "github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -736,12 +737,87 @@ func (e *PublicAPI) doCall(
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
 func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *rpctypes.BlockNumber) (hexutil.Uint64, error) {
 	e.logger.Error("eth_estimateGas")
-	// return e.backend.EstimateGas(args, blockNrOptional)
+	// converting addresses
+	// converting 'from' address
+	fromAddHex := args.From.String()
+	fromAddByte := []byte(fromAddHex)
+	fromBech32Byte, err := bech32.ConvertBits(fromAddByte, 8, 5, true)
+	if err != nil {
+		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
+	}
+	fromAddBech32, err := bech32.Encode("jkl", fromBech32Byte)
+	if err != nil {
+		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
+	}
+	// converting 'to' address
+	toAddHex := args.From.String()
+	toAddByte := []byte(toAddHex)
+	toBech32Byte, err := bech32.ConvertBits(toAddByte, 8, 5, true)
+	if err != nil {
+		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
+	}
+	toAddBech32, err := bech32.Encode("jkl", toBech32Byte)
+	if err != nil {
+		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
+	}
 
-	// return hexutil.Uint64(fee)
-	baseGas, _ := e.backend.BaseGasFee()
+	// converting gas to sdk.coins
+	// gasBig, _ := hexutil.DecodeBig(args.Gas.String())
+	// gasSdk := sdk.NewIntFromBigInt(gasBig)
+	// gasCoin := sdk.NewCoin("ujkl", gasSdk)
+	// gasCoins := sdk.NewCoins(gasCoin)
+	// transfer no coins
+	var blank int64
+	blank = 100
+	sdkBlank := sdk.NewInt(blank)
+
+	gasCoin := sdk.NewCoin("jkl", sdkBlank)
+	gasCoins := sdk.NewCoins(gasCoin)
+
+	// converting the ethereum transaction into a sdk.Msg
+	banktx := banktypes.MsgSend{
+		FromAddress: fromAddBech32,
+		ToAddress:   toAddBech32,
+		Amount:      gasCoins,
+	}
+	// creating blank fees and gas to send in mock transaction
+	blankfee := sdk.NewCoin("jkl", sdk.NewInt(1000))
+	blankfees := sdk.NewCoins(blankfee)
+
+	blankcoin := sdk.NewDecCoin("jkl", sdk.NewInt(400))
+	e.logger.Error(blankcoin.String())
+	blankcoins := sdk.NewDecCoins(blankcoin) // returning nil
+	e.logger.Error(blankfees.String(), blankcoins.String())
+
+	// // creating a new txfactory
+	var txf sdktx.Factory
+	txf = txf.WithTxConfig(e.clientCtx.TxConfig).
+		WithKeybase(e.clientCtx.Keyring).
+		WithAccountRetriever(e.clientCtx.AccountRetriever).
+		WithAccountNumber(1).
+		WithSequence(1).
+		WithGas(gasCoin.Amount.Abs().Uint64()).
+		WithTimeoutHeight(100).
+		WithGasAdjustment(1).
+		WithChainID(e.clientCtx.ChainID).
+		WithFees(blankfees.String()).
+		WithGasPrices(blankcoins.String()).
+		WithSignMode(1).
+		WithSimulateAndExecute(false)
+
+	// e.logger.Error(fmt.Sprint(txf))
+	// e.logger.Error(banktx.String())
+	// sending the sdk.Msg args
+	simresp, gas, err := sdktx.CalculateGas(e.clientCtx, txf, &banktx)
+	e.logger.Error(simresp.String(), fmt.Sprint(gas), err)
+	if err != nil {
+		e.logger.Error("failed to calculate gas")
+		return hexutil.Uint64(0), err
+	}
+
+	// e.logger.Error(simres.String(), gas)
 	// implement better error catching
-	return baseGas, nil
+	return hexutil.Uint64(14), nil
 }
 
 // GetBlockByHash returns the block identified by hash.
