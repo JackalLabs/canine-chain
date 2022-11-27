@@ -760,7 +760,8 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 	if err != nil {
 		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
 	}
-
+	// printing eth-converted addresses
+	e.logger.Error(fromAddBech32, toAddBech32)
 	// converting gas to sdk.coins
 	// gasBig, _ := hexutil.DecodeBig(args.Gas.String())
 	// gasSdk := sdk.NewIntFromBigInt(gasBig)
@@ -781,29 +782,23 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		Amount:      gasCoins,
 	}
 	// creating blank fees and gas to send in mock transaction
-	blankfee := sdk.NewCoin("jkl", sdk.NewInt(1000))
+	blankfee := sdk.NewCoin("jkl", sdk.NewInt(0))
 	blankfees := sdk.NewCoins(blankfee)
 
-	blankcoin := sdk.NewDecCoin("jkl", sdk.NewInt(400))
-	e.logger.Error(blankcoin.String())
-	blankcoins := sdk.NewDecCoins(blankcoin) // returning nil
-	e.logger.Error(blankfees.String(), blankcoins.String())
+	// blankcoin := sdk.NewDecCoin("jkl", sdk.NewInt(400))
+	blankcoins := sdk.NewDecCoins(sdk.NewDecCoin("jkl", sdk.NewInt(400)))
 
 	// // creating a new txfactory
 	var txf sdktx.Factory
 	txf = txf.WithTxConfig(e.clientCtx.TxConfig).
 		WithKeybase(e.clientCtx.Keyring).
 		WithAccountRetriever(e.clientCtx.AccountRetriever).
-		WithAccountNumber(1).
-		WithSequence(1).
 		WithGas(gasCoin.Amount.Abs().Uint64()).
 		WithTimeoutHeight(100).
-		WithGasAdjustment(1).
 		WithChainID(e.clientCtx.ChainID).
 		WithFees(blankfees.String()).
 		WithGasPrices(blankcoins.String()).
-		WithSignMode(1).
-		WithSimulateAndExecute(false)
+		WithSimulateAndExecute(true)
 
 	// e.logger.Error(fmt.Sprint(txf))
 	// e.logger.Error(banktx.String())
