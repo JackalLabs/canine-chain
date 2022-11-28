@@ -46,15 +46,15 @@ func (msg *MsgRemoveViewers) ValidateBasic() error {
 	}
 
 	if msg.ViewerIds == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid viewer ids: %s", msg.ViewerIds)
 	}
 	if msg.Address == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid address: %s", msg.Address)
 	}
 	if msg.Fileowner == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid file owner: %s", msg.Fileowner)
 	}
 

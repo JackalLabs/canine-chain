@@ -48,19 +48,19 @@ func (msg *MsgAddViewers) ValidateBasic() error {
 
 	// Check empty values
 	if msg.ViewerIds == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid viewer id: %s", msg.ViewerIds)
 	}
 	if msg.ViewerKeys == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid viewer keys: %s", msg.ViewerKeys)
 	}
 	if msg.Address == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid address: %s", msg.Address)
 	}
 	if msg.Fileowner == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid file owner: %s", msg.Fileowner)
 	}
 

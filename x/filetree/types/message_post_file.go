@@ -52,27 +52,27 @@ func (msg *MsgPostFile) ValidateBasic() error {
 	}
 
 	if msg.Account == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid account: %s", msg.Account)
 	}
 	if msg.HashParent == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid hash parent: %s", msg.HashParent)
 	}
 	if msg.HashChild == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid hash child: %s", msg.HashChild)
 	}
 	if msg.Viewers == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid viewers: %s", msg.Viewers)
 	}
 	if msg.Editors == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid editors: %s", msg.Editors)
 	}
 	if msg.TrackingNumber == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid tracking number: %s", msg.TrackingNumber)
 	}
 

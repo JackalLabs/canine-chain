@@ -49,23 +49,23 @@ func (msg *MsgMakeRoot) ValidateBasic() error {
 	}
 
 	if msg.Account == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid account: %s", msg.Account)
 	}
 	if msg.RootHashPath == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid root hash path: %s", msg.RootHashPath)
 	}
-	if msg.Editors== "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+	if msg.Editors == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid editors: %s", msg.Editors)
 	}
-	if msg.Viewers== "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+	if msg.Viewers == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid viewers: %s", msg.Viewers)
 	}
-	if msg.TrackingNumber== "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+	if msg.TrackingNumber == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid tracking number: %s", msg.TrackingNumber)
 	}
 

@@ -42,9 +42,9 @@ func (msg *MsgPostkey) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
-	
+
 	if msg.Key == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid key: %s", msg.Key)
 	}
 

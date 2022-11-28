@@ -46,18 +46,17 @@ func (msg *MsgRemoveEditors) ValidateBasic() error {
 	}
 
 	if msg.EditorIds == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid editor ids: %s", msg.EditorIds)
 	}
 	if msg.Address == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid address: %s", msg.Address)
 	}
 	if msg.Fileowner == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid file owner: %s", msg.Fileowner)
 	}
-
 
 	return nil
 }

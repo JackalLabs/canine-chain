@@ -46,11 +46,11 @@ func (msg *MsgDeleteFile) ValidateBasic() error {
 
 	// Check empty values
 	if msg.HashPath == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid hash path: %s", msg.HashPath)
 	}
 	if msg.Account == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid account: %s", msg.Account)
 	}
 

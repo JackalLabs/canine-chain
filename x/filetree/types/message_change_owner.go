@@ -47,16 +47,16 @@ func (msg *MsgChangeOwner) ValidateBasic() error {
 
 	// Check empty values
 	if msg.NewOwner == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
-		"invalid new owner: %s", msg.NewOwner)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid new owner: %s", msg.NewOwner)
 	}
 	if msg.FileOwner == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
-		"invalid file owner: %s", msg.FileOwner)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid file owner: %s", msg.FileOwner)
 	}
 	if msg.Address == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
-		"invalid address: %s", msg.Address)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid address: %s", msg.Address)
 	}
 
 	return nil
