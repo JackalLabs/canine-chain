@@ -43,7 +43,9 @@ func MakePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 func CreateMsgMakeRoot(creator string) (*MsgMakeRoot, error) {
 	merklePath := MerklePath("s/")
 	trackingNumber := uuid.NewString()
-	jsonEditors, err := MakeEditorAccessMap(trackingNumber, creator, "place holder key")
+
+	editorIds := strings.Split(creator, ",")
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +69,9 @@ func CreateRootFolder(creator string) (*Files, error) {
 	merklePath := MerklePath("s/")
 	trackingNumber := uuid.NewString()
 
-	jsonEditors, err := MakeEditorAccessMap(trackingNumber, creator, "place holder key")
+	editorIds := strings.Split(creator, ",")
+
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
 	if err != nil {
 		return nil, err
 	}
@@ -87,11 +91,11 @@ func CreateRootFolder(creator string) (*Files, error) {
 	return &rootFolder, nil
 }
 
-func CreateFolderOrFile(creator string, readablePath string) (*Files, error) {
+func CreateFolderOrFile(creator string, editorIds []string, readablePath string) (*Files, error) {
 	merklePath := MerklePath(readablePath)
 	trackingNumber := uuid.NewString()
 
-	jsonEditors, err := MakeEditorAccessMap(trackingNumber, creator, "place holder key")
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
 	if err != nil {
 		return nil, err
 	}
@@ -147,19 +151,24 @@ func HashThenHex(any string) string {
 	return fmt.Sprintf("%x", hash)
 }
 
-func MakeEditorAccessMap(trackingNumber string, creator string, aesKey string) ([]byte, error) {
+func MakeEditorAccessMap(trackingNumber string, EditorIds []string, aesKey string) ([]byte, error) {
 	editors := make(map[string]string)
 
-	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, creator)))
-	hash := h.Sum(nil)
-	addressString := fmt.Sprintf("%x", hash)
+	for _, v := range EditorIds {
+		h := sha256.New()
+		h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
+		hash := h.Sum(nil)
+		addressString := fmt.Sprintf("%x", hash)
 
-	editors[addressString] = fmt.Sprintf("%x", aesKey) // need helper function to generate a placeholder key
+		editors[addressString] = fmt.Sprintf("%x", aesKey) // need helper function to generate a placeholder key
+
+	}
+
 	jsonEditors, err := json.Marshal(editors)
 	if err != nil {
 		return nil, ErrCantMarshall
 	}
+
 	return jsonEditors, nil
 }
 
