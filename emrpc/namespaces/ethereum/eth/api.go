@@ -739,6 +739,7 @@ func (e *PublicAPI) doCall(
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
 func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *rpctypes.BlockNumber) (hexutil.Uint64, error) {
 	e.logger.Error("eth_estimateGas")
+	e.logger.Error(args.String())
 	// converting addresses
 	// converting 'from' address
 	fromAddHex := args.From
@@ -754,11 +755,6 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 	}
 	// printing eth-converted addresses
 	e.logger.Error(fromBech32, toBech32)
-	// converting gas to sdk.coins
-	// gasBig, _ := hexutil.DecodeBig(args.Gas.String())
-	// gasSdk := sdk.NewIntFromBigInt(gasBig)
-	// gasCoin := sdk.NewCoin("ujkl", gasSdk)
-	// gasCoins := sdk.NewCoins(gasCoin)
 	// transfer no coins
 	var blank int64
 	blank = 100
@@ -774,26 +770,30 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		Amount:      gasCoins,
 	}
 	// creating blank fees and gas to send in mock transaction
-	blankfee := sdk.NewCoin("jkl", sdk.NewInt(0))
-	blankfees := sdk.NewCoins(blankfee)
-
-	// blankcoin := sdk.NewDecCoin("jkl", sdk.NewInt(400))
+	blankfees := sdk.NewCoins(sdk.NewCoin("jkl", sdk.NewInt(0))) // setting to zero for estimate
 	blankcoins := sdk.NewDecCoins(sdk.NewDecCoin("jkl", sdk.NewInt(400)))
 
+	// calculating the blocknumber
+	currentHeightHex, err := e.backend.BlockNumber()
+	if err != nil {
+		return hexutil.Uint64(0), err
+	}
+	currentHeightNum, err := hexutil.DecodeUint64(currentHeightHex.String())
+	if err != nil {
+		return hexutil.Uint64(0), err
+	}
 	// // creating a new txfactory
 	var txf sdktx.Factory
 	txf = txf.WithTxConfig(e.clientCtx.TxConfig).
 		WithKeybase(e.clientCtx.Keyring).
 		WithAccountRetriever(e.clientCtx.AccountRetriever).
 		WithGas(gasCoin.Amount.Abs().Uint64()).
-		WithTimeoutHeight(100).
+		WithTimeoutHeight(currentHeightNum + 100).
 		WithChainID(e.clientCtx.ChainID).
 		WithFees(blankfees.String()).
 		WithGasPrices(blankcoins.String()).
 		WithSimulateAndExecute(true)
 
-	// e.logger.Error(fmt.Sprint(txf))
-	// e.logger.Error(banktx.String())
 	// sending the sdk.Msg args
 	simresp, gas, err := sdktx.CalculateGas(e.clientCtx, txf, &banktx)
 	e.logger.Error(simresp.String(), fmt.Sprint(gas), err)
@@ -801,9 +801,7 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		e.logger.Error("failed to calculate gas")
 		return hexutil.Uint64(0), err
 	}
-
-	// e.logger.Error(simres.String(), gas)
-	// implement better error catching
+	// temp return value
 	return hexutil.Uint64(14), nil
 }
 
