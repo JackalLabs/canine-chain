@@ -43,5 +43,16 @@ func (msg *MsgDeleteFile) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	// Check empty values
+	if msg.HashPath == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+			"invalid hash path: %s", msg.HashPath)
+	}
+	if msg.Account == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+			"invalid account: %s", msg.Account)
+	}
+
 	return nil
 }
