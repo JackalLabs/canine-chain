@@ -8,6 +8,8 @@ import (
 	"math/big"
 
 	bech32 "github.com/btcsuite/btcutil/bech32"
+	sdkbech32 "github.com/cosmos/cosmos-sdk/types/bech32"
+
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/evmos/ethermint/ethereum/eip712"
 
@@ -739,29 +741,19 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 	e.logger.Error("eth_estimateGas")
 	// converting addresses
 	// converting 'from' address
-	fromAddHex := args.From.String()
-	fromAddByte := []byte(fromAddHex)
-	fromBech32Byte, err := bech32.ConvertBits(fromAddByte, 8, 5, true)
-	if err != nil {
-		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
-	}
-	fromAddBech32, err := bech32.Encode("jkl", fromBech32Byte)
+	fromAddHex := args.From
+	fromBech32, err := sdkbech32.ConvertAndEncode("jkl", fromAddHex.Bytes())
 	if err != nil {
 		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
 	}
 	// converting 'to' address
-	toAddHex := args.From.String()
-	toAddByte := []byte(toAddHex)
-	toBech32Byte, err := bech32.ConvertBits(toAddByte, 8, 5, true)
-	if err != nil {
-		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
-	}
-	toAddBech32, err := bech32.Encode("jkl", toBech32Byte)
+	toAddHex := args.To
+	toBech32, err := sdkbech32.ConvertAndEncode("jkl", toAddHex.Bytes())
 	if err != nil {
 		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
 	}
 	// printing eth-converted addresses
-	e.logger.Error(fromAddBech32, toAddBech32)
+	e.logger.Error(fromBech32, toBech32)
 	// converting gas to sdk.coins
 	// gasBig, _ := hexutil.DecodeBig(args.Gas.String())
 	// gasSdk := sdk.NewIntFromBigInt(gasBig)
@@ -777,8 +769,8 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 
 	// converting the ethereum transaction into a sdk.Msg
 	banktx := banktypes.MsgSend{
-		FromAddress: fromAddBech32,
-		ToAddress:   toAddBech32,
+		FromAddress: fromBech32,
+		ToAddress:   toBech32,
 		Amount:      gasCoins,
 	}
 	// creating blank fees and gas to send in mock transaction
