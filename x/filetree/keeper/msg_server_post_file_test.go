@@ -1,6 +1,8 @@
 package keeper_test
 
 import (
+	"strings"
+
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
@@ -32,11 +34,11 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 	parentHash, childHash := types.MerkleHelper("s/home/")
 
 	aliceHomeTrackingNumber := uuid.NewString()
-	aliceEditorAccess, err := types.MakeEditorAccessMap(aliceHomeTrackingNumber, alice.String(), "place holder key")
+	aliceEditorAccess, err := types.MakeEditorAccessMap(aliceHomeTrackingNumber, strings.Split(alice.String(), ","), "place holder key")
 	suite.Require().NoError(err)
 
 	bobHomeTrackingNumber := uuid.NewString()
-	bobEditorAccess, err := types.MakeEditorAccessMap(bobHomeTrackingNumber, bob.String(), "place holder key")
+	bobEditorAccess, err := types.MakeEditorAccessMap(bobHomeTrackingNumber, strings.Split(bob.String(), ","), "place holder key")
 	suite.Require().NoError(err)
 
 	// hash alice account address
@@ -90,7 +92,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice makes pepe.jpg inside of her home folder
 			preRun: func() *types.MsgPostFile {
 				pepeTrackingNumber := uuid.NewString()
-				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, alice.String(), "place holder key")
+				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice.String(), ","), "place holder key")
 				suite.Require().NoError(err)
 
 				msg, err := types.CreateMsgPostFile(alice.String(), "s/home/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
@@ -103,7 +105,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice can't put pepe.jpg inside of s/videos/ because this folder doesn't exist
 			preRun: func() *types.MsgPostFile {
 				pepeTrackingNumber := uuid.NewString()
-				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, alice.String(), "place holder key")
+				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice.String(), ","), "place holder key")
 				suite.Require().NoError(err)
 
 				msg, err := types.CreateMsgPostFile(alice.String(), "s/videos/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
