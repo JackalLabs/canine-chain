@@ -8,6 +8,26 @@ import (
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
+func HasViewingAccess(file types.Files, user string) (bool, error) {
+	pvacc := file.ViewingAccess
+	trackingNumber := file.TrackingNumber
+
+	jvacc := make(map[string]string)
+	json.Unmarshal([]byte(pvacc), &jvacc)
+
+	h := sha256.New()
+	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
+	hash := h.Sum(nil)
+
+	addressString := fmt.Sprintf("%x", hash)
+
+	if _, ok := jvacc[addressString]; ok {
+		return ok, nil
+	}
+
+	return true, nil
+}
+
 func HasEditAccess(file types.Files, user string) (bool, error) {
 	peacc := file.EditAccess
 	trackingNumber := file.TrackingNumber
