@@ -151,10 +151,10 @@ func HashThenHex(any string) string {
 	return fmt.Sprintf("%x", hash)
 }
 
-func MakeEditorAccessMap(trackingNumber string, EditorIds []string, aesKey string) ([]byte, error) {
+func MakeEditorAccessMap(trackingNumber string, editorIds []string, aesKey string) ([]byte, error) {
 	editors := make(map[string]string)
 
-	for _, v := range EditorIds {
+	for _, v := range editorIds {
 		h := sha256.New()
 		h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
 		hash := h.Sum(nil)
