@@ -77,6 +77,8 @@ BUILD_FLAGS := -tags "$(build_tags_comma_sep)" -ldflags '$(ldflags)' -trimpath
 # include contrib/devtools/Makefile
 
 all: install lint test
+	
+
 
 build: go.sum
 ifeq ($(OS),Windows_NT)
@@ -87,6 +89,8 @@ endif
 
 build_cli:
 	go build -o build/canined -mod=readonly -tags "$(GO_TAGS) build/canined" -ldflags '$(LD_FLAGS)' ./cmd/canined
+	
+
 
 build-contract-tests-hooks:
 ifeq ($(OS),Windows_NT)
@@ -167,14 +171,16 @@ format: format-tools
 ###############################################################################
 ###                                Protobuf                                 ###
 ###############################################################################
-PROTO_BUILDER_IMAGE=tendermintdev/sdk-proto-gen
+PROTO_BUILDER_IMAGE=tendermintdev/sdk-proto-gen:v0.7
+PROTO_BUILDER_CONTAINER=jackal-proto-gen
 PROTO_FORMATTER_IMAGE=tendermintdev/docker-build-proto
 
 proto-all: proto-format proto-lint proto-gen format
 
 proto-gen:
 	@echo "Generating Protobuf files"
-	./scripts/protocgen.sh
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${PROTO_BUILDER_CONTAINER}$$"; then docker start -a $(PROTO_BUILDER_CONTAINER); else docker run --name $(PROTO_BUILDER_CONTAINER) -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) \
+		sh ./scripts/protocgen.sh; fi
 
 proto-format:
 	@echo "Formatting Protobuf files"
@@ -186,7 +192,7 @@ proto-swagger-gen:
 	@./scripts/protoc-swagger-gen.sh
 
 proto-lint:
-	@$(DOCKER_BUF) lint --error-format=json
+	@$(DOCKER_BUF) lint proto --error-format=json
 
 proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
