@@ -361,3 +361,71 @@ func (suite *KeeperTestSuite) TestHasEditAccess() {
 		})
 	}
 }
+
+func (suite *KeeperTestSuite) TestHasViewingAccess() {
+	suite.SetupSuite()
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
+
+	cases := map[string]struct {
+		viewingAccess string
+		trackingNum   string
+		user          string
+		expErr        bool
+		expResult     bool
+	}{
+		"invalid viewing access format": {
+			viewingAccess: "aaaaaaaa",
+			trackingNum:   uuid.NewString(),
+			user:          "",
+			expErr:        true,
+			expResult:     false,
+		},
+
+		"has viewing access": {
+			viewingAccess: "",
+			trackingNum:   uuid.NewString(),
+			user:          aliceAddr.String(),
+			expErr:        false,
+			expResult:     true,
+		},
+
+		"no viewing access": {
+			viewingAccess: `"diff_addr_str": "a"`,
+			trackingNum:   uuid.NewString(),
+			user:          aliceAddr.String(),
+			expErr:        false,
+			expResult:     false,
+		},
+	}
+
+	for name, tc := range cases {
+		suite.Run(name, func() {
+			if tc.viewingAccess == "" {
+				// Construct new editor
+				h := sha256.New()
+				h.Write([]byte(fmt.Sprintf("v%s%s", tc.trackingNum, tc.user)))
+				hash := h.Sum(nil)
+
+				jvacc := make(map[string]string)
+				jvacc[fmt.Sprintf("%x", hash)] = "a"
+				vaccBytes, err := json.Marshal(jvacc)
+				suite.Require().NoError(err)
+				tc.viewingAccess = string(vaccBytes)
+			}
+
+			file := types.Files{
+				ViewingAccess:  tc.viewingAccess,
+				TrackingNumber: tc.trackingNum,
+			}
+
+			result, err := keeper.HasViewingAccess(file, tc.user)
+
+			if tc.expErr {
+				suite.Require().Error(err)
+			}
+			suite.Require().Equal(tc.expResult, result)
+		})
+	}
+}
