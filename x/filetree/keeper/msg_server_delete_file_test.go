@@ -26,8 +26,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 	editorIds := strings.Split(alice.String(), ",")
 	editorIds = append(editorIds, bob.String())
 	aliceViewerID := strings.Split(alice.String(), ",")
-	aliceEditorID := strings.Split(alice.String(), ",")
-	// if alice is the only viewer and only editor, both the above slices are the same but I'm just differing their names to avoid confusion
+	aliceEditorID := aliceViewerID // if alice is the only viewer and only editor, this suffices
 
 	// set home folder for alice and add bob as an editor
 	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), editorIds, aliceViewerID, "s/home/")

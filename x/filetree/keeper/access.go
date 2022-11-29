@@ -24,11 +24,9 @@ func HasViewingAccess(file types.Files, user string) (bool, error) {
 
 	addressString := fmt.Sprintf("%x", hash)
 
-	if _, ok := jvacc[addressString]; ok {
-		return ok, nil
-	}
+	_, ok := jvacc[addressString]
 
-	return false, nil
+	return ok, nil
 }
 
 func HasEditAccess(file types.Files, user string) (bool, error) {
@@ -48,12 +46,9 @@ func HasEditAccess(file types.Files, user string) (bool, error) {
 
 	addressString := fmt.Sprintf("%x", hash)
 
-	if _, ok := jeacc[addressString]; ok {
-		return ok, nil
-	}
+	_, ok := jeacc[addressString]
 
-	// During sandbox testing, if editor doesn't exist, the body of the if statement never executes, so we need to return false
-	return false, nil
+	return ok, nil
 }
 
 func IsOwner(file types.Files, user string) bool {

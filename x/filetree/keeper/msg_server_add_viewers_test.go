@@ -62,7 +62,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
 	aliceViewerID := strings.Split(alice.String(), ",")
-	aliceEditorID := strings.Split(alice.String(), ",")
+	aliceEditorID := aliceViewerID
 
 	// set home folder for alice
 	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/")
