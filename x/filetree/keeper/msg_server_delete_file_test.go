@@ -25,19 +25,21 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 
 	editorIds := strings.Split(alice.String(), ",")
 	editorIds = append(editorIds, bob.String())
+	aliceViewerID := strings.Split(alice.String(), ",")
+	aliceEditorID := aliceViewerID // if alice is the only viewer and only editor, this suffices
 
 	// set home folder for alice and add bob as an editor
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), editorIds, "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), editorIds, aliceViewerID, "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice.String(), strings.Split(alice.String(), ","), "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
 	// put hasbullah in home
-	hasbullahjpg, err := types.CreateFolderOrFile(alice.String(), strings.Split(alice.String(), ","), "s/home/hasbullah.jpg")
+	hasbullahjpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/hasbullah.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *hasbullahjpg)
 

@@ -91,11 +91,16 @@ func CreateRootFolder(creator string) (*Files, error) {
 	return &rootFolder, nil
 }
 
-func CreateFolderOrFile(creator string, editorIds []string, readablePath string) (*Files, error) {
+func CreateFolderOrFile(creator string, editorIds []string, viewerIds []string, readablePath string) (*Files, error) {
 	merklePath := MerklePath(readablePath)
 	trackingNumber := uuid.NewString()
 
 	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
+	if err != nil {
+		return nil, err
+	}
+
+	jsonViewers, err := MakeViewerAccessMap(trackingNumber, viewerIds, "place holder key")
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +111,7 @@ func CreateFolderOrFile(creator string, editorIds []string, readablePath string)
 	File := Files{
 		Contents:       "Contents: FID goes here",
 		Owner:          ownerAddress,
-		ViewingAccess:  "Viewers",
+		ViewingAccess:  string(jsonViewers),
 		EditAccess:     string(jsonEditors),
 		Address:        merklePath,
 		TrackingNumber: trackingNumber,
@@ -165,6 +170,27 @@ func MakeEditorAccessMap(trackingNumber string, editorIds []string, aesKey strin
 	}
 
 	jsonEditors, err := json.Marshal(editors)
+	if err != nil {
+		return nil, ErrCantMarshall
+	}
+
+	return jsonEditors, nil
+}
+
+func MakeViewerAccessMap(trackingNumber string, viewerIds []string, aesKey string) ([]byte, error) {
+	viewers := make(map[string]string)
+
+	for _, v := range viewerIds {
+		h := sha256.New()
+		h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
+		hash := h.Sum(nil)
+		addressString := fmt.Sprintf("%x", hash)
+
+		viewers[addressString] = fmt.Sprintf("%x", aesKey) // need helper function to generate a placeholder key
+
+	}
+
+	jsonEditors, err := json.Marshal(viewers)
 	if err != nil {
 		return nil, ErrCantMarshall
 	}
