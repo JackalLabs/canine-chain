@@ -28,7 +28,7 @@ func HasViewingAccess(file types.Files, user string) (bool, error) {
 		return ok, nil
 	}
 
-	return true, nil
+	return false, nil
 }
 
 func HasEditAccess(file types.Files, user string) (bool, error) {
@@ -37,8 +37,9 @@ func HasEditAccess(file types.Files, user string) (bool, error) {
 
 	jeacc := make(map[string]string)
 
-	if err := json.Unmarshal([]byte(peacc), &jeacc); err != nil {
-		return false, err
+	err := json.Unmarshal([]byte(peacc), &jeacc)
+	if err != nil {
+		return false, types.ErrCantUnmarshall
 	}
 
 	h := sha256.New()

@@ -61,13 +61,16 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
+	aliceViewerID := strings.Split(alice.String(), ",")
+	aliceEditorID := strings.Split(alice.String(), ",")
+
 	// set home folder for alice
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), strings.Split(alice.String(), ","), "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice.String(), strings.Split(alice.String(), ","), "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 	pepeMerklePath := types.MerklePath("s/home/pepe.jpg")
