@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (*types.QueryAllFidCidResponse, error) {
+func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (*types.QueryFidCidAllResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,10 +35,10 @@ func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllFidCidResponse{FidCid: fidCids, Pagination: pageRes}, nil
+	return &types.QueryFidCidAllResponse{FidCid: fidCids, Pagination: pageRes}, nil
 }
 
-func (k Keeper) FidCid(c context.Context, req *types.QueryGetFidCidRequest) (*types.QueryGetFidCidResponse, error) {
+func (k Keeper) FidCid(c context.Context, req *types.QueryGetFidCidRequest) (*types.QueryFidCidResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) FidCid(c context.Context, req *types.QueryGetFidCidRequest) (*ty
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetFidCidResponse{FidCid: val}, nil
+	return &types.QueryFidCidResponse{FidCid: val}, nil
 }

@@ -1,70 +1,72 @@
 syntax = "proto3";
-package jackaldao.canine.rns;
+package canine_chain.rns;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "canine-chain/rns/params.proto";
-import "canine-chain/rns/whois.proto";
-import "canine-chain/rns/names.proto";
-import "canine-chain/rns/bids.proto";
-import "canine-chain/rns/forsale.proto";
-import "canine-chain/rns/init.proto";
+import "canine_chain/rns/params.proto";
+import "canine_chain/rns/whois.proto";
+import "canine_chain/rns/names.proto";
+import "canine_chain/rns/bids.proto";
+import "canine_chain/rns/forsale.proto";
+import "canine_chain/rns/init.proto";
 
-option go_package = "github.com/jackal-dao/canine/x/rns/types";
+option go_package = "github.com/jackal-dao/canine-chain/x/rns/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/params";
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/params";
   }
 
   // Queries a Name by index.
-  rpc Names(QueryGetNamesRequest) returns (QueryGetNamesResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/names/{index}";
+  rpc Names(QueryGetNamesRequest) returns (QueryNamesResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/names/{index}";
   }
 
   // Queries a list of Names.
-  rpc NamesAll(QueryAllNamesRequest) returns (QueryAllNamesResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/names";
+  rpc NamesAll(QueryAllNamesRequest) returns (QueryNamesAllResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/names";
   }
 
   // Queries a Bid by index.
-  rpc Bids(QueryGetBidsRequest) returns (QueryGetBidsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/bids/{index}";
+  rpc Bids(QueryGetBidsRequest) returns (QueryBidsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/bids/{index}";
   }
 
   // Queries a list of Bids.
-  rpc BidsAll(QueryAllBidsRequest) returns (QueryAllBidsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/bids";
+  rpc BidsAll(QueryAllBidsRequest) returns (QueryBidsAllResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/bids";
   }
 
   // Queries a Listing by index.
-  rpc Forsale(QueryGetForsaleRequest) returns (QueryGetForsaleResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/forsale/{name}";
+  rpc Forsale(QueryGetForsaleRequest) returns (QueryForsaleResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/rns/forsale/{name}";
   }
 
   // Queries all Listings.
-  rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryAllForsaleResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/forsale";
+  rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryForsaleAllResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/forsale";
   }
 
   // Queries a Init by index.
-  rpc Init(QueryGetInitRequest) returns (QueryGetInitResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/init/{address}";
+  rpc Init(QueryGetInitRequest) returns (QueryInitResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/rns/init/{address}";
   }
 
   // Queries a list of Init items.
-  rpc InitAll(QueryAllInitRequest) returns (QueryAllInitResponse) {
-    option (google.api.http).get = "/jackal-dao/canine/rns/init";
+  rpc InitAll(QueryAllInitRequest) returns (QueryInitAllResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/init";
   }
 
   // Queries a list of ListOwnedNames items.
   rpc ListOwnedNames(QueryListOwnedNamesRequest)
       returns (QueryListOwnedNamesResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine/rns/list_owned_names/{address}";
+        "/jackal-dao/canine-chain/rns/list_owned_names/{address}";
   }
 }
 
@@ -94,35 +96,33 @@ message QueryAllWhoisResponse {
 
 message QueryGetNamesRequest { string index = 1; }
 
-message QueryGetNamesResponse {
-  Names names = 1 [ (gogoproto.nullable) = false ];
-}
+message QueryNamesResponse { Names names = 1 [ (gogoproto.nullable) = false ]; }
 
 message QueryAllNamesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllNamesResponse {
+message QueryNamesAllResponse {
   repeated Names names = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetBidsRequest { string index = 1; }
 
-message QueryGetBidsResponse { Bids bids = 1 [ (gogoproto.nullable) = false ]; }
+message QueryBidsResponse { Bids bids = 1 [ (gogoproto.nullable) = false ]; }
 
 message QueryAllBidsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllBidsResponse {
+message QueryBidsAllResponse {
   repeated Bids bids = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetForsaleRequest { string name = 1; }
 
-message QueryGetForsaleResponse {
+message QueryForsaleResponse {
   Forsale forsale = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -130,20 +130,20 @@ message QueryAllForsaleRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllForsaleResponse {
+message QueryForsaleAllResponse {
   repeated Forsale forsale = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetInitRequest { string address = 1; }
 
-message QueryGetInitResponse { bool init = 1; }
+message QueryInitResponse { bool init = 1; }
 
 message QueryAllInitRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllInitResponse {
+message QueryInitAllResponse {
   repeated Init init = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

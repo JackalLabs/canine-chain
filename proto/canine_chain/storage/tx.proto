@@ -1,7 +1,7 @@
 syntax = "proto3";
-package jackaldao.canine.storage;
+package canine_chain.storage;
 
-option go_package = "github.com/jackal-dao/canine/x/storage/types";
+option go_package = "github.com/jackal-dao/canine-chain/x/storage/types";
 
 // Msg defines the Msg service.
 service Msg {
@@ -9,7 +9,8 @@ service Msg {
   rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
   rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
-  rpc SetProviderKeybase(MsgSetProviderKeybase) returns (MsgSetProviderKeybaseResponse);
+  rpc SetProviderKeybase(MsgSetProviderKeybase)
+      returns (MsgSetProviderKeybaseResponse);
   rpc SetProviderTotalspace(MsgSetProviderTotalspace)
       returns (MsgSetProviderTotalspaceResponse);
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
@@ -52,14 +53,12 @@ message MsgSetProviderIP {
 
 message MsgSetProviderIPResponse {}
 
-
 message MsgSetProviderKeybase {
   string creator = 1;
   string keybase = 2;
 }
 
 message MsgSetProviderKeybaseResponse {}
-
 
 message MsgSetProviderTotalspace {
   string creator = 1;
@@ -86,10 +85,10 @@ message MsgCancelContractResponse {}
 
 message MsgBuyStorage {
   string creator = 1;
-  string forAddress = 2;
+  string for_address = 2;
   string duration = 3;
   string bytes = 4;
-  string paymentDenom = 5;
+  string payment_denom = 5;
 }
 
 message MsgBuyStorageResponse {}
