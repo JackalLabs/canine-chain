@@ -1,9 +1,11 @@
 # About
 
-## Contributors
+## Dev Contact
 + Jackal Labs
-    + [devadmin@jackallabs.io](mailto:devadmin@jackallabs.io)
-    + [jackallabs.io](https://jackallabs.io)
+    + Email: [devadmin@jackallabs.io](mailto:devadmin@jackallabs.io)
+    + Website: [jackallabs.io](https://jackallabs.io)
+## Contributors
+(PR to add yourself)
 + Marston Connell
     + [marston@jackallabs.io](mailto:marston@jackallabs.io)
 + Jacob Gadkian
