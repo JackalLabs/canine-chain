@@ -13,13 +13,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
-	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgAddViewers() {
-	logger, logFile := testutil.CreateLogger()
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
@@ -45,7 +43,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	suite.Require().NoError(error)
 
 	signed, _, err := ctx.Keyring.Sign(ctx.FromName, []byte("jackal_init"))
-	suite.Require().NoError(error)
+	suite.Require().NoError(err)
 
 	k := secp256k1.GenPrivKeyFromSecret(signed)
 
@@ -166,13 +164,10 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 
 				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
-				logger.Println(res)
 
 				validViewer, err := keeper.HasViewingAccess(res.Files, bob.String())
 				suite.Require().NoError(err)
 				suite.Require().Equal(validViewer, true)
-
-				logger.Println(res.Files)
 
 				// Let's see if Bob can decrypt and recover pepe's AES iv and key using his private key
 
@@ -190,7 +185,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 				// He will use his keyring to sign again
 
 				signed, _, err := ctx.Keyring.Sign(ctx.FromName, []byte("jackal_init"))
-				suite.Require().NoError(error)
+				suite.Require().NoError(err)
 
 				k := secp256k1.GenPrivKeyFromSecret(signed)
 
@@ -198,12 +193,9 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 
 				decrypted, err := eciesgo.Decrypt(bobPrivateKeyAgain, bytesFromHexString)
 				suite.Require().NoError(err)
-				suite.Require().EqualValues(fmt.Sprintf("%s", decrypted), "{ key: mock key, IV: mock initialisation vector } ")
-
-				logger.Println(fmt.Sprintf("%s", decrypted))
+				suite.Require().EqualValues(string(decrypted), "{ key: mock key, IV: mock initialisation vector } ")
 
 			}
 		})
 	}
-	logFile.Close()
 }

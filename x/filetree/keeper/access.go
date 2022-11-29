@@ -13,7 +13,10 @@ func HasViewingAccess(file types.Files, user string) (bool, error) {
 	trackingNumber := file.TrackingNumber
 
 	jvacc := make(map[string]string)
-	json.Unmarshal([]byte(pvacc), &jvacc)
+	err := json.Unmarshal([]byte(pvacc), &jvacc)
+	if err != nil {
+		return false, types.ErrCantUnmarshall
+	}
 
 	h := sha256.New()
 	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
