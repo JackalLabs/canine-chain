@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*types.QueryAllNamesResponse, error) {
+func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*types.QueryNamesAllResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,10 +35,10 @@ func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*t
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllNamesResponse{Names: namess, Pagination: pageRes}, nil
+	return &types.QueryNamesAllResponse{Names: namess, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Names(c context.Context, req *types.QueryGetNamesRequest) (*types.QueryGetNamesResponse, error) {
+func (k Keeper) Names(c context.Context, req *types.QueryGetNamesRequest) (*types.QueryNamesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -63,10 +63,10 @@ func (k Keeper) Names(c context.Context, req *types.QueryGetNamesRequest) (*type
 	if hasSub {
 		for _, domain := range val.Subdomains {
 			if domain.Name == sub {
-				return &types.QueryGetNamesResponse{Names: *domain}, nil
+				return &types.QueryNamesResponse{Names: *domain}, nil
 			}
 		}
 	}
 
-	return &types.QueryGetNamesResponse{Names: val}, nil
+	return &types.QueryNamesResponse{Names: val}, nil
 }
