@@ -3,34 +3,49 @@ package types
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
 func TestMsgRemoveViewers_ValidateBasic(t *testing.T) {
-	tests := []struct {
-		name string
-		msg  MsgRemoveViewers
-		err  error
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
+
+	tests := map[string]struct {
+		Creator, ViewerIds, Address, Fileowner string
+		expErr                                 bool
 	}{
-		{
-			name: "invalid address",
-			msg: MsgRemoveViewers{
-				Creator: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg:  MsgRemoveViewers{
-				// Creator: sample.AccAddress(),
-			},
+		"invalid address": {
+			Creator:   "",
+			Address:   uuid.NewString(),
+			ViewerIds: uuid.NewString(),
+			Fileowner: uuid.NewString(),
+			expErr:    true,
+		},
+
+		"valid address": {
+			Creator:   aliceAddr.String(),
+			Address:   uuid.NewString(),
+			ViewerIds: uuid.NewString(),
+			Fileowner: uuid.NewString(),
+			expErr:    false,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.msg.ValidateBasic()
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			msg := NewMsgRemoveViewers(
+				tt.Creator, tt.Address, tt.ViewerIds, tt.Fileowner,
+			)
+
+			err := msg.ValidateBasic()
+			t.Logf("Address: %s", msg.Creator)
+			if tt.expErr {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)

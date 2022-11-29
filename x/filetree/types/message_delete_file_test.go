@@ -3,34 +3,47 @@ package types
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
 func TestMsgDeleteFile_ValidateBasic(t *testing.T) {
-	tests := []struct {
-		name string
-		msg  MsgDeleteFile
-		err  error
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
+
+	tests := map[string]struct {
+		Creator, HashPath, Account string
+		expErr                     bool
 	}{
-		{
-			name: "invalid address",
-			msg: MsgDeleteFile{
-				Creator: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg:  MsgDeleteFile{
-				// Creator: sample.AccAddress(),
-			},
+		"invalid address": {
+			Creator:  "",
+			HashPath: uuid.NewString(),
+			Account:  uuid.NewString(),
+			expErr:   true,
+		},
+
+		"valid address": {
+			Creator:  aliceAddr.String(),
+			HashPath: uuid.NewString(),
+			Account:  uuid.NewString(),
+			expErr:   false,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.msg.ValidateBasic()
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			msg := NewMsgDeleteFile(
+				tt.Creator, tt.HashPath, tt.Account,
+			)
+
+			err := msg.ValidateBasic()
+			t.Logf("Address: %s", msg.Creator)
+			if tt.expErr {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
