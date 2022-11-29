@@ -10,7 +10,7 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the whois
-	for _, elem := range genState.WhoisList {
+	for _, elem := range genState.WhoIsList {
 		k.SetWhois(ctx, elem)
 	}
 	// Set all the names
@@ -22,7 +22,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetBids(ctx, elem)
 	}
 	// Set all the forsale
-	for _, elem := range genState.ForsaleList {
+	for _, elem := range genState.ForSaleList {
 		k.SetForsale(ctx, elem)
 	}
 	// Set all the init
@@ -37,10 +37,10 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
 
-	genesis.WhoisList = k.GetAllWhois(ctx)
+	genesis.WhoIsList = k.GetAllWhois(ctx)
 	genesis.NamesList = k.GetAllNames(ctx)
 	genesis.BidsList = k.GetAllBids(ctx)
-	genesis.ForsaleList = k.GetAllForsale(ctx)
+	genesis.ForSaleList = k.GetAllForsale(ctx)
 	genesis.InitList = k.GetAllInit(ctx)
 
 	return genesis

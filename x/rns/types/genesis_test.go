@@ -21,7 +21,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-				WhoisList: []types.Whois{
+				WhoIsList: []types.Whois{
 					{
 						Index: "0",
 					},
@@ -47,7 +47,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Index: "1",
 					},
 				},
-				ForsaleList: []types.Forsale{
+				ForSaleList: []types.Forsale{
 					{
 						Name: "0",
 					},
@@ -69,7 +69,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated whois",
 			genState: &types.GenesisState{
-				WhoisList: []types.Whois{
+				WhoIsList: []types.Whois{
 					{
 						Index: "0",
 					},
@@ -113,7 +113,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated forsale",
 			genState: &types.GenesisState{
-				ForsaleList: []types.Forsale{
+				ForSaleList: []types.Forsale{
 					{
 						Name: "0",
 					},
