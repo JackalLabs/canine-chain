@@ -91,9 +91,7 @@ Below is a full description of valid transaction messages that can be broadcaste
 
 |Name|Type|Description|                                                                                       
 |--|--|--|
-|creator  | String  | The creator and broadcaster of this message. Pass in 
-Bech32 address 
-
+|creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address 
 |key  | String  | ecies.PublicKey 
 
 #### Response
@@ -106,25 +104,12 @@ Create an absolute root folder for a storage account.
 
 |Name|Type|Description|                                                                                       
 |--|--|--|
-|creator  | String  | The creator and broadcaster of this message. Pass in 
-Bech32 address 
-
-|account  | String  | Hex[ hash( bech32 address of user that will own this account)]. 
-
-Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists. 
-
+|creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address 
+|account  | String  | Hex[ hash( bech32 address of user that will own this account)]. Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists. 
 |rootHashPath  | String  | MerklePath("s")
-
 |contents  | String  | "Place holder contents." Do NOT pass in an empty string
-
-|editors  | String  | string(json encoded map) with:
-
-let c = concatenate( "e", trackingNumber, bech32 address )
-map key: hex[ hash("c") ]
-map value: ECIES.encrypt( aesIV + aesKey )
-
-|viewers  | String  | Pass in "NONE" Do not pass in an emptry string else message validation will fail. sRoot folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. 
-
+|editors  | String  | string(json encoded map) with: let c = concatenate( "e", trackingNumber, bech32 address ) map. key: hex[ hash("c") ]. map value: ECIES.encrypt( aesIV + aesKey )
+|viewers  | String  | Pass in "NONE" Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. 
 |trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
 
 #### Response
