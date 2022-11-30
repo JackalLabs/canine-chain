@@ -85,9 +85,11 @@ canined tx filetree --help
 
 ## Transaction Messages
 
-Below is a full description of valid transaction messages that can be broadcasted to affect state change. These descriptions aim to be "implementation agnostic", i.e., they make sense to both the CLI/Golang and TS implementation. 
+Below is a full description of valid transaction messages that can be broadcasted to affect state change. These descriptions aim to be "implementation agnostic", i.e., they make sense to both the CLI/Golang and TS implementations. 
 
 ### Postkey
+
+Post a ecies.PublicKey on chain for the encryption scheme
 
 |Name|Type|Description|                                                                                       
 |--|--|--|
@@ -104,32 +106,73 @@ Create an absolute root folder for a storage account.
 
 |Name|Type|Description|                                                                                       
 |--|--|--|
-|creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address 
-|account  | String  | Hex[ hash( bech32 address of user that will own this account)]. Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. <br> It is for this purpose that the Account field exists. 
-|rootHashPath  | String  | MerklePath("s")
-|contents  | String  | "Place holder contents." Do NOT pass in an empty string
-|editors  | String  | string(json encoded map) with: <br />let c = concatenate( "e", trackingNumber, bech32 address ) map_key: hex[ hash("c") ]. map_value: ECIES.encrypt( aesIV + aesKey )
-|viewers  | String  | Pass in "NONE." Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. 
+|creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address<br /> 
+|account  | String  | Hex[ hash( Bech32 address of user that will own this account)]. <br /> Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists.<br /> 
+|rootHashPath  | String  | MerklePath("s")<br />
+|contents  | String  | "Place holder contents." Do NOT pass in an empty string<br />
+|editors  | String  | string(json encoded map) with: <br />let c = concatenate( "e", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br />
+|viewers  | String  | Pass in "NONE." Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. <br />
 |trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
 
 #### Response
 
 Coming soon
 
-### Postfile
+### PostFile
 
-Create an absolute root folder for a storage account. 
+Create and save a new 'Files' struct on chain. The distinction between a folder and a file is very clear in jackalJS, but the filetree module does not care whether a Files struct is being used to save data for a folder or a file. 
+
+Let it be that alice wants to create a home folder
 
 |Name|Type|Description|                                                                                       
 |--|--|--|
-|creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address 
-|account  | String  | Hex[ hash( bech32 address of user that will own this account)]. Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists. 
-|rootHashPath  | String  | MerklePath("s")
-|contents  | String  | "Place holder contents." Do NOT pass in an empty string
-|editors  | String  | string(json encoded map) with: let c = concatenate( "e", trackingNumber, bech32 address ) map_key: hex[ hash("c") ]. map_value: ECIES.encrypt( aesIV + aesKey )
-|viewers  | String  | Pass in "NONE." Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. 
-|trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
+|creator  | String  | The creator and broadcaster of this message. Pass in alice's Bech32 address<br /> 
+|account  | String  | Hex[ hash( alice's Bech32 address )]<br />
+|hashparent  | String  | MerklePath("s")<br />
+|hashchild  | String  |  Hex[ hash("home") ]<br />
+|contents  | String  | FID<br />
+|viewers  | String  | string(json encoded map) with: <br />let c = concatenate( "v", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br />
+|editors  | String  | same as above but with c = concatenate( "e", trackingNumber, Bech32 address )<br />
+|trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors AND viewers map<br />
+
+alice can add other users to her viewers and editors map aswell. 
+#### Response
+
+let fullMerklePath = MerklePath("s/home")
+
+```json
+{
+  
+    "path": "fullMerklePath"
+
+}
+```
+### Delete
+
+Let it be that alice wants to delete her "s/home" folder
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in alice's Bech32 address<br />
+|hashPath  | String  | MerklePath("s/home")<br />
+|account  | String  | Hex[ hash( alice's Bech32 address )]<br />
 
 #### Response
 
 Coming soon
+
+## Query Requests
+
+Below is a full description of valid query requests that can be made to retrieve state information. These descriptions aim to be "implementation agnostic", i.e., they make sense to both the CLI/Golang and TS implementations.
+
+### QueryGetPubkeyRequest
+
+Retrieve a user's ecies.PublicKey
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|Address  | String  | user's Bech32 address<br />
+
+#### Response
+
+types.PubKey
