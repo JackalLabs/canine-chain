@@ -10,9 +10,13 @@ parent:
 
 ## Contents
 1. [Concept](#concept)
-2. [Client](#client)
+2. [Merkle Paths](#merkle-paths)
+3. [Client](#client)
     + [Query](#query)
     + [Transactions](#transactions)
+4. [Transaction Messages](#transaction-messages)
+    + [Postkey](#postkey)
+    
 
 
 ## Concept
@@ -65,6 +69,8 @@ func checkChild(parent ps, child cs, hc H(child)) {
 
 
 ## Client
+
+Below are CLI query and transaction commands to interact with canined.
 ### Query
 The `query` commands allow users to query `filetree` state.
 ```sh
@@ -76,3 +82,51 @@ The `tx` commands allow users to interact with the `filetree` module.
 ```sh
 canined tx filetree --help
 ```
+
+## Transaction Messages
+
+Below is a full description of valid transaction messages that can be broadcasted to affect state change. These descriptions aim to be "implementation agnostic", i.e., they make sense to both the CLI/Golang and TS implementation. 
+
+### Postkey
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in 
+Bech32 address 
+
+|key  | String  | ecies.PublicKey 
+
+#### Response
+
+Coming soon
+
+### Makeroot 
+
+Create an absolute root folder for a storage account. 
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in 
+Bech32 address 
+
+|account  | String  | Hex[ hash( bech32 address of user that will own this account)]. 
+
+Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists. 
+
+|rootHashPath  | String  | MerklePath("s")
+
+|contents  | String  | "Place holder contents." Do NOT pass in an empty string
+
+|editors  | String  | string(json encoded map) with:
+
+let c = concatenate( "e", trackingNumber, bech32 address )
+map key: hex[ hash("c") ]
+map value: ECIES.encrypt( aesIV + aesKey )
+
+|viewers  | String  | Pass in "NONE" Do not pass in an emptry string else message validation will fail. sRoot folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. 
+
+|trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
+
+#### Response
+
+Coming soon
