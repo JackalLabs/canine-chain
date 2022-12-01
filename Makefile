@@ -127,6 +127,8 @@ distclean: clean
 ########################################
 ### Testing
 
+local: install
+	./scripts/test-node.sh $(address)
 
 test: test-unit
 test-all: check test-race test-cover
@@ -182,6 +184,13 @@ proto-gen:
 	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${PROTO_BUILDER_CONTAINER}$$"; then docker start -a $(PROTO_BUILDER_CONTAINER); else docker run --name $(PROTO_BUILDER_CONTAINER) -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) \
 		sh ./scripts/protocgen.sh; fi
 
+proto-linter:
+	@echo "Linting Protobuf files"
+	# @if docker ps -a --format '{{.Names}}' | grep -Eq "^${PROTO_BUILDER_CONTAINER}$$"; then docker start -a $(PROTO_BUILDER_CONTAINER); else docker run --name $(PROTO_BUILDER_CONTAINER) -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) \
+	# 	sh ./scripts/protolint.sh; fi
+
+	sh ./scripts/protolint.sh
+
 proto-format:
 	@echo "Formatting Protobuf files"
 	$(DOCKER) run --rm -v $(CURDIR):/workspace \
@@ -200,4 +209,4 @@ proto-check-breaking:
 .PHONY: all install install-debug \
 	go-mod-cache draw-deps clean build format \
 	test test-all test-build test-cover test-unit test-race \
-	test-sim-import-export \
+	test-sim-import-export local \

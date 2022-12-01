@@ -1,9 +1,0 @@
-syntax = "proto3";
-package jackaldao.canine.storage;
-
-option go_package = "github.com/jackal-dao/canine-chain/x/storage/types";
-
-message FidCid {
-  string fid = 1;
-  string cids = 2;
-}
