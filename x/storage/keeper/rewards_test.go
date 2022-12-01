@@ -157,7 +157,7 @@ func (suite *KeeperTestSuite) TestMultiReward() {
 
 	r = nom.Quo(den).Mul(sdk.NewDec(6000000))
 
-	m = m + r.TruncateInt64()
+	m += r.TruncateInt64()
 
 	bal = suite.bankKeeper.GetBalance(suite.ctx, providers[20], "ujkl")
 	suite.Require().Equal(m, bal.Amount.Int64())
