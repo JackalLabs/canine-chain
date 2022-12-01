@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDealsRequest) (*types.QueryActiveDealsAllResponse, error) {
+func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDealsRequest) (*types.QueryAllActiveDealsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,7 +35,7 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryActiveDealsAllResponse{ActiveDeals: activeDealss, Pagination: pageRes}, nil
+	return &types.QueryAllActiveDealsResponse{ActiveDeals: activeDealss, Pagination: pageRes}, nil
 }
 
 func (k Keeper) ActiveDeals(c context.Context, req *types.QueryGetActiveDealsRequest) (*types.QueryActiveDealsResponse, error) {

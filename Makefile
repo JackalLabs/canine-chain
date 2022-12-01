@@ -192,10 +192,13 @@ proto-linter:
 	sh ./scripts/protolint.sh
 
 proto-format:
-	@echo "Formatting Protobuf files"
-	$(DOCKER) run --rm -v $(CURDIR):/workspace \
-	--workdir /workspace $(PROTO_FORMATTER_IMAGE) \
-	find ./ -name *.proto -exec clang-format -i {} \;
+	# @echo "Formatting Protobuf files"
+	# $(DOCKER) run --rm -v $(CURDIR):/workspace \
+	# --workdir /workspace $(PROTO_FORMATTER_IMAGE) \
+	# find ./ -name *.proto -exec clang-format -i {} \;
+
+	sh ./scripts/protoformat.sh
+
 
 proto-swagger-gen:
 	@./scripts/protoc-swagger-gen.sh

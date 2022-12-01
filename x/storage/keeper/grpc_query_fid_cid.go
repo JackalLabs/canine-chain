@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (*types.QueryFidCidAllResponse, error) {
+func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (*types.QueryAllFidCidResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,7 +35,7 @@ func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryFidCidAllResponse{FidCid: fidCids, Pagination: pageRes}, nil
+	return &types.QueryAllFidCidResponse{FidCid: fidCids, Pagination: pageRes}, nil
 }
 
 func (k Keeper) FidCid(c context.Context, req *types.QueryGetFidCidRequest) (*types.QueryFidCidResponse, error) {
