@@ -26,7 +26,7 @@ service Query {
   }
 
   // Queries a list of Names.
-  rpc NamesAll(QueryAllNamesRequest) returns (QueryNamesAllResponse) {
+  rpc NamesAll(QueryAllNamesRequest) returns (QueryAllNamesResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/names";
   }
 
@@ -36,7 +36,7 @@ service Query {
   }
 
   // Queries a list of Bids.
-  rpc BidsAll(QueryAllBidsRequest) returns (QueryBidsAllResponse) {
+  rpc BidsAll(QueryAllBidsRequest) returns (QueryAllBidsResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/bids";
   }
 
@@ -47,7 +47,7 @@ service Query {
   }
 
   // Queries all Listings.
-  rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryForsaleAllResponse) {
+  rpc ForsaleAll(QueryAllForsaleRequest) returns (QueryAllForsaleResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/forsale";
   }
 
@@ -58,7 +58,7 @@ service Query {
   }
 
   // Queries a list of Init items.
-  rpc InitAll(QueryAllInitRequest) returns (QueryInitAllResponse) {
+  rpc InitAll(QueryAllInitRequest) returns (QueryAllInitResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/rns/init";
   }
 
@@ -102,7 +102,7 @@ message QueryAllNamesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryNamesAllResponse {
+message QueryAllNamesResponse {
   repeated Names names = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -115,7 +115,7 @@ message QueryAllBidsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryBidsAllResponse {
+message QueryAllBidsResponse {
   repeated Bids bids = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -130,7 +130,7 @@ message QueryAllForsaleRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryForsaleAllResponse {
+message QueryAllForsaleResponse {
   repeated Forsale forsale = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -143,7 +143,7 @@ message QueryAllInitRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryInitAllResponse {
+message QueryAllInitResponse {
   repeated Init init = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) BidsAll(c context.Context, req *types.QueryAllBidsRequest) (*types.QueryBidsAllResponse, error) {
+func (k Keeper) BidsAll(c context.Context, req *types.QueryAllBidsRequest) (*types.QueryAllBidsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,7 +35,7 @@ func (k Keeper) BidsAll(c context.Context, req *types.QueryAllBidsRequest) (*typ
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryBidsAllResponse{Bids: bidss, Pagination: pageRes}, nil
+	return &types.QueryAllBidsResponse{Bids: bidss, Pagination: pageRes}, nil
 }
 
 func (k Keeper) Bids(c context.Context, req *types.QueryGetBidsRequest) (*types.QueryBidsResponse, error) {
