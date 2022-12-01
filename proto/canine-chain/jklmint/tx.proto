@@ -1,5 +1,5 @@
 syntax = "proto3";
-package canine_chain.jklmint;
+package jackaldao.canine.jklmint;
 
 option go_package = "github.com/jackal-dao/canine-chain/x/jklmint/types";
 

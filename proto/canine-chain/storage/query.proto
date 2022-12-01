@@ -1,17 +1,17 @@
 syntax = "proto3";
-package canine_chain.storage;
+package jackaldao.canine.storage;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "canine_chain/storage/params.proto";
-import "canine_chain/storage/contracts.proto";
-import "canine_chain/storage/active_deals.proto";
-import "canine_chain/storage/providers.proto";
-import "canine_chain/storage/pay_blocks.proto";
-import "canine_chain/storage/client_usage.proto";
-import "canine_chain/storage/strays.proto";
-import "canine_chain/storage/fid_cid.proto";
+import "canine-chain/storage/params.proto";
+import "canine-chain/storage/contracts.proto";
+import "canine-chain/storage/active_deals.proto";
+import "canine-chain/storage/providers.proto";
+import "canine-chain/storage/pay_blocks.proto";
+import "canine-chain/storage/client_usage.proto";
+import "canine-chain/storage/strays.proto";
+import "canine-chain/storage/fid_cid.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackal-dao/canine-chain/x/storage/types";

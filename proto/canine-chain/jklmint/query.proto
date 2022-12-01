@@ -1,9 +1,9 @@
 syntax = "proto3";
-package canine_chain.jklmint;
+package jackaldao.canine.jklmint;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "canine_chain/jklmint/params.proto";
+import "canine-chain/jklmint/params.proto";
 
 option go_package = "github.com/jackal-dao/canine-chain/x/jklmint/types";
 

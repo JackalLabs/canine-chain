@@ -1,7 +1,7 @@
 syntax = "proto3";
 package jackaldao.canine.filetree;
 
-option go_package = "github.com/jackal-dao/canine/x/filetree/types";
+option go_package = "github.com/jackal-dao/canine-chain/x/filetree/types";
 
 // Msg defines the Msg service.
 service Msg {
@@ -22,7 +22,7 @@ service Msg {
 message MsgPostFile {
   string creator = 1;
   string account = 2;
-  string hashParent = 3; 
+  string hashParent = 3;
   string hashChild = 4;
   string contents = 5;
   string viewers = 6;
@@ -30,9 +30,7 @@ message MsgPostFile {
   string trackingNumber = 8;
 }
 
-message MsgPostFileResponse {
-  string path = 1;
-}
+message MsgPostFileResponse { string path = 1; }
 
 message MsgAddViewers {
   string creator = 1;
@@ -42,16 +40,14 @@ message MsgAddViewers {
   string fileowner = 5;
 }
 
-message MsgAddViewersResponse {
-}
+message MsgAddViewersResponse {}
 
 message MsgPostkey {
   string creator = 1;
   string key = 2;
 }
 
-message MsgPostkeyResponse {
-}
+message MsgPostkeyResponse {}
 
 message MsgDeleteFile {
   string creator = 1;
@@ -59,32 +55,28 @@ message MsgDeleteFile {
   string account = 3;
 }
 
-message MsgDeleteFileResponse {
-}
+message MsgDeleteFileResponse {}
 
 message MsgRemoveViewers {
   string creator = 1;
   string viewerIds = 2;
   string address = 3;
   string fileowner = 4;
-
 }
 
-message MsgRemoveViewersResponse {
-}
+message MsgRemoveViewersResponse {}
 
 message MsgMakeRoot {
   string creator = 1;
   string account = 2;
   string rootHashPath = 3;
-  string contents = 4; 
+  string contents = 4;
   string editors = 5;
   string viewers = 6;
   string trackingNumber = 7;
 }
 
-message MsgMakeRootResponse {
-}
+message MsgMakeRootResponse {}
 
 message MsgAddEditors {
   string creator = 1;
@@ -94,8 +86,7 @@ message MsgAddEditors {
   string fileowner = 5;
 }
 
-message MsgAddEditorsResponse {
-}
+message MsgAddEditorsResponse {}
 
 message MsgRemoveEditors {
   string creator = 1;
@@ -104,8 +95,7 @@ message MsgRemoveEditors {
   string fileowner = 4;
 }
 
-message MsgRemoveEditorsResponse {
-}
+message MsgRemoveEditorsResponse {}
 
 message MsgResetEditors {
   string creator = 1;
@@ -113,8 +103,7 @@ message MsgResetEditors {
   string fileowner = 3;
 }
 
-message MsgResetEditorsResponse {
-}
+message MsgResetEditorsResponse {}
 
 message MsgResetViewers {
   string creator = 1;
@@ -122,8 +111,7 @@ message MsgResetViewers {
   string fileowner = 3;
 }
 
-message MsgResetViewersResponse {
-}
+message MsgResetViewersResponse {}
 
 message MsgChangeOwner {
   string creator = 1;
@@ -132,6 +120,4 @@ message MsgChangeOwner {
   string newOwner = 4;
 }
 
-message MsgChangeOwnerResponse {
-}
-
+message MsgChangeOwnerResponse {}
