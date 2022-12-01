@@ -5,12 +5,11 @@ import (
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func (k Keeper) HandleBlock(ctx sdk.Context) {
+func (k Keeper) HandleRewardBlock(ctx sdk.Context) {
 	allDeals := k.GetAllActiveDeals(ctx)
 
 	height := ctx.BlockHeight()
@@ -23,11 +22,11 @@ func (k Keeper) HandleBlock(ctx sdk.Context) {
 	if height%dayBlocks == 0 {
 		ctx.Logger().Debug("%s\n", "checking blocks")
 
-		var networkSize sdk.Int
+		networkSize := sdk.NewDecFromInt(sdk.NewInt(0))
 		for i := 0; i < len(allDeals); i++ {
 			deal := allDeals[i]
-			ss, ok := sdk.NewIntFromString(deal.Filesize)
-			if !ok {
+			ss, err := sdk.NewDecFromStr(deal.Filesize)
+			if err != nil {
 				continue
 			}
 			networkSize = networkSize.Add(ss)
@@ -47,15 +46,15 @@ func (k Keeper) HandleBlock(ctx sdk.Context) {
 
 			iprove := toprove.Int64()
 
-			totalSize, ok := sdk.NewIntFromString(deal.Filesize)
-			if !ok {
-				ctx.Logger().Debug("Int Parse Failed!\n")
+			totalSize, err := sdk.NewDecFromStr(deal.Filesize)
+			if err != nil {
+				ctx.Logger().Error(err.Error())
 				continue
 			}
 
 			byteHash := ctx.HeaderHash().Bytes()[0] + ctx.HeaderHash().Bytes()[1] + ctx.HeaderHash().Bytes()[2]
 
-			d := totalSize.Int64() / fchunks
+			d := totalSize.TruncateInt().Int64() / fchunks
 
 			if d > 0 {
 				iprove = (iprove + ctx.BlockHeight()*int64(byteHash)) % d
@@ -122,29 +121,21 @@ func (k Keeper) HandleBlock(ctx sdk.Context) {
 				continue
 			}
 
-			sizeint, ok := sdk.NewIntFromString(deal.Filesize)
-			if !ok {
-				ctx.Logger().Error(sdkerror.Wrapf(sdkerror.ErrInvalidType, "cannot parse int").Error())
-				continue
-			}
-
 			ctx.Logger().Debug(fmt.Sprintf("File size: %s\n", deal.Filesize))
 			ctx.Logger().Debug(fmt.Sprintf("Total size: %d\n", networkSize))
 
-			precision := sdk.NewInt(10000)
+			nom := totalSize
 
-			f := sizeint.Mul(precision)
+			den := networkSize
 
-			ts := networkSize
+			res := nom.Quo(den)
 
-			r := f.Quo(ts)
+			ctx.Logger().Debug("Percentage of network space * 1000: %f\n", res)
 
-			ctx.Logger().Debug("Percentage of network space * 1000: %f\n", r)
-
-			coinfloat := r.Mul(balance.Amount).Quo(precision)
+			coinfloat := res.Mul(balance.Amount.ToDec())
 
 			ctx.Logger().Debug("%f\n", coinfloat)
-			coin := sdk.NewCoin("ujkl", coinfloat)
+			coin := sdk.NewCoin("ujkl", coinfloat.TruncateInt())
 			coins := sdk.NewCoins(coin)
 
 			provider, err := sdk.AccAddressFromBech32(deal.Provider)
