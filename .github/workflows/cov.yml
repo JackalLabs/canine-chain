@@ -25,6 +25,6 @@ jobs:
     - name: Get Coverage
       run: |
         go test ./... -cover -coverprofile coverage.out
-        cat coverage.out | grep -v ".pb.go" > coverage2.out
-        cat coverage3.out | grep -v ".pb.gw.go" > coverage3.out
+        cat ./coverage.out | grep -v ".pb.go" > ./coverage2.out
+        cat ./coverage3.out | grep -v ".pb.gw.go" > ./coverage3.out
         go tool cover -func ./coverage3.out 
