@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -23,14 +23,14 @@ func (k Keeper) HandleBlock(ctx sdk.Context) {
 	if height%dayBlocks == 0 {
 		ctx.Logger().Debug("%s\n", "checking blocks")
 
-		var networkSize int64
+		var networkSize sdk.Int
 		for i := 0; i < len(allDeals); i++ {
 			deal := allDeals[i]
 			ss, ok := sdk.NewIntFromString(deal.Filesize)
 			if !ok {
 				continue
 			}
-			networkSize += ss.Int64()
+			networkSize = networkSize.Add(ss)
 		}
 
 		address := k.accountkeeper.GetModuleAddress(types.ModuleName)
@@ -124,52 +124,27 @@ func (k Keeper) HandleBlock(ctx sdk.Context) {
 
 			sizeint, ok := sdk.NewIntFromString(deal.Filesize)
 			if !ok {
-				ctx.Logger().Error("Cannot parse filesize as int")
+				ctx.Logger().Error(sdkerror.Wrapf(sdkerror.ErrInvalidType, "cannot parse int").Error())
 				continue
 			}
 
 			ctx.Logger().Debug(fmt.Sprintf("File size: %s\n", deal.Filesize))
 			ctx.Logger().Debug(fmt.Sprintf("Total size: %d\n", networkSize))
 
-			sid := sdk.NewDec(sizeint.Int64())
-			ts := sdk.NewDec(networkSize)
+			precision := sdk.NewInt(10000)
 
-			siv, err := sid.Float64()
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-			div, err := ts.Float64()
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
+			f := sizeint.Mul(precision)
 
-			if div == 0 {
-				ctx.Logger().Error(sdkerrors.Wrap(types.ErrDivideByZero, "dividing by zero").Error())
-				continue
-			}
+			ts := networkSize
 
-			ratio := siv / div
+			r := f.Quo(ts)
 
-			ctx.Logger().Debug("Ratio: %f\n", ratio)
+			ctx.Logger().Debug("Percentage of network space * 1000: %f\n", r)
 
-			ff, err := sdk.NewDec(balance.Amount.Int64()).Float64()
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-			coinfloat := ratio * ff
-			ctx.Logger().Debug("Coins: %f * %f = %f\n", ratio, ff, coinfloat)
+			coinfloat := r.Mul(balance.Amount).Quo(precision)
 
-			dd, err := sdk.NewDecFromStr(fmt.Sprintf("%f", coinfloat))
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-
-			ctx.Logger().Debug("%f\n", dd)
-			coin := sdk.NewInt64Coin("ujkl", dd.TruncateInt64())
+			ctx.Logger().Debug("%f\n", coinfloat)
+			coin := sdk.NewCoin("ujkl", coinfloat)
 			coins := sdk.NewCoins(coin)
 
 			provider, err := sdk.AccAddressFromBech32(deal.Provider)
