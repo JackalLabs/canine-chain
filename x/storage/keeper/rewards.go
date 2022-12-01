@@ -144,16 +144,8 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 	return nil
 }
 
-func (k Keeper) internalRewards(ctx sdk.Context, allDeals []types.ActiveDeals) error {
-	ctx.Logger().Debug("%s\n", "checking blocks")
-
-	networkSize := getTotalSize(allDeals)
-
-	address := k.accountkeeper.GetModuleAddress(types.ModuleName)
-	balance := k.bankkeeper.GetBalance(ctx, address, "ujkl")
-
-	for i := 0; i < len(allDeals); i++ {
-		deal := allDeals[i]
+func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, networkSize sdk.Dec, balance sdk.Coin) {
+	for _, deal := range allDeals {
 
 		err := k.manageDealReward(ctx, deal, networkSize, balance)
 		if err != nil {
@@ -162,7 +154,18 @@ func (k Keeper) internalRewards(ctx sdk.Context, allDeals []types.ActiveDeals) e
 		}
 
 	}
-	balance = k.bankkeeper.GetBalance(ctx, k.accountkeeper.GetModuleAddress(types.ModuleName), "ujkl")
+}
+
+func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, address sdk.AccAddress) error {
+	ctx.Logger().Debug("%s\n", "checking blocks")
+
+	networkSize := getTotalSize(allDeals)
+
+	balance := k.bankkeeper.GetBalance(ctx, address, "ujkl")
+
+	k.loopDeals(ctx, allDeals, networkSize, balance)
+
+	balance = k.bankkeeper.GetBalance(ctx, address, "ujkl")
 
 	err := k.bankkeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(balance))
 	if err != nil {
@@ -176,11 +179,15 @@ func (k Keeper) HandleRewardBlock(ctx sdk.Context) {
 	allDeals := k.GetAllActiveDeals(ctx)
 
 	ctx.Logger().Debug("blockdiff : %d\n", ctx.BlockHeight()%dayBlocks)
-	if ctx.BlockHeight()%dayBlocks == 0 {
-		err := k.internalRewards(ctx, allDeals)
-		if err != nil {
-			ctx.Logger().Error(err.Error())
-			return
-		}
+
+	if ctx.BlockHeight()%dayBlocks >= 0 {
+		return
+	}
+
+	address := k.accountkeeper.GetModuleAddress(types.ModuleName)
+
+	err := k.InternalRewards(ctx, allDeals, address)
+	if err != nil {
+		ctx.Logger().Error(err.Error())
 	}
 }
