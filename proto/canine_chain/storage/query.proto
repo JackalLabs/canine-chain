@@ -30,7 +30,7 @@ service Query {
 
   // Queries a list of Contracts items.
   rpc ContractsAll(QueryAllContractsRequest)
-      returns (QueryContractsAllResponse) {
+      returns (QueryAllContractsResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/contracts";
   }
 
@@ -43,7 +43,7 @@ service Query {
 
   // Queries a list of ActiveDeals items.
   rpc ActiveDealsAll(QueryAllActiveDealsRequest)
-      returns (QueryActiveDealsAllResponse) {
+      returns (QueryAllActiveDealsResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/active_deals";
   }
@@ -56,7 +56,7 @@ service Query {
 
   // Queries a list of Providers items.
   rpc ProvidersAll(QueryAllProvidersRequest)
-      returns (QueryProvidersAllResponse) {
+      returns (QueryAllProvidersResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/providers";
   }
 
@@ -80,7 +80,7 @@ service Query {
 
   // Queries a list of PayBlocks items.
   rpc PayBlocksAll(QueryAllPayBlocksRequest)
-      returns (QueryPayBlocksAllResponse) {
+      returns (QueryAllPayBlocksResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/pay_blocks";
   }
@@ -94,7 +94,7 @@ service Query {
 
   // Queries a list of ClientUsage items.
   rpc ClientUsageAll(QueryAllClientUsageRequest)
-      returns (QueryClientUsageAllResponse) {
+      returns (QueryAllClientUsageResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/client_usage";
   }
@@ -106,7 +106,7 @@ service Query {
   }
 
   // Queries a list of Strays items.
-  rpc StraysAll(QueryAllStraysRequest) returns (QueryStraysAllResponse) {
+  rpc StraysAll(QueryAllStraysRequest) returns (QueryAllStraysResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/strays";
   }
 
@@ -124,7 +124,7 @@ service Query {
   }
 
   // Queries a list of FidCid items.
-  rpc FidCidAll(QueryAllFidCidRequest) returns (QueryFidCidAllResponse) {
+  rpc FidCidAll(QueryAllFidCidRequest) returns (QueryAllFidCidResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/fid_cid";
   }
 
@@ -156,7 +156,7 @@ message QueryAllContractsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryContractsAllResponse {
+message QueryAllContractsResponse {
   repeated Contracts contracts = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -171,7 +171,7 @@ message QueryAllActiveDealsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryActiveDealsAllResponse {
+message QueryAllActiveDealsResponse {
   repeated ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -186,7 +186,7 @@ message QueryAllProvidersRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryProvidersAllResponse {
+message QueryAllProvidersResponse {
   repeated Providers providers = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -209,7 +209,7 @@ message QueryAllPayBlocksRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryPayBlocksAllResponse {
+message QueryAllPayBlocksResponse {
   repeated PayBlocks pay_blocks = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -224,7 +224,7 @@ message QueryAllClientUsageRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryClientUsageAllResponse {
+message QueryAllClientUsageResponse {
   repeated ClientUsage client_usage = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -239,7 +239,7 @@ message QueryAllStraysRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryStraysAllResponse {
+message QueryAllStraysResponse {
   repeated Strays strays = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -258,7 +258,7 @@ message QueryAllFidCidRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryFidCidAllResponse {
+message QueryAllFidCidResponse {
   repeated FidCid fid_cid = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

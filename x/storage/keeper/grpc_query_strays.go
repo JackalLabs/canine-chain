@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) StraysAll(c context.Context, req *types.QueryAllStraysRequest) (*types.QueryStraysAllResponse, error) {
+func (k Keeper) StraysAll(c context.Context, req *types.QueryAllStraysRequest) (*types.QueryAllStraysResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,7 +35,7 @@ func (k Keeper) StraysAll(c context.Context, req *types.QueryAllStraysRequest) (
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryStraysAllResponse{Strays: strayss, Pagination: pageRes}, nil
+	return &types.QueryAllStraysResponse{Strays: strayss, Pagination: pageRes}, nil
 }
 
 func (k Keeper) Strays(c context.Context, req *types.QueryGetStraysRequest) (*types.QueryStraysResponse, error) {

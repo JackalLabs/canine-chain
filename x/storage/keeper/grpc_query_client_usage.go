@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsageRequest) (*types.QueryClientUsageAllResponse, error) {
+func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsageRequest) (*types.QueryAllClientUsageResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,7 +35,7 @@ func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsage
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryClientUsageAllResponse{ClientUsage: clientUsages, Pagination: pageRes}, nil
+	return &types.QueryAllClientUsageResponse{ClientUsage: clientUsages, Pagination: pageRes}, nil
 }
 
 func (k Keeper) ClientUsage(c context.Context, req *types.QueryGetClientUsageRequest) (*types.QueryClientUsageResponse, error) {

@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ContractsAll(c context.Context, req *types.QueryAllContractsRequest) (*types.QueryContractsAllResponse, error) {
+func (k Keeper) ContractsAll(c context.Context, req *types.QueryAllContractsRequest) (*types.QueryAllContractsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,7 +35,7 @@ func (k Keeper) ContractsAll(c context.Context, req *types.QueryAllContractsRequ
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryContractsAllResponse{Contracts: contractss, Pagination: pageRes}, nil
+	return &types.QueryAllContractsResponse{Contracts: contractss, Pagination: pageRes}, nil
 }
 
 func (k Keeper) Contracts(c context.Context, req *types.QueryGetContractsRequest) (*types.QueryContractsResponse, error) {
