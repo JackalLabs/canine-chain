@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -44,7 +45,91 @@ func (suite *KeeperTestSuite) TestReward() {
 		Fid:           "fid1test",
 	}
 
+	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
+	suite.Require().Equal(int64(0), bal.Amount.Int64())
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
+
+	err := suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
+	suite.NoError(err)
+
+	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
+	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
+
 	suite.storageKeeper.SetActiveDeals(suite.ctx, dealOne)
 
-	suite.storageKeeper.HandleRewardBlock(suite.ctx)
+	var blocks int64 = 10 * 5
+
+	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20})
+
+	suite.Require().Equal(blocks, ctx.BlockHeight())
+	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
+
+	err = suite.storageKeeper.HandleRewardBlock(ctx)
+	suite.NoError(err)
+
+	pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
+	suite.NoError(err)
+	bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
+	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
+
+	bal = suite.bankKeeper.GetBalance(ctx, acc, "ujkl")
+	suite.Require().Equal(int64(0), bal.Amount.Int64())
+}
+
+func (suite *KeeperTestSuite) TestMultiReward() {
+	suite.SetupSuite()
+
+	const signer = "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg"
+	const providerOne = "cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl"
+
+	dealOne := types.ActiveDeals{
+		Cid:           "cid1test",
+		Signee:        signer,
+		Provider:      providerOne,
+		Startblock:    "0",
+		Endblock:      "0",
+		Filesize:      "100",
+		Proofverified: "true",
+		Proofsmissed:  "0",
+		Blocktoprove:  "1",
+		Creator:       providerOne,
+		Merkle:        "nil",
+		Fid:           "fid1test",
+	}
+
+	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
+	suite.Require().Equal(int64(0), bal.Amount.Int64())
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
+
+	err := suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
+	suite.NoError(err)
+
+	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
+	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
+
+	suite.storageKeeper.SetActiveDeals(suite.ctx, dealOne)
+
+	var blocks int64 = 10 * 5
+
+	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20})
+
+	suite.Require().Equal(blocks, ctx.BlockHeight())
+	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
+
+	err = suite.storageKeeper.HandleRewardBlock(ctx)
+	suite.NoError(err)
+
+	pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
+	suite.NoError(err)
+	bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
+	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
+
+	bal = suite.bankKeeper.GetBalance(ctx, acc, "ujkl")
+	suite.Require().Equal(int64(0), bal.Amount.Int64())
 }

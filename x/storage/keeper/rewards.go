@@ -12,7 +12,7 @@ import (
 
 const (
 	fchunks   int64 = 1024
-	dayBlocks int64 = 10 * 5 // 10 blocks is about 1 minute
+	DayBlocks int64 = 10 * 5 // 10 blocks is about 1 minute
 )
 
 func getTotalSize(allDeals []types.ActiveDeals) sdk.Dec {
@@ -69,7 +69,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 			return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
 		}
 
-		if sb.Int64() >= ctx.BlockHeight()-dayBlocks {
+		if sb.Int64() >= ctx.BlockHeight()-DayBlocks {
 			return sdkerror.Wrapf(sdkerror.ErrUnauthorized, "ignore young deals")
 		}
 
@@ -175,19 +175,21 @@ func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, a
 	return nil
 }
 
-func (k Keeper) HandleRewardBlock(ctx sdk.Context) {
+func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
 	allDeals := k.GetAllActiveDeals(ctx)
 
-	ctx.Logger().Debug("blockdiff : %d\n", ctx.BlockHeight()%dayBlocks)
+	ctx.Logger().Debug("blockdiff : %d\n", ctx.BlockHeight()%DayBlocks)
 
-	if ctx.BlockHeight()%dayBlocks >= 0 {
-		return
+	if ctx.BlockHeight()%DayBlocks > 0 {
+		return sdkerror.Wrapf(sdkerror.ErrUnauthorized, "cannot check rewards before timer has been met")
 	}
 
 	address := k.accountkeeper.GetModuleAddress(types.ModuleName)
 
 	err := k.InternalRewards(ctx, allDeals, address)
 	if err != nil {
-		ctx.Logger().Error(err.Error())
+		return err
 	}
+
+	return nil
 }
