@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitRequest) (*types.QueryInitAllResponse, error) {
+func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitRequest) (*types.QueryAllInitResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,7 +35,7 @@ func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitRequest) (*typ
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryInitAllResponse{Init: inits, Pagination: pageRes}, nil
+	return &types.QueryAllInitResponse{Init: inits, Pagination: pageRes}, nil
 }
 
 func (k Keeper) Init(c context.Context, req *types.QueryGetInitRequest) (*types.QueryInitResponse, error) {
