@@ -1,0 +1,9 @@
+syntax = "proto3";
+package jackaldao.canine.filetree;
+
+option go_package = "github.com/jackal-dao/canine-chain/x/filetree/types";
+
+message Pubkey {
+  string address = 1;
+  string key = 2;
+}
