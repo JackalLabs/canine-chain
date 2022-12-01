@@ -1,5 +1,5 @@
 syntax = "proto3";
-package canine_chain.storage;
+package jackaldao.canine.storage;
 
 import "gogoproto/gogo.proto";
 

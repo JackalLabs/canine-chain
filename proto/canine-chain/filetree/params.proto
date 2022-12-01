@@ -3,9 +3,7 @@ package jackaldao.canine.filetree;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/jackal-dao/canine/x/filetree/types";
+option go_package = "github.com/jackal-dao/canine-chain/x/filetree/types";
 
 // Params defines the parameters for the module.
-message Params {
-  option (gogoproto.goproto_stringer) = false;
-}
+message Params { option (gogoproto.goproto_stringer) = false; }

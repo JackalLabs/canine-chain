@@ -1,5 +1,5 @@
 syntax = "proto3";
-package canine_chain.storage;
+package jackaldao.canine.storage;
 
 option go_package = "github.com/jackal-dao/canine-chain/x/storage/types";
 

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package canine_chain.rns;
+package jackaldao.canine.rns;
 
 import "gogoproto/gogo.proto";
 

@@ -1,13 +1,13 @@
 syntax = "proto3";
-package canine_chain.rns;
+package jackaldao.canine.rns;
 
 import "gogoproto/gogo.proto";
-import "canine_chain/rns/params.proto";
-import "canine_chain/rns/whois.proto";
-import "canine_chain/rns/names.proto";
-import "canine_chain/rns/bids.proto";
-import "canine_chain/rns/forsale.proto";
-import "canine_chain/rns/init.proto";
+import "canine-chain/rns/params.proto";
+import "canine-chain/rns/whois.proto";
+import "canine-chain/rns/names.proto";
+import "canine-chain/rns/bids.proto";
+import "canine-chain/rns/forsale.proto";
+import "canine-chain/rns/init.proto";
 
 option go_package = "github.com/jackal-dao/canine-chain/x/rns/types";
 
