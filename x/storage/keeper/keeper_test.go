@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	storage "github.com/jackalLabs/canine-chain/x/storage"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
@@ -15,6 +16,8 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+var modAccount = authtypes.NewModuleAddress(types.ModuleName)
+
 type KeeperTestSuite struct {
 	suite.Suite
 
@@ -22,6 +25,7 @@ type KeeperTestSuite struct {
 	ctx           sdk.Context
 	storageKeeper *keeper.Keeper
 	bankKeeper    *storagetestutil.MockBankKeeper
+	accountKeeper *storagetestutil.MockAccountKeeper
 	queryClient   types.QueryClient
 	msgSrvr       types.MsgServer
 }
@@ -37,8 +41,7 @@ func (suite *KeeperTestSuite) reset() {
 	types.RegisterQueryServer(queryHelper, storageKeeper)
 	queryClient := types.NewQueryClient(queryHelper)
 
-	// TODO: make accounts in account keeper
-	_ = accountKeeper
+	// accountKeeper.EXPECT().GetModuleAccount(gomock.Any(), types.ModuleName).Return(authtypes.NewEmptyModuleAccount(types.ModuleName)).AnyTimes()
 
 	coins := sdk.NewCoins(sdk.NewCoin("stake", sdk.NewInt(1000000000)))
 	err := bankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)
@@ -49,6 +52,7 @@ func (suite *KeeperTestSuite) reset() {
 	suite.ctx = ctx
 	suite.storageKeeper = storageKeeper
 	suite.bankKeeper = bankKeeper
+	suite.accountKeeper = accountKeeper
 	suite.cdc = encCfg.Codec
 	suite.queryClient = queryClient
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.storageKeeper)
