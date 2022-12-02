@@ -118,7 +118,7 @@ Create an absolute root folder for a storage account.
 |creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address<br /> 
 |account  | String  | Hex[ hash( Bech32 address of user that will own this account)]. <br /> Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists.<br /> 
 |rootHashPath  | String  | MerklePath("s")<br />
-|contents  | String  | "Place holder contents." Do NOT pass in an empty string<br />
+|contents  | String  | FID<br />
 |editors  | String  | string(json encoded map) with: <br />let c = concatenate( "e", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br />
 |viewers  | String  | Pass in "NONE." Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. <br />
 |trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
