@@ -1,0 +1,10 @@
+syntax = "proto3";
+package canine_chain.jklmint;
+
+import "gogoproto/gogo.proto";
+import "canine_chain/jklmint/params.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/jklmint/types";
+
+// GenesisState defines the jklmint module's genesis state.
+message GenesisState { Params params = 1 [ (gogoproto.nullable) = false ]; }

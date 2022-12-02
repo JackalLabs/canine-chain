@@ -57,7 +57,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.Require().Equal(ramt.Int64(), bidder) // cost them the amount they bid
 	suite.Require().Equal(eamt.Int64(), biddee) // cost them the amount they bid
 
-	nameReq := types.QueryGetNamesRequest{
+	nameReq := types.QueryNameRequest{
 		Index: TestName,
 	}
 
@@ -85,7 +85,7 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), TestName, "1000ujkl")
 	suite.Require().NoError(err)
 
-	bidReq := types.QueryGetBidsRequest{
+	bidReq := types.QueryBidRequest{
 		Index: fmt.Sprintf("%s%s", address.String(), TestName),
 	}
 
@@ -119,7 +119,7 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), TestName, "1000ujkl")
 	suite.Require().NoError(err)
 
-	bidReq := types.QueryGetBidsRequest{
+	bidReq := types.QueryBidRequest{
 		Index: fmt.Sprintf("%s%s", address.String(), TestName),
 	}
 

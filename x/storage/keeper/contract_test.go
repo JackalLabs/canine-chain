@@ -27,7 +27,7 @@ func (suite *KeeperTestSuite) TestSetContracts() {
 	suite.storageKeeper.SetContracts(suite.ctx, contract)
 	suite.Require().NoError(err)
 
-	contractRequest := types.QueryGetContractsRequest{
+	contractRequest := types.QueryContractRequest{
 		Cid: "549",
 	}
 
@@ -171,7 +171,7 @@ func (suite *KeeperTestSuite) TestSetActiveDeals() {
 	suite.storageKeeper.SetActiveDeals(suite.ctx, deal)
 	suite.Require().NoError(err)
 
-	dealRequest := types.QueryGetActiveDealsRequest{
+	dealRequest := types.QueryActiveDealRequest{
 		Cid: "549",
 	}
 
@@ -324,7 +324,7 @@ func (suite *KeeperTestSuite) TestSetStrays() {
 	suite.storageKeeper.SetStrays(suite.ctx, stray)
 	suite.Require().NoError(err)
 
-	strayRequest := types.QueryGetStraysRequest{
+	strayRequest := types.QueryStrayRequest{
 		Cid: "549",
 	}
 
@@ -423,7 +423,7 @@ func (suite *KeeperTestSuite) TestSetFidCid() {
 
 	suite.storageKeeper.SetFidCid(suite.ctx, FidCid)
 
-	FidCidRequest := types.QueryGetFidCidRequest{
+	FidCidRequest := types.QueryFidCidRequest{
 		Fid: "549",
 	}
 

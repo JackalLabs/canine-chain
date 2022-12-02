@@ -1,0 +1,19 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+message ActiveDeals {
+  string cid = 1;
+  string signee = 2;
+  string provider = 3;
+  string startblock = 4;
+  string endblock = 5;
+  string filesize = 6;
+  string proofverified = 7;
+  string proofsmissed = 8;
+  string blocktoprove = 9;
+  string creator = 10;
+  string merkle = 11;
+  string fid = 12;
+}

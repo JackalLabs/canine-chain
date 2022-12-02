@@ -33,7 +33,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", "2")
 	suite.Require().NoError(err)
 
-	nameReq := types.QueryGetNamesRequest{
+	nameReq := types.QueryNameRequest{
 		Index: name,
 	}
 

@@ -59,7 +59,7 @@ func CmdShowFiles() *cobra.Command {
 			argAddress := args[0]
 			argOwnerAddress := args[1]
 
-			params := &types.QueryGetFilesRequest{
+			params := &types.QueryFileRequest{
 				Address:      argAddress,
 				OwnerAddress: argOwnerAddress,
 			}
@@ -107,7 +107,7 @@ func CmdShowFileFromPath() *cobra.Command {
 			Hash := H.Sum(nil)
 			ownerAddress := fmt.Sprintf("%x", Hash)
 
-			params := &types.QueryGetFilesRequest{
+			params := &types.QueryFileRequest{
 				Address:      merklePath,
 				OwnerAddress: ownerAddress,
 			}

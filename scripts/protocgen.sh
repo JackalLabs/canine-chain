@@ -2,10 +2,10 @@
 set -euox pipefail
 
 # Get protoc executions
-go get github.com/regen-network/cosmos-proto/protoc-gen-gocosmos 2>/dev/null
+go get github.com/regen-network/cosmos-proto/protoc-gen-gocosmos #2>/dev/null
 
 # Get cosmos sdk from github
-go get github.com/cosmos/cosmos-sdk@v0.45.11 2>/dev/null
+go get github.com/cosmos/cosmos-sdk@v0.45.11 #2>/dev/null
 
 echo "Generating gogo proto code"
 cd proto
@@ -21,5 +21,5 @@ done
 cd ..
 
 # move proto files to the right places
-cp -r github.com/jackal-dao/canine-chain/* ./
+cp -r github.com/jackalLabs/canine-chain/* ./
 rm -rf github.com

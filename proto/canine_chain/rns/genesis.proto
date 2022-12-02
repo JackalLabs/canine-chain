@@ -1,0 +1,22 @@
+syntax = "proto3";
+package canine_chain.rns;
+
+import "gogoproto/gogo.proto";
+import "canine_chain/rns/params.proto";
+import "canine_chain/rns/whois.proto";
+import "canine_chain/rns/names.proto";
+import "canine_chain/rns/bids.proto";
+import "canine_chain/rns/forsale.proto";
+import "canine_chain/rns/init.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
+
+// GenesisState defines the rns module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated Whois who_is_list = 2 [ (gogoproto.nullable) = false ];
+  repeated Names names_list = 3 [ (gogoproto.nullable) = false ];
+  repeated Bids bids_list = 4 [ (gogoproto.nullable) = false ];
+  repeated Forsale for_sale_list = 5 [ (gogoproto.nullable) = false ];
+  repeated Init init_list = 6 [ (gogoproto.nullable) = false ];
+}

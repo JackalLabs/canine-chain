@@ -1,0 +1,11 @@
+syntax = "proto3";
+package canine_chain.rns;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
+
+message Whois {
+  string index = 1;
+  string name = 2;
+  string value = 3;
+  string data = 4;
+}

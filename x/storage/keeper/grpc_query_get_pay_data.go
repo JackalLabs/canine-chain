@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryGetPayDataRequest) (*types.QueryGetPayDataResponse, error) {
+func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryPayDataRequest) (*types.QueryPayDataResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -27,5 +27,5 @@ func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryGetPayDataRequ
 
 	blocks -= ctx.BlockHeight()
 
-	return &types.QueryGetPayDataResponse{BlocksRemaining: blocks, Bytes: paid}, nil
+	return &types.QueryPayDataResponse{BlocksRemaining: blocks, Bytes: paid}, nil
 }

@@ -84,7 +84,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 
 	// If alice wants to share pepe with bob, she will take bob's public key from chain and use ECIES to encrypt pepeAESKeyAndIV
 
-	pubKeyReq := types.QueryGetPubkeyRequest{
+	pubKeyReq := types.QueryPubkeyRequest{
 		Address: bob.String(),
 	}
 
@@ -160,7 +160,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 				suite.Require().EqualValues(types.MsgAddViewersResponse{}, *res)
 				// Let's confirm that bob is a viewer
 
-				fileReq := types.QueryGetFilesRequest{
+				fileReq := types.QueryFileRequest{
 					Address:      pepeMerklePath,
 					OwnerAddress: ownerAddress,
 				}

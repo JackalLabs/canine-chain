@@ -103,7 +103,7 @@ func (suite *KeeperTestSuite) TestMakeBid() {
 
 	suite.rnsKeeper.SetBids(suite.ctx, bid)
 
-	bidReq := types.QueryGetBidsRequest{
+	bidReq := types.QueryBidRequest{
 		Index: fmt.Sprintf("%s%s", address.String(), name),
 	}
 
@@ -131,7 +131,7 @@ func (suite *KeeperTestSuite) TestUpdateName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryGetNamesRequest{
+	nameReq := types.QueryNameRequest{
 		Index: "validname.jkl",
 	}
 
@@ -166,7 +166,7 @@ func (suite *KeeperTestSuite) TestRemoveName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryGetNamesRequest{
+	nameReq := types.QueryNameRequest{
 		Index: "validname.jkl",
 	}
 
@@ -198,7 +198,7 @@ func (suite *KeeperTestSuite) TestSetName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryGetNamesRequest{
+	nameReq := types.QueryNameRequest{
 		Index: "validname.jkl",
 	}
 
@@ -216,7 +216,7 @@ func (suite *KeeperTestSuite) TestSetName() {
 	}
 	suite.rnsKeeper.SetNames(suite.ctx, badname)
 
-	nameReq = types.QueryGetNamesRequest{
+	nameReq = types.QueryNameRequest{
 		Index: "badname.jkl",
 	}
 	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)

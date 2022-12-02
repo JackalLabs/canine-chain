@@ -1,0 +1,271 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "canine_chain/storage/params.proto";
+import "canine_chain/storage/contracts.proto";
+import "canine_chain/storage/active_deals.proto";
+import "canine_chain/storage/providers.proto";
+import "canine_chain/storage/pay_blocks.proto";
+import "canine_chain/storage/client_usage.proto";
+import "canine_chain/storage/strays.proto";
+import "canine_chain/storage/fid_cid.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/params";
+  }
+  // Queries a Contracts by index.
+  rpc Contracts(QueryContractRequest) returns (QueryContractResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/contracts/{cid}";
+  }
+
+  // Queries a list of Contracts items.
+  rpc ContractsAll(QueryAllContractsRequest)
+      returns (QueryAllContractsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/contracts";
+  }
+
+  // Queries a ActiveDeals by index.
+  rpc ActiveDeals(QueryActiveDealRequest) returns (QueryActiveDealResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/active_deals/{cid}";
+  }
+
+  // Queries a list of ActiveDeals items.
+  rpc ActiveDealsAll(QueryAllActiveDealsRequest)
+      returns (QueryAllActiveDealsResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/active_deals";
+  }
+
+  // Queries a Providers by index.
+  rpc Providers(QueryProviderRequest) returns (QueryProviderResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/providers/{address}";
+  }
+
+  // Queries a list of Providers items.
+  rpc ProvidersAll(QueryAllProvidersRequest)
+      returns (QueryAllProvidersResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/providers";
+  }
+
+  // Queries a list of Freespace items.
+  rpc Freespace(QueryFreespaceRequest) returns (QueryFreespaceResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/freespace/{address}";
+  }
+
+  // Queries a list of FindFile items.
+  rpc FindFile(QueryFindFileRequest) returns (QueryFindFileResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/find_file/{fid}";
+  }
+
+  // Queries a PayBlocks by index.
+  rpc PayBlocks(QueryPayBlockRequest) returns (QueryPayBlockResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/pay_blocks/{blockid}";
+  }
+
+  // Queries a list of PayBlocks items.
+  rpc PayBlocksAll(QueryAllPayBlocksRequest)
+      returns (QueryAllPayBlocksResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/pay_blocks";
+  }
+
+  // Queries a ClientUsage by index.
+  rpc ClientUsage(QueryClientUsageRequest) returns (QueryClientUsageResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/client_usage/{address}";
+  }
+
+  // Queries a list of ClientUsage items.
+  rpc ClientUsageAll(QueryAllClientUsageRequest)
+      returns (QueryAllClientUsageResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/client_usage";
+  }
+
+  // Queries a Strays by index.
+  rpc Strays(QueryStrayRequest) returns (QueryStrayResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/strays/{cid}";
+  }
+
+  // Queries a list of Strays items.
+  rpc StraysAll(QueryAllStraysRequest) returns (QueryAllStraysResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/strays";
+  }
+
+  // Queries a list of GetClientFreeSpace items.
+  rpc GetClientFreeSpace(QueryClientFreeSpaceRequest)
+      returns (QueryClientFreeSpaceResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/get_client_free_space/{address}";
+  }
+
+  // Queries a FidCid by index.
+  rpc FidCid(QueryFidCidRequest) returns (QueryFidCidResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/fid_cid/{fid}";
+  }
+
+  // Queries a list of FidCid items.
+  rpc FidCidAll(QueryAllFidCidRequest) returns (QueryAllFidCidResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/fid_cid";
+  }
+
+  // Queries a list of GetPayData items.
+  rpc GetPayData(QueryPayDataRequest) returns (QueryPayDataResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/get_pay_data/{address}";
+  }
+
+  // this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryContractRequest { string cid = 1; }
+
+message QueryContractResponse {
+  Contracts contracts = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllContractsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllContractsResponse {
+  repeated Contracts contracts = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryActiveDealRequest { string cid = 1; }
+
+message QueryActiveDealResponse {
+  ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllActiveDealsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllActiveDealsResponse {
+  repeated ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryProviderRequest { string address = 1; }
+
+message QueryProviderResponse {
+  Providers providers = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllProvidersRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllProvidersResponse {
+  repeated Providers providers = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryFreespaceRequest { string address = 1; }
+
+message QueryFreespaceResponse { string space = 1; }
+
+message QueryFindFileRequest { string fid = 1; }
+
+message QueryFindFileResponse { string provider_ips = 1; }
+
+message QueryPayBlockRequest { string blockid = 1; }
+
+message QueryPayBlockResponse {
+  PayBlocks pay_blocks = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllPayBlocksRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPayBlocksResponse {
+  repeated PayBlocks pay_blocks = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryClientUsageRequest { string address = 1; }
+
+message QueryClientUsageResponse {
+  ClientUsage client_usage = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllClientUsageRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllClientUsageResponse {
+  repeated ClientUsage client_usage = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryStrayRequest { string cid = 1; }
+
+message QueryStrayResponse {
+  Strays strays = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllStraysRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStraysResponse {
+  repeated Strays strays = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryClientFreeSpaceRequest { string address = 1; }
+
+message QueryClientFreeSpaceResponse { string bytesfree = 1; }
+
+message QueryFidCidRequest { string fid = 1; }
+
+message QueryFidCidResponse {
+  FidCid fid_cid = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllFidCidRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllFidCidResponse {
+  repeated FidCid fid_cid = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryPayDataRequest { string address = 1; }
+
+message QueryPayDataResponse {
+  int64 blocks_remaining = 1;
+  int64 bytes = 2;
+}
+
+// this line is used by starport scaffolding # 3

@@ -22,7 +22,7 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 	suite.Require().NoError(err)
 
-	providerRequest := types.QueryGetProvidersRequest{
+	providerRequest := types.QueryProviderRequest{
 		Address: user.String(),
 	}
 

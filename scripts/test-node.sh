@@ -19,7 +19,7 @@ echo "brief enhance flee chest rabbit matter chaos clever lady enable luggage ar
 canined add-genesis-account $(canined keys show -a $ALIAS --keyring-backend=test --home=$JKL_HOME) 500000000ujkl --home=$JKL_HOME
 canined add-genesis-account $(canined keys show -a charlie --keyring-backend=test --home=$JKL_HOME) 500000000ujkl --home=$JKL_HOME
 canined add-genesis-account $(canined keys show -a danny --keyring-backend=test --home=$JKL_HOME) 500000000ujkl --home=$JKL_HOME
-canined add-genesis-account jkl1j6hsmmnxp2jjjad8xs07lxpy78z2rx58aqr6l2 500000000ujkl --home=$JKL_HOME
+canined add-genesis-account $1 500000000ujkl --home=$JKL_HOME
 
 canined gentx $ALIAS 200000000ujkl \
 --chain-id=$CHAIN \
@@ -39,6 +39,6 @@ sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" 
 sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enabled-unsafe-cors = false/enabled-unsafe-cors = true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/' $JKL_HOME/config/config.toml
-# sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $JKL_HOME/.canine/config/client.toml
+sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $JKL_HOME/.canine/config/client.toml
 
 canined start --home=$JKL_HOME --log_level info

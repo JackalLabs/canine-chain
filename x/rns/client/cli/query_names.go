@@ -54,7 +54,7 @@ func CmdShowNames() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryGetNamesRequest{
+			params := &types.QueryNameRequest{
 				Index: argIndex,
 			}
 

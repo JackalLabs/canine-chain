@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) GetClientFreeSpace(goCtx context.Context, req *types.QueryGetClientFreeSpaceRequest) (*types.QueryGetClientFreeSpaceResponse, error) {
+func (k Keeper) GetClientFreeSpace(goCtx context.Context, req *types.QueryClientFreeSpaceRequest) (*types.QueryClientFreeSpaceResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -38,5 +38,5 @@ func (k Keeper) GetClientFreeSpace(goCtx context.Context, req *types.QueryGetCli
 
 	bfree := paid - usage.Int64()
 
-	return &types.QueryGetClientFreeSpaceResponse{Bytesfree: fmt.Sprintf("%d", bfree)}, nil
+	return &types.QueryClientFreeSpaceResponse{Bytesfree: fmt.Sprintf("%d", bfree)}, nil
 }
