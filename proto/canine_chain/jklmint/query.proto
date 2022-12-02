@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "canine_chain/jklmint/params.proto";
 
-option go_package = "github.com/jackal-dao/canine-chain/x/jklmint/types";
+option go_package = "github.com/jackalLabs/canine-chain/x/jklmint/types";
 
 // Query defines the gRPC querier service.
 service Query {

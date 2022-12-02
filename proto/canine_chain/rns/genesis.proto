@@ -9,7 +9,7 @@ import "canine_chain/rns/bids.proto";
 import "canine_chain/rns/forsale.proto";
 import "canine_chain/rns/init.proto";
 
-option go_package = "github.com/jackal-dao/canine-chain/x/rns/types";
+option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
 
 // GenesisState defines the rns module's genesis state.
 message GenesisState {

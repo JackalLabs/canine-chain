@@ -12,6 +12,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
 
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
 	moduletestutil "github.com/jackalLabs/canine-chain/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
@@ -41,6 +42,7 @@ func setupStorageKeeper(t *testing.T) (
 	encCfg := moduletestutil.MakeTestEncodingConfig()
 	types.RegisterInterfaces(encCfg.InterfaceRegistry)
 	banktypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+	authtypes.RegisterInterfaces(encCfg.InterfaceRegistry)
 
 	// Create MsgServiceRouter, but don't populate it before creating the storage keeper.
 	msr := baseapp.NewMsgServiceRouter()
@@ -50,6 +52,7 @@ func setupStorageKeeper(t *testing.T) (
 	bankKeeper := storagetestutil.NewMockBankKeeper(ctrl)
 	accountKeeper := storagetestutil.NewMockAccountKeeper(ctrl)
 	trackMockBalances(bankKeeper)
+	accountKeeper.EXPECT().GetModuleAddress(types.ModuleName).Return(modAccount).AnyTimes()
 
 	paramsSubspace := typesparams.NewSubspace(encCfg.Codec,
 		types.Amino,
@@ -77,7 +80,14 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 
 	// We don't track module account balances.
 	bankKeeper.EXPECT().MintCoins(gomock.Any(), minttypes.ModuleName, gomock.Any()).AnyTimes()
-	bankKeeper.EXPECT().BurnCoins(gomock.Any(), types.ModuleName, gomock.Any()).AnyTimes()
+	bankKeeper.EXPECT().BurnCoins(gomock.Any(), types.ModuleName, gomock.Any()).DoAndReturn(func(_ sdk.Context, moduleName string, coins sdk.Coins) error {
+		newBalance, negative := balances[modAccount.String()].SafeSub(coins)
+		if negative {
+			return fmt.Errorf("not enough balance")
+		}
+		balances[modAccount.String()] = newBalance
+		return nil
+	}).AnyTimes()
 	bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), minttypes.ModuleName, types.ModuleName, gomock.Any()).AnyTimes()
 
 	// But we do track normal account balances.
@@ -95,5 +105,9 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 	}).AnyTimes()
 	bankKeeper.EXPECT().GetAllBalances(gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, addr sdk.AccAddress) sdk.Coins {
 		return balances[addr.String()]
+	}).AnyTimes()
+	bankKeeper.EXPECT().GetBalance(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin {
+		amt := balances[addr.String()].AmountOf(denom)
+		return sdk.NewCoin(denom, amt)
 	}).AnyTimes()
 }

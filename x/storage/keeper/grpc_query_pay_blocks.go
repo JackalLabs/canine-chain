@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) PayBlocksAll(c context.Context, req *types.QueryAllPayBlocksRequest) (*types.QueryPayBlocksAllResponse, error) {
+func (k Keeper) PayBlocksAll(c context.Context, req *types.QueryAllPayBlocksRequest) (*types.QueryAllPayBlocksResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,10 +35,10 @@ func (k Keeper) PayBlocksAll(c context.Context, req *types.QueryAllPayBlocksRequ
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryPayBlocksAllResponse{PayBlocks: payBlockss, Pagination: pageRes}, nil
+	return &types.QueryAllPayBlocksResponse{PayBlocks: payBlockss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) PayBlocks(c context.Context, req *types.QueryGetPayBlocksRequest) (*types.QueryPayBlocksResponse, error) {
+func (k Keeper) PayBlocks(c context.Context, req *types.QueryPayBlockRequest) (*types.QueryPayBlockResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) PayBlocks(c context.Context, req *types.QueryGetPayBlocksRequest
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryPayBlocksResponse{PayBlocks: val}, nil
+	return &types.QueryPayBlockResponse{PayBlocks: val}, nil
 }

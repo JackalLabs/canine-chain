@@ -12,7 +12,7 @@ import "canine_chain/storage/strays.proto";
 import "canine_chain/storage/fid_cid.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
-option go_package = "github.com/jackal-dao/canine-chain/x/storage/types";
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
 // GenesisState defines the storage module's genesis state.
 message GenesisState {

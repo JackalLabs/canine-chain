@@ -52,7 +52,7 @@ func local_request_Query_Params_0(ctx context.Context, marshaler runtime.Marshal
 }
 
 func request_Query_Names_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetNamesRequest
+	var protoReq QueryNameRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -79,7 +79,7 @@ func request_Query_Names_0(ctx context.Context, marshaler runtime.Marshaler, cli
 }
 
 func local_request_Query_Names_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetNamesRequest
+	var protoReq QueryNameRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -142,7 +142,7 @@ func local_request_Query_NamesAll_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func request_Query_Bids_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetBidsRequest
+	var protoReq QueryBidRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -169,7 +169,7 @@ func request_Query_Bids_0(ctx context.Context, marshaler runtime.Marshaler, clie
 }
 
 func local_request_Query_Bids_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetBidsRequest
+	var protoReq QueryBidRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -232,7 +232,7 @@ func local_request_Query_BidsAll_0(ctx context.Context, marshaler runtime.Marsha
 }
 
 func request_Query_Forsale_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetForsaleRequest
+	var protoReq QueryForsaleRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -259,7 +259,7 @@ func request_Query_Forsale_0(ctx context.Context, marshaler runtime.Marshaler, c
 }
 
 func local_request_Query_Forsale_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetForsaleRequest
+	var protoReq QueryForsaleRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -290,7 +290,7 @@ var (
 )
 
 func request_Query_ForsaleAll_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllForsaleRequest
+	var protoReq QueryAllForsalesRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -306,7 +306,7 @@ func request_Query_ForsaleAll_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_Query_ForsaleAll_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllForsaleRequest
+	var protoReq QueryAllForsalesRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -322,7 +322,7 @@ func local_request_Query_ForsaleAll_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func request_Query_Init_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetInitRequest
+	var protoReq QueryInitRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -349,7 +349,7 @@ func request_Query_Init_0(ctx context.Context, marshaler runtime.Marshaler, clie
 }
 
 func local_request_Query_Init_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryGetInitRequest
+	var protoReq QueryInitRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -380,7 +380,7 @@ var (
 )
 
 func request_Query_InitAll_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllInitRequest
+	var protoReq QueryAllInitsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -396,7 +396,7 @@ func request_Query_InitAll_0(ctx context.Context, marshaler runtime.Marshaler, c
 }
 
 func local_request_Query_InitAll_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllInitRequest
+	var protoReq QueryAllInitsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {

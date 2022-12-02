@@ -12,5 +12,8 @@ import (
 func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
-	k.HandleBlock(ctx)
+	err := k.HandleRewardBlock(ctx)
+	if err != nil {
+		ctx.Logger().Error(err.Error())
+	}
 }

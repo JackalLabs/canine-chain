@@ -54,7 +54,7 @@ func CmdShowActiveDeals() *cobra.Command {
 
 			argCid := args[0]
 
-			params := &types.QueryGetActiveDealsRequest{
+			params := &types.QueryActiveDealRequest{
 				Cid: argCid,
 			}
 

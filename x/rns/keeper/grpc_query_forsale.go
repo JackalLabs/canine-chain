@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ForsaleAll(c context.Context, req *types.QueryAllForsaleRequest) (*types.QueryForsaleAllResponse, error) {
+func (k Keeper) ForsaleAll(c context.Context, req *types.QueryAllForsalesRequest) (*types.QueryAllForsalesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,10 +35,10 @@ func (k Keeper) ForsaleAll(c context.Context, req *types.QueryAllForsaleRequest)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryForsaleAllResponse{Forsale: forsales, Pagination: pageRes}, nil
+	return &types.QueryAllForsalesResponse{Forsale: forsales, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Forsale(c context.Context, req *types.QueryGetForsaleRequest) (*types.QueryForsaleResponse, error) {
+func (k Keeper) Forsale(c context.Context, req *types.QueryForsaleRequest) (*types.QueryForsaleResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

@@ -54,7 +54,7 @@ func CmdShowPayBlocks() *cobra.Command {
 
 			argBlockid := args[0]
 
-			params := &types.QueryGetPayBlocksRequest{
+			params := &types.QueryPayBlockRequest{
 				Blockid: argBlockid,
 			}
 
