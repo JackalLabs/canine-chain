@@ -15,13 +15,22 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 
 	denom := k.GetParams(ctx).MintDenom
 
-	totalCoin := sdk.NewCoin(denom, sdk.NewInt((validatorRatio)*1000000))
+	totalCoin := sdk.NewCoin(denom, sdk.NewInt((validatorRatio+providerRatio)*1000000))
 
 	// mint coins, update supply
 	mintedCoin := sdk.NewCoin(denom, sdk.NewInt(validatorRatio*1000000))
 	mintedCoins := sdk.NewCoins(mintedCoin)
 
+	// mint coins, update supply
+	providerCoin := sdk.NewCoin(denom, sdk.NewInt(providerRatio*1000000))
+	providerCoins := sdk.NewCoins(providerCoin)
+
 	err := k.MintCoins(ctx, sdk.NewCoins(totalCoin))
+	if err != nil {
+		panic(err)
+	}
+
+	err = k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, storeTypes.ModuleName, providerCoins)
 	if err != nil {
 		panic(err)
 	}
@@ -32,16 +41,7 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 		panic(err)
 	}
 
-	// mint coins, update supply
-	providerCoin := sdk.NewCoin(denom, sdk.NewInt(providerRatio*1000000))
-	providerCoins := sdk.NewCoins(providerCoin)
-
-	err = k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, storeTypes.ModuleName, providerCoins)
-	if err != nil {
-		panic(err)
-	}
-
-	if mintedCoin.Amount.IsInt64() {
+	if totalCoin.Amount.IsInt64() {
 		defer telemetry.ModuleSetGauge(types.ModuleName, float32(totalCoin.Amount.Int64()), "minted_tokens")
 	}
 
