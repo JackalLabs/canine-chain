@@ -16,6 +16,15 @@ parent:
     + [Transactions](#transactions)
 4. [Transaction Messages](#transaction-messages)
     + [Postkey](#postkey)
+    + [Makeroot](#makeroot)
+    + [Postfile](#postfile)
+    + [Delete](#delete)
+5. [Query Requests](#query-requests)
+    + [GetPubkey](#getpubkey)
+    + [GetFiles](#getfiles)
+
+
+
     
 
 
@@ -165,7 +174,7 @@ Coming soon
 
 Below is a full description of valid query requests that can be made to retrieve state information. These descriptions aim to be "implementation agnostic", i.e., they make sense to both the CLI/Golang and TS implementations.
 
-### QueryGetPubkeyRequest
+### GetPubkey
 
 Retrieve a user's ecies.PublicKey
 
@@ -176,3 +185,19 @@ Retrieve a user's ecies.PublicKey
 #### Response
 
 types.PubKey
+
+### GetFiles
+
+Retrieve a Files struct. Let it be that alice want's to retrieve "s/home/bunny.jpg"
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|Address  | String  | MerklePath("s/home/bunny.jpg")    <br />
+|OwnerAddress  | String  | accountHash = Hex[hash(alice's bech32 address)] <br /> let c = concatenate("o", MerklePath("s/home/bunny.jpg"), accountHash) <br /> OwnerAddress = hex[hash(c)]<br />
+
+
+#### Response
+
+types.Files
+
+
