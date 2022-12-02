@@ -21,7 +21,7 @@ type (
 		stakingKeeper    types.StakingKeeper
 		bankKeeper       types.BankKeeper
 		feeCollectorName string
-		// miningName       string
+		miningName       string
 	}
 )
 
@@ -33,7 +33,7 @@ func NewKeeper(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	feeCollectorName string,
-	// miningName string,
+	miningName string,
 ) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -52,7 +52,7 @@ func NewKeeper(
 		stakingKeeper:    sk,
 		bankKeeper:       bk,
 		feeCollectorName: feeCollectorName,
-		// miningName:       miningName,
+		miningName:       miningName,
 	}
 }
 
