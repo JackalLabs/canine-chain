@@ -54,7 +54,7 @@ func CmdShowProviders() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryGetProvidersRequest{
+			params := &types.QueryProviderRequest{
 				Address: argAddress,
 			}
 

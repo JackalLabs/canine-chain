@@ -54,7 +54,7 @@ func CmdShowStrays() *cobra.Command {
 
 			argCid := args[0]
 
-			params := &types.QueryGetStraysRequest{
+			params := &types.QueryStrayRequest{
 				Cid: argCid,
 			}
 

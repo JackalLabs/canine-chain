@@ -30,7 +30,7 @@ service Query {
   }
 
   // Queries a Files by index.
-  rpc Files(QueryGetFilesRequest) returns (QueryGetFilesResponse) {
+  rpc Files(QueryFileRequest) returns (QueryFileResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/filetree/files/{address}/{ownerAddress}";
   }
@@ -40,21 +40,15 @@ service Query {
     option (google.api.http).get = "/jackal-dao/canine-chain/filetree/files";
   }
 
-  // Queries a list of GetKeys items.
-  rpc GetKeys(QueryGetKeysRequest) returns (QueryGetKeysResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/get_keys/{hashpath}";
-  }
-
   // Queries a Pubkey by index.
-  rpc Pubkey(QueryGetPubkeyRequest) returns (QueryGetPubkeyResponse) {
+  rpc Pubkey(QueryPubkeyRequest) returns (QueryPubkeyResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/pubkey/{address}";
+        "/jackal-dao/canine-chain/filetree/pubkeys/{address}";
   }
 
   // Queries a list of Pubkey items.
-  rpc PubkeyAll(QueryAllPubkeyRequest) returns (QueryAllPubkeyResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/filetree/pubkey";
+  rpc PubkeyAll(QueryAllPubkeysRequest) returns (QueryAllPubkeysResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/filetree/pubkeys";
   }
 }
 
@@ -78,14 +72,12 @@ message QueryDecryptRequest { string message = 1; }
 
 message QueryDecryptResponse { string data = 1; }
 
-message QueryGetFilesRequest {
+message QueryFileRequest {
   string address = 1;
   string ownerAddress = 2;
 }
 
-message QueryGetFilesResponse {
-  Files files = 1 [ (gogoproto.nullable) = false ];
-}
+message QueryFileResponse { Files files = 1 [ (gogoproto.nullable) = false ]; }
 
 message QueryAllFilesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
@@ -96,26 +88,17 @@ message QueryAllFilesResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetKeysRequest { string hashpath = 1; }
+message QueryPubkeyRequest { string address = 1; }
 
-message QueryGetKeysResponse { string keys = 1; }
-
-message QueryGetKeyRequest {
-  string filepath = 1;
-  string owner = 2;
-}
-
-message QueryGetPubkeyRequest { string address = 1; }
-
-message QueryGetPubkeyResponse {
+message QueryPubkeyResponse {
   Pubkey pubkey = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllPubkeyRequest {
+message QueryAllPubkeysRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllPubkeyResponse {
+message QueryAllPubkeysResponse {
   repeated Pubkey pubkey = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

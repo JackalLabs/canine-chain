@@ -38,7 +38,7 @@ func (k Keeper) StraysAll(c context.Context, req *types.QueryAllStraysRequest) (
 	return &types.QueryAllStraysResponse{Strays: strayss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Strays(c context.Context, req *types.QueryGetStraysRequest) (*types.QueryStraysResponse, error) {
+func (k Keeper) Strays(c context.Context, req *types.QueryStrayRequest) (*types.QueryStrayResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) Strays(c context.Context, req *types.QueryGetStraysRequest) (*ty
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryStraysResponse{Strays: val}, nil
+	return &types.QueryStrayResponse{Strays: val}, nil
 }

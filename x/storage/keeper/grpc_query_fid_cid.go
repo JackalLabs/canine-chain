@@ -38,7 +38,7 @@ func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (
 	return &types.QueryAllFidCidResponse{FidCid: fidCids, Pagination: pageRes}, nil
 }
 
-func (k Keeper) FidCid(c context.Context, req *types.QueryGetFidCidRequest) (*types.QueryFidCidResponse, error) {
+func (k Keeper) FidCid(c context.Context, req *types.QueryFidCidRequest) (*types.QueryFidCidResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

@@ -54,7 +54,7 @@ func CmdShowFidCid() *cobra.Command {
 
 			argFid := args[0]
 
-			params := &types.QueryGetFidCidRequest{
+			params := &types.QueryFidCidRequest{
 				Fid: argFid,
 			}
 

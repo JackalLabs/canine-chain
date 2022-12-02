@@ -54,7 +54,7 @@ func CmdShowClientUsage() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryGetClientUsageRequest{
+			params := &types.QueryClientUsageRequest{
 				Address: argAddress,
 			}
 

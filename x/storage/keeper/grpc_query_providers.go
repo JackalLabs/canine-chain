@@ -38,7 +38,7 @@ func (k Keeper) ProvidersAll(c context.Context, req *types.QueryAllProvidersRequ
 	return &types.QueryAllProvidersResponse{Providers: providerss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Providers(c context.Context, req *types.QueryGetProvidersRequest) (*types.QueryProvidersResponse, error) {
+func (k Keeper) Providers(c context.Context, req *types.QueryProviderRequest) (*types.QueryProviderResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) Providers(c context.Context, req *types.QueryGetProvidersRequest
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryProvidersResponse{Providers: val}, nil
+	return &types.QueryProviderResponse{Providers: val}, nil
 }

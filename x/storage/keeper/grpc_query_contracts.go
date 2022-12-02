@@ -38,7 +38,7 @@ func (k Keeper) ContractsAll(c context.Context, req *types.QueryAllContractsRequ
 	return &types.QueryAllContractsResponse{Contracts: contractss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Contracts(c context.Context, req *types.QueryGetContractsRequest) (*types.QueryContractsResponse, error) {
+func (k Keeper) Contracts(c context.Context, req *types.QueryContractRequest) (*types.QueryContractResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) Contracts(c context.Context, req *types.QueryGetContractsRequest
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryContractsResponse{Contracts: val}, nil
+	return &types.QueryContractResponse{Contracts: val}, nil
 }

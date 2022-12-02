@@ -54,7 +54,7 @@ func CmdShowBids() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryGetBidsRequest{
+			params := &types.QueryBidRequest{
 				Index: argIndex,
 			}
 

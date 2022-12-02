@@ -26,7 +26,7 @@ func CmdGetClientFreeSpace() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryGetClientFreeSpaceRequest{
+			params := &types.QueryClientFreeSpaceRequest{
 				Address: reqAddress,
 			}
 

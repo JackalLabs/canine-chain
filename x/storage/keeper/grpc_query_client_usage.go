@@ -38,7 +38,7 @@ func (k Keeper) ClientUsageAll(c context.Context, req *types.QueryAllClientUsage
 	return &types.QueryAllClientUsageResponse{ClientUsage: clientUsages, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ClientUsage(c context.Context, req *types.QueryGetClientUsageRequest) (*types.QueryClientUsageResponse, error) {
+func (k Keeper) ClientUsage(c context.Context, req *types.QueryClientUsageRequest) (*types.QueryClientUsageResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

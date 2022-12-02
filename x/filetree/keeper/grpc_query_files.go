@@ -39,7 +39,7 @@ func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*t
 	return &types.QueryAllFilesResponse{Files: filess, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Files(c context.Context, req *types.QueryGetFilesRequest) (*types.QueryGetFilesResponse, error) {
+func (k Keeper) Files(c context.Context, req *types.QueryFileRequest) (*types.QueryFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,5 +53,5 @@ func (k Keeper) Files(c context.Context, req *types.QueryGetFilesRequest) (*type
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetFilesResponse{Files: val}, nil
+	return &types.QueryFileResponse{Files: val}, nil
 }

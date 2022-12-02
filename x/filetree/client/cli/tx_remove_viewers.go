@@ -43,7 +43,7 @@ func CmdRemoveViewers() *cobra.Command {
 					continue
 				}
 
-				params := &types.QueryGetFilesRequest{
+				params := &types.QueryFileRequest{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}

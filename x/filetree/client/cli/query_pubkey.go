@@ -11,8 +11,8 @@ import (
 
 func CmdListPubkey() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-pubkey",
-		Short: "list all pubkey",
+		Use:   "list-pubkeys",
+		Short: "list all pubkeys",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -23,7 +23,7 @@ func CmdListPubkey() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllPubkeyRequest{
+			params := &types.QueryAllPubkeysRequest{
 				Pagination: pageReq,
 			}
 
@@ -54,7 +54,7 @@ func CmdShowPubkey() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryGetPubkeyRequest{
+			params := &types.QueryPubkeyRequest{
 				Address: argAddress,
 			}
 

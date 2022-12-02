@@ -66,7 +66,7 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 
 	queryClient := filetypes.NewQueryClient(clientCtx)
 
-	res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key})
+	res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryPubkeyRequest{Address: key})
 	if err != nil {
 		return nil, filetypes.ErrPubKeyNotFound
 	}

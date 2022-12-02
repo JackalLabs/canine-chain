@@ -23,7 +23,7 @@ service Query {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/params";
   }
   // Queries a Contracts by index.
-  rpc Contracts(QueryGetContractsRequest) returns (QueryContractsResponse) {
+  rpc Contracts(QueryContractRequest) returns (QueryContractResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/contracts/{cid}";
   }
@@ -35,8 +35,7 @@ service Query {
   }
 
   // Queries a ActiveDeals by index.
-  rpc ActiveDeals(QueryGetActiveDealsRequest)
-      returns (QueryActiveDealsResponse) {
+  rpc ActiveDeals(QueryActiveDealRequest) returns (QueryActiveDealResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/active_deals/{cid}";
   }
@@ -49,7 +48,7 @@ service Query {
   }
 
   // Queries a Providers by index.
-  rpc Providers(QueryGetProvidersRequest) returns (QueryProvidersResponse) {
+  rpc Providers(QueryProviderRequest) returns (QueryProviderResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/providers/{address}";
   }
@@ -73,7 +72,7 @@ service Query {
   }
 
   // Queries a PayBlocks by index.
-  rpc PayBlocks(QueryGetPayBlocksRequest) returns (QueryPayBlocksResponse) {
+  rpc PayBlocks(QueryPayBlockRequest) returns (QueryPayBlockResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/pay_blocks/{blockid}";
   }
@@ -86,8 +85,7 @@ service Query {
   }
 
   // Queries a ClientUsage by index.
-  rpc ClientUsage(QueryGetClientUsageRequest)
-      returns (QueryClientUsageResponse) {
+  rpc ClientUsage(QueryClientUsageRequest) returns (QueryClientUsageResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/client_usage/{address}";
   }
@@ -100,7 +98,7 @@ service Query {
   }
 
   // Queries a Strays by index.
-  rpc Strays(QueryGetStraysRequest) returns (QueryStraysResponse) {
+  rpc Strays(QueryStrayRequest) returns (QueryStrayResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/strays/{cid}";
   }
@@ -111,14 +109,14 @@ service Query {
   }
 
   // Queries a list of GetClientFreeSpace items.
-  rpc GetClientFreeSpace(QueryGetClientFreeSpaceRequest)
-      returns (QueryGetClientFreeSpaceResponse) {
+  rpc GetClientFreeSpace(QueryClientFreeSpaceRequest)
+      returns (QueryClientFreeSpaceResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/get_client_free_space/{address}";
   }
 
   // Queries a FidCid by index.
-  rpc FidCid(QueryGetFidCidRequest) returns (QueryFidCidResponse) {
+  rpc FidCid(QueryFidCidRequest) returns (QueryFidCidResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/fid_cid/{fid}";
   }
@@ -129,7 +127,7 @@ service Query {
   }
 
   // Queries a list of GetPayData items.
-  rpc GetPayData(QueryGetPayDataRequest) returns (QueryGetPayDataResponse) {
+  rpc GetPayData(QueryPayDataRequest) returns (QueryPayDataResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/get_pay_data/{address}";
   }
@@ -146,9 +144,9 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryGetContractsRequest { string cid = 1; }
+message QueryContractRequest { string cid = 1; }
 
-message QueryContractsResponse {
+message QueryContractResponse {
   Contracts contracts = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -161,9 +159,9 @@ message QueryAllContractsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetActiveDealsRequest { string cid = 1; }
+message QueryActiveDealRequest { string cid = 1; }
 
-message QueryActiveDealsResponse {
+message QueryActiveDealResponse {
   ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -176,9 +174,9 @@ message QueryAllActiveDealsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetProvidersRequest { string address = 1; }
+message QueryProviderRequest { string address = 1; }
 
-message QueryProvidersResponse {
+message QueryProviderResponse {
   Providers providers = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -199,9 +197,9 @@ message QueryFindFileRequest { string fid = 1; }
 
 message QueryFindFileResponse { string provider_ips = 1; }
 
-message QueryGetPayBlocksRequest { string blockid = 1; }
+message QueryPayBlockRequest { string blockid = 1; }
 
-message QueryPayBlocksResponse {
+message QueryPayBlockResponse {
   PayBlocks pay_blocks = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -214,7 +212,7 @@ message QueryAllPayBlocksResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetClientUsageRequest { string address = 1; }
+message QueryClientUsageRequest { string address = 1; }
 
 message QueryClientUsageResponse {
   ClientUsage client_usage = 1 [ (gogoproto.nullable) = false ];
@@ -229,9 +227,9 @@ message QueryAllClientUsageResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetStraysRequest { string cid = 1; }
+message QueryStrayRequest { string cid = 1; }
 
-message QueryStraysResponse {
+message QueryStrayResponse {
   Strays strays = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -244,11 +242,11 @@ message QueryAllStraysResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetClientFreeSpaceRequest { string address = 1; }
+message QueryClientFreeSpaceRequest { string address = 1; }
 
-message QueryGetClientFreeSpaceResponse { string bytesfree = 1; }
+message QueryClientFreeSpaceResponse { string bytesfree = 1; }
 
-message QueryGetFidCidRequest { string fid = 1; }
+message QueryFidCidRequest { string fid = 1; }
 
 message QueryFidCidResponse {
   FidCid fid_cid = 1 [ (gogoproto.nullable) = false ];
@@ -263,9 +261,9 @@ message QueryAllFidCidResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetPayDataRequest { string address = 1; }
+message QueryPayDataRequest { string address = 1; }
 
-message QueryGetPayDataResponse {
+message QueryPayDataResponse {
   int64 blocks_remaining = 1;
   int64 bytes = 2;
 }

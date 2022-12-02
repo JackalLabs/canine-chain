@@ -38,7 +38,7 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 	return &types.QueryAllActiveDealsResponse{ActiveDeals: activeDealss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ActiveDeals(c context.Context, req *types.QueryGetActiveDealsRequest) (*types.QueryActiveDealsResponse, error) {
+func (k Keeper) ActiveDeals(c context.Context, req *types.QueryActiveDealRequest) (*types.QueryActiveDealResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) ActiveDeals(c context.Context, req *types.QueryGetActiveDealsReq
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryActiveDealsResponse{ActiveDeals: val}, nil
+	return &types.QueryActiveDealResponse{ActiveDeals: val}, nil
 }

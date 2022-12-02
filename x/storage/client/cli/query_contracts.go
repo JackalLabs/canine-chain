@@ -54,7 +54,7 @@ func CmdShowContracts() *cobra.Command {
 
 			argCid := args[0]
 
-			params := &types.QueryGetContractsRequest{
+			params := &types.QueryContractRequest{
 				Cid: argCid,
 			}
 
