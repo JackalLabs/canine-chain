@@ -23,6 +23,19 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		return nil, fmt.Errorf("you do not have permission to approve this contract")
 	}
 
+	size, ok := sdk.NewIntFromString(contract.Filesize)
+	if !ok {
+		return nil, fmt.Errorf("cannot parse size")
+	}
+
+	pieces := size.Quo(sdk.NewInt(1024))
+
+	var pieceToStart int64
+
+	if !pieces.IsZero() {
+		pieceToStart = ctx.BlockHeight() % pieces.Int64()
+	}
+
 	deal := types.ActiveDeals{
 		Cid:           contract.Cid,
 		Signee:        contract.Signee,
@@ -31,7 +44,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Endblock:      fmt.Sprintf("%d", ctx.BlockHeight()),
 		Filesize:      contract.Filesize,
 		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", ctx.BlockHeight()/1024),
+		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
 		Creator:       msg.Creator,
 		Proofsmissed:  "0",
 		Merkle:        contract.Merkle,
@@ -44,11 +57,6 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 			Address: msg.Creator,
 			Usage:   "0",
 		}
-	}
-
-	size, ok := sdk.NewIntFromString(contract.Filesize)
-	if !ok {
-		return nil, fmt.Errorf("cannot parse filesize")
 	}
 
 	used, ok := sdk.NewIntFromString(usage.Usage)
