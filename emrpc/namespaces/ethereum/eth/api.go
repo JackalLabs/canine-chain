@@ -739,6 +739,10 @@ func (e *PublicAPI) doCall(
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
 func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *rpctypes.BlockNumber) (hexutil.Uint64, error) {
 	e.logger.Error("eth_estimateGas")
+	//  checking if empty transaction
+	if args.To == nil {
+		return hexutil.Uint64(0), fmt.Errorf("No reciever address")
+	}
 	// converting addresses
 	// converting 'from' address
 	fromAddHex := args.From
