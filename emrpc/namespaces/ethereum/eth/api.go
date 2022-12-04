@@ -737,6 +737,7 @@ func (e *PublicAPI) doCall(
 }
 
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
+// TODO: Move the gas calculation to the EVM_BACKEND.
 func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *rpctypes.BlockNumber) (hexutil.Uint64, error) {
 	e.logger.Error("eth_estimateGas")
 	//  checking if empty transaction
@@ -771,8 +772,8 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		Amount:      gasCoins,
 	}
 	// creating blank fees and gas to send in mock transaction
-	blankfees := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(0)))        // guessing 1
-	blankcoins := sdk.NewDecCoins(sdk.NewDecCoin("ujkl", sdk.NewInt(1))) // setting to zero for estimate
+	blankfees := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(1)))        // guessing 1
+	blankcoins := sdk.NewDecCoins(sdk.NewDecCoin("ujkl", sdk.NewInt(0))) // setting to zero for estimate
 
 	// calculating the blocknumber
 	currentHeightHex, err := e.backend.BlockNumber()
@@ -793,7 +794,8 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		WithChainID(e.clientCtx.ChainID).
 		WithFees(blankfees.String()).
 		WithGasPrices(blankcoins.String()).
-		WithSimulateAndExecute(true)
+		WithSimulateAndExecute(true).
+		WithGasAdjustment(1.0)
 
 	// sending the sdk.Msg args
 	_, gas, err := sdktx.CalculateGas(e.clientCtx, txf, &banktx)
