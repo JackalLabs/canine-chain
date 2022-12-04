@@ -21,7 +21,7 @@ type (
 		stakingKeeper    types.StakingKeeper
 		bankKeeper       types.BankKeeper
 		feeCollectorName string
-		// miningName       string
+		miningName       string
 	}
 )
 
@@ -33,7 +33,7 @@ func NewKeeper(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	feeCollectorName string,
-	// miningName string,
+	miningName string,
 ) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -52,7 +52,7 @@ func NewKeeper(
 		stakingKeeper:    sk,
 		bankKeeper:       bk,
 		feeCollectorName: feeCollectorName,
-		// miningName:       miningName,
+		miningName:       miningName,
 	}
 }
 
@@ -96,7 +96,7 @@ func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
 
 	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
 
-	printedPerYear := blocksPerYearEstiamte * 4_000_000
+	printedPerYear := blocksPerYearEstiamte * 10_000_000
 
 	inflate := sdk.NewDec(printedPerYear)
 

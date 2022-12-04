@@ -452,7 +452,7 @@ func NewJackalApp(
 		app.AccountKeeper,
 		app.BankKeeper,
 		authtypes.FeeCollectorName,
-		//	storagemoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
 	)
 	mintModule := mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper)
 

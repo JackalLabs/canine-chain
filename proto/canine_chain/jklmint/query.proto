@@ -11,12 +11,12 @@ option go_package = "github.com/jackalLabs/canine-chain/x/jklmint/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/jklmint/params";
+    option (google.api.http).get = "/cosmos/mint/v1beta1/params";
   }
 
   // Inflation returns the current minting inflation value.
   rpc Inflation(QueryInflationRequest) returns (QueryInflationResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/jklmint/inflation";
+    option (google.api.http).get = "/cosmos/mint/v1beta1/inflation";
   }
 }
 
