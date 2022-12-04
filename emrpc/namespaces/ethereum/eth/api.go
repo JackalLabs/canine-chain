@@ -739,7 +739,6 @@ func (e *PublicAPI) doCall(
 // EstimateGas returns an estimate of gas usage for the given smart contract call.
 func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *rpctypes.BlockNumber) (hexutil.Uint64, error) {
 	e.logger.Error("eth_estimateGas")
-	e.logger.Error(args.String())
 	// converting addresses
 	// converting 'from' address
 	fromAddHex := args.From
@@ -753,14 +752,12 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 	if err != nil {
 		return hexutil.Uint64(0), fmt.Errorf("encoding bech32 failed: %w", err)
 	}
-	// printing eth-converted addresses
-	e.logger.Error(fromBech32, toBech32)
 	// transfer no coins
 	var blank int64
-	blank = 100
+	blank = 10
 	sdkBlank := sdk.NewInt(blank)
 
-	gasCoin := sdk.NewCoin("jkl", sdkBlank)
+	gasCoin := sdk.NewCoin("ujkl", sdkBlank)
 	gasCoins := sdk.NewCoins(gasCoin)
 
 	// converting the ethereum transaction into a sdk.Msg
@@ -770,8 +767,8 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		Amount:      gasCoins,
 	}
 	// creating blank fees and gas to send in mock transaction
-	blankfees := sdk.NewCoins(sdk.NewCoin("jkl", sdk.NewInt(0))) // setting to zero for estimate
-	blankcoins := sdk.NewDecCoins(sdk.NewDecCoin("jkl", sdk.NewInt(400)))
+	blankfees := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(0)))        // guessing 1
+	blankcoins := sdk.NewDecCoins(sdk.NewDecCoin("ujkl", sdk.NewInt(1))) // setting to zero for estimate
 
 	// calculating the blocknumber
 	currentHeightHex, err := e.backend.BlockNumber()
@@ -795,14 +792,14 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		WithSimulateAndExecute(true)
 
 	// sending the sdk.Msg args
-	simresp, gas, err := sdktx.CalculateGas(e.clientCtx, txf, &banktx)
-	e.logger.Error(simresp.String(), fmt.Sprint(gas), err)
+	_, gas, err := sdktx.CalculateGas(e.clientCtx, txf, &banktx)
+	e.logger.Error(fmt.Sprint(gas), err)
 	if err != nil {
 		e.logger.Error("failed to calculate gas")
 		return hexutil.Uint64(0), err
 	}
 	// temp return value
-	return hexutil.Uint64(14), nil
+	return hexutil.Uint64(gas), nil
 }
 
 // GetBlockByHash returns the block identified by hash.
