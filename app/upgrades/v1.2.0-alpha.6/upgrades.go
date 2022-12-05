@@ -13,9 +13,8 @@ func CreateUpgradeHandler(
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		logger := ctx.Logger().With("upgrade", UpgradeName)
 
-		for _, moduleName := range []string{"storage", "dsig", "notifications", "filetreekeeper"} {
-			logger.Debug("removing module", moduleName, "from version map")
-			delete(vm, moduleName)
+		for _, moduleName := range []string{"storage"} {
+			logger.Debug("adding module", moduleName, "to version map")
 		}
 
 		logger.Debug("running module migrations")
