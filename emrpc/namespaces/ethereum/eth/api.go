@@ -395,9 +395,11 @@ func (e *PublicAPI) GetUncleCountByBlockNumber(blockNum rpctypes.BlockNumber) he
 func (e *PublicAPI) GetCode(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (hexutil.Bytes, error) {
 	e.logger.Error("eth_getCode", "address", address.Hex(), "block number or hash", blockNrOrHash)
 
+	// b := []byte("0x")
 	// returning a hash of an empty string, as no EVM contracts are running on Canine.
-	var emptyCodeHash = crypto.Keccak256(nil)
-	return emptyCodeHash, nil
+	// var emptyCodeHash = crypto.Keccak256(b)
+	var ret hexutil.Bytes
+	return ret, nil
 
 	// req := &evmtypes.QueryCodeRequest{
 	// 	Address: address.String(),
