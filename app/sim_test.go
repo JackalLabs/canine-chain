@@ -55,7 +55,9 @@ type StoreKeysPrefixes struct {
 
 // SetupSimulation wraps simapp.SetupSimulation in order to create any export directory if they do not exist yet
 func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string, log.Logger, bool, error) {
+	simapp.FlagEnabledValue = true
 	config, db, dir, logger, skip, err := simapp.SetupSimulation(dirPrefix, dbName)
+	config.Commit = true
 	if err != nil {
 		return simtypes.Config{}, nil, "", nil, false, err
 	}
@@ -281,7 +283,6 @@ func TestFullAppSimulation(t *testing.T) {
 
 // if you want to start pprof graph: go tool pprof -http localhost:8080 cpu.out
 func BenchmarkFullAppSimulation(b *testing.B) {
-	simapp.FlagEnabledValue = true
 	config, db, dir, logger, _, err := SetupSimulation("leveldb-app-sim", "Simulation")
 	require.NoError(b, err, "simulation setup failed")
 

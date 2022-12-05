@@ -16,6 +16,7 @@ log.txt
 # Build
 vendor
 build
+_build
 tools/bin/*
 examples/build/*
 docs/_build
