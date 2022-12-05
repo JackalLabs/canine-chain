@@ -140,10 +140,9 @@ import (
 	*/
 
 	store "github.com/cosmos/cosmos-sdk/store/types"
-	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
 	v120alpha6 "github.com/jackalLabs/canine-chain/app/upgrades/v1.2.0-alpha.6"
+	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
-
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"

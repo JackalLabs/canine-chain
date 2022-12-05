@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/jackalLabs/canine-chain/types"
 )
 
 func CreateUpgradeHandler(
@@ -13,7 +14,14 @@ func CreateUpgradeHandler(
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		logger := ctx.Logger().With("upgrade", UpgradeName)
 
-		logger.Debug("running module migrations")
+		if types.IsTestnet(ctx.ChainID()) {
+			logger.Debug("Updating to 1.2.0-alpha.6")
+		}
+
+		if types.IsMainnet(ctx.ChainID()) {
+			logger.Debug("Ignoring Infra & Storage Deals for mainnet")
+		}
+
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }
