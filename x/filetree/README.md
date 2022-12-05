@@ -137,8 +137,8 @@ Let it be that alice wants to create a home folder
 |--|--|--|
 |creator  | String  | The creator and broadcaster of this message. Pass in alice's Bech32 address<br /> 
 |account  | String  | Hex[ hash( alice's Bech32 address )]<br />
-|hashparent  | String  | MerklePath("s")<br />
-|hashchild  | String  |  Hex[ hash("home") ]<br />
+|hashParent  | String  | MerklePath("s")<br />
+|hashChild  | String  |  Hex[ hash("home") ]<br />
 |contents  | String  | FID<br />
 |viewers  | String  | string(json encoded map) with: <br />let c = concatenate( "v", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br />
 |editors  | String  | same as above but with c = concatenate( "e", trackingNumber, Bech32 address )<br />
