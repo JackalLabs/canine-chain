@@ -180,7 +180,7 @@ Retrieve a user's ecies.PublicKey
 
 |Name|Type|Description|                                                                                       
 |--|--|--|
-|Address  | String  | user's Bech32 address<br />
+|address  | String  | user's Bech32 address<br />
 
 #### Response
 
@@ -192,8 +192,8 @@ Retrieve a Files struct. Let it be that alice want's to retrieve "s/home/bunny.j
 
 |Name|Type|Description|                                                                                       
 |--|--|--|
-|Address  | String  | MerklePath("s/home/bunny.jpg")    <br />
-|OwnerAddress  | String  | accountHash = Hex[hash(alice's bech32 address)] <br /> let c = concatenate("o", MerklePath("s/home/bunny.jpg"), accountHash) <br /> OwnerAddress = hex[hash(c)]<br />
+|address  | String  | MerklePath("s/home/bunny.jpg")    <br />
+|ownerAddress  | String  | accountHash = Hex[hash(alice's bech32 address)] <br /> let c = concatenate("o", MerklePath("s/home/bunny.jpg"), accountHash) <br /> OwnerAddress = hex[hash(c)]<br />
 
 
 #### Response
