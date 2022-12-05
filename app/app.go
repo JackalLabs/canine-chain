@@ -1102,11 +1102,11 @@ func (app *JackalApp) setupUpgradeHandlers() {
 		}
 	}
 
-	if upgradeInfo.Name == v120alpha6.UpgradeName {
-		storeUpgrades = &store.StoreUpgrades{
-			Added: []string{"storage"},
-		}
-	}
+	// if upgradeInfo.Name == v120alpha6.UpgradeName {
+	// 	storeUpgrades = &store.StoreUpgrades{
+	// 		Added: []string{"storage"},
+	// 	}
+	// }
 
 	if upgradeInfo.Name == v3.UpgradeName {
 		storeUpgrades = &store.StoreUpgrades{
