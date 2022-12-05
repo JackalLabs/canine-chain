@@ -26,13 +26,13 @@ import (
 	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	minttypes "github.com/jackalLabs/canine-chain/x/jklmint/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -55,7 +55,9 @@ type StoreKeysPrefixes struct {
 
 // SetupSimulation wraps simapp.SetupSimulation in order to create any export directory if they do not exist yet
 func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string, log.Logger, bool, error) {
+	simapp.FlagEnabledValue = true
 	config, db, dir, logger, skip, err := simapp.SetupSimulation(dirPrefix, dbName)
+	config.Commit = true
 	if err != nil {
 		return simtypes.Config{}, nil, "", nil, false, err
 	}
@@ -279,6 +281,43 @@ func TestFullAppSimulation(t *testing.T) {
 	}
 }
 
+// if you want to start pprof graph: go tool pprof -http localhost:8080 cpu.out
+func BenchmarkFullAppSimulation(b *testing.B) {
+	config, db, dir, logger, _, err := SetupSimulation("leveldb-app-sim", "Simulation")
+	require.NoError(b, err, "simulation setup failed")
+
+	defer func() {
+		db.Close()
+		require.NoError(b, os.RemoveAll(dir))
+	}()
+	encConf := MakeEncodingConfig()
+	app := NewJackalApp(logger, db, nil, true, map[int64]bool{}, b.TempDir(), simapp.FlagPeriodValue,
+		encConf, wasm.EnableAllProposals, simapp.EmptyAppOptions{}, nil, fauxMerkleModeOpt)
+	require.Equal(b, "JackalApp", app.Name())
+
+	// run randomized simulation
+	_, simParams, simErr := simulation.SimulateFromSeed(
+		b,
+		os.Stdout,
+		app.BaseApp,
+		AppStateFn(app.appCodec, app.SimulationManager()),
+		simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
+		simapp.SimulationOperations(app, app.AppCodec(), config),
+		app.ModuleAccountAddrs(),
+		config,
+		app.AppCodec(),
+	)
+
+	// export state and simParams before the simulation error is checked
+	err = simapp.CheckExportSimulation(app, config, simParams)
+	require.NoError(b, err)
+	require.NoError(b, simErr)
+
+	if config.Commit {
+		simapp.PrintStats(db)
+	}
+}
+
 // AppStateFn returns the initial application state using a genesis or the simulation parameters.
 // It panics if the user provides files for both of them.
 // If a file is not given for the genesis or the sim params, it creates a randomized one.
@@ -288,5 +327,6 @@ func AppStateFn(codec codec.Codec, manager *module.SimulationManager) simtypes.A
 	if simapp.FlagGenesisTimeValue == 0 { // always set to have a block time
 		simapp.FlagGenesisTimeValue = time.Now().Unix()
 	}
+
 	return simapp.AppStateFn(codec, manager)
 }
