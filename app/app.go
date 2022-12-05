@@ -575,7 +575,7 @@ func NewJackalApp(
 
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
-	supportedFeatures := "iterator,staking,stargate"
+	supportedFeatures := "iterator,staking,stargate,cosmwasm_1_1"
 	app.wasmKeeper = wasm.NewKeeper(
 		appCodec,
 		keys[wasm.StoreKey],
@@ -622,7 +622,7 @@ func NewJackalApp(
 		app.DsigKeeper = *dsigmodulekeeper.NewKeeper(
 			appCodec,
 			keys[dsigmoduletypes.StoreKey],
-			keys[dsigmoduletypes.MemStoreKey],
+			keys[dsigmoduletypes.MemStoreKey],wasm
 			app.getSubspace(dsigmoduletypes.ModuleName),
 
 			app.AccountKeeper,
