@@ -15,7 +15,7 @@ func CreateUpgradeHandler(
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		logger := ctx.Logger().With("upgrade", UpgradeName)
 
-		for _, moduleName := range []string{"storage"} {
+		for _, moduleName := range []string{"storage", "filetree"} {
 			logger.Debug("adding module", moduleName, "to version map")
 		}
 
