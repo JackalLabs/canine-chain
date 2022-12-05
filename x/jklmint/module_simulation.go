@@ -29,7 +29,9 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	jklmintGenesis := types.GenesisState{}
+	jklmintGenesis := types.GenesisState{
+		Params: types.NewParams(sdk.DefaultBondDenom),
+	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&jklmintGenesis)
 }
 
