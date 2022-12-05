@@ -49,10 +49,11 @@ sleep 3
 
 # determine block_height to halt
 while true; do 
-    BLOCK_HEIGHT=$(./build/new/canined status | jq '.SyncInfo.latest_block_height' -r)
+    BLOCK_HEIGHT=$(./build/old/canined status | jq '.SyncInfo.latest_block_height' -r)
     if [ $BLOCK_HEIGHT = "$UPGRADE_HEIGHT" ]; then
         # assuming running only 1 canined
         echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING OLD ONE"
+        pkill canined
         break
     else
         ./build/old/canined q gov proposal 1 --output=json | jq ".status"
