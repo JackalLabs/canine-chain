@@ -29,3 +29,15 @@ func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryPayDataRequest
 
 	return &types.QueryPayDataResponse{BlocksRemaining: blocks, Bytes: paid}, nil
 }
+
+func (k Keeper) GetStoragePayementInfoList(goCtx context.Context, req *types.QueryStoragePaymentInfoRequest) (*types.QueryStoragePaymentInfoResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	info := k.GetAllStoragePaymentInfo(ctx)
+
+	return &types.QueryStoragePaymentInfoResponse{PaymentInfo: info}, nil
+}
