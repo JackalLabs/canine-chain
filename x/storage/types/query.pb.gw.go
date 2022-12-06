@@ -901,24 +901,6 @@ func request_Query_GetStoragePayementInfoList_0(ctx context.Context, marshaler r
 	var protoReq QueryStoragePaymentInfoRequest
 	var metadata runtime.ServerMetadata
 
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["address"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "address")
-	}
-
-	protoReq.Address, err = runtime.String(val)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
-	}
-
 	msg, err := client.GetStoragePayementInfoList(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -927,24 +909,6 @@ func request_Query_GetStoragePayementInfoList_0(ctx context.Context, marshaler r
 func local_request_Query_GetStoragePayementInfoList_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryStoragePaymentInfoRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["address"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "address")
-	}
-
-	protoReq.Address, err = runtime.String(val)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
-	}
 
 	msg, err := server.GetStoragePayementInfoList(ctx, &protoReq)
 	return msg, metadata, err
@@ -1900,7 +1864,7 @@ var (
 
 	pattern_Query_GetPayData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_pay_data", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_GetStoragePayementInfoList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_payment_info", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GetStoragePayementInfoList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "get_payment_info"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (
