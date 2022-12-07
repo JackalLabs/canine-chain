@@ -1979,9 +1979,9 @@ var (
 
 	pattern_Query_GetPayData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_pay_data", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_StoragePaymentInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "pay_info", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_StoragePaymentInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "payment_info", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_StoragePaymentInfoAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"Jackal-dao", "canine-chain", "storage", "pay_info"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_StoragePaymentInfoAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"Jackal-dao", "canine-chain", "storage", "payment_info"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (
