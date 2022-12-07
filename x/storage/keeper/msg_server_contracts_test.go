@@ -11,6 +11,8 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
+const tst = "testownercid"
+
 func (suite *KeeperTestSuite) TestPostContracts() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
@@ -332,7 +334,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		{
 			name: "invalid_deal_owner",
 			preRun: func() *types.MsgCancelContract {
-				dcid := "testownercid"
+				dcid := tst
 				h := sha256.New()
 				_, err := io.WriteString(h, dcid)
 				suite.Require().NoError(err)
@@ -377,7 +379,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		{
 			name: "fid_not_found",
 			preRun: func() *types.MsgCancelContract {
-				dcid := "testownercid"
+				dcid := tst
 				h := sha256.New()
 				_, err := io.WriteString(h, dcid)
 				suite.Require().NoError(err)
@@ -424,7 +426,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		{
 			name: "invalid_cid_json",
 			preRun: func() *types.MsgCancelContract {
-				dcid := "testownercid"
+				dcid := tst
 				h := sha256.New()
 				_, err := io.WriteString(h, dcid)
 				suite.Require().NoError(err)
@@ -503,7 +505,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		{
 			name: "successfully_cancelled_contract",
 			preRun: func() *types.MsgCancelContract {
-				dcid := "testownercid"
+				dcid := tst
 				h := sha256.New()
 				_, err := io.WriteString(h, dcid)
 				suite.Require().NoError(err)

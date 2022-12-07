@@ -70,10 +70,10 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 		s, found := k.GetStrays(ctx, right)
 		if !found {
 			return nil, fmt.Errorf("can't find contract")
-		} else {
-			fid = s.Fid
-			k.RemoveStrays(ctx, s.Cid)
 		}
+		fid = s.Fid
+		k.RemoveStrays(ctx, s.Cid)
+
 	} else {
 		fid = d.Fid
 		k.RemoveActiveDeals(ctx, d.Cid)
