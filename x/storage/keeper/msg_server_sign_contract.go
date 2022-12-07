@@ -41,7 +41,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Signee:        contract.Signee,
 		Provider:      contract.Creator,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      fmt.Sprintf("%d", ctx.BlockHeight()),
+		Endblock:      "0",
 		Filesize:      contract.Filesize,
 		Proofverified: "false",
 		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
@@ -86,13 +86,16 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 
 	for i := 0; i < 2; i++ {
 		h := sha256.New()
-		_, err := io.WriteString(h, fmt.Sprintf("%s%s%d", contract.Creator, contract.Fid, i))
+		_, err := io.WriteString(h, fmt.Sprintf("%s%d", contract.Cid, i))
 		if err != nil {
 			return nil, err
 		}
 		hashName := h.Sum(nil)
 
-		scid := fmt.Sprintf("%x", hashName)
+		scid, err := MakeCid(hashName)
+		if err != nil {
+			return nil, err
+		}
 
 		newContract := types.Strays{
 			Cid:      scid,
