@@ -16,6 +16,7 @@ log.txt
 # Build
 vendor
 build
+_build
 tools/bin/*
 examples/build/*
 docs/_build
@@ -51,3 +52,4 @@ dependency-graph.png
 *.out
 *.synctex.gz
 contract_tests/*
+app.test
