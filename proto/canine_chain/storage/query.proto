@@ -134,11 +134,17 @@ service Query {
         "/jackal-dao/canine-chain/storage/get_pay_data/{address}";
   }
 
-  // Queries a list of GetPayData items.
-  rpc GetStoragePaymentInfoList(QueryStoragePaymentInfoRequest)
-      returns (QueryStoragePaymentInfoResponse) {
+  // Queries a StoragePaymentInfo by address.
+  rpc StoragePaymentInfo(QueryStoragePaymentInfoRequest) returns (QueryStoragePaymentInfoResponse) {
+    option (google.api.http).get = 
+        "/jackal-dao/canine-chain/storage/pay_info/{address}"; 
+  }
+
+  // Queries a list of StoragePaymentInfo items.
+  rpc StoragePaymentInfoAll(QueryAllStoragePaymentInfoRequest)
+      returns (QueryAllStoragePaymentInfoResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/get_payment_info";
+        "/Jackal-dao/canine-chain/storage/pay_info";
   }
 
   // this line is used by starport scaffolding # 2
