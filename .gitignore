@@ -53,3 +53,6 @@ dependency-graph.png
 *.synctex.gz
 contract_tests/*
 app.test
+
+mytestnet
+_build
