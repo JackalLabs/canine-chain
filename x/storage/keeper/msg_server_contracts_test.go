@@ -1,9 +1,13 @@
 package keeper_test
 
 import (
+	"crypto/sha256"
 	"encoding/json"
+	"fmt"
+	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -328,12 +332,38 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		{
 			name: "invalid_deal_owner",
 			preRun: func() *types.MsgCancelContract {
+				dcid := "testownercid"
+				h := sha256.New()
+				_, err := io.WriteString(h, dcid)
+				suite.Require().NoError(err)
+				hashName := h.Sum(nil)
+
+				dcid, err = keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
 				d := types.ActiveDeals{
-					Cid:     "100",
+					Cid:     dcid,
 					Creator: user.String(),
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
-				_, found := sKeeper.GetActiveDeals(suite.ctx, "100")
+
+				for i := 0; i < 2; i++ {
+					h := sha256.New()
+					_, err := io.WriteString(h, fmt.Sprintf("%s%d", d.Cid, i))
+					suite.Require().NoError(err)
+					hashName := h.Sum(nil)
+
+					scid, err := keeper.MakeCid(hashName)
+					suite.Require().NoError(err)
+
+					k := types.ActiveDeals{
+						Cid:     scid,
+						Creator: user.String(),
+					}
+					sKeeper.SetActiveDeals(suite.ctx, k)
+				}
+
+				_, found := sKeeper.GetActiveDeals(suite.ctx, d.Cid)
 				suite.Require().True(found)
 				return &types.MsgCancelContract{
 					Creator: "foo",
@@ -347,7 +377,38 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		{
 			name: "fid_not_found",
 			preRun: func() *types.MsgCancelContract {
-				d, found := sKeeper.GetActiveDeals(suite.ctx, "100")
+				dcid := "testownercid"
+				h := sha256.New()
+				_, err := io.WriteString(h, dcid)
+				suite.Require().NoError(err)
+				hashName := h.Sum(nil)
+
+				dcid, err = keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				d := types.ActiveDeals{
+					Cid:     dcid,
+					Creator: user.String(),
+				}
+				sKeeper.SetActiveDeals(suite.ctx, d)
+
+				for i := 0; i < 2; i++ {
+					h := sha256.New()
+					_, err := io.WriteString(h, fmt.Sprintf("%s%d", d.Cid, i))
+					suite.Require().NoError(err)
+					hashName := h.Sum(nil)
+
+					scid, err := keeper.MakeCid(hashName)
+					suite.Require().NoError(err)
+
+					k := types.ActiveDeals{
+						Cid:     scid,
+						Creator: user.String(),
+					}
+					sKeeper.SetActiveDeals(suite.ctx, k)
+				}
+
+				d, found := sKeeper.GetActiveDeals(suite.ctx, d.Cid)
 				suite.Require().True(found)
 				d.Fid = "100"
 				sKeeper.SetActiveDeals(suite.ctx, d)
@@ -363,34 +424,155 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 		{
 			name: "invalid_cid_json",
 			preRun: func() *types.MsgCancelContract {
+				dcid := "testownercid"
+				h := sha256.New()
+				_, err := io.WriteString(h, dcid)
+				suite.Require().NoError(err)
+				hashName := h.Sum(nil)
+
+				dcid, err = keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids := []string{dcid}
+				fmt.Println(dcid)
+
+				d := types.ActiveDeals{
+					Cid:     dcid,
+					Creator: user.String(),
+					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, d)
+
+				h = sha256.New()
+				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 0))
+				suite.Require().NoError(err)
+				hashName = h.Sum(nil)
+
+				left, err := keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids = append(cids, left)
+				k := types.ActiveDeals{
+					Cid:     left,
+					Creator: user.String(),
+					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, k)
+
+				h = sha256.New()
+				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 1))
+				suite.Require().NoError(err)
+				hashName = h.Sum(nil)
+
+				right, err := keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids = append(cids, right)
+				k = types.ActiveDeals{
+					Cid:     right,
+					Creator: user.String(),
+					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, k)
+
+				b, err := json.Marshal(cids)
+				suite.Require().NoError(err)
+
 				ftc := types.FidCid{
-					Fid:  "100",
-					Cids: "100",
+					Fid:  "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+					Cids: string(b),
 				}
 				sKeeper.SetFidCid(suite.ctx, ftc)
+
+				suite.Require().NoError(err)
+
+				deals := sKeeper.GetAllActiveDeals(suite.ctx)
+				for _, v := range deals {
+					fmt.Println(v)
+				}
+
 				return &types.MsgCancelContract{
 					Creator: user.String(),
-					Cid:     ftc.Cids,
+					Cid:     right,
 				}
 			},
 			expErr:    true,
-			expErrMsg: "cannot unmarshal number into Go value of type []string",
+			expErrMsg: "can't find contract",
 		},
 
 		{
 			name: "successfully_cancelled_contract",
 			preRun: func() *types.MsgCancelContract {
-				ncids := []string{"abc", "def", "foo", "123_bar"}
-				b, err := json.Marshal(ncids)
+				dcid := "testownercid"
+				h := sha256.New()
+				_, err := io.WriteString(h, dcid)
 				suite.Require().NoError(err)
+				hashName := h.Sum(nil)
+
+				dcid, err = keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids := []string{dcid}
+				fmt.Println(dcid)
+
+				d := types.ActiveDeals{
+					Cid:     dcid,
+					Creator: user.String(),
+					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, d)
+
+				h = sha256.New()
+				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 0))
+				suite.Require().NoError(err)
+				hashName = h.Sum(nil)
+
+				left, err := keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids = append(cids, left)
+				k := types.ActiveDeals{
+					Cid:     left,
+					Creator: user.String(),
+					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, k)
+
+				h = sha256.New()
+				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 1))
+				suite.Require().NoError(err)
+				hashName = h.Sum(nil)
+
+				right, err := keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids = append(cids, right)
+				k = types.ActiveDeals{
+					Cid:     right,
+					Creator: user.String(),
+					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, k)
+
+				b, err := json.Marshal(cids)
+				suite.Require().NoError(err)
+
 				ftc := types.FidCid{
-					Fid:  "100",
+					Fid:  "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
 					Cids: string(b),
 				}
 				sKeeper.SetFidCid(suite.ctx, ftc)
+
+				suite.Require().NoError(err)
+
+				deals := sKeeper.GetAllActiveDeals(suite.ctx)
+				for _, v := range deals {
+					fmt.Println(v)
+				}
+
 				return &types.MsgCancelContract{
 					Creator: user.String(),
-					Cid:     "100",
+					Cid:     d.Cid,
 				}
 			},
 			expErr: false,
