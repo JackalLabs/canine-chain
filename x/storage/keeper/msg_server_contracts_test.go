@@ -579,6 +579,81 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 			},
 			expErr: false,
 		},
+
+		{
+			name: "successfully_cancelled_contract_with_strays",
+			preRun: func() *types.MsgCancelContract {
+				dcid := tst
+				h := sha256.New()
+				_, err := io.WriteString(h, dcid)
+				suite.Require().NoError(err)
+				hashName := h.Sum(nil)
+
+				dcid, err = keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids := []string{dcid}
+				fmt.Println(dcid)
+
+				d := types.Strays{
+					Cid: dcid,
+					Fid: "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetStrays(suite.ctx, d)
+
+				h = sha256.New()
+				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 0))
+				suite.Require().NoError(err)
+				hashName = h.Sum(nil)
+
+				left, err := keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids = append(cids, left)
+				k := types.Strays{
+					Cid: left,
+					Fid: "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetStrays(suite.ctx, k)
+
+				h = sha256.New()
+				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 1))
+				suite.Require().NoError(err)
+				hashName = h.Sum(nil)
+
+				right, err := keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids = append(cids, right)
+				k = types.Strays{
+					Cid: right,
+					Fid: "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+				}
+				sKeeper.SetStrays(suite.ctx, k)
+
+				b, err := json.Marshal(cids)
+				suite.Require().NoError(err)
+
+				ftc := types.FidCid{
+					Fid:  "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+					Cids: string(b),
+				}
+				sKeeper.SetFidCid(suite.ctx, ftc)
+
+				suite.Require().NoError(err)
+
+				deals := sKeeper.GetAllStrays(suite.ctx)
+				for _, v := range deals {
+					fmt.Println(v)
+				}
+
+				return &types.MsgCancelContract{
+					Creator: user.String(),
+					Cid:     d.Cid,
+				}
+			},
+			expErr: false,
+		},
 	}
 
 	for _, tc := range cases {

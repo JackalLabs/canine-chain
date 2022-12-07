@@ -77,10 +77,9 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 	} else {
 		fid = d.Fid
 		k.RemoveActiveDeals(ctx, d.Cid)
-	}
-
-	if d.Creator != msg.Creator {
-		return nil, fmt.Errorf("you don't own this deal")
+		if d.Creator != msg.Creator {
+			return nil, fmt.Errorf("you don't own this deal")
+		}
 	}
 
 	ftc, found := k.GetFidCid(ctx, fid)
