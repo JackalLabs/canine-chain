@@ -6,7 +6,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-// SetStoragePaymentInfo set a specific payBlocks in the store from its index
+// SetStoragePaymentInfo set a specific payBlocks in the store from its x
 func (k Keeper) SetStoragePaymentInfo(ctx sdk.Context, payInfo types.StoragePaymentInfo) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
 	b := k.cdc.MustMarshal(&payInfo)
@@ -15,15 +15,15 @@ func (k Keeper) SetStoragePaymentInfo(ctx sdk.Context, payInfo types.StoragePaym
 	), b)
 }
 
-// GetStoragePaymentInfo returns a payBlocks from its index
+// GetStoragePaymentInfo returns StoragePaymentInfo from its address
 func (k Keeper) GetStoragePaymentInfo(
 	ctx sdk.Context,
-	blockid string,
+	address string,
 ) (val types.StoragePaymentInfo, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
 
 	b := store.Get(types.StoragePaymentInfoKey(
-		blockid,
+		address,
 	))
 	if b == nil {
 		return val, false
@@ -33,19 +33,19 @@ func (k Keeper) GetStoragePaymentInfo(
 	return val, true
 }
 
-// RemoveStoragePaymentInfo removes a payBlocks from the store
+// RemoveStoragePaymentInfo removes a StoragePaymentInfo  from the store
 func (k Keeper) RemoveStoragePaymentInfo(
 	ctx sdk.Context,
-	blockid string,
+	address string,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
 	store.Delete(types.StoragePaymentInfoKey(
-		blockid,
+		address,
 	))
 }
 
 // GetAllStoragePaymentInfo returns all payBlocks
-func (k Keeper) GetAllStoragePaymentInfo(ctx sdk.Context) (list []*types.StoragePaymentInfo) {
+func (k Keeper) GetAllStoragePaymentInfo(ctx sdk.Context) (list []types.StoragePaymentInfo) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -54,7 +54,7 @@ func (k Keeper) GetAllStoragePaymentInfo(ctx sdk.Context) (list []*types.Storage
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.StoragePaymentInfo
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, &val)
+		list = append(list, val)
 	}
 
 	return

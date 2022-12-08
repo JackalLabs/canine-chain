@@ -11,12 +11,12 @@ const (
 
 // StoragePaymentInfoKey returns the store key to retrieve a StoragePaymentInfo from the index fields
 func StoragePaymentInfoKey(
-	blockid string,
+	address string,
 ) []byte {
 	var key []byte
 
-	blockidBytes := []byte(blockid)
-	key = append(key, blockidBytes...)
+	addressBytes := []byte(address)
+	key = append(key, addressBytes...)
 	key = append(key, []byte("/")...)
 
 	return key
