@@ -11,4 +11,5 @@ var (
 	ErrDivideByZero       = sdkerrors.Register(ModuleName, 1110, "DivideByZero")
 	ErrProviderNotFound   = sdkerrors.Register(ModuleName, 1111, "Provider not found. Please init your provider.")
 	ErrNotValidTotalSpace = sdkerrors.Register(ModuleName, 1112, "Not a valid total space. Please enter total number of bytes to provide.")
+	ErrCannotVerifyProof  = sdkerrors.Register(ModuleName, 1113, "Cannot verify Proof")
 )

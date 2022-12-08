@@ -436,7 +436,6 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				suite.Require().NoError(err)
 
 				cids := []string{dcid}
-				fmt.Println(dcid)
 
 				d := types.ActiveDeals{
 					Cid:     dcid,
@@ -487,11 +486,6 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				sKeeper.SetFidCid(suite.ctx, ftc)
 
 				suite.Require().NoError(err)
-
-				deals := sKeeper.GetAllActiveDeals(suite.ctx)
-				for _, v := range deals {
-					fmt.Println(v)
-				}
 
 				return &types.MsgCancelContract{
 					Creator: user.String(),
@@ -515,7 +509,6 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				suite.Require().NoError(err)
 
 				cids := []string{dcid}
-				fmt.Println(dcid)
 
 				d := types.ActiveDeals{
 					Cid:     dcid,
@@ -567,11 +560,6 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 				suite.Require().NoError(err)
 
-				deals := sKeeper.GetAllActiveDeals(suite.ctx)
-				for _, v := range deals {
-					fmt.Println(v)
-				}
-
 				return &types.MsgCancelContract{
 					Creator: user.String(),
 					Cid:     d.Cid,
@@ -593,7 +581,6 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				suite.Require().NoError(err)
 
 				cids := []string{dcid}
-				fmt.Println(dcid)
 
 				d := types.Strays{
 					Cid: dcid,
@@ -641,11 +628,6 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				sKeeper.SetFidCid(suite.ctx, ftc)
 
 				suite.Require().NoError(err)
-
-				deals := sKeeper.GetAllStrays(suite.ctx)
-				for _, v := range deals {
-					fmt.Println(v)
-				}
 
 				return &types.MsgCancelContract{
 					Creator: user.String(),
