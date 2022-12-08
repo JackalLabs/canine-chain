@@ -12,6 +12,8 @@ import "canine_chain/storage/pay_blocks.proto";
 import "canine_chain/storage/client_usage.proto";
 import "canine_chain/storage/strays.proto";
 import "canine_chain/storage/fid_cid.proto";
+import "canine_chain/storage/payment_info.proto";
+
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
@@ -130,6 +132,19 @@ service Query {
   rpc GetPayData(QueryPayDataRequest) returns (QueryPayDataResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/get_pay_data/{address}";
+  }
+
+  // Queries a StoragePaymentInfo by address.
+  rpc StoragePaymentInfo(QueryStoragePaymentInfoRequest) returns (QueryStoragePaymentInfoResponse) {
+    option (google.api.http).get = 
+        "/jackal-dao/canine-chain/storage/payment_info/{address}"; 
+  }
+
+  // Queries a list of StoragePaymentInfo items.
+  rpc StoragePaymentInfoAll(QueryAllStoragePaymentInfoRequest)
+      returns (QueryAllStoragePaymentInfoResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/payment_info";
   }
 
   // this line is used by starport scaffolding # 2
@@ -266,6 +281,21 @@ message QueryPayDataRequest { string address = 1; }
 message QueryPayDataResponse {
   int64 blocks_remaining = 1;
   int64 bytes = 2;
+}
+
+message QueryStoragePaymentInfoRequest { string address = 1; }
+
+message QueryStoragePaymentInfoResponse {
+  StoragePaymentInfo storage_payment_info = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllStoragePaymentInfoRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStoragePaymentInfoResponse  {
+  repeated StoragePaymentInfo storage_payment_info = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

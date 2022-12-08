@@ -1,0 +1,15 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+message StoragePaymentInfo {
+  google.protobuf.Timestamp start = 1 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  google.protobuf.Timestamp end = 2 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  int64 spaceAvailable = 3;
+  int64 spaceUsed = 4;
+  string address = 5;
+}
