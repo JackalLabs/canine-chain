@@ -20,9 +20,9 @@ import (
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/golang/mock/gomock"
 	canineglobaltestutil "github.com/jackalLabs/canine-chain/testutil"
+	"github.com/jackalLabs/canine-chain/x/oracle/keeper"
 	oracletestutil "github.com/jackalLabs/canine-chain/x/oracle/testutil"
-	"github.com/jackalLabs/canine-chain/x/rns/keeper"
-	types "github.com/jackalLabs/canine-chain/x/rns/types"
+	types "github.com/jackalLabs/canine-chain/x/oracle/types"
 )
 
 // setupOracleKeeper creates a oracleKeeper as well as all its dependencies.

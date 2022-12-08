@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"github.com/jackalLabs/canine-chain/x/oracle"
 	"testing"
 
 	gocontext "context"
@@ -52,12 +51,13 @@ func (suite *KeeperTestSuite) reset() {
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.oracleKeeper)
 }
 
-func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
-	k := suite.oracleKeeper
-	oracle.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
-	ctx := sdk.WrapSDKContext(suite.ctx)
-	return keeper.NewMsgServerImpl(*k), *k, ctx
-}
+// TODO: add msgServer tests
+// func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
+//	 k := suite.oracleKeeper
+//	 oracle.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
+//	 ctx := sdk.WrapSDKContext(suite.ctx)
+//	 return keeper.NewMsgServerImpl(*k), *k, ctx
+// }
 
 func (suite *KeeperTestSuite) TestGRPCParams() {
 	suite.SetupSuite()
