@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/jackalLabs/canine-chain/x/rns"
+	"github.com/jackalLabs/canine-chain/x/oracle"
 	"testing"
 
 	gocontext "context"
@@ -54,7 +54,7 @@ func (suite *KeeperTestSuite) reset() {
 
 func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
 	k := suite.oracleKeeper
-	rns.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
+	oracle.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
 	ctx := sdk.WrapSDKContext(suite.ctx)
 	return keeper.NewMsgServerImpl(*k), *k, ctx
 }
@@ -66,6 +66,6 @@ func (suite *KeeperTestSuite) TestGRPCParams() {
 	suite.Require().Equal(params.Params, suite.oracleKeeper.GetParams(suite.ctx))
 }
 
-func TestRnsTestSuite(t *testing.T) {
+func TestOracleTestSuite(t *testing.T) {
 	suite.Run(t, new(KeeperTestSuite))
 }
