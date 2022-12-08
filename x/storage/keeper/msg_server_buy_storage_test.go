@@ -27,7 +27,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
+				Duration:     "1440h",
 				Bytes:        "2000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -39,8 +39,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
-				Bytes:        "12345",
+				Duration:     "1440h",
+				Bytes:        "-1",
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -51,7 +51,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "431999",
+				Duration:     "1h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -64,7 +64,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
+				Duration:     "400000h",
 				Bytes:        "1000000000",
 				PaymentDenom: "uatom",
 			},
@@ -76,7 +76,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      "invalid_address",
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
+				Duration:     "400000h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -88,7 +88,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   "invalid_address",
-				Duration:     "432000",
+				Duration:     "432000h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -101,7 +101,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		suite.Run(tc.testName, func() {
 			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 			if tc.expErr {
-				suite.Require().EqualError(err, tc.expErrMsg)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 			}
