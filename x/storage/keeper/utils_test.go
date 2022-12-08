@@ -39,46 +39,6 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 	}
 }
 
-func (suite *KeeperTestSuite) TestCreatePayBlock() {
-	suite.SetupSuite()
-	//_, sKeeper, _ := setupMsgServer(suite)
-
-	cases := []struct {
-		name      string
-		preRun    func() (string, int64, int64)
-		check     func()
-		expErr    bool
-		expErrMsg string
-	}{
-
-		{
-			name: "buying_within_existing_storage_window_payblock",
-			preRun: func() (string, int64, int64) {
-				return "a", 10000, 10000
-			},
-			check:     func() {},
-			expErr:    true,
-			expErrMsg: "can't buy storage within another storage window",
-		},
-	}
-
-	for _, tc := range cases {
-		suite.Run(tc.name, func() {
-			suite.Require().NotNil(tc.preRun)
-			//addr, length, bytes := tc.preRun()
-			//err := sKeeper.CreatePayBlock(suite.ctx, addr, length, bytes)
-			tc.check()
-
-			if tc.expErr {
-				//suite.Require().Error(err)
-				//suite.Require().Contains(err.Error(), tc.expErrMsg)
-			} else {
-				//suite.Require().NoError(err)
-			}
-		})
-	}
-}
-
 func (suite *KeeperTestSuite) TestGetProviderUsing() {
 	suite.SetupSuite()
 	_, sKeeper, _ := setupMsgServer(suite)

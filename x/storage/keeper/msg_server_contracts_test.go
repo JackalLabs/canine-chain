@@ -169,7 +169,6 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 		{
 			name: "successful_post_contract",
 			preRun: func() *types.MsgPostContract {
-
 				suite.Require().NoError(err)
 				return &types.MsgPostContract{
 					Creator:  creator.String(),

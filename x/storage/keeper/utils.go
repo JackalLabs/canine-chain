@@ -19,7 +19,6 @@ func MakeCid(data []byte) (string, error) {
 }
 
 func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) (int64, bool) {
-
 	payInfo, found := k.GetStoragePaymentInfo(
 		ctx,
 		address,

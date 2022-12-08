@@ -62,7 +62,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		}
 	}
 
-	payInfo.SpaceUsed = payInfo.SpaceUsed + fsize.Int64()
+	payInfo.SpaceUsed += fsize.Int64()
 
 	k.SetStoragePaymentInfo(ctx, payInfo)
 	k.SetActiveDeals(ctx, deal)
