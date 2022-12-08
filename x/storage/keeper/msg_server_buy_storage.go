@@ -3,6 +3,8 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"time"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerr "github.com/cosmos/cosmos-sdk/types/errors"
@@ -13,14 +15,20 @@ import (
 func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (*types.MsgBuyStorageResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	duration, ok := sdk.NewIntFromString(msg.Duration)
-	if !ok {
-		return nil, fmt.Errorf("duration can't be parsed")
+	duration, err := time.ParseDuration(msg.Duration)
+
+	if err != nil{
+		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
 	}
 
-	bytes, ok := sdk.NewIntFromString(msg.Bytes)
-	if !ok {
-		return nil, fmt.Errorf("bytes can't be parsed")
+	// Truncate duration into hours
+	dh := time.Duration(time.Hour)
+	duration = duration.Truncate(dh)
+
+	bytes, err := strconv.ParseInt(msg.Bytes, 10, 64)
+
+	if err != nil{
+		return nil, fmt.Errorf("bytes can't be parsed: %s", err.Error())
 	}
 
 	denom := msg.PaymentDenom
@@ -28,21 +36,24 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, sdkerr.Wrap(sdkerr.ErrInvalidCoins, "cannot pay with anything other than ujkl")
 	}
 
-	var gb int64 = 1000000000
+	const gb int64 = 1000000000
 
-	gbs := bytes.Int64() / gb
-	if gbs == 0 {
+	gbs := bytes / gb
+	if gbs <= 0 {
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 
-	monthInBlocks := 432000
-	dr := duration.Int64() - (duration.Int64() % int64(monthInBlocks))
-
-	if dr <= 0 {
-		return nil, fmt.Errorf("cannot buy less than a month")
+	const hoursInMonth = time.Duration(time.Hour*720)
+	if duration <= hoursInMonth {
+		return nil, fmt.Errorf("cannot buy less than a month(720h)")
 	}
 
-	price := sdk.NewCoin(denom, sdk.NewInt(gbs*4000*(dr/int64(monthInBlocks))))
+	//Truncate month
+	dm := duration.Truncate(hoursInMonth)
+
+	cost := gbs * 4000 * int64(dm/hoursInMonth)
+
+	price := sdk.NewCoin(denom, sdk.NewInt(cost))
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return nil, err
@@ -57,11 +68,15 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
-	err = k.CreatePayBlock(ctx, msg.ForAddress, dr, bytes.Int64())
-
-	if err != nil {
-		return nil, err
+	spi := types.StoragePaymentInfo{
+		Start: ctx.BlockTime(),
+		End: ctx.BlockTime().Add(dm),
+		SpaceAvailable: bytes,
+		SpaceUsed: 0,
+		Address: msg.ForAddress,
 	}
+
+	k.SetStoragePaymentInfo(ctx, spi)
 
 	return &types.MsgBuyStorageResponse{}, nil
 }

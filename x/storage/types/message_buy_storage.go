@@ -2,6 +2,7 @@ package types
 
 import (
 	fmt "fmt"
+	"time"
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -61,12 +62,18 @@ func (msg *MsgBuyStorage) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	if _, err := strconv.Atoi(msg.Bytes); err != nil {
+	if _, err := strconv.ParseInt(msg.Bytes, 10, 64); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse bytes (%s)", err)
 	}
 
-	if _, err := strconv.Atoi(msg.Duration); err != nil {
+	duration, err := time.ParseDuration(msg.Duration)
+
+	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse bytes (%s)", err)
+	}
+
+	if duration < 0 {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "duration cannot be negative (%s)", msg.Duration)
 	}
 
 	return nil
