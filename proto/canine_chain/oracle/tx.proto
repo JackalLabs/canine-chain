@@ -1,0 +1,9 @@
+syntax = "proto3";
+package canine_chain.oracle;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
+
+// Msg defines the Msg service.
+service Msg {
+
+}
