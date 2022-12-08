@@ -35,10 +35,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(CmdFindFile())
 
-	cmd.AddCommand(CmdListPayBlocks())
-	cmd.AddCommand(CmdShowPayBlocks())
-	cmd.AddCommand(CmdListClientUsage())
-	cmd.AddCommand(CmdShowClientUsage())
 	cmd.AddCommand(CmdListStrays())
 	cmd.AddCommand(CmdShowStrays())
 	cmd.AddCommand(CmdGetClientFreeSpace())

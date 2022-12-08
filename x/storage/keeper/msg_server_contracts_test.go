@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
@@ -122,17 +123,20 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 				sKeeper.SetProviders(suite.ctx, p)
 				// start free two gig trial
 				suite.ctx = suite.ctx.WithBlockHeight(0)
-				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 1, 0)
-				suite.Require().NoError(err)
-				sKeeper.SetClientUsage(suite.ctx, types.ClientUsage{
-					Usage:   "1900000000",
-					Address: buyer.String(),
-				})
+				info := types.StoragePaymentInfo{
+					SpaceUsed:      1900000000,
+					SpaceAvailable: 2000000000,
+					Address:        buyer.String(),
+					Start:          time.Now().Add(-10),
+					End:            time.Now().Add(50),
+				}
+				sKeeper.SetStoragePaymentInfo(suite.ctx, info)
+
 				return &types.MsgPostContract{
 					Creator:  creator.String(),
 					Merkle:   "1",
 					Signee:   "1",
-					Filesize: "20000000000",
+					Filesize: "200000000",
 					Fid:      "1",
 				}
 			},
@@ -145,12 +149,10 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			preRun: func() *types.MsgPostContract {
 				// Start free trial
 				suite.ctx = suite.ctx.WithBlockHeight(0)
-				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100, 100000000)
-				suite.Require().NoError(err)
+
 				// end free trial and create "not paid" condition
 				suite.ctx = suite.ctx.WithBlockHeight(100)
-				err = sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100000, 0)
-				suite.Require().NoError(err)
+
 				suite.ctx = suite.ctx.WithBlockHeight(500)
 				goCtx = sdk.WrapSDKContext(suite.ctx)
 				return &types.MsgPostContract{
@@ -161,14 +163,13 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 					Fid:      "1",
 				}
 			},
-			expErr:    true,
-			expErrMsg: "user has not paid for any storage",
+			expErr: false,
 		},
 
 		{
 			name: "successful_post_contract",
 			preRun: func() *types.MsgPostContract {
-				err := sKeeper.CreatePayBlock(suite.ctx, buyer.String(), 100000, 10000000000)
+
 				suite.Require().NoError(err)
 				return &types.MsgPostContract{
 					Creator:  creator.String(),

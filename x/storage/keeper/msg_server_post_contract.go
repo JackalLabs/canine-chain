@@ -36,31 +36,19 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		return nil, fmt.Errorf("not enough space on provider")
 	}
 
-	paidAMT, _, _ := k.GetPaidAmount(ctx, msg.Signee, ctx.BlockHeight())
-
-	if paidAMT <= 0 {
-		return nil, fmt.Errorf("user has not paid for any storage")
-	}
-
-	usage, found := k.GetClientUsage(ctx, msg.Signee)
-	if !found {
-		usage = types.ClientUsage{
-			Usage:   "0",
-			Address: msg.Signee,
-		}
-	}
-
-	bytesUsed, ok := sdk.NewIntFromString(usage.Usage)
-	if !ok {
-		return nil, fmt.Errorf("failed to parse usage")
-	}
-
 	filesize, ok := sdk.NewIntFromString(msg.Filesize)
 	if !ok {
 		return nil, fmt.Errorf("cannot parse filesize")
 	}
 
-	if bytesUsed.Int64()+filesize.Int64() > paidAMT {
+	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Signee)
+	if !found {
+		if filesize.Int64() > TwoGigs {
+			return nil, fmt.Errorf("cannot save files greater than 2gb on a free plan")
+		}
+	}
+
+	if payInfo.SpaceUsed+filesize.Int64() > payInfo.SpaceAvailable {
 		return nil, fmt.Errorf("not enough storage on the users account")
 	}
 
