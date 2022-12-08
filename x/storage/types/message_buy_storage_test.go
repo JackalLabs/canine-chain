@@ -18,7 +18,7 @@ func TestMsgBuyStorage_ValidateBasic(t *testing.T) {
 			msg: MsgBuyStorage{
 				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				ForAddress:   "invalid_address",
-				Duration:     "10000",
+				Duration:     "10000h",
 				Bytes:        "4096",
 				PaymentDenom: "ujkl",
 			},
@@ -28,7 +28,7 @@ func TestMsgBuyStorage_ValidateBasic(t *testing.T) {
 			msg: MsgBuyStorage{
 				Creator:      "invalid_address",
 				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Duration:     "10000",
+				Duration:     "10000h",
 				Bytes:        "4096",
 				PaymentDenom: "ujkl",
 			},
@@ -44,11 +44,21 @@ func TestMsgBuyStorage_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.ErrInvalidType,
 		}, {
+			name: "invalid duration(negative)",
+			msg: MsgBuyStorage{
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "-1h",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
 			name: "invalid btyes",
 			msg: MsgBuyStorage{
 				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Duration:     "10000",
+				Duration:     "10000h",
 				Bytes:        "c",
 				PaymentDenom: "ujkl",
 			},
@@ -58,7 +68,7 @@ func TestMsgBuyStorage_ValidateBasic(t *testing.T) {
 			msg: MsgBuyStorage{
 				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Duration:     "10000",
+				Duration:     "10000h",
 				Bytes:        "4096",
 				PaymentDenom: "ujkl",
 			},
