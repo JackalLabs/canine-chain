@@ -16,6 +16,10 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAccount, coins)
 	suite.Require().NoError(err)
 
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount: testAccount.String(),
+	})
+
 	cases := []struct {
 		testName  string
 		msg       types.MsgBuyStorage
