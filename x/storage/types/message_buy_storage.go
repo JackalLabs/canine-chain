@@ -2,8 +2,8 @@ package types
 
 import (
 	fmt "fmt"
-	"time"
 	"strconv"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
@@ -67,7 +67,6 @@ func (msg *MsgBuyStorage) ValidateBasic() error {
 	}
 
 	duration, err := time.ParseDuration(msg.Duration)
-
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse bytes (%s)", err)
 	}

@@ -3,8 +3,8 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"time"
 	"strconv"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerr "github.com/cosmos/cosmos-sdk/types/errors"
@@ -16,18 +16,16 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	duration, err := time.ParseDuration(msg.Duration)
-
-	if err != nil{
+	if err != nil {
 		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
 	}
 
 	// Truncate duration into hours
-	dh := time.Duration(time.Hour)
+	dh := time.Hour
 	duration = duration.Truncate(dh)
 
 	bytes, err := strconv.ParseInt(msg.Bytes, 10, 64)
-
-	if err != nil{
+	if err != nil {
 		return nil, fmt.Errorf("bytes can't be parsed: %s", err.Error())
 	}
 
@@ -43,12 +41,12 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 
-	const hoursInMonth = time.Duration(time.Hour*720)
+	const hoursInMonth = time.Hour * 720
 	if duration <= hoursInMonth {
 		return nil, fmt.Errorf("cannot buy less than a month(720h)")
 	}
 
-	//Truncate month
+	// Truncate month
 	dm := duration.Truncate(hoursInMonth)
 
 	cost := gbs * 4000 * int64(dm/hoursInMonth)
@@ -69,11 +67,11 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	spi := types.StoragePaymentInfo{
-		Start: ctx.BlockTime(),
-		End: ctx.BlockTime().Add(dm),
+		Start:          ctx.BlockTime(),
+		End:            ctx.BlockTime().Add(dm),
 		SpaceAvailable: bytes,
-		SpaceUsed: 0,
-		Address: msg.ForAddress,
+		SpaceUsed:      0,
+		Address:        msg.ForAddress,
 	}
 
 	k.SetStoragePaymentInfo(ctx, spi)
