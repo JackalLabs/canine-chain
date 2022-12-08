@@ -80,11 +80,11 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 
 	verified, err := merkletree.VerifyProof(ditem, proof, k)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		return "", "", err
 	}
 
 	if !verified {
-		fmt.Printf("%s\n", "Cannot verify")
+		return "", "", types.ErrCannotVerifyProof
 	}
 
 	return fmt.Sprintf("%x", item), string(jproof), nil
@@ -92,10 +92,9 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 
 func makeContract(file TestFile) (string, string, error) {
 	f := []byte(file.Data)
-	size := 0
 	var list [][]byte
 
-	size += len(f)
+	size := len(f)
 
 	h := sha256.New()
 	_, err := io.WriteString(h, fmt.Sprintf("%d%x", 0, f))
@@ -108,7 +107,7 @@ func makeContract(file TestFile) (string, string, error) {
 
 	t, err := merkletree.New(list)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		return "", "", err
 	}
 
 	return hex.EncodeToString(t.Root()), fmt.Sprintf("%d", size), nil
@@ -130,7 +129,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	// Init Provider
 	_, err = msgSrvr.InitProvider(context, &types.MsgInitProvider{
 		Creator:    testProvider.String(),
-		Ip:         "198.0.0.1",
+		Ip:         "192.168.0.1",
 		Totalspace: "1_000_000",
 	})
 	suite.Require().NoError(err)
@@ -139,6 +138,10 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	merkleroot, filesize, err := makeContract(originalFile)
 	suite.Require().NoError(err)
 
+	suite.Require().Equal("11", filesize)
+
+	_, found := keeper.GetStoragePaymentInfo(suite.ctx, user.String())
+	suite.Require().Equal(false, found)
 	// Post Contract
 	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
 		Creator:  testProvider.String(),

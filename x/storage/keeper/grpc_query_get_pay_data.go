@@ -16,18 +16,16 @@ func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryPayDataRequest
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	paid, _, block := k.GetPaidAmount(ctx, req.Address, ctx.BlockHeight())
-	blocks := ctx.BlockHeight()
-	if block != nil {
-		bnum, ok := sdk.NewIntFromString(block.Blocknum)
-		if ok {
-			blocks = bnum.Int64()
-		}
+	paid, _ := k.GetPaidAmount(ctx, req.Address)
+
+	payInfo, found := k.GetStoragePaymentInfo(ctx, req.Address)
+	if !found {
+		return &types.QueryPayDataResponse{TimeRemaining: -1, Bytes: TwoGigs}, nil
 	}
 
-	blocks -= ctx.BlockHeight()
+	left := payInfo.End.Unix() - ctx.BlockTime().Unix()
 
-	return &types.QueryPayDataResponse{BlocksRemaining: blocks, Bytes: paid}, nil
+	return &types.QueryPayDataResponse{TimeRemaining: left, Bytes: paid}, nil
 }
 
 // func (k Keeper) GetStoragePayementInfoList(goCtx context.Context, req *types.QueryStoragePaymentInfoRequest) (*types.QueryStoragePaymentInfoResponse, error) {

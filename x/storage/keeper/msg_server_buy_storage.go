@@ -61,6 +61,16 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
+	deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
+	if err != nil {
+		return nil, err
+	}
+
+	err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(price))
+	if err != nil {
+		return nil, err
+	}
+
 	_, err = sdk.AccAddressFromBech32(msg.ForAddress)
 	if err != nil {
 		return nil, err
