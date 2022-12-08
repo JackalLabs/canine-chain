@@ -80,11 +80,11 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 
 	verified, err := merkletree.VerifyProof(ditem, proof, k)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		return "", "", err
 	}
 
 	if !verified {
-		fmt.Printf("%s\n", "Cannot verify")
+		return "", "", types.ErrCannotVerifyProof
 	}
 
 	return fmt.Sprintf("%x", item), string(jproof), nil
@@ -107,7 +107,7 @@ func makeContract(file TestFile) (string, string, error) {
 
 	t, err := merkletree.New(list)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		return "", "", err
 	}
 
 	return hex.EncodeToString(t.Root()), fmt.Sprintf("%d", size), nil
