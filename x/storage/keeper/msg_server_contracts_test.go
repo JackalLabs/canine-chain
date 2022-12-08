@@ -117,7 +117,7 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 					Address:         creator.String(),
 					Ip:              "123.0.0.0",
 					Totalspace:      "1000000000000000",
-					BurnedContracts: "",
+					BurnedContracts: "0",
 					Creator:         creator.String(),
 				}
 				sKeeper.SetProviders(suite.ctx, p)
@@ -135,8 +135,8 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 				return &types.MsgPostContract{
 					Creator:  creator.String(),
 					Merkle:   "1",
-					Signee:   "1",
-					Filesize: "200000000",
+					Signee:   buyer.String(),
+					Filesize: "1000000000",
 					Fid:      "1",
 				}
 			},

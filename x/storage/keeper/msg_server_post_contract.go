@@ -46,10 +46,10 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		if filesize.Int64() > TwoGigs {
 			return nil, fmt.Errorf("cannot save files greater than 2gb on a free plan")
 		}
-	}
-
-	if payInfo.SpaceUsed+filesize.Int64() > payInfo.SpaceAvailable {
-		return nil, fmt.Errorf("not enough storage on the users account")
+	} else {
+		if payInfo.SpaceUsed+filesize.Int64() > payInfo.SpaceAvailable {
+			return nil, fmt.Errorf("not enough storage on the users account")
+		}
 	}
 
 	h := sha256.New()
