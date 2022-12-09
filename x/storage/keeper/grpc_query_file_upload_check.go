@@ -26,9 +26,5 @@ func (k Keeper) FileUploadCheck(c context.Context, req *types.QueryFileUploadChe
 		return nil, status.Error(codes.InvalidArgument, "bytes cannot be negative")
 	}
 
-	if (spi.SpaceAvailable - spi.SpaceUsed) < req.Bytes {
-		return &types.QueryFileUploadCheckResponse{Valid: false}, nil
-	}
-
-	return &types.QueryFileUploadCheckResponse{Valid: true}, nil
+	return &types.QueryFileUploadCheckResponse{Valid: (spi.SpaceAvailable - spi.SpaceUsed) < req.Bytes}, nil
 }
