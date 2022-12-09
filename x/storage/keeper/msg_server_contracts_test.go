@@ -249,6 +249,7 @@ func (suite *KeeperTestSuite) TestSignContract() {
 		{
 			name: "invalid_permission_to_sign_contract",
 			preRun: func() *types.MsgSignContract {
+				// creating a test contract to sign
 				c := types.Contracts{
 					Cid:        "123",
 					Creator:    provider.String(),
@@ -271,17 +272,36 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			expErr:    true,
 			expErrMsg: "you do not have permission to approve this contract",
 		},
-
 		{
-			name: "successful_contract_signed",
+			name: "not enough storage",
 			preRun: func() *types.MsgSignContract {
+				// create a test StoragePaymentInfo
+				spi := types.StoragePaymentInfo{
+					SpaceAvailable: 200_000_000,
+					SpaceUsed:      200_000_000,
+					Address:        user.String(),
+				}
+				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				suite.Require().True(found)
 				return &types.MsgSignContract{
 					Cid:     "123",
 					Creator: user.String(),
 				}
 			},
-			expErr: false,
+			expErr:    true,
+			expErrMsg: "your mom",
 		},
+		// {
+		// 	name: "successful_contract_signed",
+		// 	preRun: func() *types.MsgSignContract {
+		// 		return &types.MsgSignContract{
+		// 			Cid:     "123",
+		// 			Creator: user.String(),
+		// 		}
+		// 	},
+		// 	expErr: false,
+		// },
 	}
 
 	for _, tc := range cases {
