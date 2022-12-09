@@ -12,9 +12,7 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
-var (
-	_ upgrades.Upgrade = &Upgrade{}
-)
+var _ upgrades.Upgrade = &Upgrade{}
 
 // Upgrade represents the v4 upgrade
 type Upgrade struct {
@@ -38,7 +36,6 @@ func (u *Upgrade) Name() string {
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-
 		// Do nothing here as we don't have anything particular in this update
 		return u.mm.RunMigrations(ctx, u.configurator, fromVM)
 	}

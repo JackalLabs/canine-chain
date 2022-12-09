@@ -2,12 +2,13 @@ package app
 
 import (
 	"fmt"
-	"github.com/jackalLabs/canine-chain/app/upgrades"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/jackalLabs/canine-chain/app/upgrades"
 
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -143,7 +144,6 @@ import (
 		notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
-
 
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
@@ -1076,14 +1076,13 @@ func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
 }
 
 func (app *JackalApp) registerUpgradeHandlers() {
-	//app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
+	// app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
 func (app *JackalApp) registerUpgrade(upgrade upgrades.Upgrade) {
 	app.upgradeKeeper.SetUpgradeHandler(upgrade.Name(), upgrade.Handler())
-
 
 	upgradeInfo, err := app.upgradeKeeper.ReadUpgradeInfoFromDisk()
 	if err != nil {
