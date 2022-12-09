@@ -76,12 +76,30 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
-	spi := types.StoragePaymentInfo{
-		Start:          ctx.BlockTime(),
-		End:            ctx.BlockTime().Add(dm),
-		SpaceAvailable: bytes,
-		SpaceUsed:      0,
-		Address:        msg.ForAddress,
+	var spi types.StoragePaymentInfo
+
+	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.ForAddress)
+	if found {
+
+		if payInfo.SpaceUsed > bytes {
+			return nil, fmt.Errorf("cannot buy less than your current gb usage")
+		}
+
+		spi = types.StoragePaymentInfo{
+			Start:          ctx.BlockTime(),
+			End:            ctx.BlockTime().Add(dm),
+			SpaceAvailable: bytes,
+			SpaceUsed:      payInfo.SpaceUsed,
+			Address:        msg.ForAddress,
+		}
+	} else {
+		spi = types.StoragePaymentInfo{
+			Start:          ctx.BlockTime(),
+			End:            ctx.BlockTime().Add(dm),
+			SpaceAvailable: bytes,
+			SpaceUsed:      0,
+			Address:        msg.ForAddress,
+		}
 	}
 
 	k.SetStoragePaymentInfo(ctx, spi)
