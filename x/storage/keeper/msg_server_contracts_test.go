@@ -323,6 +323,15 @@ func (suite *KeeperTestSuite) TestSignContract() {
 		{
 			name: "successful_contract_signed",
 			preRun: func() *types.MsgSignContract {
+				spi := types.StoragePaymentInfo{
+					SpaceAvailable: 200_000_000,
+					SpaceUsed:      0,
+					End:            time.Now().AddDate(0, 10, 0),
+					Address:        user.String(),
+				}
+				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				suite.Require().True(found)
 				return &types.MsgSignContract{
 					Cid:     "123",
 					Creator: user.String(),
