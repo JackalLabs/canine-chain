@@ -35,7 +35,7 @@ func CmdQueryAllFeeds() *cobra.Command {
 
 func CmdQueryFeed() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-feed",
+		Use:   "show-feed [feed]",
 		Short: "query a single feed",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

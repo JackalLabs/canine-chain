@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/jackalLabs/canine-chain/app/upgrades"
 	"io"
 	"net/http"
 	"os"
@@ -143,9 +144,6 @@ import (
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
 
-	store "github.com/cosmos/cosmos-sdk/store/types"
-	v120alpha6 "github.com/jackalLabs/canine-chain/app/upgrades/v1.2.0-alpha.6"
-	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
@@ -266,9 +264,9 @@ var (
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		icatypes.ModuleName:            nil,
 		wasm.ModuleName:                {authtypes.Burner},
-		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
-		oraclemoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
+		oraclemoduletypes.ModuleName:   nil,
 
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
@@ -373,8 +371,9 @@ func NewJackalApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
+		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey,
+		icacontrollertypes.StoreKey, intertxtypes.StoreKey, rnsmoduletypes.StoreKey,
+		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
 		/*
 			, dsigmoduletypes.StoreKey, f
 			notificationsmoduletypes.StoreKey,
@@ -887,7 +886,7 @@ func NewJackalApp(
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
 
-	app.setupUpgradeHandlers()
+	app.registerUpgradeHandlers()
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	//
@@ -1075,64 +1074,23 @@ func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
 }
 
-// Add new modules store loader
-func (app *JackalApp) setupUpgradeHandlers() {
-	// version 2 upgrade keeper
-	app.upgradeKeeper.SetUpgradeHandler(
-		v2.UpgradeName,
-		v2.CreateUpgradeHandler(
-			app.mm,
-			app.configurator,
-		),
-	)
+func (app *JackalApp) registerUpgradeHandlers() {
+	//app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator))
+}
 
-	// version 1.2.0-alpha.6 upgrade keeper
-	app.upgradeKeeper.SetUpgradeHandler(
-		v120alpha6.UpgradeName,
-		v120alpha6.CreateUpgradeHandler(
-			app.mm,
-			app.configurator,
-		),
-	)
+// registerUpgrade registers the given upgrade to be supported by the app
+func (app *JackalApp) registerUpgrade(upgrade upgrades.Upgrade) {
+	app.upgradeKeeper.SetUpgradeHandler(upgrade.Name(), upgrade.Handler())
 
-	// version 3 upgrade keeper
-	app.upgradeKeeper.SetUpgradeHandler(
-		v3.UpgradeName,
-		v3.CreateUpgradeHandler(
-			app.mm,
-			app.configurator,
-		),
-	)
-
-	// When a planned update height is reached, the old binary will panic
-	// writing on disk the height and name of the update that triggered it
-	// This will read that value, and execute the preparations for the upgrade.
 	upgradeInfo, err := app.upgradeKeeper.ReadUpgradeInfoFromDisk()
 	if err != nil {
-		panic(fmt.Errorf("failed to read upgrade info from disk: %w", err))
+		panic(err)
 	}
 
-	if app.upgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
-		return
-	}
-
-	var storeUpgrades *store.StoreUpgrades
-
-	if upgradeInfo.Name == v2.UpgradeName {
-		storeUpgrades = &store.StoreUpgrades{
-			Deleted: []string{"storage", "dsig", "notifications", "filetree"},
-		}
-	}
-
-	if upgradeInfo.Name == v3.UpgradeName {
-		storeUpgrades = &store.StoreUpgrades{
-			Added: []string{"storage"},
-		}
-	}
-
-	if storeUpgrades != nil {
-		// configure store loader that checks if version == upgradeHeight and applies store upgrades
-		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, storeUpgrades))
+	if upgradeInfo.Name == upgrade.Name() && !app.upgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+		// Configure store loader that checks if version == upgradeHeight and applies store upgrades
+		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, upgrade.StoreUpgrades()))
 	}
 }
 
