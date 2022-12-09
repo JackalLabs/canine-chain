@@ -144,6 +144,7 @@ import (
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
 
+
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
@@ -1082,6 +1083,7 @@ func (app *JackalApp) registerUpgradeHandlers() {
 // registerUpgrade registers the given upgrade to be supported by the app
 func (app *JackalApp) registerUpgrade(upgrade upgrades.Upgrade) {
 	app.upgradeKeeper.SetUpgradeHandler(upgrade.Name(), upgrade.Handler())
+
 
 	upgradeInfo, err := app.upgradeKeeper.ReadUpgradeInfoFromDisk()
 	if err != nil {
