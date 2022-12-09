@@ -1,0 +1,15 @@
+syntax = "proto3";
+package canine_chain.oracle;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
+
+message Feed {
+  string owner = 1;
+  string data = 2;
+  google.protobuf.Timestamp last_update = 3 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  string name = 4;
+}
+

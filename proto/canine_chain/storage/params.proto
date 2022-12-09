@@ -6,4 +6,8 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
 // Params defines the parameters for the module.
-message Params { option (gogoproto.goproto_stringer) = false; }
+message Params { 
+  option (gogoproto.goproto_stringer) = false;
+  
+  string deposit_account = 1;
+}

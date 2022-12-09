@@ -120,6 +120,10 @@ import (
 	rnsmodulekeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 
+	oraclemodule "github.com/jackalLabs/canine-chain/x/oracle"
+	oraclemodulekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
+
 	storagemodule "github.com/jackalLabs/canine-chain/x/storage"
 	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
@@ -244,6 +248,7 @@ var (
 		rnsmodule.AppModuleBasic{},
 		storagemodule.AppModuleBasic{},
 		filetreemodule.AppModuleBasic{},
+		oraclemodule.AppModuleBasic{},
 
 		/*
 			dsigmodule.AppModuleBasic{},
@@ -264,6 +269,7 @@ var (
 		wasm.ModuleName:                {authtypes.Burner},
 		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
+		oraclemoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
 
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
@@ -320,6 +326,7 @@ type JackalApp struct {
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
 	RnsKeeper      rnsmodulekeeper.Keeper
+	OracleKeeper   oraclemodulekeeper.Keeper
 	StorageKeeper  storagemodulekeeper.Keeper
 	FileTreeKeeper filetreemodulekeeper.Keeper
 
@@ -368,7 +375,7 @@ func NewJackalApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey,
+		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
 		/*
 			, dsigmoduletypes.StoreKey, f
 			notificationsmoduletypes.StoreKey,
@@ -607,6 +614,16 @@ func NewJackalApp(
 	)
 	rnsModule := rnsmodule.NewAppModule(appCodec, app.RnsKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.OracleKeeper = *oraclemodulekeeper.NewKeeper(
+		appCodec,
+		keys[oraclemoduletypes.StoreKey],
+		keys[oraclemoduletypes.MemStoreKey],
+		app.getSubspace(oraclemoduletypes.ModuleName),
+
+		app.BankKeeper,
+	)
+	oracleModule := oraclemodule.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper)
+
 	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
 		appCodec,
 		keys[storagemoduletypes.StoreKey],
@@ -710,6 +727,7 @@ func NewJackalApp(
 		rnsModule,
 		storageModule,
 		filetreeModule,
+		oracleModule,
 
 		/*
 			dsigModule,
@@ -747,6 +765,7 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -780,6 +799,7 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -821,6 +841,7 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -855,6 +876,7 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -890,6 +912,7 @@ func NewJackalApp(
 		transferModule,
 		rnsModule,
 		storageModule,
+		oracleModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -1165,6 +1188,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
+	paramsKeeper.Subspace(oraclemoduletypes.ModuleName)
 
 	return paramsKeeper
 }

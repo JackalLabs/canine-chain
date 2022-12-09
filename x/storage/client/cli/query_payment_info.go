@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CmdListClientUsage() *cobra.Command {
+func CmdListStoragePaymentInfo() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-client-usage",
-		Short: "list all client-usage",
+		Use:   "list-storage-payment-info",
+		Short: "list all storage_payment_info",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -23,11 +23,11 @@ func CmdListClientUsage() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllClientUsageRequest{
+			params := &types.QueryAllStoragePaymentInfoRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ClientUsageAll(context.Background(), params)
+			res, err := queryClient.StoragePaymentInfoAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -42,10 +42,10 @@ func CmdListClientUsage() *cobra.Command {
 	return cmd
 }
 
-func CmdShowClientUsage() *cobra.Command {
+func CmdShowStoragePaymentInfo() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-client-usage [address]",
-		Short: "shows a client-usage",
+		Use:   "show-storage-payment-info [address]",
+		Short: "shows a storage_payment_info",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -54,11 +54,11 @@ func CmdShowClientUsage() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryClientUsageRequest{
+			params := &types.QueryStoragePaymentInfoRequest{
 				Address: argAddress,
 			}
 
-			res, err := queryClient.ClientUsage(context.Background(), params)
+			res, err := queryClient.StoragePaymentInfo(context.Background(), params)
 			if err != nil {
 				return err
 			}

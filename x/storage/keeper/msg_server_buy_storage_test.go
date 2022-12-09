@@ -7,7 +7,7 @@ import (
 
 func (suite *KeeperTestSuite) TestBuyStorage() {
 	suite.SetupSuite()
-	msgSrvr, _, ctx := setupMsgServer(suite)
+	msgSrvr, k, ctx := setupMsgServer(suite)
 
 	// Create test account
 	testAccount, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
@@ -16,6 +16,17 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAccount, coins)
 	suite.Require().NoError(err)
 
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount: testAccount.String(),
+	})
+
+	// Set user current SpaceUsed to 5GB
+	initialPayInfo := types.StoragePaymentInfo{
+		SpaceUsed: 5000000000,
+		Address:   testAccount.String(),
+	}
+	k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+
 	cases := []struct {
 		testName  string
 		msg       types.MsgBuyStorage
@@ -23,12 +34,24 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		expErrMsg string
 	}{
 		{
-			testName: "buy 2gb for 1 month",
+			testName: "buy 3gb which is less than current usage of 5gb",
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
-				Bytes:        "2000000000",
+				Duration:     "1440h",
+				Bytes:        "3000000000",
+				PaymentDenom: "ujkl",
+			},
+			expErr:    true,
+			expErrMsg: "cannot buy less than your current gb usage",
+		},
+		{
+			testName: "buy 6gb for 1 month",
+			msg: types.MsgBuyStorage{
+				Creator:      testAccount.String(),
+				ForAddress:   testAccount.String(),
+				Duration:     "1440h",
+				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
@@ -39,8 +62,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
-				Bytes:        "12345",
+				Duration:     "1440h",
+				Bytes:        "-1",
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -51,7 +74,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "431999",
+				Duration:     "1h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -64,7 +87,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
+				Duration:     "400000h",
 				Bytes:        "1000000000",
 				PaymentDenom: "uatom",
 			},
@@ -76,7 +99,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      "invalid_address",
 				ForAddress:   testAccount.String(),
-				Duration:     "432000",
+				Duration:     "400000h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -88,7 +111,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   "invalid_address",
-				Duration:     "432000",
+				Duration:     "432000h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -101,7 +124,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		suite.Run(tc.testName, func() {
 			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 			if tc.expErr {
-				suite.Require().EqualError(err, tc.expErrMsg)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 			}

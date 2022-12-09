@@ -1,9 +1,0 @@
-syntax = "proto3";
-package canine_chain.storage;
-
-option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
-
-message ClientUsage {
-  string address = 1;
-  string usage = 2;
-}

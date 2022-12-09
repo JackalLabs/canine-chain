@@ -8,10 +8,10 @@ import "canine_chain/storage/params.proto";
 import "canine_chain/storage/contracts.proto";
 import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
-import "canine_chain/storage/pay_blocks.proto";
-import "canine_chain/storage/client_usage.proto";
 import "canine_chain/storage/strays.proto";
 import "canine_chain/storage/fid_cid.proto";
+import "canine_chain/storage/payment_info.proto";
+
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
@@ -71,32 +71,6 @@ service Query {
         "/jackal-dao/canine-chain/storage/find_file/{fid}";
   }
 
-  // Queries a PayBlocks by index.
-  rpc PayBlocks(QueryPayBlockRequest) returns (QueryPayBlockResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/pay_blocks/{blockid}";
-  }
-
-  // Queries a list of PayBlocks items.
-  rpc PayBlocksAll(QueryAllPayBlocksRequest)
-      returns (QueryAllPayBlocksResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/pay_blocks";
-  }
-
-  // Queries a ClientUsage by index.
-  rpc ClientUsage(QueryClientUsageRequest) returns (QueryClientUsageResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/client_usage/{address}";
-  }
-
-  // Queries a list of ClientUsage items.
-  rpc ClientUsageAll(QueryAllClientUsageRequest)
-      returns (QueryAllClientUsageResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/client_usage";
-  }
-
   // Queries a Strays by index.
   rpc Strays(QueryStrayRequest) returns (QueryStrayResponse) {
     option (google.api.http).get =
@@ -130,6 +104,19 @@ service Query {
   rpc GetPayData(QueryPayDataRequest) returns (QueryPayDataResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/get_pay_data/{address}";
+  }
+
+  // Queries a StoragePaymentInfo by address.
+  rpc StoragePaymentInfo(QueryStoragePaymentInfoRequest) returns (QueryStoragePaymentInfoResponse) {
+    option (google.api.http).get = 
+        "/jackal-dao/canine-chain/storage/payment_info/{address}"; 
+  }
+
+  // Queries a list of StoragePaymentInfo items.
+  rpc StoragePaymentInfoAll(QueryAllStoragePaymentInfoRequest)
+      returns (QueryAllStoragePaymentInfoResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/payment_info";
   }
 
   // this line is used by starport scaffolding # 2
@@ -197,35 +184,6 @@ message QueryFindFileRequest { string fid = 1; }
 
 message QueryFindFileResponse { string provider_ips = 1; }
 
-message QueryPayBlockRequest { string blockid = 1; }
-
-message QueryPayBlockResponse {
-  PayBlocks pay_blocks = 1 [ (gogoproto.nullable) = false ];
-}
-
-message QueryAllPayBlocksRequest {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
-
-message QueryAllPayBlocksResponse {
-  repeated PayBlocks pay_blocks = 1 [ (gogoproto.nullable) = false ];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
-message QueryClientUsageRequest { string address = 1; }
-
-message QueryClientUsageResponse {
-  ClientUsage client_usage = 1 [ (gogoproto.nullable) = false ];
-}
-
-message QueryAllClientUsageRequest {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
-
-message QueryAllClientUsageResponse {
-  repeated ClientUsage client_usage = 1 [ (gogoproto.nullable) = false ];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
 
 message QueryStrayRequest { string cid = 1; }
 
@@ -244,7 +202,7 @@ message QueryAllStraysResponse {
 
 message QueryClientFreeSpaceRequest { string address = 1; }
 
-message QueryClientFreeSpaceResponse { string bytesfree = 1; }
+message QueryClientFreeSpaceResponse { int64 bytesfree = 1; }
 
 message QueryFidCidRequest { string fid = 1; }
 
@@ -264,8 +222,23 @@ message QueryAllFidCidResponse {
 message QueryPayDataRequest { string address = 1; }
 
 message QueryPayDataResponse {
-  int64 blocks_remaining = 1;
+  int64 time_remaining = 1;
   int64 bytes = 2;
+}
+
+message QueryStoragePaymentInfoRequest { string address = 1; }
+
+message QueryStoragePaymentInfoResponse {
+  StoragePaymentInfo storage_payment_info = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllStoragePaymentInfoRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStoragePaymentInfoResponse  {
+  repeated StoragePaymentInfo storage_payment_info = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3
