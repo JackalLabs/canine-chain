@@ -10,12 +10,18 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	k.SetParams(ctx, genState.Params)
+
+	// Set all the names
+	for _, elem := range genState.FeedList {
+		k.SetFeed(ctx, elem)
+	}
 }
 
 // ExportGenesis returns the capability module's exported genesis.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
+	genesis.FeedList = k.GetAllFeeds(ctx)
 
 	return genesis
 }

@@ -6,4 +6,7 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
 
 // Params defines the parameters for the module.
-message Params { option (gogoproto.goproto_stringer) = false; }
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  string deposit = 1;
+}
