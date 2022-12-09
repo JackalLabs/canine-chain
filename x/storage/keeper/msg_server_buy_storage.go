@@ -48,6 +48,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	// Truncate month
 	dm := duration.Truncate(hoursInMonth)
+
 	cost := gbs * 4000 * int64(dm/hoursInMonth)
 
 	price := sdk.NewCoin(denom, sdk.NewInt(cost))
@@ -79,6 +80,11 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.ForAddress)
 	if found {
+
+		if payInfo.SpaceUsed > bytes {
+			return nil, fmt.Errorf("cannot buy less than your current gb usage")
+		}
+
 		spi = types.StoragePaymentInfo{
 			Start:          ctx.BlockTime(),
 			End:            ctx.BlockTime().Add(dm),
