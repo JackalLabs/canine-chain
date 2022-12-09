@@ -144,6 +144,7 @@ import (
 	*/
 
 	store "github.com/cosmos/cosmos-sdk/store/types"
+	alpha7 "github.com/jackalLabs/canine-chain/app/upgrades/alpha7"
 	v120alpha6 "github.com/jackalLabs/canine-chain/app/upgrades/v1.2.0-alpha.6"
 	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
@@ -1095,6 +1096,15 @@ func (app *JackalApp) setupUpgradeHandlers() {
 		),
 	)
 
+	// version 1.2.0-alpha.7 upgrade keeper
+	app.upgradeKeeper.SetUpgradeHandler(
+		alpha7.UpgradeName,
+		alpha7.CreateUpgradeHandler(
+			app.mm,
+			app.configurator,
+		),
+	)
+
 	// version 3 upgrade keeper
 	app.upgradeKeeper.SetUpgradeHandler(
 		v3.UpgradeName,
@@ -1126,7 +1136,7 @@ func (app *JackalApp) setupUpgradeHandlers() {
 
 	if upgradeInfo.Name == v3.UpgradeName {
 		storeUpgrades = &store.StoreUpgrades{
-			Added: []string{"storage"},
+			Added: []string{"storage", "filetree"},
 		}
 	}
 
