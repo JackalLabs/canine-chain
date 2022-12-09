@@ -290,18 +290,21 @@ func (suite *KeeperTestSuite) TestSignContract() {
 				}
 			},
 			expErr:    true,
-			expErrMsg: "your mom",
+			expErrMsg: "not enough storage space",
+			postRun: func() {
+				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user.String())
+			},
 		},
-		// {
-		// 	name: "successful_contract_signed",
-		// 	preRun: func() *types.MsgSignContract {
-		// 		return &types.MsgSignContract{
-		// 			Cid:     "123",
-		// 			Creator: user.String(),
-		// 		}
-		// 	},
-		// 	expErr: false,
-		// },
+		{
+			name: "successful_contract_signed",
+			preRun: func() *types.MsgSignContract {
+				return &types.MsgSignContract{
+					Cid:     "123",
+					Creator: user.String(),
+				}
+			},
+			expErr: false,
+		},
 	}
 
 	for _, tc := range cases {
