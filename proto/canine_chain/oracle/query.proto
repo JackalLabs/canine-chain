@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "canine_chain/oracle/params.proto";
+import "canine_chain/oracle/feed.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
 
@@ -13,6 +14,14 @@ service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/oracle/params";
+  }
+
+  rpc Feed(QueryFeedRequest) returns (QueryFeedResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds/{name}";
+  }
+
+  rpc AllFeeds(QueryAllFeedsRequest) returns (QueryAllFeedsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds";
   }
 }
 
@@ -25,3 +34,19 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
+message QueryFeedRequest {
+  string name = 1;
+}
+
+message QueryFeedResponse {
+  // params holds all the parameters of this module.
+  Feed feed = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllFeedsRequest {}
+
+message QueryAllFeedsResponse {
+  // params holds all the parameters of this module.
+  repeated Feed feed = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

@@ -23,31 +23,6 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{},
 			valid:    true,
 		},
-		{
-			desc:     "duplicated whois",
-			genState: &types.GenesisState{},
-			valid:    false,
-		},
-		{
-			desc:     "duplicated names",
-			genState: &types.GenesisState{},
-			valid:    false,
-		},
-		{
-			desc:     "duplicated bids",
-			genState: &types.GenesisState{},
-			valid:    false,
-		},
-		{
-			desc:     "duplicated forsale",
-			genState: &types.GenesisState{},
-			valid:    false,
-		},
-		{
-			desc:     "duplicated init",
-			genState: &types.GenesisState{},
-			valid:    false,
-		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
