@@ -296,6 +296,31 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			},
 		},
 		{
+			name: "expired storage subscription",
+			preRun: func() *types.MsgSignContract {
+				// create a test StoragePaymentInfo
+				spi := types.StoragePaymentInfo{
+					SpaceAvailable: 200_000_000,
+					SpaceUsed:      0,
+					// set expiration date to yesterday
+					End:     time.Now().AddDate(0, -1, 0),
+					Address: user.String(),
+				}
+				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				suite.Require().True(found)
+				return &types.MsgSignContract{
+					Cid:     "123",
+					Creator: user.String(),
+				}
+			},
+			expErr:    true,
+			expErrMsg: "storage subscription has expired",
+			postRun: func() {
+				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user.String())
+			},
+		},
+		{
 			name: "successful_contract_signed",
 			preRun: func() *types.MsgSignContract {
 				return &types.MsgSignContract{
