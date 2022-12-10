@@ -119,7 +119,11 @@ service Query {
         "/jackal-dao/canine-chain/storage/payment_info";
   }
 
-  // this line is used by starport scaffolding # 2
+  // Queries whether user can upload a file based on size
+  rpc FileUploadCheck(QueryFileUploadCheck) returns (QueryFileUploadCheckResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/file_upload_check";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -239,6 +243,15 @@ message QueryAllStoragePaymentInfoRequest {
 message QueryAllStoragePaymentInfoResponse  {
   repeated StoragePaymentInfo storage_payment_info = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryFileUploadCheck {
+  string address = 1;
+  int64 bytes = 2;
+}
+
+message QueryFileUploadCheckResponse {
+  bool valid = 1;
 }
 
 // this line is used by starport scaffolding # 3
