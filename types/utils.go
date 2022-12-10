@@ -5,6 +5,7 @@ import "strings"
 const (
 	MainnetChainID = "jackal"
 	TestnetChainID = "lupulella"
+	Bech32Prefix   = "jkl"
 )
 
 // IsMainnet returns true if the chain-id has the Evmos mainnet EIP155 chain prefix.

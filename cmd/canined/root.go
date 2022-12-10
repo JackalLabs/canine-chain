@@ -89,6 +89,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	}
 
 	initRootCmd(rootCmd, encodingConfig)
+	rootCmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
 
 	return rootCmd, encodingConfig
 }
@@ -174,6 +175,7 @@ func txCommand() *cobra.Command {
 	)
 
 	app.ModuleBasics.AddTxCommands(cmd)
+	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
 	return cmd
 }
 

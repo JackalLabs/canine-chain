@@ -46,7 +46,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 	d := totalSize.TruncateInt().Int64() / fchunks
 
 	if d > 0 {
-		iprove = (iprove + ctx.BlockHeight()*int64(byteHash)) % d
+		iprove = (int64(byteHash) + int64(ctx.BlockGasMeter().GasConsumed())) % d
 	}
 
 	deal.Blocktoprove = fmt.Sprintf("%d", iprove)

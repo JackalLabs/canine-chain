@@ -249,6 +249,7 @@ func (suite *KeeperTestSuite) TestSignContract() {
 		{
 			name: "invalid_permission_to_sign_contract",
 			preRun: func() *types.MsgSignContract {
+				// creating a test contract to sign
 				c := types.Contracts{
 					Cid:        "123",
 					Creator:    provider.String(),
@@ -271,10 +272,66 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			expErr:    true,
 			expErrMsg: "you do not have permission to approve this contract",
 		},
-
+		{
+			name: "not enough storage",
+			preRun: func() *types.MsgSignContract {
+				// create a test StoragePaymentInfo
+				spi := types.StoragePaymentInfo{
+					SpaceAvailable: 200_000_000,
+					SpaceUsed:      200_000_000,
+					Address:        user.String(),
+				}
+				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				suite.Require().True(found)
+				return &types.MsgSignContract{
+					Cid:     "123",
+					Creator: user.String(),
+				}
+			},
+			expErr:    true,
+			expErrMsg: "not enough storage space",
+			postRun: func() {
+				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user.String())
+			},
+		},
+		{
+			name: "expired storage subscription",
+			preRun: func() *types.MsgSignContract {
+				// create a test StoragePaymentInfo
+				spi := types.StoragePaymentInfo{
+					SpaceAvailable: 200_000_000,
+					SpaceUsed:      0,
+					// set expiration date to yesterday
+					End:     time.Now().AddDate(0, -1, 0),
+					Address: user.String(),
+				}
+				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				suite.Require().True(found)
+				return &types.MsgSignContract{
+					Cid:     "123",
+					Creator: user.String(),
+				}
+			},
+			expErr:    true,
+			expErrMsg: "storage subscription has expired",
+			postRun: func() {
+				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user.String())
+			},
+		},
 		{
 			name: "successful_contract_signed",
 			preRun: func() *types.MsgSignContract {
+				spi := types.StoragePaymentInfo{
+					SpaceAvailable: 200_000_000,
+					SpaceUsed:      0,
+					End:            time.Now().AddDate(0, 10, 0),
+					Address:        user.String(),
+				}
+				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				suite.Require().True(found)
 				return &types.MsgSignContract{
 					Cid:     "123",
 					Creator: user.String(),

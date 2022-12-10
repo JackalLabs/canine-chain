@@ -1,0 +1,26 @@
+syntax = "proto3";
+package canine_chain.oracle;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc CreateFeed(MsgCreateFeed) returns (MsgCreateFeedResponse);
+  rpc UpdateFeed(MsgUpdateFeed) returns (MsgUpdateFeedResponse);
+}
+
+
+message MsgCreateFeed {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgCreateFeedResponse {}
+
+message MsgUpdateFeed {
+  string creator = 1;
+  string name = 2;
+  string data = 3;
+}
+
+message MsgUpdateFeedResponse {}
