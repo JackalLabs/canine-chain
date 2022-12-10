@@ -381,7 +381,10 @@ func NewJackalApp(
 		*/
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
-	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey, oraclemoduletypes.MemStoreKey, storagemoduletypes.MemStoreKey, filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey)
+	memKeys := sdk.NewMemoryStoreKeys(
+		capabilitytypes.MemStoreKey,
+		//, oraclemoduletypes.MemStoreKey, storagemoduletypes.MemStoreKey, filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
+	)
 
 	app := &JackalApp{
 		BaseApp:           bApp,
@@ -905,9 +908,10 @@ func NewJackalApp(
 		intertxtypes.ModuleName,
 
 		rnsmoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
+
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
-		oraclemoduletypes.ModuleName,
 
 		crisistypes.ModuleName,
 	)
@@ -1172,6 +1176,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(oraclemoduletypes.ModuleName)
+	paramsKeeper.Subspace(storagemoduletypes.ModuleName)
+	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 
 	return paramsKeeper
 }

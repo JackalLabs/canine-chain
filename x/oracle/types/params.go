@@ -22,7 +22,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		Deposit: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+		Deposit: "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc",
 	}
 }
 

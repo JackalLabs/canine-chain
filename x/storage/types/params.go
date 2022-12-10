@@ -16,14 +16,13 @@ var KeyDepositAccount = []byte("DepositAccount")
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
-	p := NewParams()
-	return paramtypes.NewKeyTable().RegisterParamSet(&p)
+	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
 
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		DepositAccount: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+		DepositAccount: "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc",
 	}
 }
 
