@@ -383,7 +383,7 @@ func NewJackalApp(
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(
 		capabilitytypes.MemStoreKey,
-		//, oraclemoduletypes.MemStoreKey, storagemoduletypes.MemStoreKey, filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
+		// , oraclemoduletypes.MemStoreKey, storagemoduletypes.MemStoreKey, filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
 	)
 
 	app := &JackalApp{
