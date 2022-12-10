@@ -878,6 +878,40 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 	)
 
+	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
+	// alphabetically (default order)
+	// NOTE: The relationships module must occur before the profiles module, or all relationships will be deleted
+	app.mm.SetOrderMigrations(
+		authtypes.ModuleName,
+		authz.ModuleName,
+		banktypes.ModuleName,
+		capabilitytypes.ModuleName,
+		distrtypes.ModuleName,
+		evidencetypes.ModuleName,
+		feegrant.ModuleName,
+		genutiltypes.ModuleName,
+		govtypes.ModuleName,
+		ibchost.ModuleName,
+		minttypes.ModuleName,
+		slashingtypes.ModuleName,
+		stakingtypes.ModuleName,
+		ibctransfertypes.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
+		vestingtypes.ModuleName,
+		wasm.ModuleName,
+
+		icatypes.ModuleName,
+		intertxtypes.ModuleName,
+
+		rnsmoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
+		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
+
+		crisistypes.ModuleName,
+	)
+
 	// Uncomment if you want to set a custom migration order here.
 	// app.mm.SetOrderMigrations(custom order)
 
@@ -1077,7 +1111,7 @@ func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
 
 func (app *JackalApp) registerUpgradeHandlers() {
 	// app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
-	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator))
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app

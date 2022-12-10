@@ -1,7 +1,7 @@
 #!/bin/bash
 
 OLD_VERSION=1.1.2-hotfix
-UPGRADE_HEIGHT=30
+UPGRADE_HEIGHT=20
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
@@ -23,11 +23,6 @@ then
     cd ../..
 fi
 
-# install new binary
-if ! command -v ../_build/new/canined &> /dev/null
-then
-    GOBIN="${ROOT}/../_build/new" go install -mod=readonly ./... 2> /dev/null
-fi
 
 # start old node
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
@@ -67,4 +62,4 @@ done
 
 sleep 3
 
-../_build/new/canined start --log_level debug --home $HOME
+canined start --log_level debug --home $HOME

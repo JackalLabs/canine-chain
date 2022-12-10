@@ -4,6 +4,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/jackalLabs/canine-chain/app/upgrades"
 	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+	oraclekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
 	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
@@ -18,13 +19,15 @@ var _ upgrades.Upgrade = &Upgrade{}
 type Upgrade struct {
 	mm           *module.Manager
 	configurator module.Configurator
+	ok           oraclekeeper.Keeper
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator) *Upgrade {
+func NewUpgrade(mm *module.Manager, configurator module.Configurator, ok oraclekeeper.Keeper) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,
+		ok:           ok,
 	}
 }
 
@@ -36,8 +39,17 @@ func (u *Upgrade) Name() string {
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		// Do nothing here as we don't have anything particular in this update
-		return u.mm.RunMigrations(ctx, u.configurator, fromVM)
+
+		fromVM[storagemoduletypes.ModuleName] = 1
+		fromVM[filetreemoduletypes.ModuleName] = 1
+		fromVM[oraclemoduletypes.ModuleName] = 1
+
+		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
+		if err != nil {
+			return newVM, err
+		}
+
+		return newVM, err
 	}
 }
 

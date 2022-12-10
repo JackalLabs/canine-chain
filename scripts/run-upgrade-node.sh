@@ -33,6 +33,8 @@ update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom
 update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": $DENOM,"amount": "1000"}' $DENOM
 update_test_genesis '.app_state["staking"]["params"]["bond_denom"]=$DENOM' $DENOM
 
+
+sed -i '' 's/enable = false/enable = true/' $HOME/config/app.toml
 # Sign genesis transaction
 $BINARY gentx $KEY "1000000${DENOM}" --keyring-backend $KEYRING --chain-id $CHAIN_ID --home $HOME
 
