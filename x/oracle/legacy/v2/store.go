@@ -14,7 +14,8 @@ func MigrateStore(ctx sdk.Context, paramsSubspace paramstypes.Subspace) error {
 	ctx.Logger().Error("MIGRATING ORACLE STORE!")
 	// Set the module params
 	params := types.NewParams()
-	ctx.Logger().Error(params.String())
+
+	params.Deposit = "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc"
 
 	paramsSubspace.SetParamSet(ctx, &params)
 

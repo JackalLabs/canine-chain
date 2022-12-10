@@ -60,6 +60,6 @@ while true; do
     fi
 done
 
-sleep 3
+#sleep 3
 
-canined start --log_level debug --home $HOME
+#canined start --log_level debug --home $HOME

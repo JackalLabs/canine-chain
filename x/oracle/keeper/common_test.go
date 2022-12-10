@@ -36,8 +36,8 @@ func setupOracleKeeper(t *testing.T) (
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, sdk.NewTransientStoreKey("transient_test"))
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
-
 	encCfg := moduletestutil.MakeTestEncodingConfig()
+
 	types.RegisterInterfaces(encCfg.InterfaceRegistry)
 	banktypes.RegisterInterfaces(encCfg.InterfaceRegistry)
 
