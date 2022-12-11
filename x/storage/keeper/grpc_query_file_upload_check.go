@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) FileUploadCheck(c context.Context, req *types.QueryFileUploadCheck) (*types.QueryFileUploadCheckResponse, error) {
+func (k Keeper) FileUploadCheck(c context.Context, req *types.QueryFileUploadCheckRequest) (*types.QueryFileUploadCheckResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
