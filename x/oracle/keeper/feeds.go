@@ -9,10 +9,8 @@ import (
 // SetFeed set a specific Feed in the store from its index
 func (k Keeper) SetFeed(ctx sdk.Context, feed types.Feed) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FeedKeyPrefix))
-	b := k.cdc.MustMarshal(&feed)
-	store.Set(types.FeedKey(
-		feed.Name,
-	), b)
+	f := k.cdc.MustMarshal(&feed)
+	store.Set(types.FeedKey(feed.Name), f)
 }
 
 // GetFeed returns a Feed from its index
@@ -22,14 +20,12 @@ func (k Keeper) GetFeed(
 ) (val types.Feed, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FeedKeyPrefix))
 
-	b := store.Get(types.FeedKey(
-		index,
-	))
-	if b == nil {
-		return val, false
+	key := types.FeedKey(index)
+	if !store.Has(key) {
+		return types.Feed{}, false
 	}
 
-	k.cdc.MustUnmarshal(b, &val)
+	k.cdc.MustUnmarshal(store.Get(key), &val)
 	return val, true
 }
 

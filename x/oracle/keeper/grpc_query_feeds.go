@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/oracle/types"
@@ -15,10 +14,12 @@ func (k Keeper) Feed(c context.Context, req *types.QueryFeedRequest) (*types.Que
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
+	ctx.Logger().Error(req.Name)
 
 	feed, found := k.GetFeed(ctx, req.Name)
+	ctx.Logger().Error(feed.Name)
 	if !found {
-		return nil, fmt.Errorf("cannot find feed")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryFeedResponse{Feed: feed}, nil
@@ -30,5 +31,7 @@ func (k Keeper) AllFeeds(c context.Context, req *types.QueryAllFeedsRequest) (*t
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	return &types.QueryAllFeedsResponse{Feed: k.GetAllFeeds(ctx)}, nil
+	f := k.GetAllFeeds(ctx)
+
+	return &types.QueryAllFeedsResponse{Feed: f, Pagination: nil}, nil
 }

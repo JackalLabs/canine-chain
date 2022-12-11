@@ -11,7 +11,7 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	k.SetParams(ctx, genState.Params)
 
-	// Set all the names
+	// Set all the feeds
 	for _, elem := range genState.FeedList {
 		k.SetFeed(ctx, elem)
 	}
