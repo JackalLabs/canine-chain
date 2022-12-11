@@ -32,8 +32,12 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	rnsGenesis := types.GenesisState{}
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&rnsGenesis)
+	oracleGenesis := types.GenesisState{
+		Params:   types.DefaultParams(),
+		FeedList: []types.Feed{},
+	}
+
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&oracleGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals

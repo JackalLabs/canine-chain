@@ -375,6 +375,7 @@ func NewJackalApp(
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey,
 		icacontrollertypes.StoreKey, intertxtypes.StoreKey, rnsmoduletypes.StoreKey,
 		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
+
 		/*
 			, dsigmoduletypes.StoreKey, f
 			notificationsmoduletypes.StoreKey,
@@ -383,7 +384,9 @@ func NewJackalApp(
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(
 		capabilitytypes.MemStoreKey,
-		// , oraclemoduletypes.MemStoreKey, storagemoduletypes.MemStoreKey, filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
+		oraclemoduletypes.MemStoreKey,
+		storagemoduletypes.MemStoreKey,
+		// filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
 	)
 
 	app := &JackalApp{
@@ -619,7 +622,6 @@ func NewJackalApp(
 	app.OracleKeeper = *oraclemodulekeeper.NewKeeper(
 		appCodec,
 		keys[oraclemoduletypes.StoreKey],
-		keys[oraclemoduletypes.MemStoreKey],
 		app.getSubspace(oraclemoduletypes.ModuleName),
 
 		app.BankKeeper,
@@ -629,7 +631,6 @@ func NewJackalApp(
 	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
 		appCodec,
 		keys[storagemoduletypes.StoreKey],
-		keys[storagemoduletypes.MemStoreKey],
 		app.getSubspace(storagemoduletypes.ModuleName),
 		app.BankKeeper,
 		app.AccountKeeper,
@@ -909,7 +910,6 @@ func NewJackalApp(
 
 		rnsmoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
-
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 
@@ -950,6 +950,7 @@ func NewJackalApp(
 		rnsModule,
 		storageModule,
 		oracleModule,
+		filetreeModule,
 	)
 
 	app.sm.RegisterStoreDecoders()

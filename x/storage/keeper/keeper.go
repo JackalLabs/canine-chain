@@ -15,7 +15,6 @@ type (
 	Keeper struct {
 		cdc           codec.BinaryCodec
 		storeKey      sdk.StoreKey
-		memKey        sdk.StoreKey
 		paramstore    paramtypes.Subspace
 		bankkeeper    types.BankKeeper
 		accountkeeper types.AccountKeeper
@@ -24,8 +23,7 @@ type (
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	storeKey,
-	memKey sdk.StoreKey,
+	storeKey sdk.StoreKey,
 	ps paramtypes.Subspace,
 	bankkeeper types.BankKeeper,
 	accountkeeper types.AccountKeeper,
@@ -38,7 +36,6 @@ func NewKeeper(
 	return &Keeper{
 		cdc:           cdc,
 		storeKey:      storeKey,
-		memKey:        memKey,
 		paramstore:    ps,
 		bankkeeper:    bankkeeper,
 		accountkeeper: accountkeeper,

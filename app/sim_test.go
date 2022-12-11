@@ -8,6 +8,10 @@ import (
 	"testing"
 	"time"
 
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+
 	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 
@@ -193,6 +197,9 @@ func TestAppImportExport(t *testing.T) {
 		{app.keys[authzkeeper.StoreKey], newApp.keys[authzkeeper.StoreKey], [][]byte{}},
 		{app.keys[feegrant.StoreKey], newApp.keys[feegrant.StoreKey], [][]byte{}},
 		{app.keys[wasm.StoreKey], newApp.keys[wasm.StoreKey], [][]byte{}},
+		{app.keys[oraclemoduletypes.StoreKey], newApp.keys[oraclemoduletypes.StoreKey], [][]byte{}},
+		{app.keys[storagemoduletypes.StoreKey], newApp.keys[storagemoduletypes.StoreKey], [][]byte{}},
+		{app.keys[filetreemoduletypes.StoreKey], newApp.keys[filetreemoduletypes.StoreKey], [][]byte{}},
 	}
 
 	// delete persistent tx counter value

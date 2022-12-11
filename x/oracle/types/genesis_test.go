@@ -19,9 +19,9 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid:    true,
 		},
 		{
-			desc:     "valid genesis state",
+			desc:     "empty genesis state",
 			genState: &types.GenesisState{},
-			valid:    true,
+			valid:    false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
