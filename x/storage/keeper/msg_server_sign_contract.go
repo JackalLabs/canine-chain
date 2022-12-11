@@ -51,22 +51,26 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Fid:           contract.Fid,
 	}
 
-	usage, found := k.GetClientUsage(ctx, msg.Creator)
-	if !found {
-		usage = types.ClientUsage{
-			Address: msg.Creator,
-			Usage:   "0",
+	fsize, ok := sdk.NewIntFromString(contract.Filesize)
+	if !ok {
+		return nil, fmt.Errorf("cannot parse file size")
+	}
+	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
+	if found {
+		// check if user has any free space
+		if payInfo.SpaceUsed+fsize.Int64() > payInfo.SpaceAvailable {
+			return nil, fmt.Errorf("not enough storage space")
+		}
+		// check if storage subscription still active
+		if payInfo.End.Before(ctx.BlockTime()) {
+			return nil, fmt.Errorf("storage subscription has expired")
 		}
 	}
+	// we going to need an else statement to check for the free trial storage since they wont have payInfo
 
-	used, ok := sdk.NewIntFromString(usage.Usage)
-	if !ok {
-		return nil, fmt.Errorf("cannot parse usage")
-	}
+	payInfo.SpaceUsed += fsize.Int64()
 
-	usage.Usage = fmt.Sprintf("%d", used.Int64()+size.Int64())
-
-	k.SetClientUsage(ctx, usage)
+	k.SetStoragePaymentInfo(ctx, payInfo)
 	k.SetActiveDeals(ctx, deal)
 	k.RemoveContracts(ctx, contract.Cid)
 

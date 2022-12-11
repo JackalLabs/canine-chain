@@ -6,8 +6,6 @@ import "canine_chain/storage/params.proto";
 import "canine_chain/storage/contracts.proto";
 import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
-import "canine_chain/storage/pay_blocks.proto";
-import "canine_chain/storage/client_usage.proto";
 import "canine_chain/storage/strays.proto";
 import "canine_chain/storage/fid_cid.proto";
 // this line is used by starport scaffolding # genesis/proto/import
@@ -20,9 +18,7 @@ message GenesisState {
   repeated Contracts contracts_list = 2 [ (gogoproto.nullable) = false ];
   repeated ActiveDeals active_deals_list = 3 [ (gogoproto.nullable) = false ];
   repeated Providers providers_list = 4 [ (gogoproto.nullable) = false ];
-  repeated PayBlocks pay_blocks_list = 5 [ (gogoproto.nullable) = false ];
-  repeated ClientUsage client_usage_list = 6 [ (gogoproto.nullable) = false ];
   repeated Strays strays_list = 7 [ (gogoproto.nullable) = false ];
-  repeated FidCid fid_cid_list = 8 [ (gogoproto.nullable) = false ];
+  repeated FidCid fid_cid_list = 5 [ (gogoproto.nullable) = false ];
   // this line is used by starport scaffolding # genesis/proto/state
 }

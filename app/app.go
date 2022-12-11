@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/jackalLabs/canine-chain/app/upgrades"
+
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -120,6 +122,10 @@ import (
 	rnsmodulekeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
 	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 
+	oraclemodule "github.com/jackalLabs/canine-chain/x/oracle"
+	oraclemodulekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
+
 	storagemodule "github.com/jackalLabs/canine-chain/x/storage"
 	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
@@ -139,10 +145,6 @@ import (
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
 
-	store "github.com/cosmos/cosmos-sdk/store/types"
-	alpha7 "github.com/jackalLabs/canine-chain/app/upgrades/alpha7"
-	v120alpha6 "github.com/jackalLabs/canine-chain/app/upgrades/v1.2.0-alpha.6"
-	v2 "github.com/jackalLabs/canine-chain/app/upgrades/v2"
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
@@ -244,6 +246,7 @@ var (
 		rnsmodule.AppModuleBasic{},
 		storagemodule.AppModuleBasic{},
 		filetreemodule.AppModuleBasic{},
+		oraclemodule.AppModuleBasic{},
 
 		/*
 			dsigmodule.AppModuleBasic{},
@@ -262,8 +265,9 @@ var (
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		icatypes.ModuleName:            nil,
 		wasm.ModuleName:                {authtypes.Burner},
-		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
+		oraclemoduletypes.ModuleName:   nil,
 
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
@@ -320,6 +324,7 @@ type JackalApp struct {
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
 	RnsKeeper      rnsmodulekeeper.Keeper
+	OracleKeeper   oraclemodulekeeper.Keeper
 	StorageKeeper  storagemodulekeeper.Keeper
 	FileTreeKeeper filetreemodulekeeper.Keeper
 
@@ -367,15 +372,22 @@ func NewJackalApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
-		rnsmoduletypes.StoreKey, storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey,
+		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey,
+		icacontrollertypes.StoreKey, intertxtypes.StoreKey, rnsmoduletypes.StoreKey,
+		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
+
 		/*
 			, dsigmoduletypes.StoreKey, f
 			notificationsmoduletypes.StoreKey,
 		*/
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
-	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
+	memKeys := sdk.NewMemoryStoreKeys(
+		capabilitytypes.MemStoreKey,
+		oraclemoduletypes.MemStoreKey,
+		storagemoduletypes.MemStoreKey,
+		// filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
+	)
 
 	app := &JackalApp{
 		BaseApp:           bApp,
@@ -607,10 +619,18 @@ func NewJackalApp(
 	)
 	rnsModule := rnsmodule.NewAppModule(appCodec, app.RnsKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.OracleKeeper = *oraclemodulekeeper.NewKeeper(
+		appCodec,
+		keys[oraclemoduletypes.StoreKey],
+		app.getSubspace(oraclemoduletypes.ModuleName),
+
+		app.BankKeeper,
+	)
+	oracleModule := oraclemodule.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper)
+
 	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
 		appCodec,
 		keys[storagemoduletypes.StoreKey],
-		keys[storagemoduletypes.MemStoreKey],
 		app.getSubspace(storagemoduletypes.ModuleName),
 		app.BankKeeper,
 		app.AccountKeeper,
@@ -710,6 +730,7 @@ func NewJackalApp(
 		rnsModule,
 		storageModule,
 		filetreeModule,
+		oracleModule,
 
 		/*
 			dsigModule,
@@ -747,6 +768,7 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -780,6 +802,7 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -821,6 +844,7 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -855,6 +879,41 @@ func NewJackalApp(
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
+	)
+
+	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
+	// alphabetically (default order)
+	// NOTE: The relationships module must occur before the profiles module, or all relationships will be deleted
+	app.mm.SetOrderMigrations(
+		authtypes.ModuleName,
+		authz.ModuleName,
+		banktypes.ModuleName,
+		capabilitytypes.ModuleName,
+		distrtypes.ModuleName,
+		evidencetypes.ModuleName,
+		feegrant.ModuleName,
+		genutiltypes.ModuleName,
+		govtypes.ModuleName,
+		ibchost.ModuleName,
+		minttypes.ModuleName,
+		slashingtypes.ModuleName,
+		stakingtypes.ModuleName,
+		ibctransfertypes.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
+		vestingtypes.ModuleName,
+		wasm.ModuleName,
+
+		icatypes.ModuleName,
+		intertxtypes.ModuleName,
+
+		rnsmoduletypes.ModuleName,
+		oraclemoduletypes.ModuleName,
+		storagemoduletypes.ModuleName,
+		filetreemoduletypes.ModuleName,
+
+		crisistypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -866,7 +925,7 @@ func NewJackalApp(
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
 
-	app.setupUpgradeHandlers()
+	app.registerUpgradeHandlers()
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	//
@@ -890,6 +949,8 @@ func NewJackalApp(
 		transferModule,
 		rnsModule,
 		storageModule,
+		oracleModule,
+		filetreeModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -1053,73 +1114,23 @@ func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
 }
 
-// Add new modules store loader
-func (app *JackalApp) setupUpgradeHandlers() {
-	// version 2 upgrade keeper
-	app.upgradeKeeper.SetUpgradeHandler(
-		v2.UpgradeName,
-		v2.CreateUpgradeHandler(
-			app.mm,
-			app.configurator,
-		),
-	)
+func (app *JackalApp) registerUpgradeHandlers() {
+	// app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
+}
 
-	// version 1.2.0-alpha.6 upgrade keeper
-	app.upgradeKeeper.SetUpgradeHandler(
-		v120alpha6.UpgradeName,
-		v120alpha6.CreateUpgradeHandler(
-			app.mm,
-			app.configurator,
-		),
-	)
+// registerUpgrade registers the given upgrade to be supported by the app
+func (app *JackalApp) registerUpgrade(upgrade upgrades.Upgrade) {
+	app.upgradeKeeper.SetUpgradeHandler(upgrade.Name(), upgrade.Handler())
 
-	// version 1.2.0-alpha.7 upgrade keeper
-	app.upgradeKeeper.SetUpgradeHandler(
-		alpha7.UpgradeName,
-		alpha7.CreateUpgradeHandler(
-			app.mm,
-			app.configurator,
-		),
-	)
-
-	// version 3 upgrade keeper
-	app.upgradeKeeper.SetUpgradeHandler(
-		v3.UpgradeName,
-		v3.CreateUpgradeHandler(
-			app.mm,
-			app.configurator,
-		),
-	)
-
-	// When a planned update height is reached, the old binary will panic
-	// writing on disk the height and name of the update that triggered it
-	// This will read that value, and execute the preparations for the upgrade.
 	upgradeInfo, err := app.upgradeKeeper.ReadUpgradeInfoFromDisk()
 	if err != nil {
-		panic(fmt.Errorf("failed to read upgrade info from disk: %w", err))
+		panic(err)
 	}
 
-	if app.upgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
-		return
-	}
-
-	var storeUpgrades *store.StoreUpgrades
-
-	if upgradeInfo.Name == v2.UpgradeName {
-		storeUpgrades = &store.StoreUpgrades{
-			Deleted: []string{"storage", "dsig", "notifications", "filetree"},
-		}
-	}
-
-	if upgradeInfo.Name == v3.UpgradeName {
-		storeUpgrades = &store.StoreUpgrades{
-			Added: []string{"storage", "filetree"},
-		}
-	}
-
-	if storeUpgrades != nil {
-		// configure store loader that checks if version == upgradeHeight and applies store upgrades
-		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, storeUpgrades))
+	if upgradeInfo.Name == upgrade.Name() && !app.upgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+		// Configure store loader that checks if version == upgradeHeight and applies store upgrades
+		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, upgrade.StoreUpgrades()))
 	}
 }
 
@@ -1165,6 +1176,9 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
+	paramsKeeper.Subspace(oraclemoduletypes.ModuleName)
+	paramsKeeper.Subspace(storagemoduletypes.ModuleName)
+	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 
 	return paramsKeeper
 }
