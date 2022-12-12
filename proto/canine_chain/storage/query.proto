@@ -120,7 +120,7 @@ service Query {
   }
 
   // Queries whether user can upload a file based on size
-  rpc FileUploadCheck(QueryFileUploadCheck) returns (QueryFileUploadCheckResponse) {
+  rpc FileUploadCheck(QueryFileUploadCheckRequest) returns (QueryFileUploadCheckResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/file_upload_check";
   }
@@ -245,7 +245,7 @@ message QueryAllStoragePaymentInfoResponse  {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryFileUploadCheck {
+message QueryFileUploadCheckRequest {
   string address = 1;
   int64 bytes = 2;
 }
