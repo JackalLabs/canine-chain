@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macos-latest]
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v3.2.0
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18.1 # The Go version to download (if necessary) and use.
@@ -31,7 +31,7 @@ jobs:
   # MacOS-ARM64-CLI:
   #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v3.1.0
+  #     - uses: actions/checkout@v3.2.0
   #     - uses: actions/setup-go@v3
   #       with:
   #         go-version: 1.19 # The Go version to download (if necessary) and use.
@@ -54,7 +54,7 @@ jobs:
       [native-build-cli]
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v3.2.0
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
