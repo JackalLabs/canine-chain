@@ -42,13 +42,14 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	const hoursInMonth = time.Hour * 720
-	if duration <= hoursInMonth {
+	if duration < hoursInMonth {
 		return nil, fmt.Errorf("cannot buy less than a month(720h)")
 	}
 
 	// Truncate month
 	dm := duration.Truncate(hoursInMonth)
 
+	// !!! Replace 4000 with the correct price per 1GB/month
 	cost := gbs * 4000 * int64(dm/hoursInMonth)
 
 	price := sdk.NewCoin(denom, sdk.NewInt(cost))
