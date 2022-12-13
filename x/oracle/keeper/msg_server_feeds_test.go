@@ -76,3 +76,53 @@ func (suite *KeeperTestSuite) TestCreateFeed() {
 		})
 	}
 }
+
+func (suite *KeeperTestSuite) TestUpdateFeed() {
+	suite.SetupSuite()
+
+	genesisFeed := types.Feed{
+		Owner: suite.testAccs[0].String(),
+		Name:  "foo",
+	}
+
+	cases := map[string]struct {
+		creator sdk.AccAddress
+		name    string
+		expErr  bool
+	}{
+		"update feed": {
+			creator: suite.testAccs[0],
+			name:    "foo",
+			expErr:  false,
+		},
+		"cannot find feed": {
+			creator: suite.testAccs[0],
+			name:    "null",
+			expErr:  true,
+		},
+		"invalid owner": {
+			creator: suite.testAccs[1],
+			name:    "foo",
+			expErr:  true,
+		},
+	}
+
+	for name, tc := range cases {
+		suite.Run(name, func() {
+			suite.reset()
+			suite.oracleKeeper.SetFeed(suite.ctx, genesisFeed)
+			msgSrvr, _, wctx := setupMsgServer(suite)
+
+			result, err := msgSrvr.UpdateFeed(wctx, &types.MsgUpdateFeed{
+				Name:    tc.name,
+				Creator: tc.creator.String(),
+				Data:    "",
+			})
+
+			if !tc.expErr {
+				suite.Require().NoError(err)
+				suite.Require().NotNil(result)
+			}
+		})
+	}
+}
