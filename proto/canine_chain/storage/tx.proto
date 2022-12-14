@@ -17,6 +17,7 @@ service Msg {
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
   rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
+  rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -100,4 +101,12 @@ message MsgClaimStray {
 
 message MsgClaimStrayResponse {}
 
-// this line is used by starport scaffolding # proto/tx/message
+message MsgUpgradeStorage {
+  string creator = 1;
+  string for_address = 2;
+  string duration = 3;
+  string bytes = 4;
+  string payment_denom = 5;
+}
+
+message MsgUpgradeStorageResponse {}
