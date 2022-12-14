@@ -10,6 +10,7 @@ import (
 	types "github.com/cosmos/cosmos-sdk/types"
 	types0 "github.com/cosmos/cosmos-sdk/x/auth/types"
 	gomock "github.com/golang/mock/gomock"
+	types1 "github.com/jackalLabs/canine-chain/x/oracle/types"
 )
 
 // MockAccountKeeper is a mock of AccountKeeper interface.
@@ -196,4 +197,42 @@ func (m *MockBankKeeper) SpendableCoins(ctx types.Context, addr types.AccAddress
 func (mr *MockBankKeeperMockRecorder) SpendableCoins(ctx, addr interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SpendableCoins", reflect.TypeOf((*MockBankKeeper)(nil).SpendableCoins), ctx, addr)
+}
+
+// MockOracleKeeper is a mock of OracleKeeper interface.
+type MockOracleKeeper struct {
+	ctrl     *gomock.Controller
+	recorder *MockOracleKeeperMockRecorder
+}
+
+// MockOracleKeeperMockRecorder is the mock recorder for MockOracleKeeper.
+type MockOracleKeeperMockRecorder struct {
+	mock *MockOracleKeeper
+}
+
+// NewMockOracleKeeper creates a new mock instance.
+func NewMockOracleKeeper(ctrl *gomock.Controller) *MockOracleKeeper {
+	mock := &MockOracleKeeper{ctrl: ctrl}
+	mock.recorder = &MockOracleKeeperMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockOracleKeeper) EXPECT() *MockOracleKeeperMockRecorder {
+	return m.recorder
+}
+
+// GetFeed mocks base method.
+func (m *MockOracleKeeper) GetFeed(ctx types.Context, index string) (types1.Feed, bool) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFeed", ctx, index)
+	ret0, _ := ret[0].(types1.Feed)
+	ret1, _ := ret[1].(bool)
+	return ret0, ret1
+}
+
+// GetFeed indicates an expected call of GetFeed.
+func (mr *MockOracleKeeperMockRecorder) GetFeed(ctx, index interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFeed", reflect.TypeOf((*MockOracleKeeper)(nil).GetFeed), ctx, index)
 }

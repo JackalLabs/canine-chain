@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	oracletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
 )
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
@@ -24,4 +25,8 @@ type BankKeeper interface {
 	GetBalance(ctx sdk.Context, addrr sdk.AccAddress, denom string) sdk.Coin
 	GetAllBalances(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
 	// Methods imported from bank should be defined here
+}
+
+type OracleKeeper interface {
+	GetFeed(ctx sdk.Context, index string) (val oracletypes.Feed, found bool)
 }

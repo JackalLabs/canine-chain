@@ -7,8 +7,10 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	oracle "github.com/jackalLabs/canine-chain/x/oracle"
 	"github.com/jackalLabs/canine-chain/x/oracle/keeper"
 	oracletestutil "github.com/jackalLabs/canine-chain/x/oracle/testutil"
 	"github.com/jackalLabs/canine-chain/x/oracle/types"
@@ -24,6 +26,7 @@ type KeeperTestSuite struct {
 	bankKeeper   *oracletestutil.MockBankKeeper
 	queryClient  types.QueryClient
 	msgSrvr      types.MsgServer
+	testAccs     []sdk.AccAddress
 }
 
 func (suite *KeeperTestSuite) SetupSuite() {
@@ -49,15 +52,26 @@ func (suite *KeeperTestSuite) reset() {
 	suite.cdc = encCfg.Codec
 	suite.queryClient = queryClient
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.oracleKeeper)
+	suite.testAccs = CreateRandomAccounts(3)
 }
 
-// TODO: add msgServer tests
-// func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
-//	 k := suite.oracleKeeper
-//	 oracle.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
-//	 ctx := sdk.WrapSDKContext(suite.ctx)
-//	 return keeper.NewMsgServerImpl(*k), *k, ctx
-// }
+func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
+	k := suite.oracleKeeper
+	oracle.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
+	ctx := sdk.WrapSDKContext(suite.ctx)
+	return keeper.NewMsgServerImpl(*k), *k, ctx
+}
+
+func CreateRandomAccounts(numAccs int) []sdk.AccAddress {
+	accs := make([]sdk.AccAddress, numAccs)
+
+	for i := 0; i < numAccs; i++ {
+		pk := secp256k1.GenPrivKey().PubKey()
+		accs[i] = sdk.AccAddress(pk.Address())
+	}
+
+	return accs
+}
 
 func (suite *KeeperTestSuite) TestGRPCParams() {
 	suite.SetupSuite()

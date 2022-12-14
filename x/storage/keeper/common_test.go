@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	oracletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
 
@@ -51,8 +52,15 @@ func setupStorageKeeper(t *testing.T) (
 	ctrl := gomock.NewController(t)
 	bankKeeper := storagetestutil.NewMockBankKeeper(ctrl)
 	accountKeeper := storagetestutil.NewMockAccountKeeper(ctrl)
+	oracleKeeper := storagetestutil.NewMockOracleKeeper(ctrl)
 	trackMockBalances(bankKeeper)
 	accountKeeper.EXPECT().GetModuleAddress(types.ModuleName).Return(modAccount).AnyTimes()
+
+	oracleKeeper.EXPECT().GetFeed(gomock.Any(), gomock.Any()).Return(oracletypes.Feed{
+		Data:  `{"price":0.24,"24h_change":0}`,
+		Name:  "jklprice",
+		Owner: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+	}, true).AnyTimes()
 
 	paramsSubspace := typesparams.NewSubspace(encCfg.Codec,
 		types.Amino,
@@ -62,7 +70,7 @@ func setupStorageKeeper(t *testing.T) (
 	)
 
 	// storage keeper initializations
-	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper)
+	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper)
 	storageKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.
