@@ -27,7 +27,7 @@ func CmdFileUploadCheck() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryFileUploadCheck{
+			params := &types.QueryFileUploadCheckRequest{
 				Address: argAddr,
 				Bytes:   reqByte,
 			}
