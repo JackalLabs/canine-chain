@@ -59,8 +59,8 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	feed, found := k.oraclekeeper.GetFeed(ctx, "jklprice")
 	if found {
 		type data struct {
-			Price  float64 `json:"price"`
-			Change float64 `json:"24h_change"`
+			Price  string `json:"price"`
+			Change string `json:"24h_change"`
 		}
 		var d data
 		err = json.Unmarshal([]byte(feed.Data), &d)
@@ -68,7 +68,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 			return nil, err
 		}
 
-		jklPrice, err = sdk.NewDecFromStr(fmt.Sprintf("%f", d.Price))
+		jklPrice, err = sdk.NewDecFromStr(d.Price)
 		if err != nil {
 			return nil, err
 		}
