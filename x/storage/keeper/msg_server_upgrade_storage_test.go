@@ -43,7 +43,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			msg: types.MsgUpgradeStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "1440h",
+				Duration:     "2",
 				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -66,7 +66,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			msg: types.MsgUpgradeStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "720h",
+				Duration:     "1",
 				Bytes:        "4000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -89,7 +89,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			msg: types.MsgUpgradeStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "2160h",
+				Duration:     "3",
 				Bytes:        "8000000000",
 				PaymentDenom: "ujkl",
 			},
