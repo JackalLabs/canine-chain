@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	module "github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -92,6 +93,48 @@ func (suite *KeeperTestSuite) TestGetProviderUsing() {
 			result := sKeeper.GetProviderUsing(suite.ctx, provider)
 
 			suite.Require().Equal(tc.expReturn, result)
+		})
+	}
+}
+
+func (suite *KeeperTestSuite) TestGetJklPrice() {
+	suite.SetupSuite()
+	_, sKeeper, _ := setupMsgServer(suite)
+
+	price := sKeeper.GetJklPrice(suite.ctx)
+	expected, err := sdk.NewDecFromStr("0.24")
+	suite.Require().NoError(err)
+	suite.Require().Equal(expected, price)
+}
+
+func (suite *KeeperTestSuite) TestGetStorageCost() {
+	suite.SetupSuite()
+	_, sKeeper, _ := setupMsgServer(suite)
+
+	cases := []struct {
+		name     string
+		gbs      int64
+		months   int64
+		expected sdk.Int
+	}{
+		{
+			name:     "10GB for 5months",
+			gbs:      10_000_000,
+			months:   5,
+			expected: sdk.NewInt(1666666666666),
+		},
+		{
+			name:     "No_provider_found",
+			gbs:      5_000_000,
+			months:   24,
+			expected: sdk.NewInt(4000000000000),
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			cost := sKeeper.GetStorageCost(suite.ctx, tc.gbs, tc.months)
+			suite.Require().Equal(tc.expected, cost)
 		})
 	}
 }
