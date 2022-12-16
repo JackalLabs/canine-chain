@@ -133,7 +133,7 @@ func (suite *KeeperTestSuite) TestGetStorageCost() {
 
 	for _, tc := range cases {
 		suite.Run(tc.name, func() {
-			cost := sKeeper.GetStorageCost(suite.ctx, tc.gbs, tc.months)
+			cost := sKeeper.GetStorageCost(suite.ctx, tc.gbs, sdk.NewDec(tc.months))
 			suite.Require().Equal(tc.expected, cost)
 		})
 	}

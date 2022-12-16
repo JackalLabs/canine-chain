@@ -71,7 +71,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
-			expErrMsg: "cannot downgrade at the moment, please wait till your subscription is over",
+			expErrMsg: "cannot downgrade",
 		},
 		{
 			testName: "downgrading from 10GB to 8GB ",

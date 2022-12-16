@@ -55,14 +55,14 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 
 // Calculate storage cost in ujkl
 // Uses gigabytes and months to calculate how much user has to pay
-func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, months int64) sdk.Int {
+func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, months sdk.Dec) sdk.Int {
 	pricePerGB := sdk.MustNewDecFromStr("0.008")
 	jklPrice := k.GetJklPrice(ctx)
 	ujklUnit := sdk.NewDec(1000000)
 
 	pricePerMonth := pricePerGB.Mul(sdk.NewDec(gbs))
 
-	totalCost := pricePerMonth.Mul(sdk.NewDec(months))
+	totalCost := pricePerMonth.Mul(months)
 
 	jklCost := totalCost.Quo(jklPrice)
 	ujklCost := jklCost.Mul(ujklUnit)
