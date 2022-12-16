@@ -13,32 +13,28 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelContract) (*types.MsgCancelContractResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	root := msg.Cid
-
+func CanContract(ctx sdk.Context, root string, creator string, k Keeper) error {
 	h := sha256.New()
 	_, err := io.WriteString(h, fmt.Sprintf("%s%d", root, 0))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	hashName := h.Sum(nil)
 
 	left, err := MakeCid(hashName)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	h = sha256.New()
 	_, err = io.WriteString(h, fmt.Sprintf("%s%d", root, 1))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	hashName = h.Sum(nil)
 
 	right, err := MakeCid(hashName)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	var fid string
@@ -47,7 +43,7 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 	if !found {
 		s, found := k.GetStrays(ctx, root)
 		if !found {
-			return nil, fmt.Errorf("can't find contract")
+			return fmt.Errorf("can't find contract")
 		}
 		k.RemoveStrays(ctx, s.Cid)
 	} else {
@@ -58,7 +54,7 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 	if !found {
 		s, found := k.GetStrays(ctx, left)
 		if !found {
-			return nil, fmt.Errorf("can't find contract")
+			return fmt.Errorf("can't find contract")
 		}
 		k.RemoveStrays(ctx, s.Cid)
 	} else {
@@ -69,7 +65,7 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 	if !found {
 		s, found := k.GetStrays(ctx, right)
 		if !found {
-			return nil, fmt.Errorf("can't find contract")
+			return fmt.Errorf("can't find contract")
 		}
 		fid = s.Fid
 		k.RemoveStrays(ctx, s.Cid)
@@ -77,20 +73,20 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 	} else {
 		fid = d.Fid
 		k.RemoveActiveDeals(ctx, d.Cid)
-		if d.Creator != msg.Creator {
-			return nil, fmt.Errorf("you don't own this deal")
+		if !(d.Creator == creator || d.Creator == "admin") {
+			return fmt.Errorf("you don't own this deal")
 		}
 	}
 
 	ftc, found := k.GetFidCid(ctx, fid)
 	if !found {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "no fid found")
+		return sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "no fid found")
 	}
 
 	var ncids []string
 	err = json.Unmarshal([]byte(ftc.Cids), &ncids)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	cids := make([]string, 0)
@@ -101,11 +97,20 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 	}
 	b, err := json.Marshal(cids)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	ftc.Cids = string(b)
 
 	k.SetFidCid(ctx, ftc)
+	return nil
+}
 
-	return &types.MsgCancelContractResponse{}, nil
+func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelContract) (*types.MsgCancelContractResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	root := msg.Cid
+
+	err := CanContract(ctx, root, msg.Creator, k.Keeper)
+
+	return &types.MsgCancelContractResponse{}, err
 }

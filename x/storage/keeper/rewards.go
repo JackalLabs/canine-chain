@@ -147,6 +147,19 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, networkSize sdk.Dec, balance sdk.Coin) {
 	for _, deal := range allDeals {
 
+		info, _ := k.GetStoragePaymentInfo(ctx, deal.Signee)
+		if info.End.After(ctx.BlockTime()) {
+			if info.SpaceUsed > TwoGigs {
+
+				cerr := CanContract(ctx, deal.Cid, "admin", k)
+				if cerr != nil {
+					ctx.Logger().Error(cerr.Error())
+				}
+			}
+			info.SpaceAvailable = TwoGigs
+			k.SetStoragePaymentInfo(ctx, info)
+		}
+
 		err := k.manageDealReward(ctx, deal, networkSize, balance)
 		if err != nil {
 			ctx.Logger().Error(err.Error())
