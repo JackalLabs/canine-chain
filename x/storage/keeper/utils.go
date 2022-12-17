@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"encoding/json"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -49,4 +51,51 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 	}
 
 	return space
+}
+
+// Calculate storage cost in ujkl
+// Uses gigabytes and months to calculate how much user has to pay
+func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, months sdk.Dec) sdk.Int {
+	pricePerGB := sdk.MustNewDecFromStr("0.008")
+	jklPrice := k.GetJklPrice(ctx)
+	ujklUnit := sdk.NewDec(1000000)
+
+	pricePerMonth := pricePerGB.Mul(sdk.NewDec(gbs))
+
+	totalCost := pricePerMonth.Mul(months)
+
+	jklCost := totalCost.Quo(jklPrice)
+	ujklCost := jklCost.Mul(ujklUnit)
+
+	return ujklCost.TruncateInt()
+}
+
+// Use oracle module to get jkl price
+// Returns 0.20 if feed doesn't exist or failed to unmarshal data
+// Unmarshal failure is logged
+func (k Keeper) GetJklPrice(ctx sdk.Context) (price sdk.Dec) {
+	price = sdk.MustNewDecFromStr("0.20")
+
+	feed, found := k.oraclekeeper.GetFeed(ctx, "jklprice")
+	if found {
+		type data struct {
+			Price  string `json:"price"`
+			Change string `json:"24h_change"`
+		}
+
+		var d data
+		err := json.Unmarshal([]byte(feed.Data), &d)
+		if err != nil {
+			ctx.Logger().Debug("Failed to unmarshal Feed.Data (%s)", feed.Data)
+		}
+
+		p, err := sdk.NewDecFromStr(d.Price)
+		if err != nil {
+			ctx.Logger().Debug("Failed to convert Feed.Data.Price to sdk.Dec (%s)", d.Price)
+		} else {
+			price = p
+		}
+	}
+
+	return price
 }
