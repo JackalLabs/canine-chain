@@ -1,8 +1,6 @@
 package keeper_test
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -26,22 +24,46 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		DepositAccount: depoAccount.String(),
 	})
 
-	// Set user current SpaceUsed to 5GB
-	initialPayInfo := types.StoragePaymentInfo{
-		SpaceUsed: 5000000000,
-		Address:   testAccount.String(),
-	}
-	k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
-
 	cases := []struct {
 		testName  string
+		preRun    func()
 		msg       types.MsgBuyStorage
 		expErr    bool
 		tokens    int64
 		expErrMsg string
 	}{
 		{
+			testName: "buy storage while having an active plan",
+			preRun: func() {
+				initialPayInfo := types.StoragePaymentInfo{
+					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
+					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
+					SpaceAvailable: 100_000_000_000,
+					SpaceUsed:      5_000_000_000,
+					Address:        testAccount.String(),
+				}
+				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+			},
+			msg: types.MsgBuyStorage{
+				Creator:      testAccount.String(),
+				ForAddress:   testAccount.String(),
+				Duration:     "1",
+				Bytes:        "6000000000",
+				PaymentDenom: "ujkl",
+			},
+			expErr:    true,
+			expErrMsg: "please use MsgUpgradeStorage if you want to upgrade/downgrade",
+		},
+		{
 			testName: "buy 3gb which is less than current usage of 5gb",
+			preRun: func() {
+				// Set user current SpaceUsed to 5GB
+				initialPayInfo := types.StoragePaymentInfo{
+					SpaceUsed: 5000000000,
+					Address:   testAccount.String(),
+				}
+				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+			},
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
@@ -53,7 +75,17 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			expErrMsg: "cannot buy less than your current gb usage",
 		},
 		{
-			testName: "buy 6gb for 1 month",
+			testName: "successfully buy 6gb for 1 month",
+			preRun: func() {
+				initialPayInfo := types.StoragePaymentInfo{
+					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
+					End:            suite.ctx.BlockTime().AddDate(0, 0, -1),
+					SpaceAvailable: 100_000_000_000,
+					SpaceUsed:      5_000_000_000,
+					Address:        testAccount.String(),
+				}
+				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+			},
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
@@ -66,7 +98,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			expErrMsg: "",
 		},
 		{
-			testName: "buy 1tb for 3 month",
+			testName: "successfullybuy 1tb for 3 month",
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
@@ -142,27 +174,30 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	}
 
 	dep := k.GetParams(suite.ctx).DepositAccount
-	fmt.Println(dep)
 	add, err := sdk.AccAddressFromBech32(dep)
 	suite.Require().NoError(err)
 	amt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl").Amount.Int64()
-	fmt.Println(amt)
+
 	for _, tc := range cases {
 		suite.Run(tc.testName, func() {
+			if tc.preRun != nil {
+				tc.preRun()
+			}
 			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 
 			bal := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl")
 			diff := bal.Amount.Int64() - amt
-			fmt.Println(diff)
 			amt = bal.Amount.Int64()
+
 			if tc.expErr {
 				suite.Require().Equal(int64(0), diff)
-				suite.Require().Contains(err.Error(), tc.expErrMsg)
+				suite.Require().EqualError(err, tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 				suite.Require().Equal(tc.tokens, diff)
-
 			}
+
+			k.RemoveStoragePaymentInfo(suite.ctx, testAccount.String())
 		})
 	}
 	suite.reset()

@@ -74,6 +74,10 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 			return nil, fmt.Errorf("cannot buy less than your current gb usage")
 		}
 
+		if payInfo.End.After(ctx.BlockTime()) {
+			return nil, fmt.Errorf("please use MsgUpgradeStorage if you want to upgrade/downgrade")
+		}
+
 		spi = types.StoragePaymentInfo{
 			Start:          ctx.BlockTime(),
 			End:            ctx.BlockTime().Add(timeTotal),
