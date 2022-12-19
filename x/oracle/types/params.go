@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -22,7 +21,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		Deposit: "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+		Deposit: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
 	}
 }
 
@@ -39,9 +38,6 @@ func validateDeposit(i interface{}) error {
 
 	if strings.TrimSpace(v) == "" {
 		return errors.New("deposit cannot be blank")
-	}
-	if _, err := sdk.AccAddressFromBech32(v); err != nil {
-		return err
 	}
 
 	return nil
