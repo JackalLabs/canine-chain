@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
@@ -25,39 +24,55 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, err
 	}
 
+	// Get how much credit they have left on the old plan
 	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.ForAddress)
 	if !found {
 		return nil, fmt.Errorf("can't upgrade non-existing storage, please use MsgBuyStorage")
 	}
 
+	proratedDurationInHour := payInfo.End.Sub(ctx.BlockTime())
+	proratedDuration := sdk.NewDec(int64(proratedDurationInHour)).Quo(sdk.NewDec(int64(timeMonth)))
+
+	if proratedDuration.LTE(sdk.ZeroDec()) {
+		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "old plan is expired, use MsgBuyStorage")
+	}
+
+	currentBytes := payInfo.SpaceAvailable
+	currentGbs := currentBytes / gb
+
+	oldCost := k.GetStorageCost(ctx, currentGbs, proratedDuration)
+
+	// Get cost of new plan
 	duration, err := strconv.ParseInt(msg.Duration, 10, 64)
 	if err != nil {
 		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
 	}
 
 	if duration <= 0 {
-		return nil, fmt.Errorf("duration can't be less than 1 month ")
+		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "duration can't be less than 1 month")
 	}
 
-	timeTotal := timeMonth * time.Duration(duration)
+	newBytes, err := strconv.ParseInt(msg.Bytes, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse int64: %s", err.Error())
+	}
 
-	proratedDurationInHour := payInfo.End.Sub(ctx.BlockTime())
-	proratedDuration := sdk.NewDec(int64(proratedDurationInHour)).Quo(sdk.NewDec(int64(timeMonth)))
+	newGbs := newBytes / gb
+	if newGbs <= 0 {
+		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "cannot buy less than a gb")
+	}
+
+	newCost := k.GetStorageCost(ctx, newGbs, sdk.NewDec(duration))
+
+	price := newCost.Sub(oldCost)
+
+	if price.LTE(sdk.ZeroInt()) {
+		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "cannot downgrade until current plan expires")
+	}
 
 	bytes, err := strconv.ParseInt(msg.Bytes, 10, 64)
 	if err != nil {
 		return nil, fmt.Errorf("bytes can't be parsed: %s", err.Error())
-	}
-	currentBytes := payInfo.SpaceAvailable
-	currentGbs := currentBytes / gb
-
-	if bytes == currentBytes {
-		return nil, fmt.Errorf("cannot upgrade to the same SpaceAvailable of %d GB", bytes/gb)
-	}
-
-	gbs := bytes / gb
-	if gbs <= 0 {
-		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 
 	denom := msg.PaymentDenom
@@ -65,46 +80,7 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, sdkerr.Wrap(sdkerr.ErrInvalidCoins, "cannot pay with anything other than ujkl")
 	}
 
-	pricePerGB := sdk.MustNewDecFromStr("0.008")
-
-	pricePerMonth := pricePerGB.Mul(sdk.NewDec(gbs))
-	currentPricePerMonth := pricePerGB.Mul(sdk.NewDec(currentGbs))
-
-	priceBefore := pricePerMonth.Mul(sdk.NewDec(duration))
-	proratedRefund := currentPricePerMonth.Mul(proratedDuration)
-	price := priceBefore.Sub(proratedRefund)
-
-	if price.IsNegative() {
-		return nil, fmt.Errorf("cannot downgrade at the moment, please wait till your subscription is over")
-	}
-
-	jklPrice, err := sdk.NewDecFromStr("0.20")
-	if err != nil {
-		return nil, err
-	}
-	feed, found := k.oraclekeeper.GetFeed(ctx, "jklPrice")
-	if found {
-		type data struct {
-			Price  string `json:"price"`
-			Change string `json:"24h_change"`
-		}
-		var d data
-		err = json.Unmarshal([]byte(feed.Data), &d)
-		if err != nil {
-			return nil, err
-		}
-
-		jklPrice, err = sdk.NewDecFromStr(d.Price)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	jklTokens := price.Quo(jklPrice)
-
-	ujklTokens := jklTokens.Mul(sdk.NewDec(1_000_000))
-
-	priceTokens := sdk.NewCoin(denom, ujklTokens.TruncateInt())
+	priceTokens := sdk.NewCoin(denom, price)
 
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
@@ -120,6 +96,12 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, err
 	}
 
+	err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, depositAccount, sdk.NewCoins(priceTokens))
+	if err != nil {
+		return nil, err
+	}
+
+	timeTotal := timeMonth * time.Duration(duration)
 	spi := types.StoragePaymentInfo{
 		Start:          ctx.BlockTime(),
 		End:            ctx.BlockTime().Add(timeTotal),
@@ -129,11 +111,6 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 	}
 
 	k.SetStoragePaymentInfo(ctx, spi)
-
-	err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, depositAccount, sdk.NewCoins(priceTokens))
-	if err != nil {
-		return nil, err
-	}
 
 	return &types.MsgUpgradeStorageResponse{}, nil
 }
