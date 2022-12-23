@@ -10,7 +10,6 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	storagesimulation "github.com/jackalLabs/canine-chain/x/storage/simulation"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // avoid unused import issue
@@ -68,46 +67,7 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	accs := make([]string, len(simState.Accounts))
-	for i, acc := range simState.Accounts {
-		accs[i] = acc.Address.String()
-	}
-	storageGenesis := types.GenesisState{
-		ContractsList: []types.Contracts{
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Cid:     "0",
-			// },
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Cid:     "1",
-			// },
-		},
-		ActiveDealsList: []types.ActiveDeals{
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Cid:     "0",
-			// },
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Cid:     "1",
-			// },
-		},
-		ProvidersList: []types.Providers{
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Address: "0",
-			// },
-			// {
-			// 	Creator: sample.AccAddress(),
-			// 	Address: "1",
-			// },
-		},
-		Params: types.DefaultParams(),
-
-		// this line is used by starport scaffolding # simapp/module/genesisState
-	}
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&storageGenesis)
+	storagesimulation.RandomizedGenState(simState)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -116,8 +76,8 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{}
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	return storagesimulation.ParamChanges(r)
 }
 
 // RegisterStoreDecoder registers a decoder
