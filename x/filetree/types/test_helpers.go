@@ -190,12 +190,12 @@ func MakeViewerAccessMap(trackingNumber string, viewerIds []string, aesKey strin
 
 	}
 
-	jsonEditors, err := json.Marshal(viewers)
+	jsonViewers, err := json.Marshal(viewers)
 	if err != nil {
 		return nil, ErrCantMarshall
 	}
 
-	return jsonEditors, nil
+	return jsonViewers, nil
 }
 
 func CreateMsgPostFile(creator string, readablePath string, jsonEditAccess []byte, trackingNumber string) (*MsgPostFile, error) {
