@@ -41,8 +41,16 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 	pepeMerklePath := types.MerklePath("s/home/pepe.jpg")
 	aliceAccountHash := types.HashThenHex(alice.String())
-	ownerAddress := types.MakeOwnerAddress(pepeMerklePath, aliceAccountHash)
-	bobViewerAddress := keeper.MakeViewerAddress(pepejpg.TrackingNumber, bob.String())
+	pepeOwnerAddress := types.MakeOwnerAddress(pepeMerklePath, aliceAccountHash)
+	bobPepeViewerAddress := keeper.MakeViewerAddress(pepejpg.TrackingNumber, bob.String())
+
+	// Create a good file
+	bunnyjpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/bunny.jpg")
+	suite.Require().NoError(err)
+	suite.filetreeKeeper.SetFiles(suite.ctx, *bunnyjpg)
+	bunnyMerklePath := types.MerklePath("s/home/bunny.jpg")
+	bunnyOwnerAddress := types.MakeOwnerAddress(bunnyMerklePath, aliceAccountHash)
+	bobBunnyViewerAddress := keeper.MakeViewerAddress(bunnyjpg.TrackingNumber, bob.String())
 
 	cases := []struct {
 		preRun    func() *types.MsgAddViewers
@@ -54,15 +62,28 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 			preRun: func() *types.MsgAddViewers {
 				return types.NewMsgAddViewers(
 					alice.String(),
-					bobViewerAddress,
+					bobPepeViewerAddress,
 					fmt.Sprintf("%x", "encryptedPepeAESKeyAndIV"),
 					pepeMerklePath,
-					ownerAddress,
+					pepeOwnerAddress,
 				)
 			},
 			expErr:    true,
 			name:      "alice fails to add a viewer",
 			expErrMsg: "cannot unmarshall data from json",
+		},
+		{ // alice successfully adds a viewer
+			preRun: func() *types.MsgAddViewers {
+				return types.NewMsgAddViewers(
+					alice.String(),
+					bobBunnyViewerAddress,
+					fmt.Sprintf("%x", "encryptedBunnyAESKeyAndIV"),
+					bunnyMerklePath,
+					bunnyOwnerAddress,
+				)
+			},
+			expErr: false,
+			name:   "alice adds a viewer",
 		},
 	}
 
@@ -93,7 +114,7 @@ func CreateBadFile(creator string, editorIds []string, viewerIds []string, reada
 		return nil, err
 	}
 
-	viewers := make([]string, 10, 10)
+	viewers := make([]string, 10)
 
 	for i := range viewerIds {
 		viewers[i] = fmt.Sprintf("%x", "aesKey")
