@@ -16,7 +16,6 @@ var (
 	ErrParentFileNotFound = sdkerrors.Register(ModuleName, 1106, "Parent folder does not exist")
 	ErrCannotWrite        = sdkerrors.Register(ModuleName, 1107, "You are not permitted to write to this folder")
 	ErrNoViewingAccess    = sdkerrors.Register(ModuleName, 1108, "You do not have viewing access. Failed to decrypt.")
-	ErrTrackerNotFound    = sdkerrors.Register(ModuleName, 1109, "Tracking number not found")
 	ErrCannotDelete       = sdkerrors.Register(ModuleName, 1110, "You are not authorized to delete this file")
 	ErrNotOwner           = sdkerrors.Register(ModuleName, 1111, "Not permitted to remove or reset edit/view access. You are not the owner of this file")
 	ErrCantGiveAway       = sdkerrors.Register(ModuleName, 1112, "You do not own this file and cannot give it away")
