@@ -28,7 +28,7 @@ func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEdit
 
 	jeacc := make(map[string]string)
 	if err := json.Unmarshal([]byte(peacc), &jeacc); err != nil {
-		ctx.Logger().Error(err.Error())
+		return nil, types.ErrCantUnmarshall
 	}
 
 	ids := strings.Split(msg.EditorIds, ",")

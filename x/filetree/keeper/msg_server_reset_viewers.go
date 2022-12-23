@@ -27,7 +27,7 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 	// Unmarshall current edit access to this blank map
 	jvacc := make(map[string]string)
 	if err := json.Unmarshal([]byte(pvacc), &jvacc); err != nil {
-		ctx.Logger().Error(err.Error())
+		return nil, types.ErrCantUnmarshall
 	}
 
 	ownerKey := jvacc[ownerViewerAddress]
