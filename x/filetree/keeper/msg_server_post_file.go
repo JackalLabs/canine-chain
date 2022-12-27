@@ -19,8 +19,8 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	hasEdit, err := HasEditAccess(parentFile, msg.Creator)
 	if err != nil {
-		// Error raised when json unmarshalling is failed
-		ctx.Logger().Error(err.Error())
+		// Error raised when json unmarshalling has failed
+		return nil, err
 	}
 
 	if !hasEdit {

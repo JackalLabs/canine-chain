@@ -26,7 +26,7 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 
 	jeacc := make(map[string]string)
 	if err := json.Unmarshal([]byte(peacc), &jeacc); err != nil {
-		ctx.Logger().Error(err.Error())
+		return nil, types.ErrCantUnmarshall
 	}
 
 	ids := strings.Split(msg.EditorIds, ",")
