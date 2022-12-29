@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"fmt"
 	"math/rand"
 
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -17,7 +18,7 @@ func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyDepositAccount),
 			func(r *rand.Rand) string {
-				return genDepositAccount(r).Address.String()
+				return fmt.Sprintf("\"%s\"", genDepositAccount(r).Address.String())
 			},
 		),
 	}
