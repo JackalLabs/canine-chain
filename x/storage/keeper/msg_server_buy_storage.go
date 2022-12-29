@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
@@ -46,40 +45,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 
-	pricePerGB := sdk.MustNewDecFromStr("0.008")
-
-	pricePerMonth := pricePerGB.Mul(sdk.NewDec(gbs))
-
-	price := pricePerMonth.Mul(sdk.NewDec(duration))
-
-	jklPrice, err := sdk.NewDecFromStr("0.20")
-	if err != nil {
-		return nil, err
-	}
-	feed, found := k.oraclekeeper.GetFeed(ctx, "jklprice")
-	if found {
-		type data struct {
-			Price  string `json:"price"`
-			Change string `json:"24h_change"`
-		}
-		var d data
-		err = json.Unmarshal([]byte(feed.Data), &d)
-		if err != nil {
-			return nil, err
-		}
-
-		jklPrice, err = sdk.NewDecFromStr(d.Price)
-		if err != nil {
-			return nil, err
-		}
-
-	}
-
-	jklTokens := price.Quo(jklPrice)
-
-	ujklTokens := jklTokens.Mul(sdk.NewDec(1000000)) // converting jkl to ujkl
-
-	priceTokens := sdk.NewCoin(denom, ujklTokens.TruncateInt())
+	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, sdk.NewDec(duration)))
 
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
@@ -106,6 +72,10 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 		if payInfo.SpaceUsed > bytes {
 			return nil, fmt.Errorf("cannot buy less than your current gb usage")
+		}
+
+		if payInfo.End.After(ctx.BlockTime()) {
+			return nil, fmt.Errorf("please use MsgUpgradeStorage if you want to upgrade/downgrade")
 		}
 
 		spi = types.StoragePaymentInfo{

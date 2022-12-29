@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -46,9 +45,6 @@ func validateDeposit(i interface{}) error {
 
 	if strings.TrimSpace(v) == "" {
 		return errors.New("deposit cannot be blank")
-	}
-	if _, err := sdk.AccAddressFromBech32(v); err != nil {
-		return err
 	}
 
 	return nil
