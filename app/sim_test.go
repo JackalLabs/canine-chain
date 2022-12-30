@@ -66,6 +66,14 @@ func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string,
 		return simtypes.Config{}, nil, "", nil, false, err
 	}
 
+	// SDK config
+	cfg := sdk.GetConfig()
+	cfg.SetBech32PrefixForAccount(Bech32PrefixAccAddr, Bech32PrefixAccPub)
+	cfg.SetBech32PrefixForValidator(Bech32PrefixValAddr, Bech32PrefixValPub)
+	cfg.SetBech32PrefixForConsensusNode(Bech32PrefixConsAddr, Bech32PrefixConsPub)
+	cfg.SetAddressVerifier(wasmtypes.VerifyAddressLen())
+	cfg.Seal()
+
 	paths := []string{config.ExportParamsPath, config.ExportStatePath, config.ExportStatsPath}
 	for _, path := range paths {
 		if len(path) == 0 {
