@@ -19,10 +19,7 @@ func SimulateMsgSignContract(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgSignContract{
-			Creator: simAccount.Address.String(),
-		}
+		msg := &types.MsgSignContract{}
 
 		// Choose random contract
 		contracts := k.GetAllContracts(ctx)
@@ -30,6 +27,17 @@ func SimulateMsgSignContract(
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "no contracts exist"), nil, nil
 		}
 		contract := contracts[r.Intn(len(contracts))]
+
+		simAccount, found := simtypes.FindAccount(
+			accs, sdk.MustAccAddressFromBech32(contract.Signee),
+		)
+		
+		if !found {
+			return simtypes.NoOpMsg(
+				types.ModuleName, types.TypeMsgSignContract, 
+				"unable to find contract signee in []simtypes.Account",
+			), nil, nil
+		}
 
 		msg.Cid = contract.Cid
 		msg.Creator = contract.Signee
