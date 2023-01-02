@@ -50,7 +50,7 @@ const (
 	//nolint:all
 	opWeightMsgInitProvider = "op_weight_msg_init_provider"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgInitProvider int = 100
+	defaultWeightMsgInitProvider int = 10
 
 	//nolint:all
 	opWeightMsgCancelContract = "op_weight_msg_cancel_contract"
@@ -86,7 +86,6 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
-
 	var weightMsgPostContract int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPostContract, &weightMsgPostContract, nil,
 		func(_ *rand.Rand) {

@@ -6,6 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -22,8 +24,29 @@ func SimulateMsgSignContract(
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the SignContract simulation
+		// Choose random contract
+		contracts := k.GetAllContracts(ctx)
+		if len(contracts) <= 0 {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "no contracts exist"), nil, nil
+		}
+		contract := contracts[r.Intn(len(contracts))]
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SignContract simulation not implemented"), nil, nil
+		msg.Cid = contract.Cid
+		msg.Creator = contract.Signee
+		
+		txCtx := simulation.OperationInput{
+			R:             r,
+			App:           app,
+			TxGen:         simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:           nil,
+			Msg:           msg,
+			MsgType:       msg.Type(),
+			Context:       ctx,
+			SimAccount:    simAccount,
+			AccountKeeper: ak,
+			ModuleName:    types.ModuleName,
+		}
+
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
