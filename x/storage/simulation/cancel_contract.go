@@ -6,6 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -17,13 +19,42 @@ func SimulateMsgCancelContract(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgCancelContract{
-			Creator: simAccount.Address.String(),
+		msg := &types.MsgCancelContract{}
+
+		// choose a contract
+		contracts := k.GetAllContracts(ctx)
+		if len(contracts) <= 0 {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "no contracts exist"), nil, nil
+		}
+		contract := contracts[simtypes.RandIntBetween(r, 0, len(contracts))]
+
+		simAccount, found := simtypes.FindAccount(
+			accs, sdk.MustAccAddressFromBech32(contract.Signee),
+		)
+		
+		if !found {
+			return simtypes.NoOpMsg(
+				types.ModuleName, types.TypeMsgSignContract, 
+				"unable to find contract signee in []simtypes.Account",
+			), nil, nil
 		}
 
-		// TODO: Handling the CancelContract simulation
+		msg.Creator = contract.Signee
+		msg.Cid = contract.Cid
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "CancelContract simulation not implemented"), nil, nil
+		txCtx := simulation.OperationInput{
+			R:             r,
+			App:           app,
+			TxGen:         simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:           nil,
+			Msg:           msg,
+			MsgType:       msg.Type(),
+			Context:       ctx,
+			SimAccount:    simAccount,
+			AccountKeeper: ak,
+			ModuleName:    types.ModuleName,
+		}
+
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
