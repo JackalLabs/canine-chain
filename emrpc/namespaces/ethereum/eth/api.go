@@ -6,6 +6,11 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+	"os"
+	"strconv"
+	"strings"
+
+	"gopkg.in/yaml.v3"
 
 	bech32 "github.com/btcsuite/btcutil/bech32"
 	sdkbech32 "github.com/cosmos/cosmos-sdk/types/bech32"
@@ -202,34 +207,57 @@ func (e *PublicAPI) Hashrate() hexutil.Uint64 {
 	return 0
 }
 
-// NOT WORKING -- not needed
-// GasPrice returns the current gas price based on Ethermint's gas price oracle.
+// WORKING
+// GasPrice returns the current gas price based on min-gas-prices in config.yml
 func (e *PublicAPI) GasPrice() (*hexutil.Big, error) {
 	e.logger.Error("eth_gasPrice")
-	var (
-		result *big.Int
-		err    error
-	)
-	if head := e.backend.CurrentHeader(); head.BaseFee != nil {
-		result, err = e.backend.SuggestGasTipCap(head.BaseFee)
-		if err != nil {
-			return nil, err
-		}
-		result = result.Add(result, head.BaseFee)
-	} else {
-		result = big.NewInt(e.backend.RPCMinGasPrice())
-	}
+	// initalizing the result variables
+	var result *big.Int
+	var ujklprice float64
 
-	// return at least GlobalMinGasPrice from FeeMarket module
-	minGasPrice, err := e.backend.GlobalMinGasPrice()
+	// finding the working directory
+	wd, _ := os.Getwd()
+	// finding the canine-chain directory --
+	// config.yml must be in canine-chain/config.yml
+	i := strings.Index(wd, "canine-chain")
+	if i < 0 {
+		return (*hexutil.Big)(result), nil
+	}
+	cfgdir := wd[0:i]
+
+	// importing config.yml
+	fmt.Println(cfgdir + "config.yml")
+	readcfg, err := os.ReadFile(cfgdir + "canine-chain/config.yml")
 	if err != nil {
-		return nil, err
+		e.logger.Error(fmt.Sprint(err))
+		return (*hexutil.Big)(result), err
 	}
-	minGasPriceInt := minGasPrice.TruncateInt().BigInt()
-	if result.Cmp(minGasPriceInt) < 0 {
-		result = minGasPriceInt
+	cfg := make(map[interface{}]interface{})
+	err2 := yaml.Unmarshal([]byte(readcfg), &cfg)
+	if err2 != nil {
+		e.logger.Error(fmt.Sprint(err))
+		return (*hexutil.Big)(result), err2
 	}
+	// collecting the min-gas-prices string
+	mingasprices := cfg["init"].(map[string]interface{})["app"].(map[string]interface{})["minimum-gas-prices"]
+	if mingasprices == nil {
+		e.logger.Error("ujkl min-gas-price either not configured or failed to read")
+	}
+	// selecting ujkl only
+	mgp_split := strings.Split(mingasprices.(string), ";")
 
+	for _, price := range mgp_split {
+		if i := strings.Index(price, "ujkl"); i != -1 {
+			pricefloat, err := strconv.ParseFloat(price[0:i], 64)
+			if err != nil {
+				e.logger.Error("Failed to parse min-gas-prices into float")
+				return (*hexutil.Big)(result), err
+			}
+			ujklprice = pricefloat
+		}
+	}
+	// converting ujkl to GWEI (giga-wei)
+	result = big.NewInt(int64(ujklprice * 10e8))
 	return (*hexutil.Big)(result), nil
 }
 
@@ -395,22 +423,9 @@ func (e *PublicAPI) GetUncleCountByBlockNumber(blockNum rpctypes.BlockNumber) he
 func (e *PublicAPI) GetCode(address common.Address, blockNrOrHash rpctypes.BlockNumberOrHash) (hexutil.Bytes, error) {
 	e.logger.Error("eth_getCode", "address", address.Hex(), "block number or hash", blockNrOrHash)
 
-	// b := []byte("0x")
 	// returning a hash of an empty string, as no EVM contracts are running on Canine.
-	// var emptyCodeHash = crypto.Keccak256(b)
 	var ret hexutil.Bytes
 	return ret, nil
-
-	// req := &evmtypes.QueryCodeRequest{
-	// 	Address: address.String(),
-	// }
-
-	// res, err := e.queryClient.QueryClient.Code(rpctypes.ContextWithHeight(blockNum.Int64()), req)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// return res.Code, nil
 }
 
 // GetTransactionLogs returns the logs given a transaction hash.
@@ -786,7 +801,8 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 	if err != nil {
 		return hexutil.Uint64(0), err
 	}
-	// // creating a new txfactory
+
+	// creating a new txfactory
 	var txf sdktx.Factory
 	txf = txf.WithTxConfig(e.clientCtx.TxConfig).
 		WithKeybase(e.clientCtx.Keyring).
@@ -806,7 +822,6 @@ func (e *PublicAPI) EstimateGas(args evmtypes.TransactionArgs, blockNrOptional *
 		e.logger.Error("failed to calculate gas")
 		return hexutil.Uint64(0), err
 	}
-	// temp return value
 	return hexutil.Uint64(gas), nil
 }
 
