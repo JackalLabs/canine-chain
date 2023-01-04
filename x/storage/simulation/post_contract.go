@@ -40,6 +40,9 @@ func SimulateMsgPostContract(
 		}
 		msg.Signee = users[simtypes.RandIntBetween(r, 0, len(users))].Address
 
+		// Generate merkle tree
+		msg.Merkle = GetMerkleRoot()
+
 		msg.Filesize = strconv.Itoa(simtypes.RandIntBetween(r, 1, 100_000_000_000_000))
 		fid, err := bech32.ConvertAndEncode(
 			"jklf", []byte(simtypes.RandStringOfLength(r, 20)))
