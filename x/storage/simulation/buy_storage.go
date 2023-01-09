@@ -23,8 +23,8 @@ func SimulateMsgBuyStorage(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgBuyStorage{
-			Creator:    simAccount.Address.String(),
-			ForAddress: simAccount.Address.String(),
+			Creator:      simAccount.Address.String(),
+			ForAddress:   simAccount.Address.String(),
 			PaymentDenom: "ujkl",
 		}
 

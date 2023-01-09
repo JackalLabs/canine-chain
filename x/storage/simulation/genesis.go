@@ -9,7 +9,6 @@ import (
 )
 
 func RandomizedGenState(simState *module.SimulationState) {
-
 	var providers []types.Providers
 
 	// Generate random amount of provider accounts
@@ -22,7 +21,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 	for i := 0; i < randProviderCount; i++ {
 		provider := types.Providers{
 			Address: provAccs[i].Address.String(),
-			Ip: RandIPv4Url(simState.Rand),
+			Ip:      RandIPv4Url(simState.Rand),
 			Totalspace: strconv.Itoa(
 				// Between 1Tb and 1Pb
 				sdksim.RandIntBetween(simState.Rand, 1_000_000_000_000, 1_000_000_000_000_000)),

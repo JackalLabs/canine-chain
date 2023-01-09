@@ -22,7 +22,7 @@ func SimulateMsgPostproof(
 		msg := &types.MsgPostproof{}
 
 		deals := k.GetAllActiveDeals(ctx)
-		if len(deals) <= 0 {
+		if len(deals) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find active deals"), nil, nil
 		}
 
@@ -40,7 +40,7 @@ func SimulateMsgPostproof(
 		if !found {
 			return simtypes.NoOpMsg(
 				types.ModuleName, msg.Type(), "unable to find provider account from []simtypes.Account"), nil, nil
-		}		
+		}
 
 		msg.Item, msg.Hashlist = GetMerkleProof()
 		msg.Creator = simAccount.Address.String()

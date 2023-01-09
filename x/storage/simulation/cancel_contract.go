@@ -4,9 +4,9 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -23,7 +23,7 @@ func SimulateMsgCancelContract(
 
 		// choose a contract
 		contracts := k.GetAllContracts(ctx)
-		if len(contracts) <= 0 {
+		if len(contracts) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "no contracts exist"), nil, nil
 		}
 		contract := contracts[simtypes.RandIntBetween(r, 0, len(contracts))]
@@ -31,10 +31,10 @@ func SimulateMsgCancelContract(
 		simAccount, found := simtypes.FindAccount(
 			accs, sdk.MustAccAddressFromBech32(contract.Signee),
 		)
-		
+
 		if !found {
 			return simtypes.NoOpMsg(
-				types.ModuleName, types.TypeMsgSignContract, 
+				types.ModuleName, types.TypeMsgSignContract,
 				"unable to find contract signee in []simtypes.Account",
 			), nil, nil
 		}

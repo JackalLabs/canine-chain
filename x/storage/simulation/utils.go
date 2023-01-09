@@ -72,7 +72,7 @@ func GetMerkleProof() (item, jProof string) {
 		panic(err)
 	}
 
-	sHex:= hex.EncodeToString(tree.Root())
+	sHex := hex.EncodeToString(tree.Root())
 	hex, err := hex.DecodeString(sHex)
 	if err != nil {
 		panic(err)
@@ -89,7 +89,6 @@ func GetMerkleProof() (item, jProof string) {
 
 	return fmt.Sprintf("%x", hashedItem), string(jproof)
 }
-
 
 // Generate merkle root with similar operation as jackal provider daemon
 func GetMerkleRoot() string {

@@ -1,14 +1,14 @@
 package simulation
 
 import (
-	"strconv"
 	"math/rand"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -21,9 +21,8 @@ func SimulateMsgPostContract(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-
 		providers := k.GetAllProviders(ctx)
-		if len(providers) <= 0 {
+		if len(providers) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "providers are not initiated"), nil, nil
 		}
 
@@ -32,15 +31,15 @@ func SimulateMsgPostContract(
 		simAccount, found := simtypes.FindAccount(accs, sdk.MustAccAddressFromBech32(provider.Creator))
 
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "provider address is unkown"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "provider address is unknown"), nil, nil
 		}
 
-		msg := &types.MsgPostContract {
+		msg := &types.MsgPostContract{
 			Creator: provider.Creator,
 		}
 
 		users := k.GetAllStoragePaymentInfo(ctx)
-		if len(users) <= 0 {
+		if len(users) == 0 {
 			return simtypes.NoOpMsg(
 				types.ModuleName, types.TypeMsgPostContract, "storage payment infos are not initiated"), nil, nil
 		}
@@ -49,7 +48,6 @@ func SimulateMsgPostContract(
 		msg.Filesize = strconv.Itoa(simtypes.RandIntBetween(r, 1, 100))
 		fid, err := bech32.ConvertAndEncode(
 			"jklf", []byte(simtypes.RandStringOfLength(r, 20)))
-
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "failed to generate fid"), nil, err
 		}
@@ -64,16 +62,16 @@ func SimulateMsgPostContract(
 		}
 
 		txCtx := simulation.OperationInput{
-			R: r,
-			App: app,
-			TxGen: simappparams.MakeTestEncodingConfig().TxConfig,
-			Cdc: nil,
-			Msg: msg,
-			MsgType: msg.Type(),
-			Context: ctx,
-			SimAccount: simAccount,
+			R:             r,
+			App:           app,
+			TxGen:         simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:           nil,
+			Msg:           msg,
+			MsgType:       msg.Type(),
+			Context:       ctx,
+			SimAccount:    simAccount,
 			AccountKeeper: ak,
-			ModuleName: types.ModuleName,
+			ModuleName:    types.ModuleName,
 		}
 
 		return simulation.GenAndDeliverTx(txCtx, fees)
