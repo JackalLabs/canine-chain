@@ -24,7 +24,9 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	if err != nil {
 		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
 	}
-	if duration <= 0 {
+
+	timeMonth := time.Hour * 24 * 30
+	if duration.Truncate(timeMonth) <= 0 {
 		return nil, fmt.Errorf("duration can't be less than 1 month")
 	}
 
@@ -45,7 +47,6 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 
-	timeMonth := time.Hour * 24 * 30
 	months := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(timeMonth.Milliseconds()))
 	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, months))
 
