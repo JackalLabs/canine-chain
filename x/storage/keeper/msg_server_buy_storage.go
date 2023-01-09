@@ -20,7 +20,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
-	duration, err := strconv.ParseInt(msg.Duration, 10, 64)
+	duration, err := time.ParseDuration(msg.Duration)
 	if err != nil {
 		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
 	}
@@ -45,7 +45,9 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 
-	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, sdk.NewDec(duration)))
+	timeMonth := time.Hour * 24 * 30
+	months := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(timeMonth.Milliseconds()))
+	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, months))
 
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
@@ -60,10 +62,6 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	if err != nil {
 		return nil, err
 	}
-
-	timeMonth := time.Hour * 24 * 30
-
-	timeTotal := timeMonth * time.Duration(duration)
 
 	var spi types.StoragePaymentInfo
 
@@ -80,7 +78,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 		spi = types.StoragePaymentInfo{
 			Start:          ctx.BlockTime(),
-			End:            ctx.BlockTime().Add(timeTotal),
+			End:            ctx.BlockTime().Add(duration),
 			SpaceAvailable: bytes,
 			SpaceUsed:      payInfo.SpaceUsed,
 			Address:        msg.ForAddress,
@@ -88,7 +86,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	} else {
 		spi = types.StoragePaymentInfo{
 			Start:          ctx.BlockTime(),
-			End:            ctx.BlockTime().Add(timeTotal),
+			End:            ctx.BlockTime().Add(duration),
 			SpaceAvailable: bytes,
 			SpaceUsed:      0,
 			Address:        msg.ForAddress,
