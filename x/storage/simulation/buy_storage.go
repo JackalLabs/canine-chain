@@ -3,6 +3,7 @@ package simulation
 import (
 	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -24,23 +25,37 @@ func SimulateMsgBuyStorage(
 		msg := &types.MsgBuyStorage{
 			Creator:    simAccount.Address.String(),
 			ForAddress: simAccount.Address.String(),
+			PaymentDenom: "ujkl",
 		}
+
+		size := simtypes.RandIntBetween(r, 1_000_000_000, 10_000_000_000)
+
+		t := time.Hour * 720
+		months := sdk.NewDec(1)
+		cost := k.GetStorageCost(ctx, int64(size), months)
+
+		msg.Bytes = strconv.Itoa(size)
+		msg.Duration = t.String()
 
 		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
-		if !jBalance.IsPositive() {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "balance is negative"), nil, nil
+		// It is impossible to specify default bond denom through param.json
+		// to naturally fund the accounts with ujkl.
+		// The other option is genesis.jon but it is not possible to sign transactions
+		// due to private and pubkeys are generated independent of addresses
+		// resulting pubkey does not match signer address error.
+		if jBalance.Amount.LTE(cost) {
+			c := sdk.NewCoin("ujkl", cost)
+
+			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unabled to fund account"), nil, err
+			}
+
+			err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, sdk.NewCoins(c))
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unabled to fund account"), nil, err
+			}
 		}
-
-		cost, err := simtypes.RandPositiveInt(r, jBalance.Amount)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unable to generate positive cost"), nil, err
-		}
-
-		jklPrice := k.GetJklPrice(ctx)
-		size, duration := RandStoragePlan(r, jklPrice, cost)
-
-		msg.Bytes = strconv.Itoa(int(size))
-		msg.Duration = strconv.Itoa(int(duration))
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
@@ -48,6 +63,7 @@ func SimulateMsgBuyStorage(
 		var fees sdk.Coins
 
 		if !hasNeg {
+			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
 				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unable to generate fees"), nil, err
@@ -69,30 +85,4 @@ func SimulateMsgBuyStorage(
 
 		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
-}
-
-// Get random size and duration that costs ujklCost
-func RandStoragePlan(
-	r *rand.Rand, jklPrice sdk.Dec, ujklCost sdk.Int,
-) (bytes, duration int64) {
-	ujklUnit := sdk.NewDec(1000000)
-	pricePerGb := sdk.MustNewDecFromStr("0.008")
-	// Calculate GetStorageCost in reverse
-	jklcost := sdk.NewDecFromInt(ujklCost).Quo(ujklUnit)
-	totalCost := jklcost.Mul(jklPrice)
-
-	/*
-		To choose random storage size that won't end up costing more than
-		ujkl_cost.
-		Randomly choose size between 1 and maximum size with 1 month duration.
-		Then get duration based on that size.
-	*/
-
-	maxSize := totalCost.Mul(pricePerGb)
-	bytes = int64(simtypes.RandIntBetween(r, 1, int(maxSize.TruncateInt64())))
-	bytes *= 1_000_000_000
-
-	pricePerMonth := sdk.NewDec(bytes).Mul(pricePerGb)
-	duration = totalCost.Quo(pricePerMonth).TruncateInt64()
-	return
 }

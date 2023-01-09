@@ -9,16 +9,11 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-// Randomly generate single account
-func genDepositAccount(r *rand.Rand) simtypes.Account {
-	return simtypes.RandomAccounts(r, 1)[0]
-}
-
 func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyDepositAccount),
 			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%s\"", genDepositAccount(r).Address.String())
+				return fmt.Sprintf("\"%s\"", "jkl14c3j672kvw9l5uleh4x9uds2fre5vl7yun4ss8")
 			},
 		),
 	}

@@ -34,7 +34,6 @@ func RandIPv4Url(r *rand.Rand) string {
 // but the file used to generate is much simpler
 // Returns json encoding of merkle proof
 func GetMerkleProof() (item, jProof string) {
-	// The index for the file is 
 	f := []byte(fileData)
 	var data [][]byte
 
@@ -52,9 +51,11 @@ func GetMerkleProof() (item, jProof string) {
 		panic(err)
 	}
 
-	// Build proof
 	h = sha256.New()
-	_, err = io.WriteString(h, fmt.Sprintf("%d%x", 0, f))
+	_, err = io.WriteString(h, fmt.Sprintf("%d%x", 0, []byte(fileData)))
+	if err != nil {
+		panic(err)
+	}
 	hashedItem := h.Sum(nil)
 
 	proof, err := tree.GenerateProof(hashedItem)
@@ -62,8 +63,11 @@ func GetMerkleProof() (item, jProof string) {
 		panic(err)
 	}
 
-	// Verify that proof is valid
-	jproof, err := json.Marshal(proof)
+	jproof, err := json.Marshal(*proof)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(jproof, &proof)
 	if err != nil {
 		panic(err)
 	}

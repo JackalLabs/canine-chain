@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"math/rand"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -10,14 +9,6 @@ import (
 )
 
 func RandomizedGenState(simState *module.SimulationState) {
-	var depAcc string
-
-	simState.AppParams.GetOrGenerate(
-		simState.Cdc, string(types.KeyDepositAccount), &depAcc, simState.Rand,
-		func(r *rand.Rand) {
-			depAcc = genDepositAccount(r).Address.String()
-		},
-	)
 
 	var providers []types.Providers
 

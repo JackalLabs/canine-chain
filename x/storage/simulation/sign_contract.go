@@ -41,6 +41,12 @@ func SimulateMsgSignContract(
 
 		msg.Cid = contract.Cid
 		msg.Creator = contract.Signee
+
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "unable to generate fees"), nil, err
+		}
 		
 		txCtx := simulation.OperationInput{
 			R:             r,
@@ -55,6 +61,6 @@ func SimulateMsgSignContract(
 			ModuleName:    types.ModuleName,
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }

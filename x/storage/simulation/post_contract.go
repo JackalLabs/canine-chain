@@ -21,18 +21,24 @@ func SimulateMsgPostContract(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgPostContract{}
 
-		// Choose random provider
 		providers := k.GetAllProviders(ctx)
 		if len(providers) <= 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "providers are not initiated"), nil, nil
 		}
-		provider := providers[simtypes.RandIntBetween(r, 0, len(providers))]
-		msg.Creator = provider.Address
 
-		// Choose random signee
+		provider := providers[simtypes.RandIntBetween(r, 0, len(providers))]
+
+		simAccount, found := simtypes.FindAccount(accs, sdk.MustAccAddressFromBech32(provider.Creator))
+
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "provider address is unkown"), nil, nil
+		}
+
+		msg := &types.MsgPostContract {
+			Creator: provider.Creator,
+		}
+
 		users := k.GetAllStoragePaymentInfo(ctx)
 		if len(users) <= 0 {
 			return simtypes.NoOpMsg(
@@ -40,10 +46,7 @@ func SimulateMsgPostContract(
 		}
 		msg.Signee = users[simtypes.RandIntBetween(r, 0, len(users))].Address
 
-		// Generate merkle tree
-		msg.Merkle = GetMerkleRoot()
-
-		msg.Filesize = strconv.Itoa(simtypes.RandIntBetween(r, 1, 100_000_000_000_000))
+		msg.Filesize = strconv.Itoa(simtypes.RandIntBetween(r, 1, 100))
 		fid, err := bech32.ConvertAndEncode(
 			"jklf", []byte(simtypes.RandStringOfLength(r, 20)))
 
@@ -52,12 +55,12 @@ func SimulateMsgPostContract(
 		}
 
 		msg.Fid = fid
-		msg.Merkle = simtypes.RandStringOfLength(r, 20)
+		msg.Merkle = GetMerkleRoot()
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "failed to generate fee"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

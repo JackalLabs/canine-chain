@@ -72,7 +72,6 @@ func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string,
 	cfg.SetBech32PrefixForValidator(Bech32PrefixValAddr, Bech32PrefixValPub)
 	cfg.SetBech32PrefixForConsensusNode(Bech32PrefixConsAddr, Bech32PrefixConsPub)
 	cfg.SetAddressVerifier(wasmtypes.VerifyAddressLen())
-	cfg.Seal()
 
 	paths := []string{config.ExportParamsPath, config.ExportStatePath, config.ExportStatsPath}
 	for _, path := range paths {
@@ -259,6 +258,7 @@ func TestAppImportExport(t *testing.T) {
 
 func TestFullAppSimulation(t *testing.T) {
 	config, db, dir, logger, skip, err := SetupSimulation("leveldb-app-sim", "Simulation")
+
 	if skip {
 		t.Skip("skipping application simulation")
 	}

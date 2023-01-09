@@ -50,7 +50,7 @@ const (
 	//nolint:all
 	opWeightMsgInitProvider = "op_weight_msg_init_provider"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgInitProvider int = 10
+	defaultWeightMsgInitProvider int = 40
 
 	//nolint:all
 	opWeightMsgCancelContract = "op_weight_msg_cancel_contract"

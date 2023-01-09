@@ -4,9 +4,9 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -43,6 +43,14 @@ func SimulateMsgPostproof(
 		}		
 
 		msg.Item, msg.Hashlist = GetMerkleProof()
+		msg.Creator = simAccount.Address.String()
+		msg.Cid = deal.Cid
+
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "unable to generate fees"), nil, err
+		}
 
 		txCtx := simulation.OperationInput{
 			R:             r,
@@ -57,6 +65,6 @@ func SimulateMsgPostproof(
 			ModuleName:    types.ModuleName,
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }
