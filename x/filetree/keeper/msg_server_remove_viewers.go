@@ -28,7 +28,7 @@ func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveView
 
 	jvacc := make(map[string]string)
 	if err := json.Unmarshal([]byte(pvacc), &jvacc); err != nil {
-		ctx.Logger().Error(err.Error())
+		return nil, types.ErrCantUnmarshall
 	}
 
 	ids := strings.Split(msg.ViewerIds, ",")
