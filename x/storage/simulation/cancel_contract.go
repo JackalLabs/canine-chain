@@ -42,6 +42,11 @@ func SimulateMsgCancelContract(
 		msg.Creator = contract.Signee
 		msg.Cid = contract.Cid
 
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostContract, "failed to generate fee"), nil, err
+		}
 		txCtx := simulation.OperationInput{
 			R:             r,
 			App:           app,
@@ -55,6 +60,6 @@ func SimulateMsgCancelContract(
 			ModuleName:    types.ModuleName,
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }

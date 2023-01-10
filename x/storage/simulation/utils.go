@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -52,7 +53,7 @@ func GetMerkleProof() (item, jProof string) {
 	}
 
 	h = sha256.New()
-	_, err = io.WriteString(h, fmt.Sprintf("%d%x", 0, []byte(fileData)))
+	_, err = io.WriteString(h, fmt.Sprintf("%d%x", 0, f))
 	if err != nil {
 		panic(err)
 	}
@@ -84,10 +85,10 @@ func GetMerkleProof() (item, jProof string) {
 	}
 
 	if !validProof {
-		panic(err)
+		err = errors.New("GetMerkleProof() failed to verify proof")
 	}
 
-	return fmt.Sprintf("%x", hashedItem), string(jproof)
+	return fmt.Sprintf("%x", f), string(jproof)
 }
 
 // Generate merkle root with similar operation as jackal provider daemon
@@ -97,7 +98,7 @@ func GetMerkleRoot() string {
 	var data [][]byte
 
 	h := sha256.New()
-	_, err := io.WriteString(h, fmt.Sprintf("%d%s", 0, f))
+	_, err := io.WriteString(h, fmt.Sprintf("%d%x", 0, f))
 	if err != nil {
 		panic(err)
 	}
