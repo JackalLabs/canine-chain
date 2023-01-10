@@ -21,7 +21,6 @@ func SimulateMsgSignContract(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		msg := &types.MsgSignContract{}
 
-		// Choose random contract
 		contracts := k.GetAllContracts(ctx)
 		if len(contracts) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "no contracts exist"), nil, nil

@@ -22,7 +22,7 @@ func SimulateMsgCancelContract(
 		msg := &types.MsgCancelContract{}
 
 		// choose a contract
-		contracts := k.GetAllContracts(ctx)
+		contracts := k.GetAllActiveDeals(ctx)
 		if len(contracts) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "no contracts exist"), nil, nil
 		}

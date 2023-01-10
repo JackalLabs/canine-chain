@@ -28,6 +28,11 @@ func SimulateMsgBuyStorage(
 			PaymentDenom: "ujkl",
 		}
 
+		_, found := k.GetStoragePaymentInfo(ctx, simAccount.Address.String())
+		if found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "user already paid for storage, skipping"), nil, nil
+		}
+
 		size := simtypes.RandIntBetween(r, 1_000_000_000, 10_000_000_000)
 
 		t := time.Hour * 720

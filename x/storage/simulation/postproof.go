@@ -28,6 +28,10 @@ func SimulateMsgPostproof(
 
 		deal := deals[r.Intn(len(deals))]
 
+		if deal.Proofverified == "true" {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "proof already verified, skipping"), nil, nil
+		}
+
 		provider, found := k.GetProviders(ctx, deal.Provider)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find provider for an active deal"), nil, nil
