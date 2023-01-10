@@ -85,7 +85,7 @@ func GetMerkleProof() (item, jProof string) {
 	}
 
 	if !validProof {
-		err = errors.New("GetMerkleProof() failed to verify proof")
+		panic(errors.New("GetMerkleProof() failed to verify proof"))
 	}
 
 	return fmt.Sprintf("%x", f), string(jproof)
