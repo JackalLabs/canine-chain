@@ -38,6 +38,17 @@ func SimulateMsgSignContract(
 			), nil, nil
 		}
 
+		payInfo, found := k.GetStoragePaymentInfo(ctx, simAccount.Address.String())
+		if !found {
+			return simtypes.NoOpMsg(
+				types.ModuleName, types.TypeMsgSignContract,
+				"unable to find contract signee in []simtypes.Account",
+			), nil, nil
+		}
+		if payInfo.End.Before(ctx.BlockTime()) {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "storage payment expired"), nil, nil
+		}
+
 		msg.Cid = contract.Cid
 		msg.Creator = contract.Signee
 

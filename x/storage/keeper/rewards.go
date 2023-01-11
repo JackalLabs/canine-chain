@@ -41,7 +41,12 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		return err
 	}
 
-	byteHash := ctx.HeaderHash().Bytes()[0] + ctx.HeaderHash().Bytes()[1] + ctx.HeaderHash().Bytes()[2]
+	var byteHash byte
+	if len(ctx.HeaderHash().Bytes()) > 2 {
+		byteHash = ctx.HeaderHash().Bytes()[0] + ctx.HeaderHash().Bytes()[1] + ctx.HeaderHash().Bytes()[2]
+	} else {
+		byteHash = byte(ctx.BlockHeight()) // support for running simulations
+	}
 
 	d := totalSize.TruncateInt().Int64() / fchunks
 
