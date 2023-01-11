@@ -30,20 +30,19 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, fmt.Errorf("can't upgrade non-existing storage, please use MsgBuyStorage")
 	}
 
-	proratedDurationInHour := payInfo.End.Sub(ctx.BlockTime())
-	proratedDuration := sdk.NewDec(int64(proratedDurationInHour)).Quo(sdk.NewDec(int64(timeMonth)))
-
-	if proratedDuration.LTE(sdk.ZeroDec()) {
-		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "old plan is expired, use MsgBuyStorage")
+	if ctx.BlockTime().After(payInfo.End) {
+		return nil, sdkerr.Wrapf(sdkerr.ErrInvalidRequest, "old plan is expired, use MsgBuyStorage")
 	}
+	proratedDuration := payInfo.End.Sub(ctx.BlockTime())
+	proratedDurationInHour := sdk.NewDec(proratedDuration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
 
 	currentBytes := payInfo.SpaceAvailable
 	currentGbs := currentBytes / gb
 
-	oldCost := k.GetStorageCost(ctx, currentGbs, proratedDuration)
+	oldCost := k.GetStorageCost(ctx, currentGbs, proratedDurationInHour.TruncateInt64())
 
 	// Get cost of new plan
-	duration, err := strconv.ParseInt(msg.Duration, 10, 64)
+	duration, err := time.ParseDuration(msg.Duration)
 	if err != nil {
 		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
 	}
@@ -62,7 +61,8 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "cannot buy less than a gb")
 	}
 
-	newCost := k.GetStorageCost(ctx, newGbs, sdk.NewDec(duration))
+	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
+	newCost := k.GetStorageCost(ctx, newGbs, hours.TruncateInt64())
 
 	price := newCost.Sub(oldCost)
 
@@ -101,7 +101,7 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, err
 	}
 
-	timeTotal := timeMonth * time.Duration(duration)
+	timeTotal := timeMonth * duration
 	spi := types.StoragePaymentInfo{
 		Start:          ctx.BlockTime(),
 		End:            ctx.BlockTime().Add(timeTotal),

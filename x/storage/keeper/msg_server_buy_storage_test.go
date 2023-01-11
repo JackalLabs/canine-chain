@@ -47,7 +47,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -67,7 +67,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "3000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -89,25 +89,25 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    200000,
+			tokens:    66666,
 			expErrMsg: "",
 		},
 		{
-			testName: "successfullybuy 1tb for 3 month",
+			testName: "successfully buy 1tb for 3 month",
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "3",
+				Duration:     "2160h",
 				Bytes:        "1000000000000",
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    100000000,
+			tokens:    33333333,
 			expErrMsg: "",
 		},
 		{
@@ -115,7 +115,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "-1",
 				PaymentDenom: "ujkl",
 			},
@@ -127,7 +127,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "0",
+				Duration:     "2m",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -140,7 +140,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "1000000000",
 				PaymentDenom: "uatom",
 			},
@@ -152,7 +152,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      "invalid_address",
 				ForAddress:   testAccount.String(),
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -164,7 +164,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   "invalid_address",
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
 			},

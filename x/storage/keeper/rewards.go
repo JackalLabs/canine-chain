@@ -3,6 +3,7 @@ package keeper
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
@@ -41,7 +42,12 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		return err
 	}
 
-	byteHash := ctx.HeaderHash().Bytes()[0] + ctx.HeaderHash().Bytes()[1] + ctx.HeaderHash().Bytes()[2]
+	var byteHash byte
+	if len(ctx.HeaderHash().Bytes()) > 2 {
+		byteHash = ctx.HeaderHash().Bytes()[0] + ctx.HeaderHash().Bytes()[1] + ctx.HeaderHash().Bytes()[2]
+	} else {
+		byteHash = byte(ctx.BlockHeight()) // support for running simulations
+	}
 
 	d := totalSize.TruncateInt().Int64() / fchunks
 
@@ -146,6 +152,15 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 
 func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, networkSize sdk.Dec, balance sdk.Coin) {
 	for _, deal := range allDeals {
+		info, _ := k.GetStoragePaymentInfo(ctx, deal.Signee)
+		grace := info.End.Add(time.Hour * 24 * 30)
+		if grace.After(ctx.BlockTime()) {
+
+			cerr := CanContract(ctx, deal.Cid, deal.Signee, k)
+			if cerr != nil {
+				ctx.Logger().Error(cerr.Error())
+			}
+		}
 
 		err := k.manageDealReward(ctx, deal, networkSize, balance)
 		if err != nil {

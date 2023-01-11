@@ -9,8 +9,6 @@ import (
 	"io"
 	"strings"
 
-	// sdk "github.com/cosmos/cosmos-sdk/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	merkletree "github.com/wealdtech/go-merkletree"
 

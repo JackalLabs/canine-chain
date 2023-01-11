@@ -119,21 +119,21 @@ func (suite *KeeperTestSuite) TestGetStorageCost() {
 	}{
 		{
 			name:     "10GB for 5months",
-			gbs:      10_000_000,
+			gbs:      10,
 			months:   5,
-			expected: sdk.NewInt(1666666666666),
+			expected: sdk.NewInt(555555),
 		},
 		{
 			name:     "5GB for 24months",
-			gbs:      5_000_000,
+			gbs:      5,
 			months:   24,
-			expected: sdk.NewInt(4000000000000),
+			expected: sdk.NewInt(1333333),
 		},
 	}
 
 	for _, tc := range cases {
 		suite.Run(tc.name, func() {
-			cost := sKeeper.GetStorageCost(suite.ctx, tc.gbs, sdk.NewDec(tc.months))
+			cost := sKeeper.GetStorageCost(suite.ctx, tc.gbs, tc.months*720)
 			suite.Require().Equal(tc.expected, cost)
 		})
 	}

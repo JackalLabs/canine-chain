@@ -12,7 +12,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 	// Create test account
 	testAccount, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
 	suite.Require().NoError(err)
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000))) // Send some coins to their account
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAccount, coins)
 	suite.Require().NoError(err)
 
@@ -43,7 +43,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			msg: types.MsgUpgradeStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "2",
+				Duration:     "1440h",
 				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -66,7 +66,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			msg: types.MsgUpgradeStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "1",
+				Duration:     "720h",
 				Bytes:        "4000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -89,7 +89,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			msg: types.MsgUpgradeStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "3",
+				Duration:     "2160h",
 				Bytes:        "8000000000",
 				PaymentDenom: "ujkl",
 			},
@@ -112,7 +112,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			msg: types.MsgUpgradeStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
-				Duration:     "3",
+				Duration:     "2160h",
 				Bytes:        "8000000000",
 				PaymentDenom: "ujkl",
 			},

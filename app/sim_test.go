@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"testing"
@@ -59,9 +60,12 @@ type StoreKeysPrefixes struct {
 
 // SetupSimulation wraps simapp.SetupSimulation in order to create any export directory if they do not exist yet
 func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string, log.Logger, bool, error) {
+	setBech32ForTest()
+
 	simapp.FlagEnabledValue = true
 	config, db, dir, logger, skip, err := simapp.SetupSimulation(dirPrefix, dbName)
 	config.Commit = true
+	config.Seed = rand.Int63()
 	if err != nil {
 		return simtypes.Config{}, nil, "", nil, false, err
 	}
@@ -251,6 +255,7 @@ func TestAppImportExport(t *testing.T) {
 
 func TestFullAppSimulation(t *testing.T) {
 	config, db, dir, logger, skip, err := SetupSimulation("leveldb-app-sim", "Simulation")
+
 	if skip {
 		t.Skip("skipping application simulation")
 	}
