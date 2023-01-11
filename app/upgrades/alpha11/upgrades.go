@@ -1,4 +1,4 @@
-package alpha10
+package alpha11
 
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -30,7 +30,7 @@ func NewUpgrade(mm *module.Manager, configurator module.Configurator, ok oraclek
 
 // Name implements upgrades.Upgrade
 func (u *Upgrade) Name() string {
-	return "alpha10"
+	return "alpha11"
 }
 
 // Handler implements upgrades.Upgrade
