@@ -1,27 +1,28 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // testing: contracts.go active_deals.go...
 func (suite *KeeperTestSuite) TestSetContracts() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 2)
 	suite.Require().NoError(err)
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	user := testAddresses[0]
+	provider := testAddresses[1]
 
 	contract := types.Contracts{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   user.String(),
+		Signee:   user,
 		Duration: "1000",
 		Filesize: "5000",
 		Fid:      "5789",
-		Creator:  provider.String(),
+		Creator:  provider,
 	}
 
 	suite.storageKeeper.SetContracts(suite.ctx, contract)
@@ -39,20 +40,21 @@ func (suite *KeeperTestSuite) TestSetContracts() {
 
 func (suite *KeeperTestSuite) TestGetContracts() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 2)
 	suite.Require().NoError(err)
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	user := testAddresses[0]
+	provider := testAddresses[1]
 
 	contract := types.Contracts{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   user.String(),
+		Signee:   user,
 		Duration: "1000",
 		Filesize: "5000",
 		Fid:      "5789",
-		Creator:  provider.String(),
+		Creator:  provider,
 	}
 
 	suite.storageKeeper.SetContracts(suite.ctx, contract)
@@ -69,23 +71,21 @@ func (suite *KeeperTestSuite) TestGetContracts() {
 func (suite *KeeperTestSuite) TestGetAllContracts() {
 	suite.SetupSuite()
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 3)
 	suite.Require().NoError(err)
 
-	alice, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
-
-	charlie, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
-	suite.Require().NoError(err)
+	provider := testAddresses[0]
+	alice := testAddresses[1]
+	charlie := testAddresses[2]
 
 	contract := types.Contracts{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   alice.String(),
+		Signee:   alice,
 		Duration: "1000",
 		Filesize: "5000",
 		Fid:      "5789",
-		Creator:  provider.String(),
+		Creator:  provider,
 	}
 
 	suite.storageKeeper.SetContracts(suite.ctx, contract)
@@ -94,11 +94,11 @@ func (suite *KeeperTestSuite) TestGetAllContracts() {
 	contract1 := types.Contracts{
 		Cid:      "649",
 		Merkle:   "",
-		Signee:   charlie.String(),
+		Signee:   charlie,
 		Duration: "2000",
 		Filesize: "10000",
 		Fid:      "4587",
-		Creator:  provider.String(),
+		Creator:  provider,
 	}
 
 	suite.storageKeeper.SetContracts(suite.ctx, contract1)
@@ -115,20 +115,21 @@ func (suite *KeeperTestSuite) TestGetAllContracts() {
 
 func (suite *KeeperTestSuite) TestRemoveContracts() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 2)
 	suite.Require().NoError(err)
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	user := testAddresses[0]
+	provider := testAddresses[1]
 
 	contract := types.Contracts{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   user.String(),
+		Signee:   user,
 		Duration: "1000",
 		Filesize: "5000",
 		Fid:      "5789",
-		Creator:  provider.String(),
+		Creator:  provider,
 	}
 
 	suite.storageKeeper.SetContracts(suite.ctx, contract)
@@ -147,23 +148,24 @@ func (suite *KeeperTestSuite) TestRemoveContracts() {
 
 func (suite *KeeperTestSuite) TestSetActiveDeals() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 2)
 	suite.Require().NoError(err)
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	user := testAddresses[0]
+	provider := testAddresses[1]
 
 	deal := types.ActiveDeals{
 		Cid:           "549",
-		Signee:        user.String(),
-		Provider:      provider.String(),
+		Signee:        user,
+		Provider:      provider,
 		Startblock:    "100",
 		Endblock:      "1000",
 		Filesize:      "5000",
 		Proofverified: "true",
 		Proofsmissed:  "0",
 		Blocktoprove:  "150",
-		Creator:       user.String(),
+		Creator:       user,
 		Merkle:        "",
 		Fid:           "5789",
 	}
@@ -183,23 +185,24 @@ func (suite *KeeperTestSuite) TestSetActiveDeals() {
 
 func (suite *KeeperTestSuite) TestGetActiveDeals() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 2)
 	suite.Require().NoError(err)
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	user := testAddresses[0]
+	provider := testAddresses[1]
 
 	deal := types.ActiveDeals{
 		Cid:           "549",
-		Signee:        user.String(),
-		Provider:      provider.String(),
+		Signee:        user,
+		Provider:      provider,
 		Startblock:    "100",
 		Endblock:      "1000",
 		Filesize:      "5000",
 		Proofverified: "true",
 		Proofsmissed:  "0",
 		Blocktoprove:  "150",
-		Creator:       user.String(),
+		Creator:       user,
 		Merkle:        "",
 		Fid:           "5789",
 	}
@@ -218,26 +221,24 @@ func (suite *KeeperTestSuite) TestGetActiveDeals() {
 func (suite *KeeperTestSuite) TestGetAllActiveDeals() {
 	suite.SetupSuite()
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 3)
 	suite.Require().NoError(err)
 
-	alice, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
-
-	charlie, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
-	suite.Require().NoError(err)
+	provider := testAddresses[0]
+	alice := testAddresses[1]
+	charlie := testAddresses[2]
 
 	deal := types.ActiveDeals{
 		Cid:           "549",
-		Signee:        alice.String(),
-		Provider:      provider.String(),
+		Signee:        alice,
+		Provider:      provider,
 		Startblock:    "100",
 		Endblock:      "1000",
 		Filesize:      "5000",
 		Proofverified: "true",
 		Proofsmissed:  "0",
 		Blocktoprove:  "150",
-		Creator:       alice.String(),
+		Creator:       alice,
 		Merkle:        "",
 		Fid:           "5789",
 	}
@@ -247,15 +248,15 @@ func (suite *KeeperTestSuite) TestGetAllActiveDeals() {
 
 	deal1 := types.ActiveDeals{
 		Cid:           "1458",
-		Signee:        charlie.String(),
-		Provider:      provider.String(),
+		Signee:        charlie,
+		Provider:      provider,
 		Startblock:    "200",
 		Endblock:      "2000",
 		Filesize:      "10000",
 		Proofverified: "true",
 		Proofsmissed:  "0",
 		Blocktoprove:  "200",
-		Creator:       charlie.String(),
+		Creator:       charlie,
 		Merkle:        "",
 		Fid:           "4589",
 	}
@@ -274,23 +275,24 @@ func (suite *KeeperTestSuite) TestGetAllActiveDeals() {
 
 func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 2)
 	suite.Require().NoError(err)
 
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	user := testAddresses[0]
+	provider := testAddresses[1]
 
 	deal := types.ActiveDeals{
 		Cid:           "549",
-		Signee:        user.String(),
-		Provider:      provider.String(),
+		Signee:        user,
+		Provider:      provider,
 		Startblock:    "100",
 		Endblock:      "1000",
 		Filesize:      "5000",
 		Proofverified: "true",
 		Proofsmissed:  "0",
 		Blocktoprove:  "150",
-		Creator:       user.String(),
+		Creator:       user,
 		Merkle:        "",
 		Fid:           "5789",
 	}
@@ -311,13 +313,16 @@ func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
 
 func (suite *KeeperTestSuite) TestSetStrays() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 1)
 	suite.Require().NoError(err)
+
+	user := testAddresses[0]
 
 	stray := types.Strays{
 		Cid:      "549",
 		Fid:      "5789",
-		Signee:   user.String(),
+		Signee:   user,
 		Filesize: "1000",
 		Merkle:   "",
 	}
@@ -336,13 +341,16 @@ func (suite *KeeperTestSuite) TestSetStrays() {
 
 func (suite *KeeperTestSuite) TestGetStrays() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 1)
 	suite.Require().NoError(err)
+
+	user := testAddresses[0]
 
 	stray := types.Strays{
 		Cid:      "549",
 		Fid:      "5789",
-		Signee:   user.String(),
+		Signee:   user,
 		Filesize: "1000",
 		Merkle:   "",
 	}
@@ -359,13 +367,16 @@ func (suite *KeeperTestSuite) TestGetStrays() {
 
 func (suite *KeeperTestSuite) TestGetAllStrays() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 1)
 	suite.Require().NoError(err)
+
+	user := testAddresses[0]
 
 	stray := types.Strays{
 		Cid:      "549",
 		Fid:      "5789",
-		Signee:   user.String(),
+		Signee:   user,
 		Filesize: "1000",
 		Merkle:   "",
 	}
@@ -375,7 +386,7 @@ func (suite *KeeperTestSuite) TestGetAllStrays() {
 	stray1 := types.Strays{
 		Cid:      "649",
 		Fid:      "5789",
-		Signee:   user.String(),
+		Signee:   user,
 		Filesize: "1000",
 		Merkle:   "",
 	}
@@ -393,13 +404,16 @@ func (suite *KeeperTestSuite) TestGetAllStrays() {
 
 func (suite *KeeperTestSuite) TestRemoveStrays() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("jkl", 1)
 	suite.Require().NoError(err)
+
+	user := testAddresses[0]
 
 	stray := types.Strays{
 		Cid:      "549",
 		Fid:      "5789",
-		Signee:   user.String(),
+		Signee:   user,
 		Filesize: "1000",
 		Merkle:   "",
 	}

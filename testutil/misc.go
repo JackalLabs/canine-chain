@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/simulation"
 )
 
-// createTestAddresses retunrs a []string of random addresses.
-func createTestAddresses(prefix string, n int) ([]string, error) {
+// CreateTestAddresses returns a []string of random addresses.
+func CreateTestAddresses(prefix string, n int) ([]string, error) {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	randomAccounts := simulation.RandomAccounts(r, n)
 	var s []string
