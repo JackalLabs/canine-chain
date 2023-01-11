@@ -18,7 +18,6 @@ type contract struct {
 }
 
 func CanContract(ctx sdk.Context, root string, creator string, k Keeper) error {
-	var fid string
 	var c contract
 
 	d, dealFound := k.GetActiveDeals(ctx, root)
@@ -46,7 +45,7 @@ func CanContract(ctx sdk.Context, root string, creator string, k Keeper) error {
 	k.RemoveStrays(ctx, c.Cid)
 	k.RemoveActiveDeals(ctx, c.Cid)
 
-	ftc, found := k.GetFidCid(ctx, fid)
+	ftc, found := k.GetFidCid(ctx, c.Fid)
 	if found {
 		var ncids []string
 		err := json.Unmarshal([]byte(ftc.Cids), &ncids)

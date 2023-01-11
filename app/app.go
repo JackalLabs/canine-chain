@@ -145,7 +145,7 @@ import (
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
 
-	"github.com/jackalLabs/canine-chain/app/upgrades/alpha8"
+	"github.com/jackalLabs/canine-chain/app/upgrades/alpha10"
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
@@ -1119,7 +1119,7 @@ func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
 func (app *JackalApp) registerUpgradeHandlers() {
 	// app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
-	app.registerUpgrade(alpha8.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
+	app.registerUpgrade(alpha10.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
