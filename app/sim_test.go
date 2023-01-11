@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"testing"
@@ -64,6 +65,7 @@ func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string,
 	simapp.FlagEnabledValue = true
 	config, db, dir, logger, skip, err := simapp.SetupSimulation(dirPrefix, dbName)
 	config.Commit = true
+	config.Seed = rand.Int63()
 	if err != nil {
 		return simtypes.Config{}, nil, "", nil, false, err
 	}

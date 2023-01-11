@@ -3,6 +3,7 @@ package keeper
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
@@ -151,18 +152,14 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 
 func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, networkSize sdk.Dec, balance sdk.Coin) {
 	for _, deal := range allDeals {
-
 		info, _ := k.GetStoragePaymentInfo(ctx, deal.Signee)
-		if info.End.After(ctx.BlockTime()) {
-			if info.SpaceUsed > TwoGigs {
+		grace := info.End.Add(time.Hour * 24 * 30)
+		if grace.After(ctx.BlockTime()) {
 
-				cerr := CanContract(ctx, deal.Cid, "admin", k)
-				if cerr != nil {
-					ctx.Logger().Error(cerr.Error())
-				}
+			cerr := CanContract(ctx, deal.Cid, deal.Signee, k)
+			if cerr != nil {
+				ctx.Logger().Error(cerr.Error())
 			}
-			info.SpaceAvailable = TwoGigs
-			k.SetStoragePaymentInfo(ctx, info)
 		}
 
 		err := k.manageDealReward(ctx, deal, networkSize, balance)
