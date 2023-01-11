@@ -21,7 +21,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		DepositAccount: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+		DepositAccount: "jkl1778a6x4e6t074ajvs7l76wpa2xd0s4pt0tqq57",
 	}
 }
 
