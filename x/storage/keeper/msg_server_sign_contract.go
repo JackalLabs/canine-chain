@@ -58,7 +58,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
 	if found {
 		// check if user has any free space
-		if payInfo.SpaceUsed+fsize.Int64() > payInfo.SpaceAvailable {
+		if payInfo.SpaceUsed+(fsize.Int64()*3) > payInfo.SpaceAvailable {
 			return nil, fmt.Errorf("not enough storage space")
 		}
 		// check if storage subscription still active
@@ -68,7 +68,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 	}
 	// we going to need an else statement to check for the free trial storage since they wont have payInfo
 
-	payInfo.SpaceUsed += fsize.Int64()
+	payInfo.SpaceUsed += fsize.Int64() * 3
 
 	k.SetStoragePaymentInfo(ctx, payInfo)
 	k.SetActiveDeals(ctx, deal)

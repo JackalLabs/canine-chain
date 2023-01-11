@@ -47,8 +47,8 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, fmt.Errorf("cannot buy less than a gb")
 	}
 
-	months := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(timeMonth.Milliseconds()))
-	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, months))
+	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
+	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64()))
 
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {

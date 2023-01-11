@@ -39,6 +39,14 @@ func SimulateMsgCancelContract(
 			), nil, nil
 		}
 
+		_, found = k.GetFidCid(ctx, contract.Fid)
+		if !found {
+			return simtypes.NoOpMsg(
+				types.ModuleName, types.TypeMsgSignContract,
+				"unable to find fid to cid",
+			), nil, nil
+		}
+
 		msg.Creator = contract.Signee
 		msg.Cid = contract.Cid
 

@@ -385,7 +385,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				}
 			},
 			expErr:    true,
-			expErrMsg: "can't find contract",
+			expErrMsg: "no deal found: key not found",
 		},
 
 		{
@@ -402,6 +402,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 				d := types.ActiveDeals{
 					Cid:     dcid,
+					Signee:  user.String(),
 					Creator: user.String(),
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
@@ -417,6 +418,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 					k := types.ActiveDeals{
 						Cid:     scid,
+						Signee:  user.String(),
 						Creator: user.String(),
 					}
 					sKeeper.SetActiveDeals(suite.ctx, k)
@@ -430,127 +432,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				}
 			},
 			expErr:    true,
-			expErrMsg: "you don't own this deal",
-		},
-
-		{
-			name: "fid_not_found",
-			preRun: func() *types.MsgCancelContract {
-				dcid := tst
-				h := sha256.New()
-				_, err := io.WriteString(h, dcid)
-				suite.Require().NoError(err)
-				hashName := h.Sum(nil)
-
-				dcid, err = keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				d := types.ActiveDeals{
-					Cid:     dcid,
-					Creator: user.String(),
-				}
-				sKeeper.SetActiveDeals(suite.ctx, d)
-
-				for i := 0; i < 2; i++ {
-					h := sha256.New()
-					_, err := io.WriteString(h, fmt.Sprintf("%s%d", d.Cid, i))
-					suite.Require().NoError(err)
-					hashName := h.Sum(nil)
-
-					scid, err := keeper.MakeCid(hashName)
-					suite.Require().NoError(err)
-
-					k := types.ActiveDeals{
-						Cid:     scid,
-						Creator: user.String(),
-					}
-					sKeeper.SetActiveDeals(suite.ctx, k)
-				}
-
-				d, found := sKeeper.GetActiveDeals(suite.ctx, d.Cid)
-				suite.Require().True(found)
-				d.Fid = "100"
-				sKeeper.SetActiveDeals(suite.ctx, d)
-				return &types.MsgCancelContract{
-					Creator: user.String(),
-					Cid:     d.Cid,
-				}
-			},
-			expErr:    true,
-			expErrMsg: "no fid found",
-		},
-
-		{
-			name: "invalid_cid_json",
-			preRun: func() *types.MsgCancelContract {
-				dcid := tst
-				h := sha256.New()
-				_, err := io.WriteString(h, dcid)
-				suite.Require().NoError(err)
-				hashName := h.Sum(nil)
-
-				dcid, err = keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				cids := []string{dcid}
-
-				d := types.ActiveDeals{
-					Cid:     dcid,
-					Creator: user.String(),
-					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-				}
-				sKeeper.SetActiveDeals(suite.ctx, d)
-
-				h = sha256.New()
-				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 0))
-				suite.Require().NoError(err)
-				hashName = h.Sum(nil)
-
-				left, err := keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				cids = append(cids, left)
-				k := types.ActiveDeals{
-					Cid:     left,
-					Creator: user.String(),
-					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-				}
-				sKeeper.SetActiveDeals(suite.ctx, k)
-
-				h = sha256.New()
-				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 1))
-				suite.Require().NoError(err)
-				hashName = h.Sum(nil)
-
-				right, err := keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				cids = append(cids, right)
-				k = types.ActiveDeals{
-					Cid:     right,
-					Creator: user.String(),
-					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-				}
-				sKeeper.SetActiveDeals(suite.ctx, k)
-
-				b, err := json.Marshal(cids)
-				suite.Require().NoError(err)
-
-				ftc := types.FidCid{
-					Fid:  "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-					Cids: string(b),
-				}
-				sKeeper.SetFidCid(suite.ctx, ftc)
-
-				suite.Require().NoError(err)
-
-				return &types.MsgCancelContract{
-					Creator: user.String(),
-					Cid:     right,
-				}
-			},
-			expErr:    true,
-			expErrMsg: "can't find contract",
+			expErrMsg: fmt.Sprintf("cannot cancel a contract that isn't yours. foo is not %s: unauthorized", user.String()),
 		},
 
 		{
@@ -570,41 +452,10 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				d := types.ActiveDeals{
 					Cid:     dcid,
 					Creator: user.String(),
+					Signee:  user.String(),
 					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
-
-				h = sha256.New()
-				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 0))
-				suite.Require().NoError(err)
-				hashName = h.Sum(nil)
-
-				left, err := keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				cids = append(cids, left)
-				k := types.ActiveDeals{
-					Cid:     left,
-					Creator: user.String(),
-					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-				}
-				sKeeper.SetActiveDeals(suite.ctx, k)
-
-				h = sha256.New()
-				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 1))
-				suite.Require().NoError(err)
-				hashName = h.Sum(nil)
-
-				right, err := keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				cids = append(cids, right)
-				k = types.ActiveDeals{
-					Cid:     right,
-					Creator: user.String(),
-					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-				}
-				sKeeper.SetActiveDeals(suite.ctx, k)
 
 				b, err := json.Marshal(cids)
 				suite.Require().NoError(err)
@@ -640,40 +491,11 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				cids := []string{dcid}
 
 				d := types.Strays{
-					Cid: dcid,
-					Fid: "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+					Cid:    dcid,
+					Fid:    "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+					Signee: user.String(),
 				}
 				sKeeper.SetStrays(suite.ctx, d)
-
-				h = sha256.New()
-				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 0))
-				suite.Require().NoError(err)
-				hashName = h.Sum(nil)
-
-				left, err := keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				cids = append(cids, left)
-				k := types.Strays{
-					Cid: left,
-					Fid: "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-				}
-				sKeeper.SetStrays(suite.ctx, k)
-
-				h = sha256.New()
-				_, err = io.WriteString(h, fmt.Sprintf("%s%d", dcid, 1))
-				suite.Require().NoError(err)
-				hashName = h.Sum(nil)
-
-				right, err := keeper.MakeCid(hashName)
-				suite.Require().NoError(err)
-
-				cids = append(cids, right)
-				k = types.Strays{
-					Cid: right,
-					Fid: "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-				}
-				sKeeper.SetStrays(suite.ctx, k)
 
 				b, err := json.Marshal(cids)
 				suite.Require().NoError(err)
