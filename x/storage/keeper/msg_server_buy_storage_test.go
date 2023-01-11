@@ -94,11 +94,11 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    200000,
+			tokens:    66666,
 			expErrMsg: "",
 		},
 		{
-			testName: "successfullybuy 1tb for 3 month",
+			testName: "successfully buy 1tb for 3 month",
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount.String(),
 				ForAddress:   testAccount.String(),
@@ -107,7 +107,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    100000000,
+			tokens:    33333333,
 			expErrMsg: "",
 		},
 		{

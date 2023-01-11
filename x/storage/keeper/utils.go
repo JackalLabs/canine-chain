@@ -12,9 +12,9 @@ const (
 	TwoGigs = 2000000000
 )
 
-func MakeFid(data []byte) (string, error) {
-	return bech32.ConvertAndEncode(types.FidPrefix, data)
-}
+// func MakeFid(data []byte) (string, error) {
+//	return bech32.ConvertAndEncode(types.FidPrefix, data)
+// }
 
 func MakeCid(data []byte) (string, error) {
 	return bech32.ConvertAndEncode(types.CidPrefix, data)
@@ -55,19 +55,24 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 
 // Calculate storage cost in ujkl
 // Uses gigabytes and months to calculate how much user has to pay
-// cost(in jkl) = ((gbs/0.008)*months)/jkl_price
-func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, months sdk.Dec) sdk.Int {
-	pricePerGB := sdk.MustNewDecFromStr("0.008")
+// cost(in jkl) = ((gbs*(0.008/3))*months)/jkl_price
+func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int {
+	pricePerTBPerMonth := sdk.NewDec(8)
+	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
+	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
+	pricePerGbPerHour := pricePerGbPerMonth.QuoInt64(720)
+
+	pricePerHour := pricePerGbPerHour.MulInt64(gbs)
+
+	totalCost := pricePerHour.MulInt64(hours)
+
 	jklPrice := k.GetJklPrice(ctx)
+
 	// TODO: fetch denom unit from bank module
-	ujklUnit := sdk.NewDec(1000000)
-
-	pricePerMonth := pricePerGB.Mul(sdk.NewDec(gbs))
-
-	totalCost := pricePerMonth.Mul(months)
-
+	var ujklUnit int64 = 1000000
 	jklCost := totalCost.Quo(jklPrice)
-	ujklCost := jklCost.Mul(ujklUnit)
+
+	ujklCost := jklCost.MulInt64(ujklUnit)
 
 	return ujklCost.TruncateInt()
 }

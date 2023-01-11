@@ -36,8 +36,8 @@ func SimulateMsgBuyStorage(
 		size := simtypes.RandIntBetween(r, 1_000_000_000, 10_000_000_000)
 
 		t := time.Hour * 720
-		months := sdk.NewDec(1)
-		cost := k.GetStorageCost(ctx, int64(size), months)
+		hours := sdk.NewDec(t.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
+		cost := k.GetStorageCost(ctx, int64(size), hours.TruncateInt64())
 
 		msg.Bytes = strconv.Itoa(size)
 		msg.Duration = t.String()
