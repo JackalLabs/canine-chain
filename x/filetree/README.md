@@ -119,7 +119,7 @@ Create an absolute root folder for a storage account.
 |account  | String  | Hex[ hash( Bech32 address of user that will own this account)]. <br /> Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists.<br /> 
 |rootHashPath  | String  | MerklePath("s")<br />
 |contents  | String  | FID<br />
-|editors  | String  | string(json encoded map) with: <br />let c = concatenate( "e", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br />
+|editors  | String  | string(json encoded map) with: <br />let c = concatenate( "e", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br /> Note that map_key and map_value must be strings or else unmarshalling in the keeper will fail. <br />
 |viewers  | String  | Pass in "NONE." Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. <br />
 |trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
 
@@ -140,7 +140,7 @@ Let it be that alice wants to create a home folder
 |hashParent  | String  | MerklePath("s")<br />
 |hashChild  | String  |  Hex[ hash("home") ]<br />
 |contents  | String  | FID<br />
-|viewers  | String  | string(json encoded map) with: <br />let c = concatenate( "v", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br />
+|viewers  | String  | string(json encoded map) with: <br />let c = concatenate( "v", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br /> Note that map_key and map_value must be strings or else unmarshalling in the keeper will fail. <br />
 |editors  | String  | same as above but with c = concatenate( "e", trackingNumber, Bech32 address )<br />
 |trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors AND viewers map<br />
 
