@@ -118,6 +118,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 
 	msgSrvr, keeper, context := setupMsgServer(suite)
 
+	// harded coded accounts to keep CIDs static for testing
 	// Create user account
 	user, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
 	suite.Require().NoError(err)

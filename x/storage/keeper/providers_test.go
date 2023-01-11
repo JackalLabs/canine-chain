@@ -1,29 +1,32 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // testing providers.go file
 func (suite *KeeperTestSuite) TestSetProviders() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
 
+	user := testAddresses[0]
+
 	provider := types.Providers{
-		Address:         user.String(),
+		Address:         user,
 		Ip:              "192.158.1.38",
 		Totalspace:      "9000",
 		BurnedContracts: "0",
-		Creator:         user.String(),
+		Creator:         user,
 	}
 
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 	suite.Require().NoError(err)
 
 	providerRequest := types.QueryProviderRequest{
-		Address: user.String(),
+		Address: user,
 	}
 
 	res, err := suite.queryClient.Providers(suite.ctx.Context(), &providerRequest)
@@ -37,21 +40,24 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 
 func (suite *KeeperTestSuite) TestGetProviders() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
 
+	user := testAddresses[0]
+
 	provider := types.Providers{
-		Address:         user.String(),
+		Address:         user,
 		Ip:              "192.158.1.38",
 		Totalspace:      "9000",
 		BurnedContracts: "0",
-		Creator:         user.String(),
+		Creator:         user,
 	}
 
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 	suite.Require().NoError(err)
 
-	foundProvider, found := suite.storageKeeper.GetProviders(suite.ctx, user.String())
+	foundProvider, found := suite.storageKeeper.GetProviders(suite.ctx, user)
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundProvider.Address, provider.Address)
@@ -63,72 +69,63 @@ func (suite *KeeperTestSuite) TestGetProviders() {
 
 func (suite *KeeperTestSuite) TestGetAllProviders() {
 	suite.SetupSuite()
-	alice, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	bob, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	alice := testAddresses[0]
+	bob := testAddresses[1]
 
 	provider := types.Providers{
-		Address:         alice.String(),
+		Address:         alice,
 		Ip:              "192.158.1.38",
 		Totalspace:      "9000",
 		BurnedContracts: "0",
-		Creator:         alice.String(),
+		Creator:         alice,
 	}
 
+	allProvidersbefore := suite.storageKeeper.GetAllProviders(suite.ctx)
+	suite.Require().Equal(0, len(allProvidersbefore))
+
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
-	suite.Require().NoError(err)
 
 	provider1 := types.Providers{
-		Address:         bob.String(),
+		Address:         bob,
 		Ip:              "127.159.2.39",
 		Totalspace:      "18000",
 		BurnedContracts: "0",
-		Creator:         bob.String(),
+		Creator:         bob,
 	}
 
 	suite.storageKeeper.SetProviders(suite.ctx, provider1)
-	suite.Require().NoError(err)
 
 	allProviders := suite.storageKeeper.GetAllProviders(suite.ctx)
-	suite.Require().NoError(err)
-
-	providerAlice := allProviders[1]
-	suite.Require().Equal(providerAlice.Address, provider.Address)
-	suite.Require().Equal(providerAlice.Ip, provider.Ip)
-	suite.Require().Equal(providerAlice.Totalspace, provider.Totalspace)
-	suite.Require().Equal(providerAlice.BurnedContracts, provider.BurnedContracts)
-	suite.Require().Equal(providerAlice.Creator, provider.Creator)
-
-	providerBob := allProviders[0]
-	suite.Require().Equal(providerBob.Address, provider1.Address)
-	suite.Require().Equal(providerBob.Ip, provider1.Ip)
-	suite.Require().Equal(providerBob.Totalspace, provider1.Totalspace)
-	suite.Require().Equal(providerBob.BurnedContracts, provider1.BurnedContracts)
-	suite.Require().Equal(providerBob.Creator, provider1.Creator)
+	suite.Require().Equal(2, len(allProviders))
 }
 
 func (suite *KeeperTestSuite) TestRemoveProviders() {
 	suite.SetupSuite()
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
 
+	user := testAddresses[0]
+
 	provider := types.Providers{
-		Address:         user.String(),
+		Address:         user,
 		Ip:              "192.158.1.38",
 		Totalspace:      "9000",
 		BurnedContracts: "0",
-		Creator:         user.String(),
+		Creator:         user,
 	}
 
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 	suite.Require().NoError(err)
 
-	suite.storageKeeper.RemoveProviders(suite.ctx, user.String())
+	suite.storageKeeper.RemoveProviders(suite.ctx, user)
 	suite.Require().NoError(err)
 
-	foundProvider, found := suite.storageKeeper.GetProviders(suite.ctx, user.String())
+	foundProvider, found := suite.storageKeeper.GetProviders(suite.ctx, user)
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)
 

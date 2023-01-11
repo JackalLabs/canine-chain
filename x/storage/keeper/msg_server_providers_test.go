@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -12,8 +12,10 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
+
+	user := testAddresses[0]
 
 	cases := []struct {
 		preRun    func() *types.MsgInitProvider
@@ -24,7 +26,7 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 		{
 			preRun: func() *types.MsgInitProvider {
 				return types.NewMsgInitProvider(
-					user.String(),
+					user,
 					"127.0.0.1",
 					"1000000000",
 					"test-key",
@@ -57,14 +59,16 @@ func (suite *KeeperTestSuite) TestMsgSetProviderIP() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
 
+	user := testAddresses[0]
+
 	provider := types.Providers{
-		Address:         user.String(),
+		Address:         user,
 		Ip:              "",
 		Totalspace:      "1000000",
-		Creator:         user.String(),
+		Creator:         user,
 		BurnedContracts: "0",
 	}
 
@@ -79,7 +83,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderIP() {
 		{
 			preRun: func() *types.MsgSetProviderIP {
 				return types.NewMsgSetProviderIP(
-					user.String(),
+					user,
 					"127.0.0.1",
 				)
 			},
@@ -121,14 +125,16 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
 
+	user := testAddresses[0]
+
 	provider := types.Providers{
-		Address:         user.String(),
+		Address:         user,
 		Ip:              "127.0.0.1",
 		Totalspace:      "",
-		Creator:         user.String(),
+		Creator:         user,
 		BurnedContracts: "0",
 	}
 
@@ -143,7 +149,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 		{
 			preRun: func() *types.MsgSetProviderTotalspace {
 				return types.NewMsgSetProviderTotalspace(
-					user.String(),
+					user,
 					"1000000",
 				)
 			},
@@ -164,7 +170,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 		{
 			preRun: func() *types.MsgSetProviderTotalspace {
 				return types.NewMsgSetProviderTotalspace(
-					user.String(),
+					user,
 					"9@!0",
 				)
 			},
