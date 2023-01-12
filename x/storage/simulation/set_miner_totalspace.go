@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -33,7 +33,7 @@ func SimulateMsgSetProviderTotalspace(
 
 		msg := &types.MsgSetProviderTotalspace{
 			Creator: provider.Creator,
-			Space: strconv.Itoa(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
+			Space:   strconv.Itoa(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
@@ -56,6 +56,5 @@ func SimulateMsgSetProviderTotalspace(
 		}
 
 		return simulation.GenAndDeliverTx(txCtx, fees)
-
 	}
 }

@@ -4,9 +4,9 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -34,7 +34,7 @@ func SimulateMsgSetProviderIP(
 
 		msg := &types.MsgSetProviderIP{
 			Creator: provider.Creator,
-			Ip: ip,
+			Ip:      ip,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
