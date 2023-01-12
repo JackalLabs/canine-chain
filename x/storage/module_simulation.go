@@ -30,27 +30,27 @@ const (
 	//nolint:all
 	opWeightMsgPostproof = "op_weight_msg_postproof"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgPostproof int = 100
+	defaultWeightMsgPostproof int = 80
 
 	//nolint:all
 	opWeightMsgSignContract = "op_weight_msg_sign_contract"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgSignContract int = 100
+	defaultWeightMsgSignContract int = 80
 
 	//nolint:all
 	opWeightMsgSetProviderIP = "op_weight_msg_set_provider_ip"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetProviderIP int = 100
+	defaultWeightMsgSetProviderIP int = 10
 
 	//nolint:all
 	opWeightMsgSetProviderTotalspace = "op_weight_msg_set_provider_totalspace"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetProviderTotalspace int = 100
+	defaultWeightMsgSetProviderTotalspace int = 10
 
 	//nolint:all
 	opWeightMsgInitProvider = "op_weight_msg_init_provider"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgInitProvider int = 40
+	defaultWeightMsgInitProvider int = 60
 
 	//nolint:all
 	opWeightMsgCancelContract = "op_weight_msg_cancel_contract"
@@ -62,7 +62,8 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgBuyStorage int = 100
 
-	// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgUpgradeStorage = "op_weight_msg_upgrade_storage"
+	defaultWeightMsgUpgradeStorage int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -174,7 +175,16 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		storagesimulation.SimulateMsgBuyStorage(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	// this line is used by starport scaffolding # simapp/module/operation
+	var weightMsgUpgradeStorage int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpgradeStorage, &weightMsgUpgradeStorage, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpgradeStorage = defaultWeightMsgUpgradeStorage
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpgradeStorage,
+		storagesimulation.SimulateMsgUpgradeStorage(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	return operations
 }
