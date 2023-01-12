@@ -62,7 +62,8 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgBuyStorage int = 100
 
-	opWeightMsgUpgradeStorage = "op_weight_msg_upgrade_storage"
+	//nolint:all
+	opWeightMsgUpgradeStorage          = "op_weight_msg_upgrade_storage"
 	defaultWeightMsgUpgradeStorage int = 100
 )
 
