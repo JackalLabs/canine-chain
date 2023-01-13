@@ -15,7 +15,6 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/rakyll/statik v0.1.7
 	github.com/rs/cors v1.8.2 // indirect
-	github.com/snikch/goodman v0.0.0-20171125024755-10e37e294daa
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
@@ -157,6 +156,15 @@ replace (
 
 	// use cosmos-flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
+
+	// use Informal System's fork of Tendermint Core
+    //
+    // It seems that the official repo is being abandoned and now Informal is
+    // taking over the development with their fork:
+    // https://github.com/tendermint/tendermint/issues/9972
+    github.com/tendermint/tendermint => github.com/informalsystems/tendermint v0.34.23
+    github.com/tendermint/tm-db => github.com/informalsystems/tm-db v0.6.7
 )
