@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"strings"
 
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
@@ -12,38 +12,38 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	bob, err := sdkTypes.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	alice := testAddresses[0]
+	bob := testAddresses[1]
 
 	// set root folder for alice
-	aliceRootFolder, err := types.CreateRootFolder(alice.String())
+	aliceRootFolder, err := types.CreateRootFolder(alice)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
-	editorIds := strings.Split(alice.String(), ",")
-	editorIds = append(editorIds, bob.String())
-	aliceViewerID := strings.Split(alice.String(), ",")
+	editorIds := strings.Split(alice, ",")
+	editorIds = append(editorIds, bob)
+	aliceViewerID := strings.Split(alice, ",")
 	aliceEditorID := aliceViewerID // if alice is the only viewer and only editor, this suffices
 
 	// set home folder for alice and add bob as an editor
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), editorIds, aliceViewerID, "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice, editorIds, aliceViewerID, "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
 	// put hasbullah in home
-	hasbullahjpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/hasbullah.jpg")
+	hasbullahjpg, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/hasbullah.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *hasbullahjpg)
 
-	aliceAccountHash := types.HashThenHex(alice.String())
+	aliceAccountHash := types.HashThenHex(alice)
 	pepeMerklePath := types.MerklePath("s/home/pepe.jpg")
 	hasbullahMerklePath := types.MerklePath("s/home/hasbullah.jpg")
 
@@ -58,7 +58,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Files, *aliceHomeFolder)
 
-	validEditor, err := keeper.HasEditAccess(res.Files, bob.String())
+	validEditor, err := keeper.HasEditAccess(res.Files, bob)
 	suite.Require().NoError(err)
 	suite.Require().Equal(validEditor, true)
 
@@ -71,7 +71,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 		{ // alice deletes pepe
 			preRun: func() *types.MsgDeleteFile {
 				return types.NewMsgDeleteFile(
-					alice.String(),
+					alice,
 					pepeMerklePath,
 					aliceAccountHash,
 				)
@@ -82,7 +82,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 		{ // alice tries to delete a file that doesn't exist
 			preRun: func() *types.MsgDeleteFile {
 				return types.NewMsgDeleteFile(
-					alice.String(),
+					alice,
 					types.MerklePath("s/home/ghost.png"),
 					aliceAccountHash,
 				)
@@ -95,7 +95,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 			// This confirms that only the owner of a file can delete it.
 			preRun: func() *types.MsgDeleteFile {
 				return types.NewMsgDeleteFile(
-					bob.String(),
+					bob,
 					hasbullahMerklePath,
 					aliceAccountHash,
 				)
@@ -107,7 +107,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 		{ // alice deletes s/home/
 			preRun: func() *types.MsgDeleteFile {
 				return types.NewMsgDeleteFile(
-					alice.String(),
+					alice,
 					types.MerklePath("s/home/"),
 					aliceAccountHash,
 				)
@@ -118,7 +118,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 		{ // Confirm alice's s/home/ has been deleted
 			preRun: func() *types.MsgDeleteFile {
 				return types.NewMsgDeleteFile(
-					alice.String(),
+					alice,
 					types.MerklePath("s/home/"),
 					aliceAccountHash,
 				)
@@ -130,7 +130,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 		{ // Even though s/home/ has been deleted, hasbullah is still reachable and can be deleted. This design choice is intentional
 			preRun: func() *types.MsgDeleteFile {
 				return types.NewMsgDeleteFile(
-					alice.String(),
+					alice,
 					hasbullahMerklePath,
 					aliceAccountHash,
 				)
@@ -141,7 +141,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 		{ // Confirm hasbullah has been deleted
 			preRun: func() *types.MsgDeleteFile {
 				return types.NewMsgDeleteFile(
-					alice.String(),
+					alice,
 					hasbullahMerklePath,
 					aliceAccountHash,
 				)

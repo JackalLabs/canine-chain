@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
@@ -9,10 +9,12 @@ func (suite *KeeperTestSuite) TestMsgMakeRoot() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
 
-	msg, err := types.CreateMsgMakeRoot(alice.String())
+	alice := testAddresses[0]
+
+	msg, err := types.CreateMsgMakeRoot(alice)
 	suite.Require().NoError(err)
 
 	cases := []struct {
