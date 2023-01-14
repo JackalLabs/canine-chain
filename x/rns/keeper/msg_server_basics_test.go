@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -12,7 +13,10 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	user, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	cases := []struct {
@@ -64,7 +68,10 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	user, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
@@ -154,9 +161,12 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	owner, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
-	receiver, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
+
+	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+	receiver, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
 	successfulName := "BiPhan.jkl"

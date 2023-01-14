@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -13,10 +14,17 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.SetupSuite()
 	err := suite.setupNames()
 	suite.Require().NoError(err)
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	nameAddress, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	addr := testAddresses[0]
+	nameAddr := testAddresses[1]
+
+	address, err := sdk.AccAddressFromBech32(addr)
+	suite.Require().NoError(err)
+
+	nameAddress, err := sdk.AccAddressFromBech32(nameAddr)
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
@@ -70,7 +78,12 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	suite.SetupSuite()
 	err := suite.setupNames()
 	suite.Require().NoError(err)
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	addr := testAddresses[0]
+	address, err := sdk.AccAddressFromBech32(addr)
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000))
@@ -104,7 +117,12 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	suite.SetupSuite()
 	err := suite.setupNames()
 	suite.Require().NoError(err)
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	addr := testAddresses[0]
+	address, err := sdk.AccAddressFromBech32(addr)
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000))
