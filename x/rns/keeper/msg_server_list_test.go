@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	types "github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -9,9 +10,12 @@ func (suite *KeeperTestSuite) TestListMsg() {
 	suite.SetupSuite()
 	msgSrvr, _, ctx := setupMsgServer(suite)
 
-	// Create name owner account
-	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
+
+	nameOwner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000)) // Send some coins to their account
 	coins := sdk.NewCoins(coin)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)

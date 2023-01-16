@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	types "github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -10,17 +11,23 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 	msgSrvr, _, ctx := setupMsgServer(suite)
 	keeper := suite.rnsKeeper
 
-	// Create name owner account
-	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
 	suite.Require().NoError(err)
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000))) // Send some coins to their account
+
+	nameOwner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
+	buyer, err := sdk.AccAddressFromBech32(testAddresses[1])
+	suite.Require().NoError(err)
+
+	brokeBuyer, err := sdk.AccAddressFromBech32(testAddresses[2])
+	suite.Require().NoError(err)
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000)))
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
 	suite.Require().NoError(err)
-	// Create buyer account
-	buyer, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
-	coins = sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(1000))) // Send insufficient amount amout
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, buyer, coins)
 	suite.Require().NoError(err)
 
 	// Init rns account and register rns
@@ -63,7 +70,6 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 			expErr:    true,
 			expErrMsg: "Name not for sale.",
 		},
-
 		{
 			testName: "name_not_found",
 			preRun: func() *types.MsgBuy {
@@ -124,17 +130,26 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 			expErr:    true,
 			expErrMsg: "cannot buy your own name",
 		},
-
 		{
 			testName: "not_enough_balance",
 			preRun: func() *types.MsgBuy {
 				return &types.MsgBuy{
-					Creator: buyer.String(),
+					Creator: brokeBuyer.String(),
 					Name:    fullName,
 				}
 			},
 			expErr:    true,
 			expErrMsg: "not enough balance",
+		},
+		{
+			testName: "successful_sale",
+			preRun: func() *types.MsgBuy {
+				return &types.MsgBuy{
+					Name:    "Nuggie.jkl",
+					Creator: buyer.String(),
+				}
+			},
+			expErr: false,
 		},
 	}
 
@@ -144,8 +159,7 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 
 			err := keeper.BuyName(suite.ctx, msg.Creator, msg.Name)
 			if tc.expErr {
-				suite.Require().Error(err)
-				suite.Require().Contains(err.Error(), tc.expErrMsg)
+				suite.Require().ErrorContains(err, tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 			}

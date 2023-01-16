@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -29,8 +30,11 @@ func (suite *KeeperTestSuite) TestDecimals() {
 func (suite *KeeperTestSuite) TestReward() {
 	suite.SetupSuite()
 
-	const signer = "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg"
-	const providerOne = "cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl"
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+	suite.Require().NoError(err)
+
+	signer := testAddresses[0]
+	providerOne := testAddresses[1]
 
 	dealOne := types.ActiveDeals{
 		Cid:           "cid1test",
@@ -54,7 +58,7 @@ func (suite *KeeperTestSuite) TestReward() {
 
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
 
-	err := suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
 	suite.NoError(err)
 
 	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
@@ -84,7 +88,10 @@ func (suite *KeeperTestSuite) TestReward() {
 func (suite *KeeperTestSuite) TestMultiReward() {
 	suite.SetupSuite()
 
-	const signer = "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg"
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	signer := testAddresses[0]
 
 	const l = 50
 
@@ -130,7 +137,7 @@ func (suite *KeeperTestSuite) TestMultiReward() {
 
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
 
-	err := suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
 	suite.NoError(err)
 
 	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")

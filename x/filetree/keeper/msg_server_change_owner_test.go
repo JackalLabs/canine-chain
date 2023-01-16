@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"strings"
 
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
@@ -12,32 +12,30 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
 	suite.Require().NoError(err)
 
-	bob, err := sdkTypes.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
-
-	charlie, err := sdkTypes.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
-	suite.Require().NoError(err)
+	alice := testAddresses[0]
+	bob := testAddresses[1]
+	charlie := testAddresses[2]
 
 	// set root folder for alice
-	aliceRootFolder, err := types.CreateRootFolder(alice.String())
+	aliceRootFolder, err := types.CreateRootFolder(alice)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
 	// set home folder for alice
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), strings.Split(alice.String(), ","), strings.Split(alice.String(), ","), "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), strings.Split(alice, ","), "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// put pepe in home of alice
-	pepejpg, err := types.CreateFolderOrFile(alice.String(), strings.Split(alice.String(), ","), strings.Split(alice.String(), ","), "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), strings.Split(alice, ","), "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
 	pepeMerklePath := types.MerklePath("s/home/pepe.jpg")
-	aliceAccountHash := types.HashThenHex(alice.String())
+	aliceAccountHash := types.HashThenHex(alice)
 	aliceOwnerAddress := types.MakeOwnerAddress(pepeMerklePath, aliceAccountHash)
 
 	// Let's query the file after it was set to confirm that alice is the owner
@@ -50,22 +48,22 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	aliceIsOwner := keeper.IsOwner(res.Files, alice.String())
+	aliceIsOwner := keeper.IsOwner(res.Files, alice)
 	suite.Require().Equal(aliceIsOwner, true)
 
 	// we make a pepe.jpg for charlie as well to show that alice cannot give charlie her 'pepe.jpg' if he already has one--i.e., duplicates are not permitted
 	// set root folder for charlie
-	charlieRootFolder, err := types.CreateRootFolder(charlie.String())
+	charlieRootFolder, err := types.CreateRootFolder(charlie)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *charlieRootFolder)
 
 	// set home folder for charlie
-	charlieHomeFolder, err := types.CreateFolderOrFile(charlie.String(), strings.Split(charlie.String(), ","), strings.Split(charlie.String(), ","), "s/home/")
+	charlieHomeFolder, err := types.CreateFolderOrFile(charlie, strings.Split(charlie, ","), strings.Split(charlie, ","), "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *charlieHomeFolder)
 
 	// put pepe in home of charlie
-	charliePepejpg, err := types.CreateFolderOrFile(charlie.String(), strings.Split(charlie.String(), ","), strings.Split(charlie.String(), ","), "s/home/pepe.jpg")
+	charliePepejpg, err := types.CreateFolderOrFile(charlie, strings.Split(charlie, ","), strings.Split(charlie, ","), "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *charliePepejpg)
 
@@ -78,10 +76,10 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 		{ // charlie can't give away a file he doesn't own
 			preRun: func() *types.MsgChangeOwner {
 				return types.NewMsgChangeOwner(
-					charlie.String(),
+					charlie,
 					pepeMerklePath,
 					aliceAccountHash,
-					types.HashThenHex(bob.String()),
+					types.HashThenHex(bob),
 				)
 			},
 			expErr:    true,
@@ -91,10 +89,10 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 		{ // alice can't give pepe.jpg to charlie because he already owns a pepe.jpg
 			preRun: func() *types.MsgChangeOwner {
 				return types.NewMsgChangeOwner(
-					alice.String(),
+					alice,
 					pepeMerklePath,
 					aliceAccountHash,
-					types.HashThenHex(charlie.String()),
+					types.HashThenHex(charlie),
 				)
 			},
 			expErr:    true,
@@ -104,10 +102,10 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 		{ // alice can't give away a file that doesn't exist
 			preRun: func() *types.MsgChangeOwner {
 				return types.NewMsgChangeOwner(
-					alice.String(),
+					alice,
 					types.MerklePath("s/home/ghost.jpg"),
 					aliceAccountHash,
-					types.HashThenHex(bob.String()),
+					types.HashThenHex(bob),
 				)
 			},
 			expErr:    true,
@@ -117,10 +115,10 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 		{ // alice can give pepe.jpg to bob
 			preRun: func() *types.MsgChangeOwner {
 				return types.NewMsgChangeOwner(
-					alice.String(),
+					alice,
 					pepeMerklePath,
 					aliceAccountHash,
-					types.HashThenHex(bob.String()),
+					types.HashThenHex(bob),
 				)
 			},
 			expErr: false,
@@ -153,7 +151,7 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 
 				// we will find a pepe.jpg that belongs to bob
 
-				bobAccountHash := types.HashThenHex(bob.String())
+				bobAccountHash := types.HashThenHex(bob)
 				bobOwnerAddress := types.MakeOwnerAddress(pepeMerklePath, bobAccountHash)
 
 				fileReq2 := types.QueryFileRequest{
@@ -163,10 +161,10 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 				res, error := suite.queryClient.Files(suite.ctx.Context(), &fileReq2)
 				suite.Require().NoError(error)
 
-				bobIsOwner := keeper.IsOwner(res.Files, bob.String())
+				bobIsOwner := keeper.IsOwner(res.Files, bob)
 				suite.Require().Equal(bobIsOwner, true)
 
-				aliceIsOwner := keeper.IsOwner(res.Files, alice.String())
+				aliceIsOwner := keeper.IsOwner(res.Files, alice)
 				suite.Require().Equal(aliceIsOwner, false)
 
 			}

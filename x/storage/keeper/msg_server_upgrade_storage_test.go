@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -10,14 +11,18 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 	msgSrvr, k, ctx := setupMsgServer(suite)
 
 	// Create test account
-	testAccount, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
+
+	testAccount := testAddresses[0]
+
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAccount, coins)
+	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
 
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
-		DepositAccount: testAccount.String(),
+		DepositAccount: testAccount,
 	})
 
 	cases := []struct {
@@ -36,13 +41,13 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
 					SpaceAvailable: 5000000000,
 					SpaceUsed:      4000000000,
-					Address:        testAccount.String(),
+					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
 			msg: types.MsgUpgradeStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "1440h",
 				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
@@ -59,13 +64,13 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
 					SpaceAvailable: 5000000000,
 					SpaceUsed:      4000000000,
-					Address:        testAccount.String(),
+					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
 			msg: types.MsgUpgradeStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "720h",
 				Bytes:        "4000000000",
 				PaymentDenom: "ujkl",
@@ -82,13 +87,13 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
 					SpaceAvailable: 10000000000,
 					SpaceUsed:      4000000000,
-					Address:        testAccount.String(),
+					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
 			msg: types.MsgUpgradeStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "2160h",
 				Bytes:        "8000000000",
 				PaymentDenom: "ujkl",
@@ -105,13 +110,13 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 					End:            suite.ctx.BlockTime().AddDate(0, 0, -30),
 					SpaceAvailable: 10000000000,
 					SpaceUsed:      4000000000,
-					Address:        testAccount.String(),
+					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
 			msg: types.MsgUpgradeStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "2160h",
 				Bytes:        "8000000000",
 				PaymentDenom: "ujkl",
@@ -132,7 +137,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			} else {
 				suite.Require().NoError(err)
 			}
-			k.RemoveStoragePaymentInfo(suite.ctx, testAccount.String())
+			k.RemoveStoragePaymentInfo(suite.ctx, testAccount)
 		})
 	}
 	suite.reset()

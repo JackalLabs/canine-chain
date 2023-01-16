@@ -11,6 +11,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	rns "github.com/jackalLabs/canine-chain/x/rns"
 	"github.com/jackalLabs/canine-chain/x/rns/keeper"
 	rnstestutil "github.com/jackalLabs/canine-chain/x/rns/testutil"
@@ -62,10 +63,12 @@ func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, goc
 }
 
 func (suite *KeeperTestSuite) setupNames() error {
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	if err != nil {
-		return err
-	}
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	address, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
 	account := authtypes.NewBaseAccountWithAddress(address)
 
 	for i := 0; i < 10; i++ {
@@ -90,7 +93,10 @@ func (suite *KeeperTestSuite) TestMakeBid() {
 	err := suite.setupNames()
 	suite.Require().NoError(err)
 
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	address, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	name := "name1.jkl"
@@ -114,7 +120,10 @@ func (suite *KeeperTestSuite) TestMakeBid() {
 func (suite *KeeperTestSuite) TestUpdateName() {
 	suite.SetupSuite()
 
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	address, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	account := authtypes.NewBaseAccountWithAddress(address)
@@ -149,7 +158,11 @@ func (suite *KeeperTestSuite) TestUpdateName() {
 
 func (suite *KeeperTestSuite) TestRemoveName() {
 	suite.SetupSuite()
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	address, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	account := authtypes.NewBaseAccountWithAddress(address)
@@ -181,7 +194,11 @@ func (suite *KeeperTestSuite) TestRemoveName() {
 
 func (suite *KeeperTestSuite) TestSetName() {
 	suite.SetupSuite()
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	address, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	account := authtypes.NewBaseAccountWithAddress(address)

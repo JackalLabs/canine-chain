@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"fmt"
 
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
@@ -12,8 +12,10 @@ func (suite *KeeperTestSuite) TestMsgPostKey() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
+
+	alice := testAddresses[0]
 
 	privateKey, err := types.MakePrivateKey("alice") // clientCtx.FromName in the CLI will be alice's keyring ID (alice), not the full account address
 	suite.Require().NoError(err)
@@ -29,7 +31,7 @@ func (suite *KeeperTestSuite) TestMsgPostKey() {
 		{
 			preRun: func() *types.MsgPostkey {
 				return types.NewMsgPostkey(
-					alice.String(),
+					alice,
 					fmt.Sprintf("%x", pubKey),
 				)
 			},

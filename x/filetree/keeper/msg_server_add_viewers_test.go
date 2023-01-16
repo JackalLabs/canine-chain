@@ -13,6 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
@@ -21,11 +22,11 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	bob, err := sdkTypes.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	alice := testAddresses[0]
+	bob := testAddresses[1]
 
 	// Let it be that bob has posted a public key after signing
 	// with his keyring backend using the CLI. Below is a simulation of a CLI client environment
@@ -51,32 +52,32 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 
 	bobPubKey := bobPrivateKey.PublicKey.Bytes(false) // to hex
 	pubKeyStruct := types.Pubkey{
-		Address: bob.String(),
+		Address: bob,
 		Key:     fmt.Sprintf("%x", bobPubKey),
 	}
 	suite.filetreeKeeper.SetPubkey(suite.ctx, pubKeyStruct)
 
 	// set root folder for alice
-	aliceRootFolder, err := types.CreateRootFolder(alice.String())
+	aliceRootFolder, err := types.CreateRootFolder(alice)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
-	aliceViewerID := strings.Split(alice.String(), ",")
+	aliceViewerID := strings.Split(alice, ",")
 	aliceEditorID := aliceViewerID
 
 	// set home folder for alice
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 	pepeMerklePath := types.MerklePath("s/home/pepe.jpg")
-	aliceAccountHash := types.HashThenHex(alice.String())
+	aliceAccountHash := types.HashThenHex(alice)
 	ownerAddress := types.MakeOwnerAddress(pepeMerklePath, aliceAccountHash)
-	bobViewerAddress := keeper.MakeViewerAddress(pepejpg.TrackingNumber, bob.String())
+	bobViewerAddress := keeper.MakeViewerAddress(pepejpg.TrackingNumber, bob)
 
 	// Let it be that alice has encrypted pepe using the web client, and she now has an AES IV and Key for pepe
 
@@ -85,7 +86,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	// If alice wants to share pepe with bob, she will take bob's public key from chain and use ECIES to encrypt pepeAESKeyAndIV
 
 	pubKeyReq := types.QueryPubkeyRequest{
-		Address: bob.String(),
+		Address: bob,
 	}
 
 	res, err := suite.queryClient.Pubkey(suite.ctx.Context(), &pubKeyReq)
@@ -106,7 +107,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 		{ // alice adds a viewer
 			preRun: func() *types.MsgAddViewers {
 				return types.NewMsgAddViewers(
-					alice.String(),
+					alice,
 					bobViewerAddress,
 					fmt.Sprintf("%x", encryptedPepeAESKeyAndIV),
 					pepeMerklePath,
@@ -119,7 +120,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 		{ // alice fails to add a viewer to a non existent file
 			preRun: func() *types.MsgAddViewers {
 				return types.NewMsgAddViewers(
-					alice.String(),
+					alice,
 					bobViewerAddress,
 					fmt.Sprintf("%x", encryptedPepeAESKeyAndIV),
 					types.MerklePath("s/home/ghost.jpg"),
@@ -133,7 +134,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 		{ // bob doesn't own pepe so he can't share it
 			preRun: func() *types.MsgAddViewers {
 				return types.NewMsgAddViewers(
-					bob.String(),
+					bob,
 					bobViewerAddress,
 					fmt.Sprintf("%x", encryptedPepeAESKeyAndIV),
 					pepeMerklePath,
@@ -168,7 +169,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				validViewer, err := keeper.HasViewingAccess(res.Files, bob.String())
+				validViewer, err := keeper.HasViewingAccess(res.Files, bob)
 				suite.Require().NoError(err)
 				suite.Require().Equal(validViewer, true)
 
