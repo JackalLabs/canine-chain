@@ -16,6 +16,8 @@ service Msg {
   rpc AddRecord(MsgAddRecord) returns (MsgAddRecordResponse);
   rpc DelRecord(MsgDelRecord) returns (MsgDelRecordResponse);
   rpc Init(MsgInit) returns (MsgInitResponse);
+  rpc Update(MsgUpdate) returns (MsgUpdateResponse);
+
 }
 
 message MsgRegister {
@@ -26,6 +28,14 @@ message MsgRegister {
 }
 
 message MsgRegisterResponse {}
+
+message MsgUpdate {
+  string creator = 1;
+  string name = 2;
+  string data = 3;
+}
+
+message MsgUpdateResponse {}
 
 message MsgBid {
   string creator = 1;

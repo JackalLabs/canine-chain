@@ -42,7 +42,7 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 	suite.Require().True(found)
 
 	// Put it up for sale
-	salePrice := "1000000"
+	salePrice := "1000000ujkl"
 	msgList := types.MsgList{
 		Creator: nameOwner.String(),
 		Name:    fullName,

@@ -260,3 +260,90 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 		})
 	}
 }
+
+func (suite *KeeperTestSuite) TestMsgUpdate() {
+	suite.SetupSuite()
+
+	msgSrvr, _, context := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+	suite.Require().NoError(err)
+
+	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
+	notowner, err := sdk.AccAddressFromBech32(testAddresses[1])
+	suite.Require().NoError(err)
+
+	successfulName := "BiPhan.jkl"
+
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", "2")
+	suite.Require().NoError(err)
+
+	const testdata = "{\"test\":\"test\"}"
+
+	cases := []struct {
+		preRun    func() *types.MsgUpdate
+		expErr    bool
+		expErrMsg string
+		name      string
+	}{
+		{
+			preRun: func() *types.MsgUpdate {
+				return types.NewMsgUpdate(
+					owner.String(),
+					successfulName,
+					testdata,
+				)
+			},
+			expErr: false,
+			name:   "successful update",
+		},
+		{
+			preRun: func() *types.MsgUpdate {
+				return types.NewMsgUpdate(
+					notowner.String(),
+					successfulName,
+					testdata,
+				)
+			},
+			expErr:    true,
+			expErrMsg: "not your name: unauthorized",
+			name:      "not owner",
+		},
+		{
+			preRun: func() *types.MsgUpdate {
+				return types.NewMsgUpdate(
+					owner.String(),
+					"nonExistentName.jkl",
+					testdata,
+				)
+			},
+			expErr:    true,
+			expErrMsg: "name does not exist or has expired: not found",
+			name:      "name doesn't exist",
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			msg := tc.preRun()
+			suite.Require().NoError(err)
+			res, err := msgSrvr.Update(context, msg)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+				suite.Require().EqualValues(types.MsgUpdateResponse{}, *res)
+
+			}
+		})
+	}
+}
