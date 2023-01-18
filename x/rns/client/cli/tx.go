@@ -11,6 +11,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
+//nolint:unused
 var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 
 //nolint:unused
@@ -40,6 +41,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdAddRecord())
 	cmd.AddCommand(CmdDelRecord())
 	cmd.AddCommand(CmdInit())
+	cmd.AddCommand(CmdUpdate())
 
 	return cmd
 }
