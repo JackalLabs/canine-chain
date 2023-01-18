@@ -46,14 +46,12 @@ func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
 
 	seller, _ := sdk.AccAddressFromBech32(sale.Owner)
 
-	price, ok := sdk.NewIntFromString(sale.Price)
-
-	if !ok {
-		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Price is not a valid number.")
+	price, err := sdk.ParseCoinNormalized(sale.Price)
+	if err != nil {
+		return sdkerrors.Wrap(err, "Price is not a valid coin.")
 	}
 
-	coin := sdk.NewCoin("ujkl", price)
-	coins := sdk.NewCoins(coin)
+	coins := sdk.NewCoins(price)
 
 	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, buyer, types.ModuleName, coins)
 	if err != nil {
