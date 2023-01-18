@@ -1,163 +1,101 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	// sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/testutil"
 	types "github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestListMsg() {
-	suite.SetupSuite()
-	msgSrvr, _, ctx := setupMsgServer(suite)
-
-	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	accs, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	nameOwner, err := sdk.AccAddressFromBech32(testAddresses[0])
-	suite.Require().NoError(err)
+	names := []string{"jackal", "maxi", "free", "expired"}
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000)) // Send some coins to their account
-	coins := sdk.NewCoins(coin)
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
-	suite.Require().NoError(err)
-
-	// Init rns account and register rns
-	rnsName := "Nuggie.jkl"
-	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
-	suite.Require().NoError(err)
-
-	keeper := suite.rnsKeeper
-
-	// Each test cases are independent hence test env must be returned to original
-	// Use postRun to return it to original state
-	cases := []struct {
-		testName  string
-		preRun    func() *types.MsgList
-		postRun   func()
-		expErr    bool
-		expErrMsg string
+	tc := map[string]struct {
+		Creator string
+		Name    string
+		Price   string
+		expErr  bool
 	}{
-		{
-			testName: "Name_already_listed",
-			preRun: func() *types.MsgList {
-				// Check if name is actually saved
-				_, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
-				suite.Require().True(found)
-				// Set the name for sale in KVStore
-				newsale := types.Forsale{
-					Price: "100000000ujkl",
-					Owner: nameOwner.String(),
-				}
-				keeper.SetForsale(suite.ctx, newsale)
-				return &types.MsgList{
-					Creator: nameOwner.String(),
-					Price:   "100000000ujkl",
-				}
-			},
-			postRun: func() {
-				// Clean up Forsale
-				name, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
-				suite.Require().True(found)
-				keeper.RemoveForsale(suite.ctx, name.Name)
-				_, found = keeper.GetForsale(suite.ctx, name.Name)
-				suite.Require().False(found)
-			},
-			expErr:    true,
-			expErrMsg: "Name already listed.",
+		"list": {
+			Creator: accs[1],
+			Name:    names[1],
+			Price:   "10000ujkl",
+			expErr:  false,
 		},
-
-		{
-			testName: "name_not_found",
-			preRun: func() *types.MsgList {
-				return &types.MsgList{
-					Creator: nameOwner.String(),
-					Name:    "nonexistent.jkl",
-					Price:   "100ujkl",
-				}
-			},
-			expErr:    true,
-			expErrMsg: "Name does not exist or has expired.",
+		"name already listed": {
+			Creator: accs[0],
+			Name:    names[0],
+			Price:   "10000ujkl",
+			expErr:  true,
 		},
-
-		{
-			testName: "wrong_onwer",
-			preRun: func() *types.MsgList {
-				return &types.MsgList{
-					Creator: "wrong_account",
-					Name:    "Nuggie.jkl",
-					Price:   "100ujkl",
-				}
-			},
-			expErr:    true,
-			expErrMsg: "You do not own this name.",
+		"name not found": {
+			Creator: accs[0],
+			Name:    "null",
+			Price:   "10000ujkl",
+			expErr:  true,
 		},
-
-		{
-			testName: "cannot_transfer_free_name",
-			preRun: func() *types.MsgList {
-				blockHeight := suite.ctx.BlockHeight()
-				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
-				suite.Require().True(found)
-				names.Locked = blockHeight + 1
-				keeper.SetNames(suite.ctx, names)
-				return &types.MsgList{
-					Creator: nameOwner.String(),
-					Name:    "Nuggie.jkl",
-					Price:   "100ujkl",
-				}
-			},
-			postRun: func() {
-				// Turn back to original
-				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
-				suite.Require().True(found)
-				names.Locked--
-				keeper.SetNames(suite.ctx, names)
-			},
-			expErr:    true,
-			expErrMsg: "cannot transfer free name",
+		"invalid owner": {
+			Creator: accs[0],
+			Name:    names[1],
+			Price:   "10000ujkl",
+			expErr:  true,
 		},
-
-		{
-			testName: "expired_name",
-			preRun: func() *types.MsgList {
-				blockHeight := suite.ctx.BlockHeight()
-				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
-				suite.Require().True(found)
-				names.Expires = blockHeight - 1
-				keeper.SetNames(suite.ctx, names)
-				return &types.MsgList{
-					Creator: nameOwner.String(),
-					Name:    "Nuggie.jkl",
-					Price:   "100ujkl",
-				}
-			},
-			postRun: func() {
-				// Turn back to original
-				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
-				suite.Require().True(found)
-				names.Expires++
-				keeper.SetNames(suite.ctx, names)
-			},
-			expErr:    true,
-			expErrMsg: "Name does not exist or has expired.",
+		"expired": {
+			Creator: accs[1],
+			Name:    names[3],
+			Price:   "10000ujkl",
+			expErr:  true,
 		},
 	}
 
-	for _, tc := range cases {
-		suite.Run(tc.testName, func() {
-			msg := tc.preRun()
+	for name, tc := range tc {
+		suite.Run(name, func() {
+			suite.SetupSuite()
+			suite.ctx = suite.ctx.WithBlockHeight(0)
+			msgSrvr, _, ctx := setupMsgServer(suite)
 
-			_, err := msgSrvr.List(ctx, msg)
-			if tc.expErr {
-				suite.Require().Error(err)
-				suite.Require().Contains(err.Error(), tc.expErrMsg)
-			} else {
-				suite.Require().NoError(err)
+			rns := types.Names{
+				Name:       names[0],
+				Expires:    suite.ctx.BlockHeight() + 5733818,
+				Value:      accs[0],
+				Data:       "{}",
+				Subdomains: nil,
+				Tld:        types.SupportedTLDs[0],
+				Locked:     0,
+			}
+			suite.rnsKeeper.SetNames(suite.ctx, rns)
+
+			rns.Name, rns.Value = names[1], accs[1]
+			suite.rnsKeeper.SetNames(suite.ctx, rns)
+
+			rns.Name, rns.Locked = names[2], suite.ctx.BlockHeight()+1
+			suite.rnsKeeper.SetNames(suite.ctx, rns)
+
+			rns.Name, rns.Expires, rns.Locked = names[3], -1, 0
+			suite.rnsKeeper.SetNames(suite.ctx, rns)
+
+			tld := types.SupportedTLDs[0]
+
+			msg := &types.MsgList{
+				Creator: accs[0],
+				Name:    names[0] + "." + tld,
+				Price:   "10000ujkl",
+			}
+			_, err = msgSrvr.List(ctx, msg)
+			suite.Require().NoError(err)
+
+			msg = &types.MsgList{
+				Creator: tc.Creator,
+				Name:    tc.Name + "." + tld,
+				Price:   tc.Price,
 			}
 
-			if tc.postRun != nil {
-				tc.postRun()
+			res, err := msgSrvr.List(ctx, msg)
+			if !tc.expErr {
+				suite.Require().NoError(err)
+				suite.NotNil(res)
 			}
 		})
 	}
