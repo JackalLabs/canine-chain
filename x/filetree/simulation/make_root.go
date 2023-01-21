@@ -8,6 +8,8 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
 func SimulateMsgMakeRoot(
@@ -22,8 +24,30 @@ func SimulateMsgMakeRoot(
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the MakeFolder simulation
+		msg, err := types.CreateMsgMakeRoot(simAccount.Address.String())
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate msg"), nil, err
+		}
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "MakeFolder simulation not implemented"), nil, nil
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+		}
+
+		txCtx := simulation.OperationInput{
+			R:             r,
+			App:           app,
+			TxGen:         simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:           nil,
+			Msg:           msg,
+			MsgType:       msg.Type(),
+			Context:       ctx,
+			SimAccount:    simAccount,
+			AccountKeeper: ak,
+			ModuleName:    types.ModuleName,
+		}
+
+		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }
