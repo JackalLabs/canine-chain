@@ -157,14 +157,14 @@ replace (
 	// use cosmos-flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
+	// use Informal System's fork of Tendermint Core
+	//
+	// It seems that the official repo is being abandoned and now Informal is
+	// taking over the development with their fork:
+	// https://github.com/tendermint/tendermint/issues/9972
+	github.com/tendermint/tendermint => github.com/informalsystems/tendermint v0.34.23
+	github.com/tendermint/tm-db => github.com/informalsystems/tm-db v0.6.7
+
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
-
-	// use Informal System's fork of Tendermint Core
-    //
-    // It seems that the official repo is being abandoned and now Informal is
-    // taking over the development with their fork:
-    // https://github.com/tendermint/tendermint/issues/9972
-    github.com/tendermint/tendermint => github.com/informalsystems/tendermint v0.34.23
-    github.com/tendermint/tm-db => github.com/informalsystems/tm-db v0.6.7
 )
