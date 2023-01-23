@@ -24,14 +24,14 @@ require (
 	github.com/tendermint/tm-db v0.6.7
 	github.com/wealdtech/go-merkletree v1.0.0
 	github.com/zondax/hid v0.9.1 // indirect
-	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a
-	google.golang.org/grpc v1.50.1
+	google.golang.org/genproto v0.0.0-20230112194545-e10362b5ecf9
+	google.golang.org/grpc v1.52.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
 	github.com/CosmWasm/wasmvm v1.1.1 // indirect
-	github.com/cosmos/cosmos-proto v1.0.0-alpha8 // indirect
+	github.com/cosmos/cosmos-proto v1.0.0-beta.1 // indirect
 	github.com/cosmos/gogoproto v1.4.3
 	github.com/cosmos/iavl v0.19.4 // indirect
 	github.com/creachadair/taskgroup v0.3.2 // indirect
@@ -47,8 +47,8 @@ require (
 )
 
 require (
-	cosmossdk.io/api v0.2.4
-	cosmossdk.io/core v0.3.2
+	cosmossdk.io/api v0.2.6
+	cosmossdk.io/core v0.5.0
 	github.com/golang/mock v1.6.0
 )
 
@@ -132,10 +132,10 @@ require (
 	github.com/tendermint/go-amino v0.16.0 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
-	golang.org/x/net v0.1.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
-	golang.org/x/term v0.1.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/term v0.4.0 // indirect
+	golang.org/x/text v0.6.0 // indirect
 	google.golang.org/protobuf v1.28.2-0.20220831092852-f930b1dc76e8 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -157,14 +157,14 @@ replace (
 	// use cosmos-flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
+	// use Informal System's fork of Tendermint Core
+	//
+	// It seems that the official repo is being abandoned and now Informal is
+	// taking over the development with their fork:
+	// https://github.com/tendermint/tendermint/issues/9972
+	github.com/tendermint/tendermint => github.com/informalsystems/tendermint v0.34.23
+	github.com/tendermint/tm-db => github.com/informalsystems/tm-db v0.6.7
+
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
-
-	// use Informal System's fork of Tendermint Core
-    //
-    // It seems that the official repo is being abandoned and now Informal is
-    // taking over the development with their fork:
-    // https://github.com/tendermint/tendermint/issues/9972
-    github.com/tendermint/tendermint => github.com/informalsystems/tendermint v0.34.23
-    github.com/tendermint/tm-db => github.com/informalsystems/tm-db v0.6.7
 )
