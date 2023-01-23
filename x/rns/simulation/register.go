@@ -11,6 +11,17 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
+const charset = "abcdefghijklmnopqrstuvwxyz" +
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+func StringWithCharset(r *rand.Rand, length int, charset string) string {
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[r.Intn(len(charset))]
+	}
+	return string(b)
+}
+
 func SimulateMsgRegister(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
@@ -25,17 +36,12 @@ func SimulateMsgRegister(
 
 		// generating a random name
 		// generating a random TLD
-		tldIndex := simtypes.RandIntBetween(r, 0, len(types.SupportedTLDs)+1)
+		tldIndex := simtypes.RandIntBetween(r, 0, len(types.SupportedTLDs))
 		tld := types.SupportedTLDs[tldIndex]
 
 		// generating a random name
 		nameLength := simtypes.RandIntBetween(r, 1, 5)
-		var name string
-		i := 0
-		for i < nameLength {
-			name += "j"
-			i++
-		}
+		name := StringWithCharset(r, nameLength, charset)
 
 		fullDomain := name + "." + tld
 		fmt.Print(fullDomain)
