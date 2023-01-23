@@ -9,6 +9,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types/sha512"
 	merkletree "github.com/wealdtech/go-merkletree"
 )
 
@@ -52,7 +53,7 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 
 	data = append(data, hashName)
 
-	tree, err := merkletree.New(data)
+	tree, err := merkletree.NewUsing(data, sha512.New(), []byte{})
 	if err != nil {
 		return "", "", err
 	}
@@ -105,7 +106,7 @@ func makeContract(file TestFile) (string, string, error) {
 
 	list = append(list, hashName)
 
-	t, err := merkletree.New(list)
+	t, err := merkletree.NewUsing(list, sha512.New(), []byte{})
 	if err != nil {
 		return "", "", err
 	}
