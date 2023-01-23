@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -22,7 +23,22 @@ func SimulateMsgRegister(
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the Register simulation
+		// generating a random name
+		// generating a random TLD
+		tldIndex := simtypes.RandIntBetween(r, 0, len(types.SupportedTLDs)+1)
+		tld := types.SupportedTLDs[tldIndex]
+
+		// generating a random name
+		nameLength := simtypes.RandIntBetween(r, 1, 5)
+		var name string
+		i := 0
+		for i < nameLength {
+			name += "j"
+			i++
+		}
+
+		fullDomain := name + "." + tld
+		fmt.Print(fullDomain)
 
 		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Register simulation not implemented"), nil, nil
 	}
