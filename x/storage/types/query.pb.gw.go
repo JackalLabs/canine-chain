@@ -1668,41 +1668,41 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "params"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Contracts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "contracts", "cid"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Contracts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "contracts", "cid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ContractsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "contracts"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ContractsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "contracts"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ActiveDeals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "active_deals", "cid"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ActiveDeals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "active_deals", "cid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ActiveDealsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "active_deals"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ActiveDealsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "active_deals"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Providers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "providers", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Providers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "providers", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ProvidersAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "providers"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ProvidersAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "providers"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Freespace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "freespace", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Freespace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "freespace", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_FindFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "find_file", "fid"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_FindFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "find_file", "fid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Strays_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "strays", "cid"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Strays_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "strays", "cid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_StraysAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "strays"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_StraysAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "strays"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GetClientFreeSpace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_client_free_space", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GetClientFreeSpace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_client_free_space", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_FidCid_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "fid_cid", "fid"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_FidCid_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "fid_cid", "fid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_FidCidAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "fid_cid"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_FidCidAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "fid_cid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GetPayData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_pay_data", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GetPayData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_pay_data", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_StoragePaymentInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "payment_info", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_StoragePaymentInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "payment_info", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_StoragePaymentInfoAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "payment_info"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_StoragePaymentInfoAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "payment_info"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_FileUploadCheck_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "file_upload_check"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_FileUploadCheck_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "file_upload_check"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

@@ -13,16 +13,6 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-const charset = "abcdefghijklmnopqrstuvwxyz"
-
-func StringWithCharset(r *rand.Rand, length int, charset string) string {
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[r.Intn(len(charset))]
-	}
-	return string(b)
-}
-
 func SimulateMsgRegister(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
@@ -41,13 +31,8 @@ func SimulateMsgRegister(
 		// generating a random name
 		nameLength := simtypes.RandIntBetween(r, 1, 10)
 		name := StringWithCharset(r, nameLength, charset)
-
-		// calculating the owner
-		owner, err := sdk.AccAddressFromBech32(string(simAccount.Address))
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Can't parse sender"), nil, nil
-		}
-
+		fullDomain := name + "." + tld // for debugging purposes
+		fmt.Print(fullDomain)
 		// generating a random time in years
 		numYears := simtypes.RandIntBetween(r, 1, 15)
 		blockHeight := ctx.BlockTime()
@@ -56,7 +41,7 @@ func SimulateMsgRegister(
 		// checking if the domain already exists on-chain
 		whois, isFound := k.GetNames(ctx, name, tld)
 		if isFound {
-			if whois.Value == owner.String() {
+			if whois.Value == msg.Creator {
 				time = whois.Expires + time
 			} else if blockHeight.Unix() < whois.Expires {
 				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Name is already registered"), nil, nil
@@ -66,7 +51,7 @@ func SimulateMsgRegister(
 		}
 
 		// calculating the necessary costs to rent the domain
-		domainPrice, err := GetCostOfName(name, tld)
+		domainPrice, err := keeper.GetCostOfName(name, tld)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Grabbing cost of name"), nil, nil
 		}
