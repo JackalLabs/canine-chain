@@ -964,25 +964,25 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "params"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Names_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "names", "index"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Names_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "names", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_NamesAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "names"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_NamesAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "names"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Bids_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "bids", "index"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Bids_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "bids", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BidsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "bids"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_BidsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "bids"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Forsale_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "forsale", "name"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Forsale_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "forsale", "name"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ForsaleAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "forsale"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ForsaleAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "forsale"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Init_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "init", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Init_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "init", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_InitAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "init"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_InitAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "rns", "init"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ListOwnedNames_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "list_owned_names", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ListOwnedNames_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "rns", "list_owned_names", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
