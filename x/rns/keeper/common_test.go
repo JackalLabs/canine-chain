@@ -94,4 +94,8 @@ func trackMockBalances(bankKeeper *rnstestutil.MockBankKeeper) {
 	bankKeeper.EXPECT().GetAllBalances(gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, addr sdk.AccAddress) sdk.Coins {
 		return balances[addr.String()]
 	}).AnyTimes()
+	bankKeeper.EXPECT().GetBalance(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin {
+		amt := balances[addr.String()].AmountOf(denom)
+		return sdk.NewCoin(denom, amt)
+	}).AnyTimes()
 }
