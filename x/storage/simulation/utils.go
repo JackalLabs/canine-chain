@@ -48,7 +48,7 @@ func GetMerkleProof() (item, jProof string) {
 
 	data = append(data, hashName)
 
-	tree, err := merkle.New(data)
+	tree, err := merkle.NewUsing(data, sha3.New512(), false)
 	if err != nil {
 		panic(err)
 	}
@@ -107,7 +107,7 @@ func GetMerkleRoot() string {
 
 	data = append(data, hashName)
 
-	tree, err := merkle.New(data)
+	tree, err := merkle.NewUsing(data, sha3.New512(), false)
 	if err != nil {
 		panic(err)
 	}
