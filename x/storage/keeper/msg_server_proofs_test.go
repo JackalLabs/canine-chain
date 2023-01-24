@@ -9,8 +9,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
-	"github.com/jackalLabs/canine-chain/x/storage/types/sha512"
 	merkletree "github.com/wealdtech/go-merkletree"
+	"github.com/wealdtech/go-merkletree/sha3"
 )
 
 type TestFile struct {
@@ -53,7 +53,7 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 
 	data = append(data, hashName)
 
-	tree, err := merkletree.NewUsing(data, sha512.New(), []byte{})
+	tree, err := merkletree.NewUsing(data, sha3.New512(), false)
 	if err != nil {
 		return "", "", err
 	}
@@ -65,7 +65,7 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 	}
 	ditem := h.Sum(nil)
 
-	proof, err := tree.GenerateProof(ditem)
+	proof, err := tree.GenerateProof(ditem, 0)
 	if err != nil {
 		return "", "", err
 	}
@@ -79,7 +79,7 @@ func CreateMerkleForProof(file TestFile) (string, string, error) {
 
 	k, _ := hex.DecodeString(e)
 
-	verified, err := merkletree.VerifyProof(ditem, proof, k)
+	verified, err := merkletree.VerifyProofUsing(ditem, false, proof, [][]byte{k}, sha3.New512())
 	if err != nil {
 		return "", "", err
 	}
@@ -106,7 +106,7 @@ func makeContract(file TestFile) (string, string, error) {
 
 	list = append(list, hashName)
 
-	t, err := merkletree.NewUsing(list, sha512.New(), []byte{})
+	t, err := merkletree.NewUsing(list, sha3.New512(), false)
 	if err != nil {
 		return "", "", err
 	}
