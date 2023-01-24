@@ -51,12 +51,15 @@ func SimulateMsgRegister(
 		}
 
 		// calculating the necessary costs to rent the domain
-		domainPrice, err := keeper.GetCostOfName(name, tld)
+		domainCost, err := keeper.GetCostOfName(name, tld)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Grabbing cost of name"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Could not grab the cost of name"), nil, nil
 		}
 		var cost sdk.Int
-		cost = sdk.NewInt(domainPrice)
+		cost = sdk.NewInt(domainCost)
+
+		var price sdk.Int
+		price = sdk.NewInt(cost.Int64() * int64(numYears))
 
 		// ensuring the account has enough coins to buy the domain
 		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
@@ -65,8 +68,8 @@ func SimulateMsgRegister(
 		// The other option is genesis.json but it is not possible to sign transactions
 		// due to private and pubkeys are generated independent of addresses
 		// resulting pubkey does not match signer address error.
-		if jBalance.Amount.LTE(cost) {
-			c := sdk.NewCoin("ujkl", cost)
+		if jBalance.Amount.LTE(price) {
+			c := sdk.NewCoin("ujkl", price)
 
 			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
 			if err != nil {
@@ -80,7 +83,7 @@ func SimulateMsgRegister(
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
-		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
+		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
 
 		var fees sdk.Coins
 
