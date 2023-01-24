@@ -1,6 +1,6 @@
 package sha512
 
-import "github.com/tendermint/crypto/sha3"
+import "golang.org/x/crypto/blake2b"
 
 // SHA512 is the SHA512 hashing method
 type SHA512 struct{}
@@ -12,6 +12,6 @@ func New() *SHA512 {
 
 // Hash generates a SHA512 hash from a byte array
 func (h *SHA512) Hash(data []byte) []byte {
-	hash := sha3.Sum512(data)
+	hash := blake2b.Sum512(data)
 	return hash[:]
 }

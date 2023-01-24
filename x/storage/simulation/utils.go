@@ -13,6 +13,7 @@ import (
 
 	sdksim "github.com/cosmos/cosmos-sdk/types/simulation"
 	merkle "github.com/wealdtech/go-merkletree"
+	"github.com/wealdtech/go-merkletree/sha3"
 )
 
 const (
@@ -59,7 +60,7 @@ func GetMerkleProof() (item, jProof string) {
 	}
 	hashedItem := h.Sum(nil)
 
-	proof, err := tree.GenerateProof(hashedItem)
+	proof, err := tree.GenerateProof(hashedItem, 0)
 	if err != nil {
 		panic(err)
 	}
@@ -79,7 +80,7 @@ func GetMerkleProof() (item, jProof string) {
 		panic(err)
 	}
 
-	validProof, err := merkle.VerifyProof(hashedItem, proof, hex)
+	validProof, err := merkle.VerifyProofUsing(hashedItem, false, proof, [][]byte{hex}, sha3.New512())
 	if err != nil {
 		panic(err)
 	}
