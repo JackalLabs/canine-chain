@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -74,6 +75,11 @@ func SimulateMsgRegister(
 
 		// ensuring the account has enough coins to buy the domain
 		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
+		// It is impossible to specify default bond denom through param.json
+		// to naturally fund the accounts with ujkl.
+		// The other option is genesis.json but it is not possible to sign transactions
+		// due to private and pubkeys are generated independent of addresses
+		// resulting pubkey does not match signer address error.
 		if jBalance.Amount.LTE(cost) {
 			c := sdk.NewCoin("ujkl", cost)
 
@@ -100,6 +106,10 @@ func SimulateMsgRegister(
 				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
 			}
 		}
+		// filling the appropriate message fields
+		msg.Data = ""
+		msg.Years = string(fmt.Sprint(numYears))
+		msg.Name = name + "." + tld
 
 		// generating the transaction
 		txCtx := simulation.OperationInput{
