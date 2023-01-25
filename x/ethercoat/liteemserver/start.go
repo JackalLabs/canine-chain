@@ -30,18 +30,9 @@ func AddCommands(rootCmd *cobra.Command, defaultNodeHome string, appCreator type
 // Tendermint.
 func StartCmd(appCreator types.AppCreator, defaultNodeHome string) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "start-ethcoat",
+		Use:   "ethcoat",
 		Short: "Run the JSON-RPC Server",
 		Long:  `Running the JSON-RPC Server`,
-		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			serverCtx := GetServerContextFromCmd(cmd)
-
-			// Bind flags to the Context's Viper so the app construction can set
-			// options accordingly.
-			serverCtx.Viper.BindPFlags(cmd.Flags())
-
-			return nil
-		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			serverCtx := GetServerContextFromCmd(cmd)
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -56,7 +47,7 @@ func StartCmd(appCreator types.AppCreator, defaultNodeHome string) *cobra.Comman
 			}
 
 			serverCtx.Logger.Debug(fmt.Sprintf("received quit signal: %d", errCode.Code))
-			return nil
+			return err
 		},
 	}
 	// TODO: Add cmd flags
@@ -68,7 +59,7 @@ func startConfig(ctx *sdkserver.Context, clientCtx client.Context, appCreator ty
 	cfg := ctx.Config
 	home := cfg.RootDir
 
-	emconfig := emconfig.GetConfig(ctx.Viper)
+	emcfg := emconfig.DefaultConfig()
 
 	genDocProvider := node.DefaultGenesisDocProviderFunc(cfg)
 
@@ -77,7 +68,7 @@ func startConfig(ctx *sdkserver.Context, clientCtx client.Context, appCreator ty
 		httpSrvDone chan struct{}
 	)
 
-	if emconfig.JSONRPC.Enable {
+	if emcfg.JSONRPC.Enable {
 		genDoc, err := genDocProvider()
 		if err != nil {
 			return err
@@ -89,7 +80,7 @@ func startConfig(ctx *sdkserver.Context, clientCtx client.Context, appCreator ty
 
 		tmEndpoint := "/websocket"
 		tmRPCAddr := cfg.RPC.ListenAddress
-		httpSrv, httpSrvDone, err = StartJSONRPC(ctx, clientCtx, tmRPCAddr, tmEndpoint, &emconfig)
+		httpSrv, httpSrvDone, err = StartJSONRPC(ctx, clientCtx, tmRPCAddr, tmEndpoint, emcfg)
 		if err != nil {
 			return err
 		}
