@@ -37,6 +37,7 @@ import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	"github.com/jackalLabs/canine-chain/app"
 	"github.com/jackalLabs/canine-chain/app/params"
+	ethcoatServer "github.com/jackalLabs/canine-chain/x/ethercoat/liteemserver"
 )
 
 // NewRootCmd creates a new root command for wasmd. It is called once in the
@@ -113,7 +114,9 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 	ac := appCreator{
 		encCfg: encodingConfig,
 	}
+
 	server.AddCommands(rootCmd, app.DefaultNodeHome, ac.newApp, ac.appExport, addModuleInitFlags)
+	ethcoatServer.AddCommands(rootCmd, app.DefaultNodeHome, ac.newApp, ac.appExport, addModuleInitFlags)
 
 	// add keybase, auxiliary RPC, query, and tx child commands
 	rootCmd.AddCommand(

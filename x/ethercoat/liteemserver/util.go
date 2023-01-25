@@ -1,75 +1,80 @@
 package liteemserver
 
 import (
-	"net/http"
-	"time"
+	"io"
+	"os"
+	"os/signal"
+	"path/filepath"
+	"strconv"
+	"syscall"
 
-	"github.com/gorilla/mux"
-	"github.com/improbable-eng/grpc-web/go/grpcweb"
+	"github.com/rs/zerolog/log"
+
+	sdkserver "github.com/cosmos/cosmos-sdk/server"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	tmcfg "github.com/tendermint/tendermint/config"
-
 	tmlog "github.com/tendermint/tendermint/libs/log"
-	rpcclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
+	dbm "github.com/tendermint/tm-db"
 )
 
-// adding TmWS functionality
-func ConnectTmWS(tmRPCAddr, tmEndpoint string, logger tmlog.Logger) *rpcclient.WSClient {
-	tmWsClient, err := rpcclient.NewWS(tmRPCAddr, tmEndpoint,
-		rpcclient.MaxReconnectAttempts(256),
-		rpcclient.ReadWait(120*time.Second),
-		rpcclient.WriteWait(120*time.Second),
-		rpcclient.PingPeriod(50*time.Second),
-		rpcclient.OnReconnect(func() {
-			logger.Debug("EVM RPC reconnects to Tendermint WS", "address", tmRPCAddr+tmEndpoint)
-		}),
+// ServerContextKey defines the context key used to retrieve a server.Context from
+// a command's Context.
+const ServerContextKey = sdk.ContextKey("server.context")
+
+// ErrorCode contains the exit code for server exit.
+type ErrorCode struct {
+	Code int
+}
+
+func (e ErrorCode) Error() string {
+	return strconv.Itoa(e.Code)
+}
+
+func openDB(rootDir string) (dbm.DB, error) {
+	dataDir := filepath.Join(rootDir, "data")
+	return sdk.NewLevelDB("application", dataDir)
+}
+
+func openTraceWriter(traceWriterFile string) (w io.Writer, err error) {
+	if traceWriterFile == "" {
+		return
+	}
+	return os.OpenFile(
+		traceWriterFile,
+		os.O_WRONLY|os.O_APPEND|os.O_CREATE,
+		0666,
 	)
-
-	if err != nil {
-		logger.Error(
-			"Tendermint WS client could not be created",
-			"address", tmRPCAddr+tmEndpoint,
-			"error", err,
-		)
-	} else if err := tmWsClient.OnStart(); err != nil {
-		logger.Error(
-			"Tendermint WS client could not start",
-			"address", tmRPCAddr+tmEndpoint,
-			"error", err,
-		)
-	}
-
-	return tmWsClient
 }
 
-func MountGRPCWebServices(
-	router *mux.Router,
-	grpcWeb *grpcweb.WrappedGrpcServer,
-	grpcResources []string,
-	logger tmlog.Logger,
-) {
-	for _, res := range grpcResources {
-
-		logger.Info("[GRPC Web] HTTP POST mounted", "resource", res)
-
-		s := router.Methods("POST").Subrouter()
-		s.HandleFunc(res, func(resp http.ResponseWriter, req *http.Request) {
-			if grpcWeb.IsGrpcWebSocketRequest(req) {
-				grpcWeb.HandleGrpcWebsocketRequest(resp, req)
-				return
-			}
-
-			if grpcWeb.IsGrpcWebRequest(req) {
-				grpcWeb.HandleGrpcWebRequest(resp, req)
-				return
-			}
-		})
+// GetServerContextFromCmd returns a Context from a command or an empty Context
+// if it has not been set.
+func GetServerContextFromCmd(cmd *cobra.Command) *sdkserver.Context {
+	if v := cmd.Context().Value(ServerContextKey); v != nil {
+		serverCtxPtr := v.(*sdkserver.Context)
+		return serverCtxPtr
 	}
+
+	return NewDefaultContext()
 }
 
-// server context
-type Context struct {
-	Viper  *viper.Viper
-	Config *tmcfg.Config
-	Logger tmlog.Logger
+func NewDefaultContext() *sdkserver.Context {
+	return NewContext(
+		viper.New(),
+		tmcfg.DefaultConfig(),
+		ZeroLogWrapper{log.Logger},
+	)
+}
+
+func NewContext(v *viper.Viper, config *tmcfg.Config, logger tmlog.Logger) *sdkserver.Context {
+	return &sdkserver.Context{v, config, logger}
+}
+
+// WaitForQuitSignals waits for SIGINT and SIGTERM and returns.
+func WaitForQuitSignals() ErrorCode {
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	sig := <-sigs
+	return ErrorCode{Code: int(sig.(syscall.Signal)) + 128}
 }
