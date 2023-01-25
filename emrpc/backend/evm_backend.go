@@ -301,7 +301,7 @@ func (b *Backend) EthBlockFromTendermint(
 	ctx := emrpctypes.ContextWithHeight(block.Height)
 	res, err := b.queryClient.QueryClient.ValidatorAccount(ctx, req)
 	if err != nil {
-		b.logger.Debug(
+		b.logger.Error(
 			"failed to query validator operator address",
 			"height", block.Height,
 			"cons-address", req.ConsAddress,

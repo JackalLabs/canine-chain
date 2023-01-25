@@ -2,6 +2,7 @@ package eth
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"math"
@@ -241,7 +242,7 @@ func (e *PublicAPI) GasPrice() (*hexutil.Big, error) {
 	// collecting the min-gas-prices string
 	mingasprices := cfg["init"].(map[string]interface{})["app"].(map[string]interface{})["minimum-gas-prices"]
 	if mingasprices == nil {
-		e.logger.Error("ujkl min-gas-price either not configured or failed to read")
+		e.logger.Error("ujkl min-gas-price either not configured or configured with different hierarchy")
 	}
 	// selecting ujkl only
 	mgp_split := strings.Split(mingasprices.(string), ";")
@@ -341,7 +342,7 @@ func (e *PublicAPI) GetBalance(address common.Address, blockNrOrHash rpctypes.Bl
 	}
 
 	// rounding up
-	rounding := sdk.NewInt(1000000000000000000)
+	rounding := sdk.NewInt(1000000000000)
 	nval := val.Mul(rounding)
 	e.logger.Error(rounding.String())
 	return (*hexutil.Big)(nval.BigInt()), nil
@@ -568,18 +569,32 @@ func (e *PublicAPI) SendRawTransaction(data hexutil.Bytes) (common.Hash, error) 
 		return common.Hash{}, err
 	}
 
-	// Query params to use the EVM denomination
-	res, err := e.queryClient.QueryClient.Params(e.ctx, &evmtypes.QueryParamsRequest{})
-	if err != nil {
-		e.logger.Error("failed to query evm params", "error", err.Error())
-		return common.Hash{}, err
-	}
-
-	cosmosTx, err := ethereumTx.BuildTx(e.clientCtx.TxConfig.NewTxBuilder(), res.Params.EvmDenom)
+	cosmosTx, err := ethereumTx.BuildTx(e.clientCtx.TxConfig.NewTxBuilder(), "ujkl")
 	if err != nil {
 		e.logger.Error("failed to build cosmos tx", "error", err.Error())
 		return common.Hash{}, err
 	}
+
+	// decrypting a sample cosmos transaction
+	rawtxbytes := "Co8BCooBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmoKKmprbDFmaHduaHJzOHN2dzJzYzdjdHlrZ3AzeWthbDdxc2owcjM0a25zaBIqamtsMXZ2anV6MjAwODZ1amp3azNybW5maHk2NzdseG43aHJ2dTR6emZyGhAKBHVqa2wSCDEyMDAwMDAwEgASZgpQCkYKHy9jb3Ntb3MuY3J5cHRvLnNlY3AyNTZrMS5QdWJLZXkSIwohAisET0CjmTWbbo6/Gk0Eb2AcJWtwcjdgMmqG7H9BOqTwEgQKAgh/GAESEgoMCgR1amtsEgQxOTg1EKLsBBpAeX2AqFLHLrasQ74+HLkuo45hurKT+TH/BST5p3P6xksm5v1Va/oGgUr6c4xrdNkeexbfbnUeQ4uYEK438s/L3w=="
+
+	// copied from the default tx processor found in x/auth
+	rawDecodeTx, err := base64.StdEncoding.DecodeString(rawtxbytes)
+	if err != nil {
+		e.logger.Error(fmt.Sprint(err))
+	}
+
+	txstruct, err := e.clientCtx.TxConfig.TxDecoder()(rawDecodeTx)
+	if err != nil {
+		e.logger.Error(fmt.Sprint(err))
+	}
+
+	jsontx, err := e.clientCtx.TxConfig.TxJSONEncoder()(txstruct)
+	if err != nil {
+		e.logger.Error(fmt.Sprint(err))
+	}
+
+	e.clientCtx.PrintBytes(jsontx)
 
 	// Encode transaction by default Tx encoder
 	txBytes, err := e.clientCtx.TxConfig.TxEncoder()(cosmosTx)
