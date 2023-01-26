@@ -9,7 +9,8 @@ import (
 	"strings"
 
 	"github.com/jackalLabs/canine-chain/app/upgrades"
-	"github.com/jackalLabs/canine-chain/app/upgrades/alpha13"
+	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha11"
+	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha13"
 
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -146,7 +147,6 @@ import (
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
 
-	"github.com/jackalLabs/canine-chain/app/upgrades/alpha11"
 	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
@@ -928,7 +928,8 @@ func NewJackalApp(
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
 
-	app.registerUpgradeHandlers()
+	app.registerTestnetUpgradeHandlers()
+	app.registerMainnetUpgradeHandlers()
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	//
@@ -1117,11 +1118,13 @@ func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
 }
 
-func (app *JackalApp) registerUpgradeHandlers() {
-	// app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
-	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
+func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(alpha11.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(alpha13.NewUpgrade(app.mm, app.configurator))
+}
+
+func (app *JackalApp) registerMainnetUpgradeHandlers() {
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
