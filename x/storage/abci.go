@@ -16,4 +16,6 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	if err != nil {
 		ctx.Logger().Error(err.Error())
 	}
+
+	k.KillOldContracts(ctx)
 }
