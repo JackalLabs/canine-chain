@@ -85,7 +85,7 @@ import (
 	icahostkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
 	icatypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/types"
-	transfer "github.com/cosmos/ibc-go/v3/modules/apps/transfer"
+	"github.com/cosmos/ibc-go/v3/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v3/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v3/modules/core"
@@ -152,20 +152,20 @@ import (
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
-	docs "github.com/jackalLabs/canine-chain/docs"
+	"github.com/jackalLabs/canine-chain/docs"
 )
 
 const appName = "JackalApp"
 
-// We pull these out so we can set them with LDFLAGS in the Makefile
+// We pull these out, so we can set them with LDFLAGS in the Makefile
 var (
 	NodeDir      = ".canine"
 	Bech32Prefix = "jkl"
 
-	// If EnabledSpecificProposals is "", and this is "true", then enable all x/wasm proposals.
+	// ProposalsEnabled if EnabledSpecificProposals is "", and this is "true", then enable all x/wasm proposals.
 	// If EnabledSpecificProposals is "", and this is not "true", then disable all x/wasm proposals.
 	ProposalsEnabled = "false"
-	// If set to non-empty string it must be comma-separated list of values that are all a subset
+	// EnableSpecificProposals if set to non-empty string it must be comma-separated list of values that are all a subset
 	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
 	// https://github.com/jackalLabs/canine-chain/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
@@ -742,7 +742,7 @@ func NewJackalApp(
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
-	// there is nothing left over in the validator fee pool, so as to keep the
+	// there is nothing left over in the validator fee pool, to keep the
 	// CanWithdrawInvariant invariant.
 	// NOTE: staking module is required if HistoricalEntries param > 0
 	app.mm.SetOrderBeginBlockers(
@@ -887,7 +887,7 @@ func NewJackalApp(
 
 	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
 	// alphabetically (default order)
-	// NOTE: The relationships module must occur before the profiles module, or all relationships will be deleted
+	// NOTE: The relationships module must occur before the profile's module, or all relationships will be deleted
 	app.mm.SetOrderMigrations(
 		authtypes.ModuleName,
 		authz.ModuleName,
@@ -1023,7 +1023,7 @@ func NewJackalApp(
 // Name returns the name of the App
 func (app *JackalApp) Name() string { return app.BaseApp.Name() }
 
-// application updates every begin block
+// BeginBlocker : application updates every begin block
 func (app *JackalApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
