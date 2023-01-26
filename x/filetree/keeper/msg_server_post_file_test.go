@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"strings"
 
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
@@ -12,19 +12,19 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	bob, err := sdkTypes.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	alice := testAddresses[0]
+	bob := testAddresses[1]
 
 	// set root folder for alice
-	aliceRootFolder, err := types.CreateRootFolder(alice.String())
+	aliceRootFolder, err := types.CreateRootFolder(alice)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
 	// set root folder for bob
-	bobRootFolder, err := types.CreateRootFolder(bob.String())
+	bobRootFolder, err := types.CreateRootFolder(bob)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *bobRootFolder)
 
@@ -34,18 +34,18 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 	parentHash, childHash := types.MerkleHelper("s/home/")
 
 	aliceHomeTrackingNumber := uuid.NewString()
-	aliceEditorAccess, err := types.MakeEditorAccessMap(aliceHomeTrackingNumber, strings.Split(alice.String(), ","), "place holder key")
+	aliceEditorAccess, err := types.MakeEditorAccessMap(aliceHomeTrackingNumber, strings.Split(alice, ","), "place holder key")
 	suite.Require().NoError(err)
 
 	bobHomeTrackingNumber := uuid.NewString()
-	bobEditorAccess, err := types.MakeEditorAccessMap(bobHomeTrackingNumber, strings.Split(bob.String(), ","), "place holder key")
+	bobEditorAccess, err := types.MakeEditorAccessMap(bobHomeTrackingNumber, strings.Split(bob, ","), "place holder key")
 	suite.Require().NoError(err)
 
 	// hash alice account address
-	aliceAccountHash := types.HashThenHex(alice.String())
+	aliceAccountHash := types.HashThenHex(alice)
 
 	// hash bob account address
-	bobAccountHash := types.HashThenHex(bob.String())
+	bobAccountHash := types.HashThenHex(bob)
 
 	// arguments for non existent root
 	ghostParentHash, ghostChildHash := types.MerkleHelper("g/home/")
@@ -59,7 +59,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice makes her home folder
 			preRun: func() *types.MsgPostFile {
 				return types.NewMsgPostFile(
-					alice.String(),
+					alice,
 					aliceAccountHash,
 					parentHash,
 					childHash,
@@ -75,7 +75,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice fails to make a home folder in a non existent root
 			preRun: func() *types.MsgPostFile {
 				return types.NewMsgPostFile(
-					alice.String(),
+					alice,
 					aliceAccountHash,
 					ghostParentHash,
 					ghostChildHash,
@@ -92,10 +92,10 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice makes pepe.jpg inside of her home folder
 			preRun: func() *types.MsgPostFile {
 				pepeTrackingNumber := uuid.NewString()
-				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice.String(), ","), "place holder key")
+				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice, ","), "place holder key")
 				suite.Require().NoError(err)
 
-				msg, err := types.CreateMsgPostFile(alice.String(), "s/home/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
+				msg, err := types.CreateMsgPostFile(alice, "s/home/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
 				suite.Require().NoError(err)
 				return msg
 			},
@@ -105,10 +105,10 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice can't put pepe.jpg inside of s/videos/ because this folder doesn't exist
 			preRun: func() *types.MsgPostFile {
 				pepeTrackingNumber := uuid.NewString()
-				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice.String(), ","), "place holder key")
+				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice, ","), "place holder key")
 				suite.Require().NoError(err)
 
-				msg, err := types.CreateMsgPostFile(alice.String(), "s/videos/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
+				msg, err := types.CreateMsgPostFile(alice, "s/videos/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
 				suite.Require().NoError(err)
 				return msg
 			},
@@ -119,7 +119,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // bob fails to make a home folder inside of alice's root folder, i.e., inside of alice's account
 			preRun: func() *types.MsgPostFile {
 				return types.NewMsgPostFile(
-					bob.String(),
+					bob,
 					aliceAccountHash,
 					parentHash,
 					childHash,
@@ -136,7 +136,7 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // bob can make a home folder inside of his root in his account
 			preRun: func() *types.MsgPostFile {
 				return types.NewMsgPostFile(
-					bob.String(),
+					bob,
 					bobAccountHash,
 					parentHash,
 					childHash,

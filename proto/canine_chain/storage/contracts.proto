@@ -7,10 +7,11 @@ message Contracts {
   string cid = 1;
   string priceamt = 2;
   string pricedenom = 3;
+  string creator = 4;
   string merkle = 5;
   string signee = 6;
   string duration = 7;
   string filesize = 8;
   string fid = 9;
-  string creator = 4;
+  int64 age = 10;
 }

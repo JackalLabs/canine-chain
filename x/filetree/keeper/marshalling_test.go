@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
@@ -15,42 +15,42 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	bob, err := sdkTypes.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
+	alice := testAddresses[0]
+	bob := testAddresses[1]
 
 	// set root folder for alice
-	aliceRootFolder, err := types.CreateRootFolder(alice.String())
+	aliceRootFolder, err := types.CreateRootFolder(alice)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
-	aliceViewerID := strings.Split(alice.String(), ",")
+	aliceViewerID := strings.Split(alice, ",")
 	aliceEditorID := aliceViewerID
 
 	// set home folder for alice
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// put pepe in home
 	// pepe's viewing access is a marshalled slice which means the keeper will fail to unmarshall
-	pepejpg, err := CreateBadFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
+	pepejpg, err := CreateBadFile(alice, aliceEditorID, aliceViewerID, "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 	pepeMerklePath := types.MerklePath("s/home/pepe.jpg")
-	aliceAccountHash := types.HashThenHex(alice.String())
+	aliceAccountHash := types.HashThenHex(alice)
 	pepeOwnerAddress := types.MakeOwnerAddress(pepeMerklePath, aliceAccountHash)
-	bobPepeViewerAddress := keeper.MakeViewerAddress(pepejpg.TrackingNumber, bob.String())
+	bobPepeViewerAddress := keeper.MakeViewerAddress(pepejpg.TrackingNumber, bob)
 
 	// Create a good file
-	bunnyjpg, err := types.CreateFolderOrFile(alice.String(), aliceEditorID, aliceViewerID, "s/home/bunny.jpg")
+	bunnyjpg, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/bunny.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *bunnyjpg)
 	bunnyMerklePath := types.MerklePath("s/home/bunny.jpg")
 	bunnyOwnerAddress := types.MakeOwnerAddress(bunnyMerklePath, aliceAccountHash)
-	bobBunnyViewerAddress := keeper.MakeViewerAddress(bunnyjpg.TrackingNumber, bob.String())
+	bobBunnyViewerAddress := keeper.MakeViewerAddress(bunnyjpg.TrackingNumber, bob)
 
 	cases := []struct {
 		preRun    func() *types.MsgAddViewers
@@ -61,7 +61,7 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 		{ // alice fails to add a viewer
 			preRun: func() *types.MsgAddViewers {
 				return types.NewMsgAddViewers(
-					alice.String(),
+					alice,
 					bobPepeViewerAddress,
 					fmt.Sprintf("%x", "encryptedPepeAESKeyAndIV"),
 					pepeMerklePath,
@@ -75,7 +75,7 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 		{ // alice successfully adds a viewer
 			preRun: func() *types.MsgAddViewers {
 				return types.NewMsgAddViewers(
-					alice.String(),
+					alice,
 					bobBunnyViewerAddress,
 					fmt.Sprintf("%x", "encryptedBunnyAESKeyAndIV"),
 					bunnyMerklePath,

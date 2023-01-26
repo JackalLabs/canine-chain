@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/keeper"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
@@ -10,10 +11,15 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 	suite.SetupSuite()
 	err := suite.setupNames()
 	suite.Require().NoError(err)
-	address, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
-	receiver, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
+
+	address, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
+	receiver, err := sdk.AccAddressFromBech32(testAddresses[1])
+	suite.Require().NoError(err)
+
 	name := "test.jkl"
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
