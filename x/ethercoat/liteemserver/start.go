@@ -11,7 +11,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/types"
 	emconfig "github.com/jackalLabs/canine-chain/x/ethercoat/liteemserver/config"
 	"github.com/spf13/cobra"
-	tcmd "github.com/tendermint/tendermint/cmd/tendermint/commands"
 	"github.com/tendermint/tendermint/node"
 )
 
@@ -51,7 +50,6 @@ func StartCmd(appCreator types.AppCreator, defaultNodeHome string) *cobra.Comman
 		},
 	}
 	// TODO: Add cmd flags
-	tcmd.AddNodeFlags(cmd)
 	return cmd
 }
 
