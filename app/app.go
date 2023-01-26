@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/jackalLabs/canine-chain/app/upgrades"
+	"github.com/jackalLabs/canine-chain/app/upgrades/alpha13"
 
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -1120,6 +1121,7 @@ func (app *JackalApp) registerUpgradeHandlers() {
 	// app.registerUpgrade(v2.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(alpha11.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
+	app.registerUpgrade(alpha13.NewUpgrade(app.mm, app.configurator))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
