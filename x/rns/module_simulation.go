@@ -46,7 +46,7 @@ const (
 
 	opWeightMsgList = "op_weight_msg_list"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgList int = 100
+	defaultWeightMsgList int = 20
 
 	opWeightMsgBuy = "op_weight_msg_buy"
 	// TODO: Determine the simulation weight value
@@ -58,7 +58,7 @@ const (
 
 	opWeightMsgTransfer = "op_weight_msg_transfer"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgTransfer int = 100
+	defaultWeightMsgTransfer int = 20
 )
 
 // GenerateGenesisState creates a randomized GenState of the module

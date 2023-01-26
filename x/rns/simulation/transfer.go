@@ -24,35 +24,39 @@ func SimulateMsgTransfer(
 			Creator: simAccount.Address.String(),
 		}
 
+		if len(accs) < 2 {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Need more than two accounts to transfer names"), nil, nil
+		}
+
 		// finding all the registered names
-		nReq := &types.QueryAllNamesRequest{}
+		nReq := &types.QueryListOwnedNamesRequest{
+			Address: simAccount.Address.String(),
+		}
 		wctx := sdk.WrapSDKContext(ctx)
-		regNames, err := k.NamesAll(wctx, nReq)
+		regNames, err := k.ListOwnedNames(wctx, nReq)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't fetch names"), nil, err
 		}
 		// unmarshalling the results
 		names := regNames.GetNames()
+		if names == nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No names to transfer"), nil, nil
+		}
 		// selecting a random name to transfer
 		nameI := simtypes.RandIntBetween(r, 0, len(names))
 		tName := names[nameI]
-		owner := tName.Value
+
 		// checking if the name is transferrable
 		if ctx.BlockHeight() > tName.Expires {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Expired domain"), nil, nil
 		}
-
-		if owner == simAccount.Address.String() {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Already own the name"), nil, nil
+		if tName.Locked > ctx.BlockHeight() {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Can't transfer a free name"), nil, nil
 		}
 
-		sdkOwner, err := sdk.AccAddressFromBech32(owner)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't parse owner string"), nil, nil
-		}
 		// generating the fees
 		price := sdk.NewInt(0) // transferring is free?
-		spendable := bk.SpendableCoins(ctx, sdkOwner)
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
 
 		var fees sdk.Coins
@@ -65,12 +69,19 @@ func SimulateMsgTransfer(
 			}
 		}
 
-		// transferring to the randomly generated simulation account
-		msg = &types.MsgTransfer{
-			Creator:  owner,
-			Name:     tName.Name,
-			Receiver: simAccount.Address.String(),
+		// generating randomly generated account
+		receiverAcc := &simtypes.Account{}
+		res, _ := simtypes.RandomAcc(r, accs)
+		receiverAcc = &res
+		// ensuring the sender and receiver are different
+		for receiverAcc.Address.String() == simAccount.Address.String() {
+			res, _ := simtypes.RandomAcc(r, accs)
+			receiverAcc = &res
 		}
+
+		// transferring to the randomly generated simulation account
+		msg.Name = tName.Name + "." + tName.Tld
+		msg.Receiver = simAccount.Address.String()
 
 		txCtx := simulation.OperationInput{
 			R:             r,
