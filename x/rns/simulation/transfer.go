@@ -4,8 +4,10 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/rns/keeper"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
@@ -22,8 +24,67 @@ func SimulateMsgTransfer(
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the Transfer simulation
+		// finding all the registered names
+		nReq := &types.QueryAllNamesRequest{}
+		wctx := sdk.WrapSDKContext(ctx)
+		regNames, err := k.NamesAll(wctx, nReq)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't fetch names"), nil, err
+		}
+		// unmarshalling the results
+		names := regNames.GetNames()
+		// selecting a random name to transfer
+		nameI := simtypes.RandIntBetween(r, 0, len(names))
+		tName := names[nameI]
+		owner := tName.Value
+		// checking if the name is transferrable
+		if ctx.BlockHeight() > tName.Expires {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Expired domain"), nil, nil
+		}
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Transfer simulation not implemented"), nil, nil
+		if owner == simAccount.Address.String() {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Already own the name"), nil, nil
+		}
+
+		sdkOwner, err := sdk.AccAddressFromBech32(owner)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't parse owner string"), nil, nil
+		}
+		// generating the fees
+		price := sdk.NewInt(0) // transferring is free?
+		spendable := bk.SpendableCoins(ctx, sdkOwner)
+		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
+
+		var fees sdk.Coins
+
+		if !hasNeg {
+			var err error
+			fees, err = simtypes.RandomFees(r, ctx, coins)
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			}
+		}
+
+		// transferring to the randomly generated simulation account
+		msg = &types.MsgTransfer{
+			Creator:  owner,
+			Name:     tName.Name,
+			Receiver: simAccount.Address.String(),
+		}
+
+		txCtx := simulation.OperationInput{
+			R:             r,
+			App:           app,
+			TxGen:         simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:           nil,
+			Msg:           msg,
+			MsgType:       msg.Type(),
+			Context:       ctx,
+			SimAccount:    simAccount,
+			AccountKeeper: ak,
+			ModuleName:    types.ModuleName,
+		}
+
+		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }
