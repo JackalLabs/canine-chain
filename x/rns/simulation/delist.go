@@ -19,6 +19,7 @@ func SimulateMsgDelist(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		// TODO this fails because most random accounts dont have listed domains
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgDelist{
 			Creator: simAccount.Address.String(),
@@ -36,7 +37,7 @@ func SimulateMsgDelist(
 		}
 		names := regNames.GetNames()
 		if len(names) < 1 {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No listed domains"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No registered domains"), nil, nil
 		}
 
 		var deList string
@@ -51,6 +52,9 @@ func SimulateMsgDelist(
 				deList = name.Name
 				break
 			}
+		}
+		if deList == "" {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No listed domains"), nil, nil
 		}
 		// delisting the chosen name
 		msg.Name = deList

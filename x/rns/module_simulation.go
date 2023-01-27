@@ -38,27 +38,27 @@ const (
 
 	opWeightMsgAcceptBid = "op_weight_msg_accept_bid"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgAcceptBid int = 100
+	defaultWeightMsgAcceptBid int = 0
 
 	opWeightMsgCancelBid = "op_weight_msg_cancel_bid"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgCancelBid int = 100
+	defaultWeightMsgCancelBid int = 0
 
 	opWeightMsgList = "op_weight_msg_list"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgList int = 20
+	defaultWeightMsgList int = 100
 
 	opWeightMsgBuy = "op_weight_msg_buy"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgBuy int = 100
+	defaultWeightMsgBuy int = 0
 
 	opWeightMsgDelist = "op_weight_msg_delist"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgDelist int = 100
+	defaultWeightMsgDelist int = 0
 
 	opWeightMsgTransfer = "op_weight_msg_transfer"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgTransfer int = 20
+	defaultWeightMsgTransfer int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
