@@ -4,8 +4,10 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/jackalLabs/canine-chain/x/rns/keeper"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
@@ -22,8 +24,66 @@ func SimulateMsgDelist(
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the Delist simulation
+		// checking for listed domains
+		wctx := sdk.WrapSDKContext(ctx)
+		nReq := &types.QueryListOwnedNamesRequest{
+			Address: simAccount.Address.String(),
+		}
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Delist simulation not implemented"), nil, nil
+		regNames, err := k.ListOwnedNames(wctx, nReq)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't fetch names"), nil, err
+		}
+		names := regNames.GetNames()
+		if len(names) < 1 {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No listed domains"), nil, nil
+		}
+
+		var deList string
+
+		// finding the first name that the random sim account has listed
+		for _, name := range names {
+			nreq := &types.QueryForsaleRequest{
+				Name: name.Name,
+			}
+			listedIs, _ := k.Forsale(wctx, nreq)
+			if listedIs != nil {
+				deList = name.Name
+				break
+			}
+		}
+		// delisting the chosen name
+		msg.Name = deList
+
+		// compiling the fees and the message
+		// generating the fees
+		price := sdk.NewInt(0) // delisting is free?
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
+
+		var fees sdk.Coins
+
+		if !hasNeg {
+			var err error
+			fees, err = simtypes.RandomFees(r, ctx, coins)
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			}
+		}
+
+		txCtx := simulation.OperationInput{
+			R:             r,
+			App:           app,
+			TxGen:         simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:           nil,
+			Msg:           msg,
+			MsgType:       msg.Type(),
+			Context:       ctx,
+			SimAccount:    simAccount,
+			AccountKeeper: ak,
+			ModuleName:    types.ModuleName,
+		}
+
+		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }

@@ -20,6 +20,7 @@ func SimulateMsgList(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		// TODO: Maybe implement FutureOps
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgList{
 			Creator: simAccount.Address.String(),
