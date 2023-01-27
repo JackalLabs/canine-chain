@@ -25,6 +25,9 @@ func SimulateMsgList(
 		msg := &types.MsgList{
 			Creator: simAccount.Address.String(),
 		}
+		// need to own the domain
+		// cant be registered
+		// needs a valid price?
 
 		// choosing names that the simAccount already owns
 		wctx := sdk.WrapSDKContext(ctx)
@@ -42,9 +45,18 @@ func SimulateMsgList(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No names to list for bidding"), nil, nil
 		}
 
-		// choosing a random name
-		nameI := simtypes.RandIntBetween(r, 0, len(names))
-		tName := names[nameI]
+		// choosing a random name that isn't already listed
+		var unListed = make([]types.Names, len(names))
+		for _, name := range names {
+			if _, found := k.GetForsale(ctx, name.Name); !found {
+				unListed = append(unListed, name)
+			}
+		}
+		if len(unListed) < 1 {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "All owned domains are listed"), nil, nil
+		}
+		nameI := simtypes.RandIntBetween(r, 0, len(unListed))
+		tName := unListed[nameI]
 
 		// checking if the name is listable
 		if ctx.BlockHeight() > tName.Expires {
@@ -85,7 +97,15 @@ func SimulateMsgList(
 			AccountKeeper: ak,
 			ModuleName:    types.ModuleName,
 		}
+		OpMsg, _, err := simulation.GenAndDeliverTx(txCtx, fees)
 
-		return simulation.GenAndDeliverTx(txCtx, fees)
+		// creating a future op
+		fOp := simtypes.FutureOperation{
+			BlockHeight: int(ctx.BlockHeight()) + 15,
+			Op:          SimulateMsgBid(ak, bk, k),
+		}
+		fOps := []simtypes.FutureOperation{fOp}
+
+		return OpMsg, fOps, err
 	}
 }

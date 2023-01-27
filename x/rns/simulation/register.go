@@ -112,6 +112,15 @@ func SimulateMsgRegister(
 			AccountKeeper: ak,
 			ModuleName:    types.ModuleName,
 		}
-		return simulation.GenAndDeliverTx(txCtx, fees)
+
+		// generating futureOps
+		fOp := simtypes.FutureOperation{
+			BlockHeight: int(ctx.BlockHeight()) + 5,
+			Op:          SimulateMsgList(ak, bk, k),
+		}
+		fOps := []simtypes.FutureOperation{fOp}
+
+		OpMsg, _, err := simulation.GenAndDeliverTx(txCtx, fees)
+		return OpMsg, fOps, err
 	}
 }

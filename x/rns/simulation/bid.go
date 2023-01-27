@@ -27,16 +27,14 @@ func SimulateMsgBid(
 		}
 
 		// finding a random bid
-		wctx := sdk.WrapSDKContext(ctx)
-		nreq := &types.QueryAllForsalesRequest{}
-		forSale, _ := k.ForsaleAll(wctx, nreq)
-		numForSale := len(forSale.GetForsale())
+		forSale := k.GetAllForsale(ctx)
+		numForSale := len(forSale)
 		if numForSale < 1 {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No domains for sale"), nil, nil
 		}
 
 		saleI := simtypes.RandIntBetween(r, 0, numForSale)
-		bidDomain := forSale.Forsale[saleI]
+		bidDomain := forSale[saleI]
 
 		// making the bid
 		bidPrice, err := strconv.ParseFloat(bidDomain.Price, 64)
