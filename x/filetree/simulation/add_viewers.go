@@ -25,7 +25,9 @@ func SimulateMsgAddViewers(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		merklePath := types.MerklePath("s/home/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
+		simBob, _ := simtypes.RandomAcc(r, accs)
 		address, _ := sdk.Bech32ifyAddressBytes("jkl", simAccount.Address)
+		bob, _ := sdk.Bech32ifyAddressBytes("jkl", simBob.Address)
 		accountHash := types.HashThenHex(address)
 		ownerAddress := types.MakeOwnerAddress(merklePath, accountHash)
 
@@ -43,11 +45,12 @@ func SimulateMsgAddViewers(
 		}
 		k.SetFiles(ctx, *homeFolder)
 
-		viewIds := keeper.MakeViewerAddress(homeFolder.TrackingNumber, address)
+		// bob as a viewer for home folder
+		// get viewer id and viewer key for bob
+		viewIds := keeper.MakeViewerAddress(homeFolder.TrackingNumber, bob)
 
-		// get viewer key
 		mockKeyAndIV := "{ key: mock key, IV: mock initialisation vector } "
-		pkeyHex := fmt.Sprintf("%x", simAccount.PubKey.Bytes())
+		pkeyHex := fmt.Sprintf("%x", simBob.PubKey.Bytes())
 		pkey, _ := eciesgo.NewPublicKeyFromHex(pkeyHex)
 		encryptedKeyAndIV, err := eciesgo.Encrypt(pkey, []byte(mockKeyAndIV))
 		viewKeys := fmt.Sprintf("%x", encryptedKeyAndIV)
