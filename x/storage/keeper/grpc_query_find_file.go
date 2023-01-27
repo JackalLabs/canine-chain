@@ -13,7 +13,7 @@ import (
 func (k Keeper) ListFiles(ctx sdk.Context, fid string) []string {
 	allDeals := k.GetAllActiveDeals(ctx)
 
-	var providers []string
+	providers := []string{}
 
 	for i := 0; i < len(allDeals); i++ {
 		if allDeals[i].Fid == fid {
