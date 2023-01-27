@@ -11,6 +11,7 @@ import (
 	"github.com/jackalLabs/canine-chain/app/upgrades"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha11"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha13"
+	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/killdeals"
 
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -1121,6 +1122,7 @@ func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
 func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(alpha11.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(alpha13.NewUpgrade(app.mm, app.configurator))
+	app.registerUpgrade(killdeals.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
