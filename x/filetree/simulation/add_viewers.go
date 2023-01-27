@@ -34,7 +34,7 @@ func SimulateMsgAddViewers(
 		// root folder
 		rootFolder, err := types.CreateRootFolder(address)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgResetEditors, "unable to create root folder"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddViewers, "unable to create root folder"), nil, err
 		}
 		k.SetFiles(ctx, *rootFolder)
 
