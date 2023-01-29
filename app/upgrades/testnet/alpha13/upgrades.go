@@ -6,6 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/jackalLabs/canine-chain/app/upgrades"
+	"github.com/jackalLabs/canine-chain/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -32,12 +33,16 @@ func (u *Upgrade) Name() string {
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
-		if err != nil {
+		if types.IsTestnet(ctx.ChainID()) {
+			newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
+			if err != nil {
+				return newVM, err
+			}
+
 			return newVM, err
 		}
 
-		return newVM, err
+		return fromVM, nil
 	}
 }
 
