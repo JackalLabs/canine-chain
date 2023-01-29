@@ -49,7 +49,6 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		}
 
 		return fromVM, nil
-
 	}
 }
 
