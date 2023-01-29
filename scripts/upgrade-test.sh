@@ -5,7 +5,7 @@ UPGRADE_HEIGHT=20
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
-SOFTWARE_UPGRADE_NAME=v3
+SOFTWARE_UPGRADE_NAME=bouncybulldog
 
 # underscore so that go tool will not take gocache into account
 mkdir -p ${ROOT}/../_build/gocache
