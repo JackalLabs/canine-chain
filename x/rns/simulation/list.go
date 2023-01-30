@@ -20,38 +20,46 @@ func SimulateMsgList(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// TODO: Maybe implement FutureOps
-		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// 1. need accounts with registered domains
+		// 2. need to randomly select an account, and ensure that it's names aren't already listed
+		// 3. list the name
+
+		// choosing a random account WITH registered domains
+		var simAccount simtypes.Account
+		var names []types.Names
+		simAccount, _ = simtypes.RandomAcc(r, accs)
+		for {
+			// finding all registered domain names
+			wctx := sdk.WrapSDKContext(ctx)
+			nReq := &types.QueryListOwnedNamesRequest{
+				Address: simAccount.Address.String(),
+			}
+			// requesting the domain names
+			regNames, err := k.ListOwnedNames(wctx, nReq)
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Couldn't request names"), nil, nil
+			}
+			names = regNames.GetNames()
+			if names != nil {
+				break
+			} else {
+				simAccount, _ = simtypes.RandomAcc(r, accs)
+			}
+		}
+
+		// initializing the message
 		msg := &types.MsgList{
 			Creator: simAccount.Address.String(),
 		}
-		// need to own the domain
-		// cant be registered
-		// needs a valid price?
-
-		// choosing names that the simAccount already owns
-		wctx := sdk.WrapSDKContext(ctx)
-		nReq := &types.QueryListOwnedNamesRequest{
-			Address: simAccount.Address.String(),
-		}
-
-		regNames, err := k.ListOwnedNames(wctx, nReq)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't fetch names"), nil, err
-		}
-
-		names := regNames.GetNames()
-		if names == nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No names to list for bidding"), nil, nil
-		}
 
 		// choosing a random name that isn't already listed
-		var unListed = make([]types.Names, len(names))
+		var unListed = make([]types.Names, 0)
 		for _, name := range names {
-			if _, found := k.GetForsale(ctx, name.Name); !found {
+			if _, found := k.GetForsale(ctx, name.Name+"."+name.Tld); !found && name.Name != "" {
 				unListed = append(unListed, name)
 			}
 		}
+
 		if len(unListed) < 1 {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "All owned domains are listed"), nil, nil
 		}

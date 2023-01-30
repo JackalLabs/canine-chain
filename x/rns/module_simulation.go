@@ -30,7 +30,7 @@ var (
 const (
 	opWeightMsgRegister = "op_weight_msg_register"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgRegister int = 200
+	defaultWeightMsgRegister int = 100
 
 	opWeightMsgBid = "op_weight_msg_bid"
 	// TODO: Determine the simulation weight value
