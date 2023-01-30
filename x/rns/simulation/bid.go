@@ -3,7 +3,6 @@ package simulation
 import (
 	"fmt"
 	"math/rand"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -37,12 +36,12 @@ func SimulateMsgBid(
 		bidDomain := forSale[saleI]
 
 		// making the bid
-		bidPrice, err := strconv.Atoi(bidDomain.Price[:len(bidDomain.Price)-4])
+		bidPrice, err := sdk.ParseCoinNormalized(bidDomain.Price)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't convert bidPrice"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, nil
 		}
 		// calculating the bid
-		max := sdk.NewInt(int64(bidPrice * 2))
+		max := sdk.NewInt(bidPrice.Amount.Int64() * 2)
 		sdkPrice := simtypes.RandomAmount(r, max)
 
 		// ensuring the account has enough coins to make a bid
