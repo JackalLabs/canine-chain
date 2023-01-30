@@ -41,7 +41,7 @@ func SimulateMsgAddViewers(
 		// home folder
 		homeFolder, err := types.CreateFolderOrFile(address, strings.Split(address, ","), strings.Split(address, ","), "s/home/")
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgResetEditors, "unable to create home folder"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddViewers, "unable to create home folder"), nil, err
 		}
 		k.SetFiles(ctx, *homeFolder)
 
@@ -66,7 +66,7 @@ func SimulateMsgAddViewers(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgResetEditors, "failed to generate fee"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddViewers, "failed to generate fee"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{
