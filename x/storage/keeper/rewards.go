@@ -105,12 +105,12 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 			}
 			k.SetStrays(ctx, strayDeal)
 			k.RemoveActiveDeals(ctx, deal.Cid)
-			return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
+			return nil
 		}
 
 		deal.Proofsmissed = fmt.Sprintf("%d", misses)
 		k.SetActiveDeals(ctx, deal)
-		return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
+		return nil
 	}
 
 	ctx.Logger().Debug(fmt.Sprintf("File size: %s\n", deal.Filesize))
