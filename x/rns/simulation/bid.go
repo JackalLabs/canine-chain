@@ -37,22 +37,38 @@ func SimulateMsgBid(
 		bidDomain := forSale[saleI]
 
 		// making the bid
-		bidPrice, err := strconv.ParseFloat(bidDomain.Price, 64)
+		bidPrice, err := strconv.Atoi(bidDomain.Price[:len(bidDomain.Price)-4])
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't convert bidPrice"), nil, nil
 		}
-		lowerBid := int(bidPrice * 0.75)
-		upperBid := int(bidPrice * 1.25)
-		rPrice := simtypes.RandIntBetween(r, lowerBid, upperBid)
+		// calculating the bid
+		max := sdk.NewInt(int64(bidPrice * 2))
+		sdkPrice := simtypes.RandomAmount(r, max)
 
-		// building the message
-		msg.Bid = fmt.Sprint(rPrice) + "ujkl"
-		msg.Name = bidDomain.Name
+		// ensuring the account has enough coins to make a bid
+		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
+		// It is impossible to specify default bond denom through param.json
+		// to naturally fund the accounts with ujkl.
+		// The other option is genesis.json but it is not possible to sign transactions
+		// due to private and pubkeys are generated independent of addresses
+		// resulting pubkey does not match signer address error.
+		if jBalance.Amount.LTE(sdkPrice) {
+			c := sdk.NewCoin("ujkl", sdkPrice)
+
+			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+			}
+
+			err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, sdk.NewCoins(c))
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+			}
+		}
 
 		// generating the fees
-		price := sdk.NewInt(0) // listing is free?
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
-		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
+		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", sdkPrice)))
 
 		var fees sdk.Coins
 
@@ -63,6 +79,10 @@ func SimulateMsgBid(
 				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
 			}
 		}
+
+		// building the message
+		msg.Bid = fmt.Sprint(sdkPrice) + "ujkl"
+		msg.Name = bidDomain.Name
 
 		txCtx := simulation.OperationInput{
 			R:             r,
