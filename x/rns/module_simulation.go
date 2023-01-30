@@ -50,7 +50,7 @@ const (
 
 	opWeightMsgBuy = "op_weight_msg_buy"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgBuy int = 0
+	defaultWeightMsgBuy int = 50
 
 	opWeightMsgDelist = "op_weight_msg_delist"
 	// TODO: Determine the simulation weight value

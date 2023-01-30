@@ -20,10 +20,6 @@ func SimulateMsgList(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// 1. need accounts with registered domains
-		// 2. need to randomly select an account, and ensure that it's names aren't already listed
-		// 3. list the name
-
 		// choosing a random account WITH registered domains
 		var simAccount simtypes.Account
 		var names []types.Names
@@ -89,7 +85,6 @@ func SimulateMsgList(
 			}
 		}
 
-		// transferring to the randomly generated simulation account
 		msg.Name = tName.Name + "." + tName.Tld
 		msg.Price = fmt.Sprint(simtypes.RandIntBetween(r, 0, 10000000)) + "ujkl"
 
