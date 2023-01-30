@@ -19,45 +19,45 @@ func SimulateMsgDelist(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// TODO this fails because most random accounts dont have listed domains
-		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// Selecting accounts with listed domains
+		// choosing a random account WITH registered domains
+		var simAccount simtypes.Account
+		var names []types.Names
+		simAccount, _ = simtypes.RandomAcc(r, accs)
+		for {
+			// finding all registered domain names
+			wctx := sdk.WrapSDKContext(ctx)
+			nReq := &types.QueryListOwnedNamesRequest{
+				Address: simAccount.Address.String(),
+			}
+			// requesting the domain names
+			regNames, err := k.ListOwnedNames(wctx, nReq)
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Couldn't request names"), nil, nil
+			}
+			names = regNames.GetNames()
+			if names != nil {
+				break
+			} else {
+				simAccount, _ = simtypes.RandomAcc(r, accs)
+			}
+		}
+
 		msg := &types.MsgDelist{
 			Creator: simAccount.Address.String(),
 		}
-
-		// checking for listed domains
-		wctx := sdk.WrapSDKContext(ctx)
-		nReq := &types.QueryListOwnedNamesRequest{
-			Address: simAccount.Address.String(),
-		}
-
-		regNames, err := k.ListOwnedNames(wctx, nReq)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't fetch names"), nil, err
-		}
-		names := regNames.GetNames()
-		if len(names) < 1 {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No registered domains"), nil, nil
-		}
-
-		var deList string
-
 		// finding the first name that the random sim account has listed
-		for _, name := range names {
-			nreq := &types.QueryForsaleRequest{
-				Name: name.Name,
-			}
-			listedIs, _ := k.Forsale(wctx, nreq)
-			if listedIs != nil {
-				deList = name.Name
-				break
+		var deList types.Names
+		for _, n := range names {
+			if _, found := k.GetForsale(ctx, n.Name+"."+n.Tld); found && n.Name != "" {
+				deList = n
 			}
 		}
-		if deList == "" {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No listed domains"), nil, nil
+		if deList.Name == "" {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No viable registered domains found"), nil, nil
 		}
 		// delisting the chosen name
-		msg.Name = deList
+		msg.Name = deList.Name + "." + deList.Tld
 
 		// compiling the fees and the message
 		// generating the fees

@@ -32,9 +32,18 @@ func SimulateMsgBuy(
 		saleI := simtypes.RandIntBetween(r, 0, len(allSale))
 		bName := allSale[saleI]
 
+		// ensuring the sim accounts isn't the owner
+		for bName.Name == simAccount.Address.String() {
+			saleI = simtypes.RandIntBetween(r, 0, len(allSale))
+			bName = allSale[saleI]
+		}
+
 		// ensuring the simAccount can buy the domain
-		price := bName.Price[:len(bName.Price)-4]
-		sdkPrice, _ := sdk.NewIntFromString(price)
+		price, err := sdk.ParseCoinNormalized(bName.Price)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Unable to build "), nil, nil
+		}
+		sdkPrice := price.Amount
 
 		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
 		// It is impossible to specify default bond denom through param.json

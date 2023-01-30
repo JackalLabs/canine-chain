@@ -54,7 +54,7 @@ const (
 
 	opWeightMsgDelist = "op_weight_msg_delist"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgDelist int = 0
+	defaultWeightMsgDelist int = 100
 
 	opWeightMsgTransfer = "op_weight_msg_transfer"
 	// TODO: Determine the simulation weight value

@@ -24,6 +24,9 @@ func SimulateMsgBid(
 		msg := &types.MsgBid{
 			Creator: simAccount.Address.String(),
 		}
+		if len(accs) < 2 {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Not enough accounts to perform a buy"), nil, nil
+		}
 
 		// finding a random bid
 		forSale := k.GetAllForsale(ctx)
@@ -34,11 +37,16 @@ func SimulateMsgBid(
 
 		saleI := simtypes.RandIntBetween(r, 0, numForSale)
 		bidDomain := forSale[saleI]
+		// ensuring the buyer is not the owner of the address
+		for bidDomain.Owner == simAccount.Address.String() {
+			saleI = simtypes.RandIntBetween(r, 0, numForSale)
+			bidDomain = forSale[saleI]
+		}
 
 		// making the bid
 		bidPrice, err := sdk.ParseCoinNormalized(bidDomain.Price)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Unable to parse price"), nil, nil
 		}
 		// calculating the bid
 		max := sdk.NewInt(bidPrice.Amount.Int64() * 2)
