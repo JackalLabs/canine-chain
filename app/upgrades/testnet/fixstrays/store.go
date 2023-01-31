@@ -13,7 +13,10 @@ import (
 func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 	ctx.Logger().Error("MIGRATING STORAGE STORE!")
 	// Set the module params
-	params := types.NewParams()
+
+	var params types.Params
+
+	paramsSubspace.GetParamSet(ctx, &params)
 
 	params.ProofWindow = 50
 
