@@ -38,16 +38,16 @@ canined gentx $ALIAS 200000000ujkl \
 canined collect-gentxs --home=$JKL_HOME
 
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"10\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enabled-unsafe-cors = false/enabled-unsafe-cors = true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/' $JKL_HOME/config/config.toml
 sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $JKL_HOME/config/client.toml
-
 screen -d -m canined start --home=$JKL_HOME --log_level info
 sleep 20
 jprovd client config chain-id $CHAIN --home=$PROV_HOME
 echo '{"key":"7d5a77d4e3dadb5103f45a884d1aad0310bc6eaabbc7c1426fd9909de27dc818","address":"jkl1p6tje2akcr8z5ghxqlpur06ep6uexf7fk2vy3y"}' > $PROV_HOME/config/priv_storkey.json
 jprovd client balance --home=$PROV_HOME
 jprovd init http://localhost:3333 1000000000 "" --home=$PROV_HOME
-jprovd start --home=$PROV_HOME
+jprovd start --home=$PROV_HOME --interval=10

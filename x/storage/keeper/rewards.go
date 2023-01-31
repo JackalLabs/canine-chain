@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	fchunks   int64 = 1024
-	DayBlocks int64 = 10 * 5 // 10 blocks is about 1 minute
+	fchunks int64 = 1024
 )
 
 func getTotalSize(allDeals []types.ActiveDeals) sdk.Dec {
@@ -74,6 +73,8 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		if !ok {
 			return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
 		}
+
+		DayBlocks := k.GetParams(ctx).ProofWindow
 
 		if sb.Int64() >= ctx.BlockHeight()-DayBlocks {
 			return sdkerror.Wrapf(sdkerror.ErrUnauthorized, "ignore young deals")
@@ -192,6 +193,8 @@ func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, a
 
 func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
 	allDeals := k.GetAllActiveDeals(ctx)
+
+	DayBlocks := k.GetParams(ctx).ProofWindow
 
 	ctx.Logger().Debug("blockdiff : %d\n", ctx.BlockHeight()%DayBlocks)
 
