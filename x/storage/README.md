@@ -185,3 +185,19 @@ The `cancel-contract` command allows users to cancel currently active contracts 
 ```sh
 canined tx storage cancel-contract [cid]
 ```
+---
+### upgrade-storage
+The `upgrade-storage` command allows users to UPGRADE or DOWNGRADE for more/less storage or more/less duration.
+```sh
+canined tx storage upgrade-storage [for-address] [duration] [bytes] [payment-denom]
+```
+Example:
+```sh
+canined tx storage upgrade-storage jkl1t3stAcc0unt 720h 6000000000 ujkl
+```
+
+#### Failed Cases:
+ - downgrading with refund higher than new cost (user will have to wait till current plan expired or upgrade only)
+ - upgrading an expired plan
+ --- 
+
