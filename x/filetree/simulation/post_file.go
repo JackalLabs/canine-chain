@@ -22,7 +22,15 @@ func SimulateMsgPostFile(
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the PostFile simulation
+		files, err := types.CreateRootFolder(simAccount.Address.String())
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate root folder"), nil, err
+		}
+
+		_, found := k.GetFiles(ctx, files.Address, files.Owner)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find root folder"), nil, nil
+		}
 
 		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "PostFile simulation not implemented"), nil, nil
 	}

@@ -55,7 +55,7 @@ const (
 	//nolint:all
 	opWeightMsgCancelContract = "op_weight_msg_cancel_contract"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgCancelContract int = 100
+	defaultWeightMsgCancelContract int = 50
 
 	//nolint:all
 	opWeightMsgBuyStorage = "op_weight_msg_buy_storage"
