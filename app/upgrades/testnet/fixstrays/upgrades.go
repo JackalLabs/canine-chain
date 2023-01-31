@@ -8,6 +8,7 @@ import (
 	"github.com/jackalLabs/canine-chain/app/upgrades"
 	"github.com/jackalLabs/canine-chain/types"
 	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+	storeagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -36,7 +37,9 @@ func (u *Upgrade) Name() string {
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		if types.IsTestnet(ctx.ChainID()) {
+		if types.IsTestnet(ctx.ChainID()) || ctx.ChainID() == "test" {
+
+			fromVM[storeagemoduletypes.ModuleName] = 2
 
 			newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
 			if err != nil {
