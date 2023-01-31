@@ -161,11 +161,25 @@ The `postproof` command allows storage providers to post a proof claiming they h
 ```sh
 canined tx storage postproof [chunk_data] [proof_data]
 ```
+---
 ### buy-storage
 The `buy-storage` command allows users to pay for a specific amount of storage for a specified period of time.
 ```sh
-canined tx storage buy-storage [address] [duration] [byte-amount] [payment-denom]
+canined tx storage buy-storage [for-address] [duration] [bytes] [payment-denom]
 ```
+Example:
+```sh
+canined tx storage buy-storage jkl1t3stAcc0unt 720h 6000000000 ujkl
+```
+
+#### Failed Cases:
+ - buy storage while having an active plan
+ - buy less than the current usage (SpaceUsed)
+ - buy less than a GB
+ - buy less than a month
+ - pay with anything other than ujkl
+ --- 
+
 ### cancel-contract
 The `cancel-contract` command allows users to cancel currently active contracts removing the data usage from their account.
 ```sh
