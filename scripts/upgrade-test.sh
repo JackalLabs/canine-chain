@@ -1,11 +1,11 @@
 #!/bin/bash
 
-OLD_VERSION=1.1.2-hotfix
+OLD_VERSION=23.01-beta
 UPGRADE_HEIGHT=20
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
-SOFTWARE_UPGRADE_NAME=v3
+SOFTWARE_UPGRADE_NAME=fixstrays
 
 # underscore so that go tool will not take gocache into account
 mkdir -p ${ROOT}/../_build/gocache
@@ -26,6 +26,8 @@ fi
 
 # start old node
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
+
+./../_build/old/canined version --home $HOME
 
 sleep 20
 
