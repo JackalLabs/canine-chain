@@ -11,6 +11,7 @@ import (
 	"github.com/jackalLabs/canine-chain/app/upgrades"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha11"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha13"
+	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/fixstrays"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/killdeals"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -148,7 +149,7 @@ import (
 		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
 
-	v3 "github.com/jackalLabs/canine-chain/app/upgrades/v3"
+	"github.com/jackalLabs/canine-chain/app/upgrades/bouncybulldog"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -1123,10 +1124,11 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(alpha11.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(alpha13.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(killdeals.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(fixstrays.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
-	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
+	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
