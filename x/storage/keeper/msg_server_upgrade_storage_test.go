@@ -23,6 +23,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
 		DepositAccount: testAccount,
+		ProofWindow:    50,
 	})
 
 	cases := []struct {

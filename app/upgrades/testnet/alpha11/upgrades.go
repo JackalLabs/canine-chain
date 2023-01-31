@@ -1,16 +1,14 @@
-package v3
+package alpha11
 
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/jackalLabs/canine-chain/app/upgrades"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
-	oraclekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/jackalLabs/canine-chain/app/upgrades"
+	"github.com/jackalLabs/canine-chain/types"
+	oraclekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -33,22 +31,24 @@ func NewUpgrade(mm *module.Manager, configurator module.Configurator, ok oraclek
 
 // Name implements upgrades.Upgrade
 func (u *Upgrade) Name() string {
-	return "v3"
+	return "alpha11"
 }
 
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		fromVM[storagemoduletypes.ModuleName] = 1
-		fromVM[filetreemoduletypes.ModuleName] = 1
-		fromVM[oraclemoduletypes.ModuleName] = 1
+		if types.IsTestnet(ctx.ChainID()) {
+			fromVM[oraclemoduletypes.ModuleName] = 1
 
-		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
-		if err != nil {
+			newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
+			if err != nil {
+				return newVM, err
+			}
 			return newVM, err
+
 		}
 
-		return newVM, err
+		return fromVM, nil
 	}
 }
 
@@ -56,8 +56,6 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 func (u *Upgrade) StoreUpgrades() *storetypes.StoreUpgrades {
 	return &storetypes.StoreUpgrades{
 		Added: []string{
-			storagemoduletypes.StoreKey,
-			filetreemoduletypes.StoreKey,
 			oraclemoduletypes.StoreKey,
 		},
 	}

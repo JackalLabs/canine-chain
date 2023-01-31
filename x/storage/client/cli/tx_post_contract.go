@@ -30,10 +30,10 @@ func CmdPostContract() *cobra.Command {
 
 			msg := types.NewMsgPostContract(
 				clientCtx.GetFromAddress().String(),
-				argHashes,
 				argSignee,
 				argFilesize,
 				argFid,
+				argHashes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

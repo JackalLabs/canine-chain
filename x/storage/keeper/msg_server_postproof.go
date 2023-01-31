@@ -11,6 +11,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	merkletree "github.com/wealdtech/go-merkletree"
+	"github.com/wealdtech/go-merkletree/sha3"
 
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -63,7 +64,7 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 		ctx.Logger().Error("%v\n", err)
 		return nil, fmt.Errorf("could not build merkle tree")
 	}
-	verified, err := merkletree.VerifyProof(hashName, &proof, m)
+	verified, err := merkletree.VerifyProofUsing(hashName, false, &proof, [][]byte{m}, sha3.New512())
 	if err != nil {
 		ctx.Logger().Error("%v\n", err)
 
