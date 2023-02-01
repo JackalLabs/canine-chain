@@ -1,3 +1,4 @@
+
 <!--
 order: 0
 title: Jackal Storage Overview
@@ -124,6 +125,11 @@ canined q storage show-strays [cid]
 The `params` command allows users to view the params of the module.
 ```sh
 canined q storage params
+```
+#### storage-payment-info
+The `storage-payment-info` command returns the payment info of the requested address.
+```sh
+canined q storage storage-payment-info [address]
 ```
 
 ### Transactions
