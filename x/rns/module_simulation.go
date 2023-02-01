@@ -42,7 +42,7 @@ const (
 
 	opWeightMsgCancelBid = "op_weight_msg_cancel_bid"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgCancelBid int = 0
+	defaultWeightMsgCancelBid int = 100
 
 	opWeightMsgList = "op_weight_msg_list"
 	// TODO: Determine the simulation weight value
