@@ -19,6 +19,16 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		return nil, fmt.Errorf("contract not found")
 	}
 
+	_, found = k.GetActiveDeals(ctx, msg.Cid)
+	if found {
+		return nil, fmt.Errorf("contract already exists")
+	}
+
+	_, found = k.GetStrays(ctx, msg.Cid)
+	if found {
+		return nil, fmt.Errorf("contract already exists")
+	}
+
 	if contract.Signee != msg.Creator {
 		return nil, fmt.Errorf("you do not have permission to approve this contract")
 	}
