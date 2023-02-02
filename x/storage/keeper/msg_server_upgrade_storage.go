@@ -47,7 +47,7 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
 	}
 
-	if duration <= 0 {
+	if duration.Truncate(timeMonth) <= 0 {
 		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "duration can't be less than 1 month")
 	}
 
@@ -101,10 +101,9 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, err
 	}
 
-	timeTotal := timeMonth * duration
 	spi := types.StoragePaymentInfo{
 		Start:          ctx.BlockTime(),
-		End:            ctx.BlockTime().Add(timeTotal),
+		End:            ctx.BlockTime().Add(duration),
 		SpaceAvailable: bytes,
 		SpaceUsed:      payInfo.SpaceUsed,
 		Address:        msg.ForAddress,
