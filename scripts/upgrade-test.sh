@@ -64,4 +64,3 @@ done
 
 #sleep 3
 
-#canined start --log_level debug --home $HOME
