@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	fchunks   int64 = 1024
-	DayBlocks int64 = 10 * 5 // 10 blocks is about 1 minute
+	fchunks int64 = 1024
 )
 
 func getTotalSize(allDeals []types.ActiveDeals) sdk.Dec {
@@ -75,6 +74,8 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 			return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
 		}
 
+		DayBlocks := k.GetParams(ctx).ProofWindow
+
 		if sb.Int64() >= ctx.BlockHeight()-DayBlocks {
 			return sdkerror.Wrapf(sdkerror.ErrUnauthorized, "ignore young deals")
 		}
@@ -85,7 +86,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		if misses > missesToBurn {
 			provider, ok := k.GetProviders(ctx, deal.Provider)
 			if !ok {
-				return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
+				return sdkerror.Wrapf(sdkerror.ErrKeyNotFound, "provider not found")
 			}
 
 			curburn, ok := sdk.NewIntFromString(provider.BurnedContracts)
@@ -105,12 +106,12 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 			}
 			k.SetStrays(ctx, strayDeal)
 			k.RemoveActiveDeals(ctx, deal.Cid)
-			return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
+			return nil
 		}
 
 		deal.Proofsmissed = fmt.Sprintf("%d", misses)
 		k.SetActiveDeals(ctx, deal)
-		return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
+		return nil
 	}
 
 	ctx.Logger().Debug(fmt.Sprintf("File size: %s\n", deal.Filesize))
@@ -192,6 +193,8 @@ func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, a
 
 func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
 	allDeals := k.GetAllActiveDeals(ctx)
+
+	DayBlocks := k.GetParams(ctx).ProofWindow
 
 	ctx.Logger().Debug("blockdiff : %d\n", ctx.BlockHeight()%DayBlocks)
 

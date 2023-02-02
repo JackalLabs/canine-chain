@@ -30,6 +30,16 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		}
 	}
 
+	size := sdk.NewInt(int64(stray.Size()))
+
+	pieces := size.Quo(sdk.NewInt(1024))
+
+	var pieceToStart int64
+
+	if !pieces.IsZero() {
+		pieceToStart = ctx.BlockHeight() % pieces.Int64()
+	}
+
 	deal := types.ActiveDeals{
 		Cid:           stray.Cid,
 		Signee:        stray.Signee,
@@ -38,7 +48,7 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		Endblock:      "0",
 		Filesize:      stray.Filesize,
 		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", ctx.BlockHeight()/1024),
+		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
 		Creator:       msg.Creator,
 		Proofsmissed:  "0",
 		Merkle:        stray.Merkle,

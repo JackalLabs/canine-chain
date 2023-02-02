@@ -10,4 +10,5 @@ message Params {
   option (gogoproto.goproto_stringer) = false;
   
   string deposit_account = 1;
+  int64 proof_window = 2;
 }
