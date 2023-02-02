@@ -31,8 +31,8 @@ func SimulateMsgRegister(
 		// generating a random name
 		nameLength := simtypes.RandIntBetween(r, 1, 10)
 		name := StringWithCharset(r, nameLength, charset)
-		fullDomain := name + "." + tld // for debugging purposes
-		fmt.Print(fullDomain)
+		// fullDomain := name + "." + tld // for debugging purposes
+		// fmt.Print(fullDomain)
 		// generating a random time in years
 		numYears := simtypes.RandIntBetween(r, 1, 15)
 		blockHeight := ctx.BlockTime()
