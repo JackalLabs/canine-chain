@@ -8,11 +8,15 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgAddClaimer = "add_claimer"
-const TypeMsgRemoveClaimer = "remove_claimer"
+const (
+	TypeMsgAddClaimer    = "add_claimer"
+	TypeMsgRemoveClaimer = "remove_claimer"
+)
 
-var _ sdk.Msg = &MsgAddClaimer{}
-var _ sdk.Msg = &MsgRemoveClaimer{}
+var (
+	_ sdk.Msg = &MsgAddClaimer{}
+	_ sdk.Msg = &MsgRemoveClaimer{}
+)
 
 func NewMsgAddClaimer(creator string, claimer string) *MsgAddClaimer {
 	return &MsgAddClaimer{
