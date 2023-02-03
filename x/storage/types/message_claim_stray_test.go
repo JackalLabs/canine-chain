@@ -18,6 +18,7 @@ func TestMsgClaimStray_ValidateBasic(t *testing.T) {
 			msg: MsgClaimStray{
 				Creator: "invalid_address",
 				Cid:     "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
+				ForAddress:     "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
@@ -25,6 +26,7 @@ func TestMsgClaimStray_ValidateBasic(t *testing.T) {
 			msg: MsgClaimStray{
 				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				Cid:     "invalid_cid",
+				ForAddress:     "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		}, {
@@ -32,6 +34,7 @@ func TestMsgClaimStray_ValidateBasic(t *testing.T) {
 			msg: MsgClaimStray{
 				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				Cid:     "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
+				ForAddress:     "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 			},
 		},
 	}
