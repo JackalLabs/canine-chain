@@ -12,10 +12,11 @@ const TypeMsgClaimStray = "claim_stray"
 
 var _ sdk.Msg = &MsgClaimStray{}
 
-func NewMsgClaimStray(creator string, cid string) *MsgClaimStray {
+func NewMsgClaimStray(creator string, cid string, forAddress string) *MsgClaimStray {
 	return &MsgClaimStray{
-		Creator: creator,
-		Cid:     cid,
+		Creator:    creator,
+		Cid:        cid,
+		ForAddress: forAddress,
 	}
 }
 
@@ -47,6 +48,14 @@ func (msg *MsgClaimStray) ValidateBasic() error {
 	}
 	if prefix != AddressPrefix {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+	}
+
+	prefix, _, err = bech32.DecodeAndConvert(msg.ForAddress)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid for address (%s)", err)
+	}
+	if prefix != AddressPrefix {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid for prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
 	prefix, _, err = bech32.DecodeAndConvert(msg.Cid)
