@@ -1,6 +1,6 @@
 module github.com/jackalLabs/canine-chain
 
-go 1.19
+go 1.20
 
 require (
 	github.com/CosmWasm/wasmd v0.29.2
