@@ -62,7 +62,7 @@ const (
 
 	opWeightMsgAddRecord = "op_weight_msg_add_record"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgAddRecord int = 100
+	defaultWeightMsgAddRecord int = 50
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
