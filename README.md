@@ -14,6 +14,11 @@
 
 
 ## Installing the Canine CLI
+### Prerequisites
+* Install GoLang 1.20 [here](https://go.dev/dl/)
+* Install build essentials (GNU Make)
+
+### Installing
 To install `canined` on your Linux machine:
 
 `go install ./...`
