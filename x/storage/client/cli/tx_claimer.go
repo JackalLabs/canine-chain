@@ -13,7 +13,7 @@ var _ = strconv.Itoa(0)
 
 func CmdAddClaimer() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-claimer [adress]",
+		Use:   "add-claimer [address]",
 		Short: "Add claiming address for provider",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -40,7 +40,7 @@ func CmdAddClaimer() *cobra.Command {
 
 func CmdRemoveClaimer() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "remove-claimer [adress]",
+		Use:   "remove-claimer [address]",
 		Short: "Remove claiming address for provider",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
