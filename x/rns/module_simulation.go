@@ -88,7 +88,7 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 // RegisterStoreDecoder registers a decoder
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
-// WeightedOperations returns the all the gov module operations with their respective weights.
+// WeightedOperations returns the all the rns module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
@@ -183,7 +183,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	var weightMsgAddRecord int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddRecord, &weightMsgAddRecord, nil,
 		func(_ *rand.Rand) {
-			weightMsgTransfer = defaultWeightMsgTransfer
+			weightMsgAddRecord = defaultWeightMsgAddRecord
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(

@@ -24,6 +24,11 @@ func SimulateMsgDelist(
 		var simAccount simtypes.Account
 		var names []types.Names
 		simAccount, _ = simtypes.RandomAcc(r, accs)
+		// checking if any names are registered
+		exists := k.CheckExistence(ctx)
+		if !exists {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No domains registered yet"), nil, nil
+		}
 		for {
 			// finding all registered domain names
 			wctx := sdk.WrapSDKContext(ctx)

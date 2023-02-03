@@ -25,6 +25,11 @@ func SimulateMsgAddRecord(
 		var simAccount simtypes.Account
 		var names []types.Names
 		simAccount, _ = simtypes.RandomAcc(r, accs)
+		// checking if any names are registered
+		exists := k.CheckExistence(ctx)
+		if !exists {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No domains registered yet"), nil, nil
+		}
 		for {
 			// finding all registered domain names
 			wctx := sdk.WrapSDKContext(ctx)
@@ -80,7 +85,7 @@ func SimulateMsgAddRecord(
 		}
 
 		// building the message
-		msg.Name = name.Name
+		msg.Name = name.Name + "." + name.Tld
 		msg.Record = subdomain
 		msg.Value = "1"
 		msg.Data = "{}"

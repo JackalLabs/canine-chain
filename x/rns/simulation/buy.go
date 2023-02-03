@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -38,10 +37,6 @@ func SimulateMsgBuy(
 			saleI = simtypes.RandIntBetween(r, 0, len(allSale))
 			bName = allSale[saleI]
 		}
-
-		bnamestr := bName.Owner
-		simaccstr := simAccount.Address.String()
-		fmt.Print(bnamestr, simaccstr)
 
 		// ensuring the simAccount can buy the domain
 		price, err := sdk.ParseCoinNormalized(bName.Price)
