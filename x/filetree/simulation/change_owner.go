@@ -20,7 +20,6 @@ func SimulateMsgChangeOwner(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		merklePath := types.MerklePath("s/home/test/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		simBob, _ := simtypes.RandomAcc(r, accs)
 		address, _ := sdk.Bech32ifyAddressBytes("jkl", simAccount.Address)
@@ -50,7 +49,7 @@ func SimulateMsgChangeOwner(
 
 		msg := &types.MsgChangeOwner{
 			Creator:   address,
-			Address:   merklePath,
+			Address:   types.MerklePath("s/home/test/"),
 			FileOwner: accountHash,
 			NewOwner:  types.HashThenHex(bob),
 		}
