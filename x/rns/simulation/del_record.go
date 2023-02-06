@@ -12,61 +12,48 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func SimulateMsgAddRecord(
+func SimulateMsgDelRecord(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// 1. Find a registered domain name
-		// 2. Add a randomly generated subdomain -- subdomains are free
+		// 1. Find a registered name with subdomains
+		// 2. Find the associated account
 		// choosing a random account WITH registered domains
 		var simAccount simtypes.Account
-		var names []types.Names
-		simAccount, _ = simtypes.RandomAcc(r, accs)
+		var name types.Names
+		var nameWithSub string
 		// checking if any names are registered
 		exists := k.CheckExistence(ctx)
 		if !exists {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddRecord, "No domains registered yet"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "No domains registered yet"), nil, nil
 		}
-		for {
-			// finding all registered domain names
-			wctx := sdk.WrapSDKContext(ctx)
-			nReq := &types.QueryListOwnedNamesRequest{
-				Address: simAccount.Address.String(),
-			}
-			// requesting the domain names
-			regNames, err := k.ListOwnedNames(wctx, nReq)
-			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddRecord, "Couldn't request names"), nil, nil
-			}
-			names = regNames.GetNames()
-			if names != nil {
-				break
-			} else {
-				simAccount, _ = simtypes.RandomAcc(r, accs)
+		// scanning all names
+		for _, n := range k.GetAllNames(ctx) {
+			if n.Subdomains != nil {
+				name = n
+				nameWithSub = n.Subdomains[0].Name + "." + name.Name
 			}
 		}
+		if nameWithSub == "" {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "No registered names have subdomains"), nil, nil
+		}
+
+		// finding the owner
+		for _, o := range accs {
+			if o.Address.String() == name.Value {
+				simAccount = o
+			}
+		}
+		if simAccount.Address.String() == "" {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "Could not find owner"), nil, nil
+		}
+
 		// initializing the message
-		msg := &types.MsgAddRecord{
+		msg := &types.MsgDelRecord{
 			Creator: simAccount.Address.String(),
-		}
-
-		// choosing a random name
-		nameI := simtypes.RandIntBetween(r, 0, len(names))
-		name := names[nameI]
-
-		// generating a random subdomain
-		nameLength := simtypes.RandIntBetween(r, 1, 10)
-		subdomain := StringWithCharset(r, nameLength, charset) // charset is a const defined in utils.go
-
-		// checking if the subdomain exists on the domain
-		for _, sd := range name.Subdomains {
-			if sd.Name == subdomain {
-				// can add a randomizer, but very unlikely a randomly generated subdomain name is already on-chain
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Subdomain is already registered"), nil, nil
-			}
 		}
 
 		// generating the fees
@@ -85,10 +72,7 @@ func SimulateMsgAddRecord(
 		}
 
 		// building the message
-		msg.Name = name.Name + "." + name.Tld
-		msg.Record = subdomain
-		msg.Value = "1"
-		msg.Data = "{}"
+		msg.Name = nameWithSub + "." + name.Tld
 
 		txCtx := simulation.OperationInput{
 			R:             r,

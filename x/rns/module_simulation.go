@@ -62,7 +62,11 @@ const (
 
 	opWeightMsgAddRecord = "op_weight_msg_add_record"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgAddRecord int = 50
+	defaultWeightMsgAddRecord int = 60
+
+	opWeightMsgDelRecord = "op_weight_msg_del_record"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDelRecord int = 40
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -189,6 +193,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgAddRecord,
 		rnssimulation.SimulateMsgAddRecord(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDelRecord int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDelRecord, &weightMsgDelRecord, nil,
+		func(_ *rand.Rand) {
+			weightMsgDelRecord = defaultWeightMsgDelRecord
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDelRecord,
+		rnssimulation.SimulateMsgDelRecord(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	return operations
