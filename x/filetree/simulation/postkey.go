@@ -20,24 +20,9 @@ func SimulateMsgPostkey(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// merklePath := types.MerklePath("s/home/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		address, _ := sdk.Bech32ifyAddressBytes("jkl", simAccount.Address)
-		// accountHash := types.HashThenHex(address)
-		//
-		// // root folder
-		// rootFolder, err := types.CreateRootFolder(address)
-		// if err != nil {
-		// 	return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostkey, "unable to create root folder"), nil, err
-		// }
-		// k.SetFiles(ctx, *rootFolder)
-		//
-		// // home folder
-		// homeFolder, err := types.CreateFolderOrFile(address, strings.Split(address, ","), strings.Split(address, ","), "s/home/")
-		// if err != nil {
-		// 	return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostkey, "unable to create home folder"), nil, err
-		// }
-		// k.SetFiles(ctx, *homeFolder)
+
 		privateKey, err := types.MakePrivateKey(address)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostkey, "unable to create privateKey"), nil, err

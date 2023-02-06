@@ -51,7 +51,7 @@ func SimulateMsgAddEditors(
 		mockKeyAndIV := "{ key: mock key, IV: mock initialisation vector } "
 		pkeyHex := fmt.Sprintf("%x", simBob.PubKey.Bytes())
 		pkey, _ := eciesgo.NewPublicKeyFromHex(pkeyHex)
-		encryptedKeyAndIV, err := eciesgo.Encrypt(pkey, []byte(mockKeyAndIV))
+		encryptedKeyAndIV, _ := eciesgo.Encrypt(pkey, []byte(mockKeyAndIV))
 		editKeys := fmt.Sprintf("%x", encryptedKeyAndIV)
 
 		msg := &types.MsgAddEditors{
