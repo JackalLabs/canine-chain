@@ -19,29 +19,44 @@ func SimulateMsgTransfer(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// checking if enough accounts exist
+		if len(accs) < 2 {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Need more than 2 accounts to transfer names"), nil, nil
+		}
+
+		// choosing a random account WITH registered domains
+		var simAccount simtypes.Account
+		var names []types.Names
+		simAccount, _ = simtypes.RandomAcc(r, accs)
+		// checking if any names are registered
+		exists := k.CheckExistence(ctx)
+		if !exists {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No domains registered yet"), nil, nil
+		}
+		for {
+			// finding all registered domain names
+			wctx := sdk.WrapSDKContext(ctx)
+			nReq := &types.QueryListOwnedNamesRequest{
+				Address: simAccount.Address.String(),
+			}
+			// requesting the domain names
+			regNames, err := k.ListOwnedNames(wctx, nReq)
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Couldn't request names"), nil, nil
+			}
+			names = regNames.GetNames()
+			if names != nil {
+				break
+			} else {
+				simAccount, _ = simtypes.RandomAcc(r, accs)
+			}
+		}
+
+		// initializing the message
 		msg := &types.MsgTransfer{
 			Creator: simAccount.Address.String(),
 		}
 
-		if len(accs) < 2 {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Need more than two accounts to transfer names"), nil, nil
-		}
-
-		// finding all the registered names
-		nReq := &types.QueryListOwnedNamesRequest{
-			Address: simAccount.Address.String(),
-		}
-		wctx := sdk.WrapSDKContext(ctx)
-		regNames, err := k.ListOwnedNames(wctx, nReq)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Couldn't fetch names"), nil, err
-		}
-		// unmarshalling the results
-		names := regNames.GetNames()
-		if names == nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No names to transfer"), nil, nil
-		}
 		// selecting a random name to transfer
 		nameI := simtypes.RandIntBetween(r, 0, len(names))
 		tName := names[nameI]
