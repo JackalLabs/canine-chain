@@ -26,30 +26,42 @@ func SimulateMsgChangeOwner(
 		bob, _ := sdk.Bech32ifyAddressBytes("jkl", simBob.Address)
 		accountHash := types.HashThenHex(address)
 
-		// root folder
-		rootFolder, err := types.CreateRootFolder(address)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to create root folder"), nil, err
-		}
-		k.SetFiles(ctx, *rootFolder)
-
-		// home folder
+		/*
+			1. create share<address> file at s/home/
+			2. choose another account to transfer ownership to
+			3. transfer ownership
+		*/
 		homeFolder, err := types.CreateFolderOrFile(address, strings.Split(address, ","), strings.Split(address, ","), "s/home/")
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to create home folder"), nil, err
 		}
-		k.SetFiles(ctx, *homeFolder)
 
-		// test folder
-		testFolder, err := types.CreateFolderOrFile(address, strings.Split(address, ","), strings.Split(address, ","), "s/home/test/")
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to create test folder"), nil, err
+		_, found := k.GetFiles(ctx, homeFolder.Address, homeFolder.Owner)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to find s/home/"), nil, nil
 		}
-		k.SetFiles(ctx, *testFolder)
+
+		shareFilePath := "s/home/share" + simAccount.Address.String()
+		shareFile, err := types.CreateFolderOrFile(
+			address,
+			strings.Split(address, ","),
+			strings.Split(address, ","),
+			shareFilePath,
+		)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to create share file"), nil, err
+		}
+		k.SetFiles(ctx, *shareFile)
+
+		bobOwnerAddr := types.MakeOwnerAddress(shareFile.Address, bob)
+		_, found = k.GetFiles(ctx, shareFile.Address, bobOwnerAddr)
+		if found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "file already shared"), nil, nil
+		}
 
 		msg := &types.MsgChangeOwner{
 			Creator:   address,
-			Address:   types.MerklePath("s/home/test/"),
+			Address:   types.MerklePath(shareFilePath),
 			FileOwner: accountHash,
 			NewOwner:  types.HashThenHex(bob),
 		}
