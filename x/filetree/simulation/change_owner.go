@@ -25,6 +25,7 @@ func SimulateMsgChangeOwner(
 		address := simAccount.Address.String()
 		bob := simBob.Address.String() 
 		accountHash := types.HashThenHex(address)
+		bobHash := types.HashThenHex(address)
 
 		/*
 			1. create share<address> file at s/home/
@@ -53,7 +54,7 @@ func SimulateMsgChangeOwner(
 		}
 		k.SetFiles(ctx, *shareFile)
 
-		bobOwnerAddr := types.MakeOwnerAddress(shareFile.Address, bob)
+		bobOwnerAddr := types.MakeOwnerAddress(shareFile.Address, bobHash)
 		_, found = k.GetFiles(ctx, shareFile.Address, bobOwnerAddr)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "file already shared"), nil, nil
@@ -61,7 +62,7 @@ func SimulateMsgChangeOwner(
 
 		msg := &types.MsgChangeOwner{
 			Creator:   address,
-			Address:   types.MerklePath(shareFilePath),
+			Address:   shareFile.Address,
 			FileOwner: accountHash,
 			NewOwner:  types.HashThenHex(bob),
 		}
