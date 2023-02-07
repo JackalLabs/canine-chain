@@ -28,6 +28,7 @@ func CmdClaimStray() *cobra.Command {
 			msg := types.NewMsgClaimStray(
 				clientCtx.GetFromAddress().String(),
 				argCid,
+				clientCtx.GetFromAddress().String(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

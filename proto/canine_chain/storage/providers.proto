@@ -10,4 +10,5 @@ message Providers {
   string burned_contracts = 4;
   string creator = 5;
   string keybase_identity = 6;
+  repeated string auth_claimers = 7;
 }
