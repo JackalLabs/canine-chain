@@ -22,8 +22,8 @@ func SimulateMsgChangeOwner(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		simBob, _ := simtypes.RandomAcc(r, accs)
-		address, _ := sdk.Bech32ifyAddressBytes("jkl", simAccount.Address)
-		bob, _ := sdk.Bech32ifyAddressBytes("jkl", simBob.Address)
+		address := simAccount.Address.String()
+		bob := simBob.Address.String() 
 		accountHash := types.HashThenHex(address)
 
 		/*
