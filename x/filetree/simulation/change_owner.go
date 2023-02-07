@@ -23,7 +23,7 @@ func SimulateMsgChangeOwner(
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		simBob, _ := simtypes.RandomAcc(r, accs)
 		address := simAccount.Address.String()
-		bob := simBob.Address.String() 
+		bob := simBob.Address.String()
 		accountHash := types.HashThenHex(address)
 		bobHash := types.HashThenHex(address)
 
