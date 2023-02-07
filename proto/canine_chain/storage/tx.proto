@@ -18,6 +18,10 @@ service Msg {
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
   rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
   rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
+  rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
+  rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
+
+
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -68,6 +72,21 @@ message MsgSetProviderTotalspace {
 
 message MsgSetProviderTotalspaceResponse {}
 
+message MsgAddClaimer {
+  string creator = 1;
+  string claim_address = 2;
+}
+
+message MsgAddClaimerResponse {}
+
+message MsgRemoveClaimer {
+  string creator = 1;
+  string claim_address = 2;
+}
+
+message MsgRemoveClaimerResponse {}
+
+
 message MsgInitProvider {
   string creator = 1;
   string ip = 2;
@@ -97,6 +116,7 @@ message MsgBuyStorageResponse {}
 message MsgClaimStray {
   string creator = 1;
   string cid = 2;
+  string for_address = 3;
 }
 
 message MsgClaimStrayResponse {}

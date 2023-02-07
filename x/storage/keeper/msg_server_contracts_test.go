@@ -546,7 +546,7 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
 
-	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 10)
 	suite.Require().NoError(err)
 
 	provider := testAddresses[0]
@@ -564,8 +564,9 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 			name: "stray_not_found",
 			preRun: func() *types.MsgClaimStray {
 				return &types.MsgClaimStray{
-					Creator: provider,
-					Cid:     "foo",
+					Creator:    provider,
+					Cid:        "foo",
+					ForAddress: provider,
 				}
 			},
 			expErr:    true,
@@ -580,8 +581,9 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 				}
 				sKeeper.SetStrays(suite.ctx, s)
 				return &types.MsgClaimStray{
-					Cid:     s.Cid,
-					Creator: provider,
+					Cid:        s.Cid,
+					Creator:    provider,
+					ForAddress: provider,
 				}
 			},
 			expErr:    true,
@@ -607,8 +609,9 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 				}
 				sKeeper.SetActiveDeals(suite.ctx, ad)
 				return &types.MsgClaimStray{
-					Cid:     s.Cid,
-					Creator: provider,
+					Cid:        s.Cid,
+					Creator:    provider,
+					ForAddress: provider,
 				}
 			},
 			expErr:    true,
@@ -623,10 +626,38 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 					Address: provider2,
 					Creator: provider2,
 				}
+				s := types.Strays{
+					Cid: "foo",
+				}
+				sKeeper.SetStrays(suite.ctx, s)
 				sKeeper.SetProviders(suite.ctx, p)
 				return &types.MsgClaimStray{
-					Cid:     "foo",
-					Creator: provider2,
+					Cid:        "foo",
+					Creator:    provider2,
+					ForAddress: provider2,
+				}
+			},
+			expErr: false,
+		},
+		{
+			name: "successfully_claimed_stray_with_auth_claim",
+
+			preRun: func() *types.MsgClaimStray {
+				p := types.Providers{
+					Ip:           "192.168.0.40",
+					Address:      testAddresses[5],
+					Creator:      testAddresses[5],
+					AuthClaimers: []string{testAddresses[6]},
+				}
+				s := types.Strays{
+					Cid: "quoz",
+				}
+				sKeeper.SetStrays(suite.ctx, s)
+				sKeeper.SetProviders(suite.ctx, p)
+				return &types.MsgClaimStray{
+					Cid:        "quoz",
+					Creator:    testAddresses[6],
+					ForAddress: testAddresses[5],
 				}
 			},
 			expErr: false,
