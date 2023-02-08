@@ -35,7 +35,7 @@ const (
 	//nolint:all
 	opWeightMsgSignContract = "op_weight_msg_sign_contract"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgSignContract int = 80
+	defaultWeightMsgSignContract int = 90
 
 	//nolint:all
 	opWeightMsgSetProviderIP = "op_weight_msg_set_provider_ip"
@@ -55,7 +55,7 @@ const (
 	//nolint:all
 	opWeightMsgCancelContract = "op_weight_msg_cancel_contract"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgCancelContract int = 100
+	defaultWeightMsgCancelContract int = 10
 
 	//nolint:all
 	opWeightMsgBuyStorage = "op_weight_msg_buy_storage"
