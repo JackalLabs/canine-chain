@@ -42,7 +42,10 @@ message MsgPostproof {
   string cid = 4;
 }
 
-message MsgPostproofResponse { string merkle = 1; }
+message MsgPostproofResponse {
+  bool success = 1;
+  string errorMessage = 2;
+}
 
 message MsgSignContract {
   string creator = 1;

@@ -260,9 +260,9 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	for _, tc := range cases {
 		suite.Run(
 			tc.testName, func() {
-				_, err := msgSrvr.Postproof(context, &tc.msg)
+				res, err := msgSrvr.Postproof(context, &tc.msg)
 				if tc.expErr {
-					suite.Require().EqualError(err, tc.expErrMsg)
+					suite.Require().Equal(false, res.Success)
 				} else {
 					contract, _ := keeper.GetActiveDeals(suite.ctx, CID)
 					suite.Require().Equal("true", contract.Proofverified)
