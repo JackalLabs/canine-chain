@@ -20,16 +20,16 @@ func MakeCid(data []byte) (string, error) {
 	return bech32.ConvertAndEncode(types.CidPrefix, data)
 }
 
-func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) (int64, bool) {
+func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) int64 {
 	payInfo, found := k.GetStoragePaymentInfo(
 		ctx,
 		address,
 	)
 	if !found {
-		return TwoGigs, true
+		return 0
 	}
 
-	return payInfo.SpaceAvailable, false
+	return payInfo.SpaceAvailable
 }
 
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
