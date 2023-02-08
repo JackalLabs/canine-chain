@@ -44,10 +44,8 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Signee)
 	if !found {
 		return nil, fmt.Errorf("cannot save files without a plan")
-	} else {
-		if payInfo.SpaceUsed+(filesize.Int64()*3) > payInfo.SpaceAvailable {
-			return nil, fmt.Errorf("not enough storage on the users account")
-		}
+	} else if payInfo.SpaceUsed+(filesize.Int64()*3) > payInfo.SpaceAvailable {
+		return nil, fmt.Errorf("not enough storage on the users account")
 	}
 
 	h := sha256.New()

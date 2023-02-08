@@ -234,7 +234,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			testName: "proof successfully verified",
 			msg: types.MsgPostproof{
 				Creator:  testProvider.String(),
-				Cid:      CID,
+				Cid:      cid1,
 				Item:     item,
 				Hashlist: hashlist,
 			},
@@ -300,7 +300,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 				if tc.expErr {
 					suite.Require().Equal(false, res.Success)
 				} else {
-					contract, _ := keeper.GetActiveDeals(suite.ctx, CID)
+					contract, _ := keeper.GetActiveDeals(suite.ctx, cid1)
 					suite.Require().Equal("true", contract.Proofverified)
 					suite.Require().NoError(err)
 				}
