@@ -61,6 +61,10 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "cannot buy less than a gb")
 	}
 
+	if newBytes < payInfo.SpaceUsed {
+		return nil, sdkerr.Wrap(sdkerr.ErrInvalidRequest, "cannot downgrade below current usage")
+	}
+
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
 	newCost := k.GetStorageCost(ctx, newGbs, hours.TruncateInt64())
 
