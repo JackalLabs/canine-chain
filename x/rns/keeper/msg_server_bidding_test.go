@@ -4,6 +4,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -13,7 +14,13 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+	suite.Require().NoError(err)
+
+	nameOwner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
+	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
@@ -27,9 +34,6 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	suite.Require().NoError(err)
 
 	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: nuggieName, Price: "200ujkl"})
-
-	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
 
 	coin = sdk.NewCoin("ujkl", sdk.NewInt(10000))
 	coins = sdk.NewCoins(coin)
@@ -89,10 +93,13 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	nameOwner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
+	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
@@ -185,10 +192,13 @@ func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	nameOwner, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	bidder, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	nameOwner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
+	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))

@@ -21,6 +21,8 @@ func CmdProvider() *cobra.Command {
 		CmdSetProviderIP(),
 		CmdSetProviderKeybase(),
 		CmdInitProvider(),
+		CmdAddClaimer(),
+		CmdRemoveClaimer(),
 	}
 
 	for _, c := range cmds {

@@ -19,7 +19,7 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 
 	ls := k.ListFiles(ctx, stray.Fid)
 
-	provider, found := k.GetProviders(ctx, msg.Creator)
+	provider, found := k.GetProviders(ctx, msg.ForAddress)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "not a provider")
 	}
@@ -30,15 +30,38 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		}
 	}
 
+	size := sdk.NewInt(int64(stray.Size()))
+
+	pieces := size.Quo(sdk.NewInt(1024))
+
+	var pieceToStart int64
+
+	if !pieces.IsZero() {
+		pieceToStart = ctx.BlockHeight() % pieces.Int64()
+	}
+
+	if msg.ForAddress != msg.Creator {
+		found := false
+		for _, claimer := range provider.AuthClaimers {
+			if claimer == msg.Creator {
+				found = true
+			}
+		}
+		if !found {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot claim a stray for someone else")
+		}
+
+	}
+
 	deal := types.ActiveDeals{
 		Cid:           stray.Cid,
 		Signee:        stray.Signee,
-		Provider:      msg.Creator,
+		Provider:      msg.ForAddress,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
 		Endblock:      "0",
 		Filesize:      stray.Filesize,
 		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", ctx.BlockHeight()/1024),
+		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
 		Creator:       msg.Creator,
 		Proofsmissed:  "0",
 		Merkle:        stray.Merkle,

@@ -11,6 +11,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	merkletree "github.com/wealdtech/go-merkletree"
+	"github.com/wealdtech/go-merkletree/sha3"
 
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -24,25 +25,25 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	if !found {
 		ctx.Logger().Debug("%s, %s\n", "Contract not found", msg.Cid)
 
-		return nil, fmt.Errorf("contract not found")
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: fmt.Sprintf("contract not found: %s", msg.Cid)}, nil
 	}
 
 	if contract.Proofverified == "true" {
-		return nil, fmt.Errorf("proof already verified")
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "proof already verified"}, nil
 	}
 
 	ctx.Logger().Debug("Contract that was found: \n%v\n", contract)
 
 	nn, ok := sdk.NewIntFromString(contract.Blocktoprove)
 	if !ok {
-		return nil, fmt.Errorf("failed to parse block")
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "cannot parse block to prove"}, nil
 	}
 	num := nn.Int64()
 
 	h := sha256.New()
 	_, err := io.WriteString(h, fmt.Sprintf("%d%s", num, msg.Item))
 	if err != nil {
-		return nil, err
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
 	hashName := h.Sum(nil)
 
@@ -53,7 +54,7 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	err = json.Unmarshal([]byte(msg.Hashlist), &proof)
 	if err != nil {
 		ctx.Logger().Debug("%v\n", err)
-		return nil, err
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
 
 	ctx.Logger().Debug("proof: %v\n", proof)
@@ -61,27 +62,24 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	m, err := hex.DecodeString(contract.Merkle)
 	if err != nil {
 		ctx.Logger().Error("%v\n", err)
-		return nil, fmt.Errorf("could not build merkle tree")
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
-	verified, err := merkletree.VerifyProof(hashName, &proof, m)
+	verified, err := merkletree.VerifyProofUsing(hashName, false, &proof, [][]byte{m}, sha3.New512())
 	if err != nil {
 		ctx.Logger().Error("%v\n", err)
-
-		return nil, fmt.Errorf("could not build merkle tree")
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
 
 	if !verified {
 		ctx.Logger().Debug("%s\n", "Cannot verify")
 
-		return nil, fmt.Errorf("file chunk was not verified")
+		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "cannot verify proof"}, nil
 	}
 
-	if contract.Proofverified == "false" {
-		ctx.GasMeter().RefundGas(ctx.GasMeter().GasConsumed(), "successful proof refund.")
-	}
+	ctx.GasMeter().RefundGas(ctx.GasMeter().GasConsumed(), "successful proof refund.")
 
 	contract.Proofverified = "true"
 	k.SetActiveDeals(ctx, contract)
 
-	return &types.MsgPostproofResponse{Merkle: fmt.Sprintf("%v", proof)}, nil
+	return &types.MsgPostproofResponse{Success: true, ErrorMessage: ""}, nil
 }

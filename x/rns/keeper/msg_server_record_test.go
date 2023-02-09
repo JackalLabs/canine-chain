@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -11,7 +12,10 @@ func (suite *KeeperTestSuite) TestMsgAddRecord() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	owner, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
@@ -80,7 +84,10 @@ func (suite *KeeperTestSuite) TestMsgDelRecord() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	owner, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))

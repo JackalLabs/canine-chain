@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -9,19 +10,20 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	suite.SetupSuite()
 	msgSrvr, k, ctx := setupMsgServer(suite)
 
-	// Create test account
-	testAccount, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	depoAccount, err := sdk.AccAddressFromBech32("cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8")
-	suite.Require().NoError(err)
+	testAccount := testAddresses[0]
+	depoAccount := testAddresses[1]
 
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAccount, coins)
+	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
 
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
-		DepositAccount: depoAccount.String(),
+		DepositAccount: depoAccount,
+		ProofWindow:    50,
 	})
 
 	cases := []struct {
@@ -40,13 +42,13 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
 					SpaceAvailable: 100_000_000_000,
 					SpaceUsed:      5_000_000_000,
-					Address:        testAccount.String(),
+					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "720h",
 				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
@@ -60,13 +62,13 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				// Set user current SpaceUsed to 5GB
 				initialPayInfo := types.StoragePaymentInfo{
 					SpaceUsed: 5000000000,
-					Address:   testAccount.String(),
+					Address:   testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "720h",
 				Bytes:        "3000000000",
 				PaymentDenom: "ujkl",
@@ -82,13 +84,13 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 					End:            suite.ctx.BlockTime().AddDate(0, 0, -1),
 					SpaceAvailable: 100_000_000_000,
 					SpaceUsed:      5_000_000_000,
-					Address:        testAccount.String(),
+					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "720h",
 				Bytes:        "6000000000",
 				PaymentDenom: "ujkl",
@@ -100,8 +102,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		{
 			testName: "successfully buy 1tb for 3 month",
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "2160h",
 				Bytes:        "1000000000000",
 				PaymentDenom: "ujkl",
@@ -113,8 +115,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		{
 			testName: "buy less than a gb",
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "720h",
 				Bytes:        "-1",
 				PaymentDenom: "ujkl",
@@ -125,8 +127,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		{
 			testName: "buy less than a month",
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "2m",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
@@ -138,8 +140,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			// TODO: update this when we allow alt payments
 			testName: "payment with uatom",
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
-				ForAddress:   testAccount.String(),
+				Creator:      testAccount,
+				ForAddress:   testAccount,
 				Duration:     "720h",
 				Bytes:        "1000000000",
 				PaymentDenom: "uatom",
@@ -151,7 +153,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			testName: "invalid creator address",
 			msg: types.MsgBuyStorage{
 				Creator:      "invalid_address",
-				ForAddress:   testAccount.String(),
+				ForAddress:   testAccount,
 				Duration:     "720h",
 				Bytes:        "1000000000",
 				PaymentDenom: "ujkl",
@@ -162,7 +164,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		{
 			testName: "invalid for address",
 			msg: types.MsgBuyStorage{
-				Creator:      testAccount.String(),
+				Creator:      testAccount,
 				ForAddress:   "invalid_address",
 				Duration:     "720h",
 				Bytes:        "1000000000",
@@ -197,7 +199,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				suite.Require().Equal(tc.tokens, diff)
 			}
 
-			k.RemoveStoragePaymentInfo(suite.ctx, testAccount.String())
+			k.RemoveStoragePaymentInfo(suite.ctx, testAccount)
 		})
 	}
 	suite.reset()

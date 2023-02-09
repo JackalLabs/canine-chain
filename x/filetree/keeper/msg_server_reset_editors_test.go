@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
@@ -13,37 +13,35 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 	suite.SetupSuite()
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	alice, err := sdkTypes.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
 	suite.Require().NoError(err)
 
-	bob, err := sdkTypes.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
-	suite.Require().NoError(err)
-
-	charlie, err := sdkTypes.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
-	suite.Require().NoError(err)
+	alice := testAddresses[0]
+	bob := testAddresses[1]
+	charlie := testAddresses[2]
 
 	// set root folder for alice
-	aliceRootFolder, err := types.CreateRootFolder(alice.String())
+	aliceRootFolder, err := types.CreateRootFolder(alice)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
 	// set home folder for alice
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice.String(), strings.Split(alice.String(), ","), strings.Split(alice.String(), ","), "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), strings.Split(alice, ","), "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// add bob and charlie as editors for pepe
 
-	EditorIds := strings.Split(alice.String(), ",")
-	EditorIds = append(EditorIds, bob.String(), charlie.String())
+	EditorIds := strings.Split(alice, ",")
+	EditorIds = append(EditorIds, bob, charlie)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice.String(), EditorIds, strings.Split(alice.String(), ","), "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice, EditorIds, strings.Split(alice, ","), "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
 	pepeMerklePath := types.MerklePath("s/home/pepe.jpg")
-	aliceAccountHash := types.HashThenHex(alice.String())
+	aliceAccountHash := types.HashThenHex(alice)
 	aliceOwnerAddress := types.MakeOwnerAddress(pepeMerklePath, aliceAccountHash)
 
 	// Let's query the file after it was set to confirm that alice and bob are editors
@@ -56,15 +54,15 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	bobIsEditor, err := keeper.HasEditAccess(res.Files, bob.String())
+	bobIsEditor, err := keeper.HasEditAccess(res.Files, bob)
 	suite.Require().NoError(err)
 	suite.Require().Equal(bobIsEditor, true)
 
-	aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice.String())
+	aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice)
 	suite.Require().NoError(err)
 	suite.Require().Equal(aliceIsEditor, true)
 
-	charlieIsEditor, err := keeper.HasEditAccess(res.Files, charlie.String())
+	charlieIsEditor, err := keeper.HasEditAccess(res.Files, charlie)
 	suite.Require().NoError(err)
 	suite.Require().Equal(charlieIsEditor, true)
 
@@ -84,7 +82,7 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 		{ // charlie fails to reset alice's editing access
 			preRun: func() *types.MsgResetEditors {
 				return types.NewMsgResetEditors(
-					charlie.String(),
+					charlie,
 					pepeMerklePath,
 					aliceOwnerAddress,
 				)
@@ -96,7 +94,7 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 		{ // alice fails to reset edit permissions for a non existent file
 			preRun: func() *types.MsgResetEditors {
 				return types.NewMsgResetEditors(
-					alice.String(),
+					alice,
 					types.MerklePath("s/home/ghost.jpg"),
 					aliceOwnerAddress,
 				)
@@ -108,7 +106,7 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 		{ // alice resets editing access
 			preRun: func() *types.MsgResetEditors {
 				return types.NewMsgResetEditors(
-					alice.String(),
+					alice,
 					pepeMerklePath,
 					aliceOwnerAddress,
 				)
@@ -139,15 +137,15 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				bobIsEditor, err := keeper.HasEditAccess(res.Files, bob.String())
+				bobIsEditor, err := keeper.HasEditAccess(res.Files, bob)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(bobIsEditor, false)
 
-				charlieIsEditor, err := keeper.HasEditAccess(res.Files, charlie.String())
+				charlieIsEditor, err := keeper.HasEditAccess(res.Files, charlie)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(charlieIsEditor, false)
 
-				aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice.String())
+				aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(aliceIsEditor, true)
 

@@ -76,6 +76,7 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		Filesize: msg.Filesize,
 		Creator:  msg.Creator,
 		Merkle:   msg.Merkle,
+		Age:      ctx.BlockHeight(),
 	}
 
 	k.SetContracts(ctx, newContract)

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -17,11 +18,12 @@ const tst = "testownercid"
 func (suite *KeeperTestSuite) TestPostContracts() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
-	creator, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	buyer, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
+	creator := testAddresses[0]
+	buyer := testAddresses[1]
 
 	cases := []struct {
 		name      string
@@ -35,7 +37,7 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "provider_doesn't_exist",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
 					Signee:   "1",
 					Filesize: "1",
@@ -51,17 +53,17 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			preRun: func() *types.MsgPostContract {
 				// Set provider with invalid totalspace string
 				p := types.Providers{
-					Address:         creator.String(),
+					Address:         creator,
 					Ip:              "123.0.0.0",
 					Totalspace:      "bad_content",
 					BurnedContracts: "",
-					Creator:         creator.String(),
+					Creator:         creator,
 				}
 				sKeeper.SetProviders(suite.ctx, p)
-				_, found := sKeeper.GetProviders(suite.ctx, creator.String())
+				_, found := sKeeper.GetProviders(suite.ctx, creator)
 				suite.Require().True(found)
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
 					Signee:   "1",
 					Filesize: "1",
@@ -70,7 +72,7 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			},
 			postRun: func() {
 				// fix the bad format for next tc
-				p, found := sKeeper.GetProviders(suite.ctx, creator.String())
+				p, found := sKeeper.GetProviders(suite.ctx, creator)
 				suite.Require().True(found)
 				p.Totalspace = "100000"
 				sKeeper.SetProviders(suite.ctx, p)
@@ -83,7 +85,7 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "bad_filesize_format",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
 					Signee:   "1",
 					Filesize: "bad_filesize",
@@ -98,7 +100,7 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "not_enough_provider_storage",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
 					Signee:   "1",
 					Filesize: "1000001",
@@ -114,11 +116,11 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			preRun: func() *types.MsgPostContract {
 				// Setup provider storag
 				p := types.Providers{
-					Address:         creator.String(),
+					Address:         creator,
 					Ip:              "123.0.0.0",
 					Totalspace:      "1000000000000000",
 					BurnedContracts: "0",
-					Creator:         creator.String(),
+					Creator:         creator,
 				}
 				sKeeper.SetProviders(suite.ctx, p)
 				// start free two gig trial
@@ -126,16 +128,16 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 				info := types.StoragePaymentInfo{
 					SpaceUsed:      1900000000,
 					SpaceAvailable: 2000000000,
-					Address:        buyer.String(),
+					Address:        buyer,
 					Start:          time.Now().Add(-10),
 					End:            time.Now().Add(50),
 				}
 				sKeeper.SetStoragePaymentInfo(suite.ctx, info)
 
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
-					Signee:   buyer.String(),
+					Signee:   buyer,
 					Filesize: "1000000000",
 					Fid:      "1",
 				}
@@ -156,9 +158,9 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 				suite.ctx = suite.ctx.WithBlockHeight(500)
 				goCtx = sdk.WrapSDKContext(suite.ctx)
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
-					Signee:   buyer.String(),
+					Signee:   buyer,
 					Filesize: "10000",
 					Fid:      "1",
 				}
@@ -171,9 +173,9 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			preRun: func() *types.MsgPostContract {
 				suite.Require().NoError(err)
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
-					Signee:   buyer.String(),
+					Signee:   buyer,
 					Filesize: "10000",
 					Fid:      "123",
 				}
@@ -185,9 +187,9 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			name: "cannot_duplicate_contract",
 			preRun: func() *types.MsgPostContract {
 				return &types.MsgPostContract{
-					Creator:  creator.String(),
+					Creator:  creator,
 					Merkle:   "1",
-					Signee:   buyer.String(),
+					Signee:   buyer,
 					Filesize: "10000",
 					Fid:      "123",
 				}
@@ -220,11 +222,12 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 func (suite *KeeperTestSuite) TestSignContract() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
+	provider := testAddresses[0]
+	user := testAddresses[1]
 
 	cases := []struct {
 		name      string
@@ -239,7 +242,7 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			preRun: func() *types.MsgSignContract {
 				return &types.MsgSignContract{
 					Cid:     "contract_that_doesn't_exist",
-					Creator: provider.String(),
+					Creator: provider,
 				}
 			},
 			expErr:    true,
@@ -252,11 +255,11 @@ func (suite *KeeperTestSuite) TestSignContract() {
 				// creating a test contract to sign
 				c := types.Contracts{
 					Cid:        "123",
-					Creator:    provider.String(),
+					Creator:    provider,
 					Priceamt:   "1",
 					Pricedenom: "ujkl",
 					Merkle:     "1",
-					Signee:     user.String(),
+					Signee:     user,
 					Duration:   "10000",
 					Filesize:   "10000",
 					Fid:        "123",
@@ -279,20 +282,20 @@ func (suite *KeeperTestSuite) TestSignContract() {
 				spi := types.StoragePaymentInfo{
 					SpaceAvailable: 200_000_000,
 					SpaceUsed:      200_000_000,
-					Address:        user.String(),
+					Address:        user,
 				}
 				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
-				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user)
 				suite.Require().True(found)
 				return &types.MsgSignContract{
 					Cid:     "123",
-					Creator: user.String(),
+					Creator: user,
 				}
 			},
 			expErr:    true,
 			expErrMsg: "not enough storage space",
 			postRun: func() {
-				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user.String())
+				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user)
 			},
 		},
 		{
@@ -304,20 +307,20 @@ func (suite *KeeperTestSuite) TestSignContract() {
 					SpaceUsed:      0,
 					// set expiration date to yesterday
 					End:     time.Now().AddDate(0, -1, 0),
-					Address: user.String(),
+					Address: user,
 				}
 				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
-				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user)
 				suite.Require().True(found)
 				return &types.MsgSignContract{
 					Cid:     "123",
-					Creator: user.String(),
+					Creator: user,
 				}
 			},
 			expErr:    true,
 			expErrMsg: "storage subscription has expired",
 			postRun: func() {
-				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user.String())
+				sKeeper.RemoveStoragePaymentInfo(suite.ctx, user)
 			},
 		},
 		{
@@ -327,14 +330,14 @@ func (suite *KeeperTestSuite) TestSignContract() {
 					SpaceAvailable: 200_000_000,
 					SpaceUsed:      0,
 					End:            time.Now().AddDate(0, 10, 0),
-					Address:        user.String(),
+					Address:        user,
 				}
 				sKeeper.SetStoragePaymentInfo(suite.ctx, spi)
-				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user.String())
+				_, found := sKeeper.GetStoragePaymentInfo(suite.ctx, user)
 				suite.Require().True(found)
 				return &types.MsgSignContract{
 					Cid:     "123",
-					Creator: user.String(),
+					Creator: user,
 				}
 			},
 			expErr: false,
@@ -365,8 +368,10 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
+
+	user := testAddresses[0]
 
 	cases := []struct {
 		name      string
@@ -380,7 +385,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 			name: "active_deal_not_found",
 			preRun: func() *types.MsgCancelContract {
 				return &types.MsgCancelContract{
-					Creator: user.String(),
+					Creator: user,
 					Cid:     "foo",
 				}
 			},
@@ -402,8 +407,8 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 				d := types.ActiveDeals{
 					Cid:     dcid,
-					Signee:  user.String(),
-					Creator: user.String(),
+					Signee:  user,
+					Creator: user,
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
 
@@ -418,8 +423,8 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 					k := types.ActiveDeals{
 						Cid:     scid,
-						Signee:  user.String(),
-						Creator: user.String(),
+						Signee:  user,
+						Creator: user,
 					}
 					sKeeper.SetActiveDeals(suite.ctx, k)
 				}
@@ -432,7 +437,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				}
 			},
 			expErr:    true,
-			expErrMsg: fmt.Sprintf("cannot cancel a contract that isn't yours. foo is not %s: unauthorized", user.String()),
+			expErrMsg: fmt.Sprintf("cannot cancel a contract that isn't yours. foo is not %s: unauthorized", user),
 		},
 
 		{
@@ -451,8 +456,8 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 				d := types.ActiveDeals{
 					Cid:     dcid,
-					Creator: user.String(),
-					Signee:  user.String(),
+					Creator: user,
+					Signee:  user,
 					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
@@ -469,7 +474,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				suite.Require().NoError(err)
 
 				return &types.MsgCancelContract{
-					Creator: user.String(),
+					Creator: user,
 					Cid:     d.Cid,
 				}
 			},
@@ -493,7 +498,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				d := types.Strays{
 					Cid:    dcid,
 					Fid:    "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-					Signee: user.String(),
+					Signee: user,
 				}
 				sKeeper.SetStrays(suite.ctx, d)
 
@@ -509,7 +514,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				suite.Require().NoError(err)
 
 				return &types.MsgCancelContract{
-					Creator: user.String(),
+					Creator: user,
 					Cid:     d.Cid,
 				}
 			},
@@ -540,11 +545,12 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 func (suite *KeeperTestSuite) TestClaimStray() {
 	suite.SetupSuite()
 	msgSrvr, sKeeper, goCtx := setupMsgServer(suite)
-	provider, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 10)
 	suite.Require().NoError(err)
 
-	provider2, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
-	suite.Require().NoError(err)
+	provider := testAddresses[0]
+	provider2 := testAddresses[1]
 
 	cases := []struct {
 		name      string
@@ -558,8 +564,9 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 			name: "stray_not_found",
 			preRun: func() *types.MsgClaimStray {
 				return &types.MsgClaimStray{
-					Creator: provider.String(),
-					Cid:     "foo",
+					Creator:    provider,
+					Cid:        "foo",
+					ForAddress: provider,
 				}
 			},
 			expErr:    true,
@@ -574,8 +581,9 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 				}
 				sKeeper.SetStrays(suite.ctx, s)
 				return &types.MsgClaimStray{
-					Cid:     s.Cid,
-					Creator: provider.String(),
+					Cid:        s.Cid,
+					Creator:    provider,
+					ForAddress: provider,
 				}
 			},
 			expErr:    true,
@@ -591,8 +599,8 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 				sKeeper.SetStrays(suite.ctx, s)
 				p := types.Providers{
 					Ip:      "0.0.0.0",
-					Address: provider.String(),
-					Creator: provider.String(),
+					Address: provider,
+					Creator: provider,
 				}
 				sKeeper.SetProviders(suite.ctx, p)
 				ad := types.ActiveDeals{
@@ -601,8 +609,9 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 				}
 				sKeeper.SetActiveDeals(suite.ctx, ad)
 				return &types.MsgClaimStray{
-					Cid:     s.Cid,
-					Creator: provider.String(),
+					Cid:        s.Cid,
+					Creator:    provider,
+					ForAddress: provider,
 				}
 			},
 			expErr:    true,
@@ -614,13 +623,41 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 			preRun: func() *types.MsgClaimStray {
 				p := types.Providers{
 					Ip:      "123.0.0.0",
-					Address: provider2.String(),
-					Creator: provider.String(),
+					Address: provider2,
+					Creator: provider2,
 				}
+				s := types.Strays{
+					Cid: "foo",
+				}
+				sKeeper.SetStrays(suite.ctx, s)
 				sKeeper.SetProviders(suite.ctx, p)
 				return &types.MsgClaimStray{
-					Cid:     "foo",
-					Creator: provider2.String(),
+					Cid:        "foo",
+					Creator:    provider2,
+					ForAddress: provider2,
+				}
+			},
+			expErr: false,
+		},
+		{
+			name: "successfully_claimed_stray_with_auth_claim",
+
+			preRun: func() *types.MsgClaimStray {
+				p := types.Providers{
+					Ip:           "192.168.0.40",
+					Address:      testAddresses[5],
+					Creator:      testAddresses[5],
+					AuthClaimers: []string{testAddresses[6]},
+				}
+				s := types.Strays{
+					Cid: "quoz",
+				}
+				sKeeper.SetStrays(suite.ctx, s)
+				sKeeper.SetProviders(suite.ctx, p)
+				return &types.MsgClaimStray{
+					Cid:        "quoz",
+					Creator:    testAddresses[6],
+					ForAddress: testAddresses[5],
 				}
 			},
 			expErr: false,

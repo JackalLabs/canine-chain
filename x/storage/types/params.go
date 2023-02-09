@@ -11,7 +11,10 @@ import (
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
-var KeyDepositAccount = []byte("DepositAccount")
+var (
+	KeyDepositAccount = []byte("DepositAccount")
+	KeyProofWindow    = []byte("ProofWindow")
+)
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
@@ -22,6 +25,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams() Params {
 	return Params{
 		DepositAccount: "jkl1778a6x4e6t074ajvs7l76wpa2xd0s4pt0tqq57",
+		ProofWindow:    50,
 	}
 }
 
@@ -34,7 +38,21 @@ func DefaultParams() Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyDepositAccount, &p.DepositAccount, validateDeposit),
+		paramtypes.NewParamSetPair(KeyProofWindow, &p.ProofWindow, validateProofWindow),
 	}
+}
+
+func validateProofWindow(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v <= 1 {
+		return errors.New("proof window must be greater than 1")
+	}
+
+	return nil
 }
 
 func validateDeposit(i interface{}) error {

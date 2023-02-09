@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
@@ -12,7 +13,10 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	user, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	cases := []struct {
@@ -64,7 +68,10 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	user, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	user, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
@@ -154,9 +161,12 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 
 	msgSrvr, _, context := setupMsgServer(suite)
 
-	owner, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
-	receiver, err := sdk.AccAddressFromBech32("cosmos1xetrp5dwjplsn4lev5r2cu8en5qsq824vza9nu")
+
+	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+	receiver, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
 	successfulName := "BiPhan.jkl"
@@ -245,6 +255,93 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 			} else {
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(types.MsgRegisterResponse{}, *res)
+
+			}
+		})
+	}
+}
+
+func (suite *KeeperTestSuite) TestMsgUpdate() {
+	suite.SetupSuite()
+
+	msgSrvr, _, context := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+	suite.Require().NoError(err)
+
+	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
+	notowner, err := sdk.AccAddressFromBech32(testAddresses[1])
+	suite.Require().NoError(err)
+
+	successfulName := "BiPhan.jkl"
+
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coins := sdk.NewCoins(coin)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", "2")
+	suite.Require().NoError(err)
+
+	const testdata = "{\"test\":\"test\"}"
+
+	cases := []struct {
+		preRun    func() *types.MsgUpdate
+		expErr    bool
+		expErrMsg string
+		name      string
+	}{
+		{
+			preRun: func() *types.MsgUpdate {
+				return types.NewMsgUpdate(
+					owner.String(),
+					successfulName,
+					testdata,
+				)
+			},
+			expErr: false,
+			name:   "successful update",
+		},
+		{
+			preRun: func() *types.MsgUpdate {
+				return types.NewMsgUpdate(
+					notowner.String(),
+					successfulName,
+					testdata,
+				)
+			},
+			expErr:    true,
+			expErrMsg: "not your name: unauthorized",
+			name:      "not owner",
+		},
+		{
+			preRun: func() *types.MsgUpdate {
+				return types.NewMsgUpdate(
+					owner.String(),
+					"nonExistentName.jkl",
+					testdata,
+				)
+			},
+			expErr:    true,
+			expErrMsg: "name does not exist or has expired: not found",
+			name:      "name doesn't exist",
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			msg := tc.preRun()
+			suite.Require().NoError(err)
+			res, err := msgSrvr.Update(context, msg)
+			if tc.expErr {
+				suite.Require().Error(err)
+				suite.Require().Contains(err.Error(), tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+				suite.Require().EqualValues(types.MsgUpdateResponse{}, *res)
 
 			}
 		})

@@ -36,7 +36,7 @@ func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data str
 
 	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost*numYears.Int64())}
 
-	blockHeight := ctx.BlockTime()
+	blockHeight := ctx.BlockHeight()
 
 	time := numYears.Int64() * 5733818
 
@@ -49,11 +49,11 @@ func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data str
 	if isFound {
 		if whois.Value == owner.String() {
 			time = whois.Expires + time
-		} else if blockHeight.Unix() < whois.Expires {
+		} else if blockHeight < whois.Expires {
 			return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "name already registered")
 		}
 	} else {
-		time += blockHeight.Unix()
+		time += blockHeight
 	}
 
 	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, types.ModuleName, price)
