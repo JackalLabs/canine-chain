@@ -65,6 +65,18 @@ const (
 	//nolint:all
 	opWeightMsgUpgradeStorage          = "op_weight_msg_upgrade_storage"
 	defaultWeightMsgUpgradeStorage int = 100
+
+	//nolint:all
+	opWeightMsgClaimStray = "op_weight_msg_claim_stray"
+	defaultWeightMsgClaimStray int = 100
+
+	//nolint:all
+	opWeightMsgAddProviderClaimer          = "op_weight_msg_add_provider_claimer"
+	defaultWeightMsgAddProviderClaimer int = 100
+
+	//nolint:all
+	opWeightMsgRemoveProviderClaimer          = "op_weight_msg_remove_provider_claimer"
+	defaultWeightMsgRemoveProviderClaimer int = 10
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -185,6 +197,39 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgUpgradeStorage,
 		storagesimulation.SimulateMsgUpgradeStorage(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgClaimStray int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaimStray, &weightMsgClaimStray, nil,
+		func(_ *rand.Rand) {
+			weightMsgClaimStray = defaultWeightMsgClaimStray
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgClaimStray,
+		storagesimulation.SimulateMsgClaimStray(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgAddProviderClaimer int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddProviderClaimer, &weightMsgAddProviderClaimer, nil,
+		func(_ *rand.Rand) {
+			weightMsgAddProviderClaimer = defaultWeightMsgAddProviderClaimer
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgAddProviderClaimer,
+		storagesimulation.SimulateMsgAddProviderClaimer(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgRemoveProviderClaimer int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgRemoveProviderClaimer, &weightMsgRemoveProviderClaimer, nil,
+		func(_ *rand.Rand) {
+			weightMsgRemoveProviderClaimer = defaultWeightMsgRemoveProviderClaimer
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgRemoveProviderClaimer,
+		storagesimulation.SimulateMsgRemoveProviderClaimer(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	return operations
