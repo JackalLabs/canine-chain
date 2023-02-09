@@ -9,4 +9,5 @@ message Strays {
   string signee = 3;
   string filesize = 4;
   string merkle = 5;
+  int64 end = 6;
 }
