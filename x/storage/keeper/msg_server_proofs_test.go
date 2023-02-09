@@ -8,8 +8,11 @@ import (
 	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/testutil"
+	k "github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
-	merkletree "github.com/wealdtech/go-merkletree"
+
+	"github.com/wealdtech/go-merkletree"
 	"github.com/wealdtech/go-merkletree/sha3"
 )
 
@@ -119,20 +122,42 @@ func (suite *KeeperTestSuite) TestPostProof() {
 
 	msgSrvr, keeper, context := setupMsgServer(suite)
 
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 4)
+	suite.Require().NoError(err)
+
+	depoAccount := testAddresses[0]
+
 	// harded coded accounts to keep CIDs static for testing
 	// Create user account
-	user, err := sdk.AccAddressFromBech32("cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl")
+	user, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
 	// Create provider account
-	testProvider, err := sdk.AccAddressFromBech32("cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg")
+	testProvider, err := sdk.AccAddressFromBech32(testAddresses[2])
 	suite.Require().NoError(err)
+
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount: depoAccount,
+		ProofWindow:    50,
+	})
 
 	// Init Provider
 	_, err = msgSrvr.InitProvider(context, &types.MsgInitProvider{
 		Creator:    testProvider.String(),
 		Ip:         "192.168.0.1",
 		Totalspace: "1_000_000",
+	})
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, user, sdk.NewCoins(sdk.NewInt64Coin("ujkl", 100000000)))
+	suite.Require().NoError(err)
+
+	_, err = msgSrvr.BuyStorage(context, &types.MsgBuyStorage{
+		Creator:      user.String(),
+		ForAddress:   user.String(),
+		Bytes:        "4000000000",
+		Duration:     "720h",
+		PaymentDenom: "ujkl",
 	})
 	suite.Require().NoError(err)
 
@@ -143,7 +168,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	suite.Require().Equal("11", filesize)
 
 	_, found := keeper.GetStoragePaymentInfo(suite.ctx, user.String())
-	suite.Require().Equal(false, found)
+	suite.Require().Equal(true, found)
 	// Post Contract
 	_, err = msgSrvr.PostContract(context, &types.MsgPostContract{
 		Creator:  testProvider.String(),
@@ -152,6 +177,12 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		Fid:      "fid",
 		Merkle:   merkleroot,
 	})
+	suite.Require().NoError(err)
+	h := sha256.New()
+	_, err = io.WriteString(h, fmt.Sprintf("%s%s%s", user.String(), testProvider.String(), "fid"))
+	suite.Require().NoError(err)
+	hashName := h.Sum(nil)
+	cid1, err := k.MakeCid(hashName)
 	suite.Require().NoError(err)
 
 	// Post Contract #2
@@ -163,20 +194,25 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		Merkle:   "invalid_merkleroot",
 	})
 	suite.Require().NoError(err)
-
+	h2 := sha256.New()
+	_, err = io.WriteString(h2, fmt.Sprintf("%s%s%s", user.String(), testProvider.String(), "fid"))
+	suite.Require().NoError(err)
+	hashName2 := h.Sum(nil)
+	cid2, err := k.MakeCid(hashName2)
+	suite.Require().NoError(err)
 	// Sign Contract for active deal
 	_, err = msgSrvr.SignContract(context, &types.MsgSignContract{
 		Creator: user.String(),
-		Cid:     CID,
+		Cid:     cid1,
 	})
 	suite.Require().NoError(err)
 
 	// Sign Contract #2 for active deal
 	_, err = msgSrvr.SignContract(context, &types.MsgSignContract{
 		Creator: user.String(),
-		Cid:     CID2,
+		Cid:     cid2,
 	})
-	suite.Require().NoError(err)
+	suite.Require().Error(err)
 
 	// Storage Provider get file and create merkle for proof
 	// for tc 1 and 2
@@ -198,7 +234,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			testName: "proof successfully verified",
 			msg: types.MsgPostproof{
 				Creator:  testProvider.String(),
-				Cid:      CID,
+				Cid:      cid1,
 				Item:     item,
 				Hashlist: hashlist,
 			},
@@ -209,7 +245,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			testName: "postproof for the same file again",
 			msg: types.MsgPostproof{
 				Creator:  testProvider.String(),
-				Cid:      CID,
+				Cid:      cid1,
 				Item:     item,
 				Hashlist: hashlist,
 			},
@@ -226,7 +262,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			testName: "proof fail to verify",
 			msg: types.MsgPostproof{
 				Creator:  testProvider.String(),
-				Cid:      CID,
+				Cid:      cid1,
 				Item:     item2,
 				Hashlist: hashlist2,
 			},
@@ -248,7 +284,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			testName: "contract with invalid merkleroot",
 			msg: types.MsgPostproof{
 				Creator:  testProvider.String(),
-				Cid:      CID2,
+				Cid:      cid2,
 				Item:     item2,
 				Hashlist: hashlist2,
 			},
@@ -264,7 +300,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 				if tc.expErr {
 					suite.Require().Equal(false, res.Success)
 				} else {
-					contract, _ := keeper.GetActiveDeals(suite.ctx, CID)
+					contract, _ := keeper.GetActiveDeals(suite.ctx, cid1)
 					suite.Require().Equal("true", contract.Proofverified)
 					suite.Require().NoError(err)
 				}

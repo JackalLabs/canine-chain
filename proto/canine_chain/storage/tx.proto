@@ -50,9 +50,11 @@ message MsgPostproofResponse {
 message MsgSignContract {
   string creator = 1;
   string cid = 2;
+  bool pay_once = 3;
 }
 
 message MsgSignContractResponse {}
+
 
 message MsgSetProviderIP {
   string creator = 1;

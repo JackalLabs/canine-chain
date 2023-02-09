@@ -103,6 +103,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 				Signee:   deal.Signee,
 				Filesize: deal.Filesize,
 				Merkle:   deal.Merkle,
+				End:      deal.Endblock,
 			}
 			k.SetStrays(ctx, strayDeal)
 			k.RemoveActiveDeals(ctx, deal.Cid)
@@ -153,7 +154,13 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 
 func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, networkSize sdk.Dec, balance sdk.Coin) {
 	for _, deal := range allDeals {
-		info, _ := k.GetStoragePaymentInfo(ctx, deal.Signee)
+		info, found := k.GetStoragePaymentInfo(ctx, deal.Signee)
+		if !found {
+			cerr := CanContract(ctx, deal.Cid, deal.Signee, k)
+			if cerr != nil {
+				ctx.Logger().Error(cerr.Error())
+			}
+		}
 		grace := info.End.Add(time.Hour * 24 * 30)
 		if grace.After(ctx.BlockTime()) {
 
