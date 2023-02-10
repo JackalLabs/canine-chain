@@ -58,7 +58,7 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		Signee:        stray.Signee,
 		Provider:      msg.ForAddress,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      "0",
+		Endblock:      stray.End,
 		Filesize:      stray.Filesize,
 		Proofverified: "false",
 		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),

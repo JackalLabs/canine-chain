@@ -12,30 +12,28 @@ import (
 
 var _ = strconv.Itoa(0)
 
-const FlagPayUpfront = "pay-upfront"
-
-func CmdSignContract() *cobra.Command {
+func CmdUpgradeStorage() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "sign-contract [cid]",
-		Short: "Broadcast message sign-contract",
-		Args:  cobra.ExactArgs(1),
+		Use:   "upgrade-storage [for-address] [duration] [bytes] [payment-denom]",
+		Short: "Broadcast message upgrade-storage",
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argCid := args[0]
-
-			pay, err := cmd.Flags().GetBool(FlagPayUpfront)
-			if err != nil {
-				return err
-			}
+			argForAddress := args[0]
+			argDuration := args[1]
+			argBytes := args[2]
+			argPaymentDenom := args[3]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgSignContract(
+			msg := types.NewMsgUpgradeStorage(
 				clientCtx.GetFromAddress().String(),
-				argCid,
-				pay,
+				argForAddress,
+				argDuration,
+				argBytes,
+				argPaymentDenom,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -43,8 +41,6 @@ func CmdSignContract() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-
-	cmd.Flags().Bool(FlagPayUpfront, false, "Pay for the contract in advance.")
 
 	flags.AddTxFlagsToCmd(cmd)
 

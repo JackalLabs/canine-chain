@@ -38,7 +38,7 @@ func SimulateMsgUpgradeStorage(
 		}
 
 		oldSize := paymentInfo.SpaceAvailable
-		size := simtypes.RandIntBetween(r, int(oldSize), int(oldSize)+10_000_000_000)
+		size := simtypes.RandIntBetween(r, int(oldSize)+10_000_000_000, int(oldSize)+10_000_000_000_000)
 
 		t := time.Hour * 1440
 		hours := sdk.NewDec(t.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))

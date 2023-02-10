@@ -46,12 +46,31 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		pieceToStart = ctx.BlockHeight() % pieces.Int64()
 	}
 
+	var end int64
+	if msg.PayOnce {
+		s := size.Quo(sdk.NewInt(1_000_000_000)).Int64()
+		if s <= 0 {
+			s = 1
+		}
+		cost := k.GetStorageCost(ctx, s, 720*12*200) // pay for 200 years
+		deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
+		if err != nil {
+			return nil, err
+		}
+		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
+		if err != nil {
+			return nil, err
+		}
+
+		end = (200*31_536_000)/6 + ctx.BlockHeight()
+	}
+
 	deal := types.ActiveDeals{
 		Cid:           contract.Cid,
 		Signee:        contract.Signee,
 		Provider:      contract.Creator,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      "0",
+		Endblock:      end,
 		Filesize:      contract.Filesize,
 		Proofverified: "false",
 		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
@@ -61,26 +80,29 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Fid:           contract.Fid,
 	}
 
-	fsize, ok := sdk.NewIntFromString(contract.Filesize)
-	if !ok {
-		return nil, fmt.Errorf("cannot parse file size")
-	}
-	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
-	if found {
-		// check if user has any free space
-		if payInfo.SpaceUsed+(fsize.Int64()*3) > payInfo.SpaceAvailable {
-			return nil, fmt.Errorf("not enough storage space")
+	if end == 0 {
+		fsize, ok := sdk.NewIntFromString(contract.Filesize)
+		if !ok {
+			return nil, fmt.Errorf("cannot parse file size")
 		}
-		// check if storage subscription still active
-		if payInfo.End.Before(ctx.BlockTime()) {
-			return nil, fmt.Errorf("storage subscription has expired")
+		payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
+		if found {
+			// check if user has any free space
+			if payInfo.SpaceUsed+(fsize.Int64()*3) > payInfo.SpaceAvailable {
+				return nil, fmt.Errorf("not enough storage space")
+			}
+			// check if storage subscription still active
+			if payInfo.End.Before(ctx.BlockTime()) {
+				return nil, fmt.Errorf("storage subscription has expired")
+			}
 		}
+		// we going to need an else statement to check for the free trial storage since they wont have payInfo
+
+		payInfo.SpaceUsed += fsize.Int64() * 3
+
+		k.SetStoragePaymentInfo(ctx, payInfo)
 	}
-	// we going to need an else statement to check for the free trial storage since they wont have payInfo
 
-	payInfo.SpaceUsed += fsize.Int64() * 3
-
-	k.SetStoragePaymentInfo(ctx, payInfo)
 	k.SetActiveDeals(ctx, deal)
 	k.RemoveContracts(ctx, contract.Cid)
 
@@ -117,6 +139,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 			Fid:      contract.Fid,
 			Filesize: contract.Filesize,
 			Merkle:   contract.Merkle,
+			End:      end,
 		}
 
 		cids = append(cids, scid)
