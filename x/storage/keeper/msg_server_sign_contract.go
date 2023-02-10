@@ -70,7 +70,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Signee:        contract.Signee,
 		Provider:      contract.Creator,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      end,
+		Endblock:      fmt.Sprintf("%d", end),
 		Filesize:      contract.Filesize,
 		Proofverified: "false",
 		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
