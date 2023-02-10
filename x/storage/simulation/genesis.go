@@ -35,7 +35,9 @@ func RandomizedGenState(simState *module.SimulationState) {
 
 	storageGen := types.DefaultGenesis()
 	storageGen.ProvidersList = providers
-	storageGen.Params = types.DefaultParams()
+	p := types.DefaultParams()
+	p.DepositAccount = "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc"
+	storageGen.Params = p
 
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(storageGen)
 }
