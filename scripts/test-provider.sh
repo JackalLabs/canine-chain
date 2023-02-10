@@ -8,7 +8,6 @@ export CHAIN="canine-1"
 export ALIAS="marston"
 export MONIKER="jackal"
 
-
 canined init $MONIKER --home=$JKL_HOME --chain-id=$CHAIN
 canined config chain-id $CHAIN --home=$JKL_HOME
 canined config keyring-backend test --home=$JKL_HOME
