@@ -13,6 +13,20 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
+func GetBidsFor(k keeper.Keeper, ctx sdk.Context, name string) (bids []types.Bids) {
+	allBids := k.GetAllBids(ctx)
+	if len(bids) == 0 {
+		return nil
+	}
+
+	for _, bid := range allBids {
+		if bid.Name == name{
+			bids = append(bids, bid)
+		}
+	}
+	return bids
+}
+
 func SimulateMsgAcceptBid(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
@@ -27,65 +41,41 @@ func SimulateMsgAcceptBid(
 
 		// getting a random domain name that is on sale
 		allNames := k.GetAllForsale(ctx)
-		if len(allNames) < 1 {
+		if len(allNames) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "No domain names listed"), nil, nil
 		}
-		rNameI := simtypes.RandIntBetween(r, 0, len(allNames))
-		rName := allNames[rNameI]
+		rName := allNames[r.Intn(len(allNames))]
 
 		// scanning bids
-		allBids := k.GetAllBids(ctx)
-		var bidderName string
-		for _, bids := range allBids {
-			// assuming all addresses are 42 characters long
-			auctionedName := bids.Index[42:]
-			if auctionedName == rName.Name {
-				bidderName = bids.Index[:42]
-				break
-			}
+		bids := GetBidsFor(k, ctx, rName.Name)
+		if len(bids) == 0 {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unalbe to find bids"), nil, nil
 		}
-		if bidderName == "" {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "No active bids available"), nil, nil
-		}
+		bid := bids[r.Intn(len(bids))]
 
 		// finding the owner account
-		var simAccount simtypes.Account
-		for _, acc := range accs {
-			if acc.Address.String() == rName.Owner {
-				simAccount = acc
-				break
-			}
-		}
+		acc := sdk.MustAccAddressFromBech32(rName.Owner)
+		simAccount, found := simtypes.FindAccount(accs, acc)
 
-		if len(simAccount.Address) < 1 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "Could not find owner account"), nil, nil
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "owner account not found"), 
+			nil, 
+			fmt.Errorf("rns registered with non-existing account")
 		}
 
 		// packaging the request
 		msg := &types.MsgAcceptBid{
-			Creator: simAccount.Address.String(),
+			Creator: rName.Owner,
 			Name:    rName.Name,
-			From:    bidderName,
+			From: bid.Bidder,
 		}
-
-		n, tld, _ := keeper.GetNameAndTLD(rName.Name)
-		whois, isFound := k.GetNames(ctx, n, tld)
-		simaccstr := simAccount.Address.String()
-		fmt.Print(whois, isFound, simaccstr)
-
-		// calculating the fees
-		price := sdk.NewInt(0) // accepting bids is free?
-		spendable := bk.SpendableCoins(ctx, simAccount.Address)
-		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
 
 		var fees sdk.Coins
 
-		if !hasNeg {
-			var err error
-			fees, err = simtypes.RandomFees(r, ctx, coins)
-			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
-			}
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{
