@@ -26,16 +26,14 @@ func SimulateMsgBuy(
 
 		// choosing a random name listed on the market
 		allSale := k.GetAllForsale(ctx)
-		if len(allSale) < 1 {
+		if len(allSale) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No domains for sale"), nil, nil
 		}
-		saleI := simtypes.RandIntBetween(r, 0, len(allSale))
-		bName := allSale[saleI]
+		bName := allSale[r.Intn(len(allSale))]
 
 		// ensuring the sim accounts isn't the owner
-		for bName.Owner == simAccount.Address.String() {
-			saleI = simtypes.RandIntBetween(r, 0, len(allSale))
-			bName = allSale[saleI]
+		if bName.Owner == simAccount.Address.String() {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to choose buyer"), nil, nil
 		}
 
 		// ensuring the simAccount can buy the domain

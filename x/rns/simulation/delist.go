@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -19,65 +20,39 @@ func SimulateMsgDelist(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Selecting accounts with listed domains
-		// choosing a random account WITH registered domains
-		var simAccount simtypes.Account
-		var names []types.Names
-		simAccount, _ = simtypes.RandomAcc(r, accs)
-		// checking if any names are registered
-		exists := k.CheckExistence(ctx)
-		if !exists {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No domains registered yet"), nil, nil
+
+		forsales := k.GetAllForsale(ctx)
+		if len(forsales) == 0 {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "unable to find names for sale"), nil, nil
 		}
-		for {
-			// finding all registered domain names
-			wctx := sdk.WrapSDKContext(ctx)
-			nReq := &types.QueryListOwnedNamesRequest{
-				Address: simAccount.Address.String(),
-			}
-			// requesting the domain names
-			regNames, err := k.ListOwnedNames(wctx, nReq)
-			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Couldn't request names"), nil, nil
-			}
-			names = regNames.GetNames()
-			if names != nil {
-				break
-			} else {
-				simAccount, _ = simtypes.RandomAcc(r, accs)
-			}
+		forsale := forsales[r.Intn(len(forsales))]
+
+		name, tld, err := keeper.GetNameAndTLD(forsale.Name)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "unable to get name and tld"), nil, err
+		}
+
+		rns, found := k.GetNames(ctx, name, tld)
+		if rns.Value != forsale.Owner {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "name is expired"), nil, nil
 		}
 
 		msg := &types.MsgDelist{
-			Creator: simAccount.Address.String(),
+			Creator: forsale.Owner,
+			Name: forsale.Name,
 		}
-		// finding the first name that the random sim account has listed
-		var deList types.Names
-		for _, n := range names {
-			if _, found := k.GetForsale(ctx, n.Name+"."+n.Tld); found && n.Name != "" {
-				deList = n
-			}
-		}
-		if deList.Name == "" {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No viable registered domains found"), nil, nil
-		}
-		// delisting the chosen name
-		msg.Name = deList.Name + "." + deList.Tld
 
-		// compiling the fees and the message
-		// generating the fees
-		price := sdk.NewInt(0) // delisting is free?
+		simAccount, found := simtypes.FindAccount(accs, sdk.MustAccAddressFromBech32(msg.Creator))
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "unable to find names for sale"),
+			nil, 
+			fmt.Errorf("account not found")
+		}
+
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
-		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
-
-		var fees sdk.Coins
-
-		if !hasNeg {
-			var err error
-			fees, err = simtypes.RandomFees(r, ctx, coins)
-			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
-			}
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

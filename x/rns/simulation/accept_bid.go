@@ -15,7 +15,7 @@ import (
 
 func GetBidsFor(k keeper.Keeper, ctx sdk.Context, name string) (bids []types.Bids) {
 	allBids := k.GetAllBids(ctx)
-	if len(bids) == 0 {
+	if len(allBids) == 0 {
 		return nil
 	}
 
@@ -46,6 +46,19 @@ func SimulateMsgAcceptBid(
 		}
 		rName := allNames[r.Intn(len(allNames))]
 
+		n, tld, err := keeper.GetNameAndTLD(rName.Name)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unable to get name and tld"), nil, err
+		}
+		
+		name, found := k.GetNames(ctx, n, tld)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unable to get name and tld"), nil, err
+		}
+		if rName.Owner != name.Value {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "bid is no longer valid"), nil, nil
+		}
+
 		// scanning bids
 		bids := GetBidsFor(k, ctx, rName.Name)
 		if len(bids) == 0 {
@@ -69,8 +82,6 @@ func SimulateMsgAcceptBid(
 			Name:    rName.Name,
 			From: bid.Bidder,
 		}
-
-		var fees sdk.Coins
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
