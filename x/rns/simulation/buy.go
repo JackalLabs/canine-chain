@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -30,9 +31,20 @@ func SimulateMsgBuy(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No domains for sale"), nil, nil
 		}
 		bName := allSale[r.Intn(len(allSale))]
+		
+		n, tld, err := keeper.GetNameAndTLD(bName.Name)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to get name and tld"), nil, err
+		}
+		name, found := k.GetNames(ctx, n, tld)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find name"),
+			nil,
+			fmt.Errorf("failed to get name")
+		}
 
 		// ensuring the sim accounts isn't the owner
-		if bName.Owner == simAccount.Address.String() {
+		if name.Value == simAccount.Address.String() {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to choose buyer"), nil, nil
 		}
 
