@@ -38,7 +38,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		return nil, fmt.Errorf("cannot parse size")
 	}
 
-	pieces := size.Quo(sdk.NewInt(1024))
+	pieces := size.Quo(sdk.NewInt(k.GetParams(ctx).ChunkSize))
 
 	var pieceToStart int64
 
