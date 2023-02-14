@@ -60,7 +60,7 @@ sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/
 sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.canine/config/config.toml
 
 # Update genesis file
-sed -i 's/"deposit_account": "[a-z0-9]*",/"deposit_account": "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",/' ~/.canine/config/genesis.json
+sed -i 's/"deposit_account": "[a-z0-9]*",/"deposit_account": "jkl1s00nvkagel9xe6luqmmd09jt6jgjl7qu57prct",/' ~/.canine/config/genesis.json
 
 # Start the node 
 canined start --pruning=nothing  --minimum-gas-prices=0ujkl
