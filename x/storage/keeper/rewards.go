@@ -11,10 +11,6 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-const (
-	fchunks int64 = 1024
-)
-
 func getTotalSize(allDeals []types.ActiveDeals) sdk.Dec {
 	networkSize := sdk.NewDecFromInt(sdk.NewInt(0))
 	for i := 0; i < len(allDeals); i++ {
@@ -48,7 +44,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		byteHash = byte(ctx.BlockHeight()) // support for running simulations
 	}
 
-	d := totalSize.TruncateInt().Int64() / fchunks
+	d := totalSize.TruncateInt().Int64() / k.GetParams(ctx).ChunkSize
 
 	if d > 0 {
 		iprove = (int64(byteHash) + int64(ctx.BlockGasMeter().GasConsumed())) % d
