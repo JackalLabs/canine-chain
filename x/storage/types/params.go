@@ -12,13 +12,13 @@ import (
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 var (
-	KeyDepositAccount = []byte("DepositAccount")
-	KeyProofWindow    = []byte("ProofWindow")
-	KeyChunkSize      = []byte("ChunkSize")
-	KeyMissesToBurn   = []byte("MissesToBurn")
-	KeyPriceFeed      = []byte("PriceFeed")
+	KeyDepositAccount         = []byte("DepositAccount")
+	KeyProofWindow            = []byte("ProofWindow")
+	KeyChunkSize              = []byte("ChunkSize")
+	KeyMissesToBurn           = []byte("MissesToBurn")
+	KeyPriceFeed              = []byte("PriceFeed")
 	KeyMaxContractAgeInBlocks = []byte("MaxContractAgeInBlocks")
-	KeyPricePerTbPerMonth = []byte("PricePerTbPerMonth")
+	KeyPricePerTbPerMonth     = []byte("PricePerTbPerMonth")
 )
 
 // ParamKeyTable the param key table for launch module
@@ -29,13 +29,13 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		DepositAccount: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
-		ProofWindow:    50,
-		ChunkSize:      1024,
-		MissesToBurn:   3,
-		PriceFeed:      "jklprice",
+		DepositAccount:         "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		MissesToBurn:           3,
+		PriceFeed:              "jklprice",
 		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth: 8,
+		PricePerTbPerMonth:     8,
 	}
 }
 
@@ -54,11 +54,11 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyPriceFeed, &p.PriceFeed, validatePriceFeed),
 		paramtypes.NewParamSetPair(
 			KeyMaxContractAgeInBlocks,
-			&p.MaxContractAgeInBlocks, 
+			&p.MaxContractAgeInBlocks,
 			validateMaxContractAgeInBlocks),
 		paramtypes.NewParamSetPair(
 			KeyPricePerTbPerMonth,
-			&p.PricePerTbPerMonth, 
+			&p.PricePerTbPerMonth,
 			validatePricePerTbPerMonth),
 	}
 }
@@ -153,6 +153,7 @@ func validatePricePerTbPerMonth(i interface{}) error {
 
 	return nil
 }
+
 // Validate validates the set of params
 func (p Params) Validate() error {
 	return nil

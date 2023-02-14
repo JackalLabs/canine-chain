@@ -4,7 +4,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-
 func (k Keeper) KillOldContracts(ctx sdk.Context) {
 	maxContractAgeInBlocks := k.GetParams(ctx).MaxContractAgeInBlocks
 	contracts := k.GetAllContracts(ctx)
