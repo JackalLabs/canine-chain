@@ -13,7 +13,7 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 	msgSrvr, k, context := setupMsgServer(suite)
 
 	alice := testAddresses[0]
-	claim_address := testAddresses[1]
+	claimAddress := testAddresses[1]
 
 	provider := types.Providers{
 		Address:         alice,
@@ -36,7 +36,7 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 			name: "add a new claim addr",
 			msg: types.MsgAddClaimer{
 				Creator:      alice,
-				ClaimAddress: claim_address,
+				ClaimAddress: claimAddress,
 			},
 			expErr: false,
 		},
@@ -44,7 +44,7 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 			name: "add the same claim addr",
 			msg: types.MsgAddClaimer{
 				Creator:      alice,
-				ClaimAddress: claim_address,
+				ClaimAddress: claimAddress,
 			},
 			expErr: true,
 			errMsg: "cannot add the same claimer twice: conflict",
@@ -53,7 +53,7 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 			name: "add claimer to a non-existing provider",
 			msg: types.MsgAddClaimer{
 				Creator:      "non-existing provider",
-				ClaimAddress: claim_address,
+				ClaimAddress: claimAddress,
 			},
 			expErr: true,
 			errMsg: "Provider not found. Please init your provider.",
@@ -66,7 +66,7 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 				suite.Require().EqualError(err, tc.errMsg)
 			} else {
 				provider, _ := k.GetProviders(suite.ctx, alice)
-				suite.Require().Equal(provider.AuthClaimers[0], claim_address)
+				suite.Require().Equal(provider.AuthClaimers[0], claimAddress)
 			}
 		})
 	}
