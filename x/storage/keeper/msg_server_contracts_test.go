@@ -284,6 +284,32 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			},
 			expErr: false,
 		},
+		{
+			name: "pay_once",
+			preRun: func() *types.MsgSignContract {
+				// creating a test contract to sign
+				c := types.Contracts{
+					Cid:        "456",
+					Creator:    provider,
+					Priceamt:   "1",
+					Pricedenom: "ujkl",
+					Merkle:     "1",
+					Signee:     user,
+					Duration:   "10000",
+					Filesize:   "10000",
+					Fid:        "123",
+				}
+				sKeeper.SetContracts(suite.ctx, c)
+				_, found := sKeeper.GetContracts(suite.ctx, c.Cid)
+				suite.Require().True(found)
+				return &types.MsgSignContract{
+					Cid:     "456",
+					Creator: user,
+					PayOnce: true,
+				}
+			},
+			expErr: false,
+		},
 	}
 
 	for _, tc := range cases {

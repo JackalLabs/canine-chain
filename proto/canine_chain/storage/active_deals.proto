@@ -8,7 +8,7 @@ message ActiveDeals {
   string signee = 2;
   string provider = 3;
   string startblock = 4;
-  int64 endblock = 5;
+  string endblock = 5;
   string filesize = 6;
   string proofverified = 7;
   string proofsmissed = 8;

@@ -20,7 +20,7 @@ $BINARY init --chain-id $CHAIN_ID moniker --home $HOME
 
 $BINARY keys add $KEY --keyring-backend $KEYRING --home $HOME
 
-$BINARY keys add $KEY1 --keyring-backend $KEYRING --home $HOME
+echo "brief enhance flee chest rabbit matter chaos clever lady enable luggage arrange hint quarter change float embark canoe chalk husband legal dignity music web" | $BINARY keys add $KEY1 --keyring-backend $KEYRING --recover --home $HOME
 
 # Allocate genesis accounts (cosmos formatted addresses)
 $BINARY add-genesis-account $KEY "1000000000000${DENOM}" --keyring-backend $KEYRING --home $HOME

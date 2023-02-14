@@ -92,6 +92,10 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 			provider.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
 			k.SetProviders(ctx, provider)
 
+			intBlock, ok := sdk.NewIntFromString(deal.Endblock)
+			if !ok {
+				return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed for endblock")
+			}
 			// Creating new stray file from the burned active deal
 			strayDeal := types.Strays{
 				Cid:      deal.Cid,
@@ -99,7 +103,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 				Signee:   deal.Signee,
 				Filesize: deal.Filesize,
 				Merkle:   deal.Merkle,
-				End:      deal.Endblock,
+				End:      intBlock.Int64(),
 			}
 			k.SetStrays(ctx, strayDeal)
 			k.RemoveActiveDeals(ctx, deal.Cid)
