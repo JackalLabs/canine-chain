@@ -24,7 +24,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
 		DepositAccount: testAccount,
 		ProofWindow:    50,
-		ChunkSize:      1024,
+		ChunkSize:      10240,
 	})
 
 	cases := []struct {

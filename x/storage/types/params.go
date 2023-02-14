@@ -27,7 +27,7 @@ func NewParams() Params {
 	return Params{
 		DepositAccount: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
 		ProofWindow:    50,
-		ChunkSize:      1024,
+		ChunkSize:      10240,
 	}
 }
 
