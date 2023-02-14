@@ -77,7 +77,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		}
 
 		misses := intt.Int64() + 1
-		const missesToBurn int64 = 3
+		missesToBurn := k.GetParams(ctx).MissesToBurn
 
 		if misses > missesToBurn {
 			provider, ok := k.GetProviders(ctx, deal.Provider)
