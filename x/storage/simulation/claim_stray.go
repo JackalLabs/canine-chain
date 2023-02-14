@@ -41,10 +41,10 @@ func SimulateMsgClaimStray(
 			}
 		}
 
-		claimer := provider.Address
-		if len(provider.AuthClaimers) > 0 {
-			claimer = provider.AuthClaimers[r.Intn(len(provider.AuthClaimers))]
+		if len(provider.AuthClaimers) == 0 {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find claimers"), nil, nil
 		}
+		claimer := provider.AuthClaimers[r.Intn(len(provider.AuthClaimers))]
 
 		simAccount, found := simtypes.FindAccount(
 			accs, sdk.MustAccAddressFromBech32(claimer),
