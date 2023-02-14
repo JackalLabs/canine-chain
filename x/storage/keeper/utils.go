@@ -79,7 +79,8 @@ func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int 
 func (k Keeper) GetJklPrice(ctx sdk.Context) (price sdk.Dec) {
 	price = sdk.MustNewDecFromStr("0.20")
 
-	feed, found := k.oraclekeeper.GetFeed(ctx, "jklprice")
+	priceFeed := k.GetParams(ctx).PriceFeed
+	feed, found := k.oraclekeeper.GetFeed(ctx, priceFeed)
 	if found {
 		type data struct {
 			Price  string `json:"price"`

@@ -16,6 +16,7 @@ var (
 	KeyProofWindow    = []byte("ProofWindow")
 	KeyChunkSize      = []byte("ChunkSize")
 	KeyMissesToBurn   = []byte("MissesToBurn")
+	KeyPriceFeed      = []byte("PriceFeed")
 )
 
 // ParamKeyTable the param key table for launch module
@@ -30,6 +31,7 @@ func NewParams() Params {
 		ProofWindow:    50,
 		ChunkSize:      1024,
 		MissesToBurn:   3,
+		PriceFeed:      "jklprice",
 	}
 }
 
@@ -45,6 +47,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyProofWindow, &p.ProofWindow, validateProofWindow),
 		paramtypes.NewParamSetPair(KeyChunkSize, &p.ChunkSize, validateChunkSize),
 		paramtypes.NewParamSetPair(KeyMissesToBurn, &p.MissesToBurn, validateMissesToBurn),
+		paramtypes.NewParamSetPair(KeyPriceFeed, &p.PriceFeed, validatePriceFeed),
 	}
 }
 
@@ -95,6 +98,19 @@ func validateMissesToBurn(i interface{}) error {
 
 	if v < 1 {
 		return errors.New("misses to burn cannot be smaller than 1")
+	}
+
+	return nil
+}
+
+func validatePriceFeed(i interface{}) error {
+	v, ok := i.(string)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if strings.TrimSpace(v) == "" {
+		return errors.New("price feed cannot be blank")
 	}
 
 	return nil

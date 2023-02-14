@@ -15,4 +15,5 @@ message Params {
   // The value cannot be smaller than 1 to avoid zero division
   int64 chunk_size = 3;
   int64 misses_to_burn = 4;
+  string price_feed = 5;
 }
