@@ -4,7 +4,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/params"
+	"github.com/jackalLabs/canine-chain/x/storage/legacy/paramUpgrade"
 	v2 "github.com/jackalLabs/canine-chain/x/storage/legacy/v2"
 )
 
@@ -32,5 +32,5 @@ func (m Migrator) Migrate2to3(ctx sdk.Context) error {
 
 // Migrate3to4 migrates from version 3 to 4.
 func (m Migrator) Migrate3to4(ctx sdk.Context) error {
-	return params.MigrateStore(ctx, &m.k.paramstore)
+	return paramUpgrade.MigrateStore(ctx, &m.k.paramstore)
 }

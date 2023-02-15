@@ -1,4 +1,4 @@
-package params
+package paramUpgrade
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -18,11 +18,15 @@ func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 
 	paramsSubspace.GetParamSet(ctx, &params)
 
+	params.MissesToBurn = 3
+
 	params.MaxContractAgeInBlocks = 100
 
-	params.ProofWindow = 50
-
 	params.ChunkSize = 10240
+
+	params.PriceFeed = "jklprice"
+
+	params.PricePerTbPerMonth = 8
 
 	paramsSubspace.SetParamSet(ctx, &params)
 
