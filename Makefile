@@ -167,16 +167,16 @@ format: format-tools
 ###############################################################################
 ###                                Protobuf                                 ###
 ###############################################################################
-PROTO_BUILDER_IMAGE=tendermintdev/sdk-proto-gen
+PROTO_BUILDER_IMAGE=tendermintdev/sdk-proto-gen:v0.7
 PROTO_FORMATTER_IMAGE=tendermintdev/docker-build-proto
+PROTO_BUILDER_CONTAINER=jackal-proto-gen
 
 proto-all: proto-format proto-lint proto-gen format
 
 proto-gen:
-	
 	@echo "Generating Protobuf files"
-	$(DOCKER) run --platform="linux/amd64" --rm -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) sh ./scripts/protocgen.sh 
-
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${PROTO_BUILDER_CONTAINER}$$"; then docker start -a $(PROTO_BUILDER_CONTAINER); else docker run --name $(PROTO_BUILDER_CONTAINER) -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) \
+		sh ./scripts/protocgen.sh; fi
 proto-format:
 	@echo "Formatting Protobuf files"
 	$(DOCKER) run --rm -v $(CURDIR):/workspace \
