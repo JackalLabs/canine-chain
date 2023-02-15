@@ -22,9 +22,13 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 	suite.Require().NoError(err)
 
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
-		DepositAccount: testAccount,
-		ProofWindow:    50,
-		ChunkSize:      10240,
+		DepositAccount:         testAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     8,
 	})
 
 	cases := []struct {
