@@ -8,7 +8,6 @@ export CHAIN="canine-1"
 export ALIAS="marston"
 export MONIKER="jackal"
 
-
 canined init $MONIKER --home=$JKL_HOME --chain-id=$CHAIN
 canined config chain-id $CHAIN --home=$JKL_HOME
 canined config keyring-backend test --home=$JKL_HOME
@@ -38,7 +37,8 @@ canined gentx $ALIAS 200000000ujkl \
 canined collect-gentxs --home=$JKL_HOME
 
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
-sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"3\"/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"10\"/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/\"chunk_size\": \"1024\"/\"chunk_size\": \"20480\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enabled-unsafe-cors = false/enabled-unsafe-cors = true/' $JKL_HOME/config/app.toml
@@ -50,4 +50,4 @@ jprovd client config chain-id $CHAIN --home=$PROV_HOME
 echo '{"key":"7d5a77d4e3dadb5103f45a884d1aad0310bc6eaabbc7c1426fd9909de27dc818","address":"jkl1p6tje2akcr8z5ghxqlpur06ep6uexf7fk2vy3y"}' > $PROV_HOME/config/priv_storkey.json
 jprovd client balance --home=$PROV_HOME
 jprovd init http://localhost:3333 1000000000 "" --home=$PROV_HOME
-jprovd start --home=$PROV_HOME --interval=5
+jprovd start --home=$PROV_HOME --interval=5 --no-strays

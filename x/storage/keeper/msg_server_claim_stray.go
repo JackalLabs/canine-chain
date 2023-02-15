@@ -32,7 +32,7 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 
 	size := sdk.NewInt(int64(stray.Size()))
 
-	pieces := size.Quo(sdk.NewInt(1024))
+	pieces := size.Quo(sdk.NewInt(k.GetParams(ctx).ChunkSize))
 
 	var pieceToStart int64
 
@@ -58,7 +58,7 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		Signee:        stray.Signee,
 		Provider:      msg.ForAddress,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      "0",
+		Endblock:      fmt.Sprintf("%d", stray.End),
 		Filesize:      stray.Filesize,
 		Proofverified: "false",
 		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),

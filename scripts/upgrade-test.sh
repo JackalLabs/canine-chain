@@ -1,11 +1,11 @@
 #!/bin/bash
 
-OLD_VERSION=23.01-beta
+OLD_VERSION=1.2.0-beta.4
 UPGRADE_HEIGHT=20
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
-SOFTWARE_UPGRADE_NAME=fixstrays
+SOFTWARE_UPGRADE_NAME=params
 
 # underscore so that go tool will not take gocache into account
 mkdir -p ${ROOT}/../_build/gocache
@@ -31,21 +31,38 @@ screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENO
 
 sleep 20
 
+./../_build/old/canined tx storage buy-storage $(./../_build/old/canined keys show test1 -a --keyring-backend test --chain-id test --home $HOME) 720h 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
+./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
+./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf $(./../_build/old/canined keys show test1 -a --keyring-backend test --chain-id test --home $HOME) 10000 jklf16yfjl9t8u9ztt0e5wzudpfr3e2u5cxwsru6l6jh930zrvav5cz2q2wrfkc --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
+echo "signing contract"
+./../_build/old/canined tx storage sign-contract jklc1p8u0a9yhqc9vr2rq2ksz8jekkq002y4chcv4k7thw5ntaqgdrvss5mqx3s --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
 ./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 3
+sleep 6
 
 ./../_build/old/canined tx gov deposit 1 "20000000${DENOM}" --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 3
+sleep 6
 
 ./../_build/old/canined tx gov vote 1 yes --from test --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 3
+sleep 6
 
 ./../_build/old/canined tx gov vote 1 yes --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 3
+sleep 6
 
 # determine block_height to halt
 while true; do 
@@ -56,9 +73,12 @@ while true; do
         pkill canined
         break
     else
+        ./../_build/old/canined q storage list-active-deals --chain-id test --home $HOME
+        ./../_build/old/canined q storage list-strays --chain-id test --home $HOME
+        ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
         ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
         echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
-        sleep 10
+        sleep 5
     fi
 done
 

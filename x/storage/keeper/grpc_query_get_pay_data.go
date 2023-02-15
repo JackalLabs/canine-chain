@@ -16,11 +16,11 @@ func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryPayDataRequest
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	paid, _ := k.GetPaidAmount(ctx, req.Address)
+	paid := k.GetPaidAmount(ctx, req.Address)
 
 	payInfo, found := k.GetStoragePaymentInfo(ctx, req.Address)
 	if !found {
-		return &types.QueryPayDataResponse{TimeRemaining: -1, Bytes: TwoGigs}, nil
+		return &types.QueryPayDataResponse{TimeRemaining: -1, Bytes: 0}, nil
 	}
 
 	left := payInfo.End.Unix() - ctx.BlockTime().Unix()

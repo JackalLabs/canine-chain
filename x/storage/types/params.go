@@ -12,8 +12,13 @@ import (
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 var (
-	KeyDepositAccount = []byte("DepositAccount")
-	KeyProofWindow    = []byte("ProofWindow")
+	KeyDepositAccount         = []byte("DepositAccount")
+	KeyProofWindow            = []byte("ProofWindow")
+	KeyChunkSize              = []byte("ChunkSize")
+	KeyMissesToBurn           = []byte("MissesToBurn")
+	KeyPriceFeed              = []byte("PriceFeed")
+	KeyMaxContractAgeInBlocks = []byte("MaxContractAgeInBlocks")
+	KeyPricePerTbPerMonth     = []byte("PricePerTbPerMonth")
 )
 
 // ParamKeyTable the param key table for launch module
@@ -24,8 +29,13 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		DepositAccount: "jkl1778a6x4e6t074ajvs7l76wpa2xd0s4pt0tqq57",
-		ProofWindow:    50,
+		DepositAccount:         "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		MissesToBurn:           3,
+		PriceFeed:              "jklprice",
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     8,
 	}
 }
 
@@ -39,6 +49,17 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyDepositAccount, &p.DepositAccount, validateDeposit),
 		paramtypes.NewParamSetPair(KeyProofWindow, &p.ProofWindow, validateProofWindow),
+		paramtypes.NewParamSetPair(KeyChunkSize, &p.ChunkSize, validateChunkSize),
+		paramtypes.NewParamSetPair(KeyMissesToBurn, &p.MissesToBurn, validateMissesToBurn),
+		paramtypes.NewParamSetPair(KeyPriceFeed, &p.PriceFeed, validatePriceFeed),
+		paramtypes.NewParamSetPair(
+			KeyMaxContractAgeInBlocks,
+			&p.MaxContractAgeInBlocks,
+			validateMaxContractAgeInBlocks),
+		paramtypes.NewParamSetPair(
+			KeyPricePerTbPerMonth,
+			&p.PricePerTbPerMonth,
+			validatePricePerTbPerMonth),
 	}
 }
 
@@ -63,6 +84,71 @@ func validateDeposit(i interface{}) error {
 
 	if strings.TrimSpace(v) == "" {
 		return errors.New("deposit cannot be blank")
+	}
+
+	return nil
+}
+
+func validateChunkSize(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v < 1 {
+		return errors.New("chunk size cannot be smaller than 1")
+	}
+
+	return nil
+}
+
+func validateMissesToBurn(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v < 1 {
+		return errors.New("misses to burn cannot be smaller than 1")
+	}
+
+	return nil
+}
+
+func validatePriceFeed(i interface{}) error {
+	v, ok := i.(string)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if strings.TrimSpace(v) == "" {
+		return errors.New("price feed cannot be blank")
+	}
+
+	return nil
+}
+
+func validateMaxContractAgeInBlocks(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v < 0 {
+		return errors.New("max contract age in blocks cannot be negative")
+	}
+
+	return nil
+}
+
+func validatePricePerTbPerMonth(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v < 0 {
+		return errors.New("price per tb per month cannot be negative")
 	}
 
 	return nil

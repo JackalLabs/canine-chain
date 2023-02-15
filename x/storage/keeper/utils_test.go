@@ -2,7 +2,6 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	module "github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -22,7 +21,7 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 				suite.ctx = suite.ctx.WithBlockHeight(100)
 				return "cosmos17j2hkm7n9fz9dpntyj2kxgxy5pthzd289nvlfl", 1
 			},
-			paidAmt: module.TwoGigs,
+			paidAmt: 0,
 			free:    true,
 		},
 	}
@@ -32,10 +31,9 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 			// preRun must be defined to get MsgPostContract
 			suite.Require().NotNil(tc.preRun)
 			addr, _ := tc.preRun()
-			rPaidAmt, rFree := sKeeper.GetPaidAmount(suite.ctx, addr)
+			rPaidAmt := sKeeper.GetPaidAmount(suite.ctx, addr)
 
 			suite.Require().Equal(tc.paidAmt, rPaidAmt)
-			suite.Require().Equal(tc.free, rFree)
 		})
 	}
 }

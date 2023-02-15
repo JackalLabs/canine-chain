@@ -7,7 +7,6 @@ import (
 	"io"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -109,63 +108,6 @@ func (suite *KeeperTestSuite) TestPostContracts() {
 			},
 			expErr:    true,
 			expErrMsg: "not enough space on provider",
-		},
-
-		{
-			name: "not_enough_user_storage",
-			preRun: func() *types.MsgPostContract {
-				// Setup provider storag
-				p := types.Providers{
-					Address:         creator,
-					Ip:              "123.0.0.0",
-					Totalspace:      "1000000000000000",
-					BurnedContracts: "0",
-					Creator:         creator,
-				}
-				sKeeper.SetProviders(suite.ctx, p)
-				// start free two gig trial
-				suite.ctx = suite.ctx.WithBlockHeight(0)
-				info := types.StoragePaymentInfo{
-					SpaceUsed:      1900000000,
-					SpaceAvailable: 2000000000,
-					Address:        buyer,
-					Start:          time.Now().Add(-10),
-					End:            time.Now().Add(50),
-				}
-				sKeeper.SetStoragePaymentInfo(suite.ctx, info)
-
-				return &types.MsgPostContract{
-					Creator:  creator,
-					Merkle:   "1",
-					Signee:   buyer,
-					Filesize: "1000000000",
-					Fid:      "1",
-				}
-			},
-			expErr:    true,
-			expErrMsg: "not enough storage on the users account",
-		},
-
-		{
-			name: "user_didn't_pay_for_storage",
-			preRun: func() *types.MsgPostContract {
-				// Start free trial
-				suite.ctx = suite.ctx.WithBlockHeight(0)
-
-				// end free trial and create "not paid" condition
-				suite.ctx = suite.ctx.WithBlockHeight(100)
-
-				suite.ctx = suite.ctx.WithBlockHeight(500)
-				goCtx = sdk.WrapSDKContext(suite.ctx)
-				return &types.MsgPostContract{
-					Creator:  creator,
-					Merkle:   "1",
-					Signee:   buyer,
-					Filesize: "10000",
-					Fid:      "1",
-				}
-			},
-			expErr: false,
 		},
 
 		{
@@ -338,6 +280,32 @@ func (suite *KeeperTestSuite) TestSignContract() {
 				return &types.MsgSignContract{
 					Cid:     "123",
 					Creator: user,
+				}
+			},
+			expErr: false,
+		},
+		{
+			name: "pay_once",
+			preRun: func() *types.MsgSignContract {
+				// creating a test contract to sign
+				c := types.Contracts{
+					Cid:        "456",
+					Creator:    provider,
+					Priceamt:   "1",
+					Pricedenom: "ujkl",
+					Merkle:     "1",
+					Signee:     user,
+					Duration:   "10000",
+					Filesize:   "10000",
+					Fid:        "123",
+				}
+				sKeeper.SetContracts(suite.ctx, c)
+				_, found := sKeeper.GetContracts(suite.ctx, c.Cid)
+				suite.Require().True(found)
+				return &types.MsgSignContract{
+					Cid:     "456",
+					Creator: user,
+					PayOnce: true,
 				}
 			},
 			expErr: false,

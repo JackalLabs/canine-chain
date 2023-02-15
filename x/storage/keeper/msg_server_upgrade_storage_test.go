@@ -22,8 +22,13 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 	suite.Require().NoError(err)
 
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
-		DepositAccount: testAccount,
-		ProofWindow:    50,
+		DepositAccount:         testAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     8,
 	})
 
 	cases := []struct {
@@ -124,6 +129,28 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			},
 			expErr:    true,
 			expErrMsg: "old plan is expired, use MsgBuyStorage: invalid request",
+		},
+		{
+			testName: "downgrading to buy less gb than current usage",
+			preRun: func() {
+				initialPayInfo := types.StoragePaymentInfo{
+					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
+					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
+					SpaceAvailable: 10000000000,
+					SpaceUsed:      4000000000,
+					Address:        testAccount,
+				}
+				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+			},
+			msg: types.MsgUpgradeStorage{
+				Creator:      testAccount,
+				ForAddress:   testAccount,
+				Duration:     "2160h",
+				Bytes:        "3000000000",
+				PaymentDenom: "ujkl",
+			},
+			expErr:    true,
+			expErrMsg: "cannot downgrade below current usage: invalid request",
 		},
 	}
 
