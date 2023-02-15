@@ -30,23 +30,20 @@ func SimulateMsgBid(
 
 		// finding a random bid
 		forSale := k.GetAllForsale(ctx)
-		numForSale := len(forSale)
-		if numForSale < 1 {
+		if len(forSale) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "No domains for sale"), nil, nil
 		}
 
-		saleI := simtypes.RandIntBetween(r, 0, numForSale)
-		bidDomain := forSale[saleI]
+		bidDomain := forSale[r.Intn(len(forSale))]
 		// ensuring the buyer is not the owner of the address
-		for bidDomain.Owner == simAccount.Address.String() {
-			saleI = simtypes.RandIntBetween(r, 0, numForSale)
-			bidDomain = forSale[saleI]
+		if bidDomain.Owner == simAccount.Address.String() {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find domain to bid"), nil, nil
 		}
 
 		// making the bid
 		bidPrice, err := sdk.ParseCoinNormalized(bidDomain.Price)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Unable to parse price"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Unable to parse price"), nil, err
 		}
 		// calculating the bid
 		max := sdk.NewInt(bidPrice.Amount.Int64() * 2)
