@@ -17,7 +17,7 @@ service Query {
 
   // Inflation returns the current minting inflation value.
   rpc Inflation(QueryInflationRequest) returns (QueryInflationResponse) {
-    option (google.api.http).get = "/cosmos/mint/v1beta1/params";
+    option (google.api.http).get = "/cosmos/mint/v1beta1/inflation";
   }
 
 }
