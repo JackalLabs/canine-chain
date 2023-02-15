@@ -67,7 +67,7 @@ const (
 	defaultWeightMsgUpgradeStorage int = 100
 
 	//nolint:all
-	opWeightMsgClaimStray = "op_weight_msg_claim_stray"
+	opWeightMsgClaimStray          = "op_weight_msg_claim_stray"
 	defaultWeightMsgClaimStray int = 100
 
 	//nolint:all

@@ -4,13 +4,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-const MaxContractAgeInBlocks = 100
-
 func (k Keeper) KillOldContracts(ctx sdk.Context) {
+	maxContractAgeInBlocks := k.GetParams(ctx).MaxContractAgeInBlocks
 	contracts := k.GetAllContracts(ctx)
 
 	for _, contract := range contracts {
-		if contract.Age+MaxContractAgeInBlocks < ctx.BlockHeight() {
+		if contract.Age+maxContractAgeInBlocks < ctx.BlockHeight() {
 			k.RemoveContracts(ctx, contract.Cid)
 		}
 	}
