@@ -11,12 +11,12 @@ import (
 // 1. setting up the next reason id and report id keys for existing subspaces
 // 2. setting up the module params
 func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
-	ctx.Logger().Error("MIGRATING STORAGE STORE!")
+	ctx.Logger().Info("MIGRATING STORAGE STORE!")
 	// Set the module params
 
-	var params types.Params
+	params := types.NewParams()
 
-	paramsSubspace.GetParamSet(ctx, &params)
+	params.ProofWindow = 50
 
 	params.MissesToBurn = 3
 
@@ -28,7 +28,10 @@ func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 
 	params.PricePerTbPerMonth = 8
 
+	params.DepositAccount = "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc"
+
 	paramsSubspace.SetParamSet(ctx, &params)
+	ctx.Logger().Info("DONE MIGRATING!")
 
 	return nil
 }

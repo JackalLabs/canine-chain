@@ -1,11 +1,11 @@
 #!/bin/bash
 
-OLD_VERSION=23.01-beta
+OLD_VERSION=1.2.0-beta.4
 UPGRADE_HEIGHT=20
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
-SOFTWARE_UPGRADE_NAME=async
+SOFTWARE_UPGRADE_NAME=params
 
 # underscore so that go tool will not take gocache into account
 mkdir -p ${ROOT}/../_build/gocache
@@ -78,7 +78,7 @@ while true; do
         ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
         ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
         echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
-        sleep 10
+        sleep 5
     fi
 done
 
