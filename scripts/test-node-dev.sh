@@ -1,14 +1,18 @@
 #!/bin/bash
 
 KEY="j1"
+DEPOACCKEY="deposit_account"
+
 CHAINID="test-1"
 MONIKER="localjack"
 KEYALGO="secp256k1"
 KEYRING="test"
 LOGLEVEL="info"
+BROADCASTMODE="block"
 
 canined config keyring-backend $KEYRING
 canined config chain-id $CHAINID
+canined config broadcast-mode $BROADCASTMODE
 canined config output "json"
 
 command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https://stedolan.github.io/jq/download/"; exit 1; }
@@ -22,9 +26,13 @@ from_scratch () {
     # jkl1hj5fveer5cjtn4wd6wstzugjfdxzl0xpljur4u '{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"ApZa31BR3NWLylRT6Qi5+f+zXtj2OpqtC76vgkUGLyww"}'
     echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | canined keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
     # j2 jkl1s00nvkagel9xe6luqmmd09jt6jgjl7qu57prct  '{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Ah3VzRghgXLn8IA2AH6qaoiuBwZv3ADg3gNPFTo92FwM"}'
-    echo "guess census arena parent ribbon among advice green electric almost wink muffin size unfold hedgehog gather warfare embrace float entry cargo ice fade best" | canined keys add j2 --keyring-backend $KEYRING --algo $KEYALGO --recover
+    echo "guess census arena parent ribbon among advice green electric almost wink muffin size unfold hedgehog gather warfare embrace float entry cargo ice fade best" | canined keys add $DEPOACCKEY --keyring-backend $KEYRING --algo $KEYALGO --recover
 
     canined init $MONIKER --chain-id $CHAINID 
+
+	canined config keyring-backend $KEYRING
+	canined config chain-id $CHAINID
+	canined config broadcast-mode $BROADCASTMODE
 
     # Function updates the config based on a jq argument as a string
     update_test_genesis () {
@@ -42,9 +50,12 @@ from_scratch () {
     update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom": "ujkl","amount": "1000000"}]'
     update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": "ujkl","amount": "1000"}'
 
+	# Use jkl bech32 prefix account
+	update_test_genesis '.app_state["storage"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
+
     # Allocate genesis accounts
-    canined add-genesis-account $KEY 10000000ujkl --keyring-backend $KEYRING
-    canined add-genesis-account j2 10000000ujkl --keyring-backend $KEYRING
+    canined add-genesis-account $KEY 100000000ujkl --keyring-backend $KEYRING
+    canined add-genesis-account j2 100000000ujkl --keyring-backend $KEYRING
     
     canined gentx $KEY 1000000ujkl --keyring-backend $KEYRING --chain-id $CHAINID
     
@@ -53,14 +64,24 @@ from_scratch () {
     canined validate-genesis
 }
 
+startup() {
+	mv $HOME/.canine $HOME/.canine.old
+}
+
+cleanup() {
+	echo "SIGINT captured, starting cleanup"
+	mv $HOME/.canine.old $HOME/.canine
+}
+
+startup
+
 from_scratch
 
 # Opens the RPC endpoint to outside connections
 sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/.canine/config/config.toml
 sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.canine/config/config.toml
 
-# Update genesis file
-sed -i 's/"deposit_account": "[a-z0-9]*",/"deposit_account": "jkl1s00nvkagel9xe6luqmmd09jt6jgjl7qu57prct",/' ~/.canine/config/genesis.json
+trap "cleanup" SIGINT
 
 # Start the node 
 canined start --pruning=nothing  --minimum-gas-prices=0ujkl
