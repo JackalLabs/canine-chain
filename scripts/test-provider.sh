@@ -37,6 +37,7 @@ canined gentx $ALIAS 200000000ujkl \
 canined collect-gentxs --home=$JKL_HOME
 
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8/jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"10\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"chunk_size\": \"1024\"/\"chunk_size\": \"20480\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml

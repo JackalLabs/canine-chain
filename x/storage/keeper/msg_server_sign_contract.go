@@ -92,7 +92,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		}
 
 		// check if user has any free space
-		if payInfo.SpaceUsed+(fsize.Int64()*3) > payInfo.SpaceAvailable {
+		if (payInfo.SpaceUsed + (fsize.Int64() * 3)) > payInfo.SpaceAvailable {
 			return nil, fmt.Errorf("not enough storage space")
 		}
 		// check if storage subscription still active
