@@ -54,8 +54,8 @@ from_scratch () {
 	update_test_genesis '.app_state["storage"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
 
     # Allocate genesis accounts
-    canined add-genesis-account $KEY 100000000ujkl --keyring-backend $KEYRING
-    canined add-genesis-account j2 100000000ujkl --keyring-backend $KEYRING
+    canined add-genesis-account $KEY 10000000000ujkl --keyring-backend $KEYRING
+    canined add-genesis-account $DEPOACCKEY 10000000000ujkl  --keyring-backend $KEYRING
     
     canined gentx $KEY 1000000ujkl --keyring-backend $KEYRING --chain-id $CHAINID
     
