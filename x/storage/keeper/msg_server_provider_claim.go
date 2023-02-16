@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"sort"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -51,14 +50,8 @@ func (k msgServer) RemoveProviderClaimer(goCtx context.Context, msg *types.MsgRe
 
 	newClaim := []string{}
 
-	index := sort.SearchStrings(authClaimers, msg.ClaimAddress)
-
-	if index == len(authClaimers) {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrConflict, "this address is not a claimer")
-	}
-
 	for i := 0; i < len(authClaimers); i++ {
-		if i != index {
+		if authClaimers[i] == msg.ClaimAddress {
 			newClaim = append(newClaim, authClaimers[i])
 		}
 	}
