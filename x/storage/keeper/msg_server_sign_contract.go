@@ -8,6 +8,7 @@ import (
 	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -86,17 +87,18 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 			return nil, fmt.Errorf("cannot parse file size")
 		}
 		payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
-		if found {
-			// check if user has any free space
-			if payInfo.SpaceUsed+(fsize.Int64()*3) > payInfo.SpaceAvailable {
-				return nil, fmt.Errorf("not enough storage space")
-			}
-			// check if storage subscription still active
-			if payInfo.End.Before(ctx.BlockTime()) {
-				return nil, fmt.Errorf("storage subscription has expired")
-			}
+		if !found {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "payment info not found, please purchase storage space")
 		}
-		// we going to need an else statement to check for the free trial storage since they wont have payInfo
+
+		// check if user has any free space
+		if payInfo.SpaceUsed+(fsize.Int64()*3) > payInfo.SpaceAvailable {
+			return nil, fmt.Errorf("not enough storage space")
+		}
+		// check if storage subscription still active
+		if payInfo.End.Before(ctx.BlockTime()) {
+			return nil, fmt.Errorf("storage subscription has expired")
+		}
 
 		payInfo.SpaceUsed += fsize.Int64() * 3
 
