@@ -69,14 +69,15 @@ func CanContract(ctx sdk.Context, root string, creator string, k Keeper) error {
 	}
 
 	info, found := k.GetStoragePaymentInfo(ctx, creator)
-	if found {
-		size, ok := sdk.NewIntFromString(c.Filesize)
-		if !ok {
-			return sdkerrors.Wrap(sdkerrors.ErrInvalidType, "cannot parse file size")
-		}
-		info.SpaceUsed -= size.Int64()
-		k.SetStoragePaymentInfo(ctx, info)
+	if !found {
+		return sdkerrors.Wrapf(sdkerrors.ErrNotFound, "cannot find storage payment")
 	}
+	size, ok := sdk.NewIntFromString(c.Filesize)
+	if !ok {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidType, "cannot parse file size")
+	}
+	info.SpaceUsed -= size.Int64()
+	k.SetStoragePaymentInfo(ctx, info)
 
 	return nil
 }
