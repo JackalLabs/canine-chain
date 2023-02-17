@@ -1,6 +1,8 @@
 #!/bin/bash
 
 KEY="j1"
+KEY1="j2"
+KEY2="charlie"
 DEPOACCKEY="deposit_account"
 
 CHAINID="test-1"
@@ -28,6 +30,10 @@ from_scratch () {
     # j2 jkl1s00nvkagel9xe6luqmmd09jt6jgjl7qu57prct  '{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Ah3VzRghgXLn8IA2AH6qaoiuBwZv3ADg3gNPFTo92FwM"}'
     echo "guess census arena parent ribbon among advice green electric almost wink muffin size unfold hedgehog gather warfare embrace float entry cargo ice fade best" | canined keys add $DEPOACCKEY --keyring-backend $KEYRING --algo $KEYALGO --recover
 
+	echo "video pluck level diagram maximum grant make there clog tray enrich book hawk confirm spot you book vendor ensure theory sure jewel sort basket" | canined keys add $KEY1 --algo $KEYALGO --keyring-backend $KEYRING --recover
+
+	echo "flock stereo dignity lawsuit mouse page faith exact mountain clinic hazard parent arrest face couch asset jump feed benefit upper hair scrap loud spirit" | canined keys add $KEY2 --algo $KEYALGO --keyring-backend $KEYRING --recover
+
     canined init $MONIKER --chain-id $CHAINID 
 
 	canined config keyring-backend $KEYRING
@@ -54,8 +60,10 @@ from_scratch () {
 	update_test_genesis '.app_state["storage"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
 
     # Allocate genesis accounts
-    canined add-genesis-account $KEY 10000000000ujkl --keyring-backend $KEYRING
+    canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING
     canined add-genesis-account $DEPOACCKEY 10000000000ujkl  --keyring-backend $KEYRING
+    canined add-genesis-account $KEY1 10000000000ujkl  --keyring-backend $KEYRING
+    canined add-genesis-account $KEY2 10000000000ujkl  --keyring-backend $KEYRING
     
     canined gentx $KEY 1000000ujkl --keyring-backend $KEYRING --chain-id $CHAINID
     
@@ -71,6 +79,7 @@ startup() {
 cleanup() {
 	echo "SIGINT captured, starting cleanup"
 	mv $HOME/.canine.old $HOME/.canine
+	exit
 }
 
 startup
@@ -85,3 +94,6 @@ trap "cleanup" SIGINT
 
 # Start the node 
 canined start --pruning=nothing  --minimum-gas-prices=0ujkl
+
+# clean after program termination without SIGINT
+cleanup
