@@ -43,19 +43,23 @@ func (k msgServer) RemoveProviderClaimer(goCtx context.Context, msg *types.MsgRe
 	if !found {
 		return nil, types.ErrProviderNotFound
 	}
-
-	if len(authClaimers) == 0 {
+	p := len(authClaimers)
+	if p == 0 {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrConflict, "Provider has no claimer addresses")
 	}
 
 	newClaim := []string{}
 
 	for i := 0; i < len(authClaimers); i++ {
-		if authClaimers[i] == msg.ClaimAddress {
+		if authClaimers[i] != msg.ClaimAddress {
 			newClaim = append(newClaim, authClaimers[i])
 		}
 	}
 	provider.AuthClaimers = newClaim
+
+	if p == len(provider.AuthClaimers) {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrKeyNotFound, "this address is not a claimer")
+	}
 
 	k.SetProviders(ctx, provider)
 
