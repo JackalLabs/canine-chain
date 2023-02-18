@@ -338,8 +338,15 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
-
 	user := testAddresses[0]
+
+	suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
+		Start:          time.Now(),
+		End:            time.Now().AddDate(1, 0, 0),
+		SpaceAvailable: 1000000000,
+		SpaceUsed:      0,
+		Address:        user,
+	})
 
 	cases := []struct {
 		name      string
@@ -374,9 +381,10 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				suite.Require().NoError(err)
 
 				d := types.ActiveDeals{
-					Cid:     dcid,
-					Signee:  user,
-					Creator: user,
+					Cid:      dcid,
+					Signee:   user,
+					Creator:  user,
+					Filesize: "10",
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
 
@@ -390,9 +398,10 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 					suite.Require().NoError(err)
 
 					k := types.ActiveDeals{
-						Cid:     scid,
-						Signee:  user,
-						Creator: user,
+						Cid:      scid,
+						Signee:   user,
+						Creator:  user,
+						Filesize: "10",
 					}
 					sKeeper.SetActiveDeals(suite.ctx, k)
 				}
@@ -423,10 +432,11 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				cids := []string{dcid}
 
 				d := types.ActiveDeals{
-					Cid:     dcid,
-					Creator: user,
-					Signee:  user,
-					Fid:     "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+					Cid:      dcid,
+					Creator:  user,
+					Signee:   user,
+					Fid:      "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+					Filesize: "10",
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
 
@@ -464,9 +474,10 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				cids := []string{dcid}
 
 				d := types.Strays{
-					Cid:    dcid,
-					Fid:    "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-					Signee: user,
+					Cid:      dcid,
+					Fid:      "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
+					Signee:   user,
+					Filesize: "10",
 				}
 				sKeeper.SetStrays(suite.ctx, d)
 
