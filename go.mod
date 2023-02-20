@@ -147,6 +147,9 @@ replace (
 	// use cosmos keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
+	// fix wasmd governance issue
+	github.com/CosmWasm/wasmd => github.com/CosmosContracts/wasmd v0.29.2-patch.1
+
 	// dragonberry ics23 patch
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
