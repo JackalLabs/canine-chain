@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"fmt"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -34,6 +35,13 @@ func (suite *KeeperTestSuite) TestReward() {
 	suite.Require().NoError(err)
 
 	signer := testAddresses[0]
+	suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
+		Start:          time.Now(),
+		End:            time.Now().AddDate(1, 0, 0),
+		SpaceAvailable: 1000000000,
+		SpaceUsed:      0,
+		Address:        signer,
+	})
 	providerOne := testAddresses[1]
 
 	dealOne := types.ActiveDeals{
@@ -92,6 +100,13 @@ func (suite *KeeperTestSuite) TestMultiReward() {
 	suite.Require().NoError(err)
 
 	signer := testAddresses[0]
+	suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
+		Start:          time.Now(),
+		End:            time.Now().AddDate(1, 0, 0),
+		SpaceAvailable: 1000000000,
+		SpaceUsed:      0,
+		Address:        signer,
+	})
 
 	const l = 50
 

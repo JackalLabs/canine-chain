@@ -124,6 +124,12 @@ service Query {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/file_upload_check";
   }
+
+  // Queries whether user can upload a file based on size
+  rpc PriceCheck(QueryPriceCheckRequest) returns (QueryPriceCheckResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/price_check";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -252,6 +258,15 @@ message QueryFileUploadCheckRequest {
 
 message QueryFileUploadCheckResponse {
   bool valid = 1;
+}
+
+message QueryPriceCheckRequest {
+  string duration = 1;
+  int64 bytes = 2;
+}
+
+message QueryPriceCheckResponse {
+  int64 price = 1;
 }
 
 // this line is used by starport scaffolding # 3

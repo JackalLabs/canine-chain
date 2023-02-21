@@ -129,7 +129,7 @@ func (suite *KeeperTestSuite) TestRemoveProviderClaimer() {
 				ClaimAddress: "non-existing_claimer",
 			},
 			expErr: true,
-			errMsg: "this address is not a claimer: conflict",
+			errMsg: "this address is not a claimer: key not found",
 		},
 		{
 			name: "remove from provider with no claimer",
