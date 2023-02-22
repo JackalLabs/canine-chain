@@ -5,58 +5,58 @@ import (
 )
 
 func TestIsValidName(t *testing.T) {
-	tests := map[string]struct{
-		name string
+	tests := map[string]struct {
+		name      string
 		expReturn bool
-	} {
+	}{
 		"special character at front": {
-			name: "[]jkl-canine",
+			name:      "[]jkl-canine",
 			expReturn: false,
 		},
 		"special character at end": {
-			name: "jackal-+",
+			name:      "jackal-+",
 			expReturn: false,
 		},
 		"special character in middle": {
-			name: "jackal_^-rns",
+			name:      "jackal_^-rns",
 			expReturn: false,
 		},
 		"empty string": {
-			name: "",
+			name:      "",
 			expReturn: false,
 		},
 		"special characters": {
-			name: "\"!@#$%^&*()+={}[]\\|`~><.,/?",
+			name:      "\"!@#$%^&*()+={}[]\\|`~><.,/?",
 			expReturn: false,
 		},
 		"emoji": {
-			name: "jkl🧠",
+			name:      "jkl🧠",
 			expReturn: false,
 		},
 		"underscores": {
-			name: "__________",
+			name:      "__________",
 			expReturn: true,
 		},
 		"hyphens": {
-			name: "-------------",
+			name:      "-------------",
 			expReturn: true,
 		},
 		"letters": {
-			name: "abcd",
+			name:      "abcd",
 			expReturn: true,
 		},
 		"numbers": {
-			name: "123456",
+			name:      "123456",
 			expReturn: true,
 		},
 		"valid name": {
-			name: "valid-rns_name",
+			name:      "valid-rns_name",
 			expReturn: true,
 		},
 	}
 
 	for n, tt := range tests {
-		t.Run(n, func(t *testing.T){
+		t.Run(n, func(t *testing.T) {
 			result := IsValidName(tt.name)
 			if result != tt.expReturn {
 				t.Errorf("test %s IsValidName(\"%s\") want %t got %t", n, tt.name, tt.expReturn, result)
