@@ -54,12 +54,11 @@ func SimulateMsgAddRecord(
 		}
 
 		// choosing a random name
-		nameI := simtypes.RandIntBetween(r, 0, len(names))
-		name := names[nameI]
+		name := names[r.Intn(len(names))]
 
 		// generating a random subdomain
 		nameLength := simtypes.RandIntBetween(r, 1, 10)
-		subdomain := StringWithCharset(r, nameLength, charset) // charset is a const defined in utils.go
+		subdomain := simtypes.RandStringOfLength(r, nameLength)
 
 		// checking if the subdomain exists on the domain
 		for _, sd := range name.Subdomains {
@@ -70,18 +69,13 @@ func SimulateMsgAddRecord(
 		}
 
 		// generating the fees
-		price := sdk.NewInt(0)
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
-		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
 
 		var fees sdk.Coins
 
-		if !hasNeg {
-			var err error
-			fees, err = simtypes.RandomFees(r, ctx, coins)
-			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
-			}
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
 		}
 
 		// building the message
