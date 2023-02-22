@@ -735,19 +735,19 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackaldao", "canine", "filetree", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackaldao", "canine", "filetree", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Encrypt_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine-chain", "filetree", "encrypt", "address", "message"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Encrypt_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine-chain", "filetree", "encrypt", "address", "message"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Decrypt_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "filetree", "decrypt", "message"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Decrypt_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "filetree", "decrypt", "message"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Files_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine-chain", "filetree", "files", "address", "ownerAddress"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Files_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"jackal-dao", "canine-chain", "filetree", "files", "address", "ownerAddress"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_FilesAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "filetree", "files"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_FilesAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "filetree", "files"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Pubkey_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "filetree", "pubkeys", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Pubkey_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "filetree", "pubkeys", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_PubkeyAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "filetree", "pubkeys"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_PubkeyAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "filetree", "pubkeys"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (
