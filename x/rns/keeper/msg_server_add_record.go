@@ -51,7 +51,7 @@ func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*t
 
 	// creating a new subdomain type
 	record := types.Names{
-		Name:       msg.Record,
+		Name:       strings.ToLower(msg.Record),
 		Expires:    whois.Expires,
 		Value:      msg.Value,
 		Data:       msg.Data,

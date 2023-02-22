@@ -44,9 +44,12 @@ func (msg *MsgRegister) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
-	_, _, err = GetNameAndTLD(msg.Name)
+	name, _, err := GetNameAndTLD(msg.Name)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid name/tld (%s)", err)
+	}
+	if !IsValidName(name) {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid name")
 	}
 	_, ok := sdk.NewIntFromString(msg.Years)
 	if !ok {
