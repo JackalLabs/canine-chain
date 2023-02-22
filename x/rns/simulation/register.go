@@ -28,6 +28,14 @@ func SimulateMsgRegister(
 		name := simtypes.RandStringOfLength(r, simtypes.RandIntBetween(r, 1, 15))
 		numYears := simtypes.RandIntBetween(r, 1, 15)
 
+		whois, found := k.GetNames(ctx, name, tld)
+
+		if found {
+			if ctx.BlockHeight() < whois.Expires {
+				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "name already registered"), nil, nil
+			}
+		}
+
 		// calculating the necessary costs to rent the domain
 		domainCost, err := keeper.GetCostOfName(name, tld)
 		if err != nil {
