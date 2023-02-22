@@ -54,7 +54,7 @@ func SimulateMsgList(
 		}
 
 		// choosing a random name that isn't already listed
-		var unListed = make([]types.Names, 0)
+		unListed := make([]types.Names, 0)
 		for _, name := range names {
 			if _, found := k.GetForsale(ctx, name.Name+"."+name.Tld); !found && name.Name != "" {
 				unListed = append(unListed, name)

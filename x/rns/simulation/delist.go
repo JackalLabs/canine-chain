@@ -20,7 +20,6 @@ func SimulateMsgDelist(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-
 		forsales := k.GetAllForsale(ctx)
 		if len(forsales) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "unable to find names for sale"), nil, nil
@@ -32,21 +31,21 @@ func SimulateMsgDelist(
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "unable to get name and tld"), nil, err
 		}
 
-		rns, found := k.GetNames(ctx, name, tld)
+		rns, _ := k.GetNames(ctx, name, tld)
 		if rns.Value != forsale.Owner {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "name is expired"), nil, nil
 		}
 
 		msg := &types.MsgDelist{
 			Creator: forsale.Owner,
-			Name: forsale.Name,
+			Name:    forsale.Name,
 		}
 
 		simAccount, found := simtypes.FindAccount(accs, sdk.MustAccAddressFromBech32(msg.Creator))
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "unable to find names for sale"),
-			nil, 
-			fmt.Errorf("account not found")
+				nil,
+				fmt.Errorf("account not found")
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

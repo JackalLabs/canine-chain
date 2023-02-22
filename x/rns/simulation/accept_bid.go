@@ -20,7 +20,7 @@ func GetBidsFor(k keeper.Keeper, ctx sdk.Context, name string) (bids []types.Bid
 	}
 
 	for _, bid := range allBids {
-		if bid.Name == name{
+		if bid.Name == name {
 			bids = append(bids, bid)
 		}
 	}
@@ -50,7 +50,7 @@ func SimulateMsgAcceptBid(
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unable to get name and tld"), nil, err
 		}
-		
+
 		name, found := k.GetNames(ctx, n, tld)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unable to get name and tld"), nil, err
@@ -71,16 +71,16 @@ func SimulateMsgAcceptBid(
 		simAccount, found := simtypes.FindAccount(accs, acc)
 
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "owner account not found"), 
-			nil, 
-			fmt.Errorf("rns registered with non-existing account")
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "owner account not found"),
+				nil,
+				fmt.Errorf("rns registered with non-existing account")
 		}
 
 		// packaging the request
 		msg := &types.MsgAcceptBid{
 			Creator: rName.Owner,
 			Name:    rName.Name,
-			From: bid.Bidder,
+			From:    bid.Bidder,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

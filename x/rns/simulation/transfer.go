@@ -85,13 +85,10 @@ func SimulateMsgTransfer(
 		}
 
 		// generating randomly generated account
-		receiverAcc := &simtypes.Account{}
-		res, _ := simtypes.RandomAcc(r, accs)
-		receiverAcc = &res
+		receiverAcc, _ := simtypes.RandomAcc(r, accs)
 		// ensuring the sender and receiver are different
 		for receiverAcc.Address.String() == simAccount.Address.String() {
-			res, _ := simtypes.RandomAcc(r, accs)
-			receiverAcc = &res
+			receiverAcc, _ = simtypes.RandomAcc(r, accs)
 		}
 
 		// transferring to the randomly generated simulation account

@@ -89,5 +89,4 @@ func SimulateMsgDelRecord(
 
 		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
-
 }
