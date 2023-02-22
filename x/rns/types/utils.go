@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var rnsRegexp = *regexp.MustCompile(`[\w-]+`)
+var rnsRegexp = *regexp.MustCompile(`^[\w-]+$`)
 
 func IsValidName(name string) bool {
 	return rnsRegexp.MatchString(name)
