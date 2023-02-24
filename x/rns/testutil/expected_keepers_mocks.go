@@ -80,6 +80,20 @@ func (m *MockBankKeeper) BurnCoins(ctx types.Context, moduleName string, amt typ
 	return ret0
 }
 
+// GetBalance mocks base method.
+func (m *MockBankKeeper) GetBalance(ctx types.Context, addrr types.AccAddress, denom string) types.Coin {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBalance", ctx, addrr, denom)
+	ret0, _ := ret[0].(types.Coin)
+	return ret0
+}
+
+// GetBalance indicates an expected call of GetBalance.
+func (mr *MockBankKeeperMockRecorder) GetBalance(ctx, addrr, denom interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBalance", reflect.TypeOf((*MockBankKeeper)(nil).GetBalance), ctx, addrr, denom)
+}
+
 // BurnCoins indicates an expected call of BurnCoins.
 func (mr *MockBankKeeperMockRecorder) BurnCoins(ctx, moduleName, amt interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()

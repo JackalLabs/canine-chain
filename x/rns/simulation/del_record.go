@@ -12,45 +12,52 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func SimulateMsgCancelBid(
+func SimulateMsgDelRecord(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// choosing a random account with a bid open
-		nreq := &types.QueryAllBidsRequest{}
-		wctx := sdk.WrapSDKContext(ctx)
-		allBidsResp, err := k.BidsAll(wctx, nreq)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "Unable to collect bids"), nil, err
+		// 1. Find a registered name with subdomains
+		// 2. Find the associated account
+		// choosing a random account WITH registered domains
+		var simAccount simtypes.Account
+		var name types.Names
+		var nameWithSub string
+		// checking if any names are registered
+		exists := k.CheckExistence(ctx)
+		if !exists {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "No domains registered yet"), nil, nil
 		}
-		allBids := allBidsResp.GetBids()
-		if len(allBids) < 1 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "No bids to collect"), nil, nil
+		// scanning all names
+		for _, n := range k.GetAllNames(ctx) {
+			if n.Subdomains != nil {
+				name = n
+				nameWithSub = n.Subdomains[0].Name + "." + name.Name
+			}
 		}
-		randomBidI := simtypes.RandIntBetween(r, 0, len(allBids))
-		rBid := allBids[randomBidI]
-
-		bidAddress, err := sdk.AccAddressFromBech32(rBid.Bidder)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "Unable to convert username"), nil, err
-		}
-
-		simAccount, ok := simtypes.FindAccount(accs, bidAddress)
-		if !ok {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "Unable to find bidder"), nil, err
+		if nameWithSub == "" {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "No registered names have subdomains"), nil, nil
 		}
 
-		// populating the message
-		msg := &types.MsgCancelBid{
+		// finding the owner
+		for _, o := range accs {
+			if o.Address.String() == name.Value {
+				simAccount = o
+			}
+		}
+		if simAccount.Address.String() == "" {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "Could not find owner"), nil, nil
+		}
+
+		// initializing the message
+		msg := &types.MsgDelRecord{
 			Creator: simAccount.Address.String(),
-			Name:    rBid.Name,
 		}
 
 		// generating the fees
-		price := sdk.NewInt(0) // cancelling bid is free?
+		price := sdk.NewInt(0)
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
 
@@ -64,7 +71,9 @@ func SimulateMsgCancelBid(
 			}
 		}
 
-		// configuring the tx
+		// building the message
+		msg.Name = nameWithSub + "." + name.Tld
+
 		txCtx := simulation.OperationInput{
 			R:             r,
 			App:           app,
@@ -77,6 +86,7 @@ func SimulateMsgCancelBid(
 			AccountKeeper: ak,
 			ModuleName:    types.ModuleName,
 		}
+
 		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }

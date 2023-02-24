@@ -12,18 +12,15 @@ import (
 	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func SimulateMsgTransfer(
+func SimulateMsgAddRecord(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// checking if enough accounts exist
-		if len(accs) < 2 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Need more than 2 accounts to transfer names"), nil, nil
-		}
-
+		// 1. Find a registered domain name
+		// 2. Add a randomly generated subdomain -- subdomains are free
 		// choosing a random account WITH registered domains
 		var simAccount simtypes.Account
 		var names []types.Names
@@ -31,7 +28,7 @@ func SimulateMsgTransfer(
 		// checking if any names are registered
 		exists := k.CheckExistence(ctx)
 		if !exists {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No domains registered yet"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddRecord, "No domains registered yet"), nil, nil
 		}
 		for {
 			// finding all registered domain names
@@ -42,7 +39,7 @@ func SimulateMsgTransfer(
 			// requesting the domain names
 			regNames, err := k.ListOwnedNames(wctx, nReq)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Couldn't request names"), nil, nil
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddRecord, "Couldn't request names"), nil, nil
 			}
 			names = regNames.GetNames()
 			if names != nil {
@@ -51,49 +48,41 @@ func SimulateMsgTransfer(
 				simAccount, _ = simtypes.RandomAcc(r, accs)
 			}
 		}
-
 		// initializing the message
-		msg := &types.MsgTransfer{
+		msg := &types.MsgAddRecord{
 			Creator: simAccount.Address.String(),
 		}
 
-		// selecting a random name to transfer
-		nameI := simtypes.RandIntBetween(r, 0, len(names))
-		tName := names[nameI]
+		// choosing a random name
+		name := names[r.Intn(len(names))]
 
-		// checking if the name is transferrable
-		if ctx.BlockHeight() > tName.Expires {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Expired domain"), nil, nil
-		}
-		if tName.Locked > ctx.BlockHeight() {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Can't transfer a free name"), nil, nil
-		}
+		// generating a random subdomain
+		nameLength := simtypes.RandIntBetween(r, 1, 10)
+		subdomain := simtypes.RandStringOfLength(r, nameLength)
 
-		// generating the fees
-		price := sdk.NewInt(0) // transferring is free?
-		spendable := bk.SpendableCoins(ctx, simAccount.Address)
-		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", price)))
-
-		var fees sdk.Coins
-
-		if !hasNeg {
-			var err error
-			fees, err = simtypes.RandomFees(r, ctx, coins)
-			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+		// checking if the subdomain exists on the domain
+		for _, sd := range name.Subdomains {
+			if sd.Name == subdomain {
+				// can add a randomizer, but very unlikely a randomly generated subdomain name is already on-chain
+				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Subdomain is already registered"), nil, nil
 			}
 		}
 
-		// generating randomly generated account
-		receiverAcc, _ := simtypes.RandomAcc(r, accs)
-		// ensuring the sender and receiver are different
-		for receiverAcc.Address.String() == simAccount.Address.String() {
-			receiverAcc, _ = simtypes.RandomAcc(r, accs)
+		// generating the fees
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+
+		var fees sdk.Coins
+
+		fees, err := simtypes.RandomFees(r, ctx, spendable)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
 		}
 
-		// transferring to the randomly generated simulation account
-		msg.Name = tName.Name + "." + tName.Tld
-		msg.Receiver = simAccount.Address.String()
+		// building the message
+		msg.Name = name.Name + "." + name.Tld
+		msg.Record = subdomain
+		msg.Value = "1"
+		msg.Data = "{}"
 
 		txCtx := simulation.OperationInput{
 			R:             r,

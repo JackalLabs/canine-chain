@@ -45,7 +45,7 @@ func SimulateMsgBuyStorage(
 		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
 		// It is impossible to specify default bond denom through param.json
 		// to naturally fund the accounts with ujkl.
-		// The other option is genesis.jon but it is not possible to sign transactions
+		// The other option is genesis.json but it is not possible to sign transactions
 		// due to private and pubkeys are generated independent of addresses
 		// resulting pubkey does not match signer address error.
 		if jBalance.Amount.LTE(cost) {

@@ -69,3 +69,26 @@ func (k Keeper) GetAllNames(ctx sdk.Context) (list []types.Names) {
 
 	return
 }
+
+// quickly checks if there are any domains registered
+func (k Keeper) CheckExistence(ctx sdk.Context) bool {
+	// intializing the iterator
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	// looping to see if at least 1 element exists
+	i := 0
+	for ; iterator.Valid(); iterator.Next() {
+		if i > 0 {
+			break
+		}
+		i++
+	}
+	exist := false
+	if i > 0 {
+		exist = true
+	}
+	return exist
+}
