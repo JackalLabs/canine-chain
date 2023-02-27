@@ -1,10 +1,6 @@
 package types
 
 import (
-	"errors"
-	"fmt"
-	"strings"
-
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -37,18 +33,18 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	}
 }
 
-func validateDeposit(i interface{}) error {
-	v, ok := i.(string)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	if strings.TrimSpace(v) == "" {
-		return errors.New("deposit cannot be blank")
-	}
-
-	return nil
-}
+// func validateDeposit(i interface{}) error {
+// 	v, ok := i.(string)
+// 	if !ok {
+// 		return fmt.Errorf("invalid parameter type: %T", i)
+// 	}
+//
+// 	if strings.TrimSpace(v) == "" {
+// 		return errors.New("deposit cannot be blank")
+// 	}
+//
+// 	return nil
+// }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
