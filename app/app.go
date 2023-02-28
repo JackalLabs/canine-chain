@@ -393,7 +393,8 @@ func NewJackalApp(
 		capabilitytypes.MemStoreKey,
 		oraclemoduletypes.MemStoreKey,
 		storagemoduletypes.MemStoreKey,
-		// filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
+		rnsmoduletypes.MemStoreKey,
+		// filetreemoduletypes.MemStoreKey, minttypes.MemStoreKey
 	)
 
 	app := &JackalApp{
