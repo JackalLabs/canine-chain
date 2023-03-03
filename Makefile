@@ -131,7 +131,8 @@ local: install
 	./scripts/test-node.sh $(address)
 
 test: test-unit
-test-all: check test-race test-cover
+test-all: test-race test-cover
+test-sim: test-sim-import-export test-sim-full-app
 
 test-unit:
 	@VERSION=$(VERSION) go test -mod=readonly -tags='ledger test_ledger_mock' ./...
@@ -149,13 +150,15 @@ test-sim-import-export: runsim
 	@echo "Running application import/export simulation. This may take several minutes..."
 	@$(BINDIR)/runsim -Jobs=4 -SimAppPkg=$(SIMAPP) -ExitOnFail 50 5 TestAppImportExport
 
-test-sim-multi-seed-short: runsim
+test-sim-full-app: runsim
 	@echo "Running short multi-seed application simulation. This may take awhile!"
 	@$(BINDIR)/runsim -Jobs=4 -SimAppPkg=$(SIMAPP) -ExitOnFail 50 10 TestFullAppSimulation
 
 test-sim-bench:
 	@VERSION=$(VERSION) go test -benchmem -run ^BenchmarkFullAppSimulation -bench ^BenchmarkFullAppSimulation -cpuprofile cpu.out github.com/jackalLabs/canine-chain/app
 
+runsim:
+	go install github.com/cosmos/tools/cmd/runsim@latest
 ###############################################################################
 ###                                Linting                                  ###
 ###############################################################################
