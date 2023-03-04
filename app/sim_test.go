@@ -115,6 +115,9 @@ func fauxMerkleModeOpt(bapp *baseapp.BaseApp) {
 }
 
 func TestAppImportExport(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping testing in short mode")
+	}
 	config, db, dir, logger, skip, err := SetupSimulation("leveldb-app-sim", "Simulation")
 	if skip {
 		t.Skip("skipping application import/export simulation")
@@ -256,6 +259,9 @@ func TestAppImportExport(t *testing.T) {
 }
 
 func TestFullAppSimulation(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping testing in short mode")
+	}
 	config, db, dir, logger, skip, err := SetupSimulation("leveldb-app-sim", "Simulation")
 
 	if skip {
