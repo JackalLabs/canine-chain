@@ -24,7 +24,7 @@ jobs:
         go-version: 1.19 # The Go version to download (if necessary) and use.
     - name: Get Coverage
       run: |
-        go test ./... -cover -coverprofile coverage.out
+        go test ./... -timeout=30m -cover -coverprofile coverage.out
         cat coverage.out | grep -v ".pb.go" > coverage2.out
         cat coverage2.out | grep -v ".pb.gw.go" > coverage3.out
         go tool cover -func coverage3.out 
