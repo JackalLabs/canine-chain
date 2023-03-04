@@ -1,4 +1,4 @@
-name: Test
+name: Simulation Test
 
 on:
   pull_request:
@@ -16,4 +16,4 @@ jobs:
           go-version: 1.19 # The Go version to download (if necessary) and use.
       - name: Test
         shell: bash
-        run: go test ./...
+        run: make test-sim-full-app
