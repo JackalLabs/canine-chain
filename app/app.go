@@ -141,15 +141,16 @@ import (
 	filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 
+	notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
+	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
+
 	/*
 
 		dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
 		dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
 		dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
 
-		notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
-		notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
-		notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	*/
 
 	"github.com/jackalLabs/canine-chain/app/upgrades/bouncybulldog"
@@ -254,27 +255,28 @@ var (
 		storagemodule.AppModuleBasic{},
 		filetreemodule.AppModuleBasic{},
 		oraclemodule.AppModuleBasic{},
+		notificationsmodule.AppModuleBasic{},
 
 		/*
 			dsigmodule.AppModuleBasic{},
-			notificationsmodule.AppModuleBasic{},
 		*/
 	)
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:     nil,
-		distrtypes.ModuleName:          nil,
-		minttypes.ModuleName:           {authtypes.Minter},
-		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:            {authtypes.Burner},
-		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		icatypes.ModuleName:            nil,
-		wasm.ModuleName:                {authtypes.Burner},
-		rnsmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
-		storagemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
-		oraclemoduletypes.ModuleName:   nil,
+		authtypes.FeeCollectorName:          nil,
+		distrtypes.ModuleName:               nil,
+		minttypes.ModuleName:                {authtypes.Minter},
+		stakingtypes.BondedPoolName:         {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                 {authtypes.Burner},
+		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
+		icatypes.ModuleName:                 nil,
+		wasm.ModuleName:                     {authtypes.Burner},
+		rnsmoduletypes.ModuleName:           {authtypes.Minter, authtypes.Burner},
+		storagemoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+		oraclemoduletypes.ModuleName:        nil,
+		notificationsmoduletypes.ModuleName: nil,
 
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
@@ -330,16 +332,16 @@ type JackalApp struct {
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
-	RnsKeeper      rnsmodulekeeper.Keeper
-	OracleKeeper   oraclemodulekeeper.Keeper
-	StorageKeeper  storagemodulekeeper.Keeper
-	FileTreeKeeper filetreemodulekeeper.Keeper
+	RnsKeeper           rnsmodulekeeper.Keeper
+	OracleKeeper        oraclemodulekeeper.Keeper
+	StorageKeeper       storagemodulekeeper.Keeper
+	FileTreeKeeper      filetreemodulekeeper.Keeper
+	NotificationsKeeper notificationsmodulekeeper.Keeper
 
 	/*
 
 		DsigKeeper     dsigmodulekeeper.Keeper
 
-		NotificationsKeeper notificationsmodulekeeper.Keeper
 	*/
 
 	// the module manager
@@ -382,10 +384,11 @@ func NewJackalApp(
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey,
 		icacontrollertypes.StoreKey, intertxtypes.StoreKey, rnsmoduletypes.StoreKey,
 		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
+		notificationsmoduletypes.StoreKey,
 
 		/*
-			, dsigmoduletypes.StoreKey, f
-			notificationsmoduletypes.StoreKey,
+			, dsigmoduletypes.StoreKey,
+
 		*/
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -658,14 +661,6 @@ func NewJackalApp(
 		)
 		dsigModule := dsigmodule.NewAppModule(appCodec, app.DsigKeeper, app.AccountKeeper, app.BankKeeper)
 
-		app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
-			appCodec,
-			keys[notificationsmoduletypes.StoreKey],
-			keys[notificationsmoduletypes.MemStoreKey],
-			app.getSubspace(notificationsmoduletypes.ModuleName),
-		)
-		notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
-
 	*/
 
 	app.FileTreeKeeper = *filetreemodulekeeper.NewKeeper(
@@ -675,6 +670,14 @@ func NewJackalApp(
 		app.getSubspace(filetreemoduletypes.ModuleName),
 	)
 	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.AccountKeeper, app.BankKeeper)
+
+	app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
+		appCodec,
+		keys[notificationsmoduletypes.StoreKey],
+		keys[notificationsmoduletypes.MemStoreKey],
+		app.getSubspace(notificationsmoduletypes.ModuleName),
+	)
+	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
@@ -739,10 +742,11 @@ func NewJackalApp(
 		storageModule,
 		filetreeModule,
 		oracleModule,
+		notificationsModule,
 
 		/*
 			dsigModule,
-			notificationsModule,
+
 		*/
 	)
 
@@ -777,10 +781,11 @@ func NewJackalApp(
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
-			notificationsmoduletypes.ModuleName,
+
 		*/
 	)
 
@@ -811,10 +816,11 @@ func NewJackalApp(
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
-			notificationsmoduletypes.ModuleName,
+
 		*/
 	)
 
@@ -853,10 +859,11 @@ func NewJackalApp(
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
-			notificationsmoduletypes.ModuleName,
+
 		*/
 	)
 
@@ -888,6 +895,7 @@ func NewJackalApp(
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 	)
 
 	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
@@ -920,6 +928,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
+		notificationsmoduletypes.ModuleName,
 
 		crisistypes.ModuleName,
 	)
@@ -960,6 +969,7 @@ func NewJackalApp(
 		storageModule,
 		oracleModule,
 		filetreeModule,
+		notificationsModule,
 	)
 
 	app.sm.RegisterStoreDecoders()
