@@ -12,7 +12,6 @@ import (
 
 	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	rnssimulation "github.com/jackalLabs/canine-chain/x/rns/simulation"
-	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 // TODO: rewrite tests but don't use ignite
@@ -71,12 +70,7 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	accs := make([]string, len(simState.Accounts))
-	for i, acc := range simState.Accounts {
-		accs[i] = acc.Address.String()
-	}
-	rnsGenesis := types.GenesisState{}
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&rnsGenesis)
+	rnssimulation.RandomizedGenState(simState)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -85,8 +79,8 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{}
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	return rnssimulation.ParamChanges(r)
 }
 
 // RegisterStoreDecoder registers a decoder

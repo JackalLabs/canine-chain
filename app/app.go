@@ -393,7 +393,8 @@ func NewJackalApp(
 		capabilitytypes.MemStoreKey,
 		oraclemoduletypes.MemStoreKey,
 		storagemoduletypes.MemStoreKey,
-		// filetreemoduletypes.MemStoreKey, rnsmoduletypes.MemStoreKey, minttypes.MemStoreKey
+		rnsmoduletypes.MemStoreKey,
+		// filetreemoduletypes.MemStoreKey, minttypes.MemStoreKey
 	)
 
 	app := &JackalApp{
@@ -619,7 +620,6 @@ func NewJackalApp(
 	app.RnsKeeper = *rnsmodulekeeper.NewKeeper(
 		appCodec,
 		keys[rnsmoduletypes.StoreKey],
-		keys[rnsmoduletypes.MemStoreKey],
 		app.getSubspace(rnsmoduletypes.ModuleName),
 
 		app.BankKeeper,

@@ -11,6 +11,7 @@ import (
 
 	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
 	"github.com/cosmos/cosmos-sdk/store"
@@ -207,6 +208,7 @@ func TestAppImportExport(t *testing.T) {
 		{app.keys[oraclemoduletypes.StoreKey], newApp.keys[oraclemoduletypes.StoreKey], [][]byte{}},
 		{app.keys[storagemoduletypes.StoreKey], newApp.keys[storagemoduletypes.StoreKey], [][]byte{}},
 		{app.keys[filetreemoduletypes.StoreKey], newApp.keys[filetreemoduletypes.StoreKey], [][]byte{}},
+		{app.keys[rnsmoduletypes.StoreKey], newApp.keys[rnsmoduletypes.StoreKey], [][]byte{}},
 	}
 
 	// delete persistent tx counter value
