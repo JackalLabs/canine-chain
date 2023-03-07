@@ -6,7 +6,7 @@ option go_package = "github.com/jackal-dao/canine/x/notifications/types";
 message NotiCounter {
   string address = 1; 
   uint64 counter = 2; 
-  string permittedSenders = 3;
+  string blockedSenders = 3;
   
 }
 

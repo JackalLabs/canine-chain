@@ -1,13 +1,13 @@
 syntax = "proto3";
-package jackaldao.canine.notifications;
+package canine_chain.notifications;
 
 import "gogoproto/gogo.proto";
-import "notifications/params.proto";
-import "notifications/notifications.proto";
-import "notifications/noti_counter.proto";
+import "canine_chain/notifications/params.proto";
+import "canine_chain/notifications/notifications.proto";
+import "canine_chain/notifications/noti_counter.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
-option go_package = "github.com/jackal-dao/canine/x/notifications/types";
+option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
 
 // GenesisState defines the notifications module's genesis state.
 message GenesisState {

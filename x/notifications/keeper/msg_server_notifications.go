@@ -105,35 +105,3 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 
 	return &types.MsgDeleteNotificationsResponse{}, nil
 }
-
-// DOES NOT WORK
-// I don't think update is needed. Seems pointless to overwrite a current notification--just append to the end
-func (k msgServer) UpdateNotifications(goCtx context.Context, msg *types.MsgUpdateNotifications) (*types.MsgUpdateNotificationsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Check if the value exists
-	valFound, isFound := k.GetNotifications(
-		ctx,
-		msg.Count,
-		msg.Address,
-	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Address {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	notifications := types.Notifications{
-		Sender:       msg.Creator,
-		Count:        msg.Count,
-		Notification: msg.Notification,
-		Address:      msg.Address,
-	}
-
-	k.SetNotifications(ctx, notifications)
-
-	return &types.MsgUpdateNotificationsResponse{}, nil
-}

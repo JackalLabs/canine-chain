@@ -1,9 +1,9 @@
 syntax = "proto3";
-package jackaldao.canine.notifications;
+package canine_chain.notifications;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/jackal-dao/canine/x/notifications/types";
+option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
 
 // Params defines the parameters for the module.
 message Params {
