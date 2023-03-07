@@ -9,14 +9,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/x/notifications/types"
-	"github.com/jackalLabs/canine-chain/testutil/sample"
 	notificationssimulation "github.com/jackalLabs/canine-chain/x/notifications/simulation"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	//_ = sample.AccAddress
 	_ = notificationssimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
@@ -57,11 +56,11 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		Params: types.DefaultParams(),
 		NotificationsList: []types.Notifications{
 			{
-				Sender: sample.AccAddress(),
+				Sender: "jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct", // Replace with non hard code
 				Count:  0,
 			},
 			{
-				Sender: sample.AccAddress(),
+				Sender: "jkl1hj5fveer5cjtn4wd6wstzugjfdxzl0xpljur4u",
 				Count:  1,
 			},
 		},
