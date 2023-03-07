@@ -1,0 +1,12 @@
+syntax = "proto3";
+package jackaldao.canine.notifications;
+
+option go_package = "github.com/jackal-dao/canine/x/notifications/types";
+
+message Notifications {
+  uint64 count = 1; 
+  string notification = 2; 
+  string address = 3; 
+  string sender = 4;
+}
+
