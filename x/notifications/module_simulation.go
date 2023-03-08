@@ -39,7 +39,7 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgSetCounter int = 100
 
-	opWeightMsgBlockSenders = "op_weight_msg_add_senders"
+	opWeightMsgBlockSenders = "op_weight_msg_block_senders"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgBlockSenders int = 100
 

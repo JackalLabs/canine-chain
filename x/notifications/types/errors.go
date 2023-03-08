@@ -13,4 +13,6 @@ var (
 	ErrBlockedSender          = sdkerrors.Register(ModuleName, 1102, "You are a blocked sender")
 	ErrNotificationAlreadySet = sdkerrors.Register(ModuleName, 1103, "Notification already set")
 	ErrOnlyOwnerCanBlock      = sdkerrors.Register(ModuleName, 1104, "Only the notiCounter owner can block a sender")
+	ErrNotificationNotFound   = sdkerrors.Register(ModuleName, 1105, "Notification does not exist")
+	ErrNotNotificationOwner   = sdkerrors.Register(ModuleName, 1106, "You do not own this notification")
 )

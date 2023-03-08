@@ -17,7 +17,7 @@ var _ = strconv.Itoa(0)
 
 func CmdBlockSenders() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-senders [sender-ids]",
+		Use:   "block-senders [sender-ids]",
 		Short: "Broadcast message BlockSenders",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {

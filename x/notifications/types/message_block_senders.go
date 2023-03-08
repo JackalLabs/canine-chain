@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgBlockSenders = "add_senders"
+const TypeMsgBlockSenders = "block_senders"
 
 var _ sdk.Msg = &MsgBlockSenders{}
 

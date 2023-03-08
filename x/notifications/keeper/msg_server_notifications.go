@@ -74,35 +74,49 @@ func isBlocked(notiCounter types.NotiCounter, user string) bool {
 	return false
 }
 
-// DOES NOT WORK
+// Delete the latest message
 func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDeleteNotifications) (*types.MsgDeleteNotificationsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Check if the value exists
-	valFound, isFound := k.GetNotifications(
+	notiCounter, found := k.GetNotiCounter(
 		ctx,
-		msg.Count,
-		msg.Creator, // this needs to be fleshed out with permissions checking
+		msg.Creator,
 	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
+	if !found {
+		return nil, types.ErrNotiCounterNotFound
 	}
 
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Address {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
+	notification, found := k.GetNotifications(
+		ctx,
+		notiCounter.Counter-1,
+		msg.Creator,
+	)
+	if !found {
+		return nil, types.ErrNotificationNotFound
+	}
+
+	// Checks if the the msg creator is the same as the current owner of this notification
+	if msg.Creator != notification.Address {
+		return nil, types.ErrNotNotificationOwner
 	}
 
 	k.RemoveNotifications(
 		ctx,
-		msg.Count,
-		msg.Creator, // this needs to be fleshed out with permissions checking
+		notiCounter.Counter,
+		msg.Creator,
+	)
+
+	notiCounter.Counter -= 1
+
+	k.SetNotiCounter(
+		ctx,
+		notiCounter,
 	)
 
 	return &types.MsgDeleteNotificationsResponse{}, nil
 }
 
-// DOES NOT WORK
+// DOES NOT WORK - stub for now
 // I don't think update is needed. Seems pointless to overwrite a current notification--just append to the end
 func (k msgServer) UpdateNotifications(goCtx context.Context, msg *types.MsgUpdateNotifications) (*types.MsgUpdateNotificationsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)

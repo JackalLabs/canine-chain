@@ -34,8 +34,8 @@ message MsgUpdateNotificationsResponse {}
 
 message MsgDeleteNotifications {
   string creator = 1;
-  uint64 count = 2;
 }
+
 message MsgDeleteNotificationsResponse {}
 
 message MsgSetCounter {
