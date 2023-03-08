@@ -23,10 +23,17 @@ func (k msgServer) BlockSenders(goCtx context.Context, msg *types.MsgBlockSender
 	BlockedSenders := notiCounter.BlockedSenders
 
 	placeholderMap := make([]string, 0, 1000)
-	json.Unmarshal([]byte(BlockedSenders), &placeholderMap)
+	err := json.Unmarshal([]byte(BlockedSenders), &placeholderMap)
+	if err != nil {
+		return nil, types.ErrCantUnmarshall
+	}
 
 	temporaryMap := make([]string, 0, 1000)
-	json.Unmarshal([]byte(msg.SenderIds), &temporaryMap)
+	error := json.Unmarshal([]byte(msg.SenderIds), &temporaryMap)
+
+	if error != nil {
+		return nil, types.ErrCantUnmarshall
+	}
 
 	placeholderMap = append(placeholderMap, temporaryMap...)
 

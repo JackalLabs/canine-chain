@@ -18,7 +18,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		msg.Address,
 	)
 	if !found {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Recipients notiCounter not set")
+		return nil, types.ErrNotiCounterNotFound
 	}
 
 	// Check if the value already exists
@@ -28,12 +28,17 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		msg.Address,
 	)
 	if isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "notification already set")
+		return nil, types.ErrNotificationAlreadySet
 	}
 
 	// Check if sender is permitted to notify
 
-	if isBlocked(notiCounter, msg.Creator) {
+	blocked, err := isBlocked(notiCounter, msg.Creator)
+	if err != nil {
+		return nil, types.ErrCantUnmarshall
+	}
+
+	if blocked {
 		return nil, types.ErrBlockedSender
 	}
 
@@ -49,7 +54,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		notifications,
 	)
 
-	notiCounter.Counter += 1
+	notiCounter.Counter++
 
 	k.SetNotiCounter(
 		ctx,
@@ -59,18 +64,21 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 	return &types.MsgCreateNotificationsResponse{}, nil
 }
 
-func isBlocked(notiCounter types.NotiCounter, user string) bool {
+func isBlocked(notiCounter types.NotiCounter, user string) (bool, error) {
 	BlockedSenders := notiCounter.BlockedSenders
 
 	placeholderMap := make([]string, 0, 1000)
-	json.Unmarshal([]byte(BlockedSenders), &placeholderMap)
+	err := json.Unmarshal([]byte(BlockedSenders), &placeholderMap)
+	if err != nil {
+		return false, types.ErrCantUnmarshall
+	}
 
 	for _, v := range placeholderMap {
-		if string(v) == user {
-			return true
+		if v == user {
+			return true, nil
 		}
 	}
-	return false
+	return false, nil
 }
 
 // DOES NOT WORK - stub for now

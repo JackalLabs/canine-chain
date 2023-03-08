@@ -17,9 +17,9 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 
 	// set noti counter for bob
 	notiCounter := types.NotiCounter{
-		bob,
-		0,
-		"",
+		Address:        bob,
+		Counter:        0,
+		BlockedSenders: "",
 	}
 	suite.Require().NoError(err)
 	suite.notificationsKeeper.SetNotiCounter(suite.ctx, notiCounter)

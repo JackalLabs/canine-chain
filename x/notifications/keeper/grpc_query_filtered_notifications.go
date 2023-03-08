@@ -41,7 +41,7 @@ func (k Keeper) FilteredNotifications(c context.Context, req *types.QueryFiltere
 			return nil, status.Error(codes.NotFound, "not found")
 		}
 		notifications = append(notifications, val.Notification)
-		i += 1
+		i++
 	}
 
 	jsonNotifications, err := json.Marshal(notifications)

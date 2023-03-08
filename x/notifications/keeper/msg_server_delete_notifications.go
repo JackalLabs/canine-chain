@@ -39,7 +39,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 		msg.Creator,
 	)
 
-	notiCounter.Counter -= 1
+	notiCounter.Counter--
 
 	k.SetNotiCounter(
 		ctx,
