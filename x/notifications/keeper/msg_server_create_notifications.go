@@ -42,7 +42,6 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		Count:        notiCounter.Counter,
 		Notification: msg.Notification,
 		Address:      msg.Address,
-		// hashPath and hashPathOwner not needed in this module. Will be used in filetree
 	}
 
 	k.SetNotifications(
@@ -72,48 +71,6 @@ func isBlocked(notiCounter types.NotiCounter, user string) bool {
 		}
 	}
 	return false
-}
-
-// Delete the latest message
-func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDeleteNotifications) (*types.MsgDeleteNotificationsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	notiCounter, found := k.GetNotiCounter(
-		ctx,
-		msg.Creator,
-	)
-	if !found {
-		return nil, types.ErrNotiCounterNotFound
-	}
-
-	notification, found := k.GetNotifications(
-		ctx,
-		notiCounter.Counter-1,
-		msg.Creator,
-	)
-	if !found {
-		return nil, types.ErrNotificationNotFound
-	}
-
-	// Checks if the the msg creator is the same as the current owner of this notification
-	if msg.Creator != notification.Address {
-		return nil, types.ErrNotNotificationOwner
-	}
-
-	k.RemoveNotifications(
-		ctx,
-		notiCounter.Counter,
-		msg.Creator,
-	)
-
-	notiCounter.Counter -= 1
-
-	k.SetNotiCounter(
-		ctx,
-		notiCounter,
-	)
-
-	return &types.MsgDeleteNotificationsResponse{}, nil
 }
 
 // DOES NOT WORK - stub for now
