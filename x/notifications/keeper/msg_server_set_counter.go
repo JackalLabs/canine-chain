@@ -31,12 +31,12 @@ func (k msgServer) SetCounter(goCtx context.Context, msg *types.MsgSetCounter) (
 		return nil, types.ErrCantUnmarshall
 	}
 
-	updatedSenders := string(marshalledSenders)
+	updatedBlockedSenders := string(marshalledSenders)
 
 	counter := types.NotiCounter{
-		Address:          msg.Creator,
-		Counter:          0,
-		PermittedSenders: updatedSenders,
+		Address:        msg.Creator,
+		Counter:        0,
+		BlockedSenders: updatedBlockedSenders,
 	}
 
 	k.SetNotiCounter(

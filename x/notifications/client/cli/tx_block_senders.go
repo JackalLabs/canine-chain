@@ -15,10 +15,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdAddSenders() *cobra.Command {
+func CmdBlockSenders() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add-senders [sender-ids]",
-		Short: "Broadcast message addSenders",
+		Short: "Broadcast message BlockSenders",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argSenderIds := args[0]
@@ -46,7 +46,7 @@ func CmdAddSenders() *cobra.Command {
 
 			fmt.Println(string(jsonSenders))
 
-			msg := types.NewMsgAddSenders(
+			msg := types.NewMsgBlockSenders(
 				clientCtx.GetFromAddress().String(),
 				string(jsonSenders),
 			)

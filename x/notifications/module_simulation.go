@@ -39,9 +39,9 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgSetCounter int = 100
 
-	opWeightMsgAddSenders = "op_weight_msg_add_senders"
+	opWeightMsgBlockSenders = "op_weight_msg_add_senders"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgAddSenders int = 100
+	defaultWeightMsgBlockSenders int = 100
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
@@ -130,15 +130,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		notificationssimulation.SimulateMsgSetCounter(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgAddSenders int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddSenders, &weightMsgAddSenders, nil,
+	var weightMsgBlockSenders int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgBlockSenders, &weightMsgBlockSenders, nil,
 		func(_ *rand.Rand) {
-			weightMsgAddSenders = defaultWeightMsgAddSenders
+			weightMsgBlockSenders = defaultWeightMsgBlockSenders
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgAddSenders,
-		notificationssimulation.SimulateMsgAddSenders(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgBlockSenders,
+		notificationssimulation.SimulateMsgBlockSenders(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

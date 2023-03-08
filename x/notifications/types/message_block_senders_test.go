@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgAddSenders_ValidateBasic(t *testing.T) {
+func TestMsgBlockSenders_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgAddSenders
+		msg  MsgBlockSenders
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgAddSenders{
+			msg: MsgBlockSenders{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgAddSenders{
+			msg: MsgBlockSenders{
 				Creator: sample.AccAddress(),
 			},
 		},

@@ -10,6 +10,7 @@ import (
 var (
 	ErrNotiCounterNotFound    = sdkerrors.Register(ModuleName, 1100, "User's notiCounter not set")
 	ErrCantUnmarshall         = sdkerrors.Register(ModuleName, 1101, "Cannot unmarshall from JSON")
-	ErrCannotAddSenders       = sdkerrors.Register(ModuleName, 1102, "You are not a permitted sender")
+	ErrBlockedSender          = sdkerrors.Register(ModuleName, 1102, "You are a blocked sender")
 	ErrNotificationAlreadySet = sdkerrors.Register(ModuleName, 1103, "Notification already set")
+	ErrOnlyOwnerCanBlock      = sdkerrors.Register(ModuleName, 1104, "Only the notiCounter owner can block a sender")
 )

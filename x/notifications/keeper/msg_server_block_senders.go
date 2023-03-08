@@ -8,7 +8,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
-func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (*types.MsgAddSendersResponse, error) {
+func (k msgServer) BlockSenders(goCtx context.Context, msg *types.MsgBlockSenders) (*types.MsgBlockSendersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	notiCounter, found := k.GetNotiCounter(ctx, msg.Creator)
@@ -18,13 +18,13 @@ func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (
 
 	// This message is already set to only allow the msg.Creator to add to their own notiCounter, but add this in just in case
 	if !(notiCounter.Address == msg.Creator) {
-		return nil, types.ErrCannotAddSenders
+		return nil, types.ErrOnlyOwnerCanBlock
 	}
 
-	currentSenders := notiCounter.PermittedSenders
+	BlockedSenders := notiCounter.BlockedSenders
 
 	placeholderMap := make([]string, 0, 1000) // Perhaps I could just use an array
-	json.Unmarshal([]byte(currentSenders), &placeholderMap)
+	json.Unmarshal([]byte(BlockedSenders), &placeholderMap)
 
 	temporaryMap := make([]string, 0, 1000) // Perhaps I could just use an array
 	json.Unmarshal([]byte(msg.SenderIds), &temporaryMap)
@@ -36,23 +36,11 @@ func (k msgServer) AddSenders(goCtx context.Context, msg *types.MsgAddSenders) (
 		return nil, types.ErrCantUnmarshall
 	}
 
-	updatedSenders := string(marshalledSenders)
+	updatedBlockedSenders := string(marshalledSenders)
 
-	notiCounter.PermittedSenders = updatedSenders
+	notiCounter.BlockedSenders = updatedBlockedSenders
 
 	k.SetNotiCounter(ctx, notiCounter)
 
-	return &types.MsgAddSendersResponse{}, nil
+	return &types.MsgBlockSendersResponse{}, nil
 }
-
-// func isSender(currentSenders []string, user string) bool {
-
-// 	for _, v := range currentSenders {
-// 		if v == user {
-// 			return true
-// 			break
-// 		}
-// 	}
-// 	return false
-
-// }

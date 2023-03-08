@@ -22,8 +22,9 @@ func TestNotificationsMsgServerCreate(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	creator := "A"
 	for i := 0; i < 5; i++ {
-		expected := &types.MsgCreateNotifications{Creator: creator,
-			Count: uint64(i),
+		expected := &types.MsgCreateNotifications{
+			Creator: creator,
+			Count:   uint64(i),
 		}
 		_, err := srv.CreateNotifications(wctx, expected)
 		require.NoError(t, err)
@@ -45,21 +46,24 @@ func TestNotificationsMsgServerUpdate(t *testing.T) {
 	}{
 		{
 			desc: "Completed",
-			request: &types.MsgUpdateNotifications{Creator: creator,
-				Count: 0,
+			request: &types.MsgUpdateNotifications{
+				Creator: creator,
+				Count:   0,
 			},
 		},
 		{
 			desc: "Unauthorized",
-			request: &types.MsgUpdateNotifications{Creator: "B",
-				Count: 0,
+			request: &types.MsgUpdateNotifications{
+				Creator: "B",
+				Count:   0,
 			},
 			err: sdkerrors.ErrUnauthorized,
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.MsgUpdateNotifications{Creator: creator,
-				Count: 100000,
+			request: &types.MsgUpdateNotifications{
+				Creator: creator,
+				Count:   100000,
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -68,8 +72,9 @@ func TestNotificationsMsgServerUpdate(t *testing.T) {
 			k, ctx := keepertest.NotificationsKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
-			expected := &types.MsgCreateNotifications{Creator: creator,
-				Count: 0,
+			expected := &types.MsgCreateNotifications{
+				Creator: creator,
+				Count:   0,
 			}
 			_, err := srv.CreateNotifications(wctx, expected)
 			require.NoError(t, err)
@@ -99,21 +104,24 @@ func TestNotificationsMsgServerDelete(t *testing.T) {
 	}{
 		{
 			desc: "Completed",
-			request: &types.MsgDeleteNotifications{Creator: creator,
-				Count: 0,
+			request: &types.MsgDeleteNotifications{
+				Creator: creator,
+				Count:   0,
 			},
 		},
 		{
 			desc: "Unauthorized",
-			request: &types.MsgDeleteNotifications{Creator: "B",
-				Count: 0,
+			request: &types.MsgDeleteNotifications{
+				Creator: "B",
+				Count:   0,
 			},
 			err: sdkerrors.ErrUnauthorized,
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.MsgDeleteNotifications{Creator: creator,
-				Count: 100000,
+			request: &types.MsgDeleteNotifications{
+				Creator: creator,
+				Count:   100000,
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -123,8 +131,9 @@ func TestNotificationsMsgServerDelete(t *testing.T) {
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
 
-			_, err := srv.CreateNotifications(wctx, &types.MsgCreateNotifications{Creator: creator,
-				Count: 0,
+			_, err := srv.CreateNotifications(wctx, &types.MsgCreateNotifications{
+				Creator: creator,
+				Count:   0,
 			})
 			require.NoError(t, err)
 			_, err = srv.DeleteNotifications(wctx, tc.request)

@@ -12,7 +12,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgUpdateNotifications{}, "notifications/UpdateNotifications", nil)
 	cdc.RegisterConcrete(&MsgDeleteNotifications{}, "notifications/DeleteNotifications", nil)
 	cdc.RegisterConcrete(&MsgSetCounter{}, "notifications/SetCounter", nil)
-	cdc.RegisterConcrete(&MsgAddSenders{}, "notifications/AddSenders", nil)
+	cdc.RegisterConcrete(&MsgBlockSenders{}, "notifications/BlockSenders", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -26,7 +26,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgSetCounter{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgAddSenders{},
+		&MsgBlockSenders{},
 	)
 	// this line is used by starport scaffolding # 3
 

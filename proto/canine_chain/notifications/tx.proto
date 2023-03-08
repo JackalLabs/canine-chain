@@ -1,7 +1,7 @@
 syntax = "proto3";
 package canine_chain.notifications;
 
-import "notifications/notifications.proto";
+import "canine_chain/notifications/notifications.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
@@ -12,7 +12,7 @@ service Msg {
   rpc UpdateNotifications(MsgUpdateNotifications) returns (MsgUpdateNotificationsResponse);
   rpc DeleteNotifications(MsgDeleteNotifications) returns (MsgDeleteNotificationsResponse);
   rpc SetCounter(MsgSetCounter) returns (MsgSetCounterResponse);
-  rpc AddSenders(MsgAddSenders) returns (MsgAddSendersResponse);
+  rpc BlockSenders(MsgBlockSenders) returns (MsgBlockSendersResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -45,12 +45,12 @@ message MsgSetCounter {
 message MsgSetCounterResponse {
 }
 
-message MsgAddSenders {
+message MsgBlockSenders {
   string creator = 1;
   string senderIds = 2;
 }
 
-message MsgAddSendersResponse {
+message MsgBlockSendersResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
