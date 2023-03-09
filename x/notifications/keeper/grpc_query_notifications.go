@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificationsRequest, address string) (*types.QueryAllNotificationsResponse, error) {
+func (k Keeper) NotificationsByAddress(c context.Context, req *types.QueryAllNotificationsRequest, address string) (*types.QueryAllNotificationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,6 +22,35 @@ func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificat
 
 	store := ctx.KVStore(k.storeKey)
 	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, address)
+
+	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
+
+	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(key []byte, value []byte) error {
+		var notifications types.Notifications
+		if err := k.cdc.Unmarshal(value, &notifications); err != nil {
+			return err
+		}
+
+		notificationss = append(notificationss, notifications)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllNotificationsResponse{Notifications: notificationss, Pagination: pageRes}, nil
+}
+
+func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificationsRequest) (*types.QueryAllNotificationsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var notificationss []types.Notifications
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(k.storeKey)
+	keyPrefix := types.NotificationsKeyPrefix
 
 	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
 
