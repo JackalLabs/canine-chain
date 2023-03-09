@@ -2,7 +2,6 @@ package cli
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -43,8 +42,6 @@ func CmdBlockSenders() *cobra.Command {
 			if err != nil {
 				return err
 			}
-
-			fmt.Println(string(jsonSenders))
 
 			msg := types.NewMsgBlockSenders(
 				clientCtx.GetFromAddress().String(),

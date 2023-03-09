@@ -20,7 +20,7 @@ func (suite *KeeperTestSuite) TestMsgSetCounter() {
 		expErrMsg string
 		name      string
 	}{
-		{ // alice sends a notification to bob
+		{ // alice sets her notiCounter
 			preRun: func() *types.MsgSetCounter {
 				return types.NewMsgSetCounter(
 					alice,

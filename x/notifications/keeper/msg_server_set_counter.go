@@ -22,21 +22,20 @@ func (k msgServer) SetCounter(goCtx context.Context, msg *types.MsgSetCounter) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "counter already set")
 	}
 
-	// Add yourself as a permitted Sender in the beginning so you can notify yourself
+	// Place holder map for blocked senders
 
-	placeholderMap := make([]string, 0, 1000) // Perhaps I could just use an array
-	placeholderMap = append(placeholderMap, msg.Creator)
-	marshalledSenders, err := json.Marshal(placeholderMap)
+	placeholderMap := make([]string, 0, 1000)
+	marshalledBlockedSenders, err := json.Marshal(placeholderMap)
 	if err != nil {
 		return nil, types.ErrCantUnmarshall
 	}
 
-	updatedBlockedSenders := string(marshalledSenders)
+	BlockedSenders := string(marshalledBlockedSenders)
 
 	counter := types.NotiCounter{
 		Address:        msg.Creator,
 		Counter:        0,
-		BlockedSenders: updatedBlockedSenders,
+		BlockedSenders: BlockedSenders,
 	}
 
 	k.SetNotiCounter(
