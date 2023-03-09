@@ -39,7 +39,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteNotifications() {
 		Sender:       alice,
 	}
 	suite.Require().NoError(err)
-	suite.notificationsKeeper.SetNotifications(suite.ctx, notification)
+	suite.notificationsKeeper.SetNotifications(suite.ctx, notification, bob)
 
 	// Increase the notiCounter just as it happens in the keeper code
 

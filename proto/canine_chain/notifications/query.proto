@@ -9,7 +9,7 @@ import "canine_chain/notifications/notifications.proto";
 import "canine_chain/notifications/noti_counter.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "github.com/jackal-dao/canine/x/notifications/types";
+option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
 
 // Query defines the gRPC querier service.
 service Query {
@@ -24,7 +24,7 @@ service Query {
 
 	// Queries a list of Notifications items.
 	rpc NotificationsAll(QueryAllNotificationsRequest) returns (QueryAllNotificationsResponse) {
-		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications";
+		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications/{address}";
 	}
 
 // Queries a list of FilteredNotifications items.
@@ -66,6 +66,7 @@ message QueryGetNotificationsResponse {
 
 message QueryAllNotificationsRequest {
 	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+	string address = 2;
 }
 
 message QueryAllNotificationsResponse {

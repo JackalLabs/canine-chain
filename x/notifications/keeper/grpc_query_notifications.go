@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificationsRequest) (*types.QueryAllNotificationsResponse, error) {
+func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificationsRequest, address string) (*types.QueryAllNotificationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -20,7 +21,9 @@ func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificat
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	notificationsStore := prefix.NewStore(store, types.KeyPrefix(types.NotificationsKeyPrefix))
+	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, address)
+
+	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
 
 	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(key []byte, value []byte) error {
 		var notifications types.Notifications
