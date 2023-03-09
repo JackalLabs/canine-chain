@@ -35,7 +35,7 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 
 	k.RemoveNotifications(
 		ctx,
-		notiCounter.Counter,
+		notiCounter.Counter-1,
 		msg.Creator,
 	)
 
@@ -46,5 +46,5 @@ func (k msgServer) DeleteNotifications(goCtx context.Context, msg *types.MsgDele
 		notiCounter,
 	)
 
-	return &types.MsgDeleteNotificationsResponse{}, nil
+	return &types.MsgDeleteNotificationsResponse{NotiCounter: notiCounter.Counter}, nil
 }

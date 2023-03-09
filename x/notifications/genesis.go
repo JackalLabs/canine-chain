@@ -11,11 +11,11 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the notifications
 	for _, elem := range genState.NotificationsList {
-		k.SetNotifications(ctx, elem)
+		k.SetNotifications(ctx, elem, "") // No genesis notifications
 	}
 	// Set all the notiCounter
 	for _, elem := range genState.NotiCounterList {
-		k.SetNotiCounter(ctx, elem)
+		k.SetNotiCounter(ctx, elem) // No genesis notiCounters
 	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
@@ -25,6 +25,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
+
+	// How to export every single custom prefixKey for each user?...
 
 	genesis.NotificationsList = k.GetAllNotifications(ctx)
 	genesis.NotiCounterList = k.GetAllNotiCounter(ctx)

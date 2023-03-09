@@ -52,6 +52,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 	k.SetNotifications(
 		ctx,
 		notifications,
+		msg.Address,
 	)
 
 	notiCounter.Counter++
@@ -61,7 +62,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		notiCounter,
 	)
 
-	return &types.MsgCreateNotificationsResponse{}, nil
+	return &types.MsgCreateNotificationsResponse{NotiCounter: notiCounter.Counter}, nil
 }
 
 func isBlocked(notiCounter types.NotiCounter, user string) (bool, error) {
@@ -108,7 +109,7 @@ func (k msgServer) UpdateNotifications(goCtx context.Context, msg *types.MsgUpda
 		Address:      msg.Address,
 	}
 
-	k.SetNotifications(ctx, notifications)
+	k.SetNotifications(ctx, notifications, msg.Address)
 
 	return &types.MsgUpdateNotificationsResponse{}, nil
 }

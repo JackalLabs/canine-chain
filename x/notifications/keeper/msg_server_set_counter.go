@@ -43,5 +43,5 @@ func (k msgServer) SetCounter(goCtx context.Context, msg *types.MsgSetCounter) (
 		counter,
 	)
 
-	return &types.MsgSetCounterResponse{}, nil
+	return &types.MsgSetCounterResponse{NotiCounter: counter.Counter}, nil
 }

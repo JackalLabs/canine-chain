@@ -20,9 +20,10 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 
 	// set noti counter for bob
 
-	placeholderMap := make([]string, 0, 1000)
-	updatedPlaceHolderMap := append(placeholderMap, charlie)
-	marshalledBlockedSenders, err := json.Marshal(updatedPlaceHolderMap)
+	blockedSendersMap := make([]string, 0, 1000)
+	blockedSendersMap = append(blockedSendersMap, charlie)
+
+	marshalledBlockedSenders, err := json.Marshal(blockedSendersMap)
 	suite.Require().NoError(err)
 	BlockedSenders := string(marshalledBlockedSenders)
 
@@ -88,7 +89,7 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 			} else {
 
 				suite.Require().NoError(err)
-				suite.Require().EqualValues(types.MsgCreateNotificationsResponse{}, *res)
+				suite.Require().EqualValues(types.MsgCreateNotificationsResponse{NotiCounter: 1}, *res)
 
 			}
 		})

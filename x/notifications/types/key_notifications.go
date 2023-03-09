@@ -6,7 +6,7 @@ var _ binary.ByteOrder
 
 const (
 	// NotificationsKeyPrefix is the prefix to retrieve all Notifications
-	NotificationsKeyPrefix = "Notifications/value/"
+	NotificationsKeyPrefix = "Notifications/"
 )
 
 // NotificationsKey returns the store key to retrieve a Notifications from the index fields
