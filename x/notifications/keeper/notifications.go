@@ -15,7 +15,6 @@ func (k Keeper) SetNotifications(ctx sdk.Context, notifications types.Notificati
 	b := k.cdc.MustMarshal(&notifications)
 	store.Set(types.NotificationsKey(
 		notifications.Count,
-		notifications.Address,
 	), b)
 }
 
@@ -31,7 +30,6 @@ func (k Keeper) GetNotifications(
 
 	b := store.Get(types.NotificationsKey(
 		count,
-		address,
 	))
 	if b == nil {
 		return val, false
@@ -51,7 +49,6 @@ func (k Keeper) RemoveNotifications(
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(keyPrefix))
 	store.Delete(types.NotificationsKey(
 		count,
-		address,
 	))
 }
 

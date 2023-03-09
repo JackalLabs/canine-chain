@@ -32,11 +32,6 @@ service Query {
 		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications/{address}";
 	}
 
-// Queries a list of FilteredNotifications items.
-	rpc FilteredNotifications(QueryFilteredNotificationsRequest) returns (QueryFilteredNotificationsResponse) {
-		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/filtered_notifications/{address}";
-	}
-
 // Queries a NotiCounter by index.
 	rpc NotiCounter(QueryGetNotiCounterRequest) returns (QueryGetNotiCounterResponse) {
 		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/noti_counter/{address}";
@@ -86,14 +81,6 @@ message QueryAllNotificationsByAddressRequest {
 message QueryAllNotificationsByAddressResponse {
 	repeated Notifications notifications = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
-message QueryFilteredNotificationsRequest {
-  string address = 1; 
-}
-
-message QueryFilteredNotificationsResponse {
-	string notifications = 1; //could turn it back to 'repeated Notifications notifications' if needed
 }
 
 message QueryGetNotiCounterRequest {
