@@ -62,7 +62,7 @@ func (k msgServer) CreateNotifications(goCtx context.Context, msg *types.MsgCrea
 		notiCounter,
 	)
 
-	return &types.MsgCreateNotificationsResponse{}, nil
+	return &types.MsgCreateNotificationsResponse{NotiCounter: notiCounter.Counter}, nil
 }
 
 func isBlocked(notiCounter types.NotiCounter, user string) (bool, error) {

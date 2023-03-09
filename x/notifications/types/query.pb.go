@@ -211,7 +211,6 @@ func (m *QueryGetNotificationsResponse) GetNotifications() Notifications {
 
 type QueryAllNotificationsRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	Address    string             `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 }
 
 func (m *QueryAllNotificationsRequest) Reset()         { *m = QueryAllNotificationsRequest{} }
@@ -252,13 +251,6 @@ func (m *QueryAllNotificationsRequest) GetPagination() *query.PageRequest {
 		return m.Pagination
 	}
 	return nil
-}
-
-func (m *QueryAllNotificationsRequest) GetAddress() string {
-	if m != nil {
-		return m.Address
-	}
-	return ""
 }
 
 type QueryAllNotificationsResponse struct {
@@ -313,6 +305,112 @@ func (m *QueryAllNotificationsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryAllNotificationsByAddressRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Address    string             `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryAllNotificationsByAddressRequest) Reset()         { *m = QueryAllNotificationsByAddressRequest{} }
+func (m *QueryAllNotificationsByAddressRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllNotificationsByAddressRequest) ProtoMessage()    {}
+func (*QueryAllNotificationsByAddressRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0e7e3c82750b3d9e, []int{6}
+}
+func (m *QueryAllNotificationsByAddressRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllNotificationsByAddressRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllNotificationsByAddressRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllNotificationsByAddressRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllNotificationsByAddressRequest.Merge(m, src)
+}
+func (m *QueryAllNotificationsByAddressRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllNotificationsByAddressRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllNotificationsByAddressRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllNotificationsByAddressRequest proto.InternalMessageInfo
+
+func (m *QueryAllNotificationsByAddressRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+func (m *QueryAllNotificationsByAddressRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryAllNotificationsByAddressResponse struct {
+	Notifications []Notifications     `protobuf:"bytes,1,rep,name=notifications,proto3" json:"notifications"`
+	Pagination    *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllNotificationsByAddressResponse) Reset() {
+	*m = QueryAllNotificationsByAddressResponse{}
+}
+func (m *QueryAllNotificationsByAddressResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllNotificationsByAddressResponse) ProtoMessage()    {}
+func (*QueryAllNotificationsByAddressResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0e7e3c82750b3d9e, []int{7}
+}
+func (m *QueryAllNotificationsByAddressResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllNotificationsByAddressResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllNotificationsByAddressResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllNotificationsByAddressResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllNotificationsByAddressResponse.Merge(m, src)
+}
+func (m *QueryAllNotificationsByAddressResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllNotificationsByAddressResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllNotificationsByAddressResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllNotificationsByAddressResponse proto.InternalMessageInfo
+
+func (m *QueryAllNotificationsByAddressResponse) GetNotifications() []Notifications {
+	if m != nil {
+		return m.Notifications
+	}
+	return nil
+}
+
+func (m *QueryAllNotificationsByAddressResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 type QueryFilteredNotificationsRequest struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
@@ -321,7 +419,7 @@ func (m *QueryFilteredNotificationsRequest) Reset()         { *m = QueryFiltered
 func (m *QueryFilteredNotificationsRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryFilteredNotificationsRequest) ProtoMessage()    {}
 func (*QueryFilteredNotificationsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{6}
+	return fileDescriptor_0e7e3c82750b3d9e, []int{8}
 }
 func (m *QueryFilteredNotificationsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -365,7 +463,7 @@ func (m *QueryFilteredNotificationsResponse) Reset()         { *m = QueryFiltere
 func (m *QueryFilteredNotificationsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryFilteredNotificationsResponse) ProtoMessage()    {}
 func (*QueryFilteredNotificationsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{7}
+	return fileDescriptor_0e7e3c82750b3d9e, []int{9}
 }
 func (m *QueryFilteredNotificationsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -409,7 +507,7 @@ func (m *QueryGetNotiCounterRequest) Reset()         { *m = QueryGetNotiCounterR
 func (m *QueryGetNotiCounterRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetNotiCounterRequest) ProtoMessage()    {}
 func (*QueryGetNotiCounterRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{8}
+	return fileDescriptor_0e7e3c82750b3d9e, []int{10}
 }
 func (m *QueryGetNotiCounterRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -453,7 +551,7 @@ func (m *QueryGetNotiCounterResponse) Reset()         { *m = QueryGetNotiCounter
 func (m *QueryGetNotiCounterResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetNotiCounterResponse) ProtoMessage()    {}
 func (*QueryGetNotiCounterResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{9}
+	return fileDescriptor_0e7e3c82750b3d9e, []int{11}
 }
 func (m *QueryGetNotiCounterResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -497,7 +595,7 @@ func (m *QueryAllNotiCounterRequest) Reset()         { *m = QueryAllNotiCounterR
 func (m *QueryAllNotiCounterRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAllNotiCounterRequest) ProtoMessage()    {}
 func (*QueryAllNotiCounterRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{10}
+	return fileDescriptor_0e7e3c82750b3d9e, []int{12}
 }
 func (m *QueryAllNotiCounterRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -542,7 +640,7 @@ func (m *QueryAllNotiCounterResponse) Reset()         { *m = QueryAllNotiCounter
 func (m *QueryAllNotiCounterResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllNotiCounterResponse) ProtoMessage()    {}
 func (*QueryAllNotiCounterResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{11}
+	return fileDescriptor_0e7e3c82750b3d9e, []int{13}
 }
 func (m *QueryAllNotiCounterResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -592,6 +690,8 @@ func init() {
 	proto.RegisterType((*QueryGetNotificationsResponse)(nil), "canine_chain.notifications.QueryGetNotificationsResponse")
 	proto.RegisterType((*QueryAllNotificationsRequest)(nil), "canine_chain.notifications.QueryAllNotificationsRequest")
 	proto.RegisterType((*QueryAllNotificationsResponse)(nil), "canine_chain.notifications.QueryAllNotificationsResponse")
+	proto.RegisterType((*QueryAllNotificationsByAddressRequest)(nil), "canine_chain.notifications.QueryAllNotificationsByAddressRequest")
+	proto.RegisterType((*QueryAllNotificationsByAddressResponse)(nil), "canine_chain.notifications.QueryAllNotificationsByAddressResponse")
 	proto.RegisterType((*QueryFilteredNotificationsRequest)(nil), "canine_chain.notifications.QueryFilteredNotificationsRequest")
 	proto.RegisterType((*QueryFilteredNotificationsResponse)(nil), "canine_chain.notifications.QueryFilteredNotificationsResponse")
 	proto.RegisterType((*QueryGetNotiCounterRequest)(nil), "canine_chain.notifications.QueryGetNotiCounterRequest")
@@ -605,54 +705,57 @@ func init() {
 }
 
 var fileDescriptor_0e7e3c82750b3d9e = []byte{
-	// 737 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x96, 0x5f, 0x4b, 0x14, 0x5f,
-	0x18, 0xc7, 0xf7, 0xf8, 0xef, 0x87, 0x47, 0xfc, 0x11, 0x27, 0x03, 0x99, 0x6c, 0xb3, 0x43, 0xa8,
-	0x05, 0xce, 0x41, 0x45, 0x33, 0x42, 0x53, 0xa3, 0xb5, 0x22, 0xd4, 0x16, 0x22, 0xe8, 0x46, 0xce,
-	0xce, 0x1e, 0xc7, 0xa9, 0x71, 0xce, 0xba, 0x33, 0x2b, 0x89, 0x08, 0xd1, 0x2b, 0x08, 0x7a, 0x03,
-	0xbd, 0x8b, 0xee, 0xea, 0xaa, 0xf0, 0x2e, 0xa1, 0x2e, 0xba, 0x8a, 0xd0, 0xa0, 0xb7, 0x11, 0x7b,
-	0xce, 0x63, 0xce, 0xac, 0x3b, 0x7f, 0x5c, 0xbd, 0xdb, 0x33, 0xfb, 0xfc, 0xf9, 0x7e, 0x9e, 0xf3,
-	0x9d, 0x87, 0xc1, 0x43, 0x16, 0xf7, 0x1c, 0x4f, 0xac, 0x5a, 0xeb, 0xdc, 0xf1, 0x98, 0x27, 0x03,
-	0x67, 0xcd, 0xb1, 0x78, 0xe0, 0x48, 0xcf, 0x67, 0x9b, 0x35, 0x51, 0xdd, 0x36, 0x2b, 0x55, 0x19,
-	0x48, 0x62, 0x84, 0xe3, 0xcc, 0x48, 0x9c, 0xd1, 0x67, 0x4b, 0x5b, 0xaa, 0x30, 0x56, 0xff, 0xa5,
-	0x33, 0x8c, 0x01, 0x5b, 0x4a, 0xdb, 0x15, 0x8c, 0x57, 0x1c, 0xc6, 0x3d, 0x4f, 0x06, 0x3a, 0x1a,
-	0xfe, 0xbd, 0x69, 0x49, 0x7f, 0x43, 0xfa, 0xac, 0xc4, 0x7d, 0xa1, 0x1b, 0xb1, 0xad, 0xb1, 0x92,
-	0x08, 0xf8, 0x18, 0xab, 0x70, 0xdb, 0xf1, 0x54, 0x30, 0xc4, 0x0e, 0x27, 0x68, 0xac, 0xf0, 0x2a,
-	0xdf, 0x38, 0x2a, 0x6a, 0x26, 0x04, 0x46, 0x4e, 0x10, 0x3f, 0x9a, 0x12, 0xbf, 0x6a, 0xc9, 0x9a,
-	0x17, 0x88, 0xaa, 0x0e, 0xa7, 0x7d, 0x98, 0x3c, 0xa9, 0x2b, 0x5d, 0x51, 0x3d, 0x8b, 0x62, 0xb3,
-	0x26, 0xfc, 0x80, 0x3e, 0xc3, 0x17, 0x23, 0x4f, 0xfd, 0x8a, 0xf4, 0x7c, 0x41, 0xe6, 0x70, 0x97,
-	0xd6, 0xd6, 0x8f, 0x06, 0xd1, 0x48, 0xcf, 0x38, 0x35, 0xe3, 0x27, 0x68, 0xea, 0xdc, 0x85, 0x8e,
-	0xbd, 0x9f, 0x57, 0x73, 0x45, 0xc8, 0xa3, 0x4b, 0x78, 0x40, 0x15, 0x5e, 0x14, 0xc1, 0x52, 0x38,
-	0x1a, 0x1a, 0x93, 0x3e, 0xdc, 0xa9, 0xf4, 0xa9, 0x06, 0x1d, 0x45, 0x7d, 0x20, 0xfd, 0xf8, 0x3f,
-	0x5e, 0x2e, 0x57, 0x85, 0xef, 0xf7, 0xb7, 0x0d, 0xa2, 0x91, 0xee, 0xe2, 0xd1, 0x91, 0x6e, 0xe1,
-	0x2b, 0x31, 0xf5, 0x40, 0xf2, 0x53, 0xdc, 0x1b, 0x91, 0x05, 0xca, 0x6f, 0x24, 0x29, 0x8f, 0x54,
-	0x02, 0x80, 0x68, 0x15, 0xfa, 0x1a, 0x01, 0xc8, 0xbc, 0xeb, 0x36, 0x05, 0x29, 0x60, 0x7c, 0x7c,
-	0xe7, 0xd0, 0x74, 0xc8, 0xd4, 0x06, 0x31, 0xeb, 0x06, 0x31, 0xb5, 0x13, 0xc1, 0x20, 0xe6, 0x0a,
-	0xb7, 0x05, 0xe4, 0x16, 0x43, 0x99, 0x09, 0xe8, 0x9f, 0x10, 0xb0, 0x9f, 0x94, 0x10, 0xcf, 0xde,
-	0x7e, 0x76, 0x76, 0xb2, 0x18, 0x41, 0x6b, 0x53, 0x68, 0xc3, 0xa9, 0x68, 0x5a, 0x53, 0x98, 0x8d,
-	0xce, 0xe0, 0x6b, 0x0a, 0xa0, 0xe0, 0xb8, 0x81, 0xa8, 0x8a, 0x72, 0xd3, 0x41, 0x86, 0x06, 0x80,
-	0xa2, 0x03, 0x78, 0x84, 0x69, 0x52, 0x3a, 0x0c, 0xe1, 0x7a, 0x33, 0x03, 0x74, 0x37, 0xde, 0xe7,
-	0x14, 0x36, 0xc2, 0x3e, 0xba, 0xa7, 0xdf, 0x91, 0x74, 0x0d, 0x1e, 0xbe, 0xdc, 0x34, 0x0f, 0x9a,
-	0x2f, 0xe3, 0x1e, 0xef, 0xf8, 0x31, 0xd8, 0x60, 0x38, 0x6d, 0xfe, 0x10, 0x0e, 0xd3, 0x0f, 0x57,
-	0xa0, 0x65, 0xd0, 0x09, 0x77, 0xde, 0xa0, 0xf3, 0x9c, 0x4c, 0x47, 0x3f, 0x20, 0xc0, 0x6a, 0x6c,
-	0x13, 0x87, 0xd5, 0x7e, 0x36, 0xac, 0x73, 0xb3, 0xd4, 0xf8, 0x97, 0x6e, 0xdc, 0xa9, 0x94, 0x93,
-	0xf7, 0x08, 0x77, 0xe9, 0x15, 0x44, 0xcc, 0x24, 0x65, 0x27, 0xb7, 0x9f, 0xc1, 0x32, 0xc7, 0x6b,
-	0x05, 0x74, 0xf2, 0xcd, 0xb7, 0xdf, 0xef, 0xda, 0x18, 0x19, 0x65, 0x2f, 0xb8, 0xf5, 0x92, 0xbb,
-	0x8f, 0x79, 0xc9, 0x67, 0xba, 0xc6, 0x68, 0xfc, 0x82, 0x27, 0xdf, 0x11, 0xee, 0x8d, 0x98, 0x96,
-	0x4c, 0xa7, 0x76, 0x8e, 0x59, 0x9c, 0xc6, 0xed, 0x16, 0x32, 0x41, 0xfd, 0x92, 0x52, 0xff, 0x80,
-	0x14, 0x32, 0xaa, 0x8f, 0x9e, 0x76, 0xd4, 0x8a, 0xde, 0x65, 0x3b, 0xf0, 0x4a, 0xec, 0x92, 0xaf,
-	0x08, 0x5f, 0x88, 0x74, 0x9a, 0x77, 0xdd, 0x0c, 0x64, 0x31, 0x9b, 0x34, 0x03, 0x59, 0xdc, 0x02,
-	0xa4, 0x05, 0x45, 0x36, 0x47, 0x66, 0x5b, 0x23, 0xfb, 0x47, 0xf4, 0x07, 0xe1, 0x4b, 0x4d, 0xb7,
-	0x0c, 0x99, 0x49, 0x15, 0x97, 0xb4, 0xdc, 0x8c, 0xd9, 0x56, 0xd3, 0x01, 0x70, 0x59, 0x01, 0x3e,
-	0x24, 0x8b, 0x19, 0x01, 0xd7, 0xa0, 0xda, 0x6a, 0x1c, 0xe9, 0x67, 0x84, 0x7b, 0x42, 0xef, 0x2a,
-	0x99, 0xca, 0x6a, 0xab, 0xe8, 0x26, 0x32, 0x6e, 0x9d, 0x3a, 0x0f, 0x88, 0xee, 0x2b, 0xa2, 0xbb,
-	0x64, 0xe6, 0x14, 0x57, 0x76, 0xf4, 0x49, 0x13, 0xe2, 0xf8, 0x88, 0xf0, 0xff, 0xa1, 0xf2, 0x75,
-	0x07, 0x4e, 0x65, 0xf5, 0xd1, 0xa9, 0x51, 0x9a, 0x6f, 0x49, 0x7a, 0x47, 0xa1, 0x4c, 0x92, 0x89,
-	0x16, 0x50, 0x16, 0x8a, 0x7b, 0x07, 0x79, 0xb4, 0x7f, 0x90, 0x47, 0xbf, 0x0e, 0xf2, 0xe8, 0xed,
-	0x61, 0x3e, 0xb7, 0x7f, 0x98, 0xcf, 0xfd, 0x38, 0xcc, 0xe7, 0x9e, 0x4f, 0xdb, 0x4e, 0xb0, 0x5e,
-	0x2b, 0x99, 0x96, 0xdc, 0x88, 0x2d, 0xfc, 0xaa, 0xa1, 0x74, 0xb0, 0x5d, 0x11, 0x7e, 0xa9, 0x4b,
-	0x7d, 0xf2, 0x4d, 0xfc, 0x0d, 0x00, 0x00, 0xff, 0xff, 0xe2, 0xc8, 0x6e, 0xfa, 0x20, 0x0b, 0x00,
-	0x00,
+	// 792 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x97, 0x4f, 0x4f, 0x13, 0x4f,
+	0x18, 0xc7, 0x3b, 0xfc, 0xfb, 0x85, 0x69, 0xf8, 0xc5, 0x8c, 0x68, 0xc8, 0x8a, 0x15, 0x37, 0x0a,
+	0x68, 0xc2, 0x6e, 0x00, 0xa9, 0x18, 0x05, 0x69, 0x8d, 0x45, 0x8d, 0x01, 0x6c, 0x62, 0x4c, 0xbc,
+	0x90, 0x69, 0x3b, 0x2c, 0xab, 0xcb, 0x4e, 0xe9, 0x6e, 0x89, 0x84, 0x70, 0xf1, 0xe6, 0xcd, 0xc4,
+	0x37, 0xe0, 0xc9, 0xb7, 0xe0, 0x4d, 0x4f, 0x24, 0x1c, 0x49, 0xf4, 0xe0, 0xc9, 0x18, 0x30, 0xe1,
+	0x6d, 0x98, 0xce, 0x3c, 0xc8, 0x6e, 0xd9, 0x7f, 0x2d, 0x5c, 0xbc, 0x31, 0xcb, 0xf3, 0xe7, 0xfb,
+	0x79, 0xe6, 0x99, 0xe7, 0x01, 0x3c, 0x5c, 0xa6, 0xb6, 0x69, 0xb3, 0xe5, 0xf2, 0x2a, 0x35, 0x6d,
+	0xdd, 0xe6, 0xae, 0xb9, 0x62, 0x96, 0xa9, 0x6b, 0x72, 0xdb, 0xd1, 0xd7, 0xeb, 0xac, 0xb6, 0xa9,
+	0x55, 0x6b, 0xdc, 0xe5, 0x44, 0xf1, 0xda, 0x69, 0x3e, 0x3b, 0xa5, 0xdf, 0xe0, 0x06, 0x17, 0x66,
+	0x7a, 0xe3, 0x27, 0xe9, 0xa1, 0x0c, 0x1a, 0x9c, 0x1b, 0x16, 0xd3, 0x69, 0xd5, 0xd4, 0xa9, 0x6d,
+	0x73, 0x57, 0x5a, 0xc3, 0x6f, 0x6f, 0x96, 0xb9, 0xb3, 0xc6, 0x1d, 0xbd, 0x44, 0x1d, 0x26, 0x13,
+	0xe9, 0x1b, 0xe3, 0x25, 0xe6, 0xd2, 0x71, 0xbd, 0x4a, 0x0d, 0xd3, 0x16, 0xc6, 0x60, 0x3b, 0x12,
+	0xa1, 0xb1, 0x4a, 0x6b, 0x74, 0xed, 0x28, 0xa8, 0x16, 0x61, 0xe8, 0x3b, 0x81, 0xfd, 0x58, 0x8c,
+	0xfd, 0x72, 0x99, 0xd7, 0x6d, 0x97, 0xd5, 0xa4, 0xb9, 0xda, 0x8f, 0xc9, 0xb3, 0x86, 0xd2, 0x25,
+	0x91, 0xb3, 0xc8, 0xd6, 0xeb, 0xcc, 0x71, 0xd5, 0x17, 0xf8, 0xbc, 0xef, 0xab, 0x53, 0xe5, 0xb6,
+	0xc3, 0xc8, 0x1c, 0xee, 0x91, 0xda, 0x06, 0xd0, 0x10, 0x1a, 0x4d, 0x4f, 0xa8, 0x5a, 0x78, 0x05,
+	0x35, 0xe9, 0x9b, 0xef, 0xda, 0xfd, 0x79, 0x25, 0x55, 0x04, 0x3f, 0x75, 0x01, 0x0f, 0x8a, 0xc0,
+	0xf3, 0xcc, 0x5d, 0xf0, 0x5a, 0x43, 0x62, 0xd2, 0x8f, 0xbb, 0x85, 0x3e, 0x91, 0xa0, 0xab, 0x28,
+	0x0f, 0x64, 0x00, 0xff, 0x47, 0x2b, 0x95, 0x1a, 0x73, 0x9c, 0x81, 0x8e, 0x21, 0x34, 0xda, 0x5b,
+	0x3c, 0x3a, 0xaa, 0x1b, 0xf8, 0x72, 0x48, 0x3c, 0x90, 0xfc, 0x1c, 0xf7, 0xf9, 0x64, 0x81, 0xf2,
+	0x1b, 0x51, 0xca, 0x7d, 0x91, 0x00, 0xc0, 0x1f, 0x45, 0x5d, 0x01, 0x8e, 0x9c, 0x65, 0x05, 0x72,
+	0x14, 0x30, 0x3e, 0xbe, 0x72, 0xc8, 0x39, 0xac, 0xc9, 0xfe, 0xd0, 0x1a, 0xfd, 0xa1, 0xc9, 0x46,
+	0x84, 0xfe, 0xd0, 0x96, 0xa8, 0xc1, 0xc0, 0xb7, 0xe8, 0xf1, 0x54, 0xbf, 0x22, 0x00, 0x3c, 0x99,
+	0x28, 0x1c, 0xb0, 0xf3, 0xf4, 0x80, 0x64, 0xde, 0x07, 0xd0, 0x21, 0x00, 0x46, 0x62, 0x01, 0xa4,
+	0x26, 0x1f, 0xc1, 0x3b, 0x84, 0xaf, 0x07, 0x12, 0xe4, 0x37, 0x73, 0xf2, 0x12, 0xcf, 0xb8, 0x66,
+	0x11, 0xdd, 0xb2, 0x8b, 0xf0, 0x70, 0x9c, 0x96, 0x7f, 0xa4, 0xac, 0x33, 0xf8, 0xaa, 0x20, 0x29,
+	0x98, 0x96, 0xcb, 0x6a, 0xac, 0x12, 0xd8, 0x85, 0x9e, 0x4a, 0x20, 0x7f, 0x25, 0x9e, 0x60, 0x35,
+	0xca, 0x1d, 0x8a, 0x70, 0x2d, 0xe8, 0xf1, 0xf4, 0x36, 0xbf, 0x85, 0x2c, 0x56, 0xbc, 0x6f, 0xf0,
+	0x81, 0x9c, 0x2f, 0xf1, 0x1a, 0x6c, 0x7c, 0x29, 0xd0, 0x0f, 0x92, 0x2f, 0xe2, 0xb4, 0x7d, 0xfc,
+	0x19, 0xfa, 0x61, 0x24, 0xae, 0xfe, 0x60, 0x0e, 0xd5, 0xf7, 0x46, 0x50, 0x2b, 0xa0, 0x13, 0x2e,
+	0xbf, 0x49, 0xe7, 0x59, 0xbd, 0xd8, 0xcf, 0x08, 0xb0, 0x9a, 0xd3, 0x84, 0x61, 0x75, 0x9e, 0x0e,
+	0xeb, 0xcc, 0x5a, 0x6a, 0xe2, 0x53, 0x1a, 0x77, 0x0b, 0xe5, 0xe4, 0x23, 0xc2, 0x3d, 0x72, 0x7c,
+	0x13, 0x2d, 0x4a, 0xd9, 0xc9, 0xcd, 0xa1, 0xe8, 0x89, 0xed, 0xa5, 0x02, 0x75, 0xea, 0xed, 0xb7,
+	0xdf, 0x1f, 0x3a, 0x74, 0x32, 0xa6, 0xbf, 0xa2, 0xe5, 0xd7, 0xd4, 0x7a, 0x4a, 0x4b, 0x8e, 0x2e,
+	0x63, 0x8c, 0x85, 0x2f, 0x47, 0xf2, 0x1d, 0xe1, 0x3e, 0x5f, 0xd3, 0x92, 0xe9, 0xd8, 0xcc, 0x21,
+	0x4b, 0x47, 0xb9, 0xd3, 0x86, 0x27, 0xa8, 0x5f, 0x10, 0xea, 0x1f, 0x91, 0x42, 0x42, 0xf5, 0xfe,
+	0xd3, 0x96, 0x58, 0x6f, 0xdb, 0xfa, 0x16, 0x3c, 0x89, 0x6d, 0xb2, 0x83, 0xf0, 0x39, 0x5f, 0xa6,
+	0x9c, 0x65, 0x25, 0x20, 0x0b, 0x59, 0x43, 0x09, 0xc8, 0xc2, 0xf6, 0x8a, 0x7a, 0x4f, 0x90, 0x65,
+	0xc9, 0xad, 0x76, 0xc8, 0xc8, 0x21, 0xc2, 0x17, 0x83, 0x27, 0x2c, 0xc9, 0xb5, 0xac, 0xa9, 0x79,
+	0x53, 0x28, 0xf9, 0xd3, 0x84, 0x00, 0xbe, 0x82, 0xe0, 0x9b, 0x23, 0xb3, 0xed, 0xdd, 0xdc, 0xdf,
+	0x1b, 0x3b, 0x44, 0xf8, 0x42, 0xe0, 0x14, 0x25, 0x33, 0xb1, 0x2a, 0xa3, 0x86, 0xb7, 0x32, 0xdb,
+	0xae, 0x3b, 0x00, 0x2e, 0x0a, 0xc0, 0xc7, 0x64, 0x3e, 0x21, 0xe0, 0x0a, 0x44, 0x5b, 0x0e, 0x23,
+	0xdd, 0x41, 0x38, 0xed, 0x99, 0x45, 0x24, 0x9b, 0xf4, 0xd9, 0xf8, 0x27, 0xad, 0x72, 0xbb, 0x65,
+	0x3f, 0x20, 0x7a, 0x28, 0x88, 0xee, 0x93, 0x99, 0x16, 0xae, 0xec, 0xe8, 0xcf, 0x5d, 0x0f, 0xc7,
+	0x17, 0x84, 0xff, 0xf7, 0x84, 0x6f, 0xbc, 0xb0, 0x6c, 0xd2, 0x86, 0x6a, 0x19, 0x25, 0x78, 0x0b,
+	0xa8, 0x77, 0x05, 0xca, 0x14, 0x99, 0x6c, 0x03, 0x25, 0x5f, 0xdc, 0xdd, 0xcf, 0xa0, 0xbd, 0xfd,
+	0x0c, 0xfa, 0xb5, 0x9f, 0x41, 0xef, 0x0f, 0x32, 0xa9, 0xbd, 0x83, 0x4c, 0xea, 0xc7, 0x41, 0x26,
+	0xf5, 0x72, 0xda, 0x30, 0xdd, 0xd5, 0x7a, 0x49, 0x2b, 0xf3, 0xb5, 0xd0, 0xc0, 0x6f, 0x9a, 0x42,
+	0xbb, 0x9b, 0x55, 0xe6, 0x94, 0x7a, 0xc4, 0xbf, 0x03, 0x93, 0x7f, 0x02, 0x00, 0x00, 0xff, 0xff,
+	0xfb, 0x97, 0xaf, 0x0e, 0x3c, 0x0d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -673,6 +776,8 @@ type QueryClient interface {
 	Notifications(ctx context.Context, in *QueryGetNotificationsRequest, opts ...grpc.CallOption) (*QueryGetNotificationsResponse, error)
 	// Queries a list of Notifications items.
 	NotificationsAll(ctx context.Context, in *QueryAllNotificationsRequest, opts ...grpc.CallOption) (*QueryAllNotificationsResponse, error)
+	// Queries a list of Notifications items by address.
+	NotificationsByAddress(ctx context.Context, in *QueryAllNotificationsByAddressRequest, opts ...grpc.CallOption) (*QueryAllNotificationsByAddressResponse, error)
 	// Queries a list of FilteredNotifications items.
 	FilteredNotifications(ctx context.Context, in *QueryFilteredNotificationsRequest, opts ...grpc.CallOption) (*QueryFilteredNotificationsResponse, error)
 	// Queries a NotiCounter by index.
@@ -716,6 +821,15 @@ func (c *queryClient) NotificationsAll(ctx context.Context, in *QueryAllNotifica
 	return out, nil
 }
 
+func (c *queryClient) NotificationsByAddress(ctx context.Context, in *QueryAllNotificationsByAddressRequest, opts ...grpc.CallOption) (*QueryAllNotificationsByAddressResponse, error) {
+	out := new(QueryAllNotificationsByAddressResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/NotificationsByAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) FilteredNotifications(ctx context.Context, in *QueryFilteredNotificationsRequest, opts ...grpc.CallOption) (*QueryFilteredNotificationsResponse, error) {
 	out := new(QueryFilteredNotificationsResponse)
 	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/FilteredNotifications", in, out, opts...)
@@ -751,6 +865,8 @@ type QueryServer interface {
 	Notifications(context.Context, *QueryGetNotificationsRequest) (*QueryGetNotificationsResponse, error)
 	// Queries a list of Notifications items.
 	NotificationsAll(context.Context, *QueryAllNotificationsRequest) (*QueryAllNotificationsResponse, error)
+	// Queries a list of Notifications items by address.
+	NotificationsByAddress(context.Context, *QueryAllNotificationsByAddressRequest) (*QueryAllNotificationsByAddressResponse, error)
 	// Queries a list of FilteredNotifications items.
 	FilteredNotifications(context.Context, *QueryFilteredNotificationsRequest) (*QueryFilteredNotificationsResponse, error)
 	// Queries a NotiCounter by index.
@@ -771,6 +887,9 @@ func (*UnimplementedQueryServer) Notifications(ctx context.Context, req *QueryGe
 }
 func (*UnimplementedQueryServer) NotificationsAll(ctx context.Context, req *QueryAllNotificationsRequest) (*QueryAllNotificationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NotificationsAll not implemented")
+}
+func (*UnimplementedQueryServer) NotificationsByAddress(ctx context.Context, req *QueryAllNotificationsByAddressRequest) (*QueryAllNotificationsByAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NotificationsByAddress not implemented")
 }
 func (*UnimplementedQueryServer) FilteredNotifications(ctx context.Context, req *QueryFilteredNotificationsRequest) (*QueryFilteredNotificationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FilteredNotifications not implemented")
@@ -836,6 +955,24 @@ func _Query_NotificationsAll_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).NotificationsAll(ctx, req.(*QueryAllNotificationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_NotificationsByAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllNotificationsByAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).NotificationsByAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/canine_chain.notifications.Query/NotificationsByAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).NotificationsByAddress(ctx, req.(*QueryAllNotificationsByAddressRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -909,6 +1046,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NotificationsAll",
 			Handler:    _Query_NotificationsAll_Handler,
+		},
+		{
+			MethodName: "NotificationsByAddress",
+			Handler:    _Query_NotificationsByAddress_Handler,
 		},
 		{
 			MethodName: "FilteredNotifications",
@@ -1071,13 +1212,6 @@ func (m *QueryAllNotificationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, e
 	_ = i
 	var l int
 	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0x12
-	}
 	if m.Pagination != nil {
 		{
 			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
@@ -1109,6 +1243,97 @@ func (m *QueryAllNotificationsResponse) MarshalTo(dAtA []byte) (int, error) {
 }
 
 func (m *QueryAllNotificationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Notifications) > 0 {
+		for iNdEx := len(m.Notifications) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Notifications[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllNotificationsByAddressRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllNotificationsByAddressRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllNotificationsByAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllNotificationsByAddressResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllNotificationsByAddressResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllNotificationsByAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1417,6 +1642,38 @@ func (m *QueryAllNotificationsRequest) Size() (n int) {
 		l = m.Pagination.Size()
 		n += 1 + l + sovQuery(uint64(l))
 	}
+	return n
+}
+
+func (m *QueryAllNotificationsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Notifications) > 0 {
+		for _, e := range m.Notifications {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllNotificationsByAddressRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
 	l = len(m.Address)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
@@ -1424,7 +1681,7 @@ func (m *QueryAllNotificationsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryAllNotificationsResponse) Size() (n int) {
+func (m *QueryAllNotificationsByAddressResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1913,6 +2170,212 @@ func (m *QueryAllNotificationsRequest) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllNotificationsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllNotificationsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllNotificationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Notifications", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Notifications = append(m.Notifications, Notifications{})
+			if err := m.Notifications[len(m.Notifications)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllNotificationsByAddressRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllNotificationsByAddressRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllNotificationsByAddressRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
@@ -1966,7 +2429,7 @@ func (m *QueryAllNotificationsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllNotificationsResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryAllNotificationsByAddressResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1989,10 +2452,10 @@ func (m *QueryAllNotificationsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllNotificationsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllNotificationsByAddressResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllNotificationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllNotificationsByAddressResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

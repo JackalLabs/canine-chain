@@ -21,7 +21,9 @@ message MsgCreateNotifications {
   string notification = 2;
   string address = 3;
 }
-message MsgCreateNotificationsResponse {}
+message MsgCreateNotificationsResponse {
+  uint64 notiCounter = 1;
+}
 
 message MsgUpdateNotifications {
   string creator = 1;
@@ -36,13 +38,16 @@ message MsgDeleteNotifications {
   string creator = 1;
 }
 
-message MsgDeleteNotificationsResponse {}
+message MsgDeleteNotificationsResponse {
+  uint64 notiCounter = 1;
+}
 
 message MsgSetCounter {
   string creator = 1;
 }
 
 message MsgSetCounterResponse {
+  uint64 notiCounter = 1;
 }
 
 message MsgBlockSenders {

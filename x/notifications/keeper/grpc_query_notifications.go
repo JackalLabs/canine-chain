@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NotificationsByAddress(c context.Context, req *types.QueryAllNotificationsRequest, address string) (*types.QueryAllNotificationsResponse, error) {
+func (k Keeper) NotificationsByAddress(c context.Context, req *types.QueryAllNotificationsByAddressRequest) (*types.QueryAllNotificationsByAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -21,7 +21,7 @@ func (k Keeper) NotificationsByAddress(c context.Context, req *types.QueryAllNot
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, address)
+	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, req.Address)
 
 	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
 
@@ -38,7 +38,7 @@ func (k Keeper) NotificationsByAddress(c context.Context, req *types.QueryAllNot
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllNotificationsResponse{Notifications: notificationss, Pagination: pageRes}, nil
+	return &types.QueryAllNotificationsByAddressResponse{Notifications: notificationss, Pagination: pageRes}, nil
 }
 
 func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificationsRequest) (*types.QueryAllNotificationsResponse, error) {
