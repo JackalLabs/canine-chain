@@ -1,0 +1,12 @@
+syntax = "proto3";
+package canine_chain.notifications;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
+
+message Notifications {
+  uint64 count = 1; 
+  string notification = 2; 
+  string address = 3; 
+  string sender = 4;
+}
+
