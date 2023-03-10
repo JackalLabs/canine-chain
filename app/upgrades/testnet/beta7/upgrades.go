@@ -9,6 +9,7 @@ import (
 	"github.com/jackalLabs/canine-chain/types"
 	notificationkeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
 	notificationtypes "github.com/jackalLabs/canine-chain/x/notifications/types"
+	rnstypes "github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -40,6 +41,7 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		if types.IsTestnet(ctx.ChainID()) || ctx.ChainID() == "test" {
 
 			fromVM[notificationtypes.ModuleName] = 1
+			fromVM[rnstypes.ModuleName] = 2
 
 			newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
 			if err != nil {
