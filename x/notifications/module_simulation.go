@@ -22,14 +22,11 @@ var (
 	_ = baseapp.Paramspace
 )
 
+//nolint:gosec // these aren't hard-coded credentials
 const (
 	opWeightMsgCreateNotifications = "op_weight_msg_notifications"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgCreateNotifications int = 100
-
-	opWeightMsgUpdateNotifications = "op_weight_msg_notifications"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateNotifications int = 100
 
 	opWeightMsgDeleteNotifications = "op_weight_msg_notifications"
 	// TODO: Determine the simulation weight value
@@ -41,9 +38,7 @@ const (
 
 	opWeightMsgBlockSenders = "op_weight_msg_block_senders"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgBlockSenders int = 100
-
-	// this line is used by starport scaffolding # simapp/module/const
+	defaultWeightMsgBlockSenders int = 2
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -53,18 +48,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	notificationsGenesis := types.GenesisState{
-		Params: types.DefaultParams(),
-		NotificationsList: []types.Notifications{
-			{
-				Sender: "jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct", // Replace with non hard code
-				Count:  0,
-			},
-			{
-				Sender: "jkl1hj5fveer5cjtn4wd6wstzugjfdxzl0xpljur4u",
-				Count:  1,
-			},
-		},
-		// this line is used by starport scaffolding # simapp/module/genesisState
+		Params:            types.DefaultParams(),
+		NotificationsList: []types.Notifications{},
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&notificationsGenesis)
 }
@@ -95,17 +80,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCreateNotifications,
 		notificationssimulation.SimulateMsgCreateNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpdateNotifications int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateNotifications, &weightMsgUpdateNotifications, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateNotifications = defaultWeightMsgUpdateNotifications
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateNotifications,
-		notificationssimulation.SimulateMsgUpdateNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgDeleteNotifications int
