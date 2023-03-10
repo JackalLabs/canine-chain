@@ -22,6 +22,7 @@ var (
 	_ = baseapp.Paramspace
 )
 
+//nolint:gosec // these aren't hard-coded credentials
 const (
 	opWeightMsgCreateNotifications = "op_weight_msg_notifications"
 	// TODO: Determine the simulation weight value
@@ -38,8 +39,6 @@ const (
 	opWeightMsgBlockSenders = "op_weight_msg_block_senders"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgBlockSenders int = 2
-
-	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
