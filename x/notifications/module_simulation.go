@@ -50,17 +50,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	notificationsGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
-		NotificationsList: []types.Notifications{
-			{
-				Sender: "jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct", // Replace with non hard code
-				Count:  0,
-			},
-			{
-				Sender: "jkl1hj5fveer5cjtn4wd6wstzugjfdxzl0xpljur4u",
-				Count:  1,
-			},
-		},
-		// this line is used by starport scaffolding # simapp/module/genesisState
+		NotificationsList: []types.Notifications{},
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&notificationsGenesis)
 }
