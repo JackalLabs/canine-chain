@@ -13,6 +13,7 @@ import (
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha13"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/async"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/beta6"
+	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/beta7"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/fixstrays"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/killdeals"
 	paramUpgrade "github.com/jackalLabs/canine-chain/app/upgrades/testnet/params"
@@ -1141,6 +1142,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(async.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 	app.registerUpgrade(paramUpgrade.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 	app.registerUpgrade(beta6.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(beta7.NewUpgrade(app.mm, app.configurator, app.NotificationsKeeper))
 }
 
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
