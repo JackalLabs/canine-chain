@@ -36,6 +36,10 @@ sleep 6
 
 sleep 6
 
+./../_build/old/canined tx rns init --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
 ./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf $(./../_build/old/canined keys show test1 -a --keyring-backend test --chain-id test --home $HOME) 10000 jklf16yfjl9t8u9ztt0e5wzudpfr3e2u5cxwsru6l6jh930zrvav5cz2q2wrfkc --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
