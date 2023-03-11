@@ -1209,6 +1209,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(oraclemoduletypes.ModuleName)
 	paramsKeeper.Subspace(storagemoduletypes.ModuleName)
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
+	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
 
 	return paramsKeeper
 }
