@@ -79,7 +79,7 @@ while true; do
         ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
         ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
         echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
-        sleep 5
+        sleep 2
     fi
 done
 
