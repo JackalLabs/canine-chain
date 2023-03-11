@@ -11,13 +11,14 @@ import (
 // 1. setting up the next reason id and report id keys for existing subspaces
 // 2. setting up the module params
 func MigrateStore(ctx sdk.Context, paramsSubspace paramstypes.Subspace) error {
-	ctx.Logger().Error("MIGRATING RNS STORE V2!")
+	ctx.Logger().Info("MIGRATING RNS STORE V2!")
 	// Set the module params
 	params := types.NewParams()
 
 	params.DepositAccount = "jkl1t35eusvx97953uk47r3z4ckwd2prkn3fay76r8"
 
 	paramsSubspace.SetParamSet(ctx, &params)
+	ctx.Logger().Info("DONE MIGRATING!")
 
 	return nil
 }
