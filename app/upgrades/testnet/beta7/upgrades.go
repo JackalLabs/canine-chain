@@ -57,6 +57,8 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 // StoreUpgrades implements upgrades.Upgrade
 func (u *Upgrade) StoreUpgrades() *storetypes.StoreUpgrades {
 	return &storetypes.StoreUpgrades{
-		Added: []string{notificationtypes.StoreKey},
+		Added: []string{
+			notificationtypes.StoreKey,
+		},
 	}
 }
