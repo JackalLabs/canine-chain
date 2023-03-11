@@ -28,14 +28,14 @@ func (k Keeper) GetNotifications(
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(keyPrefix))
 
-	b := store.Get(types.NotificationsKey(
+	key := types.NotificationsKey(
 		count,
-	))
-	if b == nil {
-		return val, false
+	)
+	if !store.Has(key) {
+		return types.Notifications{}, false
 	}
 
-	k.cdc.MustUnmarshal(b, &val)
+	k.cdc.MustUnmarshal(store.Get(key), &val)
 	return val, true
 }
 
