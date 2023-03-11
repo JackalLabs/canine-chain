@@ -35,7 +35,7 @@ update_test_genesis '.app_state["staking"]["params"]["bond_denom"]=$DENOM' $DENO
 
 
 sed -i '' 's/enable = false/enable = true/' $HOME/config/app.toml
-sed -i '' 's/pruning = "default"/pruning = "nothing/' $HOME/config/app.toml
+sed -i '' 's/pruning = "default"/pruning = "nothing"/' $HOME/config/app.toml
 
 # Sign genesis transaction
 $BINARY gentx $KEY "1000000${DENOM}" --keyring-backend $KEYRING --chain-id $CHAIN_ID --home $HOME
