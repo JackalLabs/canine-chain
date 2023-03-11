@@ -79,5 +79,6 @@ while true; do
     fi
 done
 
-#sleep 3
+sleep 3
+canined start --home $HOME
 
