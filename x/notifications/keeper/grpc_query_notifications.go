@@ -17,7 +17,7 @@ func (k Keeper) NotificationsByAddress(c context.Context, req *types.QueryAllNot
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var notificationss []types.Notifications
+	notificationss := []types.Notifications{}
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -46,7 +46,7 @@ func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificat
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var notificationss []types.Notifications
+	notificationss := []types.Notifications{}
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)

@@ -1,28 +1,25 @@
 #!/bin/bash
 
-OLD_VERSION=1.2.0-beta.4
-UPGRADE_HEIGHT=20
+OLD_VERSION=$1
+NEW_VERSION=$2
+UPGRADE_HEIGHT=26
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
-SOFTWARE_UPGRADE_NAME=params
+SOFTWARE_UPGRADE_NAME=$3
 
 # underscore so that go tool will not take gocache into account
 mkdir -p ${ROOT}/../_build/gocache
 export GOMODCACHE=${ROOT}/../_build/gocache
 
 # install old binary
-if ! command -v ./../_build/old/canined &> /dev/null
-then
-    mkdir -p ../_build/old
-    wget -c "https://github.com/JackalLabs/canine-chain/archive/refs/tags/v${OLD_VERSION}.zip" -O ../_build/v${OLD_VERSION}.zip
-    unzip ../_build/v${OLD_VERSION}.zip -d ../_build
-    cd ../_build/canine-chain-${OLD_VERSION}
-      make build
-      mv build/canined ../old/canined
-    cd ../..
-fi
 
+mkdir -p ../_build/old
+git checkout $OLD_VERSION
+make build
+mv build/canined ./../_build/old/canined
+git checkout $NEW_VERSION
+make install
 
 # start old node
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
@@ -36,6 +33,10 @@ sleep 20
 sleep 6
 
 ./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
+./../_build/old/canined tx rns init --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
@@ -78,9 +79,10 @@ while true; do
         ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
         ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
         echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
-        sleep 5
+        sleep 2
     fi
 done
 
-#sleep 3
+sleep 3
+canined start --home $HOME
 
