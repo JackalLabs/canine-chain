@@ -11,11 +11,11 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the notifications
 	for _, elem := range genState.NotificationsList {
-		k.SetNotifications(ctx, elem, "") // No genesis notifications
+		k.SetNotifications(ctx, elem, elem.Address)
 	}
 	// Set all the notiCounter
 	for _, elem := range genState.NotiCounterList {
-		k.SetNotiCounter(ctx, elem) // No genesis notiCounters
+		k.SetNotiCounter(ctx, elem)
 	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
