@@ -398,6 +398,7 @@ func NewJackalApp(
 		oraclemoduletypes.MemStoreKey,
 		storagemoduletypes.MemStoreKey,
 		rnsmoduletypes.MemStoreKey,
+		notificationsmoduletypes.MemStoreKey,
 		// filetreemoduletypes.MemStoreKey, minttypes.MemStoreKey
 	)
 
