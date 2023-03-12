@@ -8,6 +8,7 @@ import (
 	notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
 	oraclekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
 	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -46,10 +47,11 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 			return fromVM, nil
 		}
 
-		fromVM[storagemoduletypes.ModuleName] = 1
+		fromVM[storagemoduletypes.ModuleName] = 3
 		fromVM[filetreemoduletypes.ModuleName] = 1
 		fromVM[oraclemoduletypes.ModuleName] = 1
 		fromVM[notificationsmoduletypes.ModuleName] = 1
+		fromVM[rnsmoduletypes.ModuleName] = 2
 
 		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
 		if err != nil {
