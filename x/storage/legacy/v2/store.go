@@ -15,7 +15,7 @@ func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 	// Set the module params
 	params := types.NewParams()
 
-	params.DepositAccount = "jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc"
+	params.DepositAccount = "jkl1t35eusvx97953uk47r3z4ckwd2prkn3fay76r8"
 
 	paramsSubspace.SetParamSet(ctx, &params)
 
