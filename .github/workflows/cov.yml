@@ -27,4 +27,6 @@ jobs:
         go test ./... -timeout=30m -cover -coverprofile coverage.out
         cat coverage.out | grep -v ".pb.go" > coverage2.out
         cat coverage2.out | grep -v ".pb.gw.go" > coverage3.out
-        go tool cover -func coverage3.out 
+        go tool cover -func coverage3.out
+    - name: Upload coverage reports to Codecov
+    uses: codecov/codecov-action@v3
