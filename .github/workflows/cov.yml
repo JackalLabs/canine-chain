@@ -30,5 +30,7 @@ jobs:
         go tool cover -func coverage3.out
         rm coverage2.out
         rm coverage.out
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v3.1.1
+      with:
+        token: ${{ secrets.CODECOV }}
 
