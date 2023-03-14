@@ -19,7 +19,9 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgBuyStorage{}, "storage/BuyStorage", nil)
 	cdc.RegisterConcrete(&MsgClaimStray{}, "storage/ClaimStray", nil)
 	cdc.RegisterConcrete(&MsgUpgradeStorage{}, "storage/UpgradeStorage", nil)
-	cdc.RegisterConcrete(&MsgSetProviderKeybase{}, "storage/UpgradeStorage", nil)
+	cdc.RegisterConcrete(&MsgSetProviderKeybase{}, "storage/SetProviderKeybase", nil)
+	cdc.RegisterConcrete(&MsgAddClaimer{}, "storage/AddClaimer", nil)
+	cdc.RegisterConcrete(&MsgRemoveClaimer{}, "storage/RemoveClaimer", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -55,6 +57,12 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSetProviderKeybase{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgAddClaimer{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgRemoveClaimer{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
