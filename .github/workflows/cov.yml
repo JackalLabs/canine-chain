@@ -27,4 +27,10 @@ jobs:
         go test ./... -timeout=30m -cover -coverprofile coverage.out
         cat coverage.out | grep -v ".pb.go" > coverage2.out
         cat coverage2.out | grep -v ".pb.gw.go" > coverage3.out
-        go tool cover -func coverage3.out 
+        go tool cover -func coverage3.out
+        rm coverage2.out
+        rm coverage.out
+    - uses: codecov/codecov-action@v3.1.1
+      with:
+        token: ${{ secrets.CODECOV }}
+

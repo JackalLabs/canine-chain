@@ -56,8 +56,12 @@ from_scratch () {
     update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom": "ujkl","amount": "1000000"}]'
     update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": "ujkl","amount": "1000"}'
 
-	# Use jkl bech32 prefix account
+	# Use jkl bech32 prefix account for storage and oracle modules
 	update_test_genesis '.app_state["storage"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
+    update_test_genesis '.app_state["oracle"]["params"]["deposit"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
+    update_test_genesis '.app_state["rns"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
+
+
 
     # Allocate genesis accounts
     canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING

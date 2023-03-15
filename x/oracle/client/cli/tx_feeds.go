@@ -41,7 +41,7 @@ func CmdCreateFeed() *cobra.Command {
 
 func CmdUpdateFeed() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-feed [name]",
+		Use:   "update-feed [name] [data]",
 		Short: "Updates a data feed",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
