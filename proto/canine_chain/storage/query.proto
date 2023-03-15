@@ -128,7 +128,7 @@ service Query {
   // Queries whether user can upload a file based on size
   rpc PriceCheck(QueryPriceCheckRequest) returns (QueryPriceCheckResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/price_check";
+        "/jackal-dao/canine-chain/storage/price_check/{duration}/{bytes}";
   }
 }
 
