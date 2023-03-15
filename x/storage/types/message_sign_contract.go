@@ -20,15 +20,15 @@ func NewMsgSignContract(creator string, cid string, payOnce bool) *MsgSignContra
 	}
 }
 
-func (msg *MsgSignContract) Route() string {
+func (msg MsgSignContract) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgSignContract) Type() string {
+func (msg MsgSignContract) Type() string {
 	return TypeMsgSignContract
 }
 
-func (msg *MsgSignContract) GetSigners() []sdk.AccAddress {
+func (msg MsgSignContract) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -36,12 +36,12 @@ func (msg *MsgSignContract) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgSignContract) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+func (msg MsgSignContract) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgSignContract) ValidateBasic() error {
+func (msg MsgSignContract) ValidateBasic() error {
 	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
