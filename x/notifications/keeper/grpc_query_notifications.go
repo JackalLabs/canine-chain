@@ -2,25 +2,28 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificationsRequest) (*types.QueryAllNotificationsResponse, error) {
+func (k Keeper) NotificationsByAddress(c context.Context, req *types.QueryAllNotificationsByAddressRequest) (*types.QueryAllNotificationsByAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var notificationss []types.Notifications
+	notificationss := []types.Notifications{}
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	notificationsStore := prefix.NewStore(store, types.KeyPrefix(types.NotificationsKeyPrefix))
+	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, req.Address)
+
+	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
 
 	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(key []byte, value []byte) error {
 		var notifications types.Notifications
@@ -31,7 +34,35 @@ func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificat
 		notificationss = append(notificationss, notifications)
 		return nil
 	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 
+	return &types.QueryAllNotificationsByAddressResponse{Notifications: notificationss, Pagination: pageRes}, nil
+}
+
+func (k Keeper) NotificationsAll(c context.Context, req *types.QueryAllNotificationsRequest) (*types.QueryAllNotificationsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	notificationss := []types.Notifications{}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(k.storeKey)
+	keyPrefix := types.NotificationsKeyPrefix
+
+	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
+
+	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(key []byte, value []byte) error {
+		var notifications types.Notifications
+		if err := k.cdc.Unmarshal(value, &notifications); err != nil {
+			return err
+		}
+
+		notificationss = append(notificationss, notifications)
+		return nil
+	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

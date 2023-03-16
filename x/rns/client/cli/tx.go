@@ -8,13 +8,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-var (
-	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
-)
+//nolint:unused
+var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 
+//nolint:unused
 const (
 	flagPacketTimeoutTimestamp = "packet-timeout-timestamp"
 	listSeparator              = ","
@@ -41,7 +41,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdAddRecord())
 	cmd.AddCommand(CmdDelRecord())
 	cmd.AddCommand(CmdInit())
-	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(CmdUpdate())
 
 	return cmd
 }

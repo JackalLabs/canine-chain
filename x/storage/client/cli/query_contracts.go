@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +54,7 @@ func CmdShowContracts() *cobra.Command {
 
 			argCid := args[0]
 
-			params := &types.QueryGetContractsRequest{
+			params := &types.QueryContractRequest{
 				Cid: argCid,
 			}
 

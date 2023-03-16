@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +30,7 @@ func CmdResetViewers() *cobra.Command {
 			trimPath := strings.TrimSuffix(argHashpath, "/")
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argFileowner)
-			//how to notify everyone who is losing viewing access?
+			// how to notify everyone who is losing viewing access?
 			msg := types.NewMsgResetViewers(
 				clientCtx.GetFromAddress().String(),
 				merklePath,

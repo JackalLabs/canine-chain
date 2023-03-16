@@ -1,0 +1,112 @@
+syntax = "proto3";
+package canine_chain.rns;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc Register(MsgRegister) returns (MsgRegisterResponse);
+  rpc Bid(MsgBid) returns (MsgBidResponse);
+  rpc AcceptBid(MsgAcceptBid) returns (MsgAcceptBidResponse);
+  rpc CancelBid(MsgCancelBid) returns (MsgCancelBidResponse);
+  rpc List(MsgList) returns (MsgListResponse);
+  rpc Buy(MsgBuy) returns (MsgBuyResponse);
+  rpc Delist(MsgDelist) returns (MsgDelistResponse);
+  rpc Transfer(MsgTransfer) returns (MsgTransferResponse);
+  rpc AddRecord(MsgAddRecord) returns (MsgAddRecordResponse);
+  rpc DelRecord(MsgDelRecord) returns (MsgDelRecordResponse);
+  rpc Init(MsgInit) returns (MsgInitResponse);
+  rpc Update(MsgUpdate) returns (MsgUpdateResponse);
+
+}
+
+message MsgRegister {
+  string creator = 1;
+  string name = 2;
+  string years = 3;
+  string data = 4;
+}
+
+message MsgRegisterResponse {}
+
+message MsgUpdate {
+  string creator = 1;
+  string name = 2;
+  string data = 3;
+}
+
+message MsgUpdateResponse {}
+
+message MsgBid {
+  string creator = 1;
+  string name = 2;
+  string bid = 3;
+}
+
+message MsgBidResponse {}
+
+message MsgAcceptBid {
+  string creator = 1;
+  string name = 2;
+  string from = 3;
+}
+
+message MsgAcceptBidResponse {}
+
+message MsgCancelBid {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgCancelBidResponse {}
+
+message MsgList {
+  string creator = 1;
+  string name = 2;
+  string price = 3;
+}
+
+message MsgListResponse {}
+
+message MsgBuy {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgBuyResponse {}
+
+message MsgDelist {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgDelistResponse {}
+
+message MsgTransfer {
+  string creator = 1;
+  string name = 2;
+  string receiver = 3;
+}
+
+message MsgTransferResponse {}
+
+message MsgAddRecord {
+  string creator = 1;
+  string name = 2;
+  string value = 3;
+  string data = 4;
+  string record = 5;
+}
+
+message MsgAddRecordResponse {}
+
+message MsgDelRecord {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgDelRecordResponse {}
+
+message MsgInit { string creator = 1; }
+
+message MsgInitResponse {}

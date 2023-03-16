@@ -43,5 +43,13 @@ func (msg *MsgList) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+	_, _, err = GetNameAndTLD(msg.Name)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid name/tld (%s)", err)
+	}
+	_, err = sdk.ParseCoinsNormalized(msg.Price)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid bid/tld (%s)", err)
+	}
 	return nil
 }

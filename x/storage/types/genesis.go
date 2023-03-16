@@ -11,13 +11,12 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		ContractsList:   []Contracts{},
-		ProofsList:      []Proofs{},
 		ActiveDealsList: []ActiveDeals{},
 		ProvidersList:   []Providers{},
-		PayBlocksList:   []PayBlocks{},
-		ClientUsageList: []ClientUsage{},
 		StraysList:      []Strays{},
 		FidCidList:      []FidCid{},
+		PaymentInfoList: []StoragePaymentInfo{},
+
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -36,16 +35,7 @@ func (gs GenesisState) Validate() error {
 		}
 		contractsIndexMap[index] = struct{}{}
 	}
-	// Check for duplicated index in proofs
-	proofsIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.ProofsList {
-		index := string(ProofsKey(elem.Cid))
-		if _, ok := proofsIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for proofs")
-		}
-		proofsIndexMap[index] = struct{}{}
-	}
 	// Check for duplicated index in activeDeals
 	activeDealsIndexMap := make(map[string]struct{})
 
@@ -66,26 +56,7 @@ func (gs GenesisState) Validate() error {
 		}
 		providersIndexMap[index] = struct{}{}
 	}
-	// Check for duplicated index in payBlocks
-	payBlocksIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.PayBlocksList {
-		index := string(PayBlocksKey(elem.Blockid))
-		if _, ok := payBlocksIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for payBlocks")
-		}
-		payBlocksIndexMap[index] = struct{}{}
-	}
-	// Check for duplicated index in clientUsage
-	clientUsageIndexMap := make(map[string]struct{})
-
-	for _, elem := range gs.ClientUsageList {
-		index := string(ClientUsageKey(elem.Address))
-		if _, ok := clientUsageIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for clientUsage")
-		}
-		clientUsageIndexMap[index] = struct{}{}
-	}
 	// Check for duplicated index in strays
 	straysIndexMap := make(map[string]struct{})
 
@@ -105,6 +76,17 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for fidCid")
 		}
 		fidCidIndexMap[index] = struct{}{}
+	}
+
+	// Check for duplicated index in fidCid
+	payinfoIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.PaymentInfoList {
+		index := string(StoragePaymentInfoKey(elem.Address))
+		if _, ok := payinfoIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for address")
+		}
+		payinfoIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

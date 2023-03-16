@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func CmdListForsale() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllForsaleRequest{
+			params := &types.QueryAllForsalesRequest{
 				Pagination: pageReq,
 			}
 
@@ -54,7 +54,7 @@ func CmdShowForsale() *cobra.Command {
 
 			argName := args[0]
 
-			params := &types.QueryGetForsaleRequest{
+			params := &types.QueryForsaleRequest{
 				Name: argName,
 			}
 

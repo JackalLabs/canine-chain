@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 // SetForsale set a specific forsale in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetForsale(ctx sdk.Context, forsale types.Forsale) {
 func (k Keeper) GetForsale(
 	ctx sdk.Context,
 	name string,
-
 ) (val types.Forsale, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ForsaleKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetForsale(
 func (k Keeper) RemoveForsale(
 	ctx sdk.Context,
 	name string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ForsaleKeyPrefix))
 	store.Delete(types.ForsaleKey(

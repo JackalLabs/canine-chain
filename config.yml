@@ -1,39 +1,59 @@
+version: 1
+build:
+  main: cmd/canined
+  proto:
+    path: proto
+    third_party_paths:
+    - third_party/proto
+    - proto_vendor
 accounts:
-  - name: alice
-    coins: ["2000000000ujkl", "100000000ujwl"]
-    mnemonic: "across business friend enact find light myself pistol stick place oil anchor deny orient sudden educate flame proud crash panel right aisle found connect"
-  - name: bob
-    coins: ["100000000ujkl"]
-    mnemonic: "ripple doctor enforce review soldier rebuild video blanket vehicle market media forward hover thought fitness cover effort uniform club fence reveal slam spoon wasp"
-  - name: charlie
-    coins: ["10000000ujkl"]
-    mnemonic: "flock stereo dignity lawsuit mouse page faith exact mountain clinic hazard parent arrest face couch asset jump feed benefit upper hair scrap loud spirit"
-  - name: danny
-    coins: ["100000ujkl"]
-    mnemonic: "brief enhance flee chest rabbit matter chaos clever lady enable luggage arrange hint quarter change float embark canoe chalk husband legal dignity music web"
-validator:
-  name: alice
-  staked: "100000000ujkl"
+- name: alice
+  coins:
+  - 2000000000ujkl
+  - 100000000ujwl
+  mnemonic: across business friend enact find light myself pistol stick place oil
+    anchor deny orient sudden educate flame proud crash panel right aisle found connect
+- name: bob
+  coins:
+  - 100000000ujkl
+  mnemonic: ripple doctor enforce review soldier rebuild video blanket vehicle market
+    media forward hover thought fitness cover effort uniform club fence reveal slam
+    spoon wasp
+- name: charlie
+  coins:
+  - 10000000ujkl
+  mnemonic: flock stereo dignity lawsuit mouse page faith exact mountain clinic hazard
+    parent arrest face couch asset jump feed benefit upper hair scrap loud spirit
+- name: danny
+  coins:
+  - 100000ujkl
+  mnemonic: brief enhance flee chest rabbit matter chaos clever lady enable luggage
+    arrange hint quarter change float embark canoe chalk husband legal dignity music
+    web
+faucet:
+  name: null
+  coins: []
+  host: 0.0.0.0:4500
 client:
-  openapi:
-    path: "docs/static/openapi.yml"
   vuex:
-    path: "vue/src/store"
-init:
-  app:
-    minimum-gas-prices: "0.002ujkl"
-    api:
-      swagger: "true"
-  client:
-    chain-id: "canine-1"
+    path: vue/src/store
+  openapi:
+    path: docs/static/openapi.yml
 genesis:
   app_state:
-    staking:
-      params:
-        bond_denom: "ujkl"
     mint:
       params:
-        mint_denom: "ujkl"
-  chain_id: "canine-1"
-build:
-  main: "cmd/canined"
+        mint_denom: ujkl
+    staking:
+      params:
+        bond_denom: ujkl
+  chain_id: canine-1
+validators:
+- name: alice
+  bonded: 100000000ujkl
+  app:
+    api:
+      swagger: "true"
+    minimum-gas-prices: 0.002ujkl
+  client:
+    chain-id: canine-1

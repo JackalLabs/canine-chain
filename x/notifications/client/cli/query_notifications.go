@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
@@ -29,6 +29,41 @@ func CmdListNotifications() *cobra.Command {
 			}
 
 			res, err := queryClient.NotificationsAll(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdListNotificationsByAddress() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list-notifications-by-address [address]",
+		Short: "list all notifications for an address",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryAllNotificationsByAddressRequest{
+				Pagination: pageReq,
+				Address:    args[0],
+			}
+
+			res, err := queryClient.NotificationsByAddress(context.Background(), params)
 			if err != nil {
 				return err
 			}

@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,13 +16,28 @@ func TestMsgPostproof_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid address",
 			msg: MsgPostproof{
-				Creator: "invalid_address",
+				Creator:  "invalid_address",
+				Item:     "hex",
+				Hashlist: "hex",
+				Cid:      "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid cid",
+			msg: MsgPostproof{
+				Creator:  "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Item:     "hex",
+				Hashlist: "hex",
+				Cid:      "invalid_cid",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
 			name: "valid address",
 			msg: MsgPostproof{
-				Creator: sample.AccAddress(),
+				Creator:  "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Item:     "hex",
+				Hashlist: "hex",
+				Cid:      "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
 			},
 		},
 	}

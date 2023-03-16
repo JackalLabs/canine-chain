@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/storage/keeper"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // NewHandler ...
@@ -26,8 +26,11 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgSignContract:
 			res, err := msgServer.SignContract(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgSetProviderIp:
-			res, err := msgServer.SetProviderIp(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgSetProviderIP:
+			res, err := msgServer.SetProviderIP(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgSetProviderKeybase:
+			res, err := msgServer.SetProviderKeybase(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgSetProviderTotalspace:
 			res, err := msgServer.SetProviderTotalspace(sdk.WrapSDKContext(ctx), msg)
@@ -44,7 +47,15 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgClaimStray:
 			res, err := msgServer.ClaimStray(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-			// this line is used by starport scaffolding # 1
+		case *types.MsgUpgradeStorage:
+			res, err := msgServer.UpgradeStorage(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgAddClaimer:
+			res, err := msgServer.AddProviderClaimer(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgRemoveClaimer:
+			res, err := msgServer.RemoveProviderClaimer(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)

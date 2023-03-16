@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/cosmos/cosmos-sdk/std"
 
-	"github.com/jackal-dao/canine/app/params"
+	"github.com/jackalLabs/canine-chain/app/params"
 )
 
 // MakeEncodingConfig creates a new EncodingConfig with all modules registered

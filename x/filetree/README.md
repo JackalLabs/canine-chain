@@ -10,9 +10,22 @@ parent:
 
 ## Contents
 1. [Concept](#concept)
-2. [Client](#client)
+2. [Merkle Paths](#merkle-paths)
+3. [Client](#client)
     + [Query](#query)
     + [Transactions](#transactions)
+4. [Transaction Messages](#transaction-messages)
+    + [Postkey](#postkey)
+    + [Makeroot](#makeroot)
+    + [Postfile](#postfile)
+    + [Delete](#delete)
+5. [Query Requests](#query-requests)
+    + [GetPubkey](#getpubkey)
+    + [GetFiles](#getfiles)
+
+
+
+    
 
 
 ## Concept
@@ -65,6 +78,8 @@ func checkChild(parent ps, child cs, hc H(child)) {
 
 
 ## Client
+
+Below are CLI query and transaction commands to interact with canined.
 ### Query
 The `query` commands allow users to query `filetree` state.
 ```sh
@@ -76,3 +91,113 @@ The `tx` commands allow users to interact with the `filetree` module.
 ```sh
 canined tx filetree --help
 ```
+
+## Transaction Messages
+
+Below is a full description of valid transaction messages that can be broadcasted to affect state change. These descriptions aim to be "implementation agnostic", i.e., they make sense to both the CLI/Golang and TS implementations. 
+
+### Postkey
+
+Post a ecies.PublicKey on chain for the encryption scheme
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address 
+|key  | String  | ecies.PublicKey 
+
+#### Response
+
+Coming soon
+
+### Makeroot 
+
+Create an absolute root folder for a storage account. 
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in Bech32 address<br /> 
+|account  | String  | Hex[ hash( Bech32 address of user that will own this account)]. <br /> Please note that the broadcaster of this message will always be making a storage account for themselves, but there are other filetree transaction messages that can be called by userA to affect a change in userB's account. It is for this purpose that the Account field exists.<br /> 
+|rootHashPath  | String  | MerklePath("s")<br />
+|contents  | String  | FID<br />
+|editors  | String  | string(json encoded map) with: <br />let c = concatenate( "e", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br /> Note that map_key and map_value must be strings or else unmarshalling in the keeper will fail. <br />
+|viewers  | String  | Pass in "NONE." Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. <br />
+|trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
+
+#### Response
+
+Coming soon
+
+### PostFile
+
+Create and save a new 'Files' struct on chain. The distinction between a folder and a file is very clear in jackalJS, but the filetree module does not care whether a Files struct is being used to save data for a folder or a file. 
+
+Let it be that alice wants to create a home folder
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in alice's Bech32 address<br /> 
+|account  | String  | Hex[ hash( alice's Bech32 address )]<br />
+|hashParent  | String  | MerklePath("s")<br />
+|hashChild  | String  |  Hex[ hash("home") ]<br />
+|contents  | String  | FID<br />
+|viewers  | String  | string(json encoded map) with: <br />let c = concatenate( "v", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br /> Note that map_key and map_value must be strings or else unmarshalling in the keeper will fail. <br />
+|editors  | String  | same as above but with c = concatenate( "e", trackingNumber, Bech32 address )<br />
+|trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors AND viewers map<br />
+
+alice can add other users to her viewers and editors map aswell. 
+#### Response
+
+let fullMerklePath = MerklePath("s/home")
+
+```json
+{
+  
+    "path": "fullMerklePath"
+
+}
+```
+### Delete
+
+Let it be that alice wants to delete her "s/home" folder
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in alice's Bech32 address<br />
+|hashPath  | String  | MerklePath("s/home")<br />
+|account  | String  | Hex[ hash( alice's Bech32 address )]<br />
+
+#### Response
+
+Coming soon
+
+## Query Requests
+
+Below is a full description of valid query requests that can be made to retrieve state information. These descriptions aim to be "implementation agnostic", i.e., they make sense to both the CLI/Golang and TS implementations.
+
+### GetPubkey
+
+Retrieve a user's ecies.PublicKey
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|address  | String  | user's Bech32 address<br />
+
+#### Response
+
+types.PubKey
+
+### GetFiles
+
+Retrieve a Files struct. Let it be that alice want's to retrieve "s/home/bunny.jpg"
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|address  | String  | MerklePath("s/home/bunny.jpg")    <br />
+|ownerAddress  | String  | accountHash = Hex[hash(alice's bech32 address)] <br /> let c = concatenate("o", MerklePath("s/home/bunny.jpg"), accountHash) <br /> OwnerAddress = hex[hash(c)]<br />
+
+
+#### Response
+
+types.Files
+
+

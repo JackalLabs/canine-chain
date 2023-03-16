@@ -4,9 +4,11 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
+	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
+
+// TODO: rewrite tests without ignite
 
 func TestMsgDelist_ValidateBasic(t *testing.T) {
 	tests := []struct {
@@ -18,12 +20,21 @@ func TestMsgDelist_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgDelist{
 				Creator: "invalid_address",
+				Name:    "validname.jkl",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid name",
+			msg: MsgDelist{
+				Creator: "cosmos1k3qu47ycrut4sr73vv6uqtuhyyfewymu34gju2",
+				Name:    "invalidname",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
 			name: "valid address",
 			msg: MsgDelist{
-				Creator: sample.AccAddress(),
+				Creator: "cosmos1k3qu47ycrut4sr73vv6uqtuhyyfewymu34gju2",
+				Name:    "validname.jkl",
 			},
 		},
 	}

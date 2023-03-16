@@ -24,7 +24,7 @@ func (gs GenesisState) Validate() error {
 	notificationsIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.NotificationsList {
-		index := string(NotificationsKey(elem.Count, elem.Address))
+		index := string(NotificationsKey(elem.Count))
 		if _, ok := notificationsIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for notifications")
 		}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+message Strays {
+  string cid = 1;
+  string fid = 2;
+  string signee = 3;
+  string filesize = 4;
+  string merkle = 5;
+  int64 end = 6;
+}

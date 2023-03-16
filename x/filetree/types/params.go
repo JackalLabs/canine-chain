@@ -24,7 +24,9 @@ func DefaultParams() Params {
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{}
+	return paramtypes.ParamSetPairs{
+		// paramtypes.NewParamSetPair(KeyDepositAccount, &p.DepositAccount, validateDeposit),
+	}
 }
 
 // Validate validates the set of params

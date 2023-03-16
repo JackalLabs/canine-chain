@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitRequest) (*types.QueryAllInitResponse, error) {
+func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitsRequest) (*types.QueryAllInitsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -31,15 +31,14 @@ func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitRequest) (*typ
 		inits = append(inits, init)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllInitResponse{Init: inits, Pagination: pageRes}, nil
+	return &types.QueryAllInitsResponse{Init: inits, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Init(c context.Context, req *types.QueryGetInitRequest) (*types.QueryGetInitResponse, error) {
+func (k Keeper) Init(c context.Context, req *types.QueryInitRequest) (*types.QueryInitResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -50,5 +49,5 @@ func (k Keeper) Init(c context.Context, req *types.QueryGetInitRequest) (*types.
 		req.Address,
 	)
 
-	return &types.QueryGetInitResponse{Init: found}, nil
+	return &types.QueryInitResponse{Init: found}, nil
 }

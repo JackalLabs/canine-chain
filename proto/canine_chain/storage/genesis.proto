@@ -1,0 +1,28 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+import "gogoproto/gogo.proto";
+import "canine_chain/storage/params.proto";
+import "canine_chain/storage/contracts.proto";
+import "canine_chain/storage/active_deals.proto";
+import "canine_chain/storage/providers.proto";
+import "canine_chain/storage/strays.proto";
+import "canine_chain/storage/fid_cid.proto";
+import "canine_chain/storage/payment_info.proto";
+
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+// GenesisState defines the storage module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated Contracts contracts_list = 2 [ (gogoproto.nullable) = false ];
+  repeated ActiveDeals active_deals_list = 3 [ (gogoproto.nullable) = false ];
+  repeated Providers providers_list = 4 [ (gogoproto.nullable) = false ];
+  repeated Strays strays_list = 6 [ (gogoproto.nullable) = false ];
+  repeated FidCid fid_cid_list = 5 [ (gogoproto.nullable) = false ];
+  repeated StoragePaymentInfo payment_info_list = 7 [ (gogoproto.nullable) = false ];
+
+  // this line is used by starport scaffolding # genesis/proto/state
+}

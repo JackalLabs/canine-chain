@@ -1,0 +1,83 @@
+syntax = "proto3";
+package jackaldao.canine.lp;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/jackal-dao/canine/x/lp/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc CreateLPool(MsgCreateLPool) returns (MsgCreateLPoolResponse);
+  rpc JoinPool(MsgJoinPool) returns (MsgJoinPoolResponse);
+  rpc ExitPool(MsgExitPool) returns (MsgExitPoolResponse);
+  rpc Swap(MsgSwap) returns (MsgSwapResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateLPool {
+  string creator = 1;
+  // Creator needs to deposit coins to create pool.
+  // Input format: 
+  // "{amount0}{denomination},...,{amountN}{denominationN}"
+  repeated cosmos.base.v1beta1.DecCoin coins = 2 [(gogoproto.nullable) = false];
+  // AMM model id used to balance the pool.
+  uint32 amm_Id = 3;
+  // Swap fee charged to swap transaction (swap x swap_fee_multi).
+  // Is converted to type sdk.Dec
+  string swap_fee_multi = 4;
+  // Liquidity pool token (LPToken) lock duration in seconds.
+  // Liquidity provider's LPToken is locked when they contribute to a pool.
+  // Penalty is applied when LPToken is burned before the lock duration is over.
+  int64 min_lock_duration = 5;
+  // Penalty multiplier applied to LPToken when provider wishes to burn LPToken
+  // before lock duration is over (LPToken x penalty_multi) -> pool_tokens.
+  // Is converted to type sdk.Dec
+  string penalty_multi = 6;
+}
+
+message MsgCreateLPoolResponse {
+  // Pool id
+  string id = 1;
+}
+
+message MsgJoinPool {
+  string creator = 1;
+  string poolName = 2;
+  // Input format:
+  //"{amount0}{denomination},...,{amountN}{denominationN}"
+  repeated cosmos.base.v1beta1.DecCoin coins = 3 [(gogoproto.nullable) = false];
+}
+
+message MsgJoinPoolResponse {
+  // Amount of shares given to pool contributor.
+  uint64 shares = 1;
+}
+
+message MsgExitPool {
+  string creator = 1;
+  string poolName = 2;
+  int64 shares = 3;
+}
+
+message MsgExitPoolResponse {
+}
+
+// Swap a coin for other coin in a liquidity pool.
+// Swap fee is deducted from coin input before swap output is computed.
+message MsgSwap {
+  string creator = 1;
+  string poolName = 2;
+  // Coin input to swap in return for the desired coin. Coin output from swap is
+  // determined by the input amount.
+  cosmos.base.v1beta1.DecCoin coin_input = 3 [(gogoproto.nullable) = false];
+  // Minimum coin output from this swap. Swap will not proceed if computed
+  // swap output is less than this amount.
+  cosmos.base.v1beta1.DecCoin min_coin_output = 4 [(gogoproto.nullable) = false];
+}
+
+message MsgSwapResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message

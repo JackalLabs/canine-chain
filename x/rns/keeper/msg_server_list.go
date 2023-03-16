@@ -2,23 +2,25 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgListResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	mname := strings.ToLower(msg.Name)
 
-	_, found := k.GetForsale(ctx, msg.Name)
+	_, found := k.GetForsale(ctx, mname)
 
 	if found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name already listed.")
 	}
 
-	n, tld, err := getNameAndTLD(msg.Name)
+	n, tld, err := GetNameAndTLD(mname)
 	if err != nil {
 		return nil, err
 	}
@@ -33,18 +35,18 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You do not own this name.")
 	}
 
-	block_height := ctx.BlockHeight()
+	blockHeight := ctx.BlockHeight()
 
-	if name.Locked > block_height {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot transfer free name")
+	if name.Locked > blockHeight {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot transfer free name")
 	}
 
-	if block_height > name.Expires {
+	if blockHeight > name.Expires {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 	}
 
 	newsale := types.Forsale{
-		Name:  msg.Name,
+		Name:  mname,
 		Price: msg.Price,
 		Owner: msg.Creator,
 	}

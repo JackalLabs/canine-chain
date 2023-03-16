@@ -6,13 +6,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*types.MsgAddRecordResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	name, tld, err := getNameAndTLD(msg.Name)
+	mname := strings.ToLower(msg.Name)
+
+	name, tld, err := GetNameAndTLD(mname)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +37,21 @@ func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidType, "cannot have a '.' in a record")
 	}
 
+	// checking if the subdomain is already added
+	for _, sd := range whois.Subdomains {
+		if sd.Name == msg.Record {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidType, "Subdomain already exists")
+		}
+	}
+
+	// initializing the subdomains
+	if whois.Subdomains == nil {
+		whois.Subdomains = []*types.Names{}
+	}
+
+	// creating a new subdomain type
 	record := types.Names{
-		Name:       msg.Record,
+		Name:       strings.ToLower(msg.Record),
 		Expires:    whois.Expires,
 		Value:      msg.Value,
 		Data:       msg.Data,
@@ -44,9 +59,6 @@ func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*t
 		Tld:        whois.Tld,
 	}
 
-	if whois.Subdomains == nil {
-		whois.Subdomains = []*types.Names{}
-	}
 	whois.Subdomains = append(whois.Subdomains, &record)
 
 	k.SetNames(ctx, whois)

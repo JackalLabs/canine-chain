@@ -9,14 +9,12 @@ const TypeMsgRemoveEditors = "remove_editors"
 
 var _ sdk.Msg = &MsgRemoveEditors{}
 
-func NewMsgRemoveEditors(creator string, editorIds string, address string, fileowner string, notifyEditors string, notiForEditors string) *MsgRemoveEditors {
+func NewMsgRemoveEditors(creator string, editorIds string, address string, fileowner string) *MsgRemoveEditors {
 	return &MsgRemoveEditors{
-		Creator:        creator,
-		EditorIds:      editorIds,
-		Address:        address,
-		Fileowner:      fileowner,
-		NotifyEditors:  notifyEditors,
-		NotiForEditors: notiForEditors,
+		Creator:   creator,
+		EditorIds: editorIds,
+		Address:   address,
+		Fileowner: fileowner,
 	}
 }
 
@@ -46,5 +44,19 @@ func (msg *MsgRemoveEditors) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if msg.EditorIds == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid editor ids: %s", msg.EditorIds)
+	}
+	if msg.Address == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid address: %s", msg.Address)
+	}
+	if msg.Fileowner == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid file owner: %s", msg.Fileowner)
+	}
+
 	return nil
 }

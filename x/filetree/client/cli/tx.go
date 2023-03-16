@@ -8,17 +8,10 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
-var (
-	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
-)
-
-const (
-	flagPacketTimeoutTimestamp = "packet-timeout-timestamp"
-	listSeparator              = ","
-)
+var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd() *cobra.Command {
@@ -34,7 +27,6 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdAddViewers())
 	cmd.AddCommand(CmdPostkey())
 	cmd.AddCommand(CmdDeleteFile())
-	cmd.AddCommand(CmdInitAll())
 	cmd.AddCommand(CmdRemoveViewers())
 	cmd.AddCommand(CmdMakeRoot())
 	cmd.AddCommand(CmdAddEditors())

@@ -2,12 +2,16 @@ package simulation
 
 import (
 	"math/rand"
+	"strconv"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/jackal-dao/canine/x/storage/keeper"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func SimulateMsgBuyStorage(
@@ -19,11 +23,71 @@ func SimulateMsgBuyStorage(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgBuyStorage{
-			Creator: simAccount.Address.String(),
+			Creator:      simAccount.Address.String(),
+			ForAddress:   simAccount.Address.String(),
+			PaymentDenom: "ujkl",
 		}
 
-		// TODO: Handling the BuyStorage simulation
+		_, found := k.GetStoragePaymentInfo(ctx, simAccount.Address.String())
+		if found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "user already paid for storage, skipping"), nil, nil
+		}
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "BuyStorage simulation not implemented"), nil, nil
+		size := simtypes.RandIntBetween(r, 1_000_000_000, 10_000_000_000)
+
+		t := time.Hour * 720
+		hours := sdk.NewDec(t.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
+		cost := k.GetStorageCost(ctx, int64(size), hours.TruncateInt64())
+
+		msg.Bytes = strconv.Itoa(size)
+		msg.Duration = t.String()
+
+		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
+		// It is impossible to specify default bond denom through param.json
+		// to naturally fund the accounts with ujkl.
+		// The other option is genesis.json but it is not possible to sign transactions
+		// due to private and pubkeys are generated independent of addresses
+		// resulting pubkey does not match signer address error.
+		if jBalance.Amount.LTE(cost) {
+			c := sdk.NewCoin("ujkl", cost)
+
+			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unabled to fund account"), nil, err
+			}
+
+			err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, sdk.NewCoins(c))
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unabled to fund account"), nil, err
+			}
+		}
+
+		spendable := bk.SpendableCoins(ctx, simAccount.Address)
+		coins, hasNeg := spendable.SafeSub(sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
+
+		var fees sdk.Coins
+
+		if !hasNeg {
+			var err error
+			fees, err = simtypes.RandomFees(r, ctx, coins)
+			if err != nil {
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unable to generate fees"), nil, err
+			}
+		}
+
+		txCtx := simulation.OperationInput{
+			R:             r,
+			App:           app,
+			TxGen:         simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:           nil,
+			Msg:           msg,
+			MsgType:       msg.Type(),
+			Context:       ctx,
+			SimAccount:    simAccount,
+			AccountKeeper: ak,
+			ModuleName:    types.ModuleName,
+		}
+
+		return simulation.GenAndDeliverTx(txCtx, fees)
 	}
 }

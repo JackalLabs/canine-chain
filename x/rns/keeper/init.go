@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 // SetInit set a specific init in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetInit(ctx sdk.Context, init types.Init) {
 func (k Keeper) GetInit(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.Init, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.InitKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetInit(
 func (k Keeper) RemoveInit(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.InitKeyPrefix))
 	store.Delete(types.InitKey(

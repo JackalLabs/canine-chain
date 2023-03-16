@@ -2,16 +2,14 @@ package cli
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +18,7 @@ var _ = strconv.Itoa(0)
 func CmdRemoveViewers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-viewers [viewer-ids] [file path] [file owner]",
-		Short: "remove an address from the files viewing permisisons",
+		Short: "remove an address from the files viewing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argViewerIds := args[0]
@@ -39,14 +37,13 @@ func CmdRemoveViewers() *cobra.Command {
 
 			viewerAddresses := strings.Split(argViewerIds, ",")
 			var viewerIds []string
-			var viewersToNotify []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
 					continue
 				}
 
-				params := &types.QueryGetFilesRequest{
+				params := &types.QueryFileRequest{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}
@@ -56,27 +53,17 @@ func CmdRemoveViewers() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) //This used to just be argAddress
+				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
-				viewersToNotify = append(viewersToNotify, v)
 
 			}
 
-			jsonViewersToNotify, err := json.Marshal(viewersToNotify)
-			if err != nil {
-				return err
-			}
-
-			notiForViewers := fmt.Sprintf("%s has removed read access to %s", clientCtx.GetFromAddress().String(), argHashpath)
-
-			//viewerIds supposed to be JSON marshalled aswell?
+			// viewerIds supposed to be JSON marshalled aswell?
 			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIds, ","),
 				merklePath,
 				ownerChainAddress,
-				string(jsonViewersToNotify),
-				notiForViewers,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

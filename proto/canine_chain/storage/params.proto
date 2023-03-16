@@ -1,0 +1,22 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+// Params defines the parameters for the module.
+message Params { 
+  option (gogoproto.goproto_stringer) = false;
+  
+  string deposit_account = 1;
+  int64 proof_window = 2;
+  // Chunk size of a file is divided into
+  // The value cannot be smaller than 1 to avoid zero division
+  int64 chunk_size = 3;
+  int64 misses_to_burn = 4;
+  string price_feed = 5;
+  // Life span of a contract in blocks
+  int64 max_contract_age_in_blocks = 6;
+  int64 price_per_tb_per_month = 7;
+}

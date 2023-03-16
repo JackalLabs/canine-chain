@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,15 +14,63 @@ func TestMsgBuyStorage_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "invalid for address",
 			msg: MsgBuyStorage{
-				Creator: "invalid_address",
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "invalid_address",
+				Duration:     "10000h",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid from address",
+			msg: MsgBuyStorage{
+				Creator:      "invalid_address",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "10000h",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		}, {
+			name: "invalid duration",
+			msg: MsgBuyStorage{
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "x",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidType,
+		}, {
+			name: "invalid duration(negative)",
+			msg: MsgBuyStorage{
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "-1h",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
+			name: "invalid btyes",
+			msg: MsgBuyStorage{
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "10000h",
+				Bytes:        "c",
+				PaymentDenom: "ujkl",
+			},
+			err: sdkerrors.ErrInvalidType,
+		}, {
 			name: "valid address",
 			msg: MsgBuyStorage{
-				Creator: sample.AccAddress(),
+				Creator:      "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				ForAddress:   "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
+				Duration:     "10000h",
+				Bytes:        "4096",
+				PaymentDenom: "ujkl",
 			},
 		},
 	}

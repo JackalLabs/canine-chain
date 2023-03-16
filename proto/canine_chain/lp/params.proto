@@ -1,0 +1,21 @@
+syntax = "proto3";
+package jackaldao.canine.lp;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/jackal-dao/canine/x/lp/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+	uint64 MinInitPoolDeposit = 1;  
+
+	uint32 MaxPoolDenomCount = 2;
+
+	uint32 LPTokenUnit = 3;
+
+	string protocol_fee_to_addr = 4;
+
+	string protocol_fee_rate = 5;
+}

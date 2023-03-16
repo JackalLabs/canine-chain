@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 // SetWhois set a specific whois in the store from its index
@@ -19,7 +19,6 @@ func (k Keeper) SetWhois(ctx sdk.Context, whois types.Whois) {
 func (k Keeper) GetWhois(
 	ctx sdk.Context,
 	index string,
-
 ) (val types.Whois, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.WhoisKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetWhois(
 func (k Keeper) RemoveWhois(
 	ctx sdk.Context,
 	index string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.WhoisKeyPrefix))
 	store.Delete(types.WhoisKey(

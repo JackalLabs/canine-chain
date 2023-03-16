@@ -9,28 +9,24 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/testutil/sample"
-	notificationssimulation "github.com/jackal-dao/canine/x/notifications/simulation"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	notificationssimulation "github.com/jackalLabs/canine-chain/x/notifications/simulation"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	// _ = sample.AccAddress
 	_ = notificationssimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
 	_ = baseapp.Paramspace
 )
 
+//nolint:gosec // these aren't hard-coded credentials
 const (
 	opWeightMsgCreateNotifications = "op_weight_msg_notifications"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgCreateNotifications int = 100
-
-	opWeightMsgUpdateNotifications = "op_weight_msg_notifications"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateNotifications int = 100
 
 	opWeightMsgDeleteNotifications = "op_weight_msg_notifications"
 	// TODO: Determine the simulation weight value
@@ -40,11 +36,9 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgSetCounter int = 100
 
-	opWeightMsgAddSenders = "op_weight_msg_add_senders"
+	opWeightMsgBlockSenders = "op_weight_msg_block_senders"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgAddSenders int = 100
-
-	// this line is used by starport scaffolding # simapp/module/const
+	defaultWeightMsgBlockSenders int = 2
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -54,18 +48,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	notificationsGenesis := types.GenesisState{
-		Params: types.DefaultParams(),
-		NotificationsList: []types.Notifications{
-			{
-				Sender: sample.AccAddress(),
-				Count:  0,
-			},
-			{
-				Sender: sample.AccAddress(),
-				Count:  1,
-			},
-		},
-		// this line is used by starport scaffolding # simapp/module/genesisState
+		Params:            types.DefaultParams(),
+		NotificationsList: []types.Notifications{},
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&notificationsGenesis)
 }
@@ -77,7 +61,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 
@@ -97,17 +80,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCreateNotifications,
 		notificationssimulation.SimulateMsgCreateNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpdateNotifications int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateNotifications, &weightMsgUpdateNotifications, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateNotifications = defaultWeightMsgUpdateNotifications
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateNotifications,
-		notificationssimulation.SimulateMsgUpdateNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgDeleteNotifications int
@@ -132,15 +104,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		notificationssimulation.SimulateMsgSetCounter(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgAddSenders int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddSenders, &weightMsgAddSenders, nil,
+	var weightMsgBlockSenders int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgBlockSenders, &weightMsgBlockSenders, nil,
 		func(_ *rand.Rand) {
-			weightMsgAddSenders = defaultWeightMsgAddSenders
+			weightMsgBlockSenders = defaultWeightMsgBlockSenders
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgAddSenders,
-		notificationssimulation.SimulateMsgAddSenders(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgBlockSenders,
+		notificationssimulation.SimulateMsgBlockSenders(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

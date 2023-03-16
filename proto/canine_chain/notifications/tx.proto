@@ -1,0 +1,61 @@
+syntax = "proto3";
+package canine_chain.notifications;
+
+import "canine_chain/notifications/notifications.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc CreateNotifications(MsgCreateNotifications) returns (MsgCreateNotificationsResponse);
+  rpc UpdateNotifications(MsgUpdateNotifications) returns (MsgUpdateNotificationsResponse);
+  rpc DeleteNotifications(MsgDeleteNotifications) returns (MsgDeleteNotificationsResponse);
+  rpc SetCounter(MsgSetCounter) returns (MsgSetCounterResponse);
+  rpc BlockSenders(MsgBlockSenders) returns (MsgBlockSendersResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateNotifications {
+  string creator = 1;
+  string notification = 2;
+  string address = 3;
+}
+message MsgCreateNotificationsResponse {
+  uint64 notiCounter = 1;
+}
+
+message MsgUpdateNotifications {
+  string creator = 1;
+  uint64 count = 2;
+
+  string notification = 3;
+  string address = 4;
+}
+message MsgUpdateNotificationsResponse {}
+
+message MsgDeleteNotifications {
+  string creator = 1;
+}
+
+message MsgDeleteNotificationsResponse {
+  uint64 notiCounter = 1;
+}
+
+message MsgSetCounter {
+  string creator = 1;
+}
+
+message MsgSetCounterResponse {
+  uint64 notiCounter = 1;
+}
+
+message MsgBlockSenders {
+  string creator = 1;
+  string senderIds = 2;
+}
+
+message MsgBlockSendersResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message

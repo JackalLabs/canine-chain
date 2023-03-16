@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -31,7 +31,6 @@ func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*t
 		namess = append(namess, names)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -39,18 +38,18 @@ func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*t
 	return &types.QueryAllNamesResponse{Names: namess, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Names(c context.Context, req *types.QueryGetNamesRequest) (*types.QueryGetNamesResponse, error) {
+func (k Keeper) Names(c context.Context, req *types.QueryNameRequest) (*types.QueryNameResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	n, tld, err := getNameAndTLD(req.Index)
+	n, tld, err := GetNameAndTLD(req.Index)
 	if err != nil {
 		return nil, err
 	}
 
-	sub, name, hasSub := getSubdomain(n)
+	sub, name, hasSub := GetSubdomain(n)
 	if hasSub {
 		n = name
 	}
@@ -64,10 +63,10 @@ func (k Keeper) Names(c context.Context, req *types.QueryGetNamesRequest) (*type
 	if hasSub {
 		for _, domain := range val.Subdomains {
 			if domain.Name == sub {
-				return &types.QueryGetNamesResponse{Names: *domain}, nil
+				return &types.QueryNameResponse{Names: *domain}, nil
 			}
 		}
 	}
 
-	return &types.QueryGetNamesResponse{Names: val}, nil
+	return &types.QueryNameResponse{Names: val}, nil
 }

@@ -8,17 +8,10 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-var (
-	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
-)
-
-const (
-	flagPacketTimeoutTimestamp = "packet-timeout-timestamp"
-	listSeparator              = ","
-)
+var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd() *cobra.Command {
@@ -33,13 +26,10 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdPostContract())
 	cmd.AddCommand(CmdPostproof())
 	cmd.AddCommand(CmdSignContract())
-	cmd.AddCommand(CmdSetProviderIp())
-	cmd.AddCommand(CmdSetProviderTotalspace())
-	cmd.AddCommand(CmdInitProvider())
 	cmd.AddCommand(CmdCancelContract())
 	cmd.AddCommand(CmdBuyStorage())
 	cmd.AddCommand(CmdClaimStray())
-	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(CmdUpgradeStorage())
 
 	return cmd
 }

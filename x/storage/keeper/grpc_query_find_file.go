@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -13,7 +13,7 @@ import (
 func (k Keeper) ListFiles(ctx sdk.Context, fid string) []string {
 	allDeals := k.GetAllActiveDeals(ctx)
 
-	var providers []string
+	providers := []string{}
 
 	for i := 0; i < len(allDeals); i++ {
 		if allDeals[i].Fid == fid {

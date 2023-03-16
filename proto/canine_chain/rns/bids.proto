@@ -1,0 +1,11 @@
+syntax = "proto3";
+package canine_chain.rns;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
+
+message Bids {
+  string index = 1;
+  string name = 2;
+  string bidder = 3;
+  string price = 4;
+}
