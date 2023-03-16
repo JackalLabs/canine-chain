@@ -34,11 +34,14 @@ canined gentx $ALIAS 200000000ujkl \
 
 canined collect-gentxs --home=$JKL_HOME
 
-sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
-sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml
+sed -i.bak -e 's/stake/ujkl/' $JKL_HOME/config/genesis.json
+sed -i.bak -e 's/^minimum-gas-prices =""/minimum-gas-prices = \"0.0025ujkl\"/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml
+sed -i.bak -e 's/enable=false/enable=true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enabled-unsafe-cors = false/enabled-unsafe-cors = true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/' $JKL_HOME/config/config.toml
+sed -i.bak -e 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/' $JKL_HOME/config/config.toml
+sed -i.bak -e 's/laddr = "tcp:\/\/127.0.0.1:26656"/laddr = "tcp:\/\/0.0.0.0:26656"/' $JKL_HOME/config/config.toml
 sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $JKL_HOME/.canine/config/client.toml
 
 canined start --home=$JKL_HOME --log_level info
