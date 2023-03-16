@@ -4,7 +4,7 @@ WORKDIR /canine-chain
 COPY . /canine-chain
 RUN ls
 RUN go install ./cmd/canined
-CMD ["sh", "./scripts/test-node.sh"]
+CMD ["sh", "./scripts/test-node-dev.sh"]
 EXPOSE 26657
 EXPOSE 26656
 EXPOSE 26658
