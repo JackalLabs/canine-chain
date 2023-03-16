@@ -10,7 +10,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -27,8 +27,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdListContracts())
 	cmd.AddCommand(CmdShowContracts())
-	cmd.AddCommand(CmdListProofs())
-	cmd.AddCommand(CmdShowProofs())
 	cmd.AddCommand(CmdListActiveDeals())
 	cmd.AddCommand(CmdShowActiveDeals())
 	cmd.AddCommand(CmdListProviders())
@@ -37,10 +35,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(CmdFindFile())
 
-	cmd.AddCommand(CmdListPayBlocks())
-	cmd.AddCommand(CmdShowPayBlocks())
-	cmd.AddCommand(CmdListClientUsage())
-	cmd.AddCommand(CmdShowClientUsage())
 	cmd.AddCommand(CmdListStrays())
 	cmd.AddCommand(CmdShowStrays())
 	cmd.AddCommand(CmdGetClientFreeSpace())
@@ -49,6 +43,12 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(CmdShowFidCid())
 	cmd.AddCommand(CmdGetPayData())
 
+	cmd.AddCommand(CmdFileUploadCheck())
+
+	cmd.AddCommand(CmdListStoragePaymentInfo())
+	cmd.AddCommand(CmdShowStoragePaymentInfo())
+
+	cmd.AddCommand(CmdCheckPrice())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

@@ -1,144 +1,37 @@
 package keeper
 
 import (
-	"fmt"
-	"net/url"
+	"encoding/json"
 
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func ParseIP(ip string) string {
-	u, err := url.ParseRequestURI(ip)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(u)
+// func MakeFid(data []byte) (string, error) {
+//	return bech32.ConvertAndEncode(types.FidPrefix, data)
+// }
 
-	return fmt.Sprintf("%s%s%s", u.Scheme, u.Host, u.Path)
+func MakeCid(data []byte) (string, error) {
+	return bech32.ConvertAndEncode(types.CidPrefix, data)
 }
 
-const (
-	START_BLOCK_TYPE = "start"
-	END_BLOCK_TYPE   = "end"
-	TWO_GIGS         = 2000000000
-)
-
-func (k Keeper) GetPaidAmount(ctx sdk.Context, address string, blockh int64) (int64, bool, *types.PayBlocks) {
-
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PayBlocksKeyPrefix))
-
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-
-	var highestBlock int64 = 0
-
-	eblock, found := k.GetPayBlocks(ctx, fmt.Sprintf(".%s", address))
+func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) int64 {
+	payInfo, found := k.GetStoragePaymentInfo(
+		ctx,
+		address,
+	)
 	if !found {
-		return TWO_GIGS, true, nil
+		return 0
 	}
 
-	endblock, ok := sdk.NewIntFromString(eblock.Blocknum)
-	if !ok {
-		return TWO_GIGS, true, nil
-	}
-
-	if endblock.Int64() <= blockh {
-		if endblock.Int64() <= blockh+432000 {
-			bytes, ok := sdk.NewIntFromString(eblock.Bytes)
-			if !ok {
-				return bytes.Int64(), true, nil
-			}
-		}
-		return TWO_GIGS, true, &eblock
-	}
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.PayBlocks
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-
-		fmt.Printf("BLOCK %s: %s", val.Blocktype, val.Blocknum)
-
-		if val.Blocktype == END_BLOCK_TYPE {
-			continue
-		}
-
-		adr := val.Blockid[:42]
-		if adr != address {
-			continue
-		}
-
-		blocknum, ok := sdk.NewIntFromString(val.Blocknum)
-		if !ok {
-			continue
-		}
-
-		if blocknum.Int64() > blockh {
-			continue
-		}
-
-		if blocknum.Int64() > highestBlock {
-			highestBlock = blocknum.Int64()
-			ctx.Logger().Debug(fmt.Sprintf("NEW HIGHEST BLOCK: %s", val.Blocknum))
-		}
-
-	}
-
-	if highestBlock == 0 {
-		return TWO_GIGS, true, &eblock
-	}
-
-	hblock, found := k.GetPayBlocks(ctx, fmt.Sprintf("%s%d", address, highestBlock))
-	if !found {
-		return TWO_GIGS, true, &eblock
-	}
-
-	bytes, ok := sdk.NewIntFromString(hblock.Bytes)
-	if !ok {
-		return TWO_GIGS, true, &eblock
-	}
-
-	return bytes.Int64(), false, &eblock
-}
-
-func (k Keeper) CreatePayBlock(ctx sdk.Context, address string, length int64, bytes int64) error {
-
-	startBlock := ctx.BlockHeight()
-
-	endBlock := startBlock + length
-
-	sBlock := types.PayBlocks{
-		Blockid:   fmt.Sprintf("%s%d", address, startBlock),
-		Bytes:     fmt.Sprintf("%d", bytes),
-		Blocktype: START_BLOCK_TYPE,
-		Blocknum:  fmt.Sprintf("%d", startBlock),
-	}
-
-	eBlock := types.PayBlocks{
-		Blockid:   fmt.Sprintf(".%s", address),
-		Bytes:     fmt.Sprintf("%d", bytes),
-		Blocktype: END_BLOCK_TYPE,
-		Blocknum:  fmt.Sprintf("%d", endBlock),
-	}
-
-	amount, trial, _ := k.GetPaidAmount(ctx, address, startBlock)
-
-	if !trial && bytes <= amount {
-		return fmt.Errorf("can't buy storage within another storage window")
-	}
-
-	k.SetPayBlocks(ctx, sBlock)
-	k.SetPayBlocks(ctx, eBlock)
-
-	return nil
+	return payInfo.SpaceAvailable
 }
 
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 	allDeals := k.GetAllActiveDeals(ctx)
 
-	var space int64 = 0
+	var space int64
 	for i := 0; i < len(allDeals); i++ {
 		deal := allDeals[i]
 		if deal.Provider != provider {
@@ -154,4 +47,58 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 	}
 
 	return space
+}
+
+// GetStorageCost calculates storage cost in ujkl
+// Uses gigabytes and months to calculate how much user has to pay
+func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int {
+	pricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
+	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
+	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
+	pricePerGbPerHour := pricePerGbPerMonth.QuoInt64(720)
+
+	pricePerHour := pricePerGbPerHour.MulInt64(gbs)
+
+	totalCost := pricePerHour.MulInt64(hours)
+
+	jklPrice := k.GetJklPrice(ctx)
+
+	// TODO: fetch denom unit from bank module
+	var ujklUnit int64 = 1000000
+	jklCost := totalCost.Quo(jklPrice)
+
+	ujklCost := jklCost.MulInt64(ujklUnit)
+
+	return ujklCost.TruncateInt()
+}
+
+// GetJklPrice uses oracle module to get jkl price
+// Returns 0.20 if feed doesn't exist or failed to unmarshal data
+// Unmarshal failure is logged
+func (k Keeper) GetJklPrice(ctx sdk.Context) (price sdk.Dec) {
+	price = sdk.MustNewDecFromStr("0.20")
+
+	priceFeed := k.GetParams(ctx).PriceFeed
+	feed, found := k.oraclekeeper.GetFeed(ctx, priceFeed)
+	if found {
+		type data struct {
+			Price  string `json:"price"`
+			Change string `json:"24h_change"`
+		}
+
+		var d data
+		err := json.Unmarshal([]byte(feed.Data), &d)
+		if err != nil {
+			ctx.Logger().Debug("Failed to unmarshal Feed.Data (%s)", feed.Data)
+		}
+
+		p, err := sdk.NewDecFromStr(d.Price)
+		if err != nil {
+			ctx.Logger().Debug("Failed to convert Feed.Data.Price to sdk.Dec (%s)", d.Price)
+		} else {
+			price = p
+		}
+	}
+
+	return price
 }

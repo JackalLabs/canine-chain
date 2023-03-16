@@ -15,6 +15,10 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_storage"
+
+	AddressPrefix = "jkl"
+	CidPrefix     = "jklc"
+	FidPrefix     = "jklf"
 )
 
 func KeyPrefix(p string) []byte {

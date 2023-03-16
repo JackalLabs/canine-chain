@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -31,7 +31,6 @@ func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (
 		fidCids = append(fidCids, fidCid)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -39,7 +38,7 @@ func (k Keeper) FidCidAll(c context.Context, req *types.QueryAllFidCidRequest) (
 	return &types.QueryAllFidCidResponse{FidCid: fidCids, Pagination: pageRes}, nil
 }
 
-func (k Keeper) FidCid(c context.Context, req *types.QueryGetFidCidRequest) (*types.QueryGetFidCidResponse, error) {
+func (k Keeper) FidCid(c context.Context, req *types.QueryFidCidRequest) (*types.QueryFidCidResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,5 +52,5 @@ func (k Keeper) FidCid(c context.Context, req *types.QueryGetFidCidRequest) (*ty
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetFidCidResponse{FidCid: val}, nil
+	return &types.QueryFidCidResponse{FidCid: val}, nil
 }

@@ -2,23 +2,25 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.MsgDelistResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	mname := strings.ToLower(msg.Name)
 
-	sale, found := k.GetForsale(ctx, msg.Name)
+	sale, found := k.GetForsale(ctx, mname)
 
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name isn't listed.")
 	}
 
-	n, tld, err := getNameAndTLD(msg.Name)
+	n, tld, err := GetNameAndTLD(mname)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +39,7 @@ func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.M
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "This listing has expired.")
 	}
 
-	k.RemoveForsale(ctx, msg.Name)
+	k.RemoveForsale(ctx, mname)
 
 	return &types.MsgDelistResponse{}, nil
 }

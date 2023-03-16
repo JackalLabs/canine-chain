@@ -1,0 +1,104 @@
+syntax = "proto3";
+package canine_chain.notifications;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "canine_chain/notifications/params.proto";
+import "canine_chain/notifications/notifications.proto";
+import "canine_chain/notifications/noti_counter.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/jackalLabs/canine-chain/notifications/params";
+  }
+  // Queries a Notifications by index.
+	rpc Notifications(QueryGetNotificationsRequest) returns (QueryGetNotificationsResponse) {
+		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications/{count}/{address}";
+	}
+
+	// Queries a list of Notifications items.
+	rpc NotificationsAll(QueryAllNotificationsRequest) returns (QueryAllNotificationsResponse) {
+		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications";
+	}
+
+	// Queries a list of Notifications items by address.
+	rpc NotificationsByAddress(QueryAllNotificationsByAddressRequest) returns (QueryAllNotificationsByAddressResponse) {
+		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications/{address}";
+	}
+
+// Queries a NotiCounter by index.
+	rpc NotiCounter(QueryGetNotiCounterRequest) returns (QueryGetNotiCounterResponse) {
+		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/noti_counter/{address}";
+	}
+
+	// Queries a list of NotiCounter items.
+	rpc NotiCounterAll(QueryAllNotiCounterRequest) returns (QueryAllNotiCounterResponse) {
+		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/noti_counter";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetNotificationsRequest {
+	  uint64 count = 1;
+	  string address = 2; 
+
+}
+
+message QueryGetNotificationsResponse {
+	Notifications notifications = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllNotificationsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllNotificationsResponse {
+	repeated Notifications notifications = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllNotificationsByAddressRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+	string address = 2;
+}
+
+message QueryAllNotificationsByAddressResponse {
+	repeated Notifications notifications = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetNotiCounterRequest {
+	  string address = 1;
+
+}
+
+message QueryGetNotiCounterResponse {
+	NotiCounter notiCounter = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllNotiCounterRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllNotiCounterResponse {
+	repeated NotiCounter notiCounter = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

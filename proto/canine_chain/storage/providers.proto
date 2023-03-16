@@ -1,0 +1,14 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+message Providers {
+  string address = 1;
+  string ip = 2;
+  string totalspace = 3;
+  string burned_contracts = 4;
+  string creator = 5;
+  string keybase_identity = 6;
+  repeated string auth_claimers = 7;
+}

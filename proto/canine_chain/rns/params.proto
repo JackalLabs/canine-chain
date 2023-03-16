@@ -1,0 +1,13 @@
+syntax = "proto3";
+package canine_chain.rns;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
+
+// Params defines the parameters for the module.
+message Params { 
+  option (gogoproto.goproto_stringer) = false;
+
+  string deposit_account = 1;
+}

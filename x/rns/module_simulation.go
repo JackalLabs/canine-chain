@@ -9,20 +9,23 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/testutil/sample"
-	rnssimulation "github.com/jackal-dao/canine/x/rns/simulation"
-	"github.com/jackal-dao/canine/x/rns/types"
+
+	//	"github.com/jackalLabs/canine-chain/testutil/sample"
+	rnssimulation "github.com/jackalLabs/canine-chain/x/rns/simulation"
 )
+
+// TODO: rewrite tests but don't use ignite
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	//	_ = sample.AccAddress
 	_ = rnssimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
 	_ = baseapp.Paramspace
 )
 
+//nolint:gosec // these aren't hard-coded credentials
 const (
 	opWeightMsgRegister = "op_weight_msg_register"
 	// TODO: Determine the simulation weight value
@@ -32,13 +35,13 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgBid int = 100
 
+	opWeightMsgCancelBid = "op_weight_msg_cancel_bid"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCancelBid int = 10
+
 	opWeightMsgAcceptBid = "op_weight_msg_accept_bid"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgAcceptBid int = 100
-
-	opWeightMsgCancelBid = "op_weight_msg_cancel_bid"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCancelBid int = 100
 
 	opWeightMsgList = "op_weight_msg_list"
 	// TODO: Determine the simulation weight value
@@ -56,19 +59,18 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgTransfer int = 100
 
-	// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgAddRecord = "op_weight_msg_add_record"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgAddRecord int = 60
+
+	opWeightMsgDelRecord = "op_weight_msg_del_record"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDelRecord int = 40
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	accs := make([]string, len(simState.Accounts))
-	for i, acc := range simState.Accounts {
-		accs[i] = acc.Address.String()
-	}
-	rnsGenesis := types.GenesisState{
-		// this line is used by starport scaffolding # simapp/module/genesisState
-	}
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&rnsGenesis)
+	rnssimulation.RandomizedGenState(simState)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -77,15 +79,14 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
-	return []simtypes.ParamChange{}
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	return rnssimulation.ParamChanges(r)
 }
 
 // RegisterStoreDecoder registers a decoder
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
-// WeightedOperations returns the all the gov module operations with their respective weights.
+// WeightedOperations returns the all the rns module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
@@ -177,7 +178,27 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		rnssimulation.SimulateMsgTransfer(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	// this line is used by starport scaffolding # simapp/module/operation
+	var weightMsgAddRecord int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddRecord, &weightMsgAddRecord, nil,
+		func(_ *rand.Rand) {
+			weightMsgAddRecord = defaultWeightMsgAddRecord
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgAddRecord,
+		rnssimulation.SimulateMsgAddRecord(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDelRecord int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDelRecord, &weightMsgDelRecord, nil,
+		func(_ *rand.Rand) {
+			weightMsgDelRecord = defaultWeightMsgDelRecord
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDelRecord,
+		rnssimulation.SimulateMsgDelRecord(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	return operations
 }

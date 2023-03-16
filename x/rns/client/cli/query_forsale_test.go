@@ -1,26 +1,15 @@
 package cli_test
 
 import (
-	"fmt"
 	"strconv"
-	"testing"
-
-	"github.com/cosmos/cosmos-sdk/client/flags"
-	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
-	"github.com/jackal-dao/canine/testutil/network"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/rns/client/cli"
-	"github.com/jackal-dao/canine/x/rns/types"
+	//	"github.com/jackalLabs/canine-chain/testutil/network"
+	//	"github.com/jackalLabs/canine-chain/testutil/nullify"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
+/*
 func networkWithForsaleObjects(t *testing.T, n int) (*network.Network, []types.Forsale) {
 	t.Helper()
 	cfg := network.DefaultConfig()
@@ -160,3 +149,4 @@ func TestListForsale(t *testing.T) {
 		)
 	})
 }
+*/

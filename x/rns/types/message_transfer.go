@@ -9,11 +9,11 @@ const TypeMsgTransfer = "transfer"
 
 var _ sdk.Msg = &MsgTransfer{}
 
-func NewMsgTransfer(creator string, name string, reciever string) *MsgTransfer {
+func NewMsgTransfer(creator string, name string, receiver string) *MsgTransfer {
 	return &MsgTransfer{
 		Creator:  creator,
 		Name:     name,
-		Reciever: reciever,
+		Receiver: receiver, // TODO: FIX SPELLING
 	}
 }
 
@@ -42,6 +42,14 @@ func (msg *MsgTransfer) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+	_, err = sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+	}
+	_, _, err = GetNameAndTLD(msg.Name)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid name/tld (%s)", err)
 	}
 	return nil
 }

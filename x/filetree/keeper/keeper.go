@@ -8,10 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackal-dao/canine/x/filetree/types"
-
-	notiKeeper "github.com/jackal-dao/canine/x/notifications/keeper"
-	rnsKeeper "github.com/jackal-dao/canine/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 type (
@@ -20,8 +17,6 @@ type (
 		storeKey   sdk.StoreKey
 		memKey     sdk.StoreKey
 		paramstore paramtypes.Subspace
-		rnsKeeper  rnsKeeper.Keeper
-		notiKeeper notiKeeper.Keeper
 	}
 )
 
@@ -30,9 +25,6 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
-	rnsKeeper rnsKeeper.Keeper,
-	notiKeeper notiKeeper.Keeper,
-
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -40,13 +32,10 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
-		rnsKeeper:  rnsKeeper,
-		notiKeeper: notiKeeper,
 	}
 }
 

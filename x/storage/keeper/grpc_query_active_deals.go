@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -31,7 +31,6 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 		activeDealss = append(activeDealss, activeDeals)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -39,7 +38,7 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 	return &types.QueryAllActiveDealsResponse{ActiveDeals: activeDealss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ActiveDeals(c context.Context, req *types.QueryGetActiveDealsRequest) (*types.QueryGetActiveDealsResponse, error) {
+func (k Keeper) ActiveDeals(c context.Context, req *types.QueryActiveDealRequest) (*types.QueryActiveDealResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,5 +52,5 @@ func (k Keeper) ActiveDeals(c context.Context, req *types.QueryGetActiveDealsReq
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetActiveDealsResponse{ActiveDeals: val}, nil
+	return &types.QueryActiveDealResponse{ActiveDeals: val}, nil
 }

@@ -9,14 +9,12 @@ const TypeMsgRemoveViewers = "remove_viewers"
 
 var _ sdk.Msg = &MsgRemoveViewers{}
 
-func NewMsgRemoveViewers(creator string, viewerIds string, address string, fileowner string, notifyViewers string, notiForViewers string) *MsgRemoveViewers {
+func NewMsgRemoveViewers(creator string, viewerIds string, address string, fileowner string) *MsgRemoveViewers {
 	return &MsgRemoveViewers{
-		Creator:        creator,
-		ViewerIds:      viewerIds,
-		Address:        address,
-		Fileowner:      fileowner,
-		Notifyviewers:  notifyViewers,
-		NotiForViewers: notiForViewers,
+		Creator:   creator,
+		ViewerIds: viewerIds,
+		Address:   address,
+		Fileowner: fileowner,
 	}
 }
 
@@ -46,5 +44,19 @@ func (msg *MsgRemoveViewers) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if msg.ViewerIds == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid viewer ids: %s", msg.ViewerIds)
+	}
+	if msg.Address == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid address: %s", msg.Address)
+	}
+	if msg.Fileowner == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid file owner: %s", msg.Fileowner)
+	}
+
 	return nil
 }

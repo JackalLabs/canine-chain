@@ -13,9 +13,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	"github.com/jackal-dao/canine/x/filetree/types"
-	filetypes "github.com/jackal-dao/canine/x/filetree/types"
+	testUtil "github.com/jackalLabs/canine-chain/testutil"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +24,7 @@ var _ = strconv.Itoa(0)
 func CmdAddEditors() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add-editors [editor-ids] [file path] [file owner]",
-		Short: "add an address to the files editing permisisons",
+		Short: "add an address to the files editing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argEditorIds := args[0]
@@ -46,19 +46,18 @@ func CmdAddEditors() *cobra.Command {
 
 			var editorIds []string
 			var editorKeys []string
-			var editorsToNotify []string
-
+			logger, logFile := testUtil.CreateLogger()
 			for _, v := range editorAddresses {
 				if len(v) < 1 {
 					continue
 				}
-				key, err := sdk.AccAddressFromBech32(v) //I think this isn't needed
+				key, err := sdk.AccAddressFromBech32(v) // I think this isn't needed
 				if err != nil {
 					return err
 				}
 
-				queryClient := filetypes.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryGetPubkeyRequest{Address: key.String()})
+				queryClient := types.NewQueryClient(clientCtx)
+				res, err := queryClient.Pubkey(cmd.Context(), &types.QueryPubkeyRequest{Address: key.String()})
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}
@@ -67,8 +66,8 @@ func CmdAddEditors() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				//Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
-				params := &types.QueryGetFilesRequest{
+				// Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
+				params := &types.QueryFileRequest{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}
@@ -81,16 +80,21 @@ func CmdAddEditors() *cobra.Command {
 				editors := file.Files.EditAccess
 				var m map[string]string
 
-				json.Unmarshal([]byte(editors), &m)
+				error := json.Unmarshal([]byte(editors), &m)
+				if error != nil {
+					return types.ErrCantUnmarshall
+				}
 
 				ownerEditorAddress := keeper.MakeEditorAddress(file.Files.TrackingNumber, argOwner)
+				logger.Println("m[ownerEditorAddress] =", m[ownerEditorAddress])
 
 				hexMessage, err := hex.DecodeString(m[ownerEditorAddress])
 				if err != nil {
 					return err
 				}
+				logger.Println("hex message is", hexMessage)
 
-				//May need to use "clientCtx.from?"
+				// May need to use "clientCtx.from?"
 				ownerPrivateKey, err := MakePrivateKey(clientCtx)
 				if err != nil {
 					return err
@@ -99,11 +103,12 @@ func CmdAddEditors() *cobra.Command {
 				decrypt, err := eciesgo.Decrypt(ownerPrivateKey, hexMessage)
 				if err != nil {
 					fmt.Printf("%v\n", hexMessage)
+					logger.Println("error is", err)
 					return err
 				}
-
-				//encrypt using editor's public key
-				encrypted, err := eciesgo.Encrypt(pkey, []byte(decrypt))
+				logFile.Close()
+				// encrypt using editor's public key
+				encrypted, err := eciesgo.Encrypt(pkey, decrypt)
 				if err != nil {
 					return err
 				}
@@ -111,16 +116,8 @@ func CmdAddEditors() *cobra.Command {
 				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v)
 				editorIds = append(editorIds, newEditorID)
 				editorKeys = append(editorKeys, fmt.Sprintf("%x", encrypted))
-				editorsToNotify = append(editorsToNotify, v)
 
 			}
-
-			jsonEditorsToNotify, err := json.Marshal(editorsToNotify)
-			if err != nil {
-				return err
-			}
-
-			notiForEditors := fmt.Sprintf("%s has given you edit access to %s", clientCtx.GetFromAddress().String(), argHashpath)
 
 			msg := types.NewMsgAddEditors(
 				clientCtx.GetFromAddress().String(),
@@ -128,8 +125,6 @@ func CmdAddEditors() *cobra.Command {
 				strings.Join(editorKeys, ","),
 				merklePath,
 				ownerChainAddress,
-				string(jsonEditorsToNotify),
-				notiForEditors,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

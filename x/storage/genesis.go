@@ -2,8 +2,8 @@ package storage
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/keeper"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis
@@ -13,10 +13,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.ContractsList {
 		k.SetContracts(ctx, elem)
 	}
-	// Set all the proofs
-	for _, elem := range genState.ProofsList {
-		k.SetProofs(ctx, elem)
-	}
 	// Set all the activeDeals
 	for _, elem := range genState.ActiveDealsList {
 		k.SetActiveDeals(ctx, elem)
@@ -25,14 +21,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.ProvidersList {
 		k.SetProviders(ctx, elem)
 	}
-	// Set all the payBlocks
-	for _, elem := range genState.PayBlocksList {
-		k.SetPayBlocks(ctx, elem)
-	}
-	// Set all the clientUsage
-	for _, elem := range genState.ClientUsageList {
-		k.SetClientUsage(ctx, elem)
-	}
+
 	// Set all the strays
 	for _, elem := range genState.StraysList {
 		k.SetStrays(ctx, elem)
@@ -40,6 +29,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set all the fidCid
 	for _, elem := range genState.FidCidList {
 		k.SetFidCid(ctx, elem)
+	}
+
+	// Set all the paymentinfo
+	for _, elem := range genState.PaymentInfoList {
+		k.SetStoragePaymentInfo(ctx, elem)
 	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
@@ -51,13 +45,12 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.ContractsList = k.GetAllContracts(ctx)
-	genesis.ProofsList = k.GetAllProofs(ctx)
 	genesis.ActiveDealsList = k.GetAllActiveDeals(ctx)
 	genesis.ProvidersList = k.GetAllProviders(ctx)
-	genesis.PayBlocksList = k.GetAllPayBlocks(ctx)
-	genesis.ClientUsageList = k.GetAllClientUsage(ctx)
 	genesis.StraysList = k.GetAllStrays(ctx)
 	genesis.FidCidList = k.GetAllFidCid(ctx)
+	genesis.PaymentInfoList = k.GetAllStoragePaymentInfo(ctx)
+
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

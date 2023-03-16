@@ -4,7 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +15,6 @@ func CmdCreateNotifications() *cobra.Command {
 		Short: "Create a new notifications",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			// Get value arguments
 			argNotification := args[0]
 			argAddress := args[1]
@@ -83,15 +82,10 @@ func CmdUpdateNotifications() *cobra.Command {
 
 func CmdDeleteNotifications() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "delete-notifications [count]",
+		Use:   "delete-notifications",
 		Short: "Delete a notifications",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			indexCount, err := cast.ToUint64E(args[0])
-			if err != nil {
-				return err
-			}
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
@@ -99,7 +93,6 @@ func CmdDeleteNotifications() *cobra.Command {
 
 			msg := types.NewMsgDeleteNotifications(
 				clientCtx.GetFromAddress().String(),
-				indexCount,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

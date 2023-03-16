@@ -1,0 +1,10 @@
+syntax = "proto3";
+package canine_chain.rns;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
+
+message Forsale {
+  string name = 1;
+  string price = 2;
+  string owner = 3;
+}

@@ -1,9 +1,11 @@
 package keeper
 
 import (
+	"strings"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
 // SetNames set a specific names in the store from its index
@@ -21,8 +23,10 @@ func (k Keeper) GetNames(
 	ctx sdk.Context,
 	name string,
 	tld string,
-
 ) (val types.Names, found bool) {
+	name = strings.ToLower(name)
+	tld = strings.ToLower(tld)
+
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
 
 	b := store.Get(types.NamesKey(
@@ -64,4 +68,27 @@ func (k Keeper) GetAllNames(ctx sdk.Context) (list []types.Names) {
 	}
 
 	return
+}
+
+// quickly checks if there are any domains registered
+func (k Keeper) CheckExistence(ctx sdk.Context) bool {
+	// intializing the iterator
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	// looping to see if at least 1 element exists
+	i := 0
+	for ; iterator.Valid(); iterator.Next() {
+		if i > 0 {
+			break
+		}
+		i++
+	}
+	exist := false
+	if i > 0 {
+		exist = true
+	}
+	return exist
 }

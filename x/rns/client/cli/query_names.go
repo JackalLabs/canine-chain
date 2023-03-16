@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +54,7 @@ func CmdShowNames() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryGetNamesRequest{
+			params := &types.QueryNameRequest{
 				Index: argIndex,
 			}
 

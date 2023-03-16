@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,8 +21,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-
-				WhoisList: []types.Whois{
+				WhoIsList: []types.Whois{
 					{
 						Index: "0",
 					},
@@ -48,7 +47,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Index: "1",
 					},
 				},
-				ForsaleList: []types.Forsale{
+				ForSaleList: []types.Forsale{
 					{
 						Name: "0",
 					},
@@ -64,14 +63,13 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
-				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
 		},
 		{
 			desc: "duplicated whois",
 			genState: &types.GenesisState{
-				WhoisList: []types.Whois{
+				WhoIsList: []types.Whois{
 					{
 						Index: "0",
 					},
@@ -115,7 +113,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated forsale",
 			genState: &types.GenesisState{
-				ForsaleList: []types.Forsale{
+				ForSaleList: []types.Forsale{
 					{
 						Name: "0",
 					},
@@ -140,7 +138,6 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: false,
 		},
-		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()

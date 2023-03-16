@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) PubkeyAll(c context.Context, req *types.QueryAllPubkeyRequest) (*types.QueryAllPubkeyResponse, error) {
+func (k Keeper) PubkeyAll(c context.Context, req *types.QueryAllPubkeysRequest) (*types.QueryAllPubkeysResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -31,15 +31,14 @@ func (k Keeper) PubkeyAll(c context.Context, req *types.QueryAllPubkeyRequest) (
 		pubkeys = append(pubkeys, pubkey)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllPubkeyResponse{Pubkey: pubkeys, Pagination: pageRes}, nil
+	return &types.QueryAllPubkeysResponse{Pubkey: pubkeys, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Pubkey(c context.Context, req *types.QueryGetPubkeyRequest) (*types.QueryGetPubkeyResponse, error) {
+func (k Keeper) Pubkey(c context.Context, req *types.QueryPubkeyRequest) (*types.QueryPubkeyResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,5 +52,5 @@ func (k Keeper) Pubkey(c context.Context, req *types.QueryGetPubkeyRequest) (*ty
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetPubkeyResponse{Pubkey: val}, nil
+	return &types.QueryPubkeyResponse{Pubkey: val}, nil
 }

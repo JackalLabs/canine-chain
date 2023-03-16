@@ -3,34 +3,25 @@ package types
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPostContract{}, "storage/PostContract", nil)
-	cdc.RegisterConcrete(&MsgCreateContracts{}, "storage/CreateContracts", nil)
-	cdc.RegisterConcrete(&MsgUpdateContracts{}, "storage/UpdateContracts", nil)
-	cdc.RegisterConcrete(&MsgDeleteContracts{}, "storage/DeleteContracts", nil)
-	cdc.RegisterConcrete(&MsgCreateProofs{}, "storage/CreateProofs", nil)
-	cdc.RegisterConcrete(&MsgUpdateProofs{}, "storage/UpdateProofs", nil)
-	cdc.RegisterConcrete(&MsgDeleteProofs{}, "storage/DeleteProofs", nil)
-	cdc.RegisterConcrete(&MsgItem{}, "storage/Item", nil)
 	cdc.RegisterConcrete(&MsgPostproof{}, "storage/Postproof", nil)
-	cdc.RegisterConcrete(&MsgCreateActiveDeals{}, "storage/CreateActiveDeals", nil)
-	cdc.RegisterConcrete(&MsgUpdateActiveDeals{}, "storage/UpdateActiveDeals", nil)
-	cdc.RegisterConcrete(&MsgDeleteActiveDeals{}, "storage/DeleteActiveDeals", nil)
 	cdc.RegisterConcrete(&MsgSignContract{}, "storage/SignContract", nil)
-	cdc.RegisterConcrete(&MsgCreateProviders{}, "storage/CreateProviders", nil)
-	cdc.RegisterConcrete(&MsgUpdateProviders{}, "storage/UpdateProviders", nil)
-	cdc.RegisterConcrete(&MsgDeleteProviders{}, "storage/DeleteProviders", nil)
-	cdc.RegisterConcrete(&MsgSetProviderIp{}, "storage/SetProviderIp", nil)
+	cdc.RegisterConcrete(&MsgSetProviderIP{}, "storage/SetProviderIp", nil)
 	cdc.RegisterConcrete(&MsgSetProviderTotalspace{}, "storage/SetProviderTotalspace", nil)
 	cdc.RegisterConcrete(&MsgInitProvider{}, "storage/InitProvider", nil)
 	cdc.RegisterConcrete(&MsgCancelContract{}, "storage/CancelContract", nil)
 	cdc.RegisterConcrete(&MsgBuyStorage{}, "storage/BuyStorage", nil)
 	cdc.RegisterConcrete(&MsgClaimStray{}, "storage/ClaimStray", nil)
-	// this line is used by starport scaffolding # 2
+	cdc.RegisterConcrete(&MsgUpgradeStorage{}, "storage/UpgradeStorage", nil)
+	cdc.RegisterConcrete(&MsgSetProviderKeybase{}, "storage/SetProviderKeybase", nil)
+	cdc.RegisterConcrete(&MsgAddClaimer{}, "storage/AddClaimer", nil)
+	cdc.RegisterConcrete(&MsgRemoveClaimer{}, "storage/RemoveClaimer", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -38,36 +29,13 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgPostContract{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateContracts{},
-		&MsgUpdateContracts{},
-		&MsgDeleteContracts{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateProofs{},
-		&MsgUpdateProofs{},
-		&MsgDeleteProofs{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgItem{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostproof{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateActiveDeals{},
-		&MsgUpdateActiveDeals{},
-		&MsgDeleteActiveDeals{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSignContract{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateProviders{},
-		&MsgUpdateProviders{},
-		&MsgDeleteProviders{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgSetProviderIp{},
+		&MsgSetProviderIP{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSetProviderTotalspace{},
@@ -84,12 +52,29 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgClaimStray{},
 	)
-	// this line is used by starport scaffolding # 3
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgUpgradeStorage{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgSetProviderKeybase{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgAddClaimer{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgRemoveClaimer{},
+	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 
 var (
 	Amino     = codec.NewLegacyAmino()
-	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
+	ModuleCdc = codec.NewAminoCodec(Amino)
 )
+
+func init() {
+	RegisterCodec(Amino)
+	cryptocodec.RegisterCrypto(Amino)
+	Amino.Seal()
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package canine_chain.filetree;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/filetree/types";
+
+message Files {
+  string address = 1;
+  string contents = 2;
+  string owner = 3;
+  string viewingAccess = 4;
+  string editAccess = 5;
+  string trackingNumber = 6;
+}

@@ -1,0 +1,137 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
+  rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
+  rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
+  rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
+  rpc SetProviderKeybase(MsgSetProviderKeybase)
+      returns (MsgSetProviderKeybaseResponse);
+  rpc SetProviderTotalspace(MsgSetProviderTotalspace)
+      returns (MsgSetProviderTotalspaceResponse);
+  rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
+  rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
+  rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
+  rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
+  rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
+  rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
+  rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
+
+
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgPostContract {
+  string creator = 1;
+  string merkle = 2;
+  string signee = 3;
+  string filesize = 4;
+  string fid = 5;
+}
+
+message MsgPostContractResponse {}
+
+message MsgPostproof {
+  string creator = 1;
+  string item = 2;
+  string hashlist = 3;
+  string cid = 4;
+}
+
+message MsgPostproofResponse {
+  bool success = 1;
+  string errorMessage = 2;
+}
+
+message MsgSignContract {
+  string creator = 1;
+  string cid = 2;
+  bool pay_once = 3;
+}
+
+message MsgSignContractResponse {}
+
+
+message MsgSetProviderIP {
+  string creator = 1;
+  string ip = 2;
+}
+
+message MsgSetProviderIPResponse {}
+
+message MsgSetProviderKeybase {
+  string creator = 1;
+  string keybase = 2;
+}
+
+message MsgSetProviderKeybaseResponse {}
+
+message MsgSetProviderTotalspace {
+  string creator = 1;
+  string space = 2;
+}
+
+message MsgSetProviderTotalspaceResponse {}
+
+message MsgAddClaimer {
+  string creator = 1;
+  string claim_address = 2;
+}
+
+message MsgAddClaimerResponse {}
+
+message MsgRemoveClaimer {
+  string creator = 1;
+  string claim_address = 2;
+}
+
+message MsgRemoveClaimerResponse {}
+
+
+message MsgInitProvider {
+  string creator = 1;
+  string ip = 2;
+  string keybase = 3;
+  string totalspace = 4;
+}
+
+message MsgInitProviderResponse {}
+
+message MsgCancelContract {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgCancelContractResponse {}
+
+message MsgBuyStorage {
+  string creator = 1;
+  string for_address = 2;
+  string duration = 3;
+  string bytes = 4;
+  string payment_denom = 5;
+}
+
+message MsgBuyStorageResponse {}
+
+message MsgClaimStray {
+  string creator = 1;
+  string cid = 2;
+  string for_address = 3;
+}
+
+message MsgClaimStrayResponse {}
+
+message MsgUpgradeStorage {
+  string creator = 1;
+  string for_address = 2;
+  string duration = 3;
+  string bytes = 4;
+  string payment_denom = 5;
+}
+
+message MsgUpgradeStorageResponse {}

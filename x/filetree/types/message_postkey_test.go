@@ -3,35 +3,45 @@ package types
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
 func TestMsgPostkey_ValidateBasic(t *testing.T) {
-	tests := []struct {
-		name string
-		msg  MsgPostkey
-		err  error
+	alicePrivateK := secp256k1.GenPrivKey()
+	alicePublicK := alicePrivateK.PubKey()
+	aliceAddr := sdk.AccAddress(alicePublicK.Address())
+
+	tests := map[string]struct {
+		Creator, Key string
+		expErr       bool
 	}{
-		{
-			name: "invalid address",
-			msg: MsgPostkey{
-				Creator: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgPostkey{
-				Creator: sample.AccAddress(),
-			},
+		"invalid address": {
+			Creator: "",
+			Key:     uuid.NewString(),
+			expErr:  true,
+		},
+
+		"valid address": {
+			Creator: aliceAddr.String(),
+			Key:     uuid.NewString(),
+			expErr:  false,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.msg.ValidateBasic()
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			msg := NewMsgPostkey(
+				tt.Creator, tt.Key,
+			)
+
+			err := msg.ValidateBasic()
+			t.Logf("Address: %s", msg.Creator)
+			if tt.expErr {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)

@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 
-	"github.com/jackal-dao/canine/app/params"
+	"github.com/jackalLabs/canine-chain/app/params"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -20,10 +20,10 @@ import (
 
 type TestSupport struct {
 	t   testing.TB
-	app *WasmApp
+	app *JackalApp
 }
 
-func NewTestSupport(t testing.TB, app *WasmApp) *TestSupport {
+func NewTestSupport(t testing.TB, app *JackalApp) *TestSupport {
 	return &TestSupport{t: t, app: app}
 }
 
@@ -56,7 +56,7 @@ func (s TestSupport) StakingKeeper() stakingkeeper.Keeper {
 }
 
 func (s TestSupport) BankKeeper() bankkeeper.Keeper {
-	return s.app.bankKeeper
+	return s.app.BankKeeper
 }
 
 func (s TestSupport) TransferKeeper() ibctransferkeeper.Keeper {

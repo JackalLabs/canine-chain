@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -31,7 +31,6 @@ func (k Keeper) BidsAll(c context.Context, req *types.QueryAllBidsRequest) (*typ
 		bidss = append(bidss, bids)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -39,7 +38,7 @@ func (k Keeper) BidsAll(c context.Context, req *types.QueryAllBidsRequest) (*typ
 	return &types.QueryAllBidsResponse{Bids: bidss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Bids(c context.Context, req *types.QueryGetBidsRequest) (*types.QueryGetBidsResponse, error) {
+func (k Keeper) Bids(c context.Context, req *types.QueryBidRequest) (*types.QueryBidResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,5 +52,5 @@ func (k Keeper) Bids(c context.Context, req *types.QueryGetBidsRequest) (*types.
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetBidsResponse{Bids: val}, nil
+	return &types.QueryBidResponse{Bids: val}, nil
 }

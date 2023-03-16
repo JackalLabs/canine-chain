@@ -8,25 +8,27 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 type (
 	Keeper struct {
-		cdc        codec.BinaryCodec
-		storeKey   sdk.StoreKey
-		memKey     sdk.StoreKey
-		paramstore paramtypes.Subspace
-		bankkeeper types.BankKeeper
+		cdc           codec.BinaryCodec
+		storeKey      sdk.StoreKey
+		paramstore    paramtypes.Subspace
+		bankkeeper    types.BankKeeper
+		accountkeeper types.AccountKeeper
+		oraclekeeper  types.OracleKeeper
 	}
 )
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	storeKey,
-	memKey sdk.StoreKey,
+	storeKey sdk.StoreKey,
 	ps paramtypes.Subspace,
 	bankkeeper types.BankKeeper,
+	accountkeeper types.AccountKeeper,
+	oraclekeeper types.OracleKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -34,12 +36,12 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-
-		cdc:        cdc,
-		storeKey:   storeKey,
-		memKey:     memKey,
-		paramstore: ps,
-		bankkeeper: bankkeeper,
+		cdc:           cdc,
+		storeKey:      storeKey,
+		paramstore:    ps,
+		bankkeeper:    bankkeeper,
+		accountkeeper: accountkeeper,
+		oraclekeeper:  oraclekeeper,
 	}
 }
 

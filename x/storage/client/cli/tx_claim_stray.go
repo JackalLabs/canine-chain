@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/spf13/cobra"
 )
 
@@ -28,6 +28,7 @@ func CmdClaimStray() *cobra.Command {
 			msg := types.NewMsgClaimStray(
 				clientCtx.GetFromAddress().String(),
 				argCid,
+				clientCtx.GetFromAddress().String(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

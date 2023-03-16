@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	"github.com/jackal-dao/canine/app"
+	"github.com/jackalLabs/canine-chain/app"
 )
 
 func main() {

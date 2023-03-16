@@ -9,7 +9,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContract) (*types.MsgPostContractResponse, error) {
@@ -36,39 +36,17 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		return nil, fmt.Errorf("not enough space on provider")
 	}
 
-	paidAMT, _, _ := k.GetPaidAmount(ctx, msg.Signee, ctx.BlockHeight())
-
-	if paidAMT <= 0 {
-		return nil, fmt.Errorf("user has not paid for any storage")
-	}
-
-	usage, found := k.GetClientUsage(ctx, msg.Signee)
-	if !found {
-		usage = types.ClientUsage{
-			Usage:   "0",
-			Address: msg.Signee,
-		}
-	}
-
-	bytesUsed, ok := sdk.NewIntFromString(usage.Usage)
-	if !ok {
-		return nil, fmt.Errorf("failed to parse usage")
-	}
-
-	filesize, ok := sdk.NewIntFromString(msg.Filesize)
-	if !ok {
-		return nil, fmt.Errorf("cannot parse filesize")
-	}
-
-	if bytesUsed.Int64()+filesize.Int64() > paidAMT {
-		return nil, fmt.Errorf("not enough storage on the users account")
-	}
-
 	h := sha256.New()
-	io.WriteString(h, fmt.Sprintf("%s%s%s", msg.Signee, msg.Creator, msg.Fid))
+	_, err := io.WriteString(h, fmt.Sprintf("%s%s%s", msg.Signee, msg.Creator, msg.Fid))
+	if err != nil {
+		return nil, err
+	}
 	hashName := h.Sum(nil)
 
-	cid := fmt.Sprintf("%x", hashName)
+	cid, err := MakeCid(hashName)
+	if err != nil {
+		return nil, err
+	}
 
 	_, cidtaken := k.GetContracts(ctx, cid)
 	if cidtaken {
@@ -76,15 +54,13 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	}
 
 	newContract := types.Contracts{
-		Cid:        cid,
-		Priceamt:   msg.Priceamt,
-		Pricedenom: msg.Pricedenom,
-		Signee:     msg.Signee,
-		Duration:   msg.Duration,
-		Fid:        msg.Fid,
-		Filesize:   msg.Filesize,
-		Creator:    msg.Creator,
-		Merkle:     msg.Merkle,
+		Cid:      cid,
+		Signee:   msg.Signee,
+		Fid:      msg.Fid,
+		Filesize: msg.Filesize,
+		Creator:  msg.Creator,
+		Merkle:   msg.Merkle,
+		Age:      ctx.BlockHeight(),
 	}
 
 	k.SetContracts(ctx, newContract)

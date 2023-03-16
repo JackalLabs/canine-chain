@@ -10,13 +10,12 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		WhoisList:   []Whois{},
+		WhoIsList:   []Whois{},
 		NamesList:   []Names{},
 		BidsList:    []Bids{},
-		ForsaleList: []Forsale{},
+		ForSaleList: []Forsale{},
 		InitList:    []Init{},
-		// this line is used by starport scaffolding # genesis/types/default
-		Params: DefaultParams(),
+		Params:      DefaultParams(),
 	}
 }
 
@@ -26,7 +25,7 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in whois
 	whoisIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.WhoisList {
+	for _, elem := range gs.WhoIsList {
 		index := string(WhoisKey(elem.Index))
 		if _, ok := whoisIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for whois")
@@ -56,7 +55,7 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in forsale
 	forsaleIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.ForsaleList {
+	for _, elem := range gs.ForSaleList {
 		index := string(ForsaleKey(elem.Name))
 		if _, ok := forsaleIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for forsale")
@@ -73,7 +72,6 @@ func (gs GenesisState) Validate() error {
 		}
 		initIndexMap[index] = struct{}{}
 	}
-	// this line is used by starport scaffolding # genesis/types/validate
 
 	return gs.Params.Validate()
 }

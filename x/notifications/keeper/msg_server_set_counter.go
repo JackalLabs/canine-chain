@@ -6,7 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/x/notifications/types"
 )
 
 // This needs to be inside of filetree init
@@ -22,21 +22,20 @@ func (k msgServer) SetCounter(goCtx context.Context, msg *types.MsgSetCounter) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "counter already set")
 	}
 
-	//Add yourself as a permitted Sender in the beginning so you can notify yourself
+	// Place holder map for blocked senders
 
-	placeholderMap := make([]string, 0, 1000) //Perhaps I could just use an array
-	placeholderMap = append(placeholderMap, msg.Creator)
-	marshalledSenders, err := json.Marshal(placeholderMap)
+	placeholderMap := make([]string, 0, 1000)
+	marshalledBlockedSenders, err := json.Marshal(placeholderMap)
 	if err != nil {
 		return nil, types.ErrCantUnmarshall
 	}
 
-	updatedSenders := string(marshalledSenders)
+	BlockedSenders := string(marshalledBlockedSenders)
 
-	var counter = types.NotiCounter{
-		Address:          msg.Creator,
-		Counter:          0,
-		PermittedSenders: updatedSenders,
+	counter := types.NotiCounter{
+		Address:        msg.Creator,
+		Counter:        0,
+		BlockedSenders: BlockedSenders,
 	}
 
 	k.SetNotiCounter(
@@ -44,5 +43,5 @@ func (k msgServer) SetCounter(goCtx context.Context, msg *types.MsgSetCounter) (
 		counter,
 	)
 
-	return &types.MsgSetCounterResponse{}, nil
+	return &types.MsgSetCounterResponse{NotiCounter: counter.Counter}, nil
 }

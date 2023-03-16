@@ -9,22 +9,18 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/testutil/sample"
-	jklmintsimulation "github.com/jackal-dao/canine/x/jklmint/simulation"
-	"github.com/jackal-dao/canine/x/jklmint/types"
+
+	jklmintsimulation "github.com/jackalLabs/canine-chain/x/jklmint/simulation"
+	"github.com/jackalLabs/canine-chain/x/jklmint/types"
 )
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	//	_ = sample.AccAddress
 	_ = jklmintsimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
 	_ = baseapp.Paramspace
-)
-
-const (
-// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -34,7 +30,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	jklmintGenesis := types.GenesisState{
-		// this line is used by starport scaffolding # simapp/module/genesisState
+		Params: types.NewParams(sdk.DefaultBondDenom),
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&jklmintGenesis)
 }
@@ -60,8 +56,6 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
-
-	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
 }

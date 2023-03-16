@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"math/big"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -9,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackal-dao/canine/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/x/jklmint/types"
 )
 
 type (
@@ -25,9 +26,14 @@ type (
 )
 
 func NewKeeper(
-	cdc codec.BinaryCodec, key storetypes.StoreKey, paramSpace paramtypes.Subspace,
-	sk types.StakingKeeper, ak types.AccountKeeper, bk types.BankKeeper,
-	feeCollectorName string, miningName string,
+	cdc codec.BinaryCodec,
+	key storetypes.StoreKey,
+	paramSpace paramtypes.Subspace,
+	sk types.StakingKeeper,
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	feeCollectorName string,
+	miningName string,
 ) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -63,12 +69,44 @@ func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
 	return k.bankKeeper.MintCoins(ctx, types.ModuleName, newCoins)
 }
 
+func FloatToBigInt(val float64) *big.Int {
+	bigval := new(big.Float)
+	bigval.SetFloat64(val)
+
+	coin := new(big.Float)
+	coin.SetInt(big.NewInt(1000000000000000000))
+
+	bigval.Mul(bigval, coin)
+
+	result := new(big.Int)
+	bigval.Int(result)
+
+	return result
+}
+
+func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
+	denom := k.GetParams(ctx).MintDenom
+	coins := k.bankKeeper.GetSupply(ctx, denom)
+
+	amt := coins.Amount.ToDec()
+
+	if amt.IsZero() {
+		return sdk.NewDec(0), nil
+	}
+
+	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
+
+	printedPerYear := blocksPerYearEstiamte * 10_000_000
+
+	inflate := sdk.NewDec(printedPerYear)
+
+	quo := inflate.Quo(amt)
+
+	return quo, nil
+}
+
 // AddCollectedFees implements an alias call to the underlying supply keeper's
 // AddCollectedFees to be used in BeginBlocker.
 func (k Keeper) AddCollectedFees(ctx sdk.Context, fees sdk.Coins) error {
 	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, fees)
-}
-
-func (k Keeper) SendToProviders(ctx sdk.Context, fees sdk.Coins) error {
-	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.miningName, fees)
 }

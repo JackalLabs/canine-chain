@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -31,7 +31,6 @@ func (k Keeper) WhoisAll(c context.Context, req *types.QueryAllWhoisRequest) (*t
 		whoiss = append(whoiss, whois)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -39,7 +38,7 @@ func (k Keeper) WhoisAll(c context.Context, req *types.QueryAllWhoisRequest) (*t
 	return &types.QueryAllWhoisResponse{Whois: whoiss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Whois(c context.Context, req *types.QueryGetWhoisRequest) (*types.QueryGetWhoisResponse, error) {
+func (k Keeper) Whois(c context.Context, req *types.QueryWhoisRequest) (*types.QueryWhoisResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,5 +52,5 @@ func (k Keeper) Whois(c context.Context, req *types.QueryGetWhoisRequest) (*type
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetWhoisResponse{Whois: val}, nil
+	return &types.QueryWhoisResponse{Whois: val}, nil
 }

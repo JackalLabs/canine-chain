@@ -1,0 +1,14 @@
+syntax = "proto3";
+package canine_chain.oracle;
+
+import "gogoproto/gogo.proto";
+import "canine_chain/oracle/params.proto";
+import "canine_chain/oracle/feed.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
+
+// GenesisState defines the rns module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated Feed feed_list = 2 [ (gogoproto.nullable) = false ];
+}

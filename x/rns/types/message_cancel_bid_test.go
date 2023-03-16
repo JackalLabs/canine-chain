@@ -4,9 +4,11 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
+	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
+
+// TODO: rewrite tests without ignite
 
 func TestMsgCancelBid_ValidateBasic(t *testing.T) {
 	tests := []struct {
@@ -18,12 +20,21 @@ func TestMsgCancelBid_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgCancelBid{
 				Creator: "invalid_address",
+				Name:    "validname.jkl",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
+			name: "invalid name",
+			msg: MsgCancelBid{
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "invalidname",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		}, {
 			name: "valid address",
 			msg: MsgCancelBid{
-				Creator: sample.AccAddress(),
+				Creator: "cosmos1ytwr7x4av05ek0tf8z9s4zmvr6w569zsm27dpg",
+				Name:    "validname.jkl",
 			},
 		},
 	}

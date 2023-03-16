@@ -8,7 +8,8 @@ import (
 	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/storage/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContract) (*types.MsgSignContractResponse, error) {
@@ -19,13 +20,50 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		return nil, fmt.Errorf("contract not found")
 	}
 
+	_, found = k.GetActiveDeals(ctx, msg.Cid)
+	if found {
+		return nil, fmt.Errorf("contract already exists")
+	}
+
+	_, found = k.GetStrays(ctx, msg.Cid)
+	if found {
+		return nil, fmt.Errorf("contract already exists")
+	}
+
 	if contract.Signee != msg.Creator {
 		return nil, fmt.Errorf("you do not have permission to approve this contract")
 	}
 
-	eblock, ok := sdk.NewIntFromString(contract.Duration)
+	size, ok := sdk.NewIntFromString(contract.Filesize)
 	if !ok {
-		return nil, fmt.Errorf("duration failed to convert to int")
+		return nil, fmt.Errorf("cannot parse size")
+	}
+
+	pieces := size.Quo(sdk.NewInt(k.GetParams(ctx).ChunkSize))
+
+	var pieceToStart int64
+
+	if !pieces.IsZero() {
+		pieceToStart = ctx.BlockHeight() % pieces.Int64()
+	}
+
+	var end int64
+	if msg.PayOnce {
+		s := size.Quo(sdk.NewInt(1_000_000_000)).Int64()
+		if s <= 0 {
+			s = 1
+		}
+		cost := k.GetStorageCost(ctx, s, 720*12*200) // pay for 200 years
+		deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
+		if err != nil {
+			return nil, err
+		}
+		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
+		if err != nil {
+			return nil, err
+		}
+
+		end = (200*31_536_000)/6 + ctx.BlockHeight()
 	}
 
 	deal := types.ActiveDeals{
@@ -33,37 +71,40 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		Signee:        contract.Signee,
 		Provider:      contract.Creator,
 		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      fmt.Sprintf("%d", ctx.BlockHeight()+eblock.Int64()),
+		Endblock:      fmt.Sprintf("%d", end),
 		Filesize:      contract.Filesize,
 		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", ctx.BlockHeight()/1024),
+		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
 		Creator:       msg.Creator,
 		Proofsmissed:  "0",
 		Merkle:        contract.Merkle,
 		Fid:           contract.Fid,
 	}
 
-	usage, found := k.GetClientUsage(ctx, msg.Creator)
-	if !found {
-		usage = types.ClientUsage{
-			Address: msg.Creator,
-			Usage:   "0",
+	if end == 0 {
+		fsize, ok := sdk.NewIntFromString(contract.Filesize)
+		if !ok {
+			return nil, fmt.Errorf("cannot parse file size")
 		}
+		payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
+		if !found {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "payment info not found, please purchase storage space")
+		}
+
+		// check if user has any free space
+		if (payInfo.SpaceUsed + (fsize.Int64() * 3)) > payInfo.SpaceAvailable {
+			return nil, fmt.Errorf("not enough storage space")
+		}
+		// check if storage subscription still active
+		if payInfo.End.Before(ctx.BlockTime()) {
+			return nil, fmt.Errorf("storage subscription has expired")
+		}
+
+		payInfo.SpaceUsed += fsize.Int64() * 3
+
+		k.SetStoragePaymentInfo(ctx, payInfo)
 	}
 
-	size, ok := sdk.NewIntFromString(contract.Filesize)
-	if !ok {
-		return nil, fmt.Errorf("cannot parse filesize")
-	}
-
-	used, ok := sdk.NewIntFromString(usage.Usage)
-	if !ok {
-		return nil, fmt.Errorf("cannot parse usage")
-	}
-
-	usage.Usage = fmt.Sprintf("%d", used.Int64()+size.Int64())
-
-	k.SetClientUsage(ctx, usage)
 	k.SetActiveDeals(ctx, deal)
 	k.RemoveContracts(ctx, contract.Cid)
 
@@ -83,10 +124,16 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 
 	for i := 0; i < 2; i++ {
 		h := sha256.New()
-		io.WriteString(h, fmt.Sprintf("%s%s%d", contract.Creator, contract.Fid, i))
+		_, err := io.WriteString(h, fmt.Sprintf("%s%d", contract.Cid, i))
+		if err != nil {
+			return nil, err
+		}
 		hashName := h.Sum(nil)
 
-		scid := fmt.Sprintf("%x", hashName)
+		scid, err := MakeCid(hashName)
+		if err != nil {
+			return nil, err
+		}
 
 		newContract := types.Strays{
 			Cid:      scid,
@@ -94,6 +141,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 			Fid:      contract.Fid,
 			Filesize: contract.Filesize,
 			Merkle:   contract.Merkle,
+			End:      end,
 		}
 
 		cids = append(cids, scid)

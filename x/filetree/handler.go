@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/filetree/keeper"
-	types "github.com/jackal-dao/canine/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	types "github.com/jackalLabs/canine-chain/x/filetree/types"
 )
 
 // NewHandler ...
@@ -25,9 +25,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgPostkey:
 			res, err := msgServer.Postkey(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgInitAll:
-			res, err := msgServer.InitAll(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgDeleteFile:
 			res, err := msgServer.DeleteFile(sdk.WrapSDKContext(ctx), msg)

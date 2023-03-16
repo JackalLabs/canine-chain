@@ -2,66 +2,78 @@ package keeper
 
 import (
 	"context"
-	"fmt"
+	"strings"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/rns/types"
+	"github.com/jackalLabs/canine-chain/x/rns/types"
 )
 
-func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	buyer, _ := sdk.AccAddressFromBech32(msg.Creator)
+func (k Keeper) BuyName(ctx sdk.Context, sender string, nm string) error {
+	nm = strings.ToLower(nm)
 
-	sale, found := k.GetForsale(ctx, msg.Name)
-
-	if !found {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name not for sale.")
+	buyer, err := sdk.AccAddressFromBech32(sender)
+	if err != nil {
+		return err
 	}
 
-	n, tld, err := getNameAndTLD(msg.Name)
+	sale, found := k.GetForsale(ctx, nm)
+
+	if !found {
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name not for sale.")
+	}
+
+	n, tld, err := GetNameAndTLD(nm)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	name, nfound := k.GetNames(ctx, n, tld)
 
 	if !nfound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name does not exist or has expired.")
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Name does not exist or has expired.")
 	}
 
-	block_height := ctx.BlockHeight()
+	blockHeight := ctx.BlockHeight()
 
-	if block_height > name.Expires {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
+	if blockHeight > name.Expires {
+		return sdkerrors.Wrap(sdkerrors.ErrNotFound, "Name does not exist or has expired.")
 	}
 
-	if name.Value == msg.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You cannot buy your own name.")
+	if name.Value == sender {
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "You cannot buy your own name.")
 	}
 
 	seller, _ := sdk.AccAddressFromBech32(sale.Owner)
 
-	price, ok := sdk.NewIntFromString(sale.Price)
-
-	if !ok {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Price is not a valid number.")
+	price, err := sdk.ParseCoinNormalized(sale.Price)
+	if err != nil {
+		return sdkerrors.Wrap(err, "Price is not a valid coin.")
 	}
 
-	coin := sdk.NewCoin("ujkl", price)
-	coins := sdk.NewCoins(coin)
+	coins := sdk.NewCoins(price)
 
-	ctx.Logger().Error(fmt.Sprintf("%s %s", "coins available: ", k.bankKeeper.SpendableCoins(ctx, buyer).String()))
-
-	err = k.bankKeeper.SendCoins(ctx, buyer, seller, coins)
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, buyer, types.ModuleName, coins)
 	if err != nil {
-		return nil, err
+		return err
+	}
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, seller, coins)
+	if err != nil {
+		return err
 	}
 
 	k.RemoveForsale(ctx, sale.Name)
-	name.Value = msg.Creator
+	name.Value = sender
 	name.Data = "{}"
 	k.SetNames(ctx, name)
 
-	return &types.MsgBuyResponse{}, nil
+	return nil
+}
+
+func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.BuyName(ctx, msg.Creator, msg.Name)
+
+	return &types.MsgBuyResponse{}, err
 }
