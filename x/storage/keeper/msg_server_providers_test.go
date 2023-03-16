@@ -196,3 +196,68 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 		})
 	}
 }
+
+func (suite *KeeperTestSuite) TestMsgSetProviderKeybase() {
+	suite.SetupSuite()
+
+	msgSrvr, _, context := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	user := testAddresses[0]
+
+	provider := types.Providers{
+		Address:         user,
+		Ip:              "127.0.0.1",
+		Totalspace:      "",
+		Creator:         user,
+		BurnedContracts: "0",
+	}
+
+	suite.storageKeeper.SetProviders(suite.ctx, provider)
+
+	cases := []struct {
+		preRun    func() *types.MsgSetProviderKeybase
+		expErr    bool
+		expErrMsg string
+		name      string
+	}{
+		{
+			preRun: func() *types.MsgSetProviderKeybase {
+				return types.NewMsgSetProviderKeybase(
+					user,
+					"test_key_1234",
+				)
+			},
+			expErr: false,
+			name:   "set provider keybase success",
+		},
+		{
+			preRun: func() *types.MsgSetProviderKeybase {
+				return types.NewMsgSetProviderKeybase(
+					"wrong address",
+					"test_key_1234",
+				)
+			},
+			expErr:    true,
+			expErrMsg: "Provider not found. Please init your provider.",
+			name:      "set provider keybase fail",
+		},
+	}
+
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			msg := tc.preRun()
+			suite.Require().NoError(err)
+			res, err := msgSrvr.SetProviderKeybase(context, msg)
+			if tc.expErr {
+				suite.Require().EqualError(err, tc.expErrMsg)
+			} else {
+				suite.Require().NoError(err)
+				suite.Require().EqualValues(types.MsgSetProviderKeybaseResponse{}, *res)
+
+			}
+		})
+	}
+}

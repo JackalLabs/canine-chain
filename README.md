@@ -3,7 +3,7 @@
 **Jackal Core** is a blockchain built using Cosmos SDK and Tendermint.
 
 [![golangci-lint](https://github.com/JackalLabs/canine-chain/actions/workflows/golangci.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/golangci.yml)
-[![Test](https://github.com/JackalLabs/canine-chain/actions/workflows/test.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/test.yml)
+[![Test](https://github.com/JackalLabs/canine-chain/actions/workflows/test.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/test-unit.yml)
 [![Build](https://github.com/JackalLabs/canine-chain/actions/workflows/build.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/build.yml)
 
 ## Pages

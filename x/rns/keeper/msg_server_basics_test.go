@@ -66,7 +66,7 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 func (suite *KeeperTestSuite) TestMsgRegister() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, k, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -144,12 +144,18 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
 			res, err := msgSrvr.Register(context, msg)
+
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(types.MsgRegisterResponse{}, *res)
+
+				deposit := k.GetParams(suite.ctx).DepositAccount
+				addr, _ := sdk.AccAddressFromBech32(deposit)
+				amount := suite.bankKeeper.GetBalance(suite.ctx, addr, "ujkl")
+				suite.Require().Equal("15000000ujkl", amount.String())
 
 			}
 		})

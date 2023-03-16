@@ -12,10 +12,11 @@ const TypeMsgSignContract = "sign_contract"
 
 var _ sdk.Msg = &MsgSignContract{}
 
-func NewMsgSignContract(creator string, cid string) *MsgSignContract {
+func NewMsgSignContract(creator string, cid string, payOnce bool) *MsgSignContract {
 	return &MsgSignContract{
 		Creator: creator,
 		Cid:     cid,
+		PayOnce: payOnce,
 	}
 }
 

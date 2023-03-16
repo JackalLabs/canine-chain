@@ -1,8 +1,15 @@
 package types
 
 import (
+	"regexp"
 	"strings"
 )
+
+var rnsRegexp = *regexp.MustCompile(`^[\w-]+$`)
+
+func IsValidName(name string) bool {
+	return rnsRegexp.MatchString(name)
+}
 
 func GetTLD(name string) (string, error) {
 	for _, tld := range SupportedTLDs {

@@ -24,7 +24,7 @@ func (k Keeper) PaymentInfo(goCtx context.Context, req *types.QueryStoragePaymen
 			End:            time.UnixMicro(0),
 			Address:        req.Address,
 			SpaceUsed:      0,
-			SpaceAvailable: TwoGigs,
+			SpaceAvailable: 0,
 		}
 		return &types.QueryStoragePaymentInfoResponse{
 			StoragePaymentInfo: t,

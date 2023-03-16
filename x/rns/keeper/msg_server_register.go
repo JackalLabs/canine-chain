@@ -61,6 +61,16 @@ func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data str
 		return err
 	}
 
+	deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
+	if err != nil {
+		return err
+	}
+
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, price)
+	if err != nil {
+		return err
+	}
+
 	emptySubdomains := []*types.Names{}
 
 	// Create an updated whois record
