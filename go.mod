@@ -155,7 +155,7 @@ replace (
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
 	// using jackal labs free post proof ante handler - better way to do this in the future.
-	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk v0.45.12-0.20230317150220-68839eba340e
+	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk v0.45.12-0.20230317172013-f44099cdd00b
 
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
 	// TODO Remove it: https://github.com/cosmos/cosmos-sdk/issues/10409

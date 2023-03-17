@@ -93,8 +93,8 @@ github.com/DataDog/zstd v1.4.1/go.mod h1:1jcaCB/ufaK+sKp1NBhlGmpz41jOoPQ35bpF36t
 github.com/DataDog/zstd v1.4.5/go.mod h1:1jcaCB/ufaK+sKp1NBhlGmpz41jOoPQ35bpF36t7BBo=
 github.com/DataDog/zstd v1.5.2/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
 github.com/HdrHistogram/hdrhistogram-go v1.1.2/go.mod h1:yDgFjdqOqDEKOvasDdhWNXYg9BVp4O+o5f6V/ehm6Oo=
-github.com/JackalLabs/cosmos-sdk v0.45.12-0.20230317150220-68839eba340e h1:R5BN8NxSRllY7NZCU+aJaVD/hDL1pnx4QWyljjcYuAw=
-github.com/JackalLabs/cosmos-sdk v0.45.12-0.20230317150220-68839eba340e/go.mod h1:45z8Q1Ah4iypFycu2Kl4kBPIsQKUiND8G2CUX+HTtPM=
+github.com/JackalLabs/cosmos-sdk v0.45.12-0.20230317172013-f44099cdd00b h1:nhCZX1c1iy3vdz6ncjZyvUIRCp62w6+dRXlBXFmwRcA=
+github.com/JackalLabs/cosmos-sdk v0.45.12-0.20230317172013-f44099cdd00b/go.mod h1:45z8Q1Ah4iypFycu2Kl4kBPIsQKUiND8G2CUX+HTtPM=
 github.com/Joker/hpp v1.0.0/go.mod h1:8x5n+M1Hp5hC0g8okX3sR3vFQwynaX/UgSOM9MeBKzY=
 github.com/Joker/jade v1.0.1-0.20190614124447-d475f43051e7/go.mod h1:6E6s8o2AE4KhCrqr6GRJjdC/gNfTdxkIXvuGZZda2VM=
 github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=
