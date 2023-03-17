@@ -18,13 +18,14 @@ import (
 
 func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*types.MsgPostproofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	meter := ctx.GasMeter()
+	usedGas := meter.GasConsumed()
 
 	hashes := strings.Split(msg.Hashlist, ",")
 
 	contract, found := k.GetActiveDeals(ctx, msg.Cid)
 	if !found {
 		ctx.Logger().Debug("%s, %s\n", "Contract not found", msg.Cid)
-
 		return &types.MsgPostproofResponse{Success: false, ErrorMessage: fmt.Sprintf("contract not found: %s", msg.Cid)}, nil
 	}
 
@@ -68,19 +69,18 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 
 	if !verified {
 		ctx.Logger().Debug("%s\n", "Cannot verify")
-
 		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "cannot verify proof"}, nil
 	}
 
 	if contract.Proofverified == "true" {
-		ctx.GasMeter().RefundGas(ctx.GasMeter().GasConsumed(), "already verified refund.")
+		meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")
 		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "proof already verified"}, nil
 	}
 
 	contract.Proofverified = "true"
 	k.SetActiveDeals(ctx, contract)
 
-	ctx.GasMeter().RefundGas(ctx.GasMeter().GasConsumed(), "successful proof refund.")
+	meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")
 
 	return &types.MsgPostproofResponse{Success: true, ErrorMessage: ""}, nil
 }
