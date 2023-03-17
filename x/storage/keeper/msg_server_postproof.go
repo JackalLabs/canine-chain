@@ -18,7 +18,7 @@ import (
 
 func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*types.MsgPostproofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	meter := ctx.BlockGasMeter()
+	meter := ctx.GasMeter()
 	usedGas := meter.GasConsumed()
 
 	hashes := strings.Split(msg.Hashlist, ",")
