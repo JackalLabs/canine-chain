@@ -40,8 +40,8 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	ctx.FromName = "bob"
 	algo := hd.Secp256k1
 
-	_, _, error := ctx.Keyring.NewMnemonic(ctx.FromName, keyring.English, sdkTypes.FullFundraiserPath, keyring.DefaultBIP39Passphrase, algo)
-	suite.Require().NoError(error)
+	_, _, err = ctx.Keyring.NewMnemonic(ctx.FromName, keyring.English, sdkTypes.FullFundraiserPath, keyring.DefaultBIP39Passphrase, algo)
+	suite.Require().NoError(err)
 
 	signed, _, err := ctx.Keyring.Sign(ctx.FromName, []byte("jackal_init"))
 	suite.Require().NoError(err)
@@ -178,8 +178,8 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 				viewers := res.Files.ViewingAccess
 				var m map[string]string
 
-				error := json.Unmarshal([]byte(viewers), &m)
-				suite.Require().NoError(error)
+				err = json.Unmarshal([]byte(viewers), &m)
+				suite.Require().NoError(err)
 
 				// It was posted in hex format so lets decode it from hex first
 				bytesFromHexString, err := hex.DecodeString(m[bobViewerAddress])

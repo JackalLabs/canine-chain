@@ -84,6 +84,7 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 }
 
 func getCallerAddress(ctx client.Context, cmd *cobra.Command) (*string, error) {
+	_ = cmd
 	fromAddress := ctx.GetFromAddress().String()
 	return &fromAddress, nil
 }

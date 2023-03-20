@@ -79,8 +79,8 @@ func CmdAddViewers() *cobra.Command {
 				viewers := file.Files.ViewingAccess
 				var m map[string]string
 
-				error := json.Unmarshal([]byte(viewers), &m)
-				if error != nil {
+				err = json.Unmarshal([]byte(viewers), &m)
+				if err != nil {
 					return types.ErrCantUnmarshall
 				}
 

@@ -142,8 +142,8 @@ func (suite *KeeperTestSuite) TestMsgRemoveEditors() {
 				peacc := res.Files.EditAccess
 				jeacc := make(map[string]string)
 
-				error := json.Unmarshal([]byte(peacc), &jeacc)
-				suite.Require().NoError(error)
+				err = json.Unmarshal([]byte(peacc), &jeacc)
+				suite.Require().NoError(err)
 				suite.Require().EqualValues(len(jeacc), 1)
 
 			}

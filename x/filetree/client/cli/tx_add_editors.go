@@ -80,8 +80,8 @@ func CmdAddEditors() *cobra.Command {
 				editors := file.Files.EditAccess
 				var m map[string]string
 
-				error := json.Unmarshal([]byte(editors), &m)
-				if error != nil {
+				err = json.Unmarshal([]byte(editors), &m)
+				if err != nil {
 					return types.ErrCantUnmarshall
 				}
 

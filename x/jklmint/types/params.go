@@ -45,11 +45,9 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 
 // Validate validates the set of params
 func (p Params) Validate() error {
-	if err := validateMintDenom(p.MintDenom); err != nil {
-		return err
-	}
+	err := validateMintDenom(p.MintDenom)
 
-	return nil
+	return err
 }
 
 // String implements the Stringer interface.

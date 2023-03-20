@@ -76,8 +76,8 @@ func (suite *KeeperTestSuite) TestMsgBlockSenders() {
 
 				blockedSenders := res.NotiCounter.BlockedSenders
 				blockedSendersMap := make([]string, 0, 1000)
-				error := json.Unmarshal([]byte(blockedSenders), &blockedSendersMap)
-				suite.Require().NoError(error)
+				err = json.Unmarshal([]byte(blockedSenders), &blockedSendersMap)
+				suite.Require().NoError(err)
 
 				suite.Require().EqualValues(len(blockedSendersMap), 2)
 				suite.Require().EqualValues(blockedSendersMap[0], alice)
