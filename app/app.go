@@ -156,9 +156,9 @@ import (
 
 	"github.com/jackalLabs/canine-chain/app/upgrades/bouncybulldog"
 
-	lpmodule "github.com/jackal-dao/canine/x/lp"
-	lpmodulekeeper "github.com/jackal-dao/canine/x/lp/keeper"
-	lpmoduletypes "github.com/jackal-dao/canine/x/lp/types"
+	ammmodule "github.com/jackalLabs/canine-chain/x/amm"
+	ammmodulekeeper "github.com/jackalLabs/canine-chain/x/amm/keeper"
+	ammmoduletypes "github.com/jackalLabs/canine-chain/x/amm/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -342,6 +342,7 @@ type JackalApp struct {
 	StorageKeeper       storagemodulekeeper.Keeper
 	FileTreeKeeper      filetreemodulekeeper.Keeper
 	NotificationsKeeper notificationsmodulekeeper.Keeper
+	AmmKeeper           ammmodulekeeper.Keeper
 
 	/*
 
@@ -685,15 +686,14 @@ func NewJackalApp(
 	)
 	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
 
-	app.LpKeeper = *lpmodulekeeper.NewKeeper(
+	app.AmmKeeper = *ammmodulekeeper.NewKeeper(
 		appCodec,
-		keys[lpmoduletypes.StoreKey],
-		keys[lpmoduletypes.MemStoreKey],
-		app.getSubspace(lpmoduletypes.ModuleName),
-
-		app.bankKeeper,
+		keys[ammmoduletypes.StoreKey],
+		keys[ammmoduletypes.MemStoreKey],
+		app.getSubspace(ammmoduletypes.ModuleName),
+		app.BankKeeper,
 	)
-	lpModule := lpmodule.NewAppModule(appCodec, app.LpKeeper, app.accountKeeper, app.bankKeeper)
+	ammModule := ammmodule.NewAppModule(appCodec, app.AmmKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// Create static IBC router, add app routes, then set and seal it
 	ibcRouter := porttypes.NewRouter()
@@ -944,7 +944,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
-		lpmoduletypes.ModuleName,
+		ammmoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 
 		crisistypes.ModuleName,
