@@ -10,6 +10,7 @@ import (
 )
 
 func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
+	_ = r
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyDepositAccount),
 			func(r *rand.Rand) string {

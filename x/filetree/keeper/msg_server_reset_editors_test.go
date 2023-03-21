@@ -69,8 +69,8 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 	peacc := res.Files.EditAccess
 	jeacc := make(map[string]string)
 
-	error := json.Unmarshal([]byte(peacc), &jeacc)
-	suite.Require().NoError(error)
+	err = json.Unmarshal([]byte(peacc), &jeacc)
+	suite.Require().NoError(err)
 	suite.Require().EqualValues(len(jeacc), 3)
 
 	cases := []struct {
@@ -152,8 +152,8 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 				peacc := res.Files.EditAccess
 				jeacc := make(map[string]string)
 
-				error := json.Unmarshal([]byte(peacc), &jeacc)
-				suite.Require().NoError(error)
+				err = json.Unmarshal([]byte(peacc), &jeacc)
+				suite.Require().NoError(err)
 				suite.Require().EqualValues(len(jeacc), 1)
 
 			}

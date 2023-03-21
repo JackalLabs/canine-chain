@@ -47,9 +47,10 @@ func SimulateMsgTransfer(
 			names = regNames.GetNames()
 			if names != nil {
 				break
-			} else {
-				simAccount, _ = simtypes.RandomAcc(r, accs)
 			}
+
+			simAccount, _ = simtypes.RandomAcc(r, accs)
+
 		}
 
 		// initializing the message

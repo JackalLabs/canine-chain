@@ -342,6 +342,7 @@ func SignAndDeliver(
 	t *testing.T, txCfg client.TxConfig, app *bam.BaseApp, header tmproto.Header, msgs []sdk.Msg,
 	chainID string, accNums, accSeqs []uint64, expSimPass, expPass bool, priv ...cryptotypes.PrivKey,
 ) (sdk.GasInfo, *sdk.Result, error) {
+	_ = expSimPass
 	tx, err := helpers.GenTx(
 		txCfg,
 		msgs,
@@ -438,6 +439,7 @@ type EmptyBaseAppOptions struct{}
 
 // Get implements AppOptions
 func (ao EmptyBaseAppOptions) Get(o string) interface{} {
+	_ = o
 	return nil
 }
 

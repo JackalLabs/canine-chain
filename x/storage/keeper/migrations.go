@@ -32,5 +32,5 @@ func (m Migrator) Migrate2to3(ctx sdk.Context) error {
 
 // Migrate3to4 migrates from version 3 to 4.
 func (m Migrator) Migrate3to4(ctx sdk.Context) error {
-	return paramUpgrade.MigrateStore(ctx, &m.k.paramstore)
+	return paramupgrade.MigrateStore(ctx, &m.k.paramstore)
 }

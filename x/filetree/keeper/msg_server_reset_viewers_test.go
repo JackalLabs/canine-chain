@@ -83,8 +83,8 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 	pvacc := res.Files.ViewingAccess
 	jvacc := make(map[string]string)
 
-	error := json.Unmarshal([]byte(pvacc), &jvacc)
-	suite.Require().NoError(error)
+	err = json.Unmarshal([]byte(pvacc), &jvacc)
+	suite.Require().NoError(err)
 	suite.Require().EqualValues(len(jvacc), 3)
 
 	cases := []struct {
@@ -166,8 +166,8 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 				pvacc := res.Files.ViewingAccess
 				jvacc := make(map[string]string)
 
-				error := json.Unmarshal([]byte(pvacc), &jvacc)
-				suite.Require().NoError(error)
+				err = json.Unmarshal([]byte(pvacc), &jvacc)
+				suite.Require().NoError(err)
 				suite.Require().EqualValues(len(jvacc), 1)
 
 			}
