@@ -48,6 +48,7 @@ jobs:
         with:
           prerelease: true
           name: Canary
+          tag_name: canary
           files: |
             canined-macOS
             canined-Linux
