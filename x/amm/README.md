@@ -6,22 +6,22 @@ parent:
 -->
 [◀ modules](/x/README.md)
 
-# `lp`
+# `amm`
 
 ## Contents
 
 1. [Jackal Automated Market Maker (AMM)](#jackal-automated-market-maker-(amm))
 2. [Client](#client)
     + [Query](#query)
-        + [list-l-pool](#list-l-pool)
-        + [show-l-pool](#show-l-pool)
+        + [list-pool](#list-pool)
+        + [show-pool](#show-pool)
         + [estimate-swap-in](#estimate-swap-in)
         + [estimate-swap-out](#estimate-swap-out)
         + [list-records-from-pool](#list-records-from-pool)
-        + [show-l-provider-record](#show-l-provider-record)
+        + [show-liquidity-provider-record](#show-liquidity-provider-record)
         + [params](#params)
     + [Transactions](#transactions)
-        + [create-l-pool](#create-l-pool)
+        + [create-pool](#create-l-pool)
         + [join-pool](#join-pool)
         + [exit-pool](#exit-pool)
         + [swap](#swap)
@@ -29,8 +29,8 @@ parent:
     + [Todo](#todo)
     + [Coins](#coins)
     + [States](#states)
-         + [LPool](#lpool-(liquidity-pool))
-         + [LProviderRecord](#lproviderrecord)
+         + [Pool](#lpool-(liquidity-pool))
+         + [LiquidityProviderRecord](#lproviderrecord)
 
 ## Jackal Automated Market Maker (AMM)
 
@@ -43,6 +43,12 @@ in the liquidity pool tokens.
 
 ## Client
 
+Expected format for [`coin`](https://buf.build/cosmos/cosmos-sdk/docs/main:cosmos.base.v1beta1#cosmos.base.v1beta1.Coin):
+{amount}{denom} e.g. 100000ujkl  
+List of coins: {amount0}{denom0},...,{amountN}{denomN}  
+e.g. 100000ujkl, 200000stake  
+*amount has to be an integer value
+
 ### Query
 
 The `query` (`q` for shortcut) commands allow users to query state of liquidity pools.
@@ -51,58 +57,53 @@ The `query` (`q` for shortcut) commands allow users to query state of liquidity 
 canined q storage --help
 ```
 
-#### list-l-pool
+#### list-pool
 
-The `list-l-pool` command allows users to see a list of currently active
+The `list-pool` command allows users to see a list of currently active
 liquidity pools.  
 
 ```sh
 canined q storage list-contracts
 ```
 
-#### show-l-pool
+#### show-pool
 
-The `show-l-pool` command allows users to view information about a specific
+The `show-pool` command allows users to view information about a specific
 liquidity pool.
 
 ```sh
-canined q lp show-l-pool [index]
+canined q lp show-pool [index]
 ```
 
 #### estimate-swap-in
 
-The `estimate-swap-in` command allows users to estimate deposit amount for
-desired amount of tokens in a swap.  
-Expected format for `[desired-coins]` (omit curly brackets): "{denom0}{amount0}
-...{denomN}{amountN}"
+The `estimate-swap-in` command allows users to estimate swap in coin for
+desired swap out coin.  
 
 ```sh
-canined q estimate-swap-in "pool-name" [desired-coins] 
+canined q estimate-swap-in "pool-name" [desired-coin-swap-out] 
 ```
 
 #### estimate-swap-out
 
-The `estimate-swap-out` command allows users to estimate return amount when
-depositing x amount in a swap.  
-Expected format for `[swap-input-coins]` (omit curly brackets): "{denom0}{amount0}
-...{denomN}{amountN}"
+The `estimate-swap-out` command allows users to estimate swap out coin for swap in coin.  
 
 ```sh
-canined q estimate-swap-out "pool-name" [swap-input-coins] 
+canined q estimate-swap-out "pool-name" [swap-in-coin] 
 ```
 
-#### list-records-from-pool
+#### list-pool-providers
 
-The `list-records-from-pool` command allows users to see all liquidity providers
+The `list-pool-providers` command allows users to see all liquidity providers
 of a liquidity pool.  
 
 ```sh
-canined q list-records-from-pool "pool-name" 
+canined q list-pool-providers "pool-name" 
 ```
 
-#### show-l-provider-record
+#### show-liquidity-provider-record
 
-The `show-l-provider-record` command allows users to see a liquidity provider
+The `show-liquidity-provider-record` command allows users to see a liquidity provider
 record.  
 
 ```sh
@@ -114,82 +115,73 @@ canined q show-l-provider-record "pool-name" "provider-address"
 The `params` command allows users to view the params of the module.
 
 ```sh
-canined q lp params
+canined q amm params
 ```
 
 ### Transactions
 
-The `tx` commands allow users to interact with the `lp` module.
+The `tx` commands allow users to interact with the `amm` module.
 
 ```sh
-canined tx lp --help
+canined tx amm --help
 ```
 
-#### create-l-pool
+#### create-pool
 
-The `create-l-pool` command initializes a liquidity pool.  
-Expected format for `[pool-coins]` (omit curly brackets): "{denom0}{amount0}
-...{denomN}{amountN}"
+The `create-pool` command initializes a liquidity pool.  
 
 ```sh
-canined tx lp create-l-pool [pool-coins] [AMM_Id] \
+canined tx amm create-pool [pool-coins] [AMM_Id] \
    "swap-fee-multiplier" [pool-lock-time (int64)] "withdraw-penalty-multiplier"
 ```
 
 #### join-pool
 
-The `join-pool` command allows users to contribute to a pool and receive
+The `join-pool` command allows users to provide liquidity to a pool and receive
 liquidity pool token.
-Expected format for `[deposit-coins]` (omit curly brackets): "{denom0}{amount0}
-...{denomN}{amountN}"
 
 ```sh
-canined tx lp join-pool "pool-name" [deposit-coins]
+canined tx amm join-pool "pool-name" [coins]
 ```
 
 #### exit-pool
 
 The `exit-pool` command allows users to burn their liquidity pool token
 to receive pool coins.  
-The `[burn-amount]` is an integer.
+*The `[burn-amount]` is an integer.
 
 ```sh
-canined tx lp exit-pool "pool-name" [burn-amount]
+canined tx amm exit-pool "pool-name" [burn-amount]
 ```
 
 #### swap
 
 The `swap` command allows users to swap token in a liquidity pool.  
 Use `[minimum-swap-out]` to prevent swap if swap output is below that amount.  
-Expected format for `[swap-in]` and `[minimum-swap-out]` (omit curly brackets): "{denom0}{amount0}
-...{denomN}{amountN}"
 
 ```sh
-canined tx lp swap "pool-name" [swap-in] [minimum-swap-out]
+canined tx amm swap "pool-name" [swap-in] [minimum-swap-out]
 ```
 
 # Development
 
-## Todo
-
-- [ ] Implement service fee mechanism.
-
 ## States
 
-[LPool](#lpool-(liquidity-pool)) and [LProviderRecord](#lproviderrecord) states
-are managed by `lp` module.
+[Pool](#pool-(liquidity-pool)) and
+[LiquidityProviderRecord](#liquidityproviderrecord) states
+are managed by `amm` module.
 
-### LPool (liquidity pool)
+### Pool (liquidity pool)
 
-It keeps the record of coins that are in the pool and amount of liquidity pool
+Pool keeps the record of coins that are in the pool and amount of liquidity pool
 token that exists.
 
-#### `LPool`
+#### `Pool`
 
 ```proto
-message LPool {
+message Pool {
   string index = 1; 
-  // Pool's name
+  // Pool name
   string name = 2;
   // Pool coins
   repeated cosmos.base.v1beta1.Coin coins = 3 [(gogoproto.nullable) = false];
@@ -214,24 +206,24 @@ message LPool {
 }
 ```
 
-### LProviderRecord
+### LiquidityProviderRecord
 
 This keeps the record of liquidity provider of a liquidity pool. When a user
 contributes to multiple pools the record is created for every pool.
 This allows users to keep track of their contribution, collected reward and
 LP token unlock time.
 
-#### `LProviderRecord`
+#### `LiquidityProviderRecord`
 
 This is created only once when a user contributes to a pool and only updated on
 succeeding burn or deposit transactions. This is deleted when the user burns
 all of their LP token.
 
 ```proto
-message LProviderRecord {
+message LiquidityProviderRecord {
 	string provider = 1;
 	string poolName = 2;
-	string coinsProvided = 3;
+	repeated cosmos.base.v1beta1.Coin coins coinsProvided = 3;
 	google.protobuf.Timestamp unlockTime = 4;
 	google.protobuf.Duration lockDuration = 5;
 }

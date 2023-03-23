@@ -1,0 +1,16 @@
+syntax = "proto3";
+package canine_chain.amm;
+
+import "gogoproto/gogo.proto";
+import "canine_chain/amm/params.proto";
+import "canine_chain/amm/pool.proto";
+import "canine_chain/amm/provider_record.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/amm/types";
+
+// GenesisState defines the canine_chain/amm module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated Pool pool_list = 2 [(gogoproto.nullable) = false];
+  repeated LiqProviderRec liq_provider_rec_list = 3 [(gogoproto.nullable) = false];
+}

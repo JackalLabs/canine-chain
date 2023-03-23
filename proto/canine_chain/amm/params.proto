@@ -1,9 +1,9 @@
 syntax = "proto3";
-package jackaldao.canine.lp;
+package canine_chain.amm;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/jackal-dao/canine/x/lp/types";
+option go_package = "github.com/jackalLabs/canine-chain/x/amm/types";
 
 // Params defines the parameters for the module.
 message Params {
@@ -13,9 +13,7 @@ message Params {
 
 	uint32 MaxPoolDenomCount = 2;
 
-	uint32 LPTokenUnit = 3;
+	string protocol_fee_to_addr = 3;
 
-	string protocol_fee_to_addr = 4;
-
-	string protocol_fee_rate = 5;
+	string protocol_fee_rate = 4;
 }
