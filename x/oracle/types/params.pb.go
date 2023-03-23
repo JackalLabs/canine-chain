@@ -67,20 +67,6 @@ func (m *Params) GetDeposit() string {
 	return ""
 }
 
-func (m *Params) GetProtocolFeeToAddr() string {
-	if m != nil {
-		return m.ProtocolFeeToAddr
-	}
-	return ""
-}
-
-func (m *Params) GetProtocolFeeRate() string {
-	if m != nil {
-		return m.ProtocolFeeRate
-	}
-	return ""
-}
-
 func init() {
 	proto.RegisterType((*Params)(nil), "canine_chain.oracle.Params")
 }
@@ -151,14 +137,6 @@ func (m *Params) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.Deposit)
-	if l > 0 {
-		n += 1 + l + sovParams(uint64(l))
-	}
-	l = len(m.ProtocolFeeToAddr)
-	if l > 0 {
-		n += 1 + l + sovParams(uint64(l))
-	}
-	l = len(m.ProtocolFeeRate)
 	if l > 0 {
 		n += 1 + l + sovParams(uint64(l))
 	}

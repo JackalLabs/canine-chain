@@ -36,7 +36,7 @@ message MsgCreatePool {
   string penalty_multi = 6;
 }
 
-message MsgCreateLPoolResponse {
+message MsgCreatePoolResponse {
   // Pool id
   string id = 1;
 }
