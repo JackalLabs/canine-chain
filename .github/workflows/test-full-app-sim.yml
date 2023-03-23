@@ -3,7 +3,7 @@ name: Simulation Test
 on:
   pull_request:
   push:
-    branches: ["master", "dev"]
+    branches: ["master"]
 
 jobs:
   test:
