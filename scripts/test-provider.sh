@@ -51,4 +51,4 @@ jprovd client config chain-id $CHAIN --home=$PROV_HOME
 echo '{"key":"7d5a77d4e3dadb5103f45a884d1aad0310bc6eaabbc7c1426fd9909de27dc818","address":"jkl1p6tje2akcr8z5ghxqlpur06ep6uexf7fk2vy3y"}' > $PROV_HOME/config/priv_storkey.json
 jprovd client balance --home=$PROV_HOME
 jprovd init http://localhost:3333 1000000000 "" --home=$PROV_HOME
-jprovd start --home=$PROV_HOME --interval=5 --no-strays
+jprovd start --home=$PROV_HOME --interval=5 --no-strays --gas=900000

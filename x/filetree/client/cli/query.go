@@ -15,6 +15,7 @@ import (
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd(queryRoute string) *cobra.Command {
+	_ = queryRoute
 	// Group filetree queries under a subcommand
 	cmd := &cobra.Command{
 		Use:                        types.ModuleName,

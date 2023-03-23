@@ -9,6 +9,7 @@ import (
 // TODO: rewrite test but do not use testutil stuff
 
 func TestGenesis(t *testing.T) {
+	_ = t
 	//	genesisState := types.GenesisState{
 	//		Params: types.DefaultParams(),
 

@@ -1,4 +1,4 @@
-package paramUpgrade
+package paramupgrade
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"

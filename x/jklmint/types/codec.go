@@ -8,6 +8,7 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
+	_ = cdc
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {

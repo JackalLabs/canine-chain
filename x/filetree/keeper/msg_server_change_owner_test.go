@@ -158,8 +158,8 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 					Address:      pepeMerklePath,
 					OwnerAddress: bobOwnerAddress,
 				}
-				res, error := suite.queryClient.Files(suite.ctx.Context(), &fileReq2)
-				suite.Require().NoError(error)
+				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq2)
+				suite.Require().NoError(err)
 
 				bobIsOwner := keeper.IsOwner(res.Files, bob)
 				suite.Require().Equal(bobIsOwner, true)
