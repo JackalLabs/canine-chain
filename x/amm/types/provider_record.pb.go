@@ -28,8 +28,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 // only updated after witdrawal or deposit.
 // It is deleted when the provider burns all of their shares.
 // This is stored at KVStore with
-// 	{LProviderRecordKeyPrefix}{poolName}{provider} key.
-type LiqProviderRec struct {
+// 	{ProviderRecordKeyPrefix}{poolName}{provider} key.
+type ProviderRecord struct {
 	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
 	PoolName string `protobuf:"bytes,2,opt,name=poolName,proto3" json:"poolName,omitempty"`
 	// Burning LP token is locked for certain duration the after provider
@@ -41,18 +41,18 @@ type LiqProviderRec struct {
 	LockDuration string `protobuf:"bytes,4,opt,name=lockDuration,proto3" json:"lockDuration,omitempty"`
 }
 
-func (m *LiqProviderRec) Reset()         { *m = LiqProviderRec{} }
-func (m *LiqProviderRec) String() string { return proto.CompactTextString(m) }
-func (*LiqProviderRec) ProtoMessage()    {}
-func (*LiqProviderRec) Descriptor() ([]byte, []int) {
+func (m *ProviderRecord) Reset()         { *m = ProviderRecord{} }
+func (m *ProviderRecord) String() string { return proto.CompactTextString(m) }
+func (*ProviderRecord) ProtoMessage()    {}
+func (*ProviderRecord) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0cd20825f1902325, []int{0}
 }
-func (m *LiqProviderRec) XXX_Unmarshal(b []byte) error {
+func (m *ProviderRecord) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *LiqProviderRec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ProviderRecord) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_LiqProviderRec.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ProviderRecord.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -62,40 +62,40 @@ func (m *LiqProviderRec) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 		return b[:n], nil
 	}
 }
-func (m *LiqProviderRec) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_LiqProviderRec.Merge(m, src)
+func (m *ProviderRecord) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProviderRecord.Merge(m, src)
 }
-func (m *LiqProviderRec) XXX_Size() int {
+func (m *ProviderRecord) XXX_Size() int {
 	return m.Size()
 }
-func (m *LiqProviderRec) XXX_DiscardUnknown() {
-	xxx_messageInfo_LiqProviderRec.DiscardUnknown(m)
+func (m *ProviderRecord) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProviderRecord.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_LiqProviderRec proto.InternalMessageInfo
+var xxx_messageInfo_ProviderRecord proto.InternalMessageInfo
 
-func (m *LiqProviderRec) GetProvider() string {
+func (m *ProviderRecord) GetProvider() string {
 	if m != nil {
 		return m.Provider
 	}
 	return ""
 }
 
-func (m *LiqProviderRec) GetPoolName() string {
+func (m *ProviderRecord) GetPoolName() string {
 	if m != nil {
 		return m.PoolName
 	}
 	return ""
 }
 
-func (m *LiqProviderRec) GetUnlockTime() string {
+func (m *ProviderRecord) GetUnlockTime() string {
 	if m != nil {
 		return m.UnlockTime
 	}
 	return ""
 }
 
-func (m *LiqProviderRec) GetLockDuration() string {
+func (m *ProviderRecord) GetLockDuration() string {
 	if m != nil {
 		return m.LockDuration
 	}
@@ -103,7 +103,7 @@ func (m *LiqProviderRec) GetLockDuration() string {
 }
 
 func init() {
-	proto.RegisterType((*LiqProviderRec)(nil), "canine_chain.amm.LiqProviderRec")
+	proto.RegisterType((*ProviderRecord)(nil), "canine_chain.amm.ProviderRecord")
 }
 
 func init() {
@@ -111,25 +111,24 @@ func init() {
 }
 
 var fileDescriptor_0cd20825f1902325 = []byte{
-	// 226 bytes of a gzipped FileDescriptorProto
+	// 223 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x4b, 0x4e, 0xcc, 0xcb,
 	0xcc, 0x4b, 0x8d, 0x4f, 0xce, 0x48, 0xcc, 0xcc, 0xd3, 0x4f, 0xcc, 0xcd, 0xd5, 0x2f, 0x28, 0xca,
 	0x2f, 0xcb, 0x4c, 0x49, 0x2d, 0x8a, 0x2f, 0x4a, 0x4d, 0xce, 0x2f, 0x4a, 0xd1, 0x2b, 0x28, 0xca,
-	0x2f, 0xc9, 0x17, 0x12, 0x40, 0x56, 0xa7, 0x97, 0x98, 0x9b, 0xab, 0xd4, 0xc3, 0xc8, 0xc5, 0xe7,
-	0x93, 0x59, 0x18, 0x00, 0x55, 0x1e, 0x94, 0x9a, 0x2c, 0x24, 0xc5, 0xc5, 0x01, 0xd3, 0x2d, 0xc1,
-	0xa8, 0xc0, 0xa8, 0xc1, 0x19, 0x04, 0xe7, 0x83, 0xe5, 0xf2, 0xf3, 0x73, 0xfc, 0x12, 0x73, 0x53,
-	0x25, 0x98, 0xa0, 0x72, 0x50, 0xbe, 0x90, 0x1c, 0x17, 0x57, 0x69, 0x5e, 0x4e, 0x7e, 0x72, 0x76,
-	0x48, 0x66, 0x6e, 0xaa, 0x04, 0x33, 0x58, 0x16, 0x49, 0x44, 0x48, 0x89, 0x8b, 0x07, 0xc4, 0x76,
-	0x29, 0x2d, 0x4a, 0x2c, 0xc9, 0xcc, 0xcf, 0x93, 0x60, 0x01, 0xab, 0x40, 0x11, 0x73, 0xf2, 0x38,
-	0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63,
-	0xb8, 0xf0, 0x58, 0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x86, 0x28, 0xbd, 0xf4, 0xcc, 0x92, 0x8c, 0xd2,
-	0x24, 0xbd, 0xe4, 0xfc, 0x5c, 0xfd, 0xac, 0xc4, 0xe4, 0xec, 0xc4, 0x1c, 0x9f, 0xc4, 0xa4, 0x62,
-	0x7d, 0x88, 0x87, 0x74, 0x21, 0x1e, 0xaf, 0x00, 0x7b, 0xbd, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89,
-	0x0d, 0xec, 0x63, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x02, 0x2e, 0x9b, 0x79, 0x1b, 0x01,
-	0x00, 0x00,
+	0x2f, 0xc9, 0x17, 0x12, 0x40, 0x56, 0xa7, 0x97, 0x98, 0x9b, 0xab, 0xd4, 0xc3, 0xc8, 0xc5, 0x17,
+	0x00, 0x55, 0x1b, 0x04, 0x56, 0x2a, 0x24, 0xc5, 0xc5, 0x01, 0xd3, 0x2d, 0xc1, 0xa8, 0xc0, 0xa8,
+	0xc1, 0x19, 0x04, 0xe7, 0x83, 0xe5, 0xf2, 0xf3, 0x73, 0xfc, 0x12, 0x73, 0x53, 0x25, 0x98, 0xa0,
+	0x72, 0x50, 0xbe, 0x90, 0x1c, 0x17, 0x57, 0x69, 0x5e, 0x4e, 0x7e, 0x72, 0x76, 0x48, 0x66, 0x6e,
+	0xaa, 0x04, 0x33, 0x58, 0x16, 0x49, 0x44, 0x48, 0x89, 0x8b, 0x07, 0xc4, 0x76, 0x29, 0x2d, 0x4a,
+	0x2c, 0xc9, 0xcc, 0xcf, 0x93, 0x60, 0x01, 0xab, 0x40, 0x11, 0x73, 0xf2, 0x38, 0xf1, 0x48, 0x8e,
+	0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xb8, 0xf0, 0x58,
+	0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x86, 0x28, 0xbd, 0xf4, 0xcc, 0x92, 0x8c, 0xd2, 0x24, 0xbd, 0xe4,
+	0xfc, 0x5c, 0xfd, 0xac, 0xc4, 0xe4, 0xec, 0xc4, 0x1c, 0x9f, 0xc4, 0xa4, 0x62, 0x7d, 0x88, 0x87,
+	0x74, 0x21, 0x1e, 0xaf, 0x00, 0x7b, 0xbd, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0xec, 0x63,
+	0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x89, 0xca, 0x7f, 0x76, 0x1b, 0x01, 0x00, 0x00,
 }
 
-func (m *LiqProviderRec) Marshal() (dAtA []byte, err error) {
+func (m *ProviderRecord) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -139,12 +138,12 @@ func (m *LiqProviderRec) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *LiqProviderRec) MarshalTo(dAtA []byte) (int, error) {
+func (m *ProviderRecord) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *LiqProviderRec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ProviderRecord) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -191,7 +190,7 @@ func encodeVarintProviderRecord(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *LiqProviderRec) Size() (n int) {
+func (m *ProviderRecord) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -222,7 +221,7 @@ func sovProviderRecord(x uint64) (n int) {
 func sozProviderRecord(x uint64) (n int) {
 	return sovProviderRecord(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *LiqProviderRec) Unmarshal(dAtA []byte) error {
+func (m *ProviderRecord) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -245,10 +244,10 @@ func (m *LiqProviderRec) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: LiqProviderRec: wiretype end group for non-group")
+			return fmt.Errorf("proto: ProviderRecord: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: LiqProviderRec: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ProviderRecord: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

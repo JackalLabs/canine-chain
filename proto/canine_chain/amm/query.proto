@@ -27,8 +27,8 @@ service Query {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/pool";
 	}
 
-// Queries a LiqProviderRec by pool name and provider address.
-	rpc LiqProviderRec(QueryGetLiqProviderRecRequest) returns (QueryGetLiqProviderRecResponse) {
+// Queries a ProviderRecord by pool name and provider address.
+	rpc ProviderRecord(QueryGetProviderRecordRequest) returns (QueryGetProviderRecordResponse) {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/liq_provider_rec/{poolName}/{provider}";
 	}
 
@@ -92,13 +92,13 @@ message QueryAlPoolResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetLiqProviderRecRequest {
+message QueryGetProviderRecordRequest {
   string provider = 1;
   string poolName = 2;
 }
 
-message QueryGetLiqProviderRecResponse {
-	LiqProviderRec lProviderRecord = 1 [(gogoproto.nullable) = false];
+message QueryGetProviderRecordResponse {
+	ProviderRecord lProviderRecord = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryEstimateSwapOutRequest {
@@ -154,7 +154,7 @@ message QueryListRecordsFromPoolRequest {
 }
 
 message QueryListRecordsFromPoolResponse {
-	repeated LiqProviderRec records = 1 [(gogoproto.nullable) = false];
+	repeated ProviderRecord records = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3

@@ -9,8 +9,8 @@ option go_package = "github.com/jackalLabs/canine-chain/x/amm/types";
 // only updated after witdrawal or deposit.
 // It is deleted when the provider burns all of their shares.
 // This is stored at KVStore with 
-// 	{LProviderRecordKeyPrefix}{poolName}{provider} key.
-message LiqProviderRec {
+// 	{ProviderRecordKeyPrefix}{poolName}{provider} key.
+message ProviderRecord {
 	string provider = 1;
 	string poolName = 2;
 	// Burning LP token is locked for certain duration the after provider
