@@ -9,14 +9,14 @@ import (
 var _ binary.ByteOrder
 
 const (
-	// LProviderRecordKeyPrefix is the prefix to retrieve all LProviderRecord
-	LProviderRecordKeyPrefix = "LProviderRecord/value/"
-	RefKeyPrefix             = "LProviderRecordRef/"
+	// LiqProviderRecKeyPrefix is the prefix to retrieve all LiqProviderRec
+	LiqProviderRecKeyPrefix = "LiqProviderRec/value/"
+	RefKeyPrefix             = "LiqProviderRecRef/"
 	// A separator inserted between keys.
 )
 
-// LProviderRecordKey returns the store key to retrieve a LProviderRecord
-func LProviderRecordKey(
+// LiqProviderRecKey returns the store key to retrieve a LiqProviderRec
+func LiqProviderRecKey(
 	poolName string,
 	provider string,
 ) []byte {
@@ -27,9 +27,9 @@ func LProviderRecordKey(
 	return CombineKeys(poolBytes, addrBytes)
 }
 
-// LProviderRecordKey returns the store key to retrieve a LProviderRecord
+// LiqProviderRecKey returns the store key to retrieve a LiqProviderRec
 // reference.
-func LProviderRecordRefKey(
+func LiqProviderRecRefKey(
 	poolName string,
 	provider sdk.AccAddress,
 ) []byte {
@@ -39,15 +39,15 @@ func LProviderRecordRefKey(
 	return CombineKeys(addrBytes, poolBytes)
 }
 
-// Takes LProviderRecord struct to generate store key.
+// Takes LiqProviderRec struct to generate store key.
 // Key format is: {poolName}{provider}
-func GetProviderKey(record LProviderRecord) []byte {
-	return LProviderRecordKey(record.PoolName, record.Provider)
+func GetProviderKey(record LiqProviderRec) []byte {
+	return LiqProviderRecKey(record.PoolName, record.Provider)
 }
 
-// Takes LProviderRecord struct to generate reference key.
+// Takes LiqProviderRec struct to generate reference key.
 // Key format is: {provider}{provider}
-func GetProviderRefKey(record LProviderRecord) []byte {
+func GetProviderRefKey(record LiqProviderRec) []byte {
 
 	poolBytes := []byte(record.PoolName)
 	addrBytes := []byte(record.Provider)

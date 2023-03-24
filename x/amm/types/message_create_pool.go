@@ -8,37 +8,37 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgCreateLPool = "create_l_pool"
+const TypeMsgCreatePool = "create_pool"
 
-var _ sdk.Msg = &MsgCreateLPool{}
+var _ sdk.Msg = &MsgCreatePool{}
 
-func NewMsgCreateLPool(
+func NewMsgCreatePool(
 	creator string,
-	coins sdk.DecCoins,
+	coins sdk.Coins,
 	aMMId uint32,
 	swapFeeMulti sdk.Dec,
 	minLockDuration int64,
 	penaltyMulti sdk.Dec,
-) *MsgCreateLPool {
-	return &MsgCreateLPool{
+) *MsgCreatePool {
+	return &MsgCreatePool{
 		Creator:         creator,
 		Coins:           coins,
-		Amm_Id:          aMMId,
+		AmmId:          aMMId,
 		SwapFeeMulti:    swapFeeMulti.String(),
 		MinLockDuration: minLockDuration,
 		PenaltyMulti:    penaltyMulti.String(),
 	}
 }
 
-func (msg *MsgCreateLPool) Route() string {
+func (msg *MsgCreatePool) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgCreateLPool) Type() string {
-	return TypeMsgCreateLPool
+func (msg *MsgCreatePool) Type() string {
+	return TypeMsgCreatePool
 }
 
-func (msg *MsgCreateLPool) GetSigners() []sdk.AccAddress {
+func (msg *MsgCreatePool) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -46,12 +46,12 @@ func (msg *MsgCreateLPool) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgCreateLPool) GetSignBytes() []byte {
+func (msg *MsgCreatePool) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgCreateLPool) ValidateBasic() error {
+func (msg *MsgCreatePool) ValidateBasic() error {
 	if msg == nil {
 		return sdkerrors.ErrInvalidRequest
 	}

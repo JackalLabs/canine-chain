@@ -5,12 +5,12 @@ import "encoding/binary"
 var _ binary.ByteOrder
 
 const (
-	// LPoolKeyPrefix is the prefix to retrieve all LPool
-	LPoolKeyPrefix = "LPool/value/"
+	// PoolKeyPrefix is the prefix to retrieve all LPool
+	PoolKeyPrefix = "Pool/value/"
 )
 
-// LPoolKey returns the store key to retrieve a LPool from the index fields
-func LPoolKey(
+// PoolKey returns the store key to retrieve a Pool from the index fields
+func PoolKey(
 	index string,
 ) []byte {
 	var key []byte

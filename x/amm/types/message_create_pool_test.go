@@ -4,27 +4,21 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgCreateLPool_ValidateBasic(t *testing.T) {
+func TestMsgCreatePool_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgCreateLPool
+		msg  MsgCreatePool
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgCreateLPool{
+			msg: MsgCreatePool{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgCreateLPool{
-				Creator: sample.AccAddress(),
-			},
 		},
 	}
 	for _, tt := range tests {

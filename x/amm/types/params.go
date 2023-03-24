@@ -22,7 +22,6 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 const (
 	KeyMinInitPoolDeposit = "MinInitPoolDeposit"
 	KeyMaxPoolDenomCount  = "MaxPoolDenomCount"
-	KeyLPTokenUnit        = "LPTokenUnit"
 	KeyProtocolFeeToAddr  = "ProtocolFeeToAddr"
 	KeyProtocolFeeRate  = "ProtocolFeeRate"
 )
@@ -31,7 +30,6 @@ const (
 var (
 	DefaultInitPoolDeposit   uint64 = 2
 	DefaultMaxPoolDenomCount uint32 = 2
-	DefaultLPTokenUnit       uint32 = 6
 	DefaultProtocolFeeToAddr string = "jkl1vmkyv60rztxhyahrw234l6juty72th8snftpme"
 	DefaultProtocolFeeRate   string = "0.001"
 )
@@ -179,7 +177,6 @@ func DefaultParams() Params {
 	return Params{
 		MinInitPoolDeposit: DefaultInitPoolDeposit,
 		MaxPoolDenomCount:  DefaultMaxPoolDenomCount,
-		LPTokenUnit:        DefaultLPTokenUnit,
 		ProtocolFeeToAddr: DefaultProtocolFeeToAddr,
 		ProtocolFeeRate: DefaultProtocolFeeRate,
 	}
@@ -203,7 +200,6 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair([]byte(KeyMinInitPoolDeposit), &p.MinInitPoolDeposit, validateMinInitPoolDeposit),
 		paramtypes.NewParamSetPair([]byte(KeyMaxPoolDenomCount), &p.MaxPoolDenomCount, validateMaxPoolDenomCount),
-		paramtypes.NewParamSetPair([]byte(KeyLPTokenUnit), &p.LPTokenUnit, validateLPTokenUnit),
 		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeToAddr), &p.ProtocolFeeToAddr, validateProtocolFeeToAddr),
 		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeRate), &p.ProtocolFeeRate, validateProtocolFeeRate),
 	}

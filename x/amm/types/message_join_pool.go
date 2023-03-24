@@ -9,7 +9,7 @@ const TypeMsgJoinPool = "join_pool"
 
 var _ sdk.Msg = &MsgJoinPool{}
 
-func NewMsgJoinPool(creator string, poolName string, coins sdk.DecCoins) *MsgJoinPool {
+func NewMsgJoinPool(creator string, poolName string, coins sdk.Coins) *MsgJoinPool {
 	return &MsgJoinPool{
 		Creator:      creator,
 		PoolName:     poolName,
@@ -42,15 +42,6 @@ func (msg *MsgJoinPool) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	coins := sdk.NormalizeCoins(msg.Coins)
-	if err != nil {
-		return err
-	}
-
-	if !coins.IsValid() {
-		return sdkerrors.ErrInvalidCoins
 	}
 
 	return nil

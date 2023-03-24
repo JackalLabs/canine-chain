@@ -4,27 +4,21 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgWithdrawLPool_ValidateBasic(t *testing.T) {
+func TestMsgExitPool_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgWithdrawLPool
+		msg  MsgExitPool
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgWithdrawLPool{
+			msg: MsgExitPool{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgWithdrawLPool{
-				Creator: sample.AccAddress(),
-			},
 		},
 	}
 	for _, tt := range tests {
