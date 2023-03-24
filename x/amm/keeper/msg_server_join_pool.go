@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) error {
@@ -13,7 +13,7 @@ func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) err
 		return err
 	}
 
-	pool, found := k.GetLPool(ctx, msg.PoolName)
+	pool, found := k.GetPool(ctx, msg.PoolName)
 
 	if !found {
 		return types.ErrLiquidityPoolNotFound
@@ -41,8 +41,8 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Get amount of LPToken to send
-	pool, _ := k.GetLPool(ctx, msg.PoolName)
+	// Get amount of PToken to send
+	pool, _ := k.GetPool(ctx, msg.PoolName)
 
 	coins := sdk.NormalizeCoins(msg.Coins)
 
@@ -54,21 +54,21 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	// Initialize LProviderRecord
+	// Initialize ProviderRecord
 	lockDuration := GetDuration(pool.MinLockDuration)
 
-	recordKey := types.LProviderRecordKey(pool.Name, creator.String())
-	record, found := k.GetLProviderRecord(ctx, recordKey)
+	recordKey := types.ProviderRecordKey(pool.Name, creator.String())
+	record, found := k.GetProviderRecord(ctx, recordKey)
 
 	if !found {
-		err = k.InitLProviderRecord(ctx, creator, pool.Name, lockDuration)
+		err = k.InitProviderRecord(ctx, creator, pool.Name, lockDuration)
 
 		if err != nil {
 			return nil, err
 		}
 	} else {
 		record.LockDuration = lockDuration.String()
-		k.SetLProviderRecord(ctx, record)
+		k.SetProviderRecord(ctx, record)
 	}
 
 	err = k.EngageLock(ctx, recordKey)
@@ -84,7 +84,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 		return nil, sdkErr
 	}
 
-	if err := k.MintAndSendLPToken(ctx, pool, creator, shares); err != nil {
+	if err := k.MintAndSendPToken(ctx, pool, creator, shares); err != nil {
 		return nil, err
 	}
 
@@ -97,13 +97,13 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 
 	pool.Coins = poolCoins
 
-	// Update LPTokens
-	netLPToken, _ := sdk.NewIntFromString(pool.LPTokenBalance)
-	netLPToken = netLPToken.Add(shares)
+	// Update PTokens
+	netPToken, _ := sdk.NewIntFromString(pool.PTokenBalance)
+	netPToken = netPToken.Add(shares)
 
-	pool.LPTokenBalance = netLPToken.String()
+	pool.PTokenBalance = netPToken.String()
 
-	k.SetLPool(ctx, pool)
+	k.SetPool(ctx, pool)
 
 	EmitPoolJoinedEvent(ctx, creator, pool, coins, pool.MinLockDuration)
 

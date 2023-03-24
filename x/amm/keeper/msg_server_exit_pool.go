@@ -7,22 +7,22 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 func (k Keeper) validateExitPool(ctx sdk.Context, msg *types.MsgExitPool) error {
-	pool, found := k.GetLPool(ctx, msg.PoolName)
+	pool, found := k.GetPool(ctx, msg.PoolName)
 
 	if !found {
 		return types.ErrLiquidityPoolNotFound
 	}
 
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
-	recordKey := types.LProviderRecordKey(pool.Name, creator.String())
-	_, found = k.GetLProviderRecord(ctx, recordKey)
+	recordKey := types.ProviderRecordKey(pool.Name, creator.String())
+	_, found = k.GetProviderRecord(ctx, recordKey)
 
 	if !found {
-		return types.ErrLProviderRecordNotFound
+		return types.ErrProviderRecordNotFound
 	}
 
 	if msg.Shares < 0 {
@@ -43,14 +43,14 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 		return nil, err
 	}
 
-	pool, _ := k.GetLPool(ctx, msg.PoolName)
+	pool, _ := k.GetPool(ctx, msg.PoolName)
 	poolCoins := sdk.NewCoins(pool.Coins...)
-	totalShares, _ := sdk.NewIntFromString(pool.LPTokenBalance)
+	totalShares, _ := sdk.NewIntFromString(pool.PTokenBalance)
 
 	// Calculate tokens to return
-	// If LPToken is still locked, apply panelty.
-	recordKey := types.LProviderRecordKey(pool.Name, creatorAcc.String())
-	record, _ := k.GetLProviderRecord(ctx, recordKey)
+	// If PToken is still locked, apply panelty.
+	recordKey := types.ProviderRecordKey(pool.Name, creatorAcc.String())
+	record, _ := k.GetProviderRecord(ctx, recordKey)
 
 	unlockTime, _ := StringToTime(record.UnlockTime)
 
@@ -81,10 +81,10 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 		)
 	}
 
-	burningCoin := sdk.NewCoin(pool.LptokenDenom, sdk.NewInt(msg.Shares))
+	burningCoin := sdk.NewCoin(pool.pooltokenDenom, sdk.NewInt(msg.Shares))
 	burningCoins := sdk.NewCoins(burningCoin)
 
-	// Transfer LPToken to module
+	// Transfer PToken to module
 	sdkErr := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAcc, types.ModuleName, burningCoins)
 
 	if sdkErr != nil {
@@ -98,7 +98,7 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 		return nil, sdkErr
 	}
 
-	// Burn the LPToken
+	// Burn the PToken
 	sdkErr = k.bankKeeper.BurnCoins(ctx, types.ModuleName, burningCoins)
 
 	if sdkErr != nil {
@@ -111,17 +111,17 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 	totalShares = totalShares.Sub(sdk.NewInt(msg.Shares))
 
 	pool.Coins = poolCoins
-	pool.LPTokenBalance = totalShares.String()
+	pool.PoolTokenBalance = totalShares.String()
 
-	k.SetLPool(ctx, pool)
+	k.SetPool(ctx, pool)
 
 	EmitPoolExitedEvent(
 		ctx,
 		creatorAcc,
 		pool,
-		sdk.NewCoin(pool.LptokenDenom, sdk.NewInt(msg.Shares)),
+		sdk.NewCoin(pool.pooltokenDenom, sdk.NewInt(msg.Shares)),
 		coinsOut,
-		sdk.NewCoin(pool.LptokenDenom, penaltyAmt))
+		sdk.NewCoin(pool.pooltokenDenom, penaltyAmt))
 
 	return nil, nil
 }

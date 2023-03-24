@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 // Set unlock time using block time and lock duration.
@@ -17,11 +17,11 @@ func (k Keeper) EngageLock(
 	recordKey []byte,
 ) error {
 
-	record, found := k.GetLProviderRecord(ctx, recordKey)
+	record, found := k.GetProviderRecord(ctx, recordKey)
 
 	if !found {
 		return sdkerrors.Wrapf(
-			types.ErrLProviderRecordNotFound,
+			types.ErrProviderRecordNotFound,
 			"Cannot engage lock on record %s",
 			recordKey,
 		)
@@ -33,15 +33,15 @@ func (k Keeper) EngageLock(
 
 	record.UnlockTime = TimeToString(timeNow.Add(lockDuration))
 
-	k.SetLProviderRecord(ctx, record)
+	k.SetProviderRecord(ctx, record)
 
 	return nil
 }
 
-// Create then store LProviderRecord and reference to KVStore.
+// Create then store ProviderRecord and reference to KVStore.
 // Lock is not engaged.
 // It returns error when pool doesn't exist.
-func (k Keeper) InitLProviderRecord(
+func (k Keeper) InitProviderRecord(
 	ctx sdk.Context,
 	provider sdk.AccAddress,
 	poolName string,
@@ -49,52 +49,52 @@ func (k Keeper) InitLProviderRecord(
 ) error {
 
 	// Find pool
-	_, found := k.GetLPool(ctx, poolName)
+	_, found := k.GetPool(ctx, poolName)
 
 	if !found {
 		return sdkerrors.Wrapf(
 			types.ErrLiquidityPoolNotFound,
-			"Cannot initialize LProviderRecord, pool(%s) not found",
+			"Cannot initialize ProviderRecord, pool(%s) not found",
 			poolName,
 		)
 	}
 
 	// Create record
-	record := types.LProviderRecord{
+	record := types.ProviderRecord{
 		Provider:     provider.String(),
 		PoolName:     poolName,
 		LockDuration: lockDuration.String(),
 	}
 
-	k.SetLProviderRecord(ctx, record)
+	k.SetProviderRecord(ctx, record)
 
 	// Add reference
 	if err := k.AddProviderRef(ctx, record); err != nil {
 		return sdkerrors.Wrapf(
 			err,
-			"Cannot initialize LProviderRecord",
+			"Cannot initialize ProviderRecord",
 		)
 	}
 
 	return nil
 }
 
-// SetLProviderRecord set a specific lProviderRecord in the store from its index
-func (k Keeper) SetLProviderRecord(ctx sdk.Context, lProviderRecord types.LProviderRecord) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
+// SetProviderRecord set a specific lProviderRecord in the store from its index
+func (k Keeper) SetProviderRecord(ctx sdk.Context, lProviderRecord types.ProviderRecord) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProviderRecordKeyPrefix))
 	b := k.cdc.MustMarshal(&lProviderRecord)
-	store.Set(types.LProviderRecordKey(
+	store.Set(types.ProviderRecordKey(
 		lProviderRecord.PoolName,
 		lProviderRecord.Provider,
 	), b)
 }
 
-// GetLProviderRecord returns a lProviderRecord from its index
-func (k Keeper) GetLProviderRecord(
+// GetProviderRecord returns a lProviderRecord from its index
+func (k Keeper) GetProviderRecord(
 	ctx sdk.Context,
 	recordKey []byte,
-) (val types.LProviderRecord, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
+) (val types.ProviderRecord, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProviderRecordKeyPrefix))
 
 	b := store.Get(recordKey)
 
@@ -107,46 +107,46 @@ func (k Keeper) GetLProviderRecord(
 	return val, true
 }
 
-// Removes LProviderRecord and reference from store.
-func (k Keeper) EraseLProviderRecord(
+// Removes ProviderRecord and reference from store.
+func (k Keeper) EraseProviderRecord(
 	ctx sdk.Context,
 	provider sdk.AccAddress,
 	poolName string,
 ) error {
-	recordKey := types.LProviderRecordKey(poolName, provider.String())
+	recordKey := types.ProviderRecordKey(poolName, provider.String())
 
-	record, found := k.GetLProviderRecord(ctx, recordKey)
+	record, found := k.GetProviderRecord(ctx, recordKey)
 
 	if !found {
-		return types.ErrLProviderRecordNotFound
+		return types.ErrProviderRecordNotFound
 	}
 
 	k.RemoveProviderRef(ctx, record)
-	k.RemoveLProviderRecord(ctx, recordKey)
+	k.RemoveProviderRecord(ctx, recordKey)
 
 	return nil
 }
 
-// RemoveLProviderRecord removes a lProviderRecord from the store
-func (k Keeper) RemoveLProviderRecord(
+// RemoveProviderRecord removes a lProviderRecord from the store
+func (k Keeper) RemoveProviderRecord(
 	ctx sdk.Context,
 	recordKey []byte,
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProviderRecordKeyPrefix))
 	store.Delete(recordKey)
 }
 
-// GetAllLProviderRecord returns all lProviderRecord
-func (k Keeper) GetAllLProviderRecord(ctx sdk.Context) (list []types.LProviderRecord) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LProviderRecordKeyPrefix))
+// GetAllProviderRecord returns all lProviderRecord
+func (k Keeper) GetAllProviderRecord(ctx sdk.Context) (list []types.ProviderRecord) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProviderRecordKeyPrefix))
 	iterator := store.Iterator(nil, nil)
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.LProviderRecord
+		var val types.ProviderRecord
 		if err := k.cdc.Unmarshal(iterator.Value(), &val); err != nil {
-			ctx.Logger().Error("\nFailed to unmarshal at GetAllLProviderRecord()\n", err)
+			ctx.Logger().Error("\nFailed to unmarshal at GetAllProviderRecord()\n", err)
 		}
 		list = append(list, val)
 	}
@@ -154,25 +154,25 @@ func (k Keeper) GetAllLProviderRecord(ctx sdk.Context) (list []types.LProviderRe
 	return
 }
 
-// Collect all LProviderRecord of provider.
+// Collect all ProviderRecord of provider.
 // Parse through all keys in KVStore that has {provider} as its prefix.
 func (k Keeper) GetAllRecordOfProvider(
 	ctx sdk.Context,
 	provider sdk.AccAddress,
-) (list []types.LProviderRecord) {
+) (list []types.ProviderRecord) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
-		types.KeyPrefix(types.LProviderRecordKeyPrefix))
+		types.KeyPrefix(types.ProviderRecordKeyPrefix))
 
 	iterator := sdk.KVStorePrefixIterator(store, []byte(provider.String()))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var record types.LProviderRecord
+		var record types.ProviderRecord
 
 		rawRecord := store.Get(iterator.Value())
 
 		if err := k.cdc.Unmarshal(rawRecord, &record); err != nil {
-			ctx.Logger().Error("\nFailed to unmarshal at GetAllLProviderRecord()\n")
+			ctx.Logger().Error("\nFailed to unmarshal at GetAllProviderRecord()\n")
 		}
 
 		list = append(list, record)
@@ -182,20 +182,20 @@ func (k Keeper) GetAllRecordOfProvider(
 }
 
 func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
-) (list []types.LProviderRecord) {
+) (list []types.ProviderRecord) {
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
-		types.KeyPrefix(types.LProviderRecordKeyPrefix))
+		types.KeyPrefix(types.ProviderRecordKeyPrefix))
 
 
 	iterator := sdk.KVStorePrefixIterator(store, []byte("ujkl-ujwl"))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.LProviderRecord
+		var val types.ProviderRecord
 
 		if err := k.cdc.Unmarshal(iterator.Value(), &val); err != nil {
-			ctx.Logger().Error("\nFailed to unmarshal at GetAllLProviderRecord()\n", err)
+			ctx.Logger().Error("\nFailed to unmarshal at GetAllProviderRecord()\n", err)
 		}
 		list = append(list, val)
 	}
@@ -203,11 +203,11 @@ func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
 	return
 }
 
-// Add LProviderRecord reference to KVStore.
-// Reference to LProviderRecord is LProviderRecord's key.
+// Add ProviderRecord reference to KVStore.
+// Reference to ProviderRecord is ProviderRecord's key.
 // Key to the reference key is {provider}{poolName}
 // It returns error when reference key already exists.
-func (k Keeper) AddProviderRef(ctx sdk.Context, record types.LProviderRecord) error {
+func (k Keeper) AddProviderRef(ctx sdk.Context, record types.ProviderRecord) error {
 	// Generate keys
 	refKey := types.GetProviderRefKey(record)
 	recordKey := types.GetProviderKey(record)
@@ -224,8 +224,8 @@ func (k Keeper) AddProviderRef(ctx sdk.Context, record types.LProviderRecord) er
 	return nil
 }
 
-// Remove LProviderRecord reference from KVStore.
-func (k Keeper) RemoveProviderRef(ctx sdk.Context, record types.LProviderRecord) {
+// Remove ProviderRecord reference from KVStore.
+func (k Keeper) RemoveProviderRef(ctx sdk.Context, record types.ProviderRecord) {
 	// Generate reference key
 	refKey := types.GetProviderRefKey(record)
 

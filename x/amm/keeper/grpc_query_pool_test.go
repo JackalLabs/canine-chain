@@ -10,41 +10,41 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/lp/types"
+	keepertest "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/testutil/nullify"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func TestLProviderRecordQuerySingle(t *testing.T) {
+func TestPoolQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.LpKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNLProviderRecord(keeper, ctx, 2)
+	msgs := createNPool(keeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryGetLProviderRecordRequest
-		response *types.QueryGetLProviderRecordResponse
+		request  *types.QueryGetPoolRequest
+		response *types.QueryGetPoolResponse
 		err      error
 	}{
 		{
 			desc: "First",
-			request: &types.QueryGetLProviderRecordRequest{
+			request: &types.QueryGetPoolRequest{
 				Index: msgs[0].Index,
 			},
-			response: &types.QueryGetLProviderRecordResponse{LProviderRecord: msgs[0]},
+			response: &types.QueryGetPoolResponse{Pool: msgs[0]},
 		},
 		{
 			desc: "Second",
-			request: &types.QueryGetLProviderRecordRequest{
+			request: &types.QueryGetPoolRequest{
 				Index: msgs[1].Index,
 			},
-			response: &types.QueryGetLProviderRecordResponse{LProviderRecord: msgs[1]},
+			response: &types.QueryGetPoolResponse{Pool: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.QueryGetLProviderRecordRequest{
+			request: &types.QueryGetPoolRequest{
 				Index: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
@@ -55,7 +55,7 @@ func TestLProviderRecordQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.LProviderRecord(wctx, tc.request)
+			response, err := keeper.Pool(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -69,13 +69,13 @@ func TestLProviderRecordQuerySingle(t *testing.T) {
 	}
 }
 
-func TestLProviderRecordQueryPaginated(t *testing.T) {
+func TestPoolQueryPaginated(t *testing.T) {
 	keeper, ctx := keepertest.LpKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNLProviderRecord(keeper, ctx, 5)
+	msgs := createNPool(keeper, ctx, 5)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllLProviderRecordRequest {
-		return &types.QueryAllLProviderRecordRequest{
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllPoolRequest {
+		return &types.QueryAllPoolRequest{
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -87,12 +87,12 @@ func TestLProviderRecordQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.LProviderRecordAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := keeper.PoolAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
-			require.LessOrEqual(t, len(resp.LProviderRecord), step)
+			require.LessOrEqual(t, len(resp.Pool), step)
 			require.Subset(t,
 				nullify.Fill(msgs),
-				nullify.Fill(resp.LProviderRecord),
+				nullify.Fill(resp.Pool),
 			)
 		}
 	})
@@ -100,27 +100,27 @@ func TestLProviderRecordQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.LProviderRecordAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := keeper.PoolAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
-			require.LessOrEqual(t, len(resp.LProviderRecord), step)
+			require.LessOrEqual(t, len(resp.Pool), step)
 			require.Subset(t,
 				nullify.Fill(msgs),
-				nullify.Fill(resp.LProviderRecord),
+				nullify.Fill(resp.Pool),
 			)
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.LProviderRecordAll(wctx, request(nil, 0, 0, true))
+		resp, err := keeper.PoolAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
 			nullify.Fill(msgs),
-			nullify.Fill(resp.LProviderRecord),
+			nullify.Fill(resp.Pool),
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.LProviderRecordAll(wctx, nil)
+		_, err := keeper.PoolAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

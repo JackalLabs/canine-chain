@@ -2,11 +2,11 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 // New event that has current state of pool balance
-func newPoolBalanceEvent(pool types.LPool) sdk.Event {
+func newPoolBalanceEvent(pool types.Pool) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventPoolInfo,
 		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
@@ -16,7 +16,7 @@ func newPoolBalanceEvent(pool types.LPool) sdk.Event {
 	)
 }
 
-func EmitPoolCreatedEvent(ctx sdk.Context, sender sdk.AccAddress, pool types.LPool) {
+func EmitPoolCreatedEvent(ctx sdk.Context, sender sdk.AccAddress, pool types.Pool) {
 	if ctx.EventManager() == nil {
 		return
 	}
@@ -26,7 +26,7 @@ func EmitPoolCreatedEvent(ctx sdk.Context, sender sdk.AccAddress, pool types.LPo
 	)
 }
 
-func newPoolCreatedEvent(sender sdk.AccAddress, pool types.LPool) sdk.Event {
+func newPoolCreatedEvent(sender sdk.AccAddress, pool types.Pool) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventPoolCreated,
 		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
@@ -34,7 +34,7 @@ func newPoolCreatedEvent(sender sdk.AccAddress, pool types.LPool) sdk.Event {
 		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
 		sdk.NewAttribute(types.AttrKeySwapFeeMulti, pool.SwapFeeMulti),
 		sdk.NewAttribute(types.AttrKeyPenaltyMulti, pool.PenaltyMulti),
-		sdk.NewAttribute(types.AttrKeyLPTokenDenom, pool.LptokenDenom),
+		sdk.NewAttribute(types.AttrKeyPTokenDenom, pool.LptokenDenom),
 		sdk.NewAttribute(
 			types.AttrKeyLockDuration,
 			ToSecondsStr(pool.MinLockDuration)),
@@ -44,7 +44,7 @@ func newPoolCreatedEvent(sender sdk.AccAddress, pool types.LPool) sdk.Event {
 func EmitPoolJoinedEvent(
 	ctx sdk.Context,
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	coins sdk.Coins,
 	lockDuration int64,
 ) {
@@ -61,7 +61,7 @@ func EmitPoolJoinedEvent(
 
 func newPoolJoinedEvent(
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	coins sdk.Coins,
 	lockDuration int64,
 ) sdk.Event {
@@ -78,7 +78,7 @@ func newPoolJoinedEvent(
 func EmitPoolExitedEvent(
 	ctx sdk.Context,
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	amount sdk.Coin,
 	coinsOut sdk.Coins,
 	penaltyFee sdk.Coin,
@@ -96,7 +96,7 @@ func EmitPoolExitedEvent(
 
 func newPoolExitedEvent(
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	amount sdk.Coin,
 	coinsOut sdk.Coins,
 	penaltyFee sdk.Coin,
@@ -115,7 +115,7 @@ func newPoolExitedEvent(
 func EmitCoinSwappedEvent(
 	ctx sdk.Context,
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	coinsIn sdk.Coins,
 	coinsOut sdk.Coins,
 	swapFee sdk.Coins,
@@ -140,7 +140,7 @@ func EmitCoinSwappedEvent(
 
 func newCoinSwappedEvent(
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	coinsIn sdk.Coins,
 	coinsOut sdk.Coins,
 	swapFee sdk.Coins,
@@ -160,7 +160,7 @@ func newCoinSwappedEvent(
 func EmitCoinSwapFailedEvent(
 	ctx sdk.Context,
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	coinsIn sdk.Coins,
 	coinsOut sdk.Coins,
 	minCoinsOut sdk.Coins,
@@ -178,7 +178,7 @@ func EmitCoinSwapFailedEvent(
 
 func newCoinSwapFailedEvent(
 	sender sdk.AccAddress,
-	pool types.LPool,
+	pool types.Pool,
 	coinsIn sdk.Coins,
 	coinsOut sdk.Coins,
 	minCoinsOut sdk.Coins,

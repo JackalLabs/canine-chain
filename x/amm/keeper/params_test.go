@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/jackal-dao/canine/testutil/keeper"
-	"github.com/jackal-dao/canine/x/lp/types"
+	testkeeper "github.com/jackalLabs/canine-chain/testutil/keeper"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/stretchr/testify/require"
 )
 

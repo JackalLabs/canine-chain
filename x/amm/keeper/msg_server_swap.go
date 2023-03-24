@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
@@ -15,7 +15,7 @@ func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
 		return err
 	}
 
-	pool, found := k.GetLPool(ctx, msg.PoolName)
+	pool, found := k.GetPool(ctx, msg.PoolName)
 
 	if !found {
 		return types.ErrLiquidityPoolNotFound
@@ -47,7 +47,7 @@ func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
 func GetSwapFee(swapFeeRate string, coin sdk.Coin) sdk.Coin {
 	sfm, err := sdk.NewDecFromStr(swapFeeRate)
 
-	// Something went wrong when LPool was initialized
+	// Something went wrong when Pool was initialized
 	// SwapFeeMulti saved in string format that could not be parsed
 	// by sdk.Dec NewDecFromStr()
 	if err != nil {
@@ -79,7 +79,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 			err.Error())
 	}
 
-	pool, _ := k.GetLPool(ctx, msg.PoolName)
+	pool, _ := k.GetPool(ctx, msg.PoolName)
 	poolCoins := sdk.NewCoins(pool.Coins...)
 	swapIn, _ := sdk.NormalizeDecCoin(msg.CoinInput).TruncateDecimal()
 
@@ -99,7 +99,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 
 	AMM, err := types.GetAMM(pool.AMM_Id)
 
-	// Something went wrong when LPool was initialized
+	// Something went wrong when Pool was initialized
 	// Registered invalid AMM
 	if err != nil {
 		panic(err)
@@ -167,7 +167,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 
 	pool.Coins = poolCoins
 
-	k.SetLPool(ctx, pool)
+	k.SetPool(ctx, pool)
 
 	EmitCoinSwappedEvent(
 		ctx,

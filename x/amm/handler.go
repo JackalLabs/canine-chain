@@ -3,8 +3,8 @@ package lp
 import (
 	"fmt"
 
-	"github.com/jackal-dao/canine/x/lp/keeper"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/keeper"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -18,8 +18,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 
 		switch msg := msg.(type) {
-		case *types.MsgCreateLPool:
-			res, err := msgServer.CreateLPool(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgCreatePool:
+			res, err := msgServer.CreatePool(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgJoinPool:
 			res, err := msgServer.JoinPool(sdk.WrapSDKContext(ctx), msg)

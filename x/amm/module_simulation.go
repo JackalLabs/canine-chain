@@ -9,14 +9,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackal-dao/canine/testutil/sample"
-	lpsimulation "github.com/jackal-dao/canine/x/lp/simulation"
-	"github.com/jackal-dao/canine/x/lp/types"
+	lpsimulation "github.com/jackalLabs/canine-chain/x/amm/simulation"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
 	_ = lpsimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind

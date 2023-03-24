@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -19,7 +19,7 @@ func (k Keeper) EstimateSwapOut(
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	pool, found := k.GetLPool(ctx, req.PoolName)
+	pool, found := k.GetPool(ctx, req.PoolName)
 
 	if !found {
 		return nil, types.ErrLiquidityPoolNotFound

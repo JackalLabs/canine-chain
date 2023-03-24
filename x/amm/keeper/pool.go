@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 func SortDenoms(denoms []string) []string {
@@ -28,9 +28,9 @@ func GetAllDenoms(coins sdk.Coins) []string {
 
 // Mint liquidity token and send it to toAddr.
 // Returns error when minting or sending fails.
-func (k Keeper) MintAndSendLPToken(
+func (k Keeper) MintAndSendPToken(
 	ctx sdk.Context,
-	pool types.LPool,
+	pool types.Pool,
 	toAddr sdk.AccAddress,
 	amount sdk.Int) error {
 
@@ -52,14 +52,14 @@ func (k Keeper) MintAndSendLPToken(
 	return nil
 }
 
-// Returns a LPool with passed values.
+// Returns a Pool with passed values.
 // It does not validate the message.
-func (k Keeper) NewLPool(ctx sdk.Context, msg *types.MsgCreateLPool) types.LPool {
+func (k Keeper) NewPool(ctx sdk.Context, msg *types.MsgCreatePool) types.Pool {
 
 	normCoins := sdk.NormalizeCoins(msg.Coins)
 	poolName := generatePoolName(normCoins)
 
-	var pool = types.LPool{
+	var pool = types.Pool{
 		Index:           poolName,
 		Name:            poolName,
 		Coins:           normCoins,
@@ -69,29 +69,29 @@ func (k Keeper) NewLPool(ctx sdk.Context, msg *types.MsgCreateLPool) types.LPool
 		PenaltyMulti:    msg.PenaltyMulti,
 		// NOTE: use chain token alias
 		LptokenDenom:   generatePoolName(normCoins) + "-JKL",
-		LPTokenBalance: ""}
+		PTokenBalance: ""}
 
 	return pool
 }
 
-// SetLPool set a specific lPool in the store from its index
-func (k Keeper) SetLPool(ctx sdk.Context, lPool types.LPool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LPoolKeyPrefix))
+// SetPool set a specific lPool in the store from its index
+func (k Keeper) SetPool(ctx sdk.Context, lPool types.Pool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PoolKeyPrefix))
 	b := k.cdc.MustMarshal(&lPool)
-	store.Set(types.LPoolKey(
+	store.Set(types.PoolKey(
 		lPool.Index,
 	), b)
 }
 
-// GetLPool returns a lPool from its index
-func (k Keeper) GetLPool(
+// GetPool returns a lPool from its index
+func (k Keeper) GetPool(
 	ctx sdk.Context,
 	index string,
 
-) (val types.LPool, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LPoolKeyPrefix))
+) (val types.Pool, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PoolKeyPrefix))
 
-	b := store.Get(types.LPoolKey(
+	b := store.Get(types.PoolKey(
 		index,
 	))
 	if b == nil {
@@ -102,27 +102,27 @@ func (k Keeper) GetLPool(
 	return val, true
 }
 
-// RemoveLPool removes a lPool from the store
-func (k Keeper) RemoveLPool(
+// RemovePool removes a lPool from the store
+func (k Keeper) RemovePool(
 	ctx sdk.Context,
 	index string,
 
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LPoolKeyPrefix))
-	store.Delete(types.LPoolKey(
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PoolKeyPrefix))
+	store.Delete(types.PoolKey(
 		index,
 	))
 }
 
-// GetAllLPool returns all lPool
-func (k Keeper) GetAllLPool(ctx sdk.Context) (list []types.LPool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LPoolKeyPrefix))
+// GetAllPool returns all lPool
+func (k Keeper) GetAllPool(ctx sdk.Context) (list []types.Pool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PoolKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.LPool
+		var val types.Pool
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
@@ -137,8 +137,8 @@ func generatePoolName(coins sdk.Coins) string {
 	return strings.Join(SortDenoms(denoms), "-")
 }
 
-// Generate a denom unit for LPToken with itself as smallest unit.
-func generateLPTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUnit {
+// Generate a denom unit for PToken with itself as smallest unit.
+func generatePTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUnit {
 	// More info about denom units:
 	// https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.46.0/x/bank/types#DenomUnit
 	tokenDenomUnit := banktypes.DenomUnit{
@@ -148,15 +148,15 @@ func generateLPTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUni
 	return []*banktypes.DenomUnit{&tokenDenomUnit}
 }
 
-func (k Keeper) registerLPToken(ctx sdk.Context, denom string) {
+func (k Keeper) registerPToken(ctx sdk.Context, denom string) {
 	_, found := k.bankKeeper.GetDenomMetaData(ctx, denom)
 
-	aliase := "JKLLP"
+	aliase := "JKLP"
 
 	if !found {
-		// Register LPTokenDenom meta data.
-		// Step 1: generate denom units for LPToken.
-		denomUnits := generateLPTokenDenomUnit(denom, aliase)
+		// Register PTokenDenom meta data.
+		// Step 1: generate denom units for PToken.
+		denomUnits := generatePTokenDenomUnit(denom, aliase)
 
 		// Step 2: add it to bank's denom meta data store.
 		metaData := banktypes.Metadata{

@@ -6,24 +6,24 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) LPoolAll(c context.Context, req *types.QueryAllLPoolRequest) (*types.QueryAllLPoolResponse, error) {
+func (k Keeper) PoolAll(c context.Context, req *types.QueryAllPoolRequest) (*types.QueryAllPoolResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var lPools []types.LPool
+	var lPools []types.Pool
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	lPoolStore := prefix.NewStore(store, types.KeyPrefix(types.LPoolKeyPrefix))
+	lPoolStore := prefix.NewStore(store, types.KeyPrefix(types.PoolKeyPrefix))
 
 	pageRes, err := query.Paginate(lPoolStore, req.Pagination, func(key []byte, value []byte) error {
-		var lPool types.LPool
+		var lPool types.Pool
 		if err := k.cdc.Unmarshal(value, &lPool); err != nil {
 			return err
 		}
@@ -36,16 +36,16 @@ func (k Keeper) LPoolAll(c context.Context, req *types.QueryAllLPoolRequest) (*t
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllLPoolResponse{LPool: lPools, Pagination: pageRes}, nil
+	return &types.QueryAllPoolResponse{Pool: lPools, Pagination: pageRes}, nil
 }
 
-func (k Keeper) LPool(c context.Context, req *types.QueryGetLPoolRequest) (*types.QueryGetLPoolResponse, error) {
+func (k Keeper) Pool(c context.Context, req *types.QueryGetPoolRequest) (*types.QueryGetPoolResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetLPool(
+	val, found := k.GetPool(
 		ctx,
 		req.Index,
 	)
@@ -53,5 +53,5 @@ func (k Keeper) LPool(c context.Context, req *types.QueryGetLPoolRequest) (*type
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetLPoolResponse{LPool: val}, nil
+	return &types.QueryGetPoolResponse{Pool: val}, nil
 }
