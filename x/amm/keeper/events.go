@@ -34,7 +34,7 @@ func newPoolCreatedEvent(sender sdk.AccAddress, pool types.Pool) sdk.Event {
 		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
 		sdk.NewAttribute(types.AttrKeySwapFeeMulti, pool.SwapFeeMulti),
 		sdk.NewAttribute(types.AttrKeyPenaltyMulti, pool.PenaltyMulti),
-		sdk.NewAttribute(types.AttrKeyPTokenDenom, pool.LptokenDenom),
+		sdk.NewAttribute(types.AttrKeyPoolTokenDenom, pool.PoolToken.Denom),
 		sdk.NewAttribute(
 			types.AttrKeyLockDuration,
 			ToSecondsStr(pool.MinLockDuration)),

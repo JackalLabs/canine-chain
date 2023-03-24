@@ -20,6 +20,6 @@ const (
 	AttrKeyMinCoinsOut  = "minimum_coins_out"
 	AttrKeySwapFeeMulti = "swap_fee_multiplier"
 	AttrKeyPenaltyMulti = "penalty_multiplier"
-	AttrKeyLPTokenDenom = "liquidity_pool_token_denom"
+	AttrKeyPoolTokenDenom = "pool_token_denom"
 	AttrKeyLockDuration = "lock_duration"
 )
