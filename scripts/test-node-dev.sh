@@ -48,6 +48,7 @@ from_scratch () {
 
     # Set gas limit in genesis
     update_test_genesis '.consensus_params["block"]["max_gas"]="100000000"'
+    update_test_genesis '.consensus_params["block"]["max_bytes"]="44040192"'
     update_test_genesis '.app_state["gov"]["voting_params"]["voting_period"]="15s"'
     
     update_test_genesis '.app_state["staking"]["params"]["bond_denom"]="ujkl"'  
