@@ -6,12 +6,14 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// x/lp module sentinel errors
+// x/amm module sentinel errors
 var (
-	ErrNegativeLockDuration    = sdkerrors.Register(ModuleName, 1, "Lock duration cannot be negative")
-	ErrInvalidValue            = sdkerrors.Register(ModuleName, 2, "Invalid value")
-	ErrLiquidityPoolExists     = sdkerrors.Register(ModuleName, 3, "Liquidity pool exists")
-	ErrLiquidityPoolNotFound   = sdkerrors.Register(ModuleName, 4, "Liquidity pool not found")
-	ErrLProviderRecordNotFound = sdkerrors.Register(ModuleName, 5, "Liquidity provider record not found")
-	ErrLProviderRecordExists   = sdkerrors.Register(ModuleName, 6, "Liquidity provider exists")
+	ErrNegativeLockDuration    = sdkerrors.Register(ModuleName, 1, "lock duration cannot be negative")
+	ErrInvalidValue            = sdkerrors.Register(ModuleName, 2, "invalid value")
+	ErrLiquidityPoolExists     = sdkerrors.Register(ModuleName, 3, "liquidity pool exists")
+	ErrLiquidityPoolNotFound   = sdkerrors.Register(ModuleName, 4, "liquidity pool not found")
+	ErrLProviderRecordNotFound = sdkerrors.Register(ModuleName, 5, "liquidity provider record not found")
+	ErrLProviderRecordExists   = sdkerrors.Register(ModuleName, 6, "liquidity provider exists")
+	ErrNegativeCoin = sdkerrors.Register(ModuleName, 7, "coin amount is negative")
+	ErrInvalidPoolName = sdkerrors.Register(ModuleName, 8, "invalid pool name")
 )

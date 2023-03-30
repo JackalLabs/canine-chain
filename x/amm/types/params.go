@@ -21,7 +21,6 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 // Parameter keys
 const (
 	KeyMinInitPoolDeposit = "MinInitPoolDeposit"
-	KeyMaxPoolDenomCount  = "MaxPoolDenomCount"
 	KeyProtocolFeeToAddr  = "ProtocolFeeToAddr"
 	KeyProtocolFeeRate  = "ProtocolFeeRate"
 )
@@ -29,7 +28,6 @@ const (
 // Default values
 var (
 	DefaultInitPoolDeposit   uint64 = 2
-	DefaultMaxPoolDenomCount uint32 = 2
 	DefaultProtocolFeeToAddr string = "jkl1vmkyv60rztxhyahrw234l6juty72th8snftpme"
 	DefaultProtocolFeeRate   string = "0.001"
 )
@@ -45,49 +43,6 @@ func validateMinInitPoolDeposit(i interface{}) error {
 			"Parameter validation error at %s module, %s must be uint64",
 			ModuleName,
 			KeyMinInitPoolDeposit,
-		)
-	}
-
-	return nil
-}
-
-func validateMaxPoolDenomCount(i interface{}) error {
-	// Type assertion.
-	_, ok := i.(uint32)
-
-	if !ok {
-		return sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidType,
-			"Parameter validation error at %s module, %s must be uint32",
-			ModuleName,
-			KeyMaxPoolDenomCount,
-		)
-	}
-
-	value, _ := i.(uint32)
-
-	if value < 1 {
-		return sdkerrors.Wrapf(
-			ErrInvalidValue,
-			"Parameter (%s) validation error at %s module, denom count must be bigger than 1",
-			KeyMaxPoolDenomCount,
-			ModuleName,
-		)
-	}
-
-	return nil
-}
-
-func validateLPTokenUnit(i interface{}) error {
-	// Type assertion.
-	_, ok := i.(uint32)
-
-	if !ok {
-		return sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidType,
-			"Parameter validation error at %s module, %s must be uint32",
-			ModuleName,
-			KeyMaxPoolDenomCount,
 		)
 	}
 
@@ -139,7 +94,7 @@ func validateProtocolFeeRate(i interface{}) error {
 
 	if err != nil {
 		return sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidAddress,
+			ErrInvalidValue,
 			"Parameter validation error at %s module, %s: %s",
 			ModuleName,
 			KeyProtocolFeeRate,
@@ -176,30 +131,16 @@ func NewParams() Params {
 func DefaultParams() Params {
 	return Params{
 		MinInitPoolDeposit: DefaultInitPoolDeposit,
-		MaxPoolDenomCount:  DefaultMaxPoolDenomCount,
 		ProtocolFeeToAddr: DefaultProtocolFeeToAddr,
 		ProtocolFeeRate: DefaultProtocolFeeRate,
 	}
 }
-
-/*
-ParamSetPair structure:
-	type ParamSetPair struct {
-		Key         []byte
-		Value       interface{}
-		ValidatorFn ValueValidatorFn
-	}
-
-source:
-	https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.45.6/x/params/types#ParamSetPair
-*/
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	// return slice of ParamSetPair
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair([]byte(KeyMinInitPoolDeposit), &p.MinInitPoolDeposit, validateMinInitPoolDeposit),
-		paramtypes.NewParamSetPair([]byte(KeyMaxPoolDenomCount), &p.MaxPoolDenomCount, validateMaxPoolDenomCount),
 		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeToAddr), &p.ProtocolFeeToAddr, validateProtocolFeeToAddr),
 		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeRate), &p.ProtocolFeeRate, validateProtocolFeeRate),
 	}

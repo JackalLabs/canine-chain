@@ -20,7 +20,7 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-	// Check for duplicated index in lPool
+	// Check for duplicated index in Pool
 	lPoolIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.PoolList {
@@ -30,7 +30,7 @@ func (gs GenesisState) Validate() error {
 		}
 		lPoolIndexMap[index] = struct{}{}
 	}
-	// Check for duplicated index in lProviderRecord
+	// Check for duplicated index in ProviderRecord
 	lProviderRecordIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.ProviderRecordList {
@@ -40,7 +40,6 @@ func (gs GenesisState) Validate() error {
 		}
 		lProviderRecordIndexMap[index] = struct{}{}
 	}
-	// this line is used by starport scaffolding # genesis/types/validate
 
 	return gs.Params.Validate()
 }

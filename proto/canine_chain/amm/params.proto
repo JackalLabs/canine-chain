@@ -11,8 +11,6 @@ message Params {
 
 	uint64 MinInitPoolDeposit = 1;  
 
-	uint32 MaxPoolDenomCount = 2;
-
 	string protocol_fee_to_addr = 3;
 
 	string protocol_fee_rate = 4;

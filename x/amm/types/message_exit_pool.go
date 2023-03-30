@@ -43,5 +43,15 @@ func (msg *MsgExitPool) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if len(msg.PoolName) == 0 {
+		return ErrInvalidPoolName
+	}
+
+	if msg.Amount < 0 {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, 
+			"amount is too small %d", msg.Amount)
+	}
+
 	return nil
 }

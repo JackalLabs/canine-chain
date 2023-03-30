@@ -61,6 +61,11 @@ func (msg *MsgCreatePool) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
+	if len(msg.Coins) > MaxPoolDenomCount {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"cannot create pool with more than %d coins", MaxPoolDenomCount)
+	}
+
 	if msg.MinLockDuration < 0 {
 		return sdkerrors.Wrap(errors.New(fmt.Sprintf(
 			"MinLockDuration cannot be negative: %d > 0", msg.MinLockDuration)),
@@ -69,24 +74,25 @@ func (msg *MsgCreatePool) ValidateBasic() error {
 
 	sfm, err := sdk.NewDecFromStr(msg.SwapFeeMulti)
 	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid type SwapFeeMulti: %s", err.Error())
 	}
 	if sfm.LT(sdk.NewDec(0)) || sfm.GTE(sdk.NewDec(1)) {
-		return sdkerrors.Wrap(errors.New(fmt.Sprintf(
-			"swap fee multiplier should be non-negative number less than 1:"+
-				" 0 < %s < 1", msg.SwapFeeMulti)),
-			sdkerrors.ErrInvalidRequest.Error())
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, 
+			errors.New(fmt.Sprintf("invalid value of SwapFeeMulti:"+
+				" 0 < %s < 1", msg.SwapFeeMulti)).Error())
 	}
 
 	pm, err := sdk.NewDecFromStr(msg.PenaltyMulti)
 	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
+			"invalid type PenaltyMulti: %s", err.Error())
 	}
 	if pm.LT(sdk.NewDec(0)) || pm.GTE(sdk.NewDec(1)) {
-		return sdkerrors.Wrap(errors.New(fmt.Sprintf(
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, 
+			errors.New(fmt.Sprintf(
 			"penalty multiplier fee multiplier should be non-negative number "+
-				"and less than 1: 0 < %s < 1", msg.PenaltyMulti)),
-			sdkerrors.ErrInvalidRequest.Error())
+			"and less than 1: 0 < %s < 1", msg.PenaltyMulti)).Error())
 	}
 
 	return nil

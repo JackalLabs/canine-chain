@@ -45,5 +45,18 @@ func (msg *MsgSwap) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
+	if len(msg.PoolName) == 0 {
+		return ErrInvalidPoolName
+	}
+
+	if !msg.CoinInput.IsPositive() {
+		return sdkerrors.Wrapf(ErrNegativeCoin, "coin input is too small (%s)",
+			msg.CoinInput.String())
+	}
+
+	if !msg.MinCoinOutput.IsPositive() {
+		return sdkerrors.Wrapf(ErrNegativeCoin, "minimum coin output is too small (%s)",
+			msg.MinCoinOutput.String())
+	}
 	return nil
 }

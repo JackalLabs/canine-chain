@@ -8,6 +8,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const MaxPoolDenomCount = 2;
+
 // Every liquidity pools have an amm model that balances the assets.
 // All amm models implements AMM interface.
 

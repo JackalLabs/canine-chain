@@ -43,6 +43,16 @@ func (msg *MsgJoinPool) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+	
+	if len(msg.PoolName) == 0 {
+		return ErrInvalidPoolName
+	}
+
+	coins := sdk.NewCoins(msg.Coins...)
+	if !coins.IsAllPositive() {
+		return sdkerrors.Wrapf(ErrInvalidValue,
+			"amount of coins are too small: (%s)", coins.String())
+	}
 
 	return nil
 }
