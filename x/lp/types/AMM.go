@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // Every liquidity pools have an amm model that balances the assets.
@@ -21,9 +20,9 @@ func GetAMM(id uint32) (AMM, error) {
 	// case x:
 	// 	return amm_name{}, nil
 	case 0:
-		return backup{}, nil
+		return Backup{}, nil
 	default:
-		return backup{}, errors.New(fmt.Sprintf("AMM model id not found: %v", id))
+		return Backup{}, errors.New(fmt.Sprintf("AMM model id not found: %v", id))
 	}
 }
 
@@ -45,9 +44,17 @@ type AMM interface {
 
 // Supports pool with two denoms.
 // Model: xy=k
-type backup struct{}
+type Backup struct{}
 
-func (b backup) EstimateReturn(poolCoins sdk.Coins, depositCoins sdk.Coins) (sdk.Coins, error) {
+func (b Backup) EstimateReturn(poolCoins sdk.Coins, depositCoins sdk.Coins) (sdk.Coins, error) {
+	if !poolCoins.IsValid() || !depositCoins.IsValid() {
+		return nil, errors.New(fmt.Sprintf("Invalid pool coins or deposit coins"))
+	}
+	// Check if depositCoins are subset of poolCoins
+	if !poolCoins.IsAllGTE(depositCoins) {
+		return sdk.NewCoins(), errors.New(fmt.Sprintf("Deposit coins are not subset of pool coins"))
+	}
+
 	// How to get poolCoins denoms NOT in depositCoins denoms:
 	// Subtract coins with deposit denom and amount in poolCoins from poolCoins
 	depositDenom := depositCoins.GetDenomByIndex(0)
@@ -64,18 +71,26 @@ func (b backup) EstimateReturn(poolCoins sdk.Coins, depositCoins sdk.Coins) (sdk
 		yAmt = yAmt.Sub(sdk.OneInt())
 	}
 	if yAmt.LTE(sdk.ZeroInt()) {
-		return sdk.NewCoins(sdk.NewCoin(y, sdk.ZeroInt())), sdkerrors.Wrapf(
-			sdkerrors.ErrLogic,
-			"AMM run result is zero",
-		)
+		return sdk.NewCoins(sdk.NewCoin(y, sdk.ZeroInt())), errors.New(fmt.Sprintf("AMM run result is zero"))
 	}
 	return sdk.NewCoins(sdk.NewCoin(y, yAmt)), nil
 }
 
-func (b backup) EstimateDeposit(poolCoins sdk.Coins, desiredCoins sdk.Coins) (sdk.Coins, error) {
+func (b Backup) EstimateDeposit(poolCoins sdk.Coins, desiredCoins sdk.Coins) (sdk.Coins, error) {
 	desiredDenom := desiredCoins.GetDenomByIndex(0)
 	subCoin := sdk.NewCoin(desiredDenom, poolCoins.AmountOf(desiredDenom))
 	depositEstDenom := poolCoins.Sub(sdk.NewCoins(subCoin)).GetDenomByIndex(0)
+
+	if !poolCoins.IsValid() || !desiredCoins.IsValid() {
+		return nil, errors.New(fmt.Sprintf("Invalid pool coins or desired coins"))
+	}
+	if poolCoins.AmountOf(desiredDenom).GT(sdk.ZeroInt()) {
+		return sdk.Coins{}, errors.New(fmt.Sprintf("Desired coin already in pool"))
+	}
+
+	if !poolCoins.IsAllGTE(desiredCoins) {
+		return sdk.Coins{}, errors.New(fmt.Sprintf("Not enough coins in pool"))
+	}
 
 	x := poolCoins.AmountOf(depositEstDenom)
 	var xEst sdk.Int
