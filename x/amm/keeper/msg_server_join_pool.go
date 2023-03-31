@@ -9,17 +9,13 @@ import (
 )
 
 func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) error {
-	if err := msg.ValidateBasic(); err != nil {
-		return err
-	}
-
 	pool, found := k.GetPool(ctx, msg.PoolName)
 
 	if !found {
 		return types.ErrLiquidityPoolNotFound
 	}
 
-	coins := sdk.NormalizeCoins(msg.Coins)
+	coins := sdk.NewCoins(msg.Coins...)
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
 	if !coins.DenomsSubsetOf(poolCoins) {
@@ -44,7 +40,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 	// Get amount of PToken to send
 	pool, _ := k.GetPool(ctx, msg.PoolName)
 
-	coins := sdk.NormalizeCoins(msg.Coins)
+	coins := sdk.NewCoins(msg.Coins...)
 
 	shares, err := CalculatePoolShare(pool, coins)
 
