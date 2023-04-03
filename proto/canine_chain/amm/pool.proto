@@ -17,5 +17,5 @@ message Pool {
   // sdk.Dec in string representation 
   string penalty_multi = 7;
   // Tracks amount of pool token
-  cosmos.base.v1beta1.Coin pool_token = 8;
+  cosmos.base.v1beta1.Coin pool_token = 8 [(gogoproto.nullable) = false];
 }

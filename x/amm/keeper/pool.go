@@ -34,16 +34,16 @@ func (k Keeper) MintAndSendPToken(
 	toAddr sdk.AccAddress,
 	amount sdk.Int) error {
 
-	lPToken := sdk.NewCoin(pool.LptokenDenom, amount)
-	lPTokens := sdk.NewCoins(lPToken)
+	poolToken := sdk.NewCoin(pool.PoolToken.Denom, amount)
+	poolTokens := sdk.NewCoins(poolToken)
 
-	sdkError := k.bankKeeper.MintCoins(ctx, types.ModuleName, lPTokens)
+	sdkError := k.bankKeeper.MintCoins(ctx, types.ModuleName, poolTokens)
 
 	if sdkError != nil {
 		return sdkError
 	}
 
-	sdkError = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, toAddr, lPTokens)
+	sdkError = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, toAddr, poolTokens)
 
 	if sdkError != nil {
 		return sdkError
@@ -56,20 +56,19 @@ func (k Keeper) MintAndSendPToken(
 // It does not validate the message.
 func (k Keeper) NewPool(ctx sdk.Context, msg *types.MsgCreatePool) types.Pool {
 
-	normCoins := sdk.NormalizeCoins(msg.Coins)
-	poolName := generatePoolName(normCoins)
+	coins := sdk.NewCoins(msg.Coins...)
+	poolName := generatePoolName(coins)
 
 	var pool = types.Pool{
 		Index:           poolName,
 		Name:            poolName,
-		Coins:           normCoins,
-		AMM_Id:          msg.Amm_Id,
+		Coins: coins,
+		AMM_Id:          msg.AmmId,
 		SwapFeeMulti:    msg.SwapFeeMulti,
 		MinLockDuration: msg.MinLockDuration,
 		PenaltyMulti:    msg.PenaltyMulti,
-		// NOTE: use chain token alias
-		LptokenDenom:   generatePoolName(normCoins) + "-JKL",
-		PTokenBalance: ""}
+		PoolToken: sdk.NewCoin("", sdk.ZeroInt()),
+	}
 
 	return pool
 }
@@ -83,7 +82,7 @@ func (k Keeper) SetPool(ctx sdk.Context, lPool types.Pool) {
 	), b)
 }
 
-// GetPool returns a lPool from its index
+// GetPool returns a Pool from its index
 func (k Keeper) GetPool(
 	ctx sdk.Context,
 	index string,
@@ -148,14 +147,15 @@ func generatePTokenDenomUnit(denom string, aliase string) []*banktypes.DenomUnit
 	return []*banktypes.DenomUnit{&tokenDenomUnit}
 }
 
-func (k Keeper) registerPToken(ctx sdk.Context, denom string) {
+// Register pool token to bank module
+func (k Keeper) registerPoolToken(ctx sdk.Context, denom string) {
 	_, found := k.bankKeeper.GetDenomMetaData(ctx, denom)
 
 	aliase := "JKLP"
 
 	if !found {
-		// Register PTokenDenom meta data.
-		// Step 1: generate denom units for PToken.
+		// Register PoolTokenDenom meta data.
+		// Step 1: generate denom units for PoolToken.
 		denomUnits := generatePTokenDenomUnit(denom, aliase)
 
 		// Step 2: add it to bank's denom meta data store.
