@@ -65,6 +65,12 @@ service Query {
         "/jackal-dao/canine-chain/storage/freespace/{address}";
   }
 
+  // Queries a list of Freespace items.
+  rpc StoreCount(QueryStoreCountRequest) returns (QueryStoreCountResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/storing/{address}";
+  }
+
   // Queries a list of FindFile items.
   rpc FindFile(QueryFindFileRequest) returns (QueryFindFileResponse) {
     option (google.api.http).get =
@@ -188,7 +194,12 @@ message QueryAllProvidersResponse {
 
 message QueryFreespaceRequest { string address = 1; }
 
+message QueryStoreCountRequest { string address = 1; }
+
 message QueryFreespaceResponse { string space = 1; }
+
+message QueryStoreCountResponse { string count = 1; }
+
 
 message QueryFindFileRequest { string fid = 1; }
 

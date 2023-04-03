@@ -28,6 +28,23 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) int64 {
 	return payInfo.SpaceAvailable
 }
 
+func (k Keeper) GetProviderDeals(ctx sdk.Context, provider string) int64 {
+	allDeals := k.GetAllActiveDeals(ctx)
+
+	var count int64
+	for i := 0; i < len(allDeals); i++ {
+		deal := allDeals[i]
+		if deal.Provider != provider {
+			continue
+		}
+
+		count++
+
+	}
+
+	return count
+}
+
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 	allDeals := k.GetAllActiveDeals(ctx)
 
