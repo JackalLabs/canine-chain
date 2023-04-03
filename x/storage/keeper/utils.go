@@ -38,7 +38,7 @@ func (k Keeper) GetProviderDeals(ctx sdk.Context, provider string) int64 {
 			continue
 		}
 
-		count += 1
+		count++
 
 	}
 
