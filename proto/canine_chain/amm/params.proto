@@ -9,9 +9,9 @@ option go_package = "github.com/jackalLabs/canine-chain/x/amm/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-	uint64 MinInitPoolDeposit = 1;  
+	uint64 min_init_liquidity = 1;  
 
-	string protocol_fee_to_addr = 3;
+	string protocol_fee_to_addr = 2;
 
-	string protocol_fee_rate = 4;
+	string protocol_fee_rate = 3;
 }

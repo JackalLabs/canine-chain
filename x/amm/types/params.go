@@ -20,20 +20,20 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 
 // Parameter keys
 const (
-	KeyMinInitPoolDeposit = "MinInitPoolDeposit"
+	KeyMinInitLiquidity = "MinInitLiquidity"
 	KeyProtocolFeeToAddr  = "ProtocolFeeToAddr"
 	KeyProtocolFeeRate  = "ProtocolFeeRate"
 )
 
 // Default values
 var (
-	DefaultInitPoolDeposit   uint64 = 2
+	DefaultMinInitLiquidity   uint64 = 100
 	DefaultProtocolFeeToAddr string = "jkl1vmkyv60rztxhyahrw234l6juty72th8snftpme"
 	DefaultProtocolFeeRate   string = "0.001"
 )
 
 // Validation methods
-func validateMinInitPoolDeposit(i interface{}) error {
+func validateMinInitLiquidity(i interface{}) error {
 	// Type assertion.
 	_, ok := i.(uint64)
 
@@ -42,7 +42,7 @@ func validateMinInitPoolDeposit(i interface{}) error {
 			sdkerrors.ErrInvalidType,
 			"Parameter validation error at %s module, %s must be uint64",
 			ModuleName,
-			KeyMinInitPoolDeposit,
+			KeyMinInitLiquidity,
 		)
 	}
 
@@ -130,7 +130,7 @@ func NewParams() Params {
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
 	return Params{
-		MinInitPoolDeposit: DefaultInitPoolDeposit,
+		MinInitLiquidity: DefaultMinInitLiquidity,
 		ProtocolFeeToAddr: DefaultProtocolFeeToAddr,
 		ProtocolFeeRate: DefaultProtocolFeeRate,
 	}
@@ -140,7 +140,7 @@ func DefaultParams() Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	// return slice of ParamSetPair
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair([]byte(KeyMinInitPoolDeposit), &p.MinInitPoolDeposit, validateMinInitPoolDeposit),
+		paramtypes.NewParamSetPair([]byte(KeyMinInitLiquidity), &p.MinInitLiquidity, validateMinInitLiquidity),
 		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeToAddr), &p.ProtocolFeeToAddr, validateProtocolFeeToAddr),
 		paramtypes.NewParamSetPair([]byte(KeyProtocolFeeRate), &p.ProtocolFeeRate, validateProtocolFeeRate),
 	}
