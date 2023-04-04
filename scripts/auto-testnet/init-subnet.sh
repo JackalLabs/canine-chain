@@ -70,33 +70,3 @@ for i in {1..3}
 do
     docker exec -d validator_${i} canined start 
 done
-
-# # creating a new validator
-# docker exec genesis-validator canined tx staking create-validator \
-# --amount=400000000ujkl \
-# --pubkey=$(docker exec genesis-validator canined tendermint show-validator --chain-id=testing) \
-# --moniker=genesis-val \
-# --chain-id=testing \
-# --commission-rate="0.10" \
-# --commission-max-rate="0.20" \
-# --commission-max-change-rate="0.05" \
-# --min-self-delegation="1" \
-# --from=genesis-val
-# --keyring-backend=test \
-# --yes 
-
-# for i in {1..3}
-# do
-#     # creating a new validator
-#     docker exec validator_${i} canined tx staking create-validator --amount=400000000ujkl \
-#     --from=val_${i} \
-#     --pubkey=$(docker exec validator_${i} canined tendermint show-validator --chain-id=testing) \
-#     --moniker=val_${i} \
-#     --chain-id=$CHAIN_ID \
-#     --commission-rate="0.1" \
-#     --commission-max-rate="0.2" \
-#     --commission-max-change-rate="0.05" \
-#     --min-self-delegation="1" \
-#     --keyring-backend=test \
-#     --yes 
-# done
