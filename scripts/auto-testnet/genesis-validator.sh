@@ -39,18 +39,6 @@ canined gentx $VALIDATOR_NAME 500000000ujkl \
 --commission-rate=0.05 \
 --keyring-backend=test \
 
-# canined gentx $VALIDATOR_NAME 500000000ujkl \
-# --keyring-backend=test \
-# --chain-id=$CHAIN_ID \
-# --moniker=$VALIDATOR_NAME \
-# --commission-max-change-rate=0.01 \
-# --commission-max-rate=0.20 \
-# --commission-rate=0.05 \
-# --account-number=$ACCOUNT_NUMBER \
-# --fees=2500ujkl \
-# --from=$VALIDATOR_NAME \
-# --keyring-backend=test \
-
 # update staking genesis
 cat $HOME/.canine/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="ujkl"' > $HOME/.canine/config/tmp_genesis.json && mv $HOME/.canine/config/tmp_genesis.json $HOME/.canine/config/genesis.json
 cat $HOME/.canine/config/genesis.json | jq '.app_state["staking"]["params"]["unbonding_time"]="240s"' > $HOME/.canine/config/tmp_genesis.json && mv $HOME/.canine/config/tmp_genesis.json $HOME/.canine/config/genesis.json

@@ -44,21 +44,6 @@ canined gentx $VALIDATOR_NAME 500000000ujkl \
 --commission-max-rate=0.20 \
 --commission-rate=0.05 \
 --keyring-backend test \
-# canined gentx $VALIDATOR_NAME 500000000ujkl \
-# --keyring-backend=test \
-# --chain-id=$CHAIN_ID \
-# --account-number=$ACCOUNT_NUMBER
-# --moniker=$VALIDATOR_NAME \
-# --commission-max-change-rate=0.01 \
-# --commission-max-rate=0.20 \
-# --commission-rate=0.05 \
-# --fees=2500ujkl \
-# --from=$VALIDATOR_NAME \
-# --keyring-backend=test \
-
-# # copying the keys to the common store 
-# mkdir /home/common_store/keys 
-# canined keys export --keyring-backend=test
 
 # copying the modified genesis back
 cp /root/.canine/config/genesis.json /home/common_store/genesis.json
