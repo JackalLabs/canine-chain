@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -e
 
 # collecting keywords
 # required keywords: VALIDATOR_NAME,  CHAIN_ID, 
