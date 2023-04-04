@@ -45,8 +45,10 @@ docker exec genesis-validator canined tendermint unsafe-reset-all --chain-id=tes
 export IPADDR=$(docker exec genesis-validator hostname -I | tr -d ' ')
 docker exec genesis-validator sed -i "s|tcp://0\.0\.0\.0:26656|tcp://$IPADDR:26656|" $HOME/.canine/config/config.toml
 docker exec genesis-validator sed -i "s|tcp://127\.0\.0\.1:26657|tcp://$IPADDR:26657|" $HOME/.canine/config/config.toml
+docker exec genesis-validator sed -i "s|tcp://127\.0\.0\.1:26658|tcp://$IPADDR:26658|" $HOME/.canine/config/config.toml
 
 for i in {1..3}
+do
     # collecting the gentxs
     # docker exec validator_${i} rm -rf /root/.canine/config/gentx
     docker exec validator_${i} cp /home/common_store/genesis.json /root/.canine/config/genesis.json
@@ -58,6 +60,7 @@ for i in {1..3}
     export IPADDR=$(docker exec validator_${i} hostname -I | tr -d ' ')
     docker exec validator_${i} sed -i "s|tcp://0\.0\.0\.0:26656|tcp://$IPADDR:26656|" $HOME/.canine/config/config.toml
     docker exec validator_${i} sed -i "s|tcp://127\.0\.0\.1:26657|tcp://$IPADDR:26657|" $HOME/.canine/config/config.toml
+    docker exec validator_${i} sed -i "s|tcp://127\.0\.0\.1:26658|tcp://$IPADDR:26658|" $HOME/.canine/config/config.toml
 done
 
 # starting the chain 
