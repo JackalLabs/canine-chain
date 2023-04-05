@@ -18,6 +18,8 @@ parent:
     + [Postkey](#postkey)
     + [Makeroot](#makeroot)
     + [Postfile](#postfile)
+    + [Addviewers](#addviewers)
+    + [Removeviewers](#removeviewers)
     + [Delete](#delete)
 5. [Query Requests](#query-requests)
     + [GetPubkey](#getpubkey)
@@ -156,6 +158,38 @@ let fullMerklePath = MerklePath("s/home")
 
 }
 ```
+
+### AddViewers
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in alice's Bech32 address<br /> 
+|viewerIds  | String  | A comma separated string of viewer addresses. A viewer address is: hex[ hash("c") ] where c = concatenate( "v", "trackingNumber", "Bech32 address" )<br />
+|viewerKeys  | String  | A comma separated string of keys that have been protected with the scheme used to protect the owner's viewing key<br />
+|address  | String  | The full chain address of the file, i.e., the merklePath<br />
+|owner  | String  | Let c = Hex[ hash(owner Bech32 address) ]. Full chain address is: Hex[ hash("o"+"merklePath"+"c") ]<br />
+
+
+
+
+#### Response
+
+Coming soon
+
+
+### RemoveViewers
+
+|Name|Type|Description|                                                                                       
+|--|--|--|
+|creator  | String  | The creator and broadcaster of this message. Pass in alice's Bech32 address<br /> 
+|viewerIds  | String  | A comma separated string of viewer addresses. A viewer address is: hex[ hash("c") ] where c = concatenate( "v", "trackingNumber", "Bech32 address" )<br />
+|address  | String  | The full chain address of the file, i.e., the merklePath<br />
+|owner  | String  | Let c = Hex[ hash(owner Bech32 address) ]. Full chain address is: Hex[ hash("o"+"merklePath"+"c") ]<br />
+
+#### Response
+
+Coming soon
+
 ### Delete
 
 Let it be that alice wants to delete her "s/home" folder
