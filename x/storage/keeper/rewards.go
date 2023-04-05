@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -146,6 +147,19 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 
 	ctx.Logger().Debug("%s\n", deal.Cid)
 
+	misses, ok := sdk.NewIntFromString(deal.Proofsmissed)
+	if !ok {
+		e := errors.New("cannot parse string")
+		ctx.Logger().Error(e.Error())
+		return e
+	}
+	misses.SubRaw(1)
+
+	if misses.LT(sdk.NewInt(0)) {
+		misses = sdk.NewInt(0)
+	}
+
+	deal.Proofsmissed = misses.String()
 	deal.Proofverified = "false"
 	k.SetActiveDeals(ctx, deal)
 
