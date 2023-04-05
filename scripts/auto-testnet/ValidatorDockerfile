@@ -1,0 +1,33 @@
+FROM golang:1.20
+# validator build script
+
+# creating new working dir in the container
+WORKDIR /home/canine-validator
+
+RUN apt-get update
+
+# installing git
+RUN apt-get install git jq net-tools -y
+
+# cloning the release version
+ARG RELEASE
+RUN git clone -b ${RELEASE} https://github.com/JackalLabs/canine-chain.git /home/canine-validator
+
+# installing the canine chain
+RUN make install
+# installing the canine binary
+RUN go install /home/canine-validator/cmd/canined
+
+ARG VALIDATOR_SCRIPT=validator.sh
+# copying the genesis setup script 
+COPY ${VALIDATOR_SCRIPT} /home/canine-validator/scripts
+RUN chmod +x /home/canine-validator/scripts/${VALIDATOR_SCRIPT}
+# copying the regular validator script
+COPY validator.sh /home/canine-validator/scripts
+RUN chmod +x /home/canine-validator/scripts/validator.sh
+
+# keeping the container as an executable
+CMD ["tail", "-f", "/dev/null" ]
+
+# exposing ports for canine
+EXPOSE 26657 26656 26658 1317 6060 9090
