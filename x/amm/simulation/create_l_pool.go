@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/jackal-dao/canine/x/lp/keeper"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
+	"github.com/jackalLabs/canine-chain/x/amm/keeper"
 )
 
 func SimulateMsgCreateLPool(
@@ -18,7 +18,7 @@ func SimulateMsgCreateLPool(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgCreateLPool{
+		msg := &types.MsgCreatePool{
 			Creator: simAccount.Address.String(),
 		}
 
