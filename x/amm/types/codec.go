@@ -8,7 +8,7 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgCreateLPool{}, "lp/CreateLPool", nil)
+	cdc.RegisterConcrete(&MsgCreatePool{}, "lp/CreateLPool", nil)
 	cdc.RegisterConcrete(&MsgJoinPool{}, "lp/JoinPool", nil)
 	cdc.RegisterConcrete(&MsgExitPool{}, "lp/ExitPool", nil)
 	cdc.RegisterConcrete(&MsgSwap{}, "lp/Swap", nil)
@@ -17,7 +17,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateLPool{},
+		&MsgCreatePool{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgJoinPool{},

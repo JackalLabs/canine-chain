@@ -11,7 +11,7 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdEstimateJoin() *cobra.Command {
+func CmdEstimatePoolJoin() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "estimate-join [pool-name] [pool-token-out]",
 		Short: "Estimate liquidity to add to get desired amount of pool token",
@@ -27,12 +27,12 @@ func CmdEstimateJoin() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryEstimateContributionRequest{
+			params := &types.QueryEstimatePoolJoinRequest{
 				PoolName:      reqPoolName,
 				DesiredAmount: reqDesiredAmount,
 			}
 
-			res, err := queryClient.EstimateContribution(cmd.Context(), params)
+			res, err := queryClient.EstimatePoolJoin(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

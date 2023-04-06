@@ -15,7 +15,6 @@ import (
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd(queryRoute string) *cobra.Command {
-	// Group lp queries under a subcommand
 	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
@@ -25,22 +24,21 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdQueryParams())
-	cmd.AddCommand(CmdListLPool())
-	cmd.AddCommand(CmdShowLPool())
-	cmd.AddCommand(CmdShowLProviderRecord())
+	cmd.AddCommand(CmdListPool())
+	cmd.AddCommand(CmdShowPool())
+	cmd.AddCommand(CmdShowProviderRecord())
 	cmd.AddCommand(CmdEstimateSwapOut())
 
 	cmd.AddCommand(CmdEstimateSwapIn())
 
-	cmd.AddCommand(CmdEstimateContribution())
+	cmd.AddCommand(CmdEstimatePoolJoin())
 
 	cmd.AddCommand(CmdMakeValidPair())
 
-	cmd.AddCommand(CmdEstimatePoolRemove())
+	cmd.AddCommand(CmdEstimateBurnShare())
 
 	cmd.AddCommand(CmdListRecordsFromPool())
 
-	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

@@ -23,7 +23,7 @@ service Query {
 	}
 
 	// Queries a list of Pool items.
-	rpc PoolAll(QueryAlPoolRequest) returns (QueryAlPoolResponse) {
+	rpc PoolAll(QueryAllPoolRequest) returns (QueryAllPoolResponse) {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/pool";
 	}
 
@@ -43,7 +43,7 @@ service Query {
 	}
 
 // Estimate coin inputs to get desired amount of LPToken.
-	rpc EstimateContribution(QueryEstimateContributionRequest) returns (QueryEstimateContributionResponse) {
+	rpc EstimatePoolJoin(QueryEstimatePoolJoinRequest) returns (QueryEstimatePoolJoinResponse) {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/estimate_contribution/{poolName}/{desiredAmount}";
 	}
 
@@ -54,7 +54,7 @@ service Query {
 	}
 
 // Estimate amount of coins returned by burning a pool token.
-	rpc EstimatePoolRemove(QueryEstimatePoolRemoveRequest) returns (QueryEstimatePoolRemoveResponse) {
+	rpc EstimateBurnShare(QueryEstimateBurnShareRequest) returns (QueryEstimateBurnShareResponse) {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/estimate_pool_remove/{amount}";
 	}
 
@@ -83,11 +83,11 @@ message QueryGetPoolResponse {
 	Pool Pool = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryAlPoolRequest {
+message QueryAllPoolRequest {
 	cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAlPoolResponse {
+message QueryAllPoolResponse {
 	repeated Pool Pool = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -120,12 +120,12 @@ message QueryEstimateSwapInResponse {
 }
 
 // Estimate amount of coins to deposit to get desired amount of LPToken
-message QueryEstimateContributionRequest {
+message QueryEstimatePoolJoinRequest {
   string poolName = 1;
   string desiredAmount = 2;
 }
 
-message QueryEstimateContributionResponse {
+message QueryEstimatePoolJoinResponse {
   repeated cosmos.base.v1beta1.Coin coins = 1 [(gogoproto.nullable) = false];
 }
 
@@ -140,12 +140,12 @@ message QueryMakeValidPairResponse {
 }
 
 // Estimate pool coins returned by burning LPToken
-message QueryEstimatePoolRemoveRequest {
+message QueryEstimateBurnShareRequest {
   string poolName = 1;
   string amount = 2;
 }
 
-message QueryEstimatePoolRemoveResponse {
+message QueryEstimateBurnShareResponse {
   repeated cosmos.base.v1beta1.Coin coins = 1[(gogoproto.nullable) = false];
 }
 
@@ -156,5 +156,3 @@ message QueryListRecordsFromPoolRequest {
 message QueryListRecordsFromPoolResponse {
 	repeated ProviderRecord records = 1 [(gogoproto.nullable) = false];
 }
-
-// this line is used by starport scaffolding # 3
