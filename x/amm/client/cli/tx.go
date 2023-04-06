@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 var (
@@ -30,7 +30,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdCreateLPool())
+	cmd.AddCommand(CmdCreatePool())
 	cmd.AddCommand(CmdJoinPool())
 	cmd.AddCommand(CmdExitPool())
 	cmd.AddCommand(CmdSwap())

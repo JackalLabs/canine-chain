@@ -5,16 +5,16 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/spf13/cobra"
 )
 
 var _ = strconv.Itoa(0)
 
-func CmdEstimateContribution() *cobra.Command {
+func CmdEstimateJoin() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "estimate-contribution [pool-name] [desired-amount]",
-		Short: "Estimate coins to contribute to get desired amount of LPToken",
+		Use:   "estimate-join [pool-name] [pool-token-out]",
+		Short: "Estimate liquidity to add to get desired amount of pool token",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqPoolName := args[0]

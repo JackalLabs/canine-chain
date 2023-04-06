@@ -5,14 +5,14 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/spf13/cobra"
 )
 
-func CmdListLPool() *cobra.Command {
+func CmdListPool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-l-pool",
-		Short: "list all LPool",
+		Use:   "list-pool",
+		Short: "list all liquidity pools",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -23,11 +23,11 @@ func CmdListLPool() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllLPoolRequest{
+			params := &types.QueryAllPoolRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.LPoolAll(context.Background(), params)
+			res, err := queryClient.PoolAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -42,10 +42,10 @@ func CmdListLPool() *cobra.Command {
 	return cmd
 }
 
-func CmdShowLPool() *cobra.Command {
+func CmdShowPool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-l-pool [index]",
-		Short: "shows a LPool",
+		Use:   "show-pool [name]",
+		Short: "shows a Pool",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -54,11 +54,11 @@ func CmdShowLPool() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryGetLPoolRequest{
+			params := &types.QueryGetPoolRequest{
 				Index: argIndex,
 			}
 
-			res, err := queryClient.LPool(context.Background(), params)
+			res, err := queryClient.Pool(context.Background(), params)
 			if err != nil {
 				return err
 			}

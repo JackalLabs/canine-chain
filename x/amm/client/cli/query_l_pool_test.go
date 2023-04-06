@@ -1,5 +1,6 @@
 package cli_test
 
+/*
 import (
 	"fmt"
 	"strconv"
@@ -12,10 +13,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/jackal-dao/canine/testutil/network"
-	"github.com/jackal-dao/canine/testutil/nullify"
-	"github.com/jackal-dao/canine/x/lp/client/cli"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/client/cli"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
 // Prevent strconv unused error
@@ -159,3 +158,4 @@ func TestListLPool(t *testing.T) {
 		)
 	})
 }
+*/

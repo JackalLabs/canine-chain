@@ -5,13 +5,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/spf13/cobra"
 )
 
-func CmdShowLProviderRecord() *cobra.Command {
+func CmdShowProviderRecord() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-l-provider-record [poolName] [provider_addr]",
+		Use:   "show-provider-record [poolName] [provider_addr]",
 		Short: "shows a LProviderRecord",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -22,12 +22,12 @@ func CmdShowLProviderRecord() *cobra.Command {
 			argPoolName := args[0]
 			argProviderAddr := args[1]
 
-			params := &types.QueryGetLProviderRecordRequest{
+			params := &types.QueryGetProviderRecordRequest{
 				PoolName: argPoolName,
 				Provider: argProviderAddr,
 			}
 
-			res, err := queryClient.LProviderRecord(context.Background(), params)
+			res, err := queryClient.ProviderRecord(context.Background(), params)
 			if err != nil {
 				return err
 			}

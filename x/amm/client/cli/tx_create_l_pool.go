@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/spf13/cobra"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -15,16 +15,16 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdCreateLPool() *cobra.Command {
+func CmdCreatePool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-l-pool \"{amount0}{denom0},...,{amountN){denomN}\" [invariant model id] \"swap fee multiplier\" [pool token lock duration (int64)] \"withdraw penalty multiplier\"",
+		Use:   "create-pool \"{amount0}{denom0},...,{amountN){denomN}\" [amm_id] \"swap fee multiplier\" [lock duration (blocks)] \"lock penalty multiplier\"",
 		Short: "Broadcast message createLPool",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
 			// Parse args
 
-			argCoins, err := sdk.ParseDecCoins(args[0])
+			argCoins, err := sdk.ParseCoinsNormalized(args[0])
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
@@ -54,7 +54,7 @@ func CmdCreateLPool() *cobra.Command {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
 
-			msg := types.NewMsgCreateLPool(
+			msg := types.NewMsgCreatePool(
 				clientCtx.GetFromAddress().String(),
 				argCoins,
 				uint32(invModelId),

@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/spf13/cobra"
 )
 
@@ -13,9 +13,9 @@ var _ = strconv.Itoa(0)
 
 func CmdEstimateSwapIn() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "estimate-swap-in [pool-name] [desired-coin]",
+		Use: "estimate-swap-in [pool-name] [swap-out]",
 		Short: "Estimate coin input to get desired output from a swap. Fees are" +
-			" not considered.",
+			" not considered",
 		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqPoolName := args[0]

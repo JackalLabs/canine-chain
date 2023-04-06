@@ -5,13 +5,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/spf13/cobra"
 )
 
 var _ = strconv.Itoa(0)
 
-func CmdEstimatePoolRemove() *cobra.Command {
+func CmdEstimateBurnShare() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "estimate-pool-remove [pool-name] [burn-amount]",
 		Short: "Estimate pool coins returned by burning liquidity pool token",
@@ -27,12 +27,12 @@ func CmdEstimatePoolRemove() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryEstimatePoolRemoveRequest{
+			params := &types.QueryEstimateBurnShareRequest{
 				PoolName: reqPoolName,
 				Amount:   reqBurnAmt,
 			}
 
-			res, err := queryClient.EstimatePoolRemove(cmd.Context(), params)
+			res, err := queryClient.EstimateBurnShare(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

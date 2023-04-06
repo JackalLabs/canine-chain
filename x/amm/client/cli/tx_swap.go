@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackal-dao/canine/x/lp/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
 	"github.com/spf13/cobra"
 )
 
@@ -27,11 +27,11 @@ func CmdSwap() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			coinIn, err := sdk.ParseDecCoin(args[1])
+			coinIn, err := sdk.ParseCoinNormalized(args[1])
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
-			minCoinOut, err := sdk.ParseDecCoin(args[2])
+			minCoinOut, err := sdk.ParseCoinNormalized(args[2])
 			if err != nil {
 				return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 			}
