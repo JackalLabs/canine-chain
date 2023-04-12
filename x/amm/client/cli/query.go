@@ -27,18 +27,20 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(CmdListPool())
 	cmd.AddCommand(CmdShowPool())
 	cmd.AddCommand(CmdShowProviderRecord())
+	cmd.AddCommand(CmdEstimateContribution())
 	cmd.AddCommand(CmdEstimateSwapOut())
 
 	cmd.AddCommand(CmdEstimateSwapIn())
 
 	cmd.AddCommand(CmdEstimatePoolJoin())
 
+	cmd.AddCommand(CmdEstimatePoolRemove())
+
 	cmd.AddCommand(CmdMakeValidPair())
 
 	cmd.AddCommand(CmdEstimateBurnShare())
 
 	cmd.AddCommand(CmdListRecordsFromPool())
-
 
 	return cmd
 }

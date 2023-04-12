@@ -13,7 +13,10 @@ import (
 func (k Keeper) EstimatePoolRemove(
 	goCtx context.Context,
 	req *types.QueryEstimatePoolRemoveRequest,
-) (*types.QueryEstimatePoolRemoveResponse, error) {
+) (
+	*types.QueryEstimatePoolRemoveResponse,
+	error,
+) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

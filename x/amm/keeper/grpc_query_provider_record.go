@@ -24,5 +24,5 @@ func (k Keeper) ProviderRecord(c context.Context, req *types.QueryGetProviderRec
 		return nil, status.Error(codes.NotFound, "not found ")
 	}
 
-	return &types.QueryGetProviderRecordResponse{ProviderRecord: val}, nil
+	return &types.QueryGetProviderRecordResponse{lProviderRecord: val}, nil
 }

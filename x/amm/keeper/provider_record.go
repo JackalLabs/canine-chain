@@ -21,7 +21,7 @@ func (k Keeper) EngageLock(
 
 	if !found {
 		return sdkerrors.Wrapf(
-			types.ErrProviderRecordNotFound,
+			types.ErrLProviderRecordNotFound,
 			"Cannot engage lock on record %s",
 			recordKey,
 		)
@@ -118,7 +118,7 @@ func (k Keeper) EraseProviderRecord(
 	record, found := k.GetProviderRecord(ctx, recordKey)
 
 	if !found {
-		return types.ErrProviderRecordNotFound
+		return types.ErrLProviderRecordNotFound
 	}
 
 	k.RemoveProviderRef(ctx, record)
@@ -186,7 +186,6 @@ func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
 		types.KeyPrefix(types.ProviderRecordKeyPrefix))
-
 
 	iterator := sdk.KVStorePrefixIterator(store, []byte("ujkl-ujwl"))
 	defer iterator.Close()
