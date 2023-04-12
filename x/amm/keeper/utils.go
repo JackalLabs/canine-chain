@@ -3,6 +3,10 @@ package keeper
 import (
 	"strconv"
 	t "time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/x/amm/types"
+	"github.com/tendermint/tendermint/crypto"
 )
 
 // Global time layout
@@ -28,4 +32,10 @@ func TimeToString(time t.Time) string {
 // Global conversion of string to time
 func StringToTime(time string) (t.Time, error) {
 	return t.Parse(timeLayout, time)
+}
+
+func CreatePoolAcc(pool types.Pool) sdk.AccAddress {
+	poolName := pool.GetName()
+	accAddress := sdk.AccAddress(crypto.AddressHash([]byte(poolName)))
+	return accAddress
 }
