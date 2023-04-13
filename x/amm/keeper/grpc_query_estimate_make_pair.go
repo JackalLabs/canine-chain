@@ -39,7 +39,7 @@ func (k Keeper) EstimateContribution(
 		)
 	}
 
-	result, err := CoinsToDepositForPoolToken(pool, desiredAmt)
+	result, err := CoinsToDepositForPToken(pool, desiredAmt)
 
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
@@ -48,5 +48,10 @@ func (k Keeper) EstimateContribution(
 		)
 	}
 
-	return &types.QueryEstimateContributionResponse{Coins: result}, nil
+	var coin sdk.Coin
+	if len(result) > 0 {
+		coin = sdk.NewCoin(result[0].Denom, result[0].Amount)
+	}
+
+	return &types.QueryEstimateContributionResponse{Coins: coin}, nil
 }

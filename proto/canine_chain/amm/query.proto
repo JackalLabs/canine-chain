@@ -32,6 +32,11 @@ service Query {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/liq_provider_rec/{poolName}/{provider}";
 	}
 
+// Estimate coin contribution needed to achieve desired amount in a pool.
+	rpc EstimateContribution(QueryEstimateContributionRequest) returns (QueryEstimateContributionResponse) {
+		option (google.api.http).get = "/jackal-dao/canine-chain/amm/estimate_contribution/{poolName}/{desiredAmount}";
+	}
+
 // Estimate coin output from a swap.
 	rpc EstimateSwapOut(QueryEstimateSwapOutRequest) returns (QueryEstimateSwapOutResponse) {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/estimate_out/{poolName}/{inputCoin}";
@@ -45,6 +50,11 @@ service Query {
 // Estimate coin inputs to get desired amount of LPToken.
 	rpc EstimatePoolJoin(QueryEstimatePoolJoinRequest) returns (QueryEstimatePoolJoinResponse) {
 		option (google.api.http).get = "/jackal-dao/canine-chain/amm/estimate_contribution/{poolName}/{desiredAmount}";
+	}
+
+// Estimate the expected output coins when removing a certain amount from a liquidity pool.
+	rpc EstimatePoolRemove(QueryEstimatePoolRemoveRequest) returns (QueryEstimatePoolRemoveResponse) {
+		option (google.api.http).get = "/jackal-dao/canine-chain/amm/estimate_remove/{poolName}/{amount}";
 	}
 
 // Query coins to deposit to make valid liquidity pair.
@@ -101,6 +111,15 @@ message QueryGetProviderRecordResponse {
 	ProviderRecord lProviderRecord = 1 [(gogoproto.nullable) = false];
 }
 
+message QueryEstimateContributionRequest {
+  string poolName = 1;
+  string desiredAmount = 2;
+}
+
+message QueryEstimateContributionResponse {
+  cosmos.base.v1beta1.Coin coin = 1 [(gogoproto.nullable) = false];
+}
+
 message QueryEstimateSwapOutRequest {
   string poolName = 1;
   string inputCoin = 2;
@@ -126,6 +145,15 @@ message QueryEstimatePoolJoinRequest {
 }
 
 message QueryEstimatePoolJoinResponse {
+  repeated cosmos.base.v1beta1.Coin coins = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryEstimatePoolRemoveRequest {
+  string poolName = 1;
+  string amount = 2;
+}
+
+message QueryEstimatePoolRemoveResponse {
   repeated cosmos.base.v1beta1.Coin coins = 1 [(gogoproto.nullable) = false];
 }
 
