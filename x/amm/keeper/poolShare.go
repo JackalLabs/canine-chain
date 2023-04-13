@@ -98,119 +98,71 @@ func MakeValidPair(pool types.Pool, deposit sdk.Coin) (sdk.Coins, error) {
 	return result, nil
 }
 
-// Calculate amount of PToken (sdk.Int) to be given out based on deposits.
-// If provided deposits are not same value, it'll return error.
-func CalculatePoolShare(pool types.Pool, depositCoins sdk.Coins) (sdk.Int, error) {
+// Calculate amount of pool token to be given out based on provided liquidity.
+// If provided liquidity are not same value, it'll return error.
+func CalcShareForJoin(pool types.Pool, liquidity sdk.Coins) (shareAmt sdk.Int, excess sdk.Coins, err error) {
 
-	// Check if pool is being initiated
-	if pool.PTokenBalance == "" {
-
-		// Using sdk.Dec to use sqrt()
-		x := sdk.OneDec()
-
-		// Initial pool token is sqrt(coin0 * ... * coinN)
-		for _, c := range depositCoins {
-			x = x.MulInt(depositCoins.AmountOf(c.GetDenom()))
-		}
-
-		amount, err := x.ApproxSqrt()
-
-		if err != nil {
-			return sdk.ZeroInt(), err
-		}
-
-		return amount.TruncateInt(), nil
-
-	} else {
-		poolCoins := sdk.NewCoins(pool.Coins...)
-
-		// Get total PTokens and convert it to sdk.Dec
-		totalPToken, ok := sdk.NewIntFromString(pool.PTokenBalance)
-
-		if !ok {
-			return sdk.ZeroInt(), errors.New("Failed to convert" +
-				" pool.PTokenBalance to sdk.Int")
-		}
-
-		if !depositCoins.DenomsSubsetOf(poolCoins) {
-			return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins,
-				"Input Coins are not subset of pool coins."+
-					" Pool: %s, Input: %s",
-				poolCoins.String(), depositCoins.String(),
-			)
-		}
-
-		// Using Coin type to return precise error
-		var coinShares []sdk.Coin
-		coinShares = make([]sdk.Coin, 0)
-
-		for _, x := range depositCoins {
-			// Calculate shares and append it.
-			// Get amount of coin x.
-			totalXInPool := poolCoins.AmountOf(x.GetDenom())
-
-			if totalXInPool.IsZero() {
-				return sdk.ZeroInt(), errors.New(fmt.Sprintf("Zero amount of coin %s,"+
-					" will not proceed to prevent division by zero",
-					x.GetDenom(),
-				))
-			}
-
-			// share = totalPToken * xAmtInDeposit / totalXInPool
-			share := totalPToken.Mul(depositCoins.AmountOf(x.GetDenom())).Quo(totalXInPool)
-			coinShare := sdk.NewCoin(x.GetDenom(), share)
-			coinShares = append(coinShares, coinShare)
-		}
-
-		// Check if all input coins are same value
-		// If that is true, all share amount of coins should be same
-		// shareX0 == shareX1 == shareX2 ... shareXn
-		for _, x := range coinShares {
-			if !x.Amount.Equal(coinShares[0].Amount) {
-				return sdk.ZeroInt(), errors.New(
-					fmt.Sprintf("Same value of coin not provided. denom: %s,"+
-						" value: %s",
-						x.Denom,
-						x.Amount.String(),
-					))
-			}
-		}
-
-		return coinShares[0].Amount, nil
+	if pool.PoolToken.Amount.Equal(sdk.ZeroInt()) {
+		err = errors.New("pool has zero outstanding pool tokens")
+		return
 	}
-}
-
-func CalculatePoolShareBurnReturn(pool types.Pool, burnAmt sdk.Int) (sdk.Coins, error) {
 
 	poolCoins := sdk.NewCoins(pool.Coins...)
 
-	totalPToken, ok := sdk.NewIntFromString(pool.PTokenBalance)
-
-	if !ok {
-		return nil, errors.New(fmt.Sprintf("Failed to convert PTokenBalance to"+
-			" sdk.Int: %s", pool.PTokenBalance))
+	if !liquidity.DenomsSubsetOf(poolCoins) {
+		err = errors.New("provided liquidity is not pool coins")
+		return
 	}
 
-	if totalPToken.IsZero() {
-		return nil, errors.New(fmt.Sprintf("Total Ptoken is zero." +
-			" Will not proceed to prevent divide by zero"))
+	minRatio := sdk.ZeroDec()
+	maxRatio := sdk.ZeroDec()
+
+	coinRatio := make([]sdk.Dec, len(poolCoins))
+
+	for i, coin := range liquidity {
+		r := coin.Amount.ToDec().QuoInt(poolCoins.AmountOf(coin.Denom))
+		coinRatio[i] = r
+		if minRatio.GT(r){
+			minRatio = r
+		}
+		if maxRatio.LT(r){
+			maxRatio = r
+		}
 	}
 
-	if burnAmt.GT(totalPToken) {
-		return nil, errors.New(fmt.Sprint("Burn amount is greater than total" +
-			" Ptoken that exists"))
+	// use min ratio as a base to calculate other coins used
+	if !minRatio.Equal(maxRatio) {
+		for i, coin := range liquidity {
+			if coinRatio[i].Equal(minRatio){
+				continue
+			}
+
+			useAmt := minRatio.MulInt(poolCoins.AmountOf(coin.Denom)).Ceil().TruncateInt()
+			excessAmt := coin.Amount.Sub(useAmt)
+			if !excessAmt.IsZero(){
+				excess = excess.Add(sdk.NewCoin(coin.Denom, excessAmt))
+			}
+		}
 	}
 
-	returns := sdk.NewCoins()
+	return minRatio.MulInt(pool.PoolToken.Amount).TruncateInt(), excess, nil
+}
 
-	// Calculate pool coin values in respect to amount of shares burned.
-	// return = burnAmt * coinInPool / totalPTokens
-	for _, coin := range poolCoins {
-		cAmtInPool := poolCoins.AmountOf(coin.GetDenom())
-		result := burnAmt.Mul(cAmtInPool).Quo(totalPToken)
-		resultCoin := sdk.NewCoin(coin.GetDenom(), result)
-		returns = returns.Add(resultCoin)
+func CalcShareExit(pool types.Pool, exitAmt sdk.Int) (sdk.Coins, error) {
+
+	ratio := sdk.NewDecFromInt(exitAmt).QuoInt(pool.PoolToken.Amount)
+	retCoins := sdk.Coins{}
+
+	for _, coin := range pool.Coins {
+		amt := ratio.MulInt(coin.Amount).TruncateInt()
+		if amt.IsZero(){
+			continue
+		}
+		if amt.GTE(coin.Amount){
+			return sdk.Coins{}, errors.New("exit amount is too high")
+		}
+		retCoins = retCoins.Add(sdk.NewCoin(coin.Denom, amt))
 	}
 
-	return returns, nil
+	return retCoins, nil
 }
