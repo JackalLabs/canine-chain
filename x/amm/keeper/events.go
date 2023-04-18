@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"strconv"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
@@ -9,7 +10,7 @@ import (
 func newPoolBalanceEvent(pool types.Pool) sdk.Event {
 	return sdk.NewEvent(
 		types.TypedEventPoolInfo,
-		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
+		sdk.NewAttribute(types.AttrKeyPoolId, strconv.FormatUint(pool.Id, 10)),
 		sdk.NewAttribute(
 			types.AttrKeyPoolBalance,
 			sdk.NewCoins(pool.Coins...).String()),
@@ -31,7 +32,7 @@ func newPoolCreatedEvent(sender sdk.AccAddress, pool types.Pool) sdk.Event {
 		types.TypedEventPoolCreated,
 		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
-		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
+		sdk.NewAttribute(types.AttrKeyPoolId, strconv.FormatUint(pool.Id, 10)),
 		sdk.NewAttribute(types.AttrKeySwapFeeMulti, pool.SwapFeeMulti),
 		sdk.NewAttribute(types.AttrKeyPenaltyMulti, pool.PenaltyMulti),
 		sdk.NewAttribute(types.AttrKeyPoolTokenDenom, pool.PoolToken.Denom),
@@ -69,7 +70,7 @@ func newPoolJoinedEvent(
 		types.TypedEventPoolJoined,
 		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
-		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
+		sdk.NewAttribute(types.AttrKeyPoolId, strconv.FormatUint(pool.Id, 10)),
 		sdk.NewAttribute(types.AttrKeyCoinsIn, coins.String()),
 		sdk.NewAttribute(types.AttrKeyLockDuration, ToSecondsStr(lockDuration)),
 	)
@@ -105,7 +106,7 @@ func newPoolExitedEvent(
 		types.TypedEventPoolExited,
 		sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttrValueModule),
-		sdk.NewAttribute(types.AttrKeyPoolId, pool.Index),
+		sdk.NewAttribute(types.AttrKeyPoolId, strconv.FormatUint(pool.Id, 10)),
 		sdk.NewAttribute(types.AttrKeyCoinsIn, amount.String()),
 		sdk.NewAttribute(types.AttrKeyCoinsOut, coinsOut.String()),
 		sdk.NewAttribute(types.AttrKeyPenaltyFee, penaltyFee.String()),
