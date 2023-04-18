@@ -38,14 +38,14 @@ message MsgCreatePool {
 
 message MsgCreatePoolResponse {
   // Pool id
-  string id = 1;
+  uint64 id = 1;
 }
 
 // Contribute to a pool and receive pool token.
 // The coin ratio must be valid in order for the tx to succeed.
 message MsgJoinPool {
   string creator = 1;
-  string poolName = 2;
+  uint64 pool_id = 2;
   repeated cosmos.base.v1beta1.Coin coins = 3 [(gogoproto.nullable) = false];
 }
 
@@ -57,7 +57,7 @@ message MsgJoinPoolResponse {
 // Burn pool token to receive pool coins
 message MsgExitPool {
   string creator = 1;
-  string poolName = 2;
+  uint64 pool_id = 2;
   int64 amount = 3;
 }
 
@@ -68,7 +68,7 @@ message MsgExitPoolResponse {
 // Swap fee is deducted from coin input before swap output is computed.
 message MsgSwap {
   string creator = 1;
-  string poolName = 2;
+  uint64 pool_id = 2;
   // Coin input to swap in return for the desired coin. Coin output from swap is
   // determined by the input amount.
   cosmos.base.v1beta1.Coin coin_input = 3 [(gogoproto.nullable) = false];

@@ -1,6 +1,8 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+)
 
 var _ binary.ByteOrder
 
@@ -11,12 +13,13 @@ const (
 
 // PoolKey returns the store key to retrieve a Pool from the index fields
 func PoolKey(
-	index string,
+	id uint64,
 ) []byte {
 	var key []byte
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, id)
 
-	indexBytes := []byte(index)
-	key = append(key, indexBytes...)
+	key = append(key, bz...)
 	key = append(key, []byte("/")...)
 
 	return key

@@ -7,15 +7,14 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/jackalLabs/canine-chain/x/amm/types";
 
 message Pool {
-  string index = 1; 
-  string name = 2;
-  repeated cosmos.base.v1beta1.Coin coins = 3 [(gogoproto.nullable) = false];
-  uint32 aMM_Id = 4;
+  uint64 id = 1; 
+  repeated cosmos.base.v1beta1.Coin coins = 2 [(gogoproto.nullable) = false];
+  uint32 aMM_Id = 3;
   // sdk.Dec in string representation 
-  string swap_fee_multi = 5;
-  int64 min_lock_duration = 6;
+  string swap_fee_multi = 4;
+  int64 min_lock_duration = 5;
   // sdk.Dec in string representation 
-  string penalty_multi = 7;
+  string penalty_multi = 6;
   // Tracks amount of pool token
-  cosmos.base.v1beta1.Coin pool_token = 8 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin pool_token = 7 [(gogoproto.nullable) = false];
 }

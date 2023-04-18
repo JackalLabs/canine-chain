@@ -41,28 +41,28 @@ func (k Keeper) EngageLock(
 // Create then store ProviderRecord and reference to KVStore.
 // Lock is not engaged.
 // It returns error when pool doesn't exist.
-func (k Keeper) InitProviderRecord(
+func (k Keeper) CreateProviderRecord(
 	ctx sdk.Context,
 	provider sdk.AccAddress,
-	poolName string,
+	poolId uint64,
 	lockDuration time.Duration,
 ) error {
 
 	// Find pool
-	_, found := k.GetPool(ctx, poolName)
+	_, found := k.GetPool(ctx, poolId)
 
 	if !found {
 		return sdkerrors.Wrapf(
 			types.ErrLiquidityPoolNotFound,
-			"Cannot initialize ProviderRecord, pool(%s) not found",
-			poolName,
+			"Cannot initialize ProviderRecord, pool(%d) not found",
+			poolId,
 		)
 	}
 
 	// Create record
 	record := types.ProviderRecord{
 		Provider:     provider.String(),
-		PoolName:     poolName,
+		PoolId:     poolId,
 		LockDuration: lockDuration.String(),
 	}
 
@@ -84,7 +84,7 @@ func (k Keeper) SetProviderRecord(ctx sdk.Context, lProviderRecord types.Provide
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProviderRecordKeyPrefix))
 	b := k.cdc.MustMarshal(&lProviderRecord)
 	store.Set(types.ProviderRecordKey(
-		lProviderRecord.PoolName,
+		lProviderRecord.PoolId,
 		lProviderRecord.Provider,
 	), b)
 }
@@ -111,9 +111,9 @@ func (k Keeper) GetProviderRecord(
 func (k Keeper) EraseProviderRecord(
 	ctx sdk.Context,
 	provider sdk.AccAddress,
-	poolName string,
+	poolId uint64,
 ) error {
-	recordKey := types.ProviderRecordKey(poolName, provider.String())
+	recordKey := types.ProviderRecordKey(poolId, provider.String())
 
 	record, found := k.GetProviderRecord(ctx, recordKey)
 

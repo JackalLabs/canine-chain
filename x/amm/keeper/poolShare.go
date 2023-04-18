@@ -100,14 +100,7 @@ func MakeValidPair(pool types.Pool, deposit sdk.Coin) (sdk.Coins, error) {
 
 // Calculate amount of pool token to be given out based on provided liquidity.
 // If provided liquidity are not same value, it'll return error.
-func CalcShareForJoin(pool types.Pool, liquidity sdk.Coins) (shareAmt sdk.Int, excess sdk.Coins, err error) {
-
-	if pool.PoolToken.Amount.Equal(sdk.ZeroInt()) {
-		err = errors.New("pool has zero outstanding pool tokens")
-		return
-	}
-
-	poolCoins := sdk.NewCoins(pool.Coins...)
+func CalcShareJoin(poolToken sdk.Coin, poolCoins, liquidity sdk.Coins) (shareAmt sdk.Int, excess sdk.Coins, err error) {
 
 	if !liquidity.DenomsSubsetOf(poolCoins) {
 		err = errors.New("provided liquidity is not pool coins")
@@ -145,7 +138,7 @@ func CalcShareForJoin(pool types.Pool, liquidity sdk.Coins) (shareAmt sdk.Int, e
 		}
 	}
 
-	return minRatio.MulInt(pool.PoolToken.Amount).TruncateInt(), excess, nil
+	return minRatio.MulInt(poolToken.Amount).TruncateInt(), excess, nil
 }
 
 func CalcShareExit(pool types.Pool, exitAmt sdk.Int) (sdk.Coins, error) {

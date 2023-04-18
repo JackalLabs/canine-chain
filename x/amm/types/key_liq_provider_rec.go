@@ -2,8 +2,6 @@ package types
 
 import (
 	"encoding/binary"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 var _ binary.ByteOrder
@@ -17,40 +15,39 @@ const (
 
 // ProviderRecordKey returns the store key to retrieve a ProviderRecord
 func ProviderRecordKey(
-	poolName string,
+	poolId uint64,
 	provider string,
 ) []byte {
 
-	poolBytes := []byte(poolName)
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, poolId)
 	addrBytes := []byte(provider)
 
-	return CombineKeys(poolBytes, addrBytes)
+	return CombineKeys(bz, addrBytes)
 }
 
 // ProviderRecordKey returns the store key to retrieve a ProviderRecord
 // reference.
 func ProviderRecordRefKey(
-	poolName string,
-	provider sdk.AccAddress,
+	poolId uint64,
+	provider string,
 ) []byte {
-	poolBytes := []byte(poolName)
-	addrBytes := []byte(provider.String())
+	
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, poolId)
+	addrBytes := []byte(provider)
 
-	return CombineKeys(addrBytes, poolBytes)
+	return CombineKeys(addrBytes, bz)
 }
 
 // Takes ProviderRecord struct to generate store key.
 // Key format is: {poolName}{provider}
 func GetProviderKey(record ProviderRecord) []byte {
-	return ProviderRecordKey(record.PoolName, record.Provider)
+	return ProviderRecordKey(record.PoolId, record.Provider)
 }
 
 // Takes ProviderRecord struct to generate reference key.
 // Key format is: {provider}{provider}
 func GetProviderRefKey(record ProviderRecord) []byte {
-
-	poolBytes := []byte(record.PoolName)
-	addrBytes := []byte(record.Provider)
-
-	return CombineKeys(addrBytes, poolBytes)
+	return ProviderRecordRefKey(record.PoolId, record.Provider)
 }

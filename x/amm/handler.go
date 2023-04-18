@@ -1,4 +1,4 @@
-package lp
+package amm
 
 import (
 	"fmt"

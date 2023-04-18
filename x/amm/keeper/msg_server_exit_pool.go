@@ -11,21 +11,21 @@ import (
 )
 
 func (k Keeper) validateExitPool(ctx sdk.Context, msg *types.MsgExitPool) error {
-	pool, found := k.GetPool(ctx, msg.PoolName)
+	pool, found := k.GetPool(ctx, msg.PoolId)
 
 	if !found {
 		return types.ErrLiquidityPoolNotFound
 	}
 
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
-	recordKey := types.ProviderRecordKey(pool.Name, creator.String())
+	recordKey := types.ProviderRecordKey(pool.Id, creator.String())
 	_, found = k.GetProviderRecord(ctx, recordKey)
 
 	if !found {
-		return types.ErrProviderRecordNotFound
+		return fmt.Errorf("provider record not found")
 	}
 
-	if msg.Shares < 0 {
+	if msg.Amount< 0 {
 		return sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest,
 			"Burn amount cannot be negative",
@@ -43,36 +43,37 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 		return nil, err
 	}
 
-	pool, _ := k.GetPool(ctx, msg.PoolName)
+	pool, _ := k.GetPool(ctx, msg.PoolId)
 	poolCoins := sdk.NewCoins(pool.Coins...)
-	totalShares, _ := sdk.NewIntFromString(pool.PTokenBalance)
+	totalShares := pool.PoolToken.Amount
 
 	// Calculate tokens to return
 	// If PToken is still locked, apply panelty.
-	recordKey := types.ProviderRecordKey(pool.Name, creatorAcc.String())
+	recordKey := types.ProviderRecordKey(pool.Id, creatorAcc.String())
 	record, _ := k.GetProviderRecord(ctx, recordKey)
 
 	unlockTime, _ := StringToTime(record.UnlockTime)
 
 	// This is used to calculate amount of coins to return
-	burningAmt := sdk.NewInt(msg.Shares)
+	burningAmt := sdk.NewInt(msg.Amount)
 
 	penaltyAmt := sdk.ZeroInt()
 
-	pm, err := sdk.NewDecFromStr(pool.PenaltyMulti)
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Failed to convert penalty"+
-			" multiplier; saved in invalid format: %s err: %s",
-			pool.PenaltyMulti, err))
-	}
+
 
 	if ctx.BlockTime().Before(unlockTime) {
+		pm, err := sdk.NewDecFromStr(pool.PenaltyMulti)
+		if err != nil {
+			return nil, errors.New(fmt.Sprintf("Failed to convert penalty"+
+				" multiplier; saved in invalid format: %s err: %s",
+				pool.PenaltyMulti, err))
+		}
 		penaltyAmt = pm.MulInt(burningAmt).RoundInt()
 	}
 
 	burningAmt = burningAmt.Sub(penaltyAmt)
 
-	coinsOut, err := CalculatePoolShareBurnReturn(pool, burningAmt)
+	coinsOut, err := CalcShareExit(pool, burningAmt)
 
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
@@ -81,7 +82,7 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 		)
 	}
 
-	burningCoin := sdk.NewCoin(pool.pooltokenDenom, sdk.NewInt(msg.Shares))
+	burningCoin := sdk.NewCoin(pool.PoolToken.Denom, sdk.NewInt(msg.Amount))
 	burningCoins := sdk.NewCoins(burningCoin)
 
 	// Transfer PToken to module
@@ -108,10 +109,8 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 	// Update amount on pool
 	poolCoins = poolCoins.Sub(coinsOut)
 
-	totalShares = totalShares.Sub(sdk.NewInt(msg.Shares))
-
 	pool.Coins = poolCoins
-	pool.PoolTokenBalance = totalShares.String()
+	pool.PoolToken.Amount = totalShares.Sub(sdk.NewInt(msg.Amount))
 
 	k.SetPool(ctx, pool)
 
@@ -119,9 +118,9 @@ func (k msgServer) ExitPool(goCtx context.Context, msg *types.MsgExitPool) (*typ
 		ctx,
 		creatorAcc,
 		pool,
-		sdk.NewCoin(pool.pooltokenDenom, sdk.NewInt(msg.Shares)),
+		sdk.NewCoin(pool.PoolToken.Denom, sdk.NewInt(msg.Amount)),
 		coinsOut,
-		sdk.NewCoin(pool.pooltokenDenom, penaltyAmt))
+		sdk.NewCoin(pool.PoolToken.Denom, penaltyAmt))
 
 	return nil, nil
 }

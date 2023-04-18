@@ -12,8 +12,8 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		PoolList:           []Pool{},
 		ProviderRecordList: []ProviderRecord{},
-		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
+		PoolCount: 0,
 	}
 }
 

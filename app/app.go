@@ -760,6 +760,7 @@ func NewJackalApp(
 		filetreeModule,
 		oracleModule,
 		notificationsModule,
+		ammModule,
 
 		/*
 			dsigModule,

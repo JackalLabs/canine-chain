@@ -12,12 +12,12 @@ option go_package = "github.com/jackalLabs/canine-chain/x/amm/types";
 // 	{ProviderRecordKeyPrefix}{poolName}{provider} key.
 message ProviderRecord {
 	string provider = 1;
-	string poolName = 2;
+	uint64 pool_id = 2;
 	// Burning LP token is locked for certain duration the after provider
 	// deposits to the pool. Unlock time is updated every succeeding deposits.
 	// The provider can burn their pool token during lock time but has to take
 	// certain amount of panelty.
 	// Unlock time is blocktime + lockDuration at time of deposit.
-	string unlockTime = 3;
-	string lockDuration = 4;
+	string unlock_time = 3;
+	string lock_duration = 4;
 }

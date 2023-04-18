@@ -2,25 +2,12 @@ package keeper
 
 import (
 	"context"
-	"errors"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/x/amm/types"
 )
 
-/*
-	 Checks if MsgCreatePool is a valid request
-		It validates:
-			1. Coin format
-			2. Max denom count allowed in a pool
-			3. Coin deposit is more than minimum pool creation amount
-			4. Able to create pool name
-			5.	The new pool is not a duplicate
-			6. AMM model id is valid and exists
-			7. Swap fee, lock duration and penalty percentage are non-negative
-*/
 func (k Keeper) ValidateCreatePoolMsg(ctx sdk.Context, msg *types.MsgCreatePool) error {
 
 	if err := msg.ValidateBasic(); err != nil {
@@ -29,40 +16,28 @@ func (k Keeper) ValidateCreatePoolMsg(ctx sdk.Context, msg *types.MsgCreatePool)
 
 	params := k.GetParams(ctx)
 
-	minInitPoolDeposit := params.MinInitPoolDeposit
-	maxPoolDenomCount := params.MaxPoolDenomCount
+	minInitLiquidity := params.MinInitLiquidity
 
-	coins := sdk.NormalizeCoins(msg.Coins)
+	coins := sdk.NewCoins(msg.Coins...)
 
-	if uint32(coins.Len()) > maxPoolDenomCount {
-		return sdkerrors.Wrap(errors.New(fmt.Sprintf(
-			"pool can only balance %d coins", maxPoolDenomCount)),
-			sdkerrors.ErrInvalidRequest.Error())
+	if uint32(coins.Len()) > types.MaxPoolDenomCount {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, 
+			"too much denoms to create pool")
 	}
 
 	for _, c := range coins {
-		if c.Amount.LT(sdk.NewInt(int64(minInitPoolDeposit))) {
+		if c.Amount.LT(sdk.NewInt(int64(minInitLiquidity))) {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
-				"You need to deposit at least %v amount to create a liquidity pool",
-				minInitPoolDeposit)
+				"provided liquidity is below minimum")
 		}
 	}
 
-	poolName := generatePoolName(coins)
-
-	_, found := k.GetPool(ctx, poolName)
-
-	if found {
-		return sdkerrors.Wrap(types.ErrLiquidityPoolExists,
-			sdkerrors.ErrInvalidRequest.Error())
-	}
-
 	// Validate AMM id
-	_, err := types.GetAMM(msg.Amm_Id)
+	_, err := types.GetAMM(msg.AmmId)
 
 	if err != nil {
-		return sdkerrors.Wrapf(err, "AMM with id %v does not exist",
-			msg.Amm_Id)
+		return sdkerrors.Wrapf(err, "AMM id (%d) not found",
+			msg.AmmId)
 	}
 
 	return nil
@@ -79,40 +54,36 @@ func (k msgServer) CreatePool(
 	*types.MsgCreatePoolResponse,
 	error,
 ) {
-
+	// Pool creation process:
+	// 1. Create pool
+	// 2. Mint and send pool token
+	// 3. Create provider record and engage lock
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if err := k.ValidateCreatePoolMsg(ctx, msg); err != nil {
-		return nil, sdkerrors.Wrapf(
-			err,
-			"failed to create a liquidity pool")
+		return nil, err
 	}
+	poolCoins := sdk.NewCoins(msg.Coins...)
 
-	pool := k.NewPool(ctx, msg)
-
-	creatorAccAddr, _ := sdk.AccAddressFromBech32(msg.Creator)
-	normCoins := sdk.NormalizeCoins(msg.Coins)
-
-	shareAmount, err := CalculatePoolShare(pool, normCoins)
-
-	if err != nil {
-		return nil, sdkerrors.Wrapf(
-			err,
-			"Failed to create liquidity pool, error during CalculatePoolShare()")
-	}
-
-	pool.Coins = normCoins
-	pool.PTokenBalance = shareAmount.String()
-
+	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
+	pool := NewPool(
+		k.GetPoolCountAndIncrement(ctx),
+		poolCoins,
+		msg.AmmId,
+		msg.SwapFeeMulti, 
+		msg.PenaltyMulti,
+		msg.MinLockDuration,
+	)
 	k.SetPool(ctx, pool)
+	
+	k.registerPoolToken(ctx, pool.PoolToken.Denom)
+	k.MintAndSendPoolToken(ctx, pool, creator, pool.PoolToken.Amount)
 
 	// Create ProviderRecord
 	lockDuration := GetDuration(msg.MinLockDuration)
-	err = k.InitProviderRecord(ctx, creatorAccAddr, pool.Name, lockDuration)
+	err := k.CreateProviderRecord(ctx, creator, pool.Id, lockDuration)
 
 	if err != nil {
-		k.RemovePool(ctx, pool.Index)
-
 		return nil, sdkerrors.Wrapf(
 			err,
 			"Failed to create liquidity pool. Failed to initialize"+
@@ -120,13 +91,10 @@ func (k msgServer) CreatePool(
 		)
 	}
 
-	recordKey := types.ProviderRecordKey(pool.Name, creatorAccAddr.String())
+	recordKey := types.ProviderRecordKey(pool.Id, creator.String())
 
 	// Engage lock
 	if err := k.EngageLock(ctx, recordKey); err != nil {
-		k.RemovePool(ctx, pool.Index)
-		k.EraseProviderRecord(ctx, creatorAccAddr, pool.Name)
-
 		return nil, sdkerrors.Wrapf(
 			err,
 			"Failed to create liquidity pool. Failed to engage lock",
@@ -135,32 +103,26 @@ func (k msgServer) CreatePool(
 
 	// Transfer coins from the creator to module account and give liquidity pool
 	// token.
-	sdkError := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAccAddr,
-		types.ModuleName, normCoins)
+	sdkError := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator,
+		types.ModuleName, poolCoins)
 
 	if sdkError != nil {
-		k.RemovePool(ctx, pool.Index)
-		k.EraseProviderRecord(ctx, creatorAccAddr, pool.Name)
-
 		return nil, sdkerrors.Wrapf(
 			sdkError,
 			"failed to create liquidity pool. Failed to retrieve deposit coins "+
 				"from sender")
 	}
 
-	sdkError = k.MintAndSendPToken(ctx, pool, creatorAccAddr, shareAmount)
+	sdkError = k.MintAndSendPoolToken(ctx, pool, creator, pool.PoolToken.Amount)
 
 	if sdkError != nil {
-		k.RemovePool(ctx, pool.Index)
-		k.EraseProviderRecord(ctx, creatorAccAddr, pool.Name)
-
 		return &types.MsgCreatePoolResponse{}, sdkerrors.Wrapf(
 			sdkError,
 			"Failed to create liquidity pool. Failed to mint and send token",
 		)
 	}
 
-	EmitPoolCreatedEvent(ctx, creatorAccAddr, pool)
+	EmitPoolCreatedEvent(ctx, creator, pool)
 
-	return &types.MsgCreatePoolResponse{Id: pool.Index}, nil
+	return &types.MsgCreatePoolResponse{Id: pool.Id}, nil
 }

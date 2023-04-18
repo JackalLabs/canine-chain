@@ -9,10 +9,10 @@ const TypeMsgJoinPool = "join_pool"
 
 var _ sdk.Msg = &MsgJoinPool{}
 
-func NewMsgJoinPool(creator string, poolName string, coins sdk.Coins) *MsgJoinPool {
+func NewMsgJoinPool(creator string, poolId uint64, coins sdk.Coins) *MsgJoinPool {
 	return &MsgJoinPool{
 		Creator:      creator,
-		PoolName:     poolName,
+		PoolId:     poolId,
 		Coins:        coins,
 	}
 }
@@ -44,10 +44,6 @@ func (msg *MsgJoinPool) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	
-	if len(msg.PoolName) == 0 {
-		return ErrInvalidPoolName
-	}
-
 	coins := sdk.NewCoins(msg.Coins...)
 	if !coins.IsAllPositive() {
 		return sdkerrors.Wrapf(ErrInvalidValue,

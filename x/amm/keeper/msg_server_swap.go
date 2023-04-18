@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -15,28 +14,10 @@ func (k Keeper) validateSwapMsg(ctx sdk.Context, msg *types.MsgSwap) error {
 		return err
 	}
 
-	pool, found := k.GetPool(ctx, msg.PoolName)
+	_, found := k.GetPool(ctx, msg.PoolId)
 
 	if !found {
 		return types.ErrLiquidityPoolNotFound
-	}
-
-	// Convert DecCoin to Normalized Coin
-	coin, _ := sdk.NormalizeDecCoin(msg.CoinInput).TruncateDecimal()
-
-	// Convert DecCoin to Normalized MinCoinOutput
-	minCoinOut, _ := sdk.NormalizeDecCoin(msg.MinCoinOutput).TruncateDecimal()
-
-	if !minCoinOut.IsValid() || coin.IsZero() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins,
-			"coin is invalid or has zero amount")
-	}
-
-	poolCoins := sdk.NewCoins(pool.Coins...)
-
-	// Check if msg denoms match pool coin denoms.
-	if !sdk.NewCoins(coin, minCoinOut).DenomsSubsetOf(poolCoins) {
-		return errors.New("Provided coin denoms does not match pool denoms")
 	}
 
 	return nil
@@ -79,9 +60,8 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 			err.Error())
 	}
 
-	pool, _ := k.GetPool(ctx, msg.PoolName)
+	pool, _ := k.GetPool(ctx, msg.PoolId)
 	poolCoins := sdk.NewCoins(pool.Coins...)
-	swapIn, _ := sdk.NormalizeDecCoin(msg.CoinInput).TruncateDecimal()
 
 	for _, pCoin := range poolCoins {
 		if pCoin.Amount.Equal(sdk.OneInt()) {
@@ -92,10 +72,10 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 		}
 	}
 
-	swapFee := GetSwapFee(pool.SwapFeeMulti, swapIn)
-	protocolFee := k.GetProtocolFee(ctx, swapIn)
+	swapFee := GetSwapFee(pool.SwapFeeMulti, msg.CoinInput)
+	protocolFee := k.GetProtocolFee(ctx, msg.CoinInput)
 
-	deductedCoinIn := swapIn.Sub(swapFee).Sub(protocolFee)
+	deductedCoinIn := msg.CoinInput.Sub(swapFee).Sub(protocolFee)
 
 	AMM, err := types.GetAMM(pool.AMM_Id)
 
@@ -117,15 +97,14 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 	creatorAcc, _ := sdk.AccAddressFromBech32(msg.Creator)
 
 	// Check slippage
-	minCoinOut, _ := sdk.NormalizeDecCoin(msg.MinCoinOutput).TruncateDecimal()
-	if swapOut.IsAllLT(sdk.NewCoins(minCoinOut)) {
+	if swapOut.IsAllLT(sdk.NewCoins(msg.MinCoinOutput)) {
 		EmitCoinSwapFailedEvent(
 			ctx,
 			creatorAcc,
 			pool,
-			sdk.NewCoins(swapIn),
+			sdk.NewCoins(msg.CoinInput),
 			swapOut,
-			sdk.NewCoins(minCoinOut),
+			sdk.NewCoins(msg.MinCoinOutput),
 		)
 		return &emptyMsgResponse, nil
 	}
@@ -137,7 +116,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 		ctx, 
 		creatorAcc,
 		types.ModuleName, 
-		sdk.NewCoins(swapIn))
+		sdk.NewCoins(msg.CoinInput))
 
 	if sdkErr != nil {
 		return &emptyMsgResponse, sdkerrors.Wrap(sdkErr, "swap failed")
@@ -163,7 +142,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 
 	// Update pool balance
 	poolCoins = poolCoins.Sub(swapOut)
-	poolCoins = poolCoins.Add(swapIn)
+	poolCoins = poolCoins.Add(msg.CoinInput)
 
 	pool.Coins = poolCoins
 
@@ -173,7 +152,7 @@ func (k msgServer) Swap(goCtx context.Context, msg *types.MsgSwap) (*types.MsgSw
 		ctx,
 		creatorAcc,
 		pool,
-		sdk.NewCoins(swapIn),
+		sdk.NewCoins(msg.CoinInput),
 		swapOut,
 		sdk.NewCoins(swapFee),
 		sdk.NewCoins(protocolFee))

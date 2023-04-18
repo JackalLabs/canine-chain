@@ -1,4 +1,4 @@
-package lp
+package amm
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -9,6 +9,7 @@ import (
 // InitGenesis initializes the capability module's state from a provided genesis
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
+	k.SetPoolCount(ctx, genState.PoolCount)
 	// Set all the Pool
 	for _, elem := range genState.PoolList {
 		k.SetPool(ctx, elem)
@@ -28,6 +29,8 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	genesis.PoolList = k.GetAllPool(ctx)
 	genesis.ProviderRecordList = k.GetAllProviderRecord(ctx)
+
+	genesis.PoolCount = k.GetPoolCount(ctx)
 
 	return genesis
 }

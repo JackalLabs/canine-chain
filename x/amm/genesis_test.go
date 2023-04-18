@@ -1,4 +1,4 @@
-package lp_test
+package amm_test
 
 import (
 	"testing"

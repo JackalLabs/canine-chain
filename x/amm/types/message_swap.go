@@ -9,10 +9,10 @@ const TypeMsgSwap = "swap"
 
 var _ sdk.Msg = &MsgSwap{}
 
-func NewMsgSwap(creator string, poolName string, coinInput sdk.Coin, minCoinOutput sdk.Coin) *MsgSwap {
+func NewMsgSwap(creator string, poolId uint64, coinInput sdk.Coin, minCoinOutput sdk.Coin) *MsgSwap {
 	return &MsgSwap{
 		Creator:       creator,
-		PoolName:      poolName,
+		PoolId:      poolId,
 		CoinInput:     coinInput,
 		MinCoinOutput: minCoinOutput,
 	}
@@ -43,10 +43,6 @@ func (msg *MsgSwap) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	if len(msg.PoolName) == 0 {
-		return ErrInvalidPoolName
 	}
 
 	if !msg.CoinInput.IsPositive() {

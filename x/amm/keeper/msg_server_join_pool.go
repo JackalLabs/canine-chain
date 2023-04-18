@@ -9,7 +9,7 @@ import (
 )
 
 func (k Keeper) validateJoinPoolMsg(ctx sdk.Context, msg *types.MsgJoinPool) error {
-	pool, found := k.GetPool(ctx, msg.PoolName)
+	pool, found := k.GetPool(ctx, msg.PoolId)
 
 	if !found {
 		return types.ErrLiquidityPoolNotFound
@@ -38,11 +38,11 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 	}
 
 	// Get amount of PToken to send
-	pool, _ := k.GetPool(ctx, msg.PoolName)
+	pool, _ := k.GetPool(ctx, msg.PoolId)
 
 	coins := sdk.NewCoins(msg.Coins...)
 
-	shares, err := CalculatePoolShare(pool, coins)
+	shares, excess, err := CalcShareJoin(pool, coins)
 
 	if err != nil {
 		return nil, err
@@ -53,11 +53,11 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 	// Initialize ProviderRecord
 	lockDuration := GetDuration(pool.MinLockDuration)
 
-	recordKey := types.ProviderRecordKey(pool.Name, creator.String())
+	recordKey := types.ProviderRecordKey(pool.Id, creator.String())
 	record, found := k.GetProviderRecord(ctx, recordKey)
 
 	if !found {
-		err = k.InitProviderRecord(ctx, creator, pool.Name, lockDuration)
+		err = k.CreateProviderRecord(ctx, creator, pool.Id, lockDuration)
 
 		if err != nil {
 			return nil, err
@@ -80,7 +80,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 		return nil, sdkErr
 	}
 
-	if err := k.MintAndSendPToken(ctx, pool, creator, shares); err != nil {
+	if err := k.MintAndSendPoolToken(ctx, pool, creator, shares); err != nil {
 		return nil, err
 	}
 
@@ -93,11 +93,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 
 	pool.Coins = poolCoins
 
-	// Update PTokens
-	netPToken, _ := sdk.NewIntFromString(pool.PTokenBalance)
-	netPToken = netPToken.Add(shares)
-
-	pool.PTokenBalance = netPToken.String()
+	pool.PoolToken.Amount = pool.PoolToken.Amount.Add(shares)
 
 	k.SetPool(ctx, pool)
 
