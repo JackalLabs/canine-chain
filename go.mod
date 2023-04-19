@@ -151,6 +151,8 @@ replace (
 	// fix wasmd governance issue
 	github.com/CosmWasm/wasmd => github.com/CosmosContracts/wasmd v0.29.2-patch.1
 
+	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.1.2
+
 	// dragonberry ics23 patch
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
