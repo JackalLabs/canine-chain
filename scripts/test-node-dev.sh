@@ -58,6 +58,8 @@ from_scratch () {
 
 	# Use jkl bech32 prefix account for storage and oracle modules
 	update_test_genesis '.app_state["storage"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
+    update_test_genesis '.app_state["storage"]["params"]["chunk_size"]="'10240'"'
+    update_test_genesis '.app_state["storage"]["params"]["proof_window"]="'50'"'
     update_test_genesis '.app_state["oracle"]["params"]["deposit"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
     update_test_genesis '.app_state["rns"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
 
