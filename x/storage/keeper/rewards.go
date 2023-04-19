@@ -153,13 +153,13 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		ctx.Logger().Error(e.Error())
 		return e
 	}
-	misses.SubRaw(1)
+	updatedMisses := misses.SubRaw(1)
 
-	if misses.LT(sdk.NewInt(0)) {
-		misses = sdk.NewInt(0)
+	if updatedMisses.LT(sdk.NewInt(0)) {
+		updatedMisses = sdk.NewInt(0)
 	}
 
-	deal.Proofsmissed = misses.String()
+	deal.Proofsmissed = updatedMisses.String()
 	deal.Proofverified = "false"
 	k.SetActiveDeals(ctx, deal)
 
