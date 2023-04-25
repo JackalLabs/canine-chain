@@ -25,11 +25,12 @@ make install
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
 ./../_build/old/canined version --home $HOME
+
+sleep 30
+
 ./../_build/old/canined q storage params --home $HOME
 
-sleep 20
-
-./../_build/old/canined tx storage buy-storage $(./../_build/old/canined keys show test1 -a --keyring-backend test --chain-id test --home $HOME) 720h 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage buy-storage $(./../_build/old/canined keys show test1 -a --keyring-backend test --home $HOME) 720h 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 

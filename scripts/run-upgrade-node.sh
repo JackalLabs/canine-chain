@@ -9,7 +9,7 @@ CHAIN_ID="test"
 KEYRING="test"
 KEY="test"
 KEY1="test1"
-KEY1="test2"
+KEY2="test2"
 
 # Function updates the config based on a jq argument as a string
 update_test_genesis () {
