@@ -25,6 +25,7 @@ make install
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
 ./../_build/old/canined version --home $HOME
+./../_build/old/canined config broadcast-mode block --home $HOME
 
 sleep 30
 
@@ -67,6 +68,13 @@ sleep 6
 ./../_build/old/canined tx gov vote 1 yes --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
+
+./../_build/old/canined tx storage post-contract jklc1003g00zclz5hv3kku8vtjptzx042hpm6zjpyf7me8vvu2ucv2aas4pq3nv jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf1rqry0q7a55tanxkv34rnza82pewfm292pr77m78vc8avjk5p3e9sc6qgnq --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
+./../_build/old/canined tx storage sign-contract jklc1003g00zclz5hv3kku8vtjptzx042hpm6zjpyf7me8vvu2ucv2aas4pq3nv --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
 
 # determine block_height to halt
 while true; do 
