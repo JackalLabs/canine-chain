@@ -25,6 +25,7 @@ make install
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
 ./../_build/old/canined version --home $HOME
+./../_build/old/canined q storage params --home $HOME
 
 sleep 20
 
@@ -33,6 +34,7 @@ sleep 20
 sleep 6
 
 ./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test2 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
