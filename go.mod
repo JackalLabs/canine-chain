@@ -32,7 +32,7 @@ require (
 require (
 	github.com/CosmWasm/wasmvm v1.1.1 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3 // indirect
-	github.com/cosmos/gogoproto v1.4.7
+	github.com/cosmos/gogoproto v1.4.8
 	github.com/cosmos/iavl v0.19.4 // indirect
 	github.com/creachadair/taskgroup v0.3.2 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
@@ -47,7 +47,7 @@ require (
 )
 
 require (
-	cosmossdk.io/api v0.4.0
+	cosmossdk.io/api v0.4.1
 	cosmossdk.io/core v0.3.2
 	github.com/golang/mock v1.6.0
 )
