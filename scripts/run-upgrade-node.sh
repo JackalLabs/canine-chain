@@ -36,7 +36,7 @@ update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom
 update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": $DENOM,"amount": "1000"}' $DENOM
 update_test_genesis '.app_state["staking"]["params"]["bond_denom"]=$DENOM' $DENOM
 update_test_genesis '.app_state["storage"]["params"]["misses_to_burn"]=2' $DENOM
-update_test_genesis '.app_state["storage"]["params"]["proof_window"]=3' $DENOM
+update_test_genesis '.app_state["storage"]["params"]["proof_window"]=10' $DENOM
 update_test_genesis '.app_state["storage"]["params"]["deposit_account"]="jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg"' $DENOM
 
 
