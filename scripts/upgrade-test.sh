@@ -2,7 +2,7 @@
 
 OLD_VERSION=$1
 NEW_VERSION=$2
-UPGRADE_HEIGHT=26
+UPGRADE_HEIGHT=30
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
@@ -69,11 +69,11 @@ sleep 6
 
 sleep 6
 
-./../_build/old/canined tx storage post-contract jklc1003g00zclz5hv3kku8vtjptzx042hpm6zjpyf7me8vvu2ucv2aas4pq3nv jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf1rqry0q7a55tanxkv34rnza82pewfm292pr77m78vc8avjk5p3e9sc6qgnq --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage post-contract jklc1hufzy29uulvfcpw9xsat0fs87vglyslj8sc0cz270necl9u23hzsczp0s3 jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf1rqry0q7a55tanxkv34rnza82pewfm292pr77m78vc8avjk5p3e9sc6qgnq --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
-./../_build/old/canined tx storage sign-contract jklc1003g00zclz5hv3kku8vtjptzx042hpm6zjpyf7me8vvu2ucv2aas4pq3nv --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage sign-contract jklc1hufzy29uulvfcpw9xsat0fs87vglyslj8sc0cz270necl9u23hzsczp0s3 --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 
 # determine block_height to halt
