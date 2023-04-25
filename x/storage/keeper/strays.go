@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -58,4 +60,31 @@ func (k Keeper) GetAllStrays(ctx sdk.Context) (list []types.Strays) {
 	}
 
 	return
+}
+
+func (k Keeper) ClearDeadFiles(ctx sdk.Context) {
+	strays := k.GetAllStrays(ctx)
+	deals := k.GetAllActiveDeals(ctx)
+
+	for _, stray := range strays {
+		found := false
+		for _, deal := range deals {
+			if stray.Fid == deal.Fid {
+				found = true
+				break
+			}
+		}
+		if found {
+			continue
+		}
+
+		paymentInfo, found := k.GetStoragePaymentInfo(ctx, stray.Signee)
+		if found {
+			fSize, err := strconv.ParseInt(stray.Filesize, 10, 64)
+			if err == nil {
+				paymentInfo.SpaceUsed -= fSize // remove the deal from the users paid amount.
+			}
+		}
+		k.RemoveStrays(ctx, stray.Cid)
+	}
 }

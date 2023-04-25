@@ -35,24 +35,7 @@ func (u *Upgrade) Name() string {
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		strays := u.storageKeeper.GetAllStrays(ctx)
-		deals := u.storageKeeper.GetAllActiveDeals(ctx)
-
-		for _, stray := range strays {
-			found := false
-			for _, deal := range deals {
-				if stray.Fid == deal.Fid {
-					found = true
-					break
-				}
-			}
-			if found {
-				continue
-			}
-
-			u.storageKeeper.RemoveStrays(ctx, stray.Cid)
-		}
-
+		u.storageKeeper.ClearDeadFiles(ctx)
 		return fromVM, nil
 	}
 }
