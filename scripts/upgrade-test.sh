@@ -43,7 +43,7 @@ sleep 6
 
 sleep 6
 
-./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf16yfjl9t8u9ztt0e5wzudpfr3e2u5cxwsru6l6jh930zrvav5cz2q2wrfkc --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
