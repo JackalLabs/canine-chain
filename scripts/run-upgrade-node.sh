@@ -37,6 +37,7 @@ update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": $DENOM,"amou
 update_test_genesis '.app_state["staking"]["params"]["bond_denom"]=$DENOM' $DENOM
 update_test_genesis '.app_state["storage"]["params"]["misses_to_burn"]=2' $DENOM
 update_test_genesis '.app_state["storage"]["params"]["proof_window"]=3' $DENOM
+update_test_genesis '.app_state["storage"]["params"]["deposit_account:"]=jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg' $DENOM
 
 
 sed -i '' 's/enable = false/enable = true/' $HOME/config/app.toml
