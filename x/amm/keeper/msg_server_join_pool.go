@@ -48,6 +48,8 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 		return nil, err
 	}
 
+	coins = coins.Sub(excess)
+
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
 
 	// Initialize ProviderRecord
