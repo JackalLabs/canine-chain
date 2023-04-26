@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -11,19 +12,23 @@ import (
 
 func CmdShowProviderRecord() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-provider-record [poolName] [provider_addr]",
-		Short: "shows a LProviderRecord",
+		Use:   "show-provider-record [pool-id] [provider_addr]",
+		Short: "shows a ProviderRecord",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argPoolName := args[0]
 			argProviderAddr := args[1]
 
+			poolId, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil{
+				return err
+			}
+
 			params := &types.QueryGetProviderRecordRequest{
-				PoolName: argPoolName,
+				PoolId: poolId,
 				Provider: argProviderAddr,
 			}
 

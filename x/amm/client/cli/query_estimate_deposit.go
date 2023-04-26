@@ -18,8 +18,12 @@ func CmdEstimateSwapIn() *cobra.Command {
 			" not considered",
 		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqPoolName := args[0]
 			reqDesiredCoin := args[1]
+
+			poolId, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -29,7 +33,7 @@ func CmdEstimateSwapIn() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryEstimateSwapInRequest{
-				PoolName:    reqPoolName,
+				PoolId: poolId,
 				OutputCoins: reqDesiredCoin,
 			}
 

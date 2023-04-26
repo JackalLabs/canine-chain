@@ -51,7 +51,9 @@ message MsgJoinPool {
 
 message MsgJoinPoolResponse {
   // Amount of pool token minted and sent to the contributor.
-  cosmos.base.v1beta1.Coin poolToken = 1;
+  cosmos.base.v1beta1.Coin poolToken = 1 [(gogoproto.nullable) = false];
+
+  repeated cosmos.base.v1beta1.Coin excess = 2 [(gogoproto.nullable) = false];
 }
 
 // Burn pool token to receive pool coins

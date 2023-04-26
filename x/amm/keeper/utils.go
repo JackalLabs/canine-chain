@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/binary"
 	"strconv"
 	t "time"
 
@@ -35,7 +36,8 @@ func StringToTime(time string) (t.Time, error) {
 }
 
 func CreatePoolAcc(pool types.Pool) sdk.AccAddress {
-	poolName := pool.GetName()
-	accAddress := sdk.AccAddress(crypto.AddressHash([]byte(poolName)))
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, pool.Id)
+	accAddress := sdk.AccAddress(crypto.AddressHash(bz))
 	return accAddress
 }

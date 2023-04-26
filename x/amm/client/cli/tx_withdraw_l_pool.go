@@ -14,7 +14,7 @@ var _ = strconv.Itoa(0)
 
 func CmdExitPool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "exit-pool \"Pool Name\" [burn quantity]",
+		Use:   "exit-pool [pool-id] [burn amount]",
 		Short: "exit from liquidity pool by burning liquidity pool token",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -28,10 +28,14 @@ func CmdExitPool() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			poolId, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
 
 			msg := types.NewMsgExitPool(
 				clientCtx.GetFromAddress().String(),
-				args[0],
+				poolId,
 				burnShare,
 			)
 			if err := msg.ValidateBasic(); err != nil {

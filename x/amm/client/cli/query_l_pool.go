@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"strconv"
 	"context"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -44,7 +45,7 @@ func CmdListPool() *cobra.Command {
 
 func CmdShowPool() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-pool [name]",
+		Use:   "show-pool [pool-id]",
 		Short: "shows a Pool",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -52,10 +53,13 @@ func CmdShowPool() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argIndex := args[0]
+			poolId, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil{
+				return err
+			}
 
 			params := &types.QueryGetPoolRequest{
-				Index: argIndex,
+				PoolId: poolId,
 			}
 
 			res, err := queryClient.Pool(context.Background(), params)

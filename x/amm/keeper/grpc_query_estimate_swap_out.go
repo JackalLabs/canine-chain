@@ -19,7 +19,7 @@ func (k Keeper) EstimateSwapOut(
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	pool, found := k.GetPool(ctx, req.PoolName)
+	pool, found := k.GetPool(ctx, req.PoolId)
 
 	if !found {
 		return nil, types.ErrLiquidityPoolNotFound
@@ -30,7 +30,7 @@ func (k Keeper) EstimateSwapOut(
 	depositCoins, err := sdk.ParseCoinsNormalized(req.InputCoin)
 
 	if err != nil || depositCoins.IsAnyNegative() {
-		return nil, status.Error(codes.InvalidArgument, "invalid coinIn")
+		return nil, status.Error(codes.InvalidArgument, "invalid coin input")
 	}
 
 	AMM, _ := types.GetAMM(pool.AMM_Id)

@@ -3,6 +3,7 @@ package cli
 import (
 	"strconv"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/jackalLabs/canine-chain/x/amm/types"
@@ -11,14 +12,17 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdEstimateContribution() *cobra.Command {
+func CmdEstimatePoolJoin() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "estimate-contribution [pool-name] [desired-amount]",
-		Short: "Estimate coins required to add liquidity to a pool",
+		Use:   "estimate-pool-join [pool-name] [pool-coins]",
+		Short: "Estimate amount of share returned by adding liquidity",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqPoolName := args[0]
-			reqDesiredAmount := args[1]
+			poolId, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+			liq, err := sdk.ParseCoinsNormalized(args[1])
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -27,12 +31,12 @@ func CmdEstimateContribution() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryEstimateContributionRequest{
-				PoolName:      reqPoolName,
-				DesiredAmount: reqDesiredAmount,
+			params := &types.QueryEstimatePoolJoinRequest{
+				PoolId: poolId,
+				Liquidity: liq,
 			}
 
-			res, err := queryClient.EstimateContribution(cmd.Context(), params)
+			res, err := queryClient.EstimatePoolJoin(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

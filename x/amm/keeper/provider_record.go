@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/binary"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -181,13 +182,16 @@ func (k Keeper) GetAllRecordOfProvider(
 	return
 }
 
-func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolName string,
+func (k Keeper) GetAllRecordOfPool(ctx sdk.Context, poolId uint64,
 ) (list []types.ProviderRecord) {
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey),
 		types.KeyPrefix(types.ProviderRecordKeyPrefix))
+	
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, poolId)
 
-	iterator := sdk.KVStorePrefixIterator(store, []byte("ujkl-ujwl"))
+	iterator := sdk.KVStorePrefixIterator(store, bz)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

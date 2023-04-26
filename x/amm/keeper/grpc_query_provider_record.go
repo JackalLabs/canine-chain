@@ -15,7 +15,7 @@ func (k Keeper) ProviderRecord(c context.Context, req *types.QueryGetProviderRec
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	recordKey := types.ProviderRecordKey(req.PoolName, req.Provider)
+	recordKey := types.ProviderRecordKey(req.PoolId, req.Provider)
 	val, found := k.GetProviderRecord(
 		ctx,
 		recordKey,
@@ -24,5 +24,5 @@ func (k Keeper) ProviderRecord(c context.Context, req *types.QueryGetProviderRec
 		return nil, status.Error(codes.NotFound, "not found ")
 	}
 
-	return &types.QueryGetProviderRecordResponse{lProviderRecord: val}, nil
+	return &types.QueryGetProviderRecordResponse{ProviderRecord: val}, nil
 }

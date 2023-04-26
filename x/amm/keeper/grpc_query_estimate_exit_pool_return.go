@@ -10,11 +10,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) EstimatePoolRemove(
+func (k Keeper) EstimatePoolExit(
 	goCtx context.Context,
-	req *types.QueryEstimatePoolRemoveRequest,
+	req *types.QueryEstimatePoolExitRequest,
 ) (
-	*types.QueryEstimatePoolRemoveResponse,
+	*types.QueryEstimatePoolExitResponse,
 	error,
 ) {
 	if req == nil {
@@ -23,8 +23,7 @@ func (k Keeper) EstimatePoolRemove(
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Process the query
-	pool, found := k.GetPool(ctx, req.PoolName)
+	pool, found := k.GetPool(ctx, req.PoolId)
 
 	if !found {
 		return nil, sdkerrors.Wrapf(
@@ -33,16 +32,9 @@ func (k Keeper) EstimatePoolRemove(
 		)
 	}
 
-	burnAmt, ok := sdk.NewIntFromString(req.Amount)
+	burnAmt := sdk.NewInt(int64(req.Amount))
 
-	if !ok {
-		return nil, sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidRequest,
-			"Failed to parse burn amount into sdk.Int",
-		)
-	}
-
-	retuns, err := CalculatePoolShareBurnReturn(pool, burnAmt)
+	retuns, err := CalcShareExit(pool, burnAmt)
 
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
@@ -51,5 +43,38 @@ func (k Keeper) EstimatePoolRemove(
 		)
 	}
 
-	return &types.QueryEstimatePoolRemoveResponse{Coins: retuns}, nil
+	return &types.QueryEstimatePoolExitResponse{Coins: retuns}, nil
+}
+
+func (k Keeper) EstimatePoolJoin(
+	goCtx context.Context,
+	req *types.QueryEstimatePoolJoinRequest,
+) (
+	*types.QueryEstimatePoolJoinResponse,
+	error,
+) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	pool, found := k.GetPool(ctx, req.PoolId)
+
+	if !found {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"Pool not found",
+		)
+	}
+
+	share, excess, err := CalcShareJoin(pool.PoolToken, pool.Coins, req.Liquidity)
+
+	if err != nil {
+		return nil, sdkerrors.Wrapf(
+			err,
+			"Failed to calculate pool coin return",
+		)
+	}
+	
+	return &types.QueryEstimatePoolJoinResponse{Share: sdk.NewCoin(pool.PoolToken.Denom, share), Excess: excess}, nil
 }

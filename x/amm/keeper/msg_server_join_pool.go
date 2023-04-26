@@ -42,7 +42,7 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 
 	coins := sdk.NewCoins(msg.Coins...)
 
-	shares, excess, err := CalcShareJoin(pool, coins)
+	shares, excess, err := CalcShareJoin(pool.PoolToken, pool.Coins, coins)
 
 	if err != nil {
 		return nil, err
@@ -99,5 +99,5 @@ func (k msgServer) JoinPool(goCtx context.Context, msg *types.MsgJoinPool) (*typ
 
 	EmitPoolJoinedEvent(ctx, creator, pool, coins, pool.MinLockDuration)
 
-	return &types.MsgJoinPoolResponse{}, nil
+	return &types.MsgJoinPoolResponse{PoolToken: sdk.NewCoin(pool.PoolToken.Denom, shares), Excess: excess}, nil
 }

@@ -23,7 +23,7 @@ func (k Keeper) EstimateSwapIn(
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	pool, found := k.GetPool(ctx, req.PoolName)
+	pool, found := k.GetPool(ctx, req.PoolId)
 
 	if !found {
 		return nil, types.ErrLiquidityPoolNotFound

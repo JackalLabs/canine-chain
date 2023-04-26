@@ -11,28 +11,34 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdEstimatePoolRemove() *cobra.Command {
+func CmdEstimatePoolExit() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "estimate-pool-remove [pool-name] [amount]",
-		Short: "Estimate the amount of pool shares that will be removed from the pool when removing liquidity",
+		Use:   "estimate-pool-exit [pool-exit] [amount]",
+		Short: "estimate pool coins return from exiting pool",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqPoolName := args[0]
-			reqAmount := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			poolId, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+			amount, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryEstimatePoolRemoveRequest{
-				PoolName: reqPoolName,
-				Amount:   reqAmount,
+			params := &types.QueryEstimatePoolExitRequest{
+				PoolId: poolId,
+				Amount: amount,
 			}
 
-			res, err := queryClient.EstimatePoolRemove(cmd.Context(), params)
+			res, err := queryClient.EstimatePoolExit(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
