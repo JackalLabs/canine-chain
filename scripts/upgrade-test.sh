@@ -2,7 +2,7 @@
 
 OLD_VERSION=$1
 NEW_VERSION=$2
-UPGRADE_HEIGHT=26
+UPGRADE_HEIGHT=30
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
@@ -25,14 +25,18 @@ make install
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
 ./../_build/old/canined version --home $HOME
+./../_build/old/canined config broadcast-mode block --home $HOME
 
-sleep 20
+sleep 30
 
-./../_build/old/canined tx storage buy-storage $(./../_build/old/canined keys show test1 -a --keyring-backend test --chain-id test --home $HOME) 720h 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined q storage params --home $HOME
+
+./../_build/old/canined tx storage buy-storage jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 720h 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
 ./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test2 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
@@ -40,7 +44,7 @@ sleep 6
 
 sleep 6
 
-./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf $(./../_build/old/canined keys show test1 -a --keyring-backend test --chain-id test --home $HOME) 10000 jklf16yfjl9t8u9ztt0e5wzudpfr3e2u5cxwsru6l6jh930zrvav5cz2q2wrfkc --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf16yfjl9t8u9ztt0e5wzudpfr3e2u5cxwsru6l6jh930zrvav5cz2q2wrfkc --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
@@ -64,6 +68,13 @@ sleep 6
 ./../_build/old/canined tx gov vote 1 yes --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
+
+./../_build/old/canined tx storage post-contract jklc1hufzy29uulvfcpw9xsat0fs87vglyslj8sc0cz270necl9u23hzsczp0s3 jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf1rqry0q7a55tanxkv34rnza82pewfm292pr77m78vc8avjk5p3e9sc6qgnq --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 6
+
+./../_build/old/canined tx storage sign-contract jklc1hufzy29uulvfcpw9xsat0fs87vglyslj8sc0cz270necl9u23hzsczp0s3 --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
 
 # determine block_height to halt
 while true; do 
