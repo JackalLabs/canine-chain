@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/jackalLabs/canine-chain/app/upgrades"
+	"github.com/jackalLabs/canine-chain/app/upgrades/recovery"
 	v121 "github.com/jackalLabs/canine-chain/app/upgrades/testnet/121"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha11"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha13"
@@ -1146,10 +1147,12 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(beta6.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 	app.registerUpgrade(beta7.NewUpgrade(app.mm, app.configurator, app.NotificationsKeeper))
 	app.registerUpgrade(v121.NewUpgrade(app.mm, app.configurator))
+	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
+	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app

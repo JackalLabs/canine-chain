@@ -18,4 +18,10 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	}
 
 	k.KillOldContracts(ctx)
+
+	var week int64 = (7 * 24 * 60 * 60) / 6
+
+	if ctx.BlockHeight()%week == 0 { // clear out files once a week
+		k.ClearDeadFiles(ctx)
+	}
 }
