@@ -11,6 +11,7 @@ service Msg {
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
   rpc MakeRoot(MsgMakeRoot) returns (MsgMakeRootResponse);
+  rpc MakeRootV2(MsgMakeRootV2) returns (MsgMakeRootResponse);
 
   rpc AddEditors(MsgAddEditors) returns (MsgAddEditorsResponse);
   rpc RemoveEditors(MsgRemoveEditors) returns (MsgRemoveEditorsResponse);
@@ -77,6 +78,13 @@ message MsgMakeRoot {
 }
 
 message MsgMakeRootResponse {}
+
+message MsgMakeRootV2 {
+  string creator = 1;
+  string editors = 2;
+  string viewers = 3;
+  string trackingNumber = 4;
+}
 
 message MsgAddEditors {
   string creator = 1;
