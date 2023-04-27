@@ -16,9 +16,9 @@ func (k msgServer) MakeRoot(goCtx context.Context, msg *types.MsgMakeRoot) (*typ
 	ownerAddress := MakeOwnerAddress(msg.RootHashPath, msg.Account)
 
 	file := types.Files{
-		Contents:       msg.Contents, // This won't be used for now, but we're leaving it in as a stub in case it's needed
+		Contents:       msg.Contents,
 		Owner:          ownerAddress,
-		ViewingAccess:  "NONE", // This won't be used for now, but we're leaving it in as a stub in case it's needed
+		ViewingAccess:  msg.Viewers,
 		EditAccess:     msg.Editors,
 		Address:        msg.RootHashPath,
 		TrackingNumber: msg.TrackingNumber,
