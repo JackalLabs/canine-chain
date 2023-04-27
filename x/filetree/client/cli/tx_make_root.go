@@ -26,6 +26,7 @@ func CmdMakeRoot() *cobra.Command {
 		Short: "Broadcast message make root",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			fmt.Println("make-root is deprecated as of v2.0.0, please consider using make-root-v2.")
 			argAccount := args[0]
 			argRootHashPath := args[1]
 
