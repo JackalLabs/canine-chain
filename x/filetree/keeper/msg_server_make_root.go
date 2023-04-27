@@ -10,6 +10,8 @@ import (
 func (k msgServer) MakeRoot(goCtx context.Context, msg *types.MsgMakeRoot) (*types.MsgMakeRootResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	merklePath := types.MerklePath("s")
+
 	// msg.Account was already hex(hashed) before it go to here.
 	// make the full OwnerAddress
 
@@ -20,7 +22,7 @@ func (k msgServer) MakeRoot(goCtx context.Context, msg *types.MsgMakeRoot) (*typ
 		Owner:          ownerAddress,
 		ViewingAccess:  msg.Viewers,
 		EditAccess:     msg.Editors,
-		Address:        msg.RootHashPath,
+		Address:        merklePath,
 		TrackingNumber: msg.TrackingNumber,
 	}
 
