@@ -29,6 +29,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdDeleteFile())
 	cmd.AddCommand(CmdRemoveViewers())
 	cmd.AddCommand(CmdMakeRoot())
+	cmd.AddCommand(CmdMakeRootV2())
 	cmd.AddCommand(CmdAddEditors())
 	cmd.AddCommand(CmdRemoveEditors())
 	cmd.AddCommand(CmdResetEditors())
