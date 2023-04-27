@@ -5,34 +5,28 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgMakeRoot = "make_root"
+const TypeMsgMakeRootV2 = "make_root_v2"
 
-var _ sdk.Msg = &MsgMakeRoot{}
+var _ sdk.Msg = &MsgMakeRootV2{}
 
-/*
-Deprecated: NewMsgMakeRoot is being replaced by NewMsgMakeRootV2
-*/
-func NewMsgMakeRoot(creator string, account string, rootHashPath string, contents string, editors string, viewers string, trackingNumber string) *MsgMakeRoot {
-	return &MsgMakeRoot{
+func NewMsgMakeRootV2(creator string, editors string, viewers string, trackingNumber string) *MsgMakeRootV2 {
+	return &MsgMakeRootV2{
 		Creator:        creator,
-		Account:        account,
-		RootHashPath:   rootHashPath,
-		Contents:       contents,
 		Editors:        editors,
 		Viewers:        viewers,
 		TrackingNumber: trackingNumber,
 	}
 }
 
-func (msg *MsgMakeRoot) Route() string {
+func (msg *MsgMakeRootV2) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgMakeRoot) Type() string {
-	return TypeMsgMakeRoot
+func (msg *MsgMakeRootV2) Type() string {
+	return TypeMsgMakeRootV2
 }
 
-func (msg *MsgMakeRoot) GetSigners() []sdk.AccAddress {
+func (msg *MsgMakeRootV2) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -40,25 +34,17 @@ func (msg *MsgMakeRoot) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgMakeRoot) GetSignBytes() []byte {
+func (msg *MsgMakeRootV2) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgMakeRoot) ValidateBasic() error {
+func (msg *MsgMakeRootV2) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
-	if msg.Account == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
-			"invalid account: %s", msg.Account)
-	}
-	if msg.RootHashPath == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
-			"invalid root hash path: %s", msg.RootHashPath)
-	}
 	if msg.Editors == "" {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid editors: %s", msg.Editors)
