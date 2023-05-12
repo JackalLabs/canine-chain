@@ -19,20 +19,20 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.2
-	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7 // indirect
+	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect
 	github.com/tendermint/tendermint v0.34.24
 	github.com/tendermint/tm-db v0.6.7
 	github.com/wealdtech/go-merkletree v1.0.0
 	github.com/zondax/hid v0.9.1 // indirect
-	google.golang.org/genproto v0.0.0-20230320184635-7606e756e683
-	google.golang.org/grpc v1.54.0
+	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
+	google.golang.org/grpc v1.55.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
 	github.com/CosmWasm/wasmvm v1.1.1 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3 // indirect
-	github.com/cosmos/gogoproto v1.4.9
+	github.com/cosmos/gogoproto v1.4.10
 	github.com/cosmos/iavl v0.19.4 // indirect
 	github.com/creachadair/taskgroup v0.3.2 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
@@ -43,12 +43,12 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/spf13/viper v1.14.0 // indirect
-	golang.org/x/exp v0.0.0-20230206171751-46f607a40771 // indirect
+	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 )
 
 require (
 	cosmossdk.io/api v0.4.1
-	cosmossdk.io/core v0.3.2
+	cosmossdk.io/core v0.7.0
 	github.com/golang/mock v1.6.0
 )
 
@@ -104,7 +104,7 @@ require (
 	github.com/improbable-eng/grpc-web v0.14.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
-	github.com/klauspost/compress v1.15.15 // indirect
+	github.com/klauspost/compress v1.16.0 // indirect
 	github.com/lib/pq v1.10.6 // indirect
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
@@ -118,8 +118,8 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_model v0.3.0 // indirect
-	github.com/prometheus/common v0.42.0 // indirect
+	github.com/prometheus/client_model v0.4.0 // indirect
+	github.com/prometheus/common v0.43.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rs/zerolog v1.27.0 // indirect
@@ -134,7 +134,7 @@ require (
 	go.etcd.io/bbolt v1.3.6 // indirect
 	golang.org/x/crypto v0.8.0 // indirect
 	golang.org/x/net v0.9.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/term v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
