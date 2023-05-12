@@ -25,14 +25,14 @@ require (
 	github.com/wealdtech/go-merkletree v1.0.0
 	github.com/zondax/hid v0.9.1 // indirect
 	google.golang.org/genproto v0.0.0-20230320184635-7606e756e683
-	google.golang.org/grpc v1.54.0
+	google.golang.org/grpc v1.55.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
 	github.com/CosmWasm/wasmvm v1.1.1 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3 // indirect
-	github.com/cosmos/gogoproto v1.4.9
+	github.com/cosmos/gogoproto v1.4.10
 	github.com/cosmos/iavl v0.19.4 // indirect
 	github.com/creachadair/taskgroup v0.3.2 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
