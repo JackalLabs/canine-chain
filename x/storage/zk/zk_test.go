@@ -1,6 +1,7 @@
 package zk_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/jackalLabs/canine-chain/x/storage/zk"
@@ -12,11 +13,15 @@ func TestHash(t *testing.T) {
 
 	data := "secret_message"
 
-	wp, err := zk.HashData([]byte(data))
+	ccs, err := zk.GetCircuit()
+	r.NoError(err)
 
+	wp, err := zk.HashData([]byte(data), ccs)
 	r.NoError(err)
 
 	verified := zk.VerifyHash(wp)
+
+	fmt.Println(wp)
 
 	r.Equal(true, verified)
 }

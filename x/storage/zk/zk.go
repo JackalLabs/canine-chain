@@ -8,10 +8,22 @@ import (
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/hash"
 	"github.com/consensys/gnark/backend/groth16"
+	"github.com/consensys/gnark/constraint"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
 	"github.com/consensys/gnark/std/hash/mimc"
 )
+
+func GetCircuit() (constraint.ConstraintSystem, error) {
+	// *Verifier
+	var mimcCircuit Circuit
+	ccs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &mimcCircuit)
+	if err != nil {
+		return nil, err
+	}
+
+	return ccs, err
+}
 
 func (circuit *Circuit) Define(api frontend.API) error {
 	mimc, err := mimc.NewMiMC(api)
@@ -25,7 +37,7 @@ func (circuit *Circuit) Define(api frontend.API) error {
 	return nil
 }
 
-func HashData(data []byte) (*WrappedProof, error) {
+func HashData(data []byte, ccs constraint.ConstraintSystem) (*WrappedProof, error) {
 	element, err := fr.Hash(data, []byte("storage:"), 1)
 	if err != nil {
 		return nil, err
@@ -52,13 +64,6 @@ func HashData(data []byte) (*WrappedProof, error) {
 	witnessPublic, err := wit.Public()
 	if err != nil {
 		return nil, err
-	}
-
-	// *Verifier
-	var mimcCircuit Circuit
-	ccs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &mimcCircuit)
-	if err != nil {
-		panic(err)
 	}
 
 	pk, vk, err := groth16.Setup(ccs)
