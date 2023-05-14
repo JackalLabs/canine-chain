@@ -2,7 +2,6 @@ package zk
 
 import (
 	"github.com/consensys/gnark/backend/groth16"
-	"github.com/consensys/gnark/backend/witness"
 	"github.com/consensys/gnark/frontend"
 )
 
@@ -12,7 +11,6 @@ type Circuit struct {
 }
 
 type WrappedProof struct {
-	Proof         groth16.Proof
-	WitnessPublic witness.Witness
-	VerifyingKey  groth16.VerifyingKey
+	Proof        groth16.Proof
+	VerifyingKey groth16.VerifyingKey
 }

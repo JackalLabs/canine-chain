@@ -2,7 +2,6 @@ package zk
 
 import (
 	"fmt"
-	"math/big"
 
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
@@ -10,83 +9,67 @@ import (
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/constraint"
 	"github.com/consensys/gnark/frontend"
-	"github.com/consensys/gnark/frontend/cs/r1cs"
-	"github.com/consensys/gnark/std/hash/mimc"
 )
 
-func GetCircuit() (constraint.ConstraintSystem, error) {
-	// *Verifier
-	var mimcCircuit Circuit
-	ccs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &mimcCircuit)
-	if err != nil {
-		return nil, err
-	}
-
-	return ccs, err
-}
-
-func (circuit *Circuit) Define(api frontend.API) error {
-	mimc, err := mimc.NewMiMC(api)
-	if err != nil {
-		return err
-	}
-
-	mimc.Write(circuit.Secret)
-	api.AssertIsEqual(mimc.Sum(), circuit.Hash)
-
-	return nil
-}
-
-func HashData(data []byte, ccs constraint.ConstraintSystem) (*WrappedProof, error) {
+func HashData(data []byte, ccs constraint.ConstraintSystem) (*WrappedProof, []byte, error) {
 	element, err := fr.Hash(data, []byte("storage:"), 1)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	bz := element[0].Bytes() // make addressable memory on heap
 
 	h := hash.MIMC_BN254.New()
 	_, err = h.Write(bz[:])
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	hash := h.Sum(nil)
-	// debug
-	fmt.Printf("Hash(public): %s\n", big.NewInt(0).SetBytes(hash).String())
-	fmt.Printf("PreImage(secret): %s\n", big.NewInt(0).SetBytes(bz[:]).String())
-
-	// *Prover
 	// create proof
 	assignment := Circuit{Secret: bz[:], Hash: hash}
 	wit, err := frontend.NewWitness(&assignment, ecc.BN254.ScalarField())
 	if err != nil {
-		return nil, err
-	}
-	witnessPublic, err := wit.Public()
-	if err != nil {
-		return nil, err
+		return nil, hash, err
 	}
 
 	pk, vk, err := groth16.Setup(ccs)
 	if err != nil {
-		panic(err)
+		return nil, hash, err
 	}
 
 	// *Prover
 	proof, err := groth16.Prove(ccs, pk, wit)
 	if err != nil {
-		panic(err)
+		return nil, hash, err
+	}
+
+	publicAssignment := Circuit{Hash: hash}
+	publicWitness, err := frontend.NewWitness(&publicAssignment, ecc.BN254.ScalarField())
+	if err != nil {
+		return nil, hash, err
+	}
+	// *Verifier
+	err = groth16.Verify(proof, vk, publicWitness)
+	if err != nil {
+		return nil, hash, err
 	}
 
 	return &WrappedProof{
-		Proof:         proof,
-		WitnessPublic: witnessPublic,
-		VerifyingKey:  vk,
-	}, nil
+		Proof:        proof,
+		VerifyingKey: vk,
+	}, hash, nil
 }
 
-func VerifyHash(wp *WrappedProof) bool {
+func VerifyHash(wp *WrappedProof, hash []byte) bool {
+	publicAssignment := Circuit{Hash: hash}
+	fmt.Println(hash)
+
+	publicWitness, err := frontend.NewWitness(&publicAssignment, ecc.BN254.ScalarField())
+	if err != nil {
+		return false
+	}
+
 	// *Verifier
-	err := groth16.Verify(wp.Proof, wp.VerifyingKey, wp.WitnessPublic)
+	err = groth16.Verify(wp.Proof, wp.VerifyingKey, publicWitness)
 	if err != nil {
 		return false
 	}
