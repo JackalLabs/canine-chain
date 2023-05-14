@@ -380,11 +380,11 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				dcid, err = keeper.MakeCid(hashName)
 				suite.Require().NoError(err)
 
-				d := types.ActiveDeals{
+				d := types.ActiveDealsV2{
 					Cid:      dcid,
-					Signee:   user,
+					Signer:   user,
 					Creator:  user,
-					Filesize: "10",
+					FileSize: 10,
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
 
@@ -397,11 +397,11 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 					scid, err := keeper.MakeCid(hashName)
 					suite.Require().NoError(err)
 
-					k := types.ActiveDeals{
+					k := types.ActiveDealsV2{
 						Cid:      scid,
-						Signee:   user,
+						Signer:   user,
 						Creator:  user,
-						Filesize: "10",
+						FileSize: 10,
 					}
 					sKeeper.SetActiveDeals(suite.ctx, k)
 				}
@@ -431,12 +431,12 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 				cids := []string{dcid}
 
-				d := types.ActiveDeals{
+				d := types.ActiveDealsV2{
 					Cid:      dcid,
 					Creator:  user,
-					Signee:   user,
+					Signer:   user,
 					Fid:      "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-					Filesize: "10",
+					FileSize: 10,
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
 
@@ -473,11 +473,11 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 
 				cids := []string{dcid}
 
-				d := types.Strays{
+				d := types.StrayV2{
 					Cid:      dcid,
 					Fid:      "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
-					Signee:   user,
-					Filesize: "10",
+					Signer:   user,
+					FileSize: 10,
 				}
 				sKeeper.SetStrays(suite.ctx, d)
 
@@ -555,7 +555,7 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 		{
 			name: "not_a_provider",
 			preRun: func() *types.MsgClaimStray {
-				s := types.Strays{
+				s := types.StrayV2{
 					Cid: "foo",
 				}
 				sKeeper.SetStrays(suite.ctx, s)
@@ -582,7 +582,7 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 					Creator: provider,
 				}
 				sKeeper.SetProviders(suite.ctx, p)
-				ad := types.ActiveDeals{
+				ad := types.ActiveDealsV2{
 					Fid:      s.Fid,
 					Provider: p.Address,
 				}
@@ -605,7 +605,7 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 					Address: provider2,
 					Creator: provider2,
 				}
-				s := types.Strays{
+				s := types.StrayV2{
 					Cid: "foo",
 				}
 				sKeeper.SetStrays(suite.ctx, s)
@@ -628,7 +628,7 @@ func (suite *KeeperTestSuite) TestClaimStray() {
 					Creator:      testAddresses[5],
 					AuthClaimers: []string{testAddresses[6]},
 				}
-				s := types.Strays{
+				s := types.StrayV2{
 					Cid: "quoz",
 				}
 				sKeeper.SetStrays(suite.ctx, s)

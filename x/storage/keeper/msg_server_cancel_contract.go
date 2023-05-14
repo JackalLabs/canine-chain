@@ -34,9 +34,9 @@ func CanContract(ctx sdk.Context, root string, creator string, k Keeper) error {
 		c.Filesize = fmt.Sprintf("%d", d.FileSize)
 	} else {
 		c.Cid = s.Cid
-		c.Signee = s.Signee
+		c.Signee = s.Signer
 		c.Fid = s.Fid
-		c.Filesize = s.Filesize
+		c.Filesize = fmt.Sprintf("%d", d.FileSize)
 	}
 
 	if creator != c.Signee {

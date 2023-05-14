@@ -69,6 +69,22 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 			u.keeper.RemoveActiveDealsLegacy(ctx, deal.Cid)
 		}
 
+		strays := u.keeper.GetAllStraysLegacy(ctx) // converting every active deal into a new active deal data type
+		for _, stray := range strays {
+			fileSize, _ := strconv.ParseInt(stray.Filesize, 10, 64)
+			newStray := storagemoduletypes.StrayV2{
+				Cid:      stray.Cid,
+				Signer:   stray.Signee,
+				End:      stray.End,
+				FileSize: fileSize,
+				DealType: 0,
+				Merkle:   stray.Merkle,
+				Fid:      stray.Fid,
+			}
+			u.keeper.SetStrays(ctx, newStray)
+			u.keeper.RemoveStraysLegacy(ctx, stray.Cid)
+		}
+
 		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
 		if err != nil {
 			return newVM, err

@@ -13,7 +13,7 @@ func DefaultGenesis() *GenesisState {
 		ContractsList:   []Contracts{},
 		ActiveDealsList: []ActiveDealsV2{},
 		ProvidersList:   []Providers{},
-		StraysList:      []Strays{},
+		StraysList:      []StrayV2{},
 		FidCidList:      []FidCid{},
 		PaymentInfoList: []StoragePaymentInfo{},
 

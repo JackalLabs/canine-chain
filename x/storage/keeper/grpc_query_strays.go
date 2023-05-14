@@ -16,14 +16,14 @@ func (k Keeper) StraysAll(c context.Context, req *types.QueryAllStraysRequest) (
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var strayss []types.Strays
+	var strayss []types.StrayV2
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
 	straysStore := prefix.NewStore(store, types.KeyPrefix(types.StraysKeyPrefix))
 
 	pageRes, err := query.Paginate(straysStore, req.Pagination, func(key []byte, value []byte) error {
-		var strays types.Strays
+		var strays types.StrayV2
 		if err := k.cdc.Unmarshal(value, &strays); err != nil {
 			return err
 		}

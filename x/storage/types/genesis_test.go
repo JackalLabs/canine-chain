@@ -29,7 +29,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Cid: "1",
 					},
 				},
-				ActiveDealsList: []types.ActiveDeals{
+				ActiveDealsList: []types.ActiveDealsV2{
 					{
 						Cid: "0",
 					},
@@ -46,7 +46,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 
-				StraysList: []types.Strays{
+				StraysList: []types.StrayV2{
 					{
 						Cid: "0",
 					},
@@ -83,7 +83,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated activeDeals",
 			genState: &types.GenesisState{
-				ActiveDealsList: []types.ActiveDeals{
+				ActiveDealsList: []types.ActiveDealsV2{
 					{
 						Cid: "0",
 					},
@@ -112,7 +112,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated strays",
 			genState: &types.GenesisState{
-				StraysList: []types.Strays{
+				StraysList: []types.StrayV2{
 					{
 						Cid: "0",
 					},

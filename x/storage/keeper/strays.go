@@ -1,15 +1,13 @@
 package keeper
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 // SetStrays set a specific strays in the store from its index
-func (k Keeper) SetStrays(ctx sdk.Context, strays types.Strays) {
+func (k Keeper) SetStraysLegacy(ctx sdk.Context, strays types.Strays) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StraysKeyPrefix))
 	b := k.cdc.MustMarshal(&strays)
 	store.Set(types.StraysKey(
@@ -18,7 +16,7 @@ func (k Keeper) SetStrays(ctx sdk.Context, strays types.Strays) {
 }
 
 // GetStrays returns a strays from its index
-func (k Keeper) GetStrays(
+func (k Keeper) GetStraysLegacy(
 	ctx sdk.Context,
 	cid string,
 ) (val types.Strays, found bool) {
@@ -36,7 +34,7 @@ func (k Keeper) GetStrays(
 }
 
 // RemoveStrays removes a strays from the store
-func (k Keeper) RemoveStrays(
+func (k Keeper) RemoveStraysLegacy(
 	ctx sdk.Context,
 	cid string,
 ) {
@@ -47,7 +45,7 @@ func (k Keeper) RemoveStrays(
 }
 
 // GetAllStrays returns all strays
-func (k Keeper) GetAllStrays(ctx sdk.Context) (list []types.Strays) {
+func (k Keeper) GetAllStraysLegacy(ctx sdk.Context) (list []types.Strays) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StraysKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -78,12 +76,9 @@ func (k Keeper) ClearDeadFiles(ctx sdk.Context) {
 			continue
 		}
 
-		paymentInfo, found := k.GetStoragePaymentInfo(ctx, stray.Signee)
+		paymentInfo, found := k.GetStoragePaymentInfo(ctx, stray.Signer)
 		if found {
-			fSize, err := strconv.ParseInt(stray.Filesize, 10, 64)
-			if err == nil {
-				paymentInfo.SpaceUsed -= fSize // remove the deal from the users paid amount.
-			}
+			paymentInfo.SpaceUsed -= stray.FileSize // remove the deal from the users paid amount.
 		}
 		k.RemoveStrays(ctx, stray.Cid)
 	}

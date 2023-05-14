@@ -44,16 +44,16 @@ func (suite *KeeperTestSuite) TestReward() {
 	})
 	providerOne := testAddresses[1]
 
-	dealOne := types.ActiveDeals{
+	dealOne := types.ActiveDealsV2{
 		Cid:           "cid1test",
-		Signee:        signer,
+		Signer:        signer,
 		Provider:      providerOne,
-		Startblock:    "0",
-		Endblock:      "0",
-		Filesize:      "100",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "1",
+		StartBlock:    0,
+		EndBlock:      0,
+		FileSize:      100,
+		ProofVerified: true,
+		ProofsMissed:  0,
+		BlockToProve:  1,
 		Creator:       providerOne,
 		Merkle:        "nil",
 		Fid:           "fid1test",
@@ -118,22 +118,22 @@ func (suite *KeeperTestSuite) TestMultiReward() {
 		providers[i] = acc
 	}
 
-	deals := make([]types.ActiveDeals, l*2)
+	deals := make([]types.ActiveDealsV2, l*2)
 
 	total := 0
 
 	for i := 0; i < l*2; i++ {
 		p := providers[i%l]
-		deal := types.ActiveDeals{
+		deal := types.ActiveDealsV2{
 			Cid:           fmt.Sprintf("cid1test%d", i),
-			Signee:        signer,
+			Signer:        signer,
 			Provider:      p.String(),
-			Startblock:    "0",
-			Endblock:      "0",
-			Filesize:      fmt.Sprintf("%d", i),
-			Proofverified: "true",
-			Proofsmissed:  "0",
-			Blocktoprove:  "1",
+			StartBlock:    0,
+			EndBlock:      0,
+			FileSize:      int64(i),
+			ProofVerified: true,
+			ProofsMissed:  0,
+			BlockToProve:  1,
 			Creator:       p.String(),
 			Merkle:        "nil",
 			Fid:           fmt.Sprintf("fid1test%d", i),

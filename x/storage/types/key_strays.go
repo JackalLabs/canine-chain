@@ -6,7 +6,8 @@ var _ binary.ByteOrder
 
 const (
 	// StraysKeyPrefix is the prefix to retrieve all Strays
-	StraysKeyPrefix = "Strays/value/"
+	StraysKeyPrefix   = "Strays/value/"
+	StraysV2KeyPrefix = "StrayV2/value/"
 )
 
 // StraysKey returns the store key to retrieve a Strays from the index fields

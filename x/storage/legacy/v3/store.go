@@ -9,7 +9,7 @@ import (
 // The things done here are the following:
 // 1. setting up the next reason id and report id keys for existing subspaces
 // 2. setting up the module params
-func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
+func MigrateStore(ctx sdk.Context, _ *paramstypes.Subspace) error {
 	ctx.Logger().Error("MIGRATING STORAGE STORE!")
 
 	return nil

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -53,18 +52,13 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 
 	}
 
-	fs, err := strconv.ParseInt(stray.Filesize, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
 	deal := types.ActiveDealsV2{
 		Cid:           stray.Cid,
-		Signer:        stray.Signee,
+		Signer:        stray.Signer,
 		Provider:      msg.ForAddress,
 		StartBlock:    ctx.BlockHeight(),
 		EndBlock:      stray.End,
-		FileSize:      fs,
+		FileSize:      stray.FileSize,
 		ProofVerified: false,
 		BlockToProve:  pieceToStart,
 		Creator:       msg.Creator,

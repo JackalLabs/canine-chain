@@ -259,7 +259,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			postRun: func() {
 				// Set Proofverified back to false
 				contract, _ := keeper.GetActiveDeals(suite.ctx, CID)
-				contract.Proofverified = "false"
+				contract.ProofVerified = false
 				keeper.SetActiveDeals(suite.ctx, contract)
 			},
 		},
@@ -306,7 +306,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 					suite.Require().Equal(false, res.Success)
 				} else {
 					contract, _ := keeper.GetActiveDeals(suite.ctx, cid1)
-					suite.Require().Equal("true", contract.Proofverified)
+					suite.Require().Equal(true, contract.ProofVerified)
 					suite.Require().NoError(err)
 				}
 				if tc.postRun != nil {

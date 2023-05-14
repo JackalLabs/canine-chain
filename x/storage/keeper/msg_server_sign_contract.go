@@ -141,11 +141,13 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 			return nil, err
 		}
 
-		newContract := types.Strays{
+		size, _ := strconv.ParseInt(contract.Filesize, 10, 64)
+
+		newContract := types.StrayV2{
 			Cid:      scid,
-			Signee:   contract.Signee,
+			Signer:   contract.Signee,
 			Fid:      contract.Fid,
-			Filesize: contract.Filesize,
+			FileSize: size,
 			Merkle:   contract.Merkle,
 			End:      end,
 		}

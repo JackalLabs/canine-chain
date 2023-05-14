@@ -69,11 +69,11 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDealsV2, netw
 			k.SetProviders(ctx, provider)
 
 			// Creating new stray file from the burned active deal
-			strayDeal := types.Strays{
+			strayDeal := types.StrayV2{
 				Cid:      deal.Cid,
 				Fid:      deal.Fid,
-				Signee:   deal.Signer,
-				Filesize: fmt.Sprintf("%d", deal.FileSize),
+				Signer:   deal.Signer,
+				FileSize: deal.FileSize,
 				Merkle:   deal.Merkle,
 				End:      deal.EndBlock,
 			}

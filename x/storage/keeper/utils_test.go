@@ -56,25 +56,11 @@ func (suite *KeeperTestSuite) TestGetProviderUsing() {
 		},
 
 		{
-			name: "invalid_active_deal_file_size",
-			preRun: func() string {
-				ad := types.ActiveDeals{
-					Provider: "a",
-					Filesize: "aaaaa",
-					Cid:      "abc",
-				}
-				sKeeper.SetActiveDeals(suite.ctx, ad)
-				return "a"
-			},
-			expReturn: 0,
-		},
-
-		{
 			name: "valid_active_deal_file_size",
 			preRun: func() string {
-				ad := types.ActiveDeals{
+				ad := types.ActiveDealsV2{
 					Provider: "a",
-					Filesize: "100000",
+					FileSize: 100000,
 					Cid:      "bbb",
 				}
 				sKeeper.SetActiveDeals(suite.ctx, ad)

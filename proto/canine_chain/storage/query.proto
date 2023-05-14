@@ -209,7 +209,7 @@ message QueryFindFileResponse { string provider_ips = 1; }
 message QueryStrayRequest { string cid = 1; }
 
 message QueryStrayResponse {
-  Strays strays = 1 [ (gogoproto.nullable) = false ];
+  StrayV2 strays = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryAllStraysRequest {
@@ -217,7 +217,7 @@ message QueryAllStraysRequest {
 }
 
 message QueryAllStraysResponse {
-  repeated Strays strays = 1 [ (gogoproto.nullable) = false ];
+  repeated StrayV2 strays = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

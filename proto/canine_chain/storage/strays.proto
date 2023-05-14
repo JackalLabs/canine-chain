@@ -11,3 +11,13 @@ message Strays {
   string merkle = 5;
   int64 end = 6;
 }
+
+message StrayV2 {
+  string cid = 1;
+  string fid = 2;
+  string signer = 3;
+  int64 file_size = 4;
+  string merkle = 5;
+  int64 end = 6;
+  int64 deal_type = 7;
+}
