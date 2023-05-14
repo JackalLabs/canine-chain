@@ -2,6 +2,8 @@ syntax = "proto3";
 package canine_chain.storage;
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+import "gogoproto/gogo.proto";
+import "canine_chain/storage/zkproof.proto";
 
 // Msg defines the Msg service.
 service Msg {
@@ -20,6 +22,7 @@ service Msg {
   rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
+  rpc PostZKProof(MsgPostZKProof) returns (MsgPostZKProofResponse);
 
 
   // this line is used by starport scaffolding # proto/tx/rpc
@@ -43,6 +46,19 @@ message MsgPostproof {
 }
 
 message MsgPostproofResponse {
+  bool success = 1;
+  string errorMessage = 2;
+}
+
+message MsgPostZKProof {
+  string creator = 1;
+  ProofPackage package = 2 [ (gogoproto.nullable) = false ];
+  string hash = 3;
+  string hashlist = 4;
+  string cid = 5;
+}
+
+message MsgPostZKProofResponse {
   bool success = 1;
   string errorMessage = 2;
 }
