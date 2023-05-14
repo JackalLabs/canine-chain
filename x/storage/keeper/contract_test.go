@@ -139,7 +139,7 @@ func (suite *KeeperTestSuite) TestRemoveContracts() {
 
 	foundContract, found := suite.storageKeeper.GetContracts(suite.ctx, "549")
 
-	ghostContract := types.Contracts{}
+	ghostContract := types.ContractV2{}
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)
@@ -304,7 +304,7 @@ func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
 
 	foundDeal, found := suite.storageKeeper.GetActiveDeals(suite.ctx, "549")
 
-	ghostDeal := types.ActiveDeals{}
+	ghostDeal := types.ActiveDealsV2{}
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)
@@ -424,7 +424,7 @@ func (suite *KeeperTestSuite) TestRemoveStrays() {
 	suite.storageKeeper.RemoveStrays(suite.ctx, "549")
 
 	foundStray, found := suite.storageKeeper.GetStrays(suite.ctx, "549")
-	ghostStray := types.Strays{}
+	ghostStray := types.StrayV2{}
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, false)

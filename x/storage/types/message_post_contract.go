@@ -2,6 +2,7 @@ package types
 
 import (
 	fmt "fmt"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
@@ -66,6 +67,10 @@ func (msg *MsgPostContract) ValidateBasic() error {
 	}
 	if prefix != FidPrefix {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid fid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklf`", prefix))
+	}
+
+	if _, err := strconv.Atoi(msg.Filesize); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse file size (%s)", err)
 	}
 
 	return nil
