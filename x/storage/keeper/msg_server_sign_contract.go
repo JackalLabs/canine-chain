@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -31,14 +30,11 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		return nil, fmt.Errorf("contract already exists")
 	}
 
-	if contract.Signee != msg.Creator {
+	if contract.Signer != msg.Creator {
 		return nil, fmt.Errorf("you do not have permission to approve this contract")
 	}
 
-	size, ok := sdk.NewIntFromString(contract.Filesize)
-	if !ok {
-		return nil, fmt.Errorf("cannot parse size")
-	}
+	size := sdk.NewInt(contract.FileSize)
 
 	pieces := size.Quo(sdk.NewInt(k.GetParams(ctx).ChunkSize))
 
@@ -67,38 +63,30 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		end = (200*31_536_000)/6 + ctx.BlockHeight()
 	}
 
-	fs, err := strconv.ParseInt(contract.Filesize, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
 	deal := types.ActiveDealsV2{
 		Cid:           contract.Cid,
-		Signer:        contract.Signee,
+		Signer:        contract.Signer,
 		Provider:      contract.Creator,
 		StartBlock:    ctx.BlockHeight(),
 		EndBlock:      end,
-		FileSize:      fs,
+		FileSize:      contract.FileSize,
 		ProofVerified: false,
 		BlockToProve:  pieceToStart,
 		Creator:       msg.Creator,
 		ProofsMissed:  0,
 		Merkle:        contract.Merkle,
 		Fid:           contract.Fid,
+		DealVersion:   0,
 	}
 
 	if end == 0 {
-		fsize, ok := sdk.NewIntFromString(contract.Filesize)
-		if !ok {
-			return nil, fmt.Errorf("cannot parse file size")
-		}
 		payInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
 		if !found {
 			return nil, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "payment info not found, please purchase storage space")
 		}
 
 		// check if user has any free space
-		if (payInfo.SpaceUsed + (fsize.Int64() * 3)) > payInfo.SpaceAvailable {
+		if (payInfo.SpaceUsed + (contract.FileSize * 3)) > payInfo.SpaceAvailable {
 			return nil, fmt.Errorf("not enough storage space")
 		}
 		// check if storage subscription still active
@@ -106,7 +94,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 			return nil, fmt.Errorf("storage subscription has expired")
 		}
 
-		payInfo.SpaceUsed += fsize.Int64() * 3
+		payInfo.SpaceUsed += contract.FileSize * 3
 
 		k.SetStoragePaymentInfo(ctx, payInfo)
 	}
@@ -141,13 +129,11 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 			return nil, err
 		}
 
-		size, _ := strconv.ParseInt(contract.Filesize, 10, 64)
-
 		newContract := types.StrayV2{
 			Cid:      scid,
-			Signer:   contract.Signee,
+			Signer:   contract.Signer,
 			Fid:      contract.Fid,
-			FileSize: size,
+			FileSize: contract.FileSize,
 			Merkle:   contract.Merkle,
 			End:      end,
 		}

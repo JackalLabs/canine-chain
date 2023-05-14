@@ -21,7 +21,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-				ContractsList: []types.Contracts{
+				ContractsList: []types.ContractV2{
 					{
 						Cid: "0",
 					},
@@ -69,7 +69,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated contracts",
 			genState: &types.GenesisState{
-				ContractsList: []types.Contracts{
+				ContractsList: []types.ContractV2{
 					{
 						Cid: "0",
 					},

@@ -8,6 +8,7 @@ import "canine_chain/storage/zkproof.proto";
 // Msg defines the Msg service.
 service Msg {
   rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
+  rpc PostZKContract(MsgPostZKContract) returns (MsgPostZKContractResponse);
   rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
   rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
@@ -37,6 +38,16 @@ message MsgPostContract {
 }
 
 message MsgPostContractResponse {}
+
+message MsgPostZKContract {
+  string creator = 1;
+  string merkle = 2;
+  string signer = 3;
+  int64 file_size = 4;
+  string fid = 5;
+}
+
+message MsgPostZKContractResponse {}
 
 message MsgPostproof {
   string creator = 1;

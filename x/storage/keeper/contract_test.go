@@ -15,12 +15,12 @@ func (suite *KeeperTestSuite) TestSetContracts() {
 	user := testAddresses[0]
 	provider := testAddresses[1]
 
-	contract := types.Contracts{
+	contract := types.ContractV2{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   user,
+		Signer:   user,
 		Duration: "1000",
-		Filesize: "5000",
+		FileSize: 5000,
 		Fid:      "5789",
 		Creator:  provider,
 	}
@@ -35,7 +35,7 @@ func (suite *KeeperTestSuite) TestSetContracts() {
 	res, err := suite.queryClient.Contracts(suite.ctx.Context(), &contractRequest)
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Contracts.Cid, contract.Cid)
-	suite.Require().Equal(res.Contracts.Signee, contract.Signee)
+	suite.Require().Equal(res.Contracts.Signer, contract.Signer)
 }
 
 func (suite *KeeperTestSuite) TestGetContracts() {
@@ -47,12 +47,12 @@ func (suite *KeeperTestSuite) TestGetContracts() {
 	user := testAddresses[0]
 	provider := testAddresses[1]
 
-	contract := types.Contracts{
+	contract := types.ContractV2{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   user,
+		Signer:   user,
 		Duration: "1000",
-		Filesize: "5000",
+		FileSize: 5000,
 		Fid:      "5789",
 		Creator:  provider,
 	}
@@ -65,7 +65,7 @@ func (suite *KeeperTestSuite) TestGetContracts() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundContract.Cid, contract.Cid)
-	suite.Require().Equal(foundContract.Signee, contract.Signee)
+	suite.Require().Equal(foundContract.Signer, contract.Signer)
 }
 
 func (suite *KeeperTestSuite) TestGetAllContracts() {
@@ -78,12 +78,12 @@ func (suite *KeeperTestSuite) TestGetAllContracts() {
 	alice := testAddresses[1]
 	charlie := testAddresses[2]
 
-	contract := types.Contracts{
+	contract := types.ContractV2{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   alice,
+		Signer:   alice,
 		Duration: "1000",
-		Filesize: "5000",
+		FileSize: 5000,
 		Fid:      "5789",
 		Creator:  provider,
 	}
@@ -91,12 +91,12 @@ func (suite *KeeperTestSuite) TestGetAllContracts() {
 	suite.storageKeeper.SetContracts(suite.ctx, contract)
 	suite.Require().NoError(err)
 
-	contract1 := types.Contracts{
+	contract1 := types.ContractV2{
 		Cid:      "649",
 		Merkle:   "",
-		Signee:   charlie,
+		Signer:   charlie,
 		Duration: "2000",
-		Filesize: "10000",
+		FileSize: 10000,
 		Fid:      "4587",
 		Creator:  provider,
 	}
@@ -122,12 +122,12 @@ func (suite *KeeperTestSuite) TestRemoveContracts() {
 	user := testAddresses[0]
 	provider := testAddresses[1]
 
-	contract := types.Contracts{
+	contract := types.ContractV2{
 		Cid:      "549",
 		Merkle:   "",
-		Signee:   user,
+		Signer:   user,
 		Duration: "1000",
-		Filesize: "5000",
+		FileSize: 5000,
 		Fid:      "5789",
 		Creator:  provider,
 	}

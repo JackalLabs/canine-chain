@@ -15,3 +15,17 @@ message Contracts {
   string fid = 9;
   int64 age = 10;
 }
+
+message ContractV2 {
+  string cid = 1;
+  string price_amt = 2;
+  string price_denom = 3;
+  string creator = 4;
+  string merkle = 5;
+  string signer = 6;
+  string duration = 7;
+  int64 file_size = 8;
+  string fid = 9;
+  int64 age = 10;
+  int64 deal_version = 11;
+}

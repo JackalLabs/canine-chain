@@ -10,7 +10,7 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		ContractsList:   []Contracts{},
+		ContractsList:   []ContractV2{},
 		ActiveDealsList: []ActiveDealsV2{},
 		ProvidersList:   []Providers{},
 		StraysList:      []StrayV2{},

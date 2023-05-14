@@ -12,7 +12,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContract) (*types.MsgPostContractResponse, error) {
+func (k msgServer) PostZKContract(goCtx context.Context, msg *types.MsgPostZKContract) (*types.MsgPostZKContractResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, ok := k.GetProviders(ctx, msg.Creator)
@@ -26,18 +26,12 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 		return nil, fmt.Errorf("error parsing total space")
 	}
 
-	fs, ok := sdk.NewIntFromString(msg.Filesize)
-
-	if !ok {
-		return nil, fmt.Errorf("error parsing file size")
-	}
-
-	if k.GetProviderUsing(ctx, msg.Creator)+fs.Int64() > ts.Int64() {
+	if k.GetProviderUsing(ctx, msg.Creator)+msg.FileSize > ts.Int64() {
 		return nil, fmt.Errorf("not enough space on provider")
 	}
 
 	h := sha256.New()
-	_, err := io.WriteString(h, fmt.Sprintf("%s%s%s", msg.Signee, msg.Creator, msg.Fid))
+	_, err := io.WriteString(h, fmt.Sprintf("%s%s%s", msg.Signer, msg.Creator, msg.Fid))
 	if err != nil {
 		return nil, err
 	}
@@ -54,17 +48,16 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 	}
 
 	newContract := types.ContractV2{
-		Cid:         cid,
-		Signer:      msg.Signee,
-		Fid:         msg.Fid,
-		FileSize:    fs.Int64(),
-		Creator:     msg.Creator,
-		Merkle:      msg.Merkle,
-		Age:         ctx.BlockHeight(),
-		DealVersion: 0,
+		Cid:      cid,
+		Signer:   msg.Signer,
+		Fid:      msg.Fid,
+		FileSize: msg.FileSize,
+		Creator:  msg.Creator,
+		Merkle:   msg.Merkle,
+		Age:      ctx.BlockHeight(),
 	}
 
 	k.SetContracts(ctx, newContract)
 
-	return &types.MsgPostContractResponse{}, nil
+	return &types.MsgPostZKContractResponse{}, nil
 }

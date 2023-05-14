@@ -150,7 +150,7 @@ message QueryParamsResponse {
 message QueryContractRequest { string cid = 1; }
 
 message QueryContractResponse {
-  Contracts contracts = 1 [ (gogoproto.nullable) = false ];
+  ContractV2 contracts = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryAllContractsRequest {
@@ -158,7 +158,7 @@ message QueryAllContractsRequest {
 }
 
 message QueryAllContractsResponse {
-  repeated Contracts contracts = 1 [ (gogoproto.nullable) = false ];
+  repeated ContractV2 contracts = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

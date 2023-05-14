@@ -195,15 +195,15 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			name: "invalid_permission_to_sign_contract",
 			preRun: func() *types.MsgSignContract {
 				// creating a test contract to sign
-				c := types.Contracts{
+				c := types.ContractV2{
 					Cid:        "123",
 					Creator:    provider,
-					Priceamt:   "1",
-					Pricedenom: "ujkl",
+					PriceAmt:   "1",
+					PriceDenom: "ujkl",
 					Merkle:     "1",
-					Signee:     user,
+					Signer:     user,
 					Duration:   "10000",
-					Filesize:   "10000",
+					FileSize:   10000,
 					Fid:        "123",
 				}
 				sKeeper.SetContracts(suite.ctx, c)
@@ -288,15 +288,15 @@ func (suite *KeeperTestSuite) TestSignContract() {
 			name: "pay_once",
 			preRun: func() *types.MsgSignContract {
 				// creating a test contract to sign
-				c := types.Contracts{
+				c := types.ContractV2{
 					Cid:        "456",
 					Creator:    provider,
-					Priceamt:   "1",
-					Pricedenom: "ujkl",
+					PriceAmt:   "1",
+					PriceDenom: "ujkl",
 					Merkle:     "1",
-					Signee:     user,
+					Signer:     user,
 					Duration:   "10000",
-					Filesize:   "10000",
+					FileSize:   10000,
 					Fid:        "123",
 				}
 				sKeeper.SetContracts(suite.ctx, c)

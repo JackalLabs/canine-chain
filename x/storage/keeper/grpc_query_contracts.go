@@ -16,14 +16,14 @@ func (k Keeper) ContractsAll(c context.Context, req *types.QueryAllContractsRequ
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var contractss []types.Contracts
+	var contractss []types.ContractV2
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
 	contractsStore := prefix.NewStore(store, types.KeyPrefix(types.ContractsKeyPrefix))
 
 	pageRes, err := query.Paginate(contractsStore, req.Pagination, func(key []byte, value []byte) error {
-		var contracts types.Contracts
+		var contracts types.ContractV2
 		if err := k.cdc.Unmarshal(value, &contracts); err != nil {
 			return err
 		}

@@ -8,29 +8,29 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgPostContract = "post_contract"
+const TypeMsgPostZKContract = "post_zk_contract"
 
-var _ sdk.Msg = &MsgPostContract{}
+var _ sdk.Msg = &MsgPostZKContract{}
 
-func NewMsgPostContract(creator string, signee string, filesize string, fid string, merkle string) *MsgPostContract {
-	return &MsgPostContract{
+func NewMsgPostZKContract(creator string, signer string, filesize int64, fid string, merkle string) *MsgPostZKContract {
+	return &MsgPostZKContract{
 		Creator:  creator,
-		Signee:   signee,
-		Filesize: filesize,
+		Signer:   signer,
+		FileSize: filesize,
 		Fid:      fid,
 		Merkle:   merkle,
 	}
 }
 
-func (msg *MsgPostContract) Route() string {
+func (msg *MsgPostZKContract) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgPostContract) Type() string {
-	return TypeMsgPostContract
+func (msg *MsgPostZKContract) Type() string {
+	return TypeMsgPostZKContract
 }
 
-func (msg *MsgPostContract) GetSigners() []sdk.AccAddress {
+func (msg *MsgPostZKContract) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -38,12 +38,12 @@ func (msg *MsgPostContract) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgPostContract) GetSignBytes() []byte {
+func (msg *MsgPostZKContract) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgPostContract) ValidateBasic() error {
+func (msg *MsgPostZKContract) ValidateBasic() error {
 	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -52,7 +52,7 @@ func (msg *MsgPostContract) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	prefix, _, err = bech32.DecodeAndConvert(msg.Signee)
+	prefix, _, err = bech32.DecodeAndConvert(msg.Signer)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid signee address (%s)", err)
 	}

@@ -6,7 +6,8 @@ var _ binary.ByteOrder
 
 const (
 	// ContractsKeyPrefix is the prefix to retrieve all Contracts
-	ContractsKeyPrefix = "Contracts/value/"
+	ContractsKeyPrefix   = "Contracts/value/"
+	ContractsV2KeyPrefix = "ContractV2/value/"
 )
 
 // ContractsKey returns the store key to retrieve a Contracts from the index fields

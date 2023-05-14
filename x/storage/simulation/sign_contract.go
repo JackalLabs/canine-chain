@@ -28,7 +28,7 @@ func SimulateMsgSignContract(
 		contract := contracts[r.Intn(len(contracts))]
 
 		simAccount, found := simtypes.FindAccount(
-			accs, sdk.MustAccAddressFromBech32(contract.Signee),
+			accs, sdk.MustAccAddressFromBech32(contract.Signer),
 		)
 
 		if !found {
@@ -50,7 +50,7 @@ func SimulateMsgSignContract(
 		}
 
 		msg.Cid = contract.Cid
-		msg.Creator = contract.Signee
+		msg.Creator = contract.Signer
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
