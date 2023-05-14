@@ -20,7 +20,8 @@ func TestHash(t *testing.T) {
 	wp, hash, err := zk.HashData([]byte(data), ccs)
 	r.NoError(err)
 
-	verified := zk.VerifyHash(wp, hash)
+	verified, err := zk.VerifyHash(wp, hash)
+	r.NoError(err)
 
 	r.Equal(true, verified)
 }
@@ -36,7 +37,8 @@ func TestMultiHash(t *testing.T) {
 		wp, hash, err := zk.HashData([]byte(datum), ccs)
 		r.NoError(err)
 
-		verified := zk.VerifyHash(wp, hash)
+		verified, err := zk.VerifyHash(wp, hash)
+		r.NoError(err)
 
 		r.Equal(true, verified)
 
@@ -62,7 +64,7 @@ func TestEncodeDecode(t *testing.T) {
 	wpnew, err := zk.Decode(wpenc)
 	r.NoError(err)
 
-	verified := zk.VerifyHash(wpnew, hash)
-
+	verified, err := zk.VerifyHash(wpnew, hash)
+	r.NoError(err)
 	r.Equal(true, verified)
 }

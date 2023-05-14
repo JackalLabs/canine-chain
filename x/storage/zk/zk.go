@@ -11,6 +11,8 @@ import (
 	"github.com/consensys/gnark/frontend"
 )
 
+var Scalar = ecc.BN254.ScalarField
+
 func HashData(data []byte, ccs constraint.ConstraintSystem) (*WrappedProof, []byte, error) {
 	element, err := fr.Hash(data, []byte("storage:"), 1)
 	if err != nil {
@@ -23,56 +25,58 @@ func HashData(data []byte, ccs constraint.ConstraintSystem) (*WrappedProof, []by
 	if err != nil {
 		return nil, nil, err
 	}
-	hash := h.Sum(nil)
+	hashValue := h.Sum(nil)
 	// create proof
-	assignment := Circuit{Secret: bz[:], Hash: hash}
-	wit, err := frontend.NewWitness(&assignment, ecc.BN254.ScalarField())
+	assignment := Circuit{Secret: bz[:], Hash: hashValue}
+	wit, err := frontend.NewWitness(&assignment, Scalar())
 	if err != nil {
-		return nil, hash, err
+		return nil, hashValue, err
 	}
+
+	fmt.Printf("building hash: %x\n", hashValue)
 
 	pk, vk, err := groth16.Setup(ccs)
 	if err != nil {
-		return nil, hash, err
+		return nil, hashValue, err
 	}
 
 	// *Prover
 	proof, err := groth16.Prove(ccs, pk, wit)
 	if err != nil {
-		return nil, hash, err
+		return nil, hashValue, err
 	}
 
-	publicAssignment := Circuit{Hash: hash}
-	publicWitness, err := frontend.NewWitness(&publicAssignment, ecc.BN254.ScalarField())
+	publicWitness, err := wit.Public()
 	if err != nil {
-		return nil, hash, err
+		return nil, hashValue, err
 	}
+
 	// *Verifier
 	err = groth16.Verify(proof, vk, publicWitness)
 	if err != nil {
-		return nil, hash, err
+		return nil, hashValue, err
 	}
 
 	return &WrappedProof{
 		Proof:        proof,
 		VerifyingKey: vk,
-	}, hash, nil
+	}, hashValue, nil
 }
 
-func VerifyHash(wp *WrappedProof, hash []byte) bool {
+func VerifyHash(wp *WrappedProof, hash []byte) (bool, error) {
 	publicAssignment := Circuit{Hash: hash}
-	fmt.Println(hash)
+	fmt.Printf("verification hash: %x\n", hash)
 
-	publicWitness, err := frontend.NewWitness(&publicAssignment, ecc.BN254.ScalarField())
+	publicWitness, err := frontend.NewWitness(&publicAssignment, Scalar(), frontend.PublicOnly())
 	if err != nil {
-		return false
+		return false, fmt.Errorf("%w: Cannot create a new witness", err)
 	}
 
 	// *Verifier
 	err = groth16.Verify(wp.Proof, wp.VerifyingKey, publicWitness)
 	if err != nil {
-		return false
+		return false, fmt.Errorf("%w: Cannot verify proof", err)
 	}
 
-	return true
+	return true, nil
 }
