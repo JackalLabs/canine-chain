@@ -6,7 +6,8 @@ var _ binary.ByteOrder
 
 const (
 	// ActiveDealsKeyPrefix is the prefix to retrieve all ActiveDeals
-	ActiveDealsKeyPrefix = "ActiveDeals/value/"
+	ActiveDealsKeyPrefix   = "ActiveDeals/value/"
+	ActiveDealsV2KeyPrefix = "ActiveDealsV2/value/"
 )
 
 // ActiveDealsKey returns the store key to retrieve a ActiveDeals from the index fields

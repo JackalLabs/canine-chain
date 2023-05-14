@@ -16,14 +16,14 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var activeDealss []types.ActiveDeals
+	var activeDealss []types.ActiveDealsV2
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
 	activeDealsStore := prefix.NewStore(store, types.KeyPrefix(types.ActiveDealsKeyPrefix))
 
 	pageRes, err := query.Paginate(activeDealsStore, req.Pagination, func(key []byte, value []byte) error {
-		var activeDeals types.ActiveDeals
+		var activeDeals types.ActiveDealsV2
 		if err := k.cdc.Unmarshal(value, &activeDeals); err != nil {
 			return err
 		}

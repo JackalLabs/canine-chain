@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -28,9 +29,9 @@ func CanContract(ctx sdk.Context, root string, creator string, k Keeper) error {
 			return sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "no deal found")
 		}
 		c.Cid = d.Cid
-		c.Signee = d.Signee
+		c.Signee = d.Signer
 		c.Fid = d.Fid
-		c.Filesize = d.Filesize
+		c.Filesize = fmt.Sprintf("%d", d.FileSize)
 	} else {
 		c.Cid = s.Cid
 		c.Signee = s.Signee

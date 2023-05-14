@@ -54,12 +54,8 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 		if deal.Provider != provider {
 			continue
 		}
-		size, ok := sdk.NewIntFromString(deal.Filesize)
-		if !ok {
-			continue
-		}
 
-		space += size.Int64()
+		space += deal.FileSize
 
 	}
 

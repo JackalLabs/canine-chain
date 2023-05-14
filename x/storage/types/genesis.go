@@ -11,7 +11,7 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		ContractsList:   []Contracts{},
-		ActiveDealsList: []ActiveDeals{},
+		ActiveDealsList: []ActiveDealsV2{},
 		ProvidersList:   []Providers{},
 		StraysList:      []Strays{},
 		FidCidList:      []FidCid{},

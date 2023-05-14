@@ -30,12 +30,6 @@ func (k msgServer) PostZKProof(goCtx context.Context, msg *types.MsgPostZKProof)
 
 	ctx.Logger().Debug("Contract that was found: \n%v\n", contract)
 
-	nn, ok := sdk.NewIntFromString(contract.Blocktoprove)
-	if !ok {
-		return &types.MsgPostZKProofResponse{Success: false, ErrorMessage: "cannot parse block to prove"}, nil
-	}
-	num := nn.Int64()
-
 	wp, err := zk.Decode(&msg.Package)
 	if err != nil {
 		return &types.MsgPostZKProofResponse{Success: false, ErrorMessage: err.Error()}, nil
@@ -56,7 +50,7 @@ func (k msgServer) PostZKProof(goCtx context.Context, msg *types.MsgPostZKProof)
 	}
 
 	h := sha256.New()
-	_, err = io.WriteString(h, fmt.Sprintf("%d%x", num, data))
+	_, err = io.WriteString(h, fmt.Sprintf("%d%x", contract.BlockToProve, data))
 	if err != nil {
 		return &types.MsgPostZKProofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
@@ -88,12 +82,12 @@ func (k msgServer) PostZKProof(goCtx context.Context, msg *types.MsgPostZKProof)
 		return &types.MsgPostZKProofResponse{Success: false, ErrorMessage: "cannot verify proof"}, nil
 	}
 
-	if contract.Proofverified == "true" {
+	if contract.ProofVerified {
 		meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")
 		return &types.MsgPostZKProofResponse{Success: false, ErrorMessage: "proof already verified"}, nil
 	}
 
-	contract.Proofverified = "true"
+	contract.ProofVerified = true
 	k.SetActiveDeals(ctx, contract)
 
 	meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")

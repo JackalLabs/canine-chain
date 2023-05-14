@@ -31,14 +31,8 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 
 	ctx.Logger().Debug("Contract that was found: \n%v\n", contract)
 
-	nn, ok := sdk.NewIntFromString(contract.Blocktoprove)
-	if !ok {
-		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "cannot parse block to prove"}, nil
-	}
-	num := nn.Int64()
-
 	h := sha256.New()
-	_, err := io.WriteString(h, fmt.Sprintf("%d%s", num, msg.Item))
+	_, err := io.WriteString(h, fmt.Sprintf("%d%s", contract.BlockToProve, msg.Item))
 	if err != nil {
 		return &types.MsgPostproofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
@@ -72,12 +66,12 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "cannot verify proof"}, nil
 	}
 
-	if contract.Proofverified == "true" {
+	if contract.ProofVerified == true {
 		meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")
 		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "proof already verified"}, nil
 	}
 
-	contract.Proofverified = "true"
+	contract.ProofVerified = true
 	k.SetActiveDeals(ctx, contract)
 
 	meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")

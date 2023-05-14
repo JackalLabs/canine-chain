@@ -29,7 +29,7 @@ func SimulateMsgCancelContract(
 		contract := contracts[simtypes.RandIntBetween(r, 0, len(contracts))]
 
 		simAccount, found := simtypes.FindAccount(
-			accs, sdk.MustAccAddressFromBech32(contract.Signee),
+			accs, sdk.MustAccAddressFromBech32(contract.Signer),
 		)
 
 		if !found {
@@ -47,7 +47,7 @@ func SimulateMsgCancelContract(
 			), nil, nil
 		}
 
-		msg.Creator = contract.Signee
+		msg.Creator = contract.Signer
 		msg.Cid = contract.Cid
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -66,17 +67,22 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		end = (200*31_536_000)/6 + ctx.BlockHeight()
 	}
 
-	deal := types.ActiveDeals{
+	fs, err := strconv.ParseInt(contract.Filesize, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	deal := types.ActiveDealsV2{
 		Cid:           contract.Cid,
-		Signee:        contract.Signee,
+		Signer:        contract.Signee,
 		Provider:      contract.Creator,
-		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      fmt.Sprintf("%d", end),
-		Filesize:      contract.Filesize,
-		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
+		StartBlock:    ctx.BlockHeight(),
+		EndBlock:      end,
+		FileSize:      fs,
+		ProofVerified: false,
+		BlockToProve:  pieceToStart,
 		Creator:       msg.Creator,
-		Proofsmissed:  "0",
+		ProofsMissed:  0,
 		Merkle:        contract.Merkle,
 		Fid:           contract.Fid,
 	}

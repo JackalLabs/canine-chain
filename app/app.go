@@ -157,6 +157,7 @@ import (
 	*/
 
 	"github.com/jackalLabs/canine-chain/app/upgrades/bouncybulldog"
+	"github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -1147,12 +1148,12 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(beta6.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 	app.registerUpgrade(beta7.NewUpgrade(app.mm, app.configurator, app.NotificationsKeeper))
 	app.registerUpgrade(v121.NewUpgrade(app.mm, app.configurator))
-	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app

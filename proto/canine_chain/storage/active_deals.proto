@@ -17,3 +17,19 @@ message ActiveDeals {
   string merkle = 11;
   string fid = 12;
 }
+
+message ActiveDealsV2 {
+  string cid = 1;
+  string signer = 2;
+  string provider = 3;
+  int64 start_block = 4;
+  int64 end_block = 5;
+  int64 file_size = 6;
+  bool proof_verified = 7;
+  int64 proofs_missed = 8;
+  int64 block_to_prove = 9;
+  string creator = 10;
+  string merkle = 11;
+  string fid = 12;
+  int64 deal_version = 13;
+}
