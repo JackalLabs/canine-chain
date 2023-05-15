@@ -16,6 +16,10 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "stray contract either no longer is stray, or has been removed by the user")
 	}
 
+	if stray.DealType > 0 {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "ClaimStray is deprecated, to claim a stray with a version type over 0, please use ClaimStrayV2.")
+	}
+
 	ls := k.ListFiles(ctx, stray.Fid)
 
 	provider, found := k.GetProviders(ctx, msg.ForAddress)
@@ -65,6 +69,74 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 		ProofsMissed:  0,
 		Merkle:        stray.Merkle,
 		Fid:           stray.Fid,
+		DealVersion:   stray.DealType,
+	}
+
+	k.SetActiveDeals(ctx, deal)
+
+	k.RemoveStrays(ctx, stray.Cid)
+
+	return &types.MsgClaimStrayResponse{}, nil
+}
+
+func (k msgServer) ClaimStrayV2(goCtx context.Context, msg *types.MsgClaimStrayV2) (*types.MsgClaimStrayResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	stray, ok := k.GetStrays(ctx, msg.Cid)
+	if !ok {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "stray contract either no longer is stray, or has been removed by the user")
+	}
+
+	ls := k.ListFiles(ctx, stray.Fid)
+
+	provider, found := k.GetProviders(ctx, msg.ForAddress)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "not a provider")
+	}
+
+	for _, l := range ls {
+		if l == provider.Ip {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "cannot claim a stray you own.")
+		}
+	}
+
+	size := sdk.NewInt(int64(stray.Size()))
+
+	pieces := size.Quo(sdk.NewInt(k.GetParams(ctx).ChunkSize))
+
+	var pieceToStart int64
+
+	if !pieces.IsZero() {
+		pieceToStart = ctx.BlockHeight() % pieces.Int64()
+	}
+
+	if msg.ForAddress != msg.Creator {
+		found := false
+		for _, claimer := range provider.AuthClaimers {
+			if claimer == msg.Creator {
+				found = true
+			}
+		}
+		if !found {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot claim a stray for someone else")
+		}
+
+	}
+
+	deal := types.ActiveDealsV2{
+		Cid:           stray.Cid,
+		Signer:        stray.Signer,
+		Provider:      msg.ForAddress,
+		StartBlock:    ctx.BlockHeight(),
+		EndBlock:      stray.End,
+		FileSize:      stray.FileSize,
+		ProofVerified: false,
+		BlockToProve:  pieceToStart,
+		Creator:       msg.Creator,
+		ProofsMissed:  0,
+		Merkle:        stray.Merkle,
+		Fid:           stray.Fid,
+		DealVersion:   stray.DealType,
 	}
 
 	k.SetActiveDeals(ctx, deal)

@@ -20,6 +20,7 @@ service Msg {
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
   rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
+  rpc ClaimStrayV2(MsgClaimStrayV2) returns (MsgClaimStrayResponse);
   rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
@@ -152,6 +153,13 @@ message MsgClaimStray {
 }
 
 message MsgClaimStrayResponse {}
+
+message MsgClaimStrayV2 {
+  string creator = 1;
+  string cid = 2;
+  string for_address = 3;
+}
+
 
 message MsgUpgradeStorage {
   string creator = 1;

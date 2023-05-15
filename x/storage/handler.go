@@ -47,6 +47,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgClaimStray:
 			res, err := msgServer.ClaimStray(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgClaimStrayV2:
+			res, err := msgServer.ClaimStrayV2(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgUpgradeStorage:
 			res, err := msgServer.UpgradeStorage(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

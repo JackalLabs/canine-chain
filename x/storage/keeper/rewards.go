@@ -76,6 +76,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDealsV2, netw
 				FileSize: deal.FileSize,
 				Merkle:   deal.Merkle,
 				End:      deal.EndBlock,
+				DealType: deal.DealVersion,
 			}
 			k.SetStrays(ctx, strayDeal)
 			k.RemoveActiveDeals(ctx, deal.Cid)
