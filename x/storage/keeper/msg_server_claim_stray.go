@@ -8,6 +8,7 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
+// ClaimStray is deprecated in favor of ClaimStrayV2
 func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (*types.MsgClaimStrayResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
