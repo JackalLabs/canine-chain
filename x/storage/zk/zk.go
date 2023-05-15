@@ -13,6 +13,7 @@ import (
 
 var Scalar = ecc.BN254.ScalarField
 
+// HashData is never used by the canine chain directly. This is a library function to be called by providers. This keeps all the ZK logic in one spot.
 func HashData(data []byte, ccs constraint.ConstraintSystem) (*WrappedProof, []byte, error) {
 	element, err := fr.Hash(data, []byte("storage:"), 1)
 	if err != nil {
