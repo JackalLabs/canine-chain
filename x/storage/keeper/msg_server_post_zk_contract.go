@@ -42,19 +42,20 @@ func (k msgServer) PostZKContract(goCtx context.Context, msg *types.MsgPostZKCon
 		return nil, err
 	}
 
-	_, cidtaken := k.GetContracts(ctx, cid)
-	if cidtaken {
+	_, cidTaken := k.GetContracts(ctx, cid)
+	if cidTaken {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "cannot post the same contract twice")
 	}
 
 	newContract := types.ContractV2{
-		Cid:      cid,
-		Signer:   msg.Signer,
-		Fid:      msg.Fid,
-		FileSize: msg.FileSize,
-		Creator:  msg.Creator,
-		Merkle:   msg.Merkle,
-		Age:      ctx.BlockHeight(),
+		Cid:         cid,
+		Signer:      msg.Signer,
+		Fid:         msg.Fid,
+		FileSize:    msg.FileSize,
+		Creator:     msg.Creator,
+		Merkle:      msg.Merkle,
+		Age:         ctx.BlockHeight(),
+		DealVersion: 1,
 	}
 
 	k.SetContracts(ctx, newContract)

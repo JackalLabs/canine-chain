@@ -76,7 +76,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		ProofsMissed:  0,
 		Merkle:        contract.Merkle,
 		Fid:           contract.Fid,
-		DealVersion:   0,
+		DealVersion:   contract.DealVersion,
 	}
 
 	if end == 0 {
