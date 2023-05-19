@@ -163,6 +163,12 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 	deal.Proofverified = "false"
 	k.SetActiveDeals(ctx, deal)
 
+	ap := types.ActiveProviders{
+		Address: deal.Provider,
+	}
+
+	k.SetActiveProviders(ctx, ap)
+
 	return nil
 }
 
@@ -208,6 +214,8 @@ func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, network
 func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, address sdk.AccAddress) error {
 	ctx.Logger().Debug("%s\n", "checking blocks")
 
+	k.RemoveAllActiveProviders(ctx) // clearing recent provider list
+
 	networkSize := getTotalSize(allDeals)
 
 	balance := k.bankkeeper.GetBalance(ctx, address, "ujkl")
@@ -229,10 +237,9 @@ func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
 
 	DayBlocks := k.GetParams(ctx).ProofWindow
 
-	ctx.Logger().Debug("blockdiff : %d\n", ctx.BlockHeight()%DayBlocks)
-
 	if ctx.BlockHeight()%DayBlocks > 0 {
-		return sdkerror.Wrapf(sdkerror.ErrUnauthorized, "cannot check rewards before timer has been met")
+		ctx.Logger().Debug("skipping reward handling for this block")
+		return nil
 	}
 
 	address := k.accountkeeper.GetModuleAddress(types.ModuleName)

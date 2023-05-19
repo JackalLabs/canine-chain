@@ -59,6 +59,18 @@ service Query {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/providers";
   }
 
+  // Queries a Attestation by index.
+  rpc Attestation(QueryAttestationRequest) returns (QueryAttestationResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/attestations/{cid}";
+  }
+
+  // Queries a list of Attestation items.
+  rpc AttestationsAll(QueryAllAttestationsRequest)
+      returns (QueryAllAttestationsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/attestations";
+  }
+
   // Queries a list of Freespace items.
   rpc Freespace(QueryFreespaceRequest) returns (QueryFreespaceResponse) {
     option (google.api.http).get =
@@ -189,6 +201,22 @@ message QueryAllProvidersRequest {
 
 message QueryAllProvidersResponse {
   repeated Providers providers = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+message QueryAttestationRequest { string cid = 1; }
+
+message QueryAttestationResponse {
+  AttestationForm attestation = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllAttestationsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAttestationsResponse {
+  repeated AttestationForm attestations = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

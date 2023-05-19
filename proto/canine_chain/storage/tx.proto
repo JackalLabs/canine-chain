@@ -20,6 +20,8 @@ service Msg {
   rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
+  rpc RequestAttestationForm(MsgRequestAttestationForm) returns (MsgRequestAttestationFormResponse);
+  rpc Attest(MsgAttest) returns (MsgAttestResponse);
 
 
   // this line is used by starport scaffolding # proto/tx/rpc
@@ -135,3 +137,19 @@ message MsgUpgradeStorage {
 }
 
 message MsgUpgradeStorageResponse {}
+
+message MsgRequestAttestationForm {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgRequestAttestationFormResponse {
+  repeated string providers = 1;
+}
+
+message MsgAttest {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgAttestResponse {}
