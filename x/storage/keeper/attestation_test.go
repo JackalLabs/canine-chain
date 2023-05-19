@@ -31,8 +31,9 @@ func (suite *KeeperTestSuite) TestSetAttestationForm() {
 func (suite *KeeperTestSuite) TestGetAttestationForm() {
 	suite.SetupSuite()
 
+	var att []*types.Attestation
 	attestation := types.AttestationForm{
-		Attestations: []*types.Attestation{},
+		Attestations: att,
 		Cid:          cid,
 	}
 
