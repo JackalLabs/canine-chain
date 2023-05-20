@@ -16,12 +16,10 @@ const ( // TODO: Figure out optimal values for these and replace them with chain
 	True      = "true"
 )
 
-func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.MsgAttestResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	form, found := k.GetAttestationForm(ctx, msg.Cid)
+func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
+	form, found := k.GetAttestationForm(ctx, cid)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrFormNotFound, "cannot find attestation form")
+		return nil
 	}
 
 	done := false
@@ -30,7 +28,7 @@ func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.M
 
 	attestations := form.Attestations
 	for _, attestation := range attestations {
-		if attestation.Provider == msg.Creator {
+		if attestation.Provider == creator {
 			attestation.Complete = true
 			done = true
 		}
@@ -41,39 +39,46 @@ func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.M
 	}
 
 	if !done {
-		return nil, sdkerrors.Wrapf(types.ErrAttestInvalid, "you cannot attest to this deal")
+		return sdkerrors.Wrapf(types.ErrAttestInvalid, "you cannot attest to this deal")
 	}
 
 	if count < MinToPass {
 		form.Attestations = attestations
 		k.SetAttestationForm(ctx, form)
-		return &types.MsgAttestResponse{}, nil
+		return nil
 	}
 
-	deal, found := k.GetActiveDeals(ctx, msg.Cid)
+	deal, found := k.GetActiveDeals(ctx, cid)
 
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal from form")
+		return sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal from form")
 	}
 
 	deal.Proofverified = True // flip deal to verified if the minimum attestation threshold is met
 	k.SetActiveDeals(ctx, deal)
-	k.RemoveAttestation(ctx, msg.Cid)
+	k.RemoveAttestation(ctx, cid)
+
+	return nil
+}
+
+func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.MsgAttestResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.Keeper.Attest(ctx, msg.Cid, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.MsgAttestResponse{}, nil
 }
 
-func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgRequestAttestationForm) (*types.MsgRequestAttestationFormResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	cid := msg.Cid
-
+func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) ([]string, error) {
 	deal, found := k.GetActiveDeals(ctx, cid)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal for attestation form")
 	}
 
-	if deal.Creator != msg.Creator {
+	if deal.Provider != creator {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "you do not own this deal")
 	}
 
@@ -103,5 +108,15 @@ func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgR
 
 	k.SetAttestationForm(ctx, form)
 
-	return &types.MsgRequestAttestationFormResponse{Providers: providerAddresses}, nil
+	return providerAddresses, nil
+}
+
+func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgRequestAttestationForm) (*types.MsgRequestAttestationFormResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	cid := msg.Cid
+	creator := msg.Creator
+
+	providerAddresses, err := k.RequestAttestation(ctx, cid, creator)
+
+	return &types.MsgRequestAttestationFormResponse{Providers: providerAddresses}, err
 }
