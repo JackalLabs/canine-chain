@@ -30,14 +30,11 @@ func CustomQuerier(qp *QueryPlugin) func(ctx sdk.Context, request json.RawMessag
 			// Osmosis uses GetFullDenom which calls tokenfactorytypes.GetTokenDenom(contract, subDenom)
 			// which simply just builds a string. This is not useful to us.
 			// We can fork wasmd to expose the keeper, or expose the keeper some other way, but this
-			// is a huge security vulernability.
+			// is a huge security vulnerability.
 			// Perhaps we can just use the query client here? If this package is not a full-on module, does it slow the chain down at all?
 
 			// Don't need the below code any more
 			// Files, err := RetrieveFiles(ctx, filetree, owner, address)
-			// if err != nil {
-			// 	return nil, errorsmod.Wrap(err, "Jackal Files query")
-			// }
 
 			var cc grpc1.ClientConn
 
@@ -65,21 +62,11 @@ func CustomQuerier(qp *QueryPlugin) func(ctx sdk.Context, request json.RawMessag
 
 			return bz, nil
 
-		// case contractQuery.DenomAdmin != nil:
-		// 	res, err := qp.GetDenomAdmin(ctx, contractQuery.DenomAdmin.Subdenom)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
-
-		// 	bz, err := json.Marshal(res)
-		// 	if err != nil {
-		// 		return nil, fmt.Errorf("failed to JSON marshal DenomAdminResponse response: %w", err)
-		// 	}
-
-		// 	return bz, nil
+		// can add more case statements
+		// case contractQuery._________ != nil:
 
 		default:
-			return nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown osmosis query variant"}
+			return nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown filetree query variant"}
 		}
 	}
 }
