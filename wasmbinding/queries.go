@@ -15,5 +15,5 @@ func NewQueryPlugin(ftk *filetreekeeper.Keeper) *QueryPlugin {
 	}
 }
 
-// TO DO
+// !!! MUST DO !!!
 // Implement a query

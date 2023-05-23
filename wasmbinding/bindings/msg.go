@@ -5,6 +5,7 @@ type JackalMsg struct {
 	/// will they be namespaced under the contract's address?
 	/// A contract may create any number of independent files.
 	PostFiles *PostFiles `json:"post_files,omitempty"`
+	MakeRoot  *MakeRoot  `json:"make_root,omitempty"`
 }
 
 // / creator == broadcaster of the msg
@@ -16,5 +17,12 @@ type PostFiles struct {
 	Contents       string `json:"contents"`
 	Viewers        string `json:"viewers"`
 	Editors        string `json:"editors"`
-	TrackingNumber string `json:"trackingNumber"`
+	TrackingNumber string `json:"trackingnumber"`
+}
+
+type MakeRoot struct {
+	Creator        string `json:"creator"`
+	Editors        string `json:"editors"`
+	Viewers        string `json:"viewers"`
+	TrackingNumber string `json:"trackingnumber"`
 }
