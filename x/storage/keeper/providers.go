@@ -12,7 +12,7 @@ const (
 )
 
 // GetActiveProviders returns a list of recently active providers in a random order
-func (k Keeper) GetActiveProviders(ctx sdk.Context) []types.Providers {
+func (k Keeper) GetActiveProviders(ctx sdk.Context) []types.ActiveProviders {
 	providers := k.GetAllActiveProviders(ctx)
 
 	size := len(providers)
@@ -30,7 +30,7 @@ func (k Keeper) GetActiveProviders(ctx sdk.Context) []types.Providers {
 		providers[x], providers[y] = providers[y], providers[x]
 	}
 
-	return nil
+	return providers
 }
 
 // SetProviders set a specific providers in the store from its index
@@ -127,5 +127,5 @@ func (k Keeper) GetAllActiveProviders(ctx sdk.Context) (list []types.ActiveProvi
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

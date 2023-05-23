@@ -1,6 +1,9 @@
 package keeper_test
 
 import (
+	"fmt"
+
+	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -31,8 +34,9 @@ func (suite *KeeperTestSuite) TestSetAttestationForm() {
 func (suite *KeeperTestSuite) TestGetAttestationForm() {
 	suite.SetupSuite()
 
+	var att []*types.Attestation
 	attestation := types.AttestationForm{
-		Attestations: []*types.Attestation{},
+		Attestations: att,
 		Cid:          cid,
 	}
 
@@ -88,4 +92,64 @@ func (suite *KeeperTestSuite) TestRemoveAttestationForm() {
 	}
 
 	suite.Require().Equal(foundAttestation, ghostAttestation)
+}
+
+func (suite *KeeperTestSuite) TestMakeAttestation() {
+	suite.SetupSuite()
+
+	addresses, err := testutil.CreateTestAddresses("jkl", 50)
+	suite.NoError(err)
+
+	for _, address := range addresses {
+		suite.storageKeeper.SetActiveProviders(suite.ctx, types.ActiveProviders{
+			Address: address,
+		})
+	}
+
+	deal := types.ActiveDeals{
+		Cid:           cid,
+		Signee:        "",
+		Provider:      addresses[10],
+		Startblock:    "",
+		Endblock:      "",
+		Filesize:      "",
+		Proofverified: "false",
+		Proofsmissed:  "",
+		Blocktoprove:  "",
+		Creator:       "",
+		Merkle:        "",
+		Fid:           "",
+	}
+
+	suite.storageKeeper.SetActiveDeals(suite.ctx, deal) // creating storage deal
+
+	_, err = suite.storageKeeper.RequestAttestation(suite.ctx, cid, addresses[10])
+	suite.NoError(err)
+
+	form, found := suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
+	suite.Equal(true, found)
+
+	for _, attestation := range form.Attestations {
+		fmt.Printf("%s %t\n", attestation.Provider, attestation.Complete)
+	}
+
+	_ = form
+	allAttestationForm := suite.storageKeeper.GetAllAttestation(suite.ctx)
+	suite.Require().Equal(1, len(allAttestationForm))
+
+	d, found := suite.storageKeeper.GetActiveDeals(suite.ctx, cid)
+	suite.Equal(true, found)
+	suite.Equal("false", d.Proofverified)
+
+	for _, attestation := range form.Attestations {
+		err := suite.storageKeeper.Attest(suite.ctx, cid, attestation.Provider)
+		suite.Require().NoError(err)
+	}
+
+	_, found = suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
+	suite.Equal(false, found)
+
+	d, found = suite.storageKeeper.GetActiveDeals(suite.ctx, cid)
+	suite.Equal(true, found)
+	suite.Equal("true", d.Proofverified)
 }
