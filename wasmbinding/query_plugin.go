@@ -27,6 +27,9 @@ func CustomQuerier(qp *QueryPlugin) func(ctx sdk.Context, request json.RawMessag
 			// Using the query client is always still an option
 
 			res, err := qp.GetFiles(ctx, address, owner)
+			if err != nil {
+				return nil, err
+			}
 
 			// !! WARNING !!
 			// res is the Files struct converted to a one line string with the .String() method from files.pb.go
