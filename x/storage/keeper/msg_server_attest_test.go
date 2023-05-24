@@ -1,10 +1,9 @@
 package keeper_test
 
 import (
-//	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestAttest() {
@@ -15,31 +14,31 @@ func (suite *KeeperTestSuite) TestAttest() {
 	noActiveDealCid := "no_active_deal_cid"
 
 	cases := map[string]struct {
-		cid string
+		cid     string
 		creator string
-		expErr bool
+		expErr  bool
 	}{
 		"attestation form not found": {
-			cid: "I do not exist",
+			cid:     "I do not exist",
 			creator: addresses[keeper.FormSize],
-			expErr: true,
+			expErr:  true,
 		},
 		"not requested provider": {
-			cid: validCid,
+			cid:     validCid,
 			creator: "not requested provider",
-			expErr: true,
+			expErr:  true,
 		},
 		"active deal not found": {
-			cid: noActiveDealCid,
+			cid:     noActiveDealCid,
 			creator: addresses[keeper.FormSize],
-			expErr: true,
+			expErr:  true,
 		},
 	}
 
 	for name, tc := range cases {
 		suite.Run(name, func() {
 			suite.SetupSuite()
-			
+
 			attestations := make([]*types.Attestation, keeper.FormSize)
 
 			providerAddresses := make([]string, keeper.FormSize)
@@ -55,12 +54,12 @@ func (suite *KeeperTestSuite) TestAttest() {
 
 			attestForm := types.AttestationForm{
 				Attestations: attestations,
-				Cid: validCid,
+				Cid:          validCid,
 			}
 
 			noActiveDealAttestForm := types.AttestationForm{
 				Attestations: attestations,
-				Cid: noActiveDealCid,
+				Cid:          noActiveDealCid,
 			}
 
 			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
