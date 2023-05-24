@@ -42,7 +42,6 @@ func (suite *KeeperTestSuite) TestAttest() {
 			attestations := make([]*types.Attestation, keeper.FormSize)
 
 			for i := 0; i < keeper.FormSize; i++ {
-
 				attestations[i] = &types.Attestation{
 					Provider: addresses[i],
 					Complete: false,
@@ -93,9 +92,9 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 		expErr  bool
 	}{
 		"attestation already requested": {
-			cid: requestedCid,
+			cid:     requestedCid,
 			creator: addresses[keeper.FormSize],
-			expErr: true,
+			expErr:  true,
 		},
 		"not provider's cid": {
 			cid:     validCid,
@@ -113,7 +112,7 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 		suite.Run(name, func() {
 			suite.SetupSuite()
 
-			for i :=0; i < keeper.FormSize; i++ {
+			for i := 0; i < keeper.FormSize; i++ {
 				provider := types.ActiveProviders{
 					Address: addresses[i],
 				}
@@ -131,14 +130,14 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 
 			attestForm := types.AttestationForm{
 				Attestations: attestations,
-				Cid: requestedCid,
+				Cid:          requestedCid,
 			}
 
 			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
 
 			activeDeal := types.ActiveDeals{
 				Provider: addresses[keeper.FormSize],
-				Cid: validCid,
+				Cid:      validCid,
 			}
 			suite.storageKeeper.SetActiveDeals(suite.ctx, activeDeal)
 
