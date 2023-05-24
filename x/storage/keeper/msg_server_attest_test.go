@@ -12,6 +12,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 	suite.Require().NoError(err)
 
 	validCid := "cid1"
+	noActiveDealCid := "no_active_deal_cid"
 
 	cases := map[string]struct {
 		cid string
@@ -20,6 +21,16 @@ func (suite *KeeperTestSuite) TestAttest() {
 	}{
 		"attestation form not found": {
 			cid: "I do not exist",
+			creator: addresses[keeper.FormSize],
+			expErr: true,
+		},
+		"not requested provider": {
+			cid: validCid,
+			creator: "not requested provider",
+			expErr: true,
+		},
+		"active deal not found": {
+			cid: noActiveDealCid,
 			creator: addresses[keeper.FormSize],
 			expErr: true,
 		},
@@ -47,9 +58,21 @@ func (suite *KeeperTestSuite) TestAttest() {
 				Cid: validCid,
 			}
 
-			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
+			noActiveDealAttestForm := types.AttestationForm{
+				Attestations: attestations,
+				Cid: noActiveDealCid,
+			}
 
-			err := suite.storageKeeper.Attest(suite.ctx, tc.cid, tc.creator)
+			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
+			suite.storageKeeper.SetAttestationForm(suite.ctx, noActiveDealAttestForm)
+
+			activeDeal := types.ActiveDeals{
+				Cid: validCid,
+			}
+
+			suite.storageKeeper.SetActiveDeals(suite.ctx, activeDeal)
+
+			err = suite.storageKeeper.Attest(suite.ctx, tc.cid, tc.creator)
 
 			if !tc.expErr {
 				suite.NoError(err)
