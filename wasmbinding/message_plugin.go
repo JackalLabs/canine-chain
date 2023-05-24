@@ -56,7 +56,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 func (m *CustomMessenger) makeRoot(ctx sdk.Context, contractAddr sdk.AccAddress, makeRoot *bindings.MakeRoot) ([]sdk.Event, [][]byte, error) {
 	err := PerformMakeRoot(m.filetree, ctx, contractAddr, makeRoot)
 	if err != nil {
-		return nil, nil, errorsmod.Wrap(err, "perform post files")
+		return nil, nil, errorsmod.Wrap(err, "perform make root")
 	}
 	return nil, nil, nil
 }
@@ -67,27 +67,22 @@ func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk
 		return wasmvmtypes.InvalidRequest{Err: "make root null make root"}
 	}
 
-	msgServer := filetreekeeper.NewMsgServerImpl(*f)
-
-	msgMakeRoot := filetreetypes.NewMsgMakeRootV2(
+	sdkMsg := filetreetypes.NewMsgMakeRootV2(
 		makeRoot.Creator,
 		makeRoot.Editors,
 		makeRoot.Viewers,
 		makeRoot.TrackingNumber,
 	)
-
-	if err := msgMakeRoot.ValidateBasic(); err != nil {
-		return errorsmod.Wrap(err, "failed validating MsgMakeRoot")
+	if err := sdkMsg.ValidateBasic(); err != nil {
+		return err
 	}
 
-	// Make root
-	_, err := msgServer.MakeRootV2(
-		sdk.WrapSDKContext(ctx),
-		msgMakeRoot,
-	)
+	msgServer := filetreekeeper.NewMsgServerImpl(*f)
+	_, err := msgServer.MakeRootV2(sdk.WrapSDKContext(ctx), sdkMsg)
 	if err != nil {
-		return errorsmod.Wrap(err, "creating denom")
+		return errorsmod.Wrap(err, "making root from message")
 	}
+
 	return nil
 }
 
