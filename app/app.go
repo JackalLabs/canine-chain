@@ -123,6 +123,7 @@ import (
 	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackalLabs/canine-chain/app/params"
+	owasm "github.com/jackalLabs/canine-chain/wasmbinding"
 
 	mint "github.com/jackalLabs/canine-chain/x/jklmint"
 	mintkeeper "github.com/jackalLabs/canine-chain/x/jklmint/keeper"
@@ -604,6 +605,9 @@ func NewJackalApp(
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
 	supportedFeatures := "iterator,staking,stargate,cosmwasm_1_1"
+
+	wasmOpts = append(owasm.RegisterCustomPlugins(&app.FileTreeKeeper), wasmOpts...)
+
 	app.wasmKeeper = wasm.NewKeeper(
 		appCodec,
 		keys[wasm.StoreKey],
