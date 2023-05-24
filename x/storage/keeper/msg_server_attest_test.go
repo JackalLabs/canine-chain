@@ -74,7 +74,9 @@ func (suite *KeeperTestSuite) TestAttest() {
 
 			err = suite.storageKeeper.Attest(suite.ctx, tc.cid, tc.creator)
 
-			if !tc.expErr {
+			if tc.expErr {
+				suite.Error(err)
+			} else {
 				suite.NoError(err)
 			}
 		})
