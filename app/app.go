@@ -315,12 +315,9 @@ type JackalApp struct {
 	authzKeeper      authzkeeper.Keeper
 	wasmKeeper       wasm.Keeper
 
-	scopedIBCKeeper           capabilitykeeper.ScopedKeeper
-	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
-	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
-	scopedInterTxKeeper       capabilitykeeper.ScopedKeeper
-	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
-	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
+	scopedIBCKeeper      capabilitykeeper.ScopedKeeper
+	scopedTransferKeeper capabilitykeeper.ScopedKeeper
+	scopedWasmKeeper     capabilitykeeper.ScopedKeeper
 
 	RnsKeeper           rnsmodulekeeper.Keeper
 	OracleKeeper        oraclemodulekeeper.Keeper
