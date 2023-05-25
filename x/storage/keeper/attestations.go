@@ -74,6 +74,4 @@ func (k Keeper) RemoveAllAttestation(ctx sdk.Context) {
 			val.Cid,
 		))
 	}
-
-	return
 }
