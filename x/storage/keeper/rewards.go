@@ -229,6 +229,8 @@ func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, a
 		return err
 	}
 
+	k.RemoveAllAttestation(ctx)
+
 	return nil
 }
 

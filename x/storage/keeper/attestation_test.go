@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -29,6 +30,40 @@ func (suite *KeeperTestSuite) TestSetAttestationForm() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(attestation.Cid, res.Attestation.Cid)
 	suite.Require().Equal(attestation.Attestations, res.Attestation.Attestations)
+}
+
+// testing attestations.go file
+func (suite *KeeperTestSuite) TestRewardsAttestationForm() {
+	suite.SetupSuite()
+
+	var att []*types.Attestation
+	attestation := types.AttestationForm{
+		Attestations: att,
+		Cid:          cid,
+	}
+
+	suite.storageKeeper.SetAttestationForm(suite.ctx, attestation)
+
+	attestationRequest := types.QueryAttestationRequest{
+		Cid: cid,
+	}
+
+	addresses, err := testutil.CreateTestAddresses("cosmos", 50)
+	suite.NoError(err)
+
+	res, err := suite.queryClient.Attestation(suite.ctx.Context(), &attestationRequest)
+	suite.Require().NoError(err)
+	suite.Require().Equal(attestation.Cid, res.Attestation.Cid)
+	suite.Require().Equal(attestation.Attestations, res.Attestation.Attestations)
+
+	address, err := sdk.AccAddressFromBech32(addresses[0])
+	suite.Require().NoError(err)
+
+	err = suite.storageKeeper.InternalRewards(suite.ctx, make([]types.ActiveDeals, 0), address)
+	suite.Require().NoError(err)
+
+	_, found := suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
+	suite.Require().Equal(false, found)
 }
 
 func (suite *KeeperTestSuite) TestGetAttestationForm() {

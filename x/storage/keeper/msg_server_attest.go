@@ -82,6 +82,11 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "you do not own this deal")
 	}
 
+	_, found = k.GetAttestationForm(ctx, cid)
+	if found {
+		return nil, sdkerrors.Wrapf(types.ErrAttestAlreadyExists, "attestation form already exists")
+	}
+
 	providers := k.GetActiveProviders(ctx) // get a random list of active providers
 
 	rand.Seed(ctx.BlockTime().UnixNano())
