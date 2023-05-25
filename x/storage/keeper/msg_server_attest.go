@@ -19,7 +19,7 @@ const ( // TODO: Figure out optimal values for these and replace them with chain
 func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 	form, found := k.GetAttestationForm(ctx, cid)
 	if !found {
-		return nil
+		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this attestation")
 	}
 
 	done := false

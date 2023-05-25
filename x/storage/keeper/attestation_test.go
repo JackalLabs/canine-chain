@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/testutil"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -176,9 +177,13 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 	suite.Equal(true, found)
 	suite.Equal("false", d.Proofverified)
 
-	for _, attestation := range form.Attestations {
+	for i, attestation := range form.Attestations {
 		err := suite.storageKeeper.Attest(suite.ctx, cid, attestation.Provider)
-		suite.Require().NoError(err)
+		if i >= keeper.MinToPass {
+			suite.Require().Error(err)
+		} else {
+			suite.Require().NoError(err)
+		}
 	}
 
 	_, found = suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
