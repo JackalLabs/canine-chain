@@ -45,7 +45,10 @@ require (
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 )
 
-require github.com/golang/mock v1.6.0
+require (
+	github.com/cosmos/interchain-accounts v0.2.6
+	github.com/golang/mock v1.6.0
+)
 
 require (
 	cosmossdk.io/api v0.2.6 // indirect

@@ -11,6 +11,6 @@ import (
 // 2. setting up the module params
 func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 	ctx.Logger().Error("MIGRATING STORAGE STORE!")
-
+	_ = paramsSubspace
 	return nil
 }
