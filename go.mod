@@ -158,6 +158,8 @@ replace (
 
 	// using jackal labs free post proof ante handler - better way to do this in the future.
 	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk v0.45.12-0.20230426135607-17a136e31eac
+
+	github.com/cosmos/ibc-go/v3 => github.com/JackalLabs/ibc-go/v3 v3.4.1
 	//github.com/cosmos/cosmos-sdk => ../cosmos-sdk
 
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
