@@ -12,14 +12,16 @@ import (
 	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	filetreetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
-func CustomMessageDecorator(filetree *filetreekeeper.Keeper) func(wasmkeeper.Messenger) wasmkeeper.Messenger {
+func CustomMessageDecorator(filetree *filetreekeeper.Keeper, storage *storagekeeper.Keeper) func(wasmkeeper.Messenger) wasmkeeper.Messenger {
 	return func(old wasmkeeper.Messenger) wasmkeeper.Messenger {
 		return &CustomMessenger{
 			wrapped:  old,
 			filetree: filetree,
+			storage:  storage,
 		}
 	}
 }
@@ -27,6 +29,7 @@ func CustomMessageDecorator(filetree *filetreekeeper.Keeper) func(wasmkeeper.Mes
 type CustomMessenger struct {
 	wrapped  wasmkeeper.Messenger
 	filetree *filetreekeeper.Keeper
+	storage  *storagekeeper.Keeper
 }
 
 var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)

@@ -606,7 +606,7 @@ func NewJackalApp(
 	// if we want to allow any custom callbacks
 	supportedFeatures := "iterator,staking,stargate,cosmwasm_1_1"
 
-	wasmOpts = append(owasm.RegisterCustomPlugins(&app.FileTreeKeeper), wasmOpts...)
+	wasmOpts = append(owasm.RegisterCustomPlugins(&app.FileTreeKeeper, &app.StorageKeeper), wasmOpts...)
 
 	app.wasmKeeper = wasm.NewKeeper(
 		appCodec,

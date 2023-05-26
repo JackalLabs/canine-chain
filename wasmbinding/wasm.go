@@ -5,12 +5,14 @@ import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 
 	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
 )
 
 func RegisterCustomPlugins(
 	// we can add in more keepers here if needed
 	// bank *bankkeeper.BaseKeeper,
 	filetree *filetreekeeper.Keeper,
+	storage *storagekeeper.Keeper,
 ) []wasmkeeper.Option {
 	wasmQueryPlugin := NewQueryPlugin(filetree)
 
@@ -18,7 +20,7 @@ func RegisterCustomPlugins(
 		Custom: CustomQuerier(wasmQueryPlugin),
 	})
 	messengerDecoratorOpt := wasmkeeper.WithMessageHandlerDecorator(
-		CustomMessageDecorator(filetree),
+		CustomMessageDecorator(filetree, storage),
 	)
 
 	return []wasm.Option{
