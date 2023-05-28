@@ -19,7 +19,7 @@ const ( // TODO: Figure out optimal values for these and replace them with chain
 func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 	form, found := k.GetAttestationForm(ctx, cid)
 	if !found {
-		return nil
+		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this attestation")
 	}
 
 	done := false
@@ -80,6 +80,11 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 
 	if deal.Provider != creator {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "you do not own this deal")
+	}
+
+	_, found = k.GetAttestationForm(ctx, cid)
+	if found {
+		return nil, sdkerrors.Wrapf(types.ErrAttestAlreadyExists, "attestation form already exists")
 	}
 
 	providers := k.GetActiveProviders(ctx) // get a random list of active providers
