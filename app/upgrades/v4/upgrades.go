@@ -56,9 +56,7 @@ func (u *Upgrade) StoreUpgrades() *storetypes.StoreUpgrades {
 			ibcfeetypes.StoreKey,
 		},
 		Deleted: []string{
-			intertxtypes.StoreKey, // removing ICA host and controller modules for IBC-Go v4
-			"icahost",
-			"icacontroller",
+			intertxtypes.StoreKey,
 		},
 	}
 }
