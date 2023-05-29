@@ -256,7 +256,7 @@ var (
 		filetreemodule.AppModuleBasic{},
 		oraclemodule.AppModuleBasic{},
 		notificationsmodule.AppModuleBasic{},
-
+		ica.AppModuleBasic{},
 		/*
 			dsigmodule.AppModuleBasic{},
 		*/
@@ -324,9 +324,11 @@ type JackalApp struct {
 	authzKeeper      authzkeeper.Keeper
 	wasmKeeper       wasm.Keeper
 
-	scopedIBCKeeper      capabilitykeeper.ScopedKeeper
-	scopedTransferKeeper capabilitykeeper.ScopedKeeper
-	scopedWasmKeeper     capabilitykeeper.ScopedKeeper
+	scopedIBCKeeper           capabilitykeeper.ScopedKeeper
+	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
+	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
+	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
+	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
@@ -773,12 +775,12 @@ func NewJackalApp(
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		ibcfeetypes.ModuleName,
-		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -810,12 +812,12 @@ func NewJackalApp(
 		ibchost.ModuleName,
 		ibcfeetypes.ModuleName,
 
-		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -848,19 +850,18 @@ func NewJackalApp(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		// additional non simd modules
-		icatypes.ModuleName,
-
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
+		icatypes.ModuleName,
 		// wasm after ibc transfer
 		ibcfeetypes.ModuleName,
 
-		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -890,12 +891,12 @@ func NewJackalApp(
 		ibchost.ModuleName,
 		icatypes.ModuleName,
 		// wasm after ibc transfer
-		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 	)
 
 	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
@@ -1013,6 +1014,8 @@ func NewJackalApp(
 	app.scopedIBCKeeper = scopedIBCKeeper
 	app.scopedTransferKeeper = scopedTransferKeeper
 	app.scopedWasmKeeper = scopedWasmKeeper
+	app.scopedICAControllerKeeper = scopedICAControllerKeeper
+	app.scopedICAHostKeeper = scopedICAHostKeeper
 
 	if loadLatest {
 		if err := app.LoadLatestVersion(); err != nil {
@@ -1199,14 +1202,14 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
-	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
+	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(oraclemoduletypes.ModuleName)
 	paramsKeeper.Subspace(storagemoduletypes.ModuleName)
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
-	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
-	paramsKeeper.Subspace(icahosttypes.SubModuleName)
+	paramsKeeper.Subspace(wasm.ModuleName)
 
 	return paramsKeeper
 }
