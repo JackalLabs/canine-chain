@@ -8,6 +8,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
+	ibc "github.com/cosmos/ibc-go/v4/modules/core"
+	v4 "github.com/jackalLabs/canine-chain/app/upgrades/v4"
+
+	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	"github.com/jackalLabs/canine-chain/app/upgrades"
 	"github.com/jackalLabs/canine-chain/app/upgrades/recovery"
 	v121 "github.com/jackalLabs/canine-chain/app/upgrades/testnet/121"
@@ -85,30 +90,24 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ica "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts"
-	icacontroller "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller"
-	icacontrollerkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/keeper"
-	icacontrollertypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/types"
-	icahost "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host"
-	icahostkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/keeper"
-	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
-	icatypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/types"
-	"github.com/cosmos/ibc-go/v3/modules/apps/transfer"
-	ibctransferkeeper "github.com/cosmos/ibc-go/v3/modules/apps/transfer/keeper"
-	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
-	ibc "github.com/cosmos/ibc-go/v3/modules/core"
-	ibcclient "github.com/cosmos/ibc-go/v3/modules/core/02-client"
-	ibcclientclient "github.com/cosmos/ibc-go/v3/modules/core/02-client/client"
-	ibcclienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
-	porttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
-	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
-	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
+	ica "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts"
+	icacontrollerkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/keeper"
+	icacontrollertypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/types"
+	icahost "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host"
+	icahostkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/keeper"
+	icahosttypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/types"
+	icatypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/types"
+	ibcfeetypes "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/types"
+	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
+	ibctransferkeeper "github.com/cosmos/ibc-go/v4/modules/apps/transfer/keeper"
+	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	ibcclient "github.com/cosmos/ibc-go/v4/modules/core/02-client"
+	ibcclientclient "github.com/cosmos/ibc-go/v4/modules/core/02-client/client"
+	ibcclienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
+	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
+	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
+	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
 
-	// Note: please do your research before using this in production app, this is a demo and not an officially
-	// supported IBC team implementation. It has no known issues, but do your own research before using it.
-	intertx "github.com/cosmos/interchain-accounts/x/inter-tx"
-	intertxkeeper "github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
-	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
@@ -253,14 +252,12 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		wasm.AppModuleBasic{},
-		ica.AppModuleBasic{},
-		intertx.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
 		storagemodule.AppModuleBasic{},
 		filetreemodule.AppModuleBasic{},
 		oraclemodule.AppModuleBasic{},
 		notificationsmodule.AppModuleBasic{},
-
+		ica.AppModuleBasic{},
 		/*
 			dsigmodule.AppModuleBasic{},
 		*/
@@ -275,12 +272,13 @@ var (
 		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:                 {authtypes.Burner},
 		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-		icatypes.ModuleName:                 nil,
+		ibcfeetypes.ModuleName:              nil,
 		wasm.ModuleName:                     {authtypes.Burner},
 		rnsmoduletypes.ModuleName:           {authtypes.Minter, authtypes.Burner},
 		storagemoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		oraclemoduletypes.ModuleName:        nil,
 		notificationsmoduletypes.ModuleName: nil,
+		icatypes.ModuleName:                 nil,
 
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
@@ -308,33 +306,33 @@ type JackalApp struct {
 	memKeys map[string]*sdk.MemoryStoreKey
 
 	// keepers
-	AccountKeeper       authkeeper.AccountKeeper
-	BankKeeper          bankkeeper.Keeper
-	capabilityKeeper    *capabilitykeeper.Keeper
-	stakingKeeper       stakingkeeper.Keeper
-	slashingKeeper      slashingkeeper.Keeper
-	MintKeeper          mintkeeper.Keeper
-	distrKeeper         distrkeeper.Keeper
-	govKeeper           govkeeper.Keeper
-	crisisKeeper        crisiskeeper.Keeper
-	upgradeKeeper       upgradekeeper.Keeper
-	paramsKeeper        paramskeeper.Keeper
-	evidenceKeeper      evidencekeeper.Keeper
-	ibcKeeper           *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	icaControllerKeeper icacontrollerkeeper.Keeper
-	icaHostKeeper       icahostkeeper.Keeper
-	interTxKeeper       intertxkeeper.Keeper
-	transferKeeper      ibctransferkeeper.Keeper
-	feeGrantKeeper      feegrantkeeper.Keeper
-	authzKeeper         authzkeeper.Keeper
-	wasmKeeper          wasm.Keeper
+	AccountKeeper    authkeeper.AccountKeeper
+	BankKeeper       bankkeeper.Keeper
+	capabilityKeeper *capabilitykeeper.Keeper
+	stakingKeeper    stakingkeeper.Keeper
+	slashingKeeper   slashingkeeper.Keeper
+	MintKeeper       mintkeeper.Keeper
+	distrKeeper      distrkeeper.Keeper
+	govKeeper        govkeeper.Keeper
+	crisisKeeper     crisiskeeper.Keeper
+	upgradeKeeper    upgradekeeper.Keeper
+	paramsKeeper     paramskeeper.Keeper
+	evidenceKeeper   evidencekeeper.Keeper
+	ibcKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
+	ibcFeeKeeper     ibcfeekeeper.Keeper
+	transferKeeper   ibctransferkeeper.Keeper
+	feeGrantKeeper   feegrantkeeper.Keeper
+	authzKeeper      authzkeeper.Keeper
+	wasmKeeper       wasm.Keeper
 
 	scopedIBCKeeper           capabilitykeeper.ScopedKeeper
-	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
-	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
-	scopedInterTxKeeper       capabilitykeeper.ScopedKeeper
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
+	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
+	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
+
+	ICAControllerKeeper icacontrollerkeeper.Keeper
+	ICAHostKeeper       icahostkeeper.Keeper
 
 	RnsKeeper           rnsmodulekeeper.Keeper
 	OracleKeeper        oraclemodulekeeper.Keeper
@@ -385,10 +383,10 @@ func NewJackalApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey,
-		icacontrollertypes.StoreKey, intertxtypes.StoreKey, rnsmoduletypes.StoreKey,
+		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, rnsmoduletypes.StoreKey,
 		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
-		notificationsmoduletypes.StoreKey,
+		notificationsmoduletypes.StoreKey, ibcfeetypes.StoreKey, icacontrollertypes.StoreKey,
+		icahosttypes.StoreKey,
 
 		/*
 			, dsigmoduletypes.StoreKey,
@@ -433,10 +431,9 @@ func NewJackalApp(
 		memKeys[capabilitytypes.MemStoreKey],
 	)
 	scopedIBCKeeper := app.capabilityKeeper.ScopeToModule(ibchost.ModuleName)
-	scopedICAHostKeeper := app.capabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
-	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
-	scopedInterTxKeeper := app.capabilityKeeper.ScopeToModule(intertxtypes.ModuleName)
 	scopedTransferKeeper := app.capabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
+	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
+	scopedICAHostKeeper := app.capabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	scopedWasmKeeper := app.capabilityKeeper.ScopeToModule(wasm.ModuleName)
 	app.capabilityKeeper.Seal()
 
@@ -540,6 +537,14 @@ func NewJackalApp(
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.upgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.ibcKeeper.ClientKeeper))
 
+	// IBC Fee Module keeper
+	app.ibcFeeKeeper = ibcfeekeeper.NewKeeper(
+		appCodec, keys[ibcfeetypes.StoreKey], app.getSubspace(ibcfeetypes.ModuleName),
+		app.ibcKeeper.ChannelKeeper, // may be replaced with IBC middleware
+		app.ibcKeeper.ChannelKeeper,
+		&app.ibcKeeper.PortKeeper, app.AccountKeeper, app.BankKeeper,
+	)
+
 	// Create Transfer Keepers
 	app.transferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,
@@ -553,39 +558,21 @@ func NewJackalApp(
 		scopedTransferKeeper,
 	)
 	transferModule := transfer.NewAppModule(app.transferKeeper)
-	transferIBCModule := transfer.NewIBCModule(app.transferKeeper)
 
-	app.icaHostKeeper = icahostkeeper.NewKeeper(
-		appCodec,
-		keys[icahosttypes.StoreKey],
-		app.getSubspace(icahosttypes.SubModuleName),
-		app.ibcKeeper.ChannelKeeper,
-		&app.ibcKeeper.PortKeeper,
-		app.AccountKeeper,
-		scopedICAHostKeeper,
-		app.MsgServiceRouter(),
-	)
-	app.icaControllerKeeper = icacontrollerkeeper.NewKeeper(
-		appCodec,
-		keys[icacontrollertypes.StoreKey],
-		app.getSubspace(icacontrollertypes.SubModuleName),
+	app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
+		appCodec, keys[icacontrollertypes.StoreKey], app.getSubspace(icacontrollertypes.SubModuleName),
 		app.ibcKeeper.ChannelKeeper, // may be replaced with middleware such as ics29 fee
-		app.ibcKeeper.ChannelKeeper,
-		&app.ibcKeeper.PortKeeper,
-		scopedICAControllerKeeper,
-		app.MsgServiceRouter(),
+		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper, scopedICAControllerKeeper, app.MsgServiceRouter(),
 	)
-	icaModule := ica.NewAppModule(&app.icaControllerKeeper, &app.icaHostKeeper)
-	icaHostIBCModule := icahost.NewIBCModule(app.icaHostKeeper)
+	app.ICAHostKeeper = icahostkeeper.NewKeeper(
+		appCodec, keys[icahosttypes.StoreKey], app.getSubspace(icahosttypes.SubModuleName),
+		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper,
+		app.AccountKeeper, scopedICAHostKeeper, app.MsgServiceRouter(),
+	)
+	icaModule := ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper)
 
-	// For wasmd we use the demo controller from https://github.com/cosmos/interchain-accounts but see notes below
-	app.interTxKeeper = intertxkeeper.NewKeeper(appCodec, keys[intertxtypes.StoreKey], app.icaControllerKeeper, scopedInterTxKeeper)
-	// Note: please do your research before using this in production app, this is a demo and not an officially
-	// supported IBC team implementation. Do your own research before using it.
-	interTxModule := intertx.NewAppModule(appCodec, app.interTxKeeper)
-	interTxIBCModule := intertx.NewIBCModule(app.interTxKeeper)
-	// You will likely want to swap out the second argument with your own reviewed and maintained ica auth module
-	icaControllerIBCModule := icacontroller.NewIBCModule(app.icaControllerKeeper, interTxIBCModule)
+	// icaControllerIBCModule := icacontroller.NewIBCModule(app.ICAControllerKeeper, intergammIBCModule)
+	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
 
 	// create evidence keeper with router
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -616,6 +603,7 @@ func NewJackalApp(
 		app.BankKeeper,
 		app.stakingKeeper,
 		app.distrKeeper,
+		app.ibcFeeKeeper, // ISC4 Wrapper: fee IBC middleware
 		app.ibcKeeper.ChannelKeeper,
 		&app.ibcKeeper.PortKeeper,
 		scopedWasmKeeper,
@@ -694,12 +682,19 @@ func NewJackalApp(
 	if len(enabledProposals) != 0 {
 		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(app.wasmKeeper, enabledProposals))
 	}
-	ibcRouter.
-		AddRoute(wasm.ModuleName, wasm.NewIBCHandler(app.wasmKeeper, app.ibcKeeper.ChannelKeeper)).
-		AddRoute(ibctransfertypes.ModuleName, transferIBCModule).
-		AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
-		AddRoute(intertxtypes.ModuleName, icaControllerIBCModule)
+
+	var transferStack porttypes.IBCModule
+	transferStack = transfer.NewIBCModule(app.transferKeeper)
+	transferStack = ibcfee.NewIBCMiddleware(transferStack, app.ibcFeeKeeper)
+
+	var wasmStack porttypes.IBCModule
+	wasmStack = wasm.NewIBCHandler(app.wasmKeeper, app.ibcKeeper.ChannelKeeper, app.ibcFeeKeeper)
+	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, app.ibcFeeKeeper)
+
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
+		AddRoute(wasm.ModuleName, wasmStack).
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
+
 	app.ibcKeeper.SetRouter(ibcRouter)
 
 	app.govKeeper = govkeeper.NewKeeper(
@@ -743,14 +738,13 @@ func NewJackalApp(
 		ibc.NewAppModule(app.ibcKeeper),
 		params.NewAppModule(app.paramsKeeper),
 		transferModule,
-		icaModule,
-		interTxModule,
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 		rnsModule,
 		storageModule,
 		filetreeModule,
 		oracleModule,
 		notificationsModule,
+		icaModule,
 
 		/*
 			dsigModule,
@@ -780,16 +774,17 @@ func NewJackalApp(
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		// additional non simd modules
+		icatypes.ModuleName,
+
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
-		icatypes.ModuleName,
-		intertxtypes.ModuleName,
-		wasm.ModuleName,
+		ibcfeetypes.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -815,16 +810,18 @@ func NewJackalApp(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		// additional non simd modules
+		icatypes.ModuleName,
+
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
-		icatypes.ModuleName,
-		intertxtypes.ModuleName,
-		wasm.ModuleName,
+		ibcfeetypes.ModuleName,
+
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -860,14 +857,15 @@ func NewJackalApp(
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
-		intertxtypes.ModuleName,
 		// wasm after ibc transfer
-		wasm.ModuleName,
+		ibcfeetypes.ModuleName,
+
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -896,14 +894,13 @@ func NewJackalApp(
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
-		intertxtypes.ModuleName,
 		// wasm after ibc transfer
-		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		wasm.ModuleName,
 	)
 
 	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
@@ -928,15 +925,12 @@ func NewJackalApp(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		wasm.ModuleName,
-
-		icatypes.ModuleName,
-		intertxtypes.ModuleName,
-
 		rnsmoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		storagemoduletypes.ModuleName,
 		filetreemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		icatypes.ModuleName,
 
 		crisistypes.ModuleName,
 	)
@@ -1024,9 +1018,8 @@ func NewJackalApp(
 	app.scopedIBCKeeper = scopedIBCKeeper
 	app.scopedTransferKeeper = scopedTransferKeeper
 	app.scopedWasmKeeper = scopedWasmKeeper
-	app.scopedICAHostKeeper = scopedICAHostKeeper
 	app.scopedICAControllerKeeper = scopedICAControllerKeeper
-	app.scopedInterTxKeeper = scopedInterTxKeeper
+	app.scopedICAHostKeeper = scopedICAHostKeeper
 
 	if loadLatest {
 		if err := app.LoadLatestVersion(); err != nil {
@@ -1157,6 +1150,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v4.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
@@ -1212,14 +1206,14 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
-	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
-	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(rnsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(oraclemoduletypes.ModuleName)
 	paramsKeeper.Subspace(storagemoduletypes.ModuleName)
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
+	paramsKeeper.Subspace(wasm.ModuleName)
 
 	return paramsKeeper
 }
