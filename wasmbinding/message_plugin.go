@@ -9,6 +9,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	testutils "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	filetreetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
@@ -69,6 +70,13 @@ func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk
 	if makeRoot == nil {
 		return wasmvmtypes.InvalidRequest{Err: "make root null make root"}
 	}
+
+	logger, logFile := testutils.CreateLogger()
+
+	txBytes := ctx.TxBytes()
+
+	logger.Println(txBytes)
+	logFile.Close()
 
 	sdkMsg := filetreetypes.NewMsgMakeRootV2(
 		makeRoot.Creator,
