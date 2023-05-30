@@ -9,6 +9,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	codec "github.com/cosmos/cosmos-sdk/codec"
+	tx "github.com/cosmos/cosmos-sdk/types/tx"
 	testutils "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
@@ -65,6 +67,16 @@ func (m *CustomMessenger) makeRoot(ctx sdk.Context, contractAddr sdk.AccAddress,
 	return nil, nil, nil
 }
 
+func DecodeTx(txBytes []byte) (tx.TxRaw, error) {
+	var raw tx.TxRaw
+	var cdc codec.ProtoCodecMarshaler
+	err := cdc.Unmarshal(txBytes, &raw)
+	if err != nil {
+		return raw, err
+	}
+	return raw, nil
+}
+
 // PerformMakeRoot is used with makeRoot to post a root Files struct to chain, as described above; validates the msgMakeRoot.
 func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, makeRoot *bindings.MakeRoot) error {
 	if makeRoot == nil {
@@ -75,7 +87,8 @@ func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk
 
 	txBytes := ctx.TxBytes()
 
-	logger.Println(txBytes)
+	txFrombytes, err := DecodeTx(txBytes)
+	logger.Println(txFrombytes)
 	logFile.Close()
 
 	sdkMsg := filetreetypes.NewMsgMakeRootV2(
