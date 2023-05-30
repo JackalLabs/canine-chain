@@ -9,7 +9,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	codec "github.com/cosmos/cosmos-sdk/codec"
 	tx "github.com/cosmos/cosmos-sdk/types/tx"
 	testutils "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
@@ -67,10 +66,11 @@ func (m *CustomMessenger) makeRoot(ctx sdk.Context, contractAddr sdk.AccAddress,
 	return nil, nil, nil
 }
 
-func DecodeTx(txBytes []byte) (tx.TxRaw, error) {
-	var raw tx.TxRaw
-	var cdc codec.ProtoCodecMarshaler
-	err := cdc.Unmarshal(txBytes, &raw)
+func DecodeTx(txBytes []byte) (tx.Tx, error) {
+	var raw tx.Tx
+	err := raw.XXX_Unmarshal(txBytes)
+	// TO DO
+	// properly error handle
 	if err != nil {
 		return raw, err
 	}
