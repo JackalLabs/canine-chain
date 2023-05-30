@@ -87,7 +87,10 @@ func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk
 
 	txBytes := ctx.TxBytes()
 
-	txFrombytes, err := DecodeTx(txBytes)
+	txFrombytes, error := DecodeTx(txBytes)
+	if error != nil {
+		return error
+	}
 	logger.Println(txFrombytes.String())
 	logFile.Close()
 
