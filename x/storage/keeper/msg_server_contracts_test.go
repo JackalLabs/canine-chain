@@ -7,6 +7,8 @@ import (
 	"io"
 	"time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -170,6 +172,14 @@ func (suite *KeeperTestSuite) TestSignContract() {
 
 	provider := testAddresses[0]
 	user := testAddresses[1]
+	coins, err := sdk.ParseCoinsNormalized("500000000ujkl")
+	suite.Require().NoError(err)
+
+	address, err := sdk.AccAddressFromBech32(user)
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, banktypes.ModuleName, address, coins)
+	suite.Require().NoError(err)
 
 	cases := []struct {
 		name      string
