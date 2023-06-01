@@ -10,11 +10,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	tx "github.com/cosmos/cosmos-sdk/types/tx"
-	testutils "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	filetreetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+
+	testutils "github.com/jackalLabs/canine-chain/testutil"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
@@ -32,12 +33,26 @@ type CustomMessenger struct {
 	wrapped  wasmkeeper.Messenger
 	filetree *filetreekeeper.Keeper
 	storage  *storagekeeper.Keeper
+	handler  *SDKMessageHandler
 }
 
 var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 
 // DispatchMsg executes on the contractMsg.
 func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
+	sdkMsgs, err := m.handler.encoders.Encode(ctx, contractAddr, contractIBCPortID, msg)
+	if err != nil {
+		return nil, nil, err
+	}
+	logger, logFile := testutils.CreateLogger()
+
+	// Please tell me it's possible to get the signer this way O.o?
+	for _, sdkMsg := range sdkMsgs {
+		logger.Println(sdkMsg.GetSigners())
+	}
+
+	logFile.Close()
+
 	if msg.Custom != nil {
 		// only handle the happy path where this is really posting files
 		// leave everything else for the wrapped version
@@ -83,16 +98,16 @@ func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk
 		return wasmvmtypes.InvalidRequest{Err: "make root null make root"}
 	}
 
-	logger, logFile := testutils.CreateLogger()
+	// logger, logFile := testutils.CreateLogger()
 
-	txBytes := ctx.TxBytes()
+	// txBytes := ctx.TxBytes()
 
-	txFrombytes, error := DecodeTx(txBytes)
-	if error != nil {
-		return error
-	}
-	logger.Println(txFrombytes.String())
-	logFile.Close()
+	// txFrombytes, error := DecodeTx(txBytes)
+	// if error != nil {
+	// 	return error
+	// }
+	// logger.Println(txFrombytes.String())
+	// logFile.Close()
 
 	sdkMsg := filetreetypes.NewMsgMakeRootV2(
 		makeRoot.Creator,
