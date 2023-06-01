@@ -40,16 +40,18 @@ var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 
 // DispatchMsg executes on the contractMsg.
 func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
-	sdkMsgs, err := m.handler.encoders.Encode(ctx, contractAddr, contractIBCPortID, msg)
-	if err != nil {
-		return nil, nil, err
-	}
+	// sdkMsgs, err := m.handler.encoders.Encode(ctx, contractAddr, contractIBCPortID, msg)
+	// if err != nil {
+	// 	return nil, nil, err
+	// }
 	logger, logFile := testutils.CreateLogger()
 
+	logger.Println(msg.Wasm)
+
 	// Please tell me it's possible to get the signer this way O.o?
-	for _, sdkMsg := range sdkMsgs {
-		logger.Println(sdkMsg.GetSigners())
-	}
+	// for _, sdkMsg := range sdkMsgs {
+	// 	logger.Println(sdkMsg.GetSigners())
+	// }
 
 	logFile.Close()
 
