@@ -10,12 +10,15 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	tx "github.com/cosmos/cosmos-sdk/types/tx"
+
 	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	filetreetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
 	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
 
 	testutils "github.com/jackalLabs/canine-chain/testutil"
+
+	spew "github.com/davecgh/go-spew/spew"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
@@ -74,6 +77,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 			makeRoot = *contractMsg.MakeRoot
 			logger.Printf("The make root struct contains: %+v", makeRoot)
 			logger.Printf("The make root struct contains: %+v", contractMsg.MakeRoot)
+			spew.Dump(makeRoot)
 
 			creator := contractMsg.MakeRoot.Creator
 
