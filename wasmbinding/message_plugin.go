@@ -72,8 +72,8 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 
 			var makeRoot bindings.MakeRoot
 			makeRoot = *contractMsg.MakeRoot
-			logger.Printf("The make root struct contains: %s", makeRoot)
-			logger.Printf("The make root struct contains: %s", contractMsg.MakeRoot)
+			logger.Printf("The make root struct contains: %+v", makeRoot)
+			logger.Printf("The make root struct contains: %+v", contractMsg.MakeRoot)
 
 			creator := contractMsg.MakeRoot.Creator
 
