@@ -63,7 +63,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 			return nil, nil, errorsmod.Wrap(err, "Jackal msg")
 		}
 		if contractMsg.MakeRoot != nil {
-			return m.makeRoot(ctx, contractAddr, contractMsg.MakeRoot) // need this
+			return m.makeRoot(ctx, contractAddr, contractMsg.MakeRoot, sender) // need this
 		}
 		if contractMsg.PostFiles != nil {
 			return m.postFiles(ctx, contractAddr, contractMsg.PostFiles) // need this
@@ -75,8 +75,8 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 
 // makeRoot posts a Files struct on chain that serves as the root directory for the user's filetree
 // it is the merklePath of 's'
-func (m *CustomMessenger) makeRoot(ctx sdk.Context, contractAddr sdk.AccAddress, makeRoot *bindings.MakeRoot) ([]sdk.Event, [][]byte, error) {
-	err := PerformMakeRoot(m.filetree, ctx, contractAddr, makeRoot)
+func (m *CustomMessenger) makeRoot(ctx sdk.Context, contractAddr sdk.AccAddress, makeRoot *bindings.MakeRoot, sender string) ([]sdk.Event, [][]byte, error) {
+	err := PerformMakeRoot(m.filetree, ctx, contractAddr, makeRoot, sender)
 	if err != nil {
 		return nil, nil, errorsmod.Wrap(err, "perform make root")
 	}
@@ -95,21 +95,25 @@ func DecodeTx(txBytes []byte) (tx.Tx, error) {
 }
 
 // PerformMakeRoot is used with makeRoot to post a root Files struct to chain, as described above; validates the msgMakeRoot.
-func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, makeRoot *bindings.MakeRoot) error {
+func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, makeRoot *bindings.MakeRoot, sender string) error {
 	if makeRoot == nil {
 		return wasmvmtypes.InvalidRequest{Err: "make root null make root"}
 	}
 
-	// logger, logFile := testutils.CreateLogger()
+	logger, logFile := testutils.CreateLogger()
 
-	// txBytes := ctx.TxBytes()
+	// We forked wasmd to get the bech32 address of the user who executed the contract :D
+	// We do some verification here for security
+	// Perhaps we can take this up a notch and make wasmd consume the contract executor as sdk.AccAddress
+	// and build a signature verifcation function? To investigate
 
-	// txFrombytes, error := DecodeTx(txBytes)
-	// if error != nil {
-	// 	return error
-	// }
-	// logger.Println(txFrombytes.String())
-	// logFile.Close()
+	logger.Printf("The person who called execute on the contract is: %s", sender)
+	logger.Printf("The person declared as msg.Creator for MakeRoot is: %s", makeRoot.Creator)
+	logFile.Close()
+
+	if sender != makeRoot.Creator {
+		return wasmvmtypes.InvalidRequest{Err: "You can only create a root filetree File for yourself!"} // Desperately need better error handling
+	}
 
 	sdkMsg := filetreetypes.NewMsgMakeRootV2(
 		makeRoot.Creator,
