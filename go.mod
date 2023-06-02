@@ -3,7 +3,7 @@ module github.com/jackalLabs/canine-chain
 go 1.20
 
 require (
-	github.com/CosmWasm/wasmd v0.32.0
+	github.com/JackalLabs/wasmd v0.0.0
 	github.com/CosmWasm/wasmvm v1.2.3 // indirect
 	github.com/cosmos/cosmos-sdk v0.45.17
 	github.com/cosmos/ibc-go/v4 v4.4.1
