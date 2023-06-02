@@ -12,7 +12,7 @@ import (
 // STUB
 // Another dispatcher function that can be used to organise dispatching
 // the storage module's messages in a different file
-func (m *CustomMessenger) DispatchStorageMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) DispatchStorageMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg, sender string) ([]sdk.Event, [][]byte, error) {
 	if msg.Custom != nil {
 		// only handle the happy path where this is really posting files
 		// leave everything else for the wrapped version
@@ -27,5 +27,5 @@ func (m *CustomMessenger) DispatchStorageMsg(ctx sdk.Context, contractAddr sdk.A
 		}
 
 	}
-	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
+	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg, sender)
 }

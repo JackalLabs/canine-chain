@@ -39,7 +39,7 @@ type CustomMessenger struct {
 var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 
 // DispatchMsg executes on the contractMsg.
-func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg, sender string) ([]sdk.Event, [][]byte, error) {
 	// sdkMsgs, err := m.handler.encoders.Encode(ctx, contractAddr, contractIBCPortID, msg)
 	// if err != nil {
 	// 	return nil, nil, err
@@ -70,7 +70,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		}
 
 	}
-	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
+	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg, sender)
 }
 
 // makeRoot posts a Files struct on chain that serves as the root directory for the user's filetree

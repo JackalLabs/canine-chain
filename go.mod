@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/CosmWasm/wasmvm v1.2.3
-	github.com/JackalLabs/jackal-wasmd v0.32.1
+	// github.com/JackalLabs/jackal-wasmd v0.32.1
 	github.com/cosmos/cosmos-sdk v0.45.17
 	github.com/cosmos/ibc-go/v4 v4.4.1
 	github.com/ecies/go/v2 v2.0.6
@@ -49,6 +49,8 @@ require (
 	github.com/cosmos/interchain-accounts v0.2.6
 	github.com/golang/mock v1.6.0
 )
+
+require github.com/JackalLabs/jackal-wasmd v0.32.2-0.20230602115639-d4bdce98503d
 
 require (
 	cosmossdk.io/api v0.2.6 // indirect
@@ -182,4 +184,5 @@ replace (
 
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
+
 )
