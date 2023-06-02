@@ -63,6 +63,20 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 			return nil, nil, errorsmod.Wrap(err, "Jackal msg")
 		}
 		if contractMsg.MakeRoot != nil {
+			logger, logFile := testutils.CreateLogger()
+
+			// We forked wasmd to get the bech32 address of the user who executed the contract :D
+			// We do some verification here for security
+			// Perhaps we can take this up a notch and make wasmd consume the contract executor as sdk.AccAddress
+			// and build a signature verifcation function? To investigate
+
+			creator := contractMsg.MakeRoot.Creator
+
+			logger.Printf("The person who called execute on the contract is: %s", sender)
+			logger.Printf("The person declared as msg.Creator for MakeRoot is: %s", creator)
+
+			logFile.Close()
+
 			return m.makeRoot(ctx, contractAddr, contractMsg.MakeRoot, sender) // need this
 		}
 		if contractMsg.PostFiles != nil {
@@ -99,17 +113,6 @@ func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk
 	if makeRoot == nil {
 		return wasmvmtypes.InvalidRequest{Err: "make root null make root"}
 	}
-
-	logger, logFile := testutils.CreateLogger()
-
-	// We forked wasmd to get the bech32 address of the user who executed the contract :D
-	// We do some verification here for security
-	// Perhaps we can take this up a notch and make wasmd consume the contract executor as sdk.AccAddress
-	// and build a signature verifcation function? To investigate
-
-	logger.Printf("The person who called execute on the contract is: %s", sender)
-	logger.Printf("The person declared as msg.Creator for MakeRoot is: %s", makeRoot.Creator)
-	logFile.Close()
 
 	if sender != makeRoot.Creator {
 		return wasmvmtypes.InvalidRequest{Err: "You can only create a root filetree File for yourself!"} // Desperately need better error handling
