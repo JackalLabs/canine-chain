@@ -44,16 +44,16 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 	// if err != nil {
 	// 	return nil, nil, err
 	// }
-	logger, logFile := testutils.CreateLogger()
+	// logger, logFile := testutils.CreateLogger()
 
-	logger.Printf("The person who executed the contract is: %s", sender)
+	// logger.Printf("The person who executed the contract is: %s", sender)
 
 	// Please tell me it's possible to get the signer this way O.o?
 	// for _, sdkMsg := range sdkMsgs {
 	// 	logger.Println(sdkMsg.GetSigners())
 	// }
 
-	logFile.Close()
+	// logFile.Close()
 
 	if msg.Custom != nil {
 		// only handle the happy path where this is really posting files
