@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	errorsmod "cosmossdk.io/errors"
-	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
+	wasmkeeper "github.com/JackalLabs/wasmd/x/wasm/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
