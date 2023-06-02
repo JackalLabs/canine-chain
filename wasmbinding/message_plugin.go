@@ -70,6 +70,11 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 			// Perhaps we can take this up a notch and make wasmd consume the contract executor as sdk.AccAddress
 			// and build a signature verifcation function? To investigate
 
+			var makeRoot bindings.MakeRoot
+			makeRoot = *contractMsg.MakeRoot
+			logger.Printf("The make root struct contains: %s", makeRoot)
+			logger.Printf("The make root struct contains: %s", contractMsg.MakeRoot)
+
 			creator := contractMsg.MakeRoot.Creator
 
 			logger.Printf("The person who called execute on the contract is: %s", sender)
