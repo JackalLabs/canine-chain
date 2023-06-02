@@ -46,7 +46,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 	// }
 	logger, logFile := testutils.CreateLogger()
 
-	logger.Println(msg.Wasm)
+	logger.Printf("The person who executed the contract is: %s", sender)
 
 	// Please tell me it's possible to get the signer this way O.o?
 	// for _, sdkMsg := range sdkMsgs {
