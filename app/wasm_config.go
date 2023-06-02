@@ -1,7 +1,7 @@
 package app
 
 import (
-	wasmkeeper "github.com/JackalLabs/wasmd/x/wasm/keeper"
+	wasmkeeper "github.com/JackalLabs/jackal-wasmd/x/wasm/keeper"
 )
 
 const (

@@ -1,8 +1,8 @@
 package wasmbinding
 
 import (
-	"github.com/JackalLabs/wasmd/x/wasm"
-	wasmkeeper "github.com/JackalLabs/wasmd/x/wasm/keeper"
+	"github.com/JackalLabs/jackal-wasmd/x/wasm"
+	wasmkeeper "github.com/JackalLabs/jackal-wasmd/x/wasm/keeper"
 
 	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
 	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"

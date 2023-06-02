@@ -5,7 +5,7 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
-	wasmkeeper "github.com/JackalLabs/wasmd/x/wasm/keeper"
+	wasmkeeper "github.com/JackalLabs/jackal-wasmd/x/wasm/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 

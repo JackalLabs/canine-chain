@@ -32,9 +32,9 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/JackalLabs/wasmd/x/wasm"
-	wasmkeeper "github.com/JackalLabs/wasmd/x/wasm/keeper"
-	wasmtypes "github.com/JackalLabs/wasmd/x/wasm/types"
+	"github.com/JackalLabs/jackal-wasmd/x/wasm"
+	wasmkeeper "github.com/JackalLabs/jackal-wasmd/x/wasm/keeper"
+	wasmtypes "github.com/JackalLabs/jackal-wasmd/x/wasm/types"
 	"github.com/jackalLabs/canine-chain/app"
 	"github.com/jackalLabs/canine-chain/app/params"
 )

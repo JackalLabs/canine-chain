@@ -118,9 +118,9 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/JackalLabs/wasmd/x/wasm"
-	wasmclient "github.com/JackalLabs/wasmd/x/wasm/client"
-	wasmkeeper "github.com/JackalLabs/wasmd/x/wasm/keeper"
+	"github.com/JackalLabs/jackal-wasmd/x/wasm"
+	wasmclient "github.com/JackalLabs/jackal-wasmd/x/wasm/client"
+	wasmkeeper "github.com/JackalLabs/jackal-wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackalLabs/canine-chain/app/params"
 	owasm "github.com/jackalLabs/canine-chain/wasmbinding"
 
