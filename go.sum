@@ -87,8 +87,6 @@ github.com/DataDog/zstd v1.5.2/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwS
 github.com/HdrHistogram/hdrhistogram-go v1.1.2/go.mod h1:yDgFjdqOqDEKOvasDdhWNXYg9BVp4O+o5f6V/ehm6Oo=
 github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230525190516-b9142076b70c h1:Ju0uBSyOi03+kCC7gMth8s9m4/QSfd+1IaBe2o6l5ZM=
 github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230525190516-b9142076b70c/go.mod h1:bScuNwWAP0TZJpUf+SHXRU3xGoUPp+X9nAzfeIXts40=
-github.com/CosmWasm/wasmd v0.0.0 h1:PI4RQ2/pjEv6/T+mh8Nst9LJ2UwjUgWAm2UG9o45dCw=
-github.com/CosmWasm/wasmd v0.0.0/go.mod h1:E960ZPFerTZEh7WQw9UCjMH4PXJ0GHfxHcebzfWcDj4=
 github.com/Joker/hpp v1.0.0/go.mod h1:8x5n+M1Hp5hC0g8okX3sR3vFQwynaX/UgSOM9MeBKzY=
 github.com/Joker/jade v1.0.1-0.20190614124447-d475f43051e7/go.mod h1:6E6s8o2AE4KhCrqr6GRJjdC/gNfTdxkIXvuGZZda2VM=
 github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=
