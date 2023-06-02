@@ -23,7 +23,7 @@ func (m *CustomMessenger) DispatchStorageMsg(ctx sdk.Context, contractAddr sdk.A
 		// TO DO
 		// Replace with storage module's messages
 		if contractMsg.MakeRoot != nil {
-			return m.makeRoot(ctx, contractAddr, contractMsg.MakeRoot) // need this
+			return m.makeRoot(ctx, contractAddr, contractMsg.MakeRoot, sender) // need this
 		}
 
 	}

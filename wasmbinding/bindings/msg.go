@@ -21,7 +21,6 @@ type PostFiles struct {
 }
 
 type MakeRoot struct {
-	Creator        string `json:"creator"`
 	Editors        string `json:"editors"`
 	Viewers        string `json:"viewers"`
 	TrackingNumber string `json:"trackingnumber"`

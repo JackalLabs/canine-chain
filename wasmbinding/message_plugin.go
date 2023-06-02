@@ -84,10 +84,10 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 
 			// All our attempts to log the MakeRoot struct have failed thus far. Not sure why.
 
-			creator := contractMsg.MakeRoot.Creator
+			// creator := contractMsg.MakeRoot.Creator
 
 			logger.Printf("The person who called execute on the contract is: %s", sender)
-			logger.Printf("The person declared as msg.Creator for MakeRoot is: %s", creator)
+			// logger.Printf("The person declared as msg.Creator for MakeRoot is: %s", creator)
 
 			logFile.Close()
 
@@ -129,9 +129,9 @@ func PerformMakeRoot(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk
 	}
 
 	// This isn't need at the moment--especially because we can't seem to log the Creator address
-	if sender != makeRoot.Creator {
-		return wasmvmtypes.InvalidRequest{Err: "You can only create a root filetree File for yourself!"} // Desperately need better error handling
-	}
+	// if sender != makeRoot.Creator {
+	// 	return wasmvmtypes.InvalidRequest{Err: "You can only create a root filetree File for yourself!"} // Desperately need better error handling
+	// }
 
 	// Silly me, we can just pass in the executor of the contract to make a root
 
