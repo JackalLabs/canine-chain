@@ -2,6 +2,7 @@ package wasmbinding
 
 import (
 	"encoding/json"
+	"fmt"
 
 	errorsmod "cosmossdk.io/errors"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
@@ -77,6 +78,8 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 			makeRoot = *contractMsg.MakeRoot
 			logger.Printf("The make root struct contains: %+v", makeRoot)
 			logger.Printf("The make root struct contains: %+v", contractMsg.MakeRoot)
+			fmt.Printf("The make root struct contains: %+v", contractMsg.MakeRoot)
+			fmt.Printf("The make root struct contains: %+v", makeRoot)
 			spew.Dump(makeRoot)
 
 			creator := contractMsg.MakeRoot.Creator
