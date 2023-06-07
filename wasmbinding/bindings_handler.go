@@ -6,6 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+// Not sure we need this any more since we forked wasmd
+
 // WARNING
 // Any security vulnerabilities with declaring these types at all?
 
