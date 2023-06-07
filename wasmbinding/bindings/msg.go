@@ -10,7 +10,6 @@ type JackalMsg struct {
 
 // / creator == broadcaster of the msg
 type PostFiles struct {
-	Creator        string `json:"creator"`
 	Account        string `json:"account"`
 	HashParent     string `json:"hashparent"`
 	HashChild      string `json:"hashchild"`
