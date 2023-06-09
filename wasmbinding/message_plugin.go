@@ -49,10 +49,13 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 			// Perhaps we can take this up a notch and make wasmd consume the contract executor as sdk.AccAddress
 			// and build a signature verifcation function? To investigate
 
-			return m.makeRoot(ctx, contractAddr, contractMsg.MakeRoot, sender) // need this
+			return m.makeRoot(ctx, contractAddr, contractMsg.MakeRoot, sender)
 		}
 		if contractMsg.PostFiles != nil {
-			return m.postFiles(ctx, contractAddr, contractMsg.PostFiles, sender) // need this
+			return m.postFiles(ctx, contractAddr, contractMsg.PostFiles, sender)
+		}
+		if contractMsg.DeleteFile != nil {
+			return m.deleteFile(ctx, contractAddr, contractMsg.DeleteFile, sender)
 		}
 
 	}
@@ -134,7 +137,45 @@ func PerformPostFiles(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sd
 		msgPostFiles,
 	)
 	if err != nil {
-		return errorsmod.Wrap(err, "creating denom")
+		return errorsmod.Wrap(err, "failed to post file:")
+	}
+	return nil
+}
+
+// deleteFile deletes a Files struct on chain
+func (m *CustomMessenger) deleteFile(ctx sdk.Context, contractAddr sdk.AccAddress, deleteFile *bindings.DeleteFile, sender string) ([]sdk.Event, [][]byte, error) {
+	err := PerformDeleteFile(m.filetree, ctx, contractAddr, deleteFile, sender)
+	if err != nil {
+		return nil, nil, errorsmod.Wrap(err, "perform post files")
+	}
+	return nil, nil, nil
+}
+
+// PerformDeleteFile is used with deleteFile to delete a Files struct on chain; validates the msgDeleteFile.
+func PerformDeleteFile(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, deleteFile *bindings.DeleteFile, sender string) error {
+	if deleteFile == nil {
+		return wasmvmtypes.InvalidRequest{Err: "delete file is null"}
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*f)
+
+	msgDeleteFile := filetreetypes.NewMsgDeleteFile(
+		sender,
+		deleteFile.HashPath,
+		deleteFile.Account,
+	)
+
+	if err := msgDeleteFile.ValidateBasic(); err != nil {
+		return errorsmod.Wrap(err, "failed validating msgDeleteFile")
+	}
+
+	// Delete File
+	_, err := msgServer.DeleteFile(
+		sdk.WrapSDKContext(ctx),
+		msgDeleteFile,
+	)
+	if err != nil {
+		return errorsmod.Wrap(err, "failed to delete file:")
 	}
 	return nil
 }
