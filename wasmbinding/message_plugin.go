@@ -57,7 +57,6 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.DeleteFile != nil {
 			return m.deleteFile(ctx, contractAddr, contractMsg.DeleteFile, sender)
 		}
-
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg, sender)
 }

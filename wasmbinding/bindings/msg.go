@@ -7,6 +7,7 @@ type JackalMsg struct {
 	MakeRoot   *MakeRoot   `json:"make_root,omitempty"`
 	PostFiles  *PostFiles  `json:"post_files,omitempty"`
 	DeleteFile *DeleteFile `json:"delete_file,omitempty"`
+	BuyStorage *BuyStorage `json:"buy_storage,omitempty"`
 }
 
 type PostFiles struct {
@@ -29,4 +30,11 @@ type MakeRoot struct {
 type DeleteFile struct {
 	HashPath string `json:"hashpath"` // the full merklePath
 	Account  string `json:"account"`
+}
+
+type BuyStorage struct {
+	ForAddress   string `json:"foraddress"` // the full merklePath
+	Duration     string `json:"duration"`
+	Bytes        string `json:"bytes"` // the full merklePath
+	PaymentDenom string `json:"paymentdenom"`
 }
