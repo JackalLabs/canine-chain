@@ -12,6 +12,7 @@ import "canine_chain/storage/strays.proto";
 import "canine_chain/storage/fid_cid.proto";
 import "canine_chain/storage/payment_info.proto";
 
+
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
@@ -136,6 +137,12 @@ service Query {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/price_check/{duration}/{bytes}";
   }
+  // Queries the storage space used and purchased
+  rpc StorageStats(QueryStorageStatsRequest) returns (QueryStorageStatsResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/storage_stats";
+  }
+
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -278,6 +285,17 @@ message QueryPriceCheckRequest {
 
 message QueryPriceCheckResponse {
   int64 price = 1;
+}
+
+message QueryStorageStatsRequest {}
+
+message QueryStorageStatsResponse {
+  uint64 purchased = 1;
+  uint64 used = 2;
+  bytes usedRatio = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
 }
 
 // this line is used by starport scaffolding # 3

@@ -47,7 +47,7 @@ func GetQueryCmd(_ string) *cobra.Command {
 
 	cmd.AddCommand(CmdListStoragePaymentInfo())
 	cmd.AddCommand(CmdShowStoragePaymentInfo())
-
+	cmd.AddCommand(CmdGetStorageStats())
 	cmd.AddCommand(CmdCheckPrice())
 	// this line is used by starport scaffolding # 1
 
