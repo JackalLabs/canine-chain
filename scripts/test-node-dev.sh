@@ -5,7 +5,7 @@ KEY1="j2"
 KEY2="charlie"
 DEPOACCKEY="deposit_account"
 
-CHAINID="test-1"
+CHAINID="jackalwasm-1"
 MONIKER="localjack"
 KEYALGO="secp256k1"
 KEYRING="test"
