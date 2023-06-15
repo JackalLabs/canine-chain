@@ -3,7 +3,7 @@
 KEY="j1"
 KEY1="j2"
 KEY2="charlie"
-DEPOACCKEY="deposit_account"
+DEPOACCKEY="test-1"
 
 CHAINID="jackalwasm-1"
 MONIKER="localjack"
