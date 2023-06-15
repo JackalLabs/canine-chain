@@ -95,6 +95,8 @@ from_scratch
 # Opens the RPC endpoint to outside connections
 sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/.canine/config/config.toml
 sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.canine/config/config.toml
+sed -i 's/enable = false/enable = true/' ~/.canine/config/app.toml
+sed -i 's/enable-unsafe-cors = false/enable-unsafe-cors = true/' ~/.canine/config/app.toml
 
 trap "cleanup" SIGINT
 
