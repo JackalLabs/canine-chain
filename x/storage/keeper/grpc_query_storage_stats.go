@@ -21,6 +21,7 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 
 	var spacePurchased int64
 	var spaceUsed int64
+	var activeUsers uint64
 
 	for _, info := range payment {
 		if info.End.Before(time.Now()) {
@@ -28,6 +29,7 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 		}
 		spacePurchased += info.SpaceAvailable
 		spaceUsed += info.SpaceUsed
+		activeUsers++
 	}
 
 	decSpent := sdk.NewDec(spacePurchased)
@@ -36,8 +38,9 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 	ratio := decUsed.Quo(decSpent).MulInt64(100)
 
 	return &types.QueryStorageStatsResponse{
-		Purchased: uint64(spacePurchased),
-		Used:      uint64(spaceUsed),
-		UsedRatio: ratio,
+		Purchased:   uint64(spacePurchased),
+		Used:        uint64(spaceUsed),
+		UsedRatio:   ratio,
+		ActiveUsers: activeUsers,
 	}, nil
 }

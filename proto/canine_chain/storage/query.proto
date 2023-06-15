@@ -296,6 +296,7 @@ message QueryStorageStatsResponse {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
   ];
+  uint64 activeUsers = 4;
 }
 
 // this line is used by starport scaffolding # 3
