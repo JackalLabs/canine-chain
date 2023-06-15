@@ -3,9 +3,9 @@
 KEY="j1"
 KEY1="j2"
 KEY2="charlie"
-DEPOACCKEY="test-1"
+DEPOACCKEY="deposit_account"
 
-CHAINID="jackalwasm-1"
+CHAINID="test-1"
 MONIKER="localjack"
 KEYALGO="secp256k1"
 KEYRING="test"
