@@ -58,6 +58,17 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		if err != nil {
 			return nil, err
 		}
+
+		senderAddress, err := sdk.AccAddressFromBech32(msg.Creator)
+		if err != nil {
+			return nil, err
+		}
+		costCoins := sdk.NewCoins(sdk.NewCoin("ujkl", cost))
+		err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, senderAddress, types.ModuleName, costCoins)
+		if err != nil {
+			return nil, err
+		}
+
 		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
 		if err != nil {
 			return nil, err
