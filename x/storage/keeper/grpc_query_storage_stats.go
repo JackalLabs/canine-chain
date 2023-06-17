@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
@@ -24,7 +23,7 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 	var activeUsers uint64
 
 	for _, info := range payment {
-		if info.End.Before(time.Now()) {
+		if info.End.Before(ctx.BlockTime()) {
 			continue
 		}
 		spacePurchased += info.SpaceAvailable
