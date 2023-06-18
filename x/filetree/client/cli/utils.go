@@ -83,10 +83,9 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 	return encrypted, nil
 }
 
-func getCallerAddress(ctx client.Context, cmd *cobra.Command) (*string, error) {
-	_ = cmd
+func getCallerAddress(ctx client.Context) *string {
 	fromAddress := ctx.GetFromAddress().String()
-	return &fromAddress, nil
+	return &fromAddress
 }
 
 func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]string) ([]byte, []byte, error) {
