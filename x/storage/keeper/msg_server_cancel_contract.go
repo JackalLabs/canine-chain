@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -10,73 +11,75 @@ import (
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
-type contract struct {
-	Signee   string
-	Cid      string
-	Fid      string
-	Filesize string
-}
-
-func CanContract(ctx sdk.Context, root string, creator string, k Keeper) error {
-	var c contract
-
+func (k Keeper) CanContract(ctx sdk.Context, root string, creator string) error {
 	d, dealFound := k.GetActiveDeals(ctx, root)
+	s, strayFound := k.GetStrays(ctx, root)
 
-	s, found := k.GetStrays(ctx, root)
-	if !found {
-		if !dealFound {
-			return sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "no deal found")
+	var fileSize int64
+	var fid string
+	var signee string
+	var err error
+
+	// nolint
+	if dealFound {
+		signee = d.Signee
+		fid = d.Fid
+		fileSize, err = strconv.ParseInt(d.Filesize, 10, 64)
+		if err != nil {
+			return err
 		}
-		c.Cid = d.Cid
-		c.Signee = d.Signee
-		c.Fid = d.Fid
-		c.Filesize = d.Filesize
+	} else if strayFound {
+		signee = s.Signee
+		fid = s.Fid
+		fileSize, err = strconv.ParseInt(s.Filesize, 10, 64)
+		if err != nil {
+			return err
+		}
 	} else {
-		c.Cid = s.Cid
-		c.Signee = s.Signee
-		c.Fid = s.Fid
-		c.Filesize = s.Filesize
+		return types.ErrNoCid
 	}
 
-	if creator != c.Signee {
-		return sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot cancel a contract that isn't yours. %s is not %s", creator, c.Signee)
+	if creator != signee {
+		return sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot cancel a contract that isn't yours. %s is not %s", creator, signee)
 	}
 
-	k.RemoveStrays(ctx, c.Cid)
-	k.RemoveActiveDeals(ctx, c.Cid)
+	k.RemoveStrays(ctx, root)
+	k.RemoveActiveDeals(ctx, root)
 
-	ftc, found := k.GetFidCid(ctx, c.Fid)
-	if found {
+	newFidCid := types.FidCid{
+		Fid:  fid,
+		Cids: "",
+	}
+
+	ftc, found := k.GetFidCid(ctx, fid) // get existing FIDCID Mapping
+	cids := make([]string, 0)           // create new home for CID list
+	if found {                          // if found we remove the existing cid from the list
 		var ncids []string
-		err := json.Unmarshal([]byte(ftc.Cids), &ncids)
+		err := json.Unmarshal([]byte(ftc.Cids), &ncids) // getting all cids from the existing fid_cid
 		if err != nil {
 			return err
 		}
 
-		cids := make([]string, 0)
-		for _, v := range ncids {
+		for _, v := range ncids { // all all cids to the list again if they aren't the root
 			if v != root {
 				cids = append(cids, v)
 			}
 		}
-		b, err := json.Marshal(cids)
-		if err != nil {
-			return err
-		}
-		ftc.Cids = string(b)
-
-		k.SetFidCid(ctx, ftc)
 	}
+
+	b, err := json.Marshal(cids) // put em all back
+	if err != nil {
+		return err
+	}
+	newFidCid.Cids = string(b)
+
+	k.SetFidCid(ctx, newFidCid)
 
 	info, found := k.GetStoragePaymentInfo(ctx, creator)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrNotFound, "cannot find storage payment")
 	}
-	size, ok := sdk.NewIntFromString(c.Filesize)
-	if !ok {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidType, "cannot parse file size")
-	}
-	info.SpaceUsed -= size.Int64()
+	info.SpaceUsed -= fileSize
 	k.SetStoragePaymentInfo(ctx, info)
 
 	return nil
@@ -87,7 +90,7 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 
 	root := msg.Cid
 
-	err := CanContract(ctx, root, msg.Creator, k.Keeper)
+	err := k.Keeper.CanContract(ctx, root, msg.Creator)
 
 	return &types.MsgCancelContractResponse{}, err
 }
