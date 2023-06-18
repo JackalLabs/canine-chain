@@ -162,8 +162,12 @@ func TestAppImportExport(t *testing.T) {
 
 	t.Log("importing genesis...")
 
-	_, newDB, newDir, _, _, err := SetupSimulation("leveldb-app-sim-2", "Simulation-2")
+	simConfig, newDB, newDir, simLogger, simFlag, err := SetupSimulation("leveldb-app-sim-2", "Simulation-2")
 	require.NoError(t, err, "simulation setup failed")
+
+	_ = simConfig
+	_ = simLogger
+	_ = simFlag
 
 	defer func() {
 		newDB.Close()

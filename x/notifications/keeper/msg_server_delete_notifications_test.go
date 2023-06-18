@@ -9,7 +9,7 @@ import (
 
 func (suite *KeeperTestSuite) TestMsgDeleteNotifications() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
