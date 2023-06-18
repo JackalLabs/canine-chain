@@ -375,7 +375,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 				}
 			},
 			expErr:    true,
-			expErrMsg: "no deal found: key not found",
+			expErrMsg: "cid does not exist",
 		},
 
 		{
@@ -517,11 +517,20 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 			suite.Require().NotNil(tc.preRun)
 			c := tc.preRun()
 			_, err := msgSrvr.CancelContract(goCtx, c)
+
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
+				fidCid, found := suite.storageKeeper.GetFidCid(suite.ctx, "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x")
+				suite.Require().True(found)
+				var cids []string
+				err := json.Unmarshal([]byte(fidCid.Cids), &cids) // getting all cids from the existing fid_cid
+				if err != nil {
+					suite.Require().NoError(err)
+				}
+				suite.Require().Equal(0, len(cids))
 			}
 
 			if tc.postRun != nil {

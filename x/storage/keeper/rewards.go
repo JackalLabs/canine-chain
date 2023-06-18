@@ -171,7 +171,7 @@ func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, network
 		info, found := k.GetStoragePaymentInfo(ctx, deal.Signee)
 		if !found {
 			ctx.Logger().Debug(fmt.Sprintf("Removing %s due to no payment info", deal.Cid))
-			cerr := CanContract(ctx, deal.Cid, deal.Signee, k)
+			cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
 			if cerr != nil {
 				ctx.Logger().Error(cerr.Error())
 			}
@@ -180,7 +180,7 @@ func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, network
 		grace := info.End.Add(time.Hour * 24 * 30)
 		if grace.Before(ctx.BlockTime()) {
 			ctx.Logger().Debug(fmt.Sprintf("Removing %s after grace period", deal.Cid))
-			cerr := CanContract(ctx, deal.Cid, deal.Signee, k)
+			cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
 			if cerr != nil {
 				ctx.Logger().Error(cerr.Error())
 			}
@@ -189,7 +189,7 @@ func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, network
 
 		if info.SpaceUsed > info.SpaceAvailable { // remove file if the user doesn't have enough space
 			ctx.Logger().Debug(fmt.Sprintf("Removing %s for space used", deal.Cid))
-			err := CanContract(ctx, deal.Cid, deal.Signee, k)
+			err := k.CanContract(ctx, deal.Cid, deal.Signee)
 			if err != nil {
 				ctx.Logger().Error(err.Error())
 			}
