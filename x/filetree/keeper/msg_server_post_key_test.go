@@ -10,7 +10,7 @@ import (
 func (suite *KeeperTestSuite) TestMsgPostKey() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)

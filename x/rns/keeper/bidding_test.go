@@ -12,8 +12,7 @@ const TestName = "test.jkl"
 
 func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -76,8 +75,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 
 func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -115,8 +113,7 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 
 func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)

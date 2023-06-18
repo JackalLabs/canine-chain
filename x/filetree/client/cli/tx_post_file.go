@@ -34,10 +34,7 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			fromAddress, err := getCallerAddress(clientCtx, cmd)
-			if err != nil {
-				return err
-			}
+			fromAddress := getCallerAddress(clientCtx)
 
 			if argKeys == "" {
 				return filetypes.ErrMissingAESKey

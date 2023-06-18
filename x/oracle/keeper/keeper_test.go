@@ -55,11 +55,11 @@ func (suite *KeeperTestSuite) reset() {
 	suite.testAccs = CreateRandomAccounts(3)
 }
 
-func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
+func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, gocontext.Context) {
 	k := suite.oracleKeeper
 	oracle.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
 	ctx := sdk.WrapSDKContext(suite.ctx)
-	return keeper.NewMsgServerImpl(*k), *k, ctx
+	return keeper.NewMsgServerImpl(*k), ctx
 }
 
 func CreateRandomAccounts(numAccs int) []sdk.AccAddress {

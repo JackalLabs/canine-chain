@@ -41,11 +41,11 @@ func (suite *KeeperTestSuite) reset() {
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.filetreeKeeper)
 }
 
-func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
+func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, gocontext.Context) {
 	k := suite.filetreeKeeper
 	filetree.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
 	ctx := sdk.WrapSDKContext(suite.ctx)
-	return keeper.NewMsgServerImpl(*k), *k, ctx
+	return keeper.NewMsgServerImpl(*k), ctx
 }
 
 func TestFiletreeTestSuite(t *testing.T) {
