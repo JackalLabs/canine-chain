@@ -9,8 +9,7 @@ import (
 
 func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
