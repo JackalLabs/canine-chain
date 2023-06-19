@@ -2,6 +2,7 @@ package v4
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -14,7 +15,7 @@ type ParamGetterSetter interface {
 // The things done here are the following:
 // 1. setting up the next reason id and report id keys for existing subspaces
 // 2. setting up the module params
-func MigrateStore(ctx sdk.Context, pgs ParamGetterSetter) error {
+func MigrateStore(ctx sdk.Context, pgs ParamGetterSetter, paramsSubspace *paramstypes.Subspace) error {
 	ctx.Logger().Error("Migrating Storage Store to V4!")
 	params := pgs.GetParams(ctx)
 
@@ -23,9 +24,9 @@ func MigrateStore(ctx sdk.Context, pgs ParamGetterSetter) error {
 	params.AttestFormSize = 5
 	params.AttestMinToPass = 3
 
-	pgs.SetParams(ctx, params)
-
 	ctx.Logger().Info(params.String())
+
+	paramsSubspace.SetParamSet(ctx, &params)
 
 	ctx.Logger().Info("DONE MIGRATING!")
 
