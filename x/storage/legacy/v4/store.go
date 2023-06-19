@@ -19,12 +19,8 @@ func MigrateStore(ctx sdk.Context, pgs ParamGetterSetter, paramsSubspace *params
 	ctx.Logger().Error("Migrating Storage Store to V4!")
 	params := pgs.GetParams(ctx)
 
-	ctx.Logger().Info(params.String())
-
 	params.AttestFormSize = 5
 	params.AttestMinToPass = 3
-
-	ctx.Logger().Info(params.String())
 
 	paramsSubspace.SetParamSet(ctx, &params)
 

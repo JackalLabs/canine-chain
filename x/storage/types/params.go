@@ -19,6 +19,8 @@ var (
 	KeyPriceFeed              = []byte("PriceFeed")
 	KeyMaxContractAgeInBlocks = []byte("MaxContractAgeInBlocks")
 	KeyPricePerTbPerMonth     = []byte("PricePerTbPerMonth")
+	KeyAttestFormSize         = []byte("AttestFormSize")
+	KeyAttestMinToPass        = []byte("AttestMinToPass")
 )
 
 // ParamKeyTable the param key table for launch module
@@ -36,6 +38,8 @@ func NewParams() Params {
 		PriceFeed:              "jklprice",
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     8,
+		AttestMinToPass:        3,
+		AttestFormSize:         5,
 	}
 }
 
@@ -60,6 +64,14 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			KeyPricePerTbPerMonth,
 			&p.PricePerTbPerMonth,
 			validatePricePerTbPerMonth),
+		paramtypes.NewParamSetPair(
+			KeyAttestFormSize,
+			&p.AttestFormSize,
+			validateAttestFormSize),
+		paramtypes.NewParamSetPair(
+			KeyAttestMinToPass,
+			&p.AttestMinToPass,
+			validateAttestMinToPass),
 	}
 }
 
@@ -149,6 +161,32 @@ func validatePricePerTbPerMonth(i interface{}) error {
 
 	if v < 0 {
 		return errors.New("price per tb per month cannot be negative")
+	}
+
+	return nil
+}
+
+func validateAttestMinToPass(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v < 0 {
+		return errors.New("min to pass cannot be negative")
+	}
+
+	return nil
+}
+
+func validateAttestFormSize(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v < 0 {
+		return errors.New("form size cannot be negative")
 	}
 
 	return nil
