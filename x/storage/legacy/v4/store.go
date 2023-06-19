@@ -2,15 +2,22 @@ package v4
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 )
 
 // MigrateStore performs in-place store migrations from v1 to v2
 // The things done here are the following:
 // 1. setting up the next reason id and report id keys for existing subspaces
 // 2. setting up the module params
-func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
-	ctx.Logger().Error("MIGRATING STORAGE STORE!")
-	_ = paramsSubspace
+func MigrateStore(ctx sdk.Context, k *keeper.Keeper) error {
+	ctx.Logger().Error("Migrating Storage Store to V4!")
+	params := k.GetParams(ctx)
+
+	params.AttestFormSize = 5
+	params.AttestMinToPass = 3
+
+	k.SetParams(ctx, params)
+	ctx.Logger().Info("DONE MIGRATING!")
+
 	return nil
 }

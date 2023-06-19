@@ -16,6 +16,6 @@ var (
 	ErrFormNotFound        = sdkerrors.Register(ModuleName, 1115, "Cannot find attestation form")
 	ErrAttestInvalid       = sdkerrors.Register(ModuleName, 1116, "Cannot attest to form")
 	ErrAttestAlreadyExists = sdkerrors.Register(ModuleName, 1117, "Attest already exists")
-	ErrCannotVerifyProof  = sdkerrors.Register(ModuleName, 1118, "Cannot verify Proof")
-	ErrNoCid              = sdkerrors.Register(ModuleName, 1119, "cid does not exist")
+	ErrCannotVerifyProof   = sdkerrors.Register(ModuleName, 1118, "Cannot verify Proof")
+	ErrNoCid               = sdkerrors.Register(ModuleName, 1119, "cid does not exist")
 )
