@@ -11,9 +11,7 @@ import (
 )
 
 const ( // TODO: Figure out optimal values for these and replace them with chain params
-	FormSize  = 5
-	MinToPass = 3
-	True      = "true"
+	True = "true"
 )
 
 func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
@@ -24,7 +22,7 @@ func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 
 	done := false
 
-	count := 0
+	var count int64
 
 	attestations := form.Attestations
 	for _, attestation := range attestations {
@@ -42,7 +40,7 @@ func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 		return sdkerrors.Wrapf(types.ErrAttestInvalid, "you cannot attest to this deal")
 	}
 
-	if count < MinToPass {
+	if count < k.GetParams(ctx).AttestMinToPass {
 		form.Attestations = attestations
 		k.SetAttestationForm(ctx, form)
 		return nil
@@ -91,11 +89,13 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 
 	rand.Seed(ctx.BlockTime().UnixNano())
 
-	attestations := make([]*types.Attestation, FormSize)
+	params := k.GetParams(ctx)
 
-	providerAddresses := make([]string, FormSize)
+	attestations := make([]*types.Attestation, params.AttestFormSize)
 
-	for i := 0; i < FormSize; i++ {
+	providerAddresses := make([]string, params.AttestFormSize)
+
+	for i := 0; i < int(params.AttestFormSize); i++ {
 		p := providers[i]
 
 		providerAddresses[i] = p.Address

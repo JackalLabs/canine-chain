@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
@@ -132,6 +131,7 @@ func (suite *KeeperTestSuite) TestRemoveAttestationForm() {
 
 func (suite *KeeperTestSuite) TestMakeAttestation() {
 	suite.SetupSuite()
+	params := suite.storageKeeper.GetParams(suite.ctx)
 
 	addresses, err := testutil.CreateTestAddresses("jkl", 50)
 	suite.NoError(err)
@@ -179,7 +179,7 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 
 	for i, attestation := range form.Attestations {
 		err := suite.storageKeeper.Attest(suite.ctx, cid, attestation.Provider)
-		if i >= keeper.MinToPass {
+		if i >= int(params.AttestMinToPass) {
 			suite.Require().Error(err)
 		} else {
 			suite.Require().NoError(err)

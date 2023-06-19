@@ -2,12 +2,13 @@ package keeper_test
 
 import (
 	testutil "github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestAttest() {
-	addresses, err := testutil.CreateTestAddresses("cosmos", keeper.FormSize+2)
+	params := suite.storageKeeper.GetParams(suite.ctx)
+
+	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+2)
 	suite.Require().NoError(err)
 
 	validCid := "cid1"
@@ -20,7 +21,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 	}{
 		"attestation form not found": {
 			cid:     "I do not exist",
-			creator: addresses[keeper.FormSize],
+			creator: addresses[params.AttestFormSize],
 			expErr:  true,
 		},
 		"not requested provider": {
@@ -30,7 +31,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 		},
 		"active deal not found": {
 			cid:     noActiveDealCid,
-			creator: addresses[keeper.FormSize],
+			creator: addresses[params.AttestFormSize],
 			expErr:  true,
 		},
 	}
@@ -39,9 +40,9 @@ func (suite *KeeperTestSuite) TestAttest() {
 		suite.Run(name, func() {
 			suite.SetupSuite()
 
-			attestations := make([]*types.Attestation, keeper.FormSize)
+			attestations := make([]*types.Attestation, params.AttestFormSize)
 
-			for i := 0; i < keeper.FormSize; i++ {
+			for i := 0; i < int(params.AttestFormSize); i++ {
 				attestations[i] = &types.Attestation{
 					Provider: addresses[i],
 					Complete: false,
@@ -79,7 +80,9 @@ func (suite *KeeperTestSuite) TestAttest() {
 }
 
 func (suite *KeeperTestSuite) TestRequestAttestation() {
-	addresses, err := testutil.CreateTestAddresses("cosmos", keeper.FormSize+2)
+	params := suite.storageKeeper.GetParams(suite.ctx)
+
+	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+2)
 	suite.Require().NoError(err)
 
 	validCid := "cid1"
@@ -93,7 +96,7 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 	}{
 		"attestation already requested": {
 			cid:     requestedCid,
-			creator: addresses[keeper.FormSize],
+			creator: addresses[params.AttestFormSize],
 			expErr:  true,
 		},
 		"not provider's cid": {
@@ -103,7 +106,7 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 		},
 		"active deal not found": {
 			cid:     noActiveDealCid,
-			creator: addresses[keeper.FormSize],
+			creator: addresses[params.AttestFormSize],
 			expErr:  true,
 		},
 	}
@@ -112,16 +115,16 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 		suite.Run(name, func() {
 			suite.SetupSuite()
 
-			for i := 0; i < keeper.FormSize; i++ {
+			for i := 0; i < int(params.AttestFormSize); i++ {
 				provider := types.ActiveProviders{
 					Address: addresses[i],
 				}
 				suite.storageKeeper.SetActiveProviders(suite.ctx, provider)
 			}
 
-			attestations := make([]*types.Attestation, keeper.FormSize)
+			attestations := make([]*types.Attestation, params.AttestFormSize)
 
-			for i := 0; i < keeper.FormSize; i++ {
+			for i := 0; i < int(params.AttestFormSize); i++ {
 				attestations[i] = &types.Attestation{
 					Provider: addresses[i],
 					Complete: false,
@@ -136,7 +139,7 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
 
 			activeDeal := types.ActiveDeals{
-				Provider: addresses[keeper.FormSize],
+				Provider: addresses[params.AttestFormSize],
 				Cid:      validCid,
 			}
 			suite.storageKeeper.SetActiveDeals(suite.ctx, activeDeal)
