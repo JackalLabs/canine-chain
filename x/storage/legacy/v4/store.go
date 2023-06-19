@@ -17,12 +17,9 @@ type ParamGetterSetter interface {
 // 2. setting up the module params
 func MigrateStore(ctx sdk.Context, pgs ParamGetterSetter, paramsSubspace *paramstypes.Subspace) error {
 	ctx.Logger().Error("Migrating Storage Store to V4!")
-	params := pgs.GetParams(ctx)
 
-	params.AttestFormSize = 5
-	params.AttestMinToPass = 3
-
-	paramsSubspace.SetParamSet(ctx, &params)
+	paramsSubspace.Set(ctx, types.KeyAttestFormSize, 5)
+	paramsSubspace.Set(ctx, types.KeyAttestMinToPass, 3)
 
 	ctx.Logger().Info("DONE MIGRATING!")
 
