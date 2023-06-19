@@ -6,7 +6,7 @@ import (
 )
 
 type ParamGetterSetter interface {
-	GetParams(ctx sdk.Context) types.Params
+	GetParams(ctx sdk.Context) (p types.Params)
 	SetParams(ctx sdk.Context, params types.Params)
 }
 
@@ -14,14 +14,18 @@ type ParamGetterSetter interface {
 // The things done here are the following:
 // 1. setting up the next reason id and report id keys for existing subspaces
 // 2. setting up the module params
-func MigrateStore(ctx sdk.Context, k ParamGetterSetter) error {
+func MigrateStore(ctx sdk.Context, pgs ParamGetterSetter) error {
 	ctx.Logger().Error("Migrating Storage Store to V4!")
-	params := k.GetParams(ctx)
+	params := pgs.GetParams(ctx)
+
+	ctx.Logger().Info(params.String())
 
 	params.AttestFormSize = 5
 	params.AttestMinToPass = 3
 
-	k.SetParams(ctx, params)
+	pgs.SetParams(ctx, params)
+
+	ctx.Logger().Info(params.String())
 
 	ctx.Logger().Info("DONE MIGRATING!")
 
