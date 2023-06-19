@@ -638,7 +638,7 @@ func NewJackalApp(
 		app.AccountKeeper,
 		app.OracleKeeper,
 	)
-	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper)
+	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(storagemoduletypes.ModuleName))
 
 	/*
 
