@@ -126,8 +126,8 @@ service Query {
 
   // Queries a StoragePaymentInfo by address.
   rpc StoragePaymentInfo(QueryStoragePaymentInfoRequest) returns (QueryStoragePaymentInfoResponse) {
-    option (google.api.http).get = 
-        "/jackal-dao/canine-chain/storage/payment_info/{address}"; 
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/payment_info/{address}";
   }
 
   // Queries a list of StoragePaymentInfo items.
@@ -153,10 +153,10 @@ service Query {
   rpc ActiveProviders(QueryActiveProvidersRequest) returns (QueryActiveProvidersResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/active_providers";
-    }
-}
+  }
 
-// Queries the storage space used and purchased
+
+  // Queries the storage space used and purchased
   rpc StorageStats(QueryStorageStatsRequest) returns (QueryStorageStatsResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/storage_stats";
