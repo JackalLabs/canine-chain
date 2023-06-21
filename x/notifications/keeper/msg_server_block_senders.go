@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
 
 func (k msgServer) BlockSenders(goCtx context.Context, msg *types.MsgBlockSenders) (*types.MsgBlockSendersResponse, error) {

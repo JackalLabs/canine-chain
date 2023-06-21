@@ -13,7 +13,7 @@ import (
 	merkletree "github.com/wealdtech/go-merkletree"
 	"github.com/wealdtech/go-merkletree/sha3"
 
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 func VerifyDeal(merkle string, hashList string, num int64, item string) bool {

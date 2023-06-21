@@ -9,9 +9,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	testutil "github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 const tst = "testownercid"

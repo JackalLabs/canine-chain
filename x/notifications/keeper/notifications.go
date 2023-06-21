@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
 
 // SetNotifications set a specific notifications in the store from its index

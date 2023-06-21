@@ -3,7 +3,7 @@ package simulation
 import (
 	"encoding/json"
 
-	"github.com/jackalLabs/canine-chain/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
 
 func GetBlockedSenders(counter types.NotiCounter) (address []string) {

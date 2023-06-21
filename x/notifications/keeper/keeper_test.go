@@ -7,9 +7,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	notifications "github.com/jackalLabs/canine-chain/x/notifications"
-	"github.com/jackalLabs/canine-chain/x/notifications/keeper"
-	"github.com/jackalLabs/canine-chain/x/notifications/types"
+	notifications "github.com/jackalLabs/canine-chain/v3/x/notifications"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 	"github.com/stretchr/testify/suite"
 )
 

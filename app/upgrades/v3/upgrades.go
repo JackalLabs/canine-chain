@@ -7,9 +7,9 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibcfeetypes "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/types"
 	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
-	"github.com/jackalLabs/canine-chain/app/upgrades"
-	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
+	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}

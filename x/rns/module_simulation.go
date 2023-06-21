@@ -11,7 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	//	"github.com/jackalLabs/canine-chain/testutil/sample"
-	rnssimulation "github.com/jackalLabs/canine-chain/x/rns/simulation"
+	rnssimulation "github.com/jackalLabs/canine-chain/v3/x/rns/simulation"
 )
 
 // TODO: rewrite tests but don't use ignite

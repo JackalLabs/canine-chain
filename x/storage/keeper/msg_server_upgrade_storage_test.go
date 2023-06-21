@@ -2,8 +2,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestUpgradeStorage() {
