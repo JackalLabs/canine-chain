@@ -12,3 +12,23 @@ message Providers {
   string keybase_identity = 6;
   repeated string auth_claimers = 7;
 }
+
+message ActiveProviders {
+  string address = 1;
+}
+
+message Attestation {
+  string provider = 1;
+  bool complete = 2;
+}
+
+message AttestationForm {
+  repeated Attestation attestations = 1;
+  string cid = 2;
+}
+
+
+message Collateral {
+  string address = 1;
+  int64 amount = 2;
+}

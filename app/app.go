@@ -10,7 +10,7 @@ import (
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	v4 "github.com/jackalLabs/canine-chain/app/upgrades/v4"
+	"github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	"github.com/jackalLabs/canine-chain/app/upgrades"
@@ -264,21 +264,21 @@ var (
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:          nil,
-		distrtypes.ModuleName:               nil,
-		minttypes.ModuleName:                {authtypes.Minter},
-		stakingtypes.BondedPoolName:         {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:                 {authtypes.Burner},
-		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-		ibcfeetypes.ModuleName:              nil,
-		wasm.ModuleName:                     {authtypes.Burner},
-		rnsmoduletypes.ModuleName:           {authtypes.Minter, authtypes.Burner},
-		storagemoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
-		oraclemoduletypes.ModuleName:        nil,
-		notificationsmoduletypes.ModuleName: nil,
-		icatypes.ModuleName:                 nil,
-
+		authtypes.FeeCollectorName:                 nil,
+		distrtypes.ModuleName:                      nil,
+		minttypes.ModuleName:                       {authtypes.Minter},
+		stakingtypes.BondedPoolName:                {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:             {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                        {authtypes.Burner},
+		ibctransfertypes.ModuleName:                {authtypes.Minter, authtypes.Burner},
+		ibcfeetypes.ModuleName:                     nil,
+		wasm.ModuleName:                            {authtypes.Burner},
+		rnsmoduletypes.ModuleName:                  {authtypes.Minter, authtypes.Burner},
+		storagemoduletypes.ModuleName:              {authtypes.Minter, authtypes.Burner},
+		oraclemoduletypes.ModuleName:               nil,
+		notificationsmoduletypes.ModuleName:        nil,
+		icatypes.ModuleName:                        nil,
+		storagemoduletypes.CollateralCollectorName: nil,
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		*/
@@ -638,7 +638,7 @@ func NewJackalApp(
 		app.AccountKeeper,
 		app.OracleKeeper,
 	)
-	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper)
+	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(storagemoduletypes.ModuleName))
 
 	/*
 
@@ -1146,7 +1146,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
-	app.registerUpgrade(v4.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app

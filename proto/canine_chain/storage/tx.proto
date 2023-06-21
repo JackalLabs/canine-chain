@@ -14,12 +14,15 @@ service Msg {
   rpc SetProviderTotalspace(MsgSetProviderTotalspace)
       returns (MsgSetProviderTotalspaceResponse);
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
+  rpc ShutdownProvider(MsgShutdownProvider) returns (MsgShutdownProviderResponse);
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
   rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
   rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
+  rpc RequestAttestationForm(MsgRequestAttestationForm) returns (MsgRequestAttestationFormResponse);
+  rpc Attest(MsgAttest) returns (MsgAttestResponse);
 
 
   // this line is used by starport scaffolding # proto/tx/rpc
@@ -101,6 +104,13 @@ message MsgInitProvider {
 
 message MsgInitProviderResponse {}
 
+
+message MsgShutdownProvider {
+  string creator = 1;
+}
+
+message MsgShutdownProviderResponse {}
+
 message MsgCancelContract {
   string creator = 1;
   string cid = 2;
@@ -135,3 +145,22 @@ message MsgUpgradeStorage {
 }
 
 message MsgUpgradeStorageResponse {}
+
+message MsgRequestAttestationForm {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgRequestAttestationFormResponse {
+  repeated string providers = 1;
+  bool success = 2;
+  string error = 3;
+  string cid = 4;
+}
+
+message MsgAttest {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgAttestResponse {}

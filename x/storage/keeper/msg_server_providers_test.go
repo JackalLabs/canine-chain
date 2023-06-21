@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/jackalLabs/canine-chain/testutil"
 	"github.com/jackalLabs/canine-chain/x/storage/types"
 )
@@ -14,8 +15,13 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
-
 	user := testAddresses[0]
+
+	userAdr, err := sdk.AccAddressFromBech32(user)
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, userAdr, sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10000000000)))
+	suite.Require().NoError(err)
 
 	cases := []struct {
 		preRun    func() *types.MsgInitProvider

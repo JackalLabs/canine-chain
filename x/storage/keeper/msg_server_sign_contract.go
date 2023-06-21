@@ -68,8 +68,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		if err != nil {
 			return nil, err
 		}
-
-		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
+		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, costCoins)
 		if err != nil {
 			return nil, err
 		}

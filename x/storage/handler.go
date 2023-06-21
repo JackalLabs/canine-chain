@@ -38,6 +38,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgInitProvider:
 			res, err := msgServer.InitProvider(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgShutdownProvider:
+			res, err := msgServer.ShutdownProvider(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgCancelContract:
 			res, err := msgServer.CancelContract(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
@@ -55,6 +58,12 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgRemoveClaimer:
 			res, err := msgServer.RemoveProviderClaimer(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgRequestAttestationForm:
+			res, err := msgServer.RequestAttestationForm(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgAttest:
+			res, err := msgServer.Attest(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)

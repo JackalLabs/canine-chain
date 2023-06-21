@@ -19,6 +19,8 @@ const (
 	AddressPrefix = "jkl"
 	CidPrefix     = "jklc"
 	FidPrefix     = "jklf"
+
+	CollateralCollectorName = "storage_collateral_name"
 )
 
 func KeyPrefix(p string) []byte {

@@ -42,6 +42,30 @@ func CmdListProviders() *cobra.Command {
 	return cmd
 }
 
+func CmdListActiveProviders() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list-active-providers",
+		Short: "list all active providers",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+			params := &types.QueryActiveProvidersRequest{}
+			res, err := queryClient.ActiveProviders(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 func CmdShowProviders() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-providers [address]",

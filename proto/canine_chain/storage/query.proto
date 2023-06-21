@@ -59,6 +59,18 @@ service Query {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/providers";
   }
 
+  // Queries a Attestation by index.
+  rpc Attestation(QueryAttestationRequest) returns (QueryAttestationResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/attestations/{cid}";
+  }
+
+  // Queries a list of Attestation items.
+  rpc AttestationsAll(QueryAllAttestationsRequest)
+      returns (QueryAllAttestationsResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/attestations";
+  }
+
   // Queries a list of Freespace items.
   rpc Freespace(QueryFreespaceRequest) returns (QueryFreespaceResponse) {
     option (google.api.http).get =
@@ -114,8 +126,8 @@ service Query {
 
   // Queries a StoragePaymentInfo by address.
   rpc StoragePaymentInfo(QueryStoragePaymentInfoRequest) returns (QueryStoragePaymentInfoResponse) {
-    option (google.api.http).get = 
-        "/jackal-dao/canine-chain/storage/payment_info/{address}"; 
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/payment_info/{address}";
   }
 
   // Queries a list of StoragePaymentInfo items.
@@ -136,6 +148,13 @@ service Query {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/price_check/{duration}/{bytes}";
   }
+
+  // Queries whether user can upload a file based on size
+  rpc ActiveProviders(QueryActiveProvidersRequest) returns (QueryActiveProvidersResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/active_providers";
+  }
+
 
   // Queries the storage space used and purchased
   rpc StorageStats(QueryStorageStatsRequest) returns (QueryStorageStatsResponse) {
@@ -195,6 +214,22 @@ message QueryAllProvidersRequest {
 
 message QueryAllProvidersResponse {
   repeated Providers providers = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+message QueryAttestationRequest { string cid = 1; }
+
+message QueryAttestationResponse {
+  AttestationForm attestation = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllAttestationsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAttestationsResponse {
+  repeated AttestationForm attestations = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -284,6 +319,13 @@ message QueryPriceCheckRequest {
 
 message QueryPriceCheckResponse {
   int64 price = 1;
+}
+
+message QueryActiveProvidersRequest {
+}
+
+message QueryActiveProvidersResponse {
+  repeated ActiveProviders providers = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryStorageStatsRequest {}
