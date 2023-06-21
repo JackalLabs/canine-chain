@@ -100,13 +100,15 @@ startup
 
 from_scratch
 
-# Opens the RPC endpoint to outside connections
-#sed -e 's/enable = false/enable=true/'
-#sed -e 's/enable=false/enable=true/'
-#sed -e 's/enabled-unsafe-cors = false/enabled-unsafe-cors = true/'
-#sed -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/'
-#sed -e 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/'
-#sed -e 's/laddr = "tcp:\/\/127.0.0.1:26656"/laddr = "tcp:\/\/0.0.0.0:26656"/'
+sed -i.bak -e 's/stake/ujkl/' $HOME/.canine/config/genesis.json
+sed -i.bak -e 's/^minimum-gas-prices =""/minimum-gas-prices = \"0.0025ujkl\"/' $HOME/.canine/config/app.toml
+sed -i.bak -e 's/enable = false/enable=true/' $HOME/.canine/config/app.toml
+sed -i.bak -e 's/enable=false/enable=true/' $HOME/.canine/config/app.toml
+sed -i.bak -e 's/enabled-unsafe-cors = false/enabled-unsafe-cors = true/' $HOME/.canine/config/app.toml
+sed -i.bak -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/' $HOME/.canine/config/config.toml
+sed -i.bak -e 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/' $HOME/.canine/config/config.toml
+sed -i.bak -e 's/laddr = "tcp:\/\/127.0.0.1:26656"/laddr = "tcp:\/\/0.0.0.0:26656"/' $HOME/.canine/config/config.toml
+sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $HOME/.canine/config/client.toml
 
 trap "cleanup" SIGINT
 
