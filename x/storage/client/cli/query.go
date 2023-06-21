@@ -52,6 +52,8 @@ func GetQueryCmd(_ string) *cobra.Command {
 
 	cmd.AddCommand(CmdListAttestForms())
 	cmd.AddCommand(CmdShowAttestForms())
+
+	cmd.AddCommand(CmdListActiveProviders())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

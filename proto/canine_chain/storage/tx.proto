@@ -145,6 +145,7 @@ message MsgRequestAttestationForm {
 
 message MsgRequestAttestationFormResponse {
   repeated string providers = 1;
+  bool success = 2;
 }
 
 message MsgAttest {

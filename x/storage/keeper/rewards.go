@@ -74,7 +74,8 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		DayBlocks := k.GetParams(ctx).ProofWindow
 
 		if sb.Int64() >= ctx.BlockHeight()-DayBlocks {
-			return sdkerror.Wrapf(sdkerror.ErrUnauthorized, "ignore young deals")
+			ctx.Logger().Info("ignore young deals")
+			return nil
 		}
 
 		misses := intt.Int64() + 1
@@ -174,38 +175,49 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 
 func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, networkSize sdk.Dec, balance sdk.Coin) {
 	for _, deal := range allDeals {
-		info, found := k.GetStoragePaymentInfo(ctx, deal.Signee)
-		if !found {
-			ctx.Logger().Debug(fmt.Sprintf("Removing %s due to no payment info", deal.Cid))
-			cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
-			if cerr != nil {
-				ctx.Logger().Error(cerr.Error())
-			}
-			continue
-		}
-		grace := info.End.Add(time.Hour * 24 * 30)
-		if grace.Before(ctx.BlockTime()) {
-			ctx.Logger().Debug(fmt.Sprintf("Removing %s after grace period", deal.Cid))
-			cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
-			if cerr != nil {
-				ctx.Logger().Error(cerr.Error())
-			}
-			continue
-		}
-
-		if info.SpaceUsed > info.SpaceAvailable { // remove file if the user doesn't have enough space
-			ctx.Logger().Debug(fmt.Sprintf("Removing %s for space used", deal.Cid))
-			err := k.CanContract(ctx, deal.Cid, deal.Signee)
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-			}
-			continue
-		}
-
-		err := k.manageDealReward(ctx, deal, networkSize, balance)
+		end, err := strconv.ParseInt(deal.Endblock, 10, 64)
 		if err != nil {
 			ctx.Logger().Error(err.Error())
 			continue
+		}
+		ctx.Logger().Info(fmt.Sprintf("Is %d < %d?", end, ctx.BlockHeight()))
+		if end < ctx.BlockHeight() {
+			ctx.Logger().Info(fmt.Sprintf("%d < %d = true", end, ctx.BlockHeight()))
+
+			info, found := k.GetStoragePaymentInfo(ctx, deal.Signee)
+			if !found {
+
+				ctx.Logger().Debug(fmt.Sprintf("Removing %s due to no payment info", deal.Cid))
+				cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
+				if cerr != nil {
+					ctx.Logger().Error(cerr.Error())
+				}
+				continue
+
+			}
+			grace := info.End.Add(time.Hour * 24 * 30)
+			if grace.Before(ctx.BlockTime()) {
+				ctx.Logger().Debug(fmt.Sprintf("Removing %s after grace period", deal.Cid))
+				cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
+				if cerr != nil {
+					ctx.Logger().Error(cerr.Error())
+				}
+				continue
+			}
+
+			if info.SpaceUsed > info.SpaceAvailable { // remove file if the user doesn't have enough space
+				ctx.Logger().Debug(fmt.Sprintf("Removing %s for space used", deal.Cid))
+				err := k.CanContract(ctx, deal.Cid, deal.Signee)
+				if err != nil {
+					ctx.Logger().Error(err.Error())
+				}
+				continue
+			}
+		}
+
+		err = k.manageDealReward(ctx, deal, networkSize, balance)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
 		}
 
 	}

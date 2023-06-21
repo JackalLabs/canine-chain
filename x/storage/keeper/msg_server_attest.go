@@ -86,10 +86,13 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 	}
 
 	providers := k.GetActiveProviders(ctx) // get a random list of active providers
+	params := k.GetParams(ctx)
+
+	if len(providers) < int(params.AttestFormSize) {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidLengthQuery, "not enough providers online")
+	}
 
 	rand.Seed(ctx.BlockTime().UnixNano())
-
-	params := k.GetParams(ctx)
 
 	attestations := make([]*types.Attestation, params.AttestFormSize)
 
@@ -123,5 +126,11 @@ func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgR
 
 	providerAddresses, err := k.RequestAttestation(ctx, cid, creator)
 
-	return &types.MsgRequestAttestationFormResponse{Providers: providerAddresses}, err
+	success := true
+
+	if err != nil {
+		success = false
+	}
+
+	return &types.MsgRequestAttestationFormResponse{Providers: providerAddresses, Success: success}, nil
 }

@@ -148,6 +148,12 @@ service Query {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/price_check/{duration}/{bytes}";
   }
+
+  // Queries whether user can upload a file based on size
+  rpc ActiveProviders(QueryActiveProvidersRequest) returns (QueryActiveProvidersResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/active_providers";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -306,6 +312,13 @@ message QueryPriceCheckRequest {
 
 message QueryPriceCheckResponse {
   int64 price = 1;
+}
+
+message QueryActiveProvidersRequest {
+}
+
+message QueryActiveProvidersResponse {
+  repeated ActiveProviders providers = 1 [ (gogoproto.nullable) = false ];
 }
 
 // this line is used by starport scaffolding # 3
