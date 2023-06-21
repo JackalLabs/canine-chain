@@ -50,6 +50,7 @@ func GetQueryCmd(_ string) *cobra.Command {
 
 	cmd.AddCommand(CmdCheckPrice())
 	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(CmdGetStorageStats())
 
 	return cmd
 }
