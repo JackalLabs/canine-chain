@@ -126,11 +126,19 @@ func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgR
 
 	providerAddresses, err := k.RequestAttestation(ctx, cid, creator)
 
-	success := false
+	success := true
 
-	if err == nil {
-		success = true
+	errorString := ""
+
+	if err != nil {
+		success = false
+		errorString = err.Error()
 	}
 
-	return &types.MsgRequestAttestationFormResponse{Providers: providerAddresses, Success: success}, nil
+	return &types.MsgRequestAttestationFormResponse{
+		Providers: providerAddresses,
+		Success:   success,
+		Error:     errorString,
+		Cid:       cid,
+	}, nil
 }
