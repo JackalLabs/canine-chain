@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
 )
 
 // SetBids set a specific bids in the store from its index

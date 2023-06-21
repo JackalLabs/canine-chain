@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
 )
 
 // SetFeed set a specific Feed in the store from its index

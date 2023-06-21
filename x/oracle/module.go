@@ -16,9 +16,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackalLabs/canine-chain/x/oracle/client/cli"
-	"github.com/jackalLabs/canine-chain/x/oracle/keeper"
-	"github.com/jackalLabs/canine-chain/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v3/x/oracle/client/cli"
+	"github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
 )
 
 var (

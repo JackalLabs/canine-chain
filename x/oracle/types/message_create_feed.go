@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	apptypes "github.com/jackalLabs/canine-chain/types"
+	apptypes "github.com/jackalLabs/canine-chain/v3/types"
 )
 
 const TypeMsgCreateFeed = "create_feed"

@@ -9,10 +9,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	storage "github.com/jackalLabs/canine-chain/x/storage"
-	"github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagetestutil "github.com/jackalLabs/canine-chain/x/storage/testutil"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	storage "github.com/jackalLabs/canine-chain/v3/x/storage"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	storagetestutil "github.com/jackalLabs/canine-chain/v3/x/storage/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 	"github.com/stretchr/testify/suite"
 )
 

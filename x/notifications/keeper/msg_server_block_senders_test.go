@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"encoding/json"
 
-	"github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgBlockSenders() {

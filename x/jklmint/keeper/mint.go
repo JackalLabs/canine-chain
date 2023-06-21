@@ -5,8 +5,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/jklmint/types"
-	storeTypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	storeTypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 func (k Keeper) BlockMint(ctx sdk.Context) {
