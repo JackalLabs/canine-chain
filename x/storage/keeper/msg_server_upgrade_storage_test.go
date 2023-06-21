@@ -29,6 +29,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 		MissesToBurn:           3,
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     8,
+		CollateralPrice:        2,
 	})
 
 	cases := []struct {
