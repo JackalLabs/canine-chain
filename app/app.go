@@ -10,7 +10,7 @@ import (
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	v4 "github.com/jackalLabs/canine-chain/app/upgrades/v4"
+	"github.com/jackalLabs/canine-chain/app/upgrades/v3"
 
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	"github.com/jackalLabs/canine-chain/app/upgrades"
@@ -1146,7 +1146,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
-	app.registerUpgrade(v4.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
