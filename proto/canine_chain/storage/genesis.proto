@@ -23,6 +23,7 @@ message GenesisState {
   repeated Strays strays_list = 6 [ (gogoproto.nullable) = false ];
   repeated FidCid fid_cid_list = 5 [ (gogoproto.nullable) = false ];
   repeated StoragePaymentInfo payment_info_list = 7 [ (gogoproto.nullable) = false ];
+  repeated Collateral collateral_list = 8 [ (gogoproto.nullable) = false ];
 
   // this line is used by starport scaffolding # genesis/proto/state
 }

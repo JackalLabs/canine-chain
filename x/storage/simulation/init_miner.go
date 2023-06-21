@@ -16,11 +16,27 @@ import (
 func SimulateMsgInitProvider(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	_ keeper.Keeper,
+	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
+
+		_, found := k.GetProviders(ctx, simAccount.Address.String())
+		if found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitProvider, "provider already exists"), nil, nil
+		}
+
+		coins := sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10_000_000_000_000))
+		err := bk.MintCoins(ctx, types.ModuleName, coins)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitProvider, "failed to mint collateral"), nil, err
+		}
+		err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, coins)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitProvider, "failed to generate collateral"), nil, err
+		}
+
 		msg := &types.MsgInitProvider{
 			Creator:    simAccount.Address.String(),
 			Ip:         RandIPv4Url(r),
