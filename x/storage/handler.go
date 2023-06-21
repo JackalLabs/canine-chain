@@ -38,6 +38,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgInitProvider:
 			res, err := msgServer.InitProvider(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgShutdownProvider:
+			res, err := msgServer.ShutdownProvider(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgCancelContract:
 			res, err := msgServer.CancelContract(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

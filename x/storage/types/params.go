@@ -21,6 +21,7 @@ var (
 	KeyPricePerTbPerMonth     = []byte("PricePerTbPerMonth")
 	KeyAttestFormSize         = []byte("AttestFormSize")
 	KeyAttestMinToPass        = []byte("AttestMinToPass")
+	KeyCollateralPrice        = []byte("CollateralPrice")
 )
 
 // ParamKeyTable the param key table for launch module
@@ -40,6 +41,7 @@ func NewParams() Params {
 		PricePerTbPerMonth:     8,
 		AttestMinToPass:        3,
 		AttestFormSize:         5,
+		CollateralPrice:        10_000_000_000,
 	}
 }
 
@@ -72,7 +74,24 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			KeyAttestMinToPass,
 			&p.AttestMinToPass,
 			validateAttestMinToPass),
+		paramtypes.NewParamSetPair(
+			KeyCollateralPrice,
+			&p.CollateralPrice,
+			validateCollateralPrice),
 	}
+}
+
+func validateCollateralPrice(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v <= 1 {
+		return errors.New("collateral price must be greater than 1")
+	}
+
+	return nil
 }
 
 func validateProofWindow(i interface{}) error {

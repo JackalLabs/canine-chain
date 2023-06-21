@@ -23,6 +23,7 @@ func CmdProvider() *cobra.Command {
 		CmdInitProvider(),
 		CmdAddClaimer(),
 		CmdRemoveClaimer(),
+		CmdShutdownProvider(),
 	}
 
 	for _, c := range cmds {

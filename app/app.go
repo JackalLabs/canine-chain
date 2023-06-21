@@ -264,21 +264,21 @@ var (
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:          nil,
-		distrtypes.ModuleName:               nil,
-		minttypes.ModuleName:                {authtypes.Minter},
-		stakingtypes.BondedPoolName:         {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:                 {authtypes.Burner},
-		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-		ibcfeetypes.ModuleName:              nil,
-		wasm.ModuleName:                     {authtypes.Burner},
-		rnsmoduletypes.ModuleName:           {authtypes.Minter, authtypes.Burner},
-		storagemoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
-		oraclemoduletypes.ModuleName:        nil,
-		notificationsmoduletypes.ModuleName: nil,
-		icatypes.ModuleName:                 nil,
-
+		authtypes.FeeCollectorName:                 nil,
+		distrtypes.ModuleName:                      nil,
+		minttypes.ModuleName:                       {authtypes.Minter},
+		stakingtypes.BondedPoolName:                {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:             {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                        {authtypes.Burner},
+		ibctransfertypes.ModuleName:                {authtypes.Minter, authtypes.Burner},
+		ibcfeetypes.ModuleName:                     nil,
+		wasm.ModuleName:                            {authtypes.Burner},
+		rnsmoduletypes.ModuleName:                  {authtypes.Minter, authtypes.Burner},
+		storagemoduletypes.ModuleName:              {authtypes.Minter, authtypes.Burner},
+		oraclemoduletypes.ModuleName:               nil,
+		notificationsmoduletypes.ModuleName:        nil,
+		icatypes.ModuleName:                        nil,
+		storagemoduletypes.CollateralCollectorName: nil,
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		*/

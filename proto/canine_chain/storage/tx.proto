@@ -14,6 +14,7 @@ service Msg {
   rpc SetProviderTotalspace(MsgSetProviderTotalspace)
       returns (MsgSetProviderTotalspaceResponse);
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
+  rpc ShutdownProvider(MsgShutdownProvider) returns (MsgShutdownProviderResponse);
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
   rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
@@ -102,6 +103,13 @@ message MsgInitProvider {
 }
 
 message MsgInitProviderResponse {}
+
+
+message MsgShutdownProvider {
+  string creator = 1;
+}
+
+message MsgShutdownProviderResponse {}
 
 message MsgCancelContract {
   string creator = 1;

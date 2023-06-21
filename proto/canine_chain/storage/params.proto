@@ -21,4 +21,5 @@ message Params {
   int64 price_per_tb_per_month = 7;
   int64 attestFormSize = 8;
   int64 attestMinToPass = 9;
+  int64 collateralPrice = 10;
 }

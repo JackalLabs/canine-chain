@@ -8,6 +8,7 @@ const (
 	// ProvidersKeyPrefix is the prefix to retrieve all Providers
 	ProvidersKeyPrefix       = "Providers/value/"
 	ActiveProvidersKeyPrefix = "ActiveProviders/value/"
+	CollateralKeyPrefix      = "Collateral/value/"
 
 	AttestationKeyPrefix = "Attestation/value/"
 )
@@ -46,6 +47,19 @@ func AttestationKey(
 
 	cidBytes := []byte(cid)
 	key = append(key, cidBytes...)
+	key = append(key, []byte("/")...)
+
+	return key
+}
+
+// CollateralKey returns the store key to retrieve a Collateral Index from the index fields
+func CollateralKey(
+	address string,
+) []byte {
+	var key []byte
+
+	addressBytes := []byte(address)
+	key = append(key, addressBytes...)
 	key = append(key, []byte("/")...)
 
 	return key
