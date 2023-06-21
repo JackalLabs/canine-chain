@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/tendermint/libs/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 const ( // TODO: Figure out optimal values for these and replace them with chain params

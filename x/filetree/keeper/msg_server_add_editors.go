@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
 
 func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (*types.MsgAddEditorsResponse, error) {

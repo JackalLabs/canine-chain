@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 // SetStrays set a specific strays in the store from its index

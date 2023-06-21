@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
-	types "github.com/jackalLabs/canine-chain/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
+	types "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
 
 // NewHandler ...

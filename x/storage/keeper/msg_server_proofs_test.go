@@ -8,9 +8,9 @@ import (
 	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/testutil"
-	k "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
+	k "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
 	"github.com/wealdtech/go-merkletree"
 	"github.com/wealdtech/go-merkletree/sha3"

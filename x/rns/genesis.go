@@ -2,8 +2,8 @@ package rns
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/rns/keeper"
-	"github.com/jackalLabs/canine-chain/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

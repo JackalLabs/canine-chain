@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
 )
 
 // NewQuerier returns a minting Querier handler.
