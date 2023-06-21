@@ -153,6 +153,13 @@ service Query {
   rpc ActiveProviders(QueryActiveProvidersRequest) returns (QueryActiveProvidersResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/active_providers";
+    }
+}
+
+// Queries the storage space used and purchased
+  rpc StorageStats(QueryStorageStatsRequest) returns (QueryStorageStatsResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/storage_stats";
   }
 }
 
@@ -321,4 +328,15 @@ message QueryActiveProvidersResponse {
   repeated ActiveProviders providers = 1 [ (gogoproto.nullable) = false ];
 }
 
+message QueryStorageStatsRequest {}
+
+message QueryStorageStatsResponse {
+  uint64 purchased = 1;
+  uint64 used = 2;
+  bytes usedRatio = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
+  uint64 activeUsers = 4;
+}
 // this line is used by starport scaffolding # 3
