@@ -23,7 +23,7 @@ command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https
 OLD_VERSION=$1
 NEW_VERSION=$2
 SOFTWARE_UPGRADE_NAME=$3
-UPGRADE_HEIGHT=300
+UPGRADE_HEIGHT=30
 ROOT=$(pwd)
 
 # underscore so that go tool will not take gocache into account
