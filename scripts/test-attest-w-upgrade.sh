@@ -151,13 +151,9 @@ sleep 6
 
 sleep 6
 
-./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from charlie -y
+./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from charlie -y --deposit "20000000ujkl"
 
-sleep 6
-
-./../_build/old/canined tx gov deposit 1 "20000000ujkl" --from charlie -y
-
-sleep 6
+sleep 12
 
 ./../_build/old/canined tx gov vote 1 yes --from charlie -y
 
