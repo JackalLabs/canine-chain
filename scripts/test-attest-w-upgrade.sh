@@ -155,7 +155,7 @@ sleep 6
 
 sleep 7
 
-./../_build/old/canined tx gov vote 1 yes --from charlie -y
+./../_build/old/canined tx gov vote 1 yes --from $KEY -y
 
 sleep 30
 
