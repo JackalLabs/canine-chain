@@ -88,12 +88,12 @@ from_scratch () {
     update_test_genesis '.app_state["rns"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
 
     # adding providers to genesis
-    canined add-genesis-account jkl1xclg3utp4yuvaxa54r39xzrudc988s82ykve3f 1100000000000ujkl
-    canined add-genesis-account jkl1tcveayn80pe3d5wallj9kev3rfefctsmrqf6ks 1100000000000ujkl
-    canined add-genesis-account jkl1eg3gm3e3k4dypvvme26ejmajnyvtgwwlaaeu2y 1100000000000ujkl
-    canined add-genesis-account jkl1ga0348r8zhn8k4xy3fagwvkwzvyh5lynxr5kak 1100000000000ujkl
-    canined add-genesis-account jkl18encuf0esmxv3pxqjqvn0u4tgd6yzuc8urzlp0 1100000000000ujkl
-    canined add-genesis-account jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 1100000000000ujkl
+    canined add-genesis-account jkl1xclg3utp4yuvaxa54r39xzrudc988s82ykve3f 110000000000000ujkl
+    canined add-genesis-account jkl1tcveayn80pe3d5wallj9kev3rfefctsmrqf6ks 110000000000000ujkl
+    canined add-genesis-account jkl1eg3gm3e3k4dypvvme26ejmajnyvtgwwlaaeu2y 110000000000000ujkl
+    canined add-genesis-account jkl1ga0348r8zhn8k4xy3fagwvkwzvyh5lynxr5kak 110000000000000ujkl
+    canined add-genesis-account jkl18encuf0esmxv3pxqjqvn0u4tgd6yzuc8urzlp0 110000000000000ujkl
+    canined add-genesis-account jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 110000000000000ujkl
 
     # Allocate genesis accounts
     canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING
@@ -153,11 +153,7 @@ sleep 6
 
 ./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from charlie -y --deposit "20000000ujkl"
 
-sleep 12
-
-./../_build/old/canined tx gov vote 1 yes --from charlie -y
-
-sleep 6
+sleep 7
 
 ./../_build/old/canined tx gov vote 1 yes --from charlie -y
 
@@ -173,6 +169,27 @@ screen -d -m -L -S "provider4" bash -c "./scripts/start-provider.sh 8144389a23c6
 screen -d -m -L -S "provider5" bash -c "./scripts/start-provider.sh 0e019088a0fafa8f77cb5c0d0f6cb6b63a0015f20d2450480cbcdee44d170aab jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 5"
 
 echo "done!"
+
+# determine block_height to halt
+while true; do
+    BLOCK_HEIGHT=$(./../_build/old/canined status | jq '.SyncInfo.latest_block_height' -r)
+    if [ $BLOCK_HEIGHT = "$UPGRADE_HEIGHT" ]; then
+        # assuming running only 1 canined
+        echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING OLD ONE"
+        pkill canined
+        break
+    else
+        ./../_build/old/canined q storage list-active-deals --chain-id test --home $HOME
+        ./../_build/old/canined q storage list-strays --chain-id test --home $HOME
+        ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
+        ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
+        echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
+        sleep 2
+    fi
+done
+
+echo "killing old provider and starting new one"
+screen -d -m -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
 
 sleep 60
 
@@ -217,27 +234,6 @@ sleep 10
 canined tx storage sign-contract jklc14y6hk074svd8dyjg5g6c2xzkcfv4ge0w2ey96plr98k4pyepk5xq46wjkn --from charlie -y --pay-upfront
 
 sleep 20
-
-# determine block_height to halt
-while true; do
-    BLOCK_HEIGHT=$(./../_build/old/canined status | jq '.SyncInfo.latest_block_height' -r)
-    if [ $BLOCK_HEIGHT = "$UPGRADE_HEIGHT" ]; then
-        # assuming running only 1 canined
-        echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING OLD ONE"
-        pkill canined
-        break
-    else
-        ./../_build/old/canined q storage list-active-deals --chain-id test --home $HOME
-        ./../_build/old/canined q storage list-strays --chain-id test --home $HOME
-        ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
-        ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
-        echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
-        sleep 2
-    fi
-done
-
-echo "killing old provider and starting new one"
-canined start --pruning=nothing --minimum-gas-prices=0ujkl
 
 read -rsp $'Press any key to continue...\n' -n1 key
 
