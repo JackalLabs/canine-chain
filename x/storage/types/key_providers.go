@@ -11,6 +11,7 @@ const (
 	CollateralKeyPrefix      = "Collateral/value/"
 
 	AttestationKeyPrefix = "Attestation/value/"
+	ReportKeyPrefix      = "Report/value/"
 )
 
 // ActiveProvidersKey returns the store key to retrieve an Active Provider from the index fields
@@ -41,6 +42,19 @@ func ProvidersKey(
 
 // AttestationKey returns the store key to retrieve a Providers from the index fields
 func AttestationKey(
+	cid string,
+) []byte {
+	var key []byte
+
+	cidBytes := []byte(cid)
+	key = append(key, cidBytes...)
+	key = append(key, []byte("/")...)
+
+	return key
+}
+
+// ReportKey returns the store key to retrieve a Report from the index fields
+func ReportKey(
 	cid string,
 ) []byte {
 	var key []byte

@@ -9,31 +9,31 @@ import (
 )
 
 const (
-	TypeMsgRequestAttestationForm = "request_attest_form"
-	TypeMsgAttest                 = "attest"
+	TypeMsgRequestReportForm = "request_report_form"
+	TypeMsgReport            = "report"
 )
 
 var (
-	_ sdk.Msg = &MsgRequestAttestationForm{}
-	_ sdk.Msg = &MsgAttest{}
+	_ sdk.Msg = &MsgRequestReportForm{}
+	_ sdk.Msg = &MsgReport{}
 )
 
-func NewMsgRequestAttestationForm(creator string, cid string) *MsgRequestAttestationForm {
-	return &MsgRequestAttestationForm{
+func NewMsgRequestReportForm(creator string, cid string) *MsgRequestReportForm {
+	return &MsgRequestReportForm{
 		Creator: creator,
 		Cid:     cid,
 	}
 }
 
-func (msg *MsgRequestAttestationForm) Route() string {
+func (msg *MsgRequestReportForm) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgRequestAttestationForm) Type() string {
-	return TypeMsgRequestAttestationForm
+func (msg *MsgRequestReportForm) Type() string {
+	return TypeMsgRequestReportForm
 }
 
-func (msg *MsgRequestAttestationForm) GetSigners() []sdk.AccAddress {
+func (msg *MsgRequestReportForm) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -41,12 +41,12 @@ func (msg *MsgRequestAttestationForm) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgRequestAttestationForm) GetSignBytes() []byte {
+func (msg *MsgRequestReportForm) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgRequestAttestationForm) ValidateBasic() error {
+func (msg *MsgRequestReportForm) ValidateBasic() error {
 	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -65,22 +65,22 @@ func (msg *MsgRequestAttestationForm) ValidateBasic() error {
 	return nil
 }
 
-func NewMsgAttest(creator string, cid string) *MsgAttest {
-	return &MsgAttest{
+func NewMsgReport(creator string, cid string) *MsgReport {
+	return &MsgReport{
 		Creator: creator,
 		Cid:     cid,
 	}
 }
 
-func (msg *MsgAttest) Route() string {
+func (msg *MsgReport) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgAttest) Type() string {
-	return TypeMsgAttest
+func (msg *MsgReport) Type() string {
+	return TypeMsgReport
 }
 
-func (msg *MsgAttest) GetSigners() []sdk.AccAddress {
+func (msg *MsgReport) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -88,12 +88,12 @@ func (msg *MsgAttest) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgAttest) GetSignBytes() []byte {
+func (msg *MsgReport) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgAttest) ValidateBasic() error {
+func (msg *MsgReport) ValidateBasic() error {
 	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -106,7 +106,7 @@ func (msg *MsgAttest) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid (%s)", err)
 	}
-	if prefix != CidPrefix {
+	if prefix != "jklc" {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklc`", prefix))
 	}
 	return nil
