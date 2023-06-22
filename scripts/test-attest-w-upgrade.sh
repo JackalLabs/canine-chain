@@ -233,6 +233,14 @@ sleep 10
 
 canined tx storage sign-contract jklc14y6hk074svd8dyjg5g6c2xzkcfv4ge0w2ey96plr98k4pyepk5xq46wjkn --from charlie -y --pay-upfront
 
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/5.svg http://localhost:3335/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc1g80djchxzjxztkff98wrelh86ha0alhwu0j9ce84sqvljy8vpddsg637q5 --from charlie -y --pay-upfront
+
 sleep 20
 
 read -rsp $'Press any key to continue...\n' -n1 key
