@@ -39,8 +39,8 @@ mv build/canined ./../_build/old/canined
 git checkout $NEW_VERSION
 make install
 
-./../_build/old/canined version --home $HOME
-./../_build/old/canined config broadcast-mode block --home $HOME
+./../_build/old/canined version
+./../_build/old/canined config broadcast-mode block
 
 
 from_scratch () {
