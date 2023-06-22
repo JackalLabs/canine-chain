@@ -155,7 +155,7 @@ sleep 6
 
 sleep 6
 
-./../_build/old/canined tx gov deposit 1 "20000000${DENOM}" --from charlie -y
+./../_build/old/canined tx gov deposit 1 "20000000ujkl" --from charlie -y
 
 sleep 6
 
