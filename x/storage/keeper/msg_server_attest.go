@@ -64,7 +64,7 @@ func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.M
 
 	err := k.Keeper.Attest(ctx, msg.Cid, msg.Creator)
 	if err != nil {
-		return nil, err
+		ctx.Logger().Error(err.Error())
 	}
 
 	return &types.MsgAttestResponse{}, nil
