@@ -17,6 +17,7 @@ service Msg {
   rpc ShutdownProvider(MsgShutdownProvider) returns (MsgShutdownProviderResponse);
   rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
+  rpc BuyStorageToken(MsgBuyStorageToken) returns (MsgBuyStorageTokenResponse);
   rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
   rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
@@ -127,6 +128,15 @@ message MsgBuyStorage {
 }
 
 message MsgBuyStorageResponse {}
+
+
+message MsgBuyStorageToken {
+  string creator = 1;
+  int64 amount = 2;
+  string payment_denom = 3;
+}
+
+message MsgBuyStorageTokenResponse {}
 
 message MsgClaimStray {
   string creator = 1;

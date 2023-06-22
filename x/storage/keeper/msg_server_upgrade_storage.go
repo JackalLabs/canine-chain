@@ -39,8 +39,10 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 	currentBytes := payInfo.SpaceAvailable
 	currentGbs := currentBytes / gb
 
-	oldCost := k.GetStorageCost(ctx, currentGbs, proratedDurationInHour.TruncateInt64())
-
+	oldCost, err := k.GetStorageCost(ctx, currentGbs, proratedDurationInHour.TruncateInt64(), msg.PaymentDenom)
+	if err != nil {
+		return nil, err
+	}
 	// Get cost of new plan
 	duration, err := time.ParseDuration(msg.Duration)
 	if err != nil {
@@ -66,7 +68,10 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 	}
 
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
-	newCost := k.GetStorageCost(ctx, newGbs, hours.TruncateInt64())
+	newCost, err := k.GetStorageCost(ctx, newGbs, hours.TruncateInt64(), msg.PaymentDenom)
+	if err != nil {
+		return nil, err
+	}
 
 	price := newCost.Sub(oldCost)
 

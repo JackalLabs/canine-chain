@@ -53,7 +53,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		if s <= 0 {
 			s = 1
 		}
-		cost := k.GetStorageCost(ctx, s, 720*12*200) // pay for 200 years
+		cost, _ := k.GetStorageCost(ctx, s, 720*12*200, "ujkl") // pay for 200 years
 		deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
 		if err != nil {
 			return nil, err

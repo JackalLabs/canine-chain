@@ -17,8 +17,12 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	depoAccount := testAddresses[1]
 
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	jwls := sdk.NewCoins(sdk.NewCoin("ujwl", sdk.NewInt(8_000_000)))     // Send some coins to their account
+
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+	suite.Require().NoError(err)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, jwls)
 	suite.Require().NoError(err)
 
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
@@ -38,6 +42,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		msg       types.MsgBuyStorage
 		expErr    bool
 		tokens    int64
+		jwl       int64
 		expErrMsg string
 	}{
 		{
@@ -103,6 +108,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			},
 			expErr:    false,
 			tokens:    66666,
+			jwl:       0,
 			expErrMsg: "",
 		},
 		{
@@ -116,7 +122,22 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			},
 			expErr:    false,
 			tokens:    33333333,
+			jwl:       0,
 			expErrMsg: "",
+		},
+		{
+			testName: "successfully buy 1tb for 3 month with jwl",
+			msg: types.MsgBuyStorage{
+				Creator:      testAccount,
+				ForAddress:   testAccount,
+				Duration:     "2160h",
+				Bytes:        "1000000000000",
+				PaymentDenom: "ujwl",
+			},
+			expErr:    false,
+			tokens:    0,
+			expErrMsg: "",
+			jwl:       3_000_000,
 		},
 		{
 			testName: "buy less than a gb",
@@ -153,7 +174,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				PaymentDenom: "uatom",
 			},
 			expErr:    true,
-			expErrMsg: "cannot pay with anything other than ujkl: invalid coins",
+			expErrMsg: "cannot pay with anything other than ujkl or ujwl: cannot use uatom as payment: invalid coins",
 		},
 		{
 			testName: "invalid creator address",
@@ -185,24 +206,33 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	add, err := sdk.AccAddressFromBech32(dep)
 	suite.Require().NoError(err)
 	amt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl").Amount.Int64()
+	jwlamt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujwl").Amount.Int64()
 
 	for _, tc := range cases {
 		suite.Run(tc.testName, func() {
+			k.RemoveStoragePaymentInfo(suite.ctx, tc.msg.ForAddress)
+
 			if tc.preRun != nil {
 				tc.preRun()
 			}
+
 			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 
 			bal := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl")
 			diff := bal.Amount.Int64() - amt
 			amt = bal.Amount.Int64()
 
+			jwlbal := suite.bankKeeper.GetBalance(suite.ctx, add, "ujwl")
+			jwldiff := jwlbal.Amount.Int64() - jwlamt
+			jwlamt = jwlbal.Amount.Int64()
+
 			if tc.expErr {
-				suite.Require().Equal(int64(0), diff)
 				suite.Require().EqualError(err, tc.expErrMsg)
+				suite.Require().Equal(int64(0), diff)
 			} else {
 				suite.Require().NoError(err)
 				suite.Require().Equal(tc.tokens, diff)
+				suite.Require().Equal(tc.jwl, jwldiff)
 			}
 
 			k.RemoveStoragePaymentInfo(suite.ctx, testAccount)

@@ -37,8 +37,10 @@ func SimulateMsgBuyStorage(
 
 		t := time.Hour * 720
 		hours := sdk.NewDec(t.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
-		cost := k.GetStorageCost(ctx, int64(size), hours.TruncateInt64())
-
+		cost, err := k.GetStorageCost(ctx, int64(size), hours.TruncateInt64(), msg.PaymentDenom)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpgradeStorage, "cannot use payment denom"), nil, err
+		}
 		msg.Bytes = strconv.Itoa(size)
 		msg.Duration = t.String()
 

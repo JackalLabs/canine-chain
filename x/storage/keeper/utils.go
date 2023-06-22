@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
+	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
@@ -68,7 +69,7 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 
 // GetStorageCost calculates storage cost in ujkl
 // Uses gigabytes and months to calculate how much user has to pay
-func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int {
+func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64, denom string) (sdk.Int, error) {
 	pricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
 	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
 	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
@@ -78,15 +79,21 @@ func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int 
 
 	totalCost := pricePerHour.MulInt64(hours)
 
-	jklPrice := k.GetJklPrice(ctx)
-
-	// TODO: fetch denom unit from bank module
-	var ujklUnit int64 = 1000000
-	jklCost := totalCost.Quo(jklPrice)
-
-	ujklCost := jklCost.MulInt64(ujklUnit)
-
-	return ujklCost.TruncateInt()
+	switch denom {
+	case "ujkl":
+		jklPrice := k.GetJklPrice(ctx)
+		var ujklUnit int64 = 1000000
+		jklCost := totalCost.Quo(jklPrice)
+		ujklCost := jklCost.MulInt64(ujklUnit)
+		return ujklCost.TruncateInt(), nil
+	case "ujwl":
+		jwlCost := totalCost.Quo(sdk.NewDec(8).Quo(sdk.NewDec(3)))
+		ujwlCost := jwlCost.MulInt64(1000000)
+		ujklInt := ujwlCost.TruncateInt()
+		return ujklInt.Add(sdk.NewInt(1)), nil
+	default:
+		return sdk.NewInt(0), errors.Wrapf(errors.ErrInvalidCoins, "cannot use %s as payment", denom)
+	}
 }
 
 // GetJklPrice uses oracle module to get jkl price

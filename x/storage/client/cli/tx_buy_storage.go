@@ -46,3 +46,39 @@ func CmdBuyStorage() *cobra.Command {
 
 	return cmd
 }
+
+func CmdBuyStorageToken() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "mint-storage-token [amount] [payment-denom]",
+		Short: "Broadcast message buy-storage",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			argAmount := args[0]
+			argPaymentDenom := args[1]
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			amount, err := strconv.ParseInt(argAmount, 10, 64)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgBuyStorageToken(
+				clientCtx.GetFromAddress().String(),
+				amount,
+				argPaymentDenom,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}

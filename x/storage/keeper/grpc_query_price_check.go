@@ -38,7 +38,7 @@ func (k Keeper) PriceCheck(c context.Context, req *types.QueryPriceCheckRequest)
 	}
 
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
-	p := k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64())
+	p, _ := k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64(), "ujkl")
 
 	return &types.QueryPriceCheckResponse{Price: p.Int64()}, nil
 }

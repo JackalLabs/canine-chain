@@ -47,6 +47,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgBuyStorage:
 			res, err := msgServer.BuyStorage(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgBuyStorageToken:
+			res, err := msgServer.BuyStorageToken(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgClaimStray:
 			res, err := msgServer.ClaimStray(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

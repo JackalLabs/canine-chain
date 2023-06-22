@@ -10,9 +10,15 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgBuyStorage = "buy_storage"
+const (
+	TypeMsgBuyStorage      = "buy_storage"
+	TypeMsgBuyStorageToken = "buy_storage_token"
+)
 
-var _ sdk.Msg = &MsgBuyStorage{}
+var (
+	_ sdk.Msg = &MsgBuyStorage{}
+	_ sdk.Msg = &MsgBuyStorageToken{}
+)
 
 func NewMsgBuyStorage(creator string, forAddress string, duration string, bytes string, paymentDenom string) *MsgBuyStorage {
 	return &MsgBuyStorage{
@@ -73,6 +79,51 @@ func (msg *MsgBuyStorage) ValidateBasic() error {
 
 	if duration < 0 {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "duration cannot be negative (%s)", msg.Duration)
+	}
+
+	return nil
+}
+
+func NewMsgBuyStorageToken(creator string, amount int64, paymentDenom string) *MsgBuyStorageToken {
+	return &MsgBuyStorageToken{
+		Creator:      creator,
+		Amount:       amount,
+		PaymentDenom: paymentDenom,
+	}
+}
+
+func (msg *MsgBuyStorageToken) Route() string {
+	return RouterKey
+}
+
+func (msg *MsgBuyStorageToken) Type() string {
+	return TypeMsgBuyStorageToken
+}
+
+func (msg *MsgBuyStorageToken) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
+}
+
+func (msg *MsgBuyStorageToken) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg *MsgBuyStorageToken) ValidateBasic() error {
+	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+	if prefix != AddressPrefix {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+	}
+
+	if msg.Amount <= 0 {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "amount cannot be less than 1: %s", err)
 	}
 
 	return nil
