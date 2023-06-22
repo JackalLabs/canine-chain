@@ -58,11 +58,11 @@ from_scratch () {
 
 	  echo "flock stereo dignity lawsuit mouse page faith exact mountain clinic hazard parent arrest face couch asset jump feed benefit upper hair scrap loud spirit" | canined keys add $KEY2 --algo $KEYALGO --keyring-backend $KEYRING --recover
 
-    canined init $MONIKER --chain-id $CHAINID
+    ./../_build/old/canined init $MONIKER --chain-id $CHAINID
 
-	  canined config keyring-backend $KEYRING
-	  canined config chain-id $CHAINID
-	  canined config broadcast-mode $BROADCASTMODE
+	  ./../_build/old/canined config keyring-backend $KEYRING
+	  ./../_build/old/canined config chain-id $CHAINID
+	  ./../_build/old/canined config broadcast-mode $BROADCASTMODE
 
     # Function updates the config based on a jq argument as a string
     update_test_genesis () {
@@ -88,24 +88,24 @@ from_scratch () {
     update_test_genesis '.app_state["rns"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
 
     # adding providers to genesis
-    canined add-genesis-account jkl1xclg3utp4yuvaxa54r39xzrudc988s82ykve3f 110000000000000ujkl
-    canined add-genesis-account jkl1tcveayn80pe3d5wallj9kev3rfefctsmrqf6ks 110000000000000ujkl
-    canined add-genesis-account jkl1eg3gm3e3k4dypvvme26ejmajnyvtgwwlaaeu2y 110000000000000ujkl
-    canined add-genesis-account jkl1ga0348r8zhn8k4xy3fagwvkwzvyh5lynxr5kak 110000000000000ujkl
-    canined add-genesis-account jkl18encuf0esmxv3pxqjqvn0u4tgd6yzuc8urzlp0 110000000000000ujkl
-    canined add-genesis-account jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 110000000000000ujkl
+    ./../_build/old/canined add-genesis-account jkl1xclg3utp4yuvaxa54r39xzrudc988s82ykve3f 110000000000000ujkl
+    ./../_build/old/canined add-genesis-account jkl1tcveayn80pe3d5wallj9kev3rfefctsmrqf6ks 110000000000000ujkl
+    ./../_build/old/canined add-genesis-account jkl1eg3gm3e3k4dypvvme26ejmajnyvtgwwlaaeu2y 110000000000000ujkl
+    ./../_build/old/canined add-genesis-account jkl1ga0348r8zhn8k4xy3fagwvkwzvyh5lynxr5kak 110000000000000ujkl
+    ./../_build/old/canined add-genesis-account jkl18encuf0esmxv3pxqjqvn0u4tgd6yzuc8urzlp0 110000000000000ujkl
+    ./../_build/old/canined add-genesis-account jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 110000000000000ujkl
 
     # Allocate genesis accounts
-    canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING
-    canined add-genesis-account $DEPOACCKEY 10000000000ujkl  --keyring-backend $KEYRING
-    canined add-genesis-account $KEY1 10000000000ujkl  --keyring-backend $KEYRING
-    canined add-genesis-account $KEY2 10000000000ujkl  --keyring-backend $KEYRING
+    ./../_build/old/canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING
+    ./../_build/old/canined add-genesis-account $DEPOACCKEY 10000000000ujkl  --keyring-backend $KEYRING
+    ./../_build/old/canined add-genesis-account $KEY1 10000000000ujkl  --keyring-backend $KEYRING
+    ./../_build/old/canined add-genesis-account $KEY2 10000000000ujkl  --keyring-backend $KEYRING
 
-    canined gentx $KEY 1000000ujkl --keyring-backend $KEYRING --chain-id $CHAINID
+    ./../_build/old/canined gentx $KEY 1000000ujkl --keyring-backend $KEYRING --chain-id $CHAINID
 
-    canined collect-gentxs
+    ./../_build/old/canined collect-gentxs
 
-    canined validate-genesis
+    ./../_build/old/canined validate-genesis
 }
 
 startup() {
@@ -137,7 +137,7 @@ trap "cleanup" SIGINT
 rm screenlog.0
 
 # Start the node
-screen -d -m -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
+screen -d -m -S "canined" bash -c "./../_build/old/canined start --pruning=nothing --minimum-gas-prices=0ujkl"
 
 sleep 30
 
