@@ -240,3 +240,179 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	}
 	suite.reset()
 }
+
+func (suite *KeeperTestSuite) TestBuyStorageToken() {
+	suite.SetupSuite()
+	msgSrvr, k, ctx := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+	suite.Require().NoError(err)
+
+	testAccount := testAddresses[0]
+	depoAccount := testAddresses[1]
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	jwls := sdk.NewCoins(sdk.NewCoin("ujwl", sdk.NewInt(8_000_000)))     // Send some coins to their account
+
+	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+	suite.Require().NoError(err)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, jwls)
+	suite.Require().NoError(err)
+
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount:         depoAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     8,
+		CollateralPrice:        2,
+	})
+
+	cases := []struct {
+		testName  string
+		preRun    func()
+		msg       types.MsgBuyStorageToken
+		expErr    bool
+		tokens    int64
+		jwl       int64
+		expErrMsg string
+	}{
+		{
+			testName: "buy 3 tokens while having an active plan",
+			preRun: func() {
+				initialPayInfo := types.StoragePaymentInfo{
+					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
+					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
+					SpaceAvailable: 100_000_000_000,
+					SpaceUsed:      5_000_000_000,
+					Address:        testAccount,
+				}
+				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+			},
+			msg: types.MsgBuyStorageToken{
+				Creator:      testAccount,
+				Amount:       3,
+				PaymentDenom: "ujkl",
+			},
+			expErr: false,
+			tokens: 33333333,
+			jwl:    0,
+		},
+		{
+			testName: "successfully buy 6 tokens",
+			preRun: func() {
+				initialPayInfo := types.StoragePaymentInfo{
+					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
+					End:            suite.ctx.BlockTime().AddDate(0, 0, -1),
+					SpaceAvailable: 100_000_000_000,
+					SpaceUsed:      5_000_000_000,
+					Address:        testAccount,
+				}
+				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+			},
+			msg: types.MsgBuyStorageToken{
+				Creator:      testAccount,
+				Amount:       6,
+				PaymentDenom: "ujkl",
+			},
+			expErr:    false,
+			tokens:    66666666,
+			jwl:       0,
+			expErrMsg: "",
+		},
+		{
+			testName: "successfully buy 3 tokens",
+			msg: types.MsgBuyStorageToken{
+				Creator:      testAccount,
+				Amount:       3,
+				PaymentDenom: "ujkl",
+			},
+			expErr:    false,
+			tokens:    33333333,
+			jwl:       0,
+			expErrMsg: "",
+		},
+		{
+			testName: "successfully buy 3 tokens with jwl",
+			msg: types.MsgBuyStorageToken{
+				Creator:      testAccount,
+				Amount:       3,
+				PaymentDenom: "ujwl",
+			},
+			expErr:    true,
+			tokens:    0,
+			expErrMsg: "cannot buy ujwl with ujwl",
+			jwl:       0,
+		},
+		{
+			testName: "buy 0",
+			msg: types.MsgBuyStorageToken{
+				Creator:      testAccount,
+				Amount:       0,
+				PaymentDenom: "ujkl",
+			},
+			expErr:    true,
+			expErrMsg: "cannot buy less than a gb",
+		},
+		{
+			// TODO: update this when we allow alt payments
+			testName: "payment with uatom",
+			msg: types.MsgBuyStorageToken{
+				Creator:      testAccount,
+				Amount:       10,
+				PaymentDenom: "uatom",
+			},
+			expErr:    true,
+			expErrMsg: "cannot pay with anything other than ujkl or ujwl: cannot use uatom as payment: invalid coins",
+		},
+		{
+			testName: "invalid creator address",
+			msg: types.MsgBuyStorageToken{
+				Creator:      "invalid_address",
+				Amount:       1,
+				PaymentDenom: "ujkl",
+			},
+			expErr:    true,
+			expErrMsg: "decoding bech32 failed: invalid separator index -1",
+		},
+	}
+
+	dep := k.GetParams(suite.ctx).DepositAccount
+	add, err := sdk.AccAddressFromBech32(dep)
+	suite.Require().NoError(err)
+	amt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl").Amount.Int64()
+	jwlamt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujwl").Amount.Int64()
+
+	for _, tc := range cases {
+		suite.Run(tc.testName, func() {
+			if tc.preRun != nil {
+				tc.preRun()
+			}
+
+			_, err := msgSrvr.BuyStorageToken(ctx, &tc.msg)
+
+			bal := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl")
+			diff := bal.Amount.Int64() - amt
+			amt = bal.Amount.Int64()
+
+			jwlbal := suite.bankKeeper.GetBalance(suite.ctx, add, "ujwl")
+			jwldiff := jwlbal.Amount.Int64() - jwlamt
+			jwlamt = jwlbal.Amount.Int64()
+
+			if tc.expErr {
+				suite.Require().EqualError(err, tc.expErrMsg)
+				suite.Require().Equal(int64(0), diff)
+			} else {
+				suite.Require().NoError(err)
+				suite.Require().Equal(tc.tokens, diff)
+				suite.Require().Equal(tc.jwl, jwldiff)
+			}
+
+			k.RemoveStoragePaymentInfo(suite.ctx, testAccount)
+		})
+	}
+	suite.reset()
+}

@@ -87,7 +87,7 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 	balances := make(map[string]sdk.Coins)
 
 	// We don't track module account balances.
-	bankKeeper.EXPECT().MintCoins(gomock.Any(), minttypes.ModuleName, gomock.Any()).AnyTimes()
+	bankKeeper.EXPECT().MintCoins(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 	bankKeeper.EXPECT().BurnCoins(gomock.Any(), types.ModuleName, gomock.Any()).DoAndReturn(func(_ sdk.Context, moduleName string, coins sdk.Coins) error {
 		newBalance, negative := balances[modAccount.String()].SafeSub(coins)
 		if negative {

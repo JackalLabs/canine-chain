@@ -127,7 +127,11 @@ func (k msgServer) BuyStorageToken(goCtx context.Context, msg *types.MsgBuyStora
 		return nil, err
 	}
 
-	err = k.buyStorageInternal(ctx, msg.Creator, duration, 8_000_000_000_000*msg.Amount, msg.PaymentDenom, msg.Creator)
+	if msg.PaymentDenom == "ujwl" {
+		return nil, fmt.Errorf("cannot buy ujwl with ujwl")
+	}
+
+	err = k.buyStorageInternal(ctx, msg.Creator, duration, 1_000_000_000_000*msg.Amount, msg.PaymentDenom, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
