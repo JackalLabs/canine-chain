@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
@@ -36,6 +37,61 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 	suite.Require().Equal(res.Providers.Totalspace, provider.Totalspace)
 	suite.Require().Equal(res.Providers.BurnedContracts, provider.BurnedContracts)
 	suite.Require().Equal(res.Providers.Creator, provider.Creator)
+}
+
+// testing providers.go file
+func (suite *KeeperTestSuite) TestInitProviders() {
+	suite.SetupSuite()
+	msgSrvr, _, ctx := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	suite.Require().NoError(err)
+
+	user := testAddresses[0]
+
+	deposit := sdk.NewCoin("ujkl", sdk.NewInt(10_000_000_000))
+
+	coins := sdk.NewCoins(deposit) // Send some coins to their account
+	userAcc, _ := sdk.AccAddressFromBech32(user)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, userAcc, coins)
+
+	suite.Require().NoError(err)
+
+	initMsg := types.MsgInitProvider{
+		Creator:    user,
+		Ip:         "192.158.1.38",
+		Keybase:    "",
+		Totalspace: "9000",
+	}
+
+	_, err = msgSrvr.InitProvider(ctx, &initMsg)
+	suite.Require().NoError(err)
+
+	providerRequest := types.QueryProviderRequest{
+		Address: user,
+	}
+
+	res, err := suite.queryClient.Providers(suite.ctx.Context(), &providerRequest)
+	suite.Require().NoError(err)
+	suite.Require().Equal(res.Providers.Address, user)
+	suite.Require().Equal(res.Providers.Ip, initMsg.Ip)
+	suite.Require().Equal(res.Providers.Totalspace, initMsg.Totalspace)
+	suite.Require().Equal(res.Providers.BurnedContracts, "0")
+	suite.Require().Equal(res.Providers.Creator, initMsg.Creator)
+
+	coin := suite.bankKeeper.GetBalance(suite.ctx, userAcc, "ujkl")
+
+	suite.Require().Equal(sdk.NewInt(0), coin.Amount)
+
+	shutdownMsg := types.MsgShutdownProvider{
+		Creator: user,
+	}
+	_, err = msgSrvr.ShutdownProvider(ctx, &shutdownMsg)
+	suite.Require().NoError(err)
+
+	coin = suite.bankKeeper.GetBalance(suite.ctx, userAcc, "ujkl")
+
+	suite.Require().Equal(deposit.Amount, coin.Amount)
 }
 
 func (suite *KeeperTestSuite) TestGetProviders() {
