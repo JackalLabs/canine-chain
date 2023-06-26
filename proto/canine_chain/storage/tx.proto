@@ -23,6 +23,8 @@ service Msg {
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
   rpc RequestAttestationForm(MsgRequestAttestationForm) returns (MsgRequestAttestationFormResponse);
   rpc Attest(MsgAttest) returns (MsgAttestResponse);
+  rpc RequestReportForm(MsgRequestReportForm) returns (MsgRequestReportFormResponse);
+  rpc Report(MsgReport) returns (MsgReportResponse);
 
 
   // this line is used by starport scaffolding # proto/tx/rpc
@@ -164,3 +166,22 @@ message MsgAttest {
 }
 
 message MsgAttestResponse {}
+
+message MsgRequestReportForm {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgRequestReportFormResponse {
+  repeated string providers = 1;
+  bool success = 2;
+  string error = 3;
+  string cid = 4;
+}
+
+message MsgReport {
+  string creator = 1;
+  string cid = 2;
+}
+
+message MsgReportResponse {}

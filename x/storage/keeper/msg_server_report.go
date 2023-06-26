@@ -1,0 +1,133 @@
+package keeper
+
+import (
+	"context"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/tendermint/tendermint/libs/rand"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+)
+
+func (k Keeper) Report(ctx sdk.Context, cid string, creator string) error {
+	form, found := k.GetReportForm(ctx, cid)
+	if !found {
+		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this report")
+	}
+
+	done := false
+
+	var count int64
+
+	attestations := form.Attestations
+	for _, attestation := range attestations {
+		if attestation.Provider == creator {
+			attestation.Complete = true
+			done = true
+		}
+
+		if attestation.Complete {
+			count++
+		}
+	}
+
+	if !done {
+		return sdkerrors.Wrapf(types.ErrAttestInvalid, "you cannot attest to this deal")
+	}
+
+	if count < k.GetParams(ctx).AttestMinToPass {
+		form.Attestations = attestations
+		k.SetReportForm(ctx, form)
+		return nil
+	}
+
+	deal, found := k.GetActiveDeals(ctx, cid)
+
+	if !found {
+		return sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal from form")
+	}
+
+	k.RemoveReport(ctx, cid)
+
+	return k.DropDeal(ctx, deal)
+}
+
+func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.MsgReportResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.Keeper.Report(ctx, msg.Cid, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgReportResponse{}, nil
+}
+
+func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
+	_, found := k.GetActiveDeals(ctx, cid)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal for report form")
+	}
+
+	_, found = k.GetReportForm(ctx, cid)
+	if found {
+		return nil, sdkerrors.Wrapf(types.ErrAttestAlreadyExists, "report form already exists")
+	}
+
+	providers := k.GetActiveProviders(ctx) // get a random list of active providers
+	params := k.GetParams(ctx)
+
+	if len(providers) < int(params.AttestFormSize) {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidLengthQuery, "not enough providers online")
+	}
+
+	rand.Seed(ctx.BlockTime().UnixNano())
+
+	attestations := make([]*types.Attestation, params.AttestFormSize)
+
+	providerAddresses := make([]string, params.AttestFormSize)
+
+	for i := 0; i < int(params.AttestFormSize); i++ {
+		p := providers[i]
+
+		providerAddresses[i] = p.Address
+
+		attestations[i] = &types.Attestation{
+			Provider: p.Address,
+			Complete: false,
+		}
+	}
+
+	form := types.ReportForm{
+		Attestations: attestations,
+		Cid:          cid,
+	}
+
+	k.SetReportForm(ctx, form)
+
+	return providerAddresses, nil
+}
+
+func (k msgServer) RequestReportForm(goCtx context.Context, msg *types.MsgRequestReportForm) (*types.MsgRequestReportFormResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	cid := msg.Cid
+
+	providerAddresses, err := k.RequestReport(ctx, cid)
+
+	success := true
+
+	errorString := ""
+
+	if err != nil {
+		success = false
+		errorString = err.Error()
+	}
+
+	return &types.MsgRequestReportFormResponse{
+		Providers: providerAddresses,
+		Success:   success,
+		Error:     errorString,
+		Cid:       cid,
+	}, nil
+}
