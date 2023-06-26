@@ -71,3 +71,66 @@ func CmdShowAttestForms() *cobra.Command {
 
 	return cmd
 }
+
+func CmdListReportForms() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list-report-forms",
+		Short: "list report forms",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryAllReportRequest{
+				Pagination: pageReq,
+			}
+
+			res, err := queryClient.ReportsAll(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdShowReportForms() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "show-report-form [cid]",
+		Short: "shows an report form",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			argCid := args[0]
+
+			params := &types.QueryReportRequest{
+				Cid: argCid,
+			}
+
+			res, err := queryClient.Reports(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
