@@ -122,7 +122,7 @@ import (
 	wasmclient "github.com/JackalLabs/jackal-wasmd/x/wasm/client"
 	wasmkeeper "github.com/JackalLabs/jackal-wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackalLabs/canine-chain/v3/app/params"
-	owasm "github.com/jackalLabs/canine-chain/wasmbinding"
+	owasm "github.com/jackalLabs/canine-chain/v3/wasmbinding"
 
 	mint "github.com/jackalLabs/canine-chain/v3/x/jklmint"
 	mintkeeper "github.com/jackalLabs/canine-chain/v3/x/jklmint/keeper"

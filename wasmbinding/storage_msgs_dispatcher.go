@@ -4,9 +4,9 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
-	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagetypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/wasmbinding/bindings"
+	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	storagetypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 func (m *CustomMessenger) buyStorage(ctx sdk.Context, contractAddr sdk.AccAddress, buyStorage *bindings.BuyStorage, sender string) ([]sdk.Event, [][]byte, error) {

@@ -7,7 +7,7 @@ import (
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	bindings "github.com/jackalLabs/canine-chain/wasmbinding/bindings"
+	bindings "github.com/jackalLabs/canine-chain/v3/wasmbinding/bindings"
 )
 
 // CustomQuerier dispatches custom CosmWasm bindings queries.

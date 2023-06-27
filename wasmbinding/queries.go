@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
-	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v3/wasmbinding/bindings"
+	filetreekeeper "github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
 )
 
 type QueryPlugin struct {

@@ -9,10 +9,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/jackalLabs/canine-chain/wasmbinding/bindings"
-	filetreekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
-	filetreetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
-	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v3/wasmbinding/bindings"
+	filetreekeeper "github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
+	filetreetypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
