@@ -44,6 +44,9 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if err := json.Unmarshal(msg.Custom, &contractMsg); err != nil {
 			return nil, nil, errorsmod.Wrap(err, "Jackal msg")
 		}
+		if contractMsg.PostKey != nil {
+			return m.postKey(ctx, contractAddr, contractMsg.PostKey, sender)
+		}
 		if contractMsg.MakeRoot != nil {
 			// We forked wasmd to get the bech32 address of the user who executed the contract :D
 			// Perhaps we can take this up a notch and make wasmd consume the contract executor as sdk.AccAddress
@@ -62,6 +65,38 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg, sender)
+}
+
+// postKey posts a user's public key on chain for the encryption scheme
+func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey, sender string) ([]sdk.Event, [][]byte, error) {
+	err := PerformPostKey(m.filetree, ctx, contractAddr, postKey, sender)
+	if err != nil {
+		return nil, nil, errorsmod.Wrap(err, "perform post key")
+	}
+	return nil, nil, nil
+}
+
+// PerformMakeRoot is used with makeRoot to post a root Files struct to chain, as described above; validates the msgMakeRoot.
+func PerformPostKey(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey, sender string) error {
+	if postKey == nil {
+		return wasmvmtypes.InvalidRequest{Err: "post key null error"}
+	}
+
+	sdkMsg := filetreetypes.NewMsgPostkey(
+		sender,
+		postKey.Key,
+	)
+	if err := sdkMsg.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*f)
+	_, err := msgServer.Postkey(sdk.WrapSDKContext(ctx), sdkMsg)
+	if err != nil {
+		return errorsmod.Wrap(err, "post key error from message")
+	}
+
+	return nil
 }
 
 // makeRoot posts a Files struct on chain that serves as the root directory for the user's filetree
