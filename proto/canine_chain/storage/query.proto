@@ -71,6 +71,18 @@ service Query {
     option (google.api.http).get = "/jackal-dao/canine-chain/storage/attestations";
   }
 
+  // Queries a Report by index.
+  rpc Reports(QueryReportRequest) returns (QueryReportResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/reports/{cid}";
+  }
+
+  // Queries a list of Attestation items.
+  rpc ReportsAll(QueryAllReportRequest)
+      returns (QueryAllReportResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/storage/reports";
+  }
+
   // Queries a list of Freespace items.
   rpc Freespace(QueryFreespaceRequest) returns (QueryFreespaceResponse) {
     option (google.api.http).get =
@@ -126,8 +138,8 @@ service Query {
 
   // Queries a StoragePaymentInfo by address.
   rpc StoragePaymentInfo(QueryStoragePaymentInfoRequest) returns (QueryStoragePaymentInfoResponse) {
-    option (google.api.http).get = 
-        "/jackal-dao/canine-chain/storage/payment_info/{address}"; 
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/payment_info/{address}";
   }
 
   // Queries a list of StoragePaymentInfo items.
@@ -147,6 +159,19 @@ service Query {
   rpc PriceCheck(QueryPriceCheckRequest) returns (QueryPriceCheckResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/price_check/{duration}/{bytes}";
+  }
+
+  // Queries whether user can upload a file based on size
+  rpc ActiveProviders(QueryActiveProvidersRequest) returns (QueryActiveProvidersResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/active_providers";
+  }
+
+
+  // Queries the storage space used and purchased
+  rpc StorageStats(QueryStorageStatsRequest) returns (QueryStorageStatsResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/storage_stats";
   }
 }
 
@@ -217,6 +242,22 @@ message QueryAllAttestationsRequest {
 
 message QueryAllAttestationsResponse {
   repeated AttestationForm attestations = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+message QueryReportRequest { string cid = 1; }
+
+message QueryReportResponse {
+  ReportForm report = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllReportRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllReportResponse {
+  repeated ReportForm reports = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -308,4 +349,22 @@ message QueryPriceCheckResponse {
   int64 price = 1;
 }
 
+message QueryActiveProvidersRequest {
+}
+
+message QueryActiveProvidersResponse {
+  repeated ActiveProviders providers = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryStorageStatsRequest {}
+
+message QueryStorageStatsResponse {
+  uint64 purchased = 1;
+  uint64 used = 2;
+  bytes usedRatio = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
+  uint64 activeUsers = 4;
+}
 // this line is used by starport scaffolding # 3

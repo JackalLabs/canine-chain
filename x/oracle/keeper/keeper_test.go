@@ -10,10 +10,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	oracle "github.com/jackalLabs/canine-chain/x/oracle"
-	"github.com/jackalLabs/canine-chain/x/oracle/keeper"
-	oracletestutil "github.com/jackalLabs/canine-chain/x/oracle/testutil"
-	"github.com/jackalLabs/canine-chain/x/oracle/types"
+	oracle "github.com/jackalLabs/canine-chain/v3/x/oracle"
+	"github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
+	oracletestutil "github.com/jackalLabs/canine-chain/v3/x/oracle/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -55,11 +55,11 @@ func (suite *KeeperTestSuite) reset() {
 	suite.testAccs = CreateRandomAccounts(3)
 }
 
-func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
+func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, gocontext.Context) {
 	k := suite.oracleKeeper
 	oracle.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
 	ctx := sdk.WrapSDKContext(suite.ctx)
-	return keeper.NewMsgServerImpl(*k), *k, ctx
+	return keeper.NewMsgServerImpl(*k), ctx
 }
 
 func CreateRandomAccounts(numAccs int) []sdk.AccAddress {

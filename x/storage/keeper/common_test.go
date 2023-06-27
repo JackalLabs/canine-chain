@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	oracletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
+	oracletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
 
@@ -15,15 +15,15 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	moduletestutil "github.com/jackalLabs/canine-chain/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
+	moduletestutil "github.com/jackalLabs/canine-chain/v3/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/golang/mock/gomock"
-	canineglobaltestutil "github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagetestutil "github.com/jackalLabs/canine-chain/x/storage/testutil"
-	types "github.com/jackalLabs/canine-chain/x/storage/types"
+	canineglobaltestutil "github.com/jackalLabs/canine-chain/v3/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	storagetestutil "github.com/jackalLabs/canine-chain/v3/x/storage/testutil"
+	types "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 // setupStorageKeeper creates a storageKeeper as well as all its dependencies.
@@ -99,7 +99,7 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 	bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), minttypes.ModuleName, types.ModuleName, gomock.Any()).AnyTimes()
 
 	// But we do track normal account balances.
-	bankKeeper.EXPECT().SendCoinsFromAccountToModule(gomock.Any(), gomock.Any(), types.ModuleName, gomock.Any()).DoAndReturn(func(_ sdk.Context, sender sdk.AccAddress, _ string, coins sdk.Coins) error {
+	bankKeeper.EXPECT().SendCoinsFromAccountToModule(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, sender sdk.AccAddress, _ string, coins sdk.Coins) error {
 		newBalance, negative := balances[sender.String()].SafeSub(coins) // in v0.46, this method is variadic
 		if negative {
 			return fmt.Errorf("not enough balance")

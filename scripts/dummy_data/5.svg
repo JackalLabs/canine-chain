@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg6059"
+   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
+   sodipodi:docname="roma banner.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview6061"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.4204826"
+     inkscape:cx="414.99933"
+     inkscape:cy="72.5357"
+     inkscape:window-width="1366"
+     inkscape:window-height="847"
+     inkscape:window-x="109"
+     inkscape:window-y="47"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs6056">
+    <linearGradient
+       id="grad">
+      <stop
+         style="stop-color:#3188df;stop-opacity:1;"
+         offset="0.06820289"
+         id="stop7665" />
+      <stop
+         style="stop-color:#e03737;stop-opacity:1;"
+         offset="0.67095053"
+         id="stop7667" />
+      <stop
+         style="stop-color:#ffdf00;stop-opacity:1;"
+         offset="1"
+         id="stop7669" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#grad"
+       id="linearGradient14452"
+       x1="32.296814"
+       y1="251.35451"
+       x2="168.86551"
+       y2="196.72433"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.4031,0,0,1.4783495,-52.090089,-289.30234)" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:url(#linearGradient14452);fill-opacity:1;stroke-width:14.1272"
+       id="rect14444"
+       width="196"
+       height="80"
+       x="0"
+       y="0"
+       inkscape:export-filename="banner.png"
+       inkscape:export-xdpi="103.67347"
+       inkscape:export-ydpi="103.67347" />
+    <g
+       id="g1198"
+       transform="matrix(0.5,0,0,0.5,69.5,16)"
+       style="fill:#ffffff;fill-opacity:1">
+      <path
+         id="rect286"
+         style="stroke-width:4.70451"
+         d="M 3,0 H 111 V 14 H 3 Z" />
+      <path
+         id="rect286-5"
+         style="stroke-width:4.52692"
+         d="M 7,18 H 107 V 32 H 7 Z" />
+      <path
+         id="rect286-9"
+         style="stroke-width:3.38764"
+         d="M 14,36 H 28 V 92 H 14 Z" />
+      <path
+         id="rect286-9-6"
+         style="stroke-width:3.50654"
+         d="M 32,36 H 46 V 96 H 32 Z" />
+      <path
+         id="rect286-9-7"
+         style="stroke-width:3.50654"
+         d="M 50,36 H 64 V 96 H 50 Z" />
+      <path
+         id="rect286-9-6-8"
+         style="stroke-width:3.50654"
+         d="M 68,36 H 82 V 96 H 68 Z" />
+      <path
+         id="rect286-9-6-8-3"
+         style="stroke-width:3.38764"
+         d="m 86,36 h 14 V 92 H 86 Z" />
+    </g>
+  </g>
+</svg>

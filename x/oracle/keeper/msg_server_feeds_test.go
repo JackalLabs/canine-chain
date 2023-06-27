@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/jackalLabs/canine-chain/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -44,7 +44,7 @@ func (suite *KeeperTestSuite) TestCreateFeed() {
 	for name, tc := range cases {
 		suite.Run(name, func() {
 			suite.SetupSuite()
-			msgSrvr, _, _ := setupMsgServer(suite)
+			msgSrvr, _ := setupMsgServer(suite)
 			suite.oracleKeeper.SetFeed(suite.ctx, genesisFeed)
 
 			// TODO: setup simulation and use that instead
@@ -111,7 +111,7 @@ func (suite *KeeperTestSuite) TestUpdateFeed() {
 		suite.Run(name, func() {
 			suite.reset()
 			suite.oracleKeeper.SetFeed(suite.ctx, genesisFeed)
-			msgSrvr, _, wctx := setupMsgServer(suite)
+			msgSrvr, wctx := setupMsgServer(suite)
 
 			result, err := msgSrvr.UpdateFeed(wctx, &types.MsgUpdateFeed{
 				Name:    tc.name,

@@ -7,9 +7,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	notifications "github.com/jackalLabs/canine-chain/x/notifications"
-	"github.com/jackalLabs/canine-chain/x/notifications/keeper"
-	"github.com/jackalLabs/canine-chain/x/notifications/types"
+	notifications "github.com/jackalLabs/canine-chain/v3/x/notifications"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -41,11 +41,11 @@ func (suite *KeeperTestSuite) reset() {
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.notificationsKeeper)
 }
 
-func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
+func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, gocontext.Context) {
 	k := suite.notificationsKeeper
 	notifications.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
 	ctx := sdk.WrapSDKContext(suite.ctx)
-	return keeper.NewMsgServerImpl(*k), *k, ctx
+	return keeper.NewMsgServerImpl(*k), ctx
 }
 
 func TestNotificationsTestSuite(t *testing.T) {

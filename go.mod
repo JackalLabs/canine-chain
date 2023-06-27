@@ -1,4 +1,4 @@
-module github.com/jackalLabs/canine-chain
+module github.com/jackalLabs/canine-chain/v3
 
 go 1.20
 
@@ -6,19 +6,19 @@ require (
 	github.com/CosmWasm/wasmvm v1.2.3
 	// github.com/JackalLabs/jackal-wasmd v0.32.1
 	github.com/cosmos/cosmos-sdk v0.45.17
-	github.com/cosmos/ibc-go/v4 v4.4.1
+	github.com/cosmos/ibc-go/v4 v4.4.2
 	github.com/ecies/go/v2 v2.0.6
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.3
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/prometheus/client_golang v1.15.1
+	github.com/prometheus/client_golang v1.16.0
 	github.com/rakyll/statik v0.1.7
 	github.com/rs/cors v1.8.2 // indirect
 	github.com/spf13/cast v1.5.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7 // indirect
 	github.com/tendermint/tendermint v0.34.27
 	github.com/tendermint/tm-db v0.6.7
@@ -136,7 +136,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
-	github.com/prometheus/procfs v0.9.0 // indirect
+	github.com/prometheus/procfs v0.10.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/rs/zerolog v1.27.0 // indirect
@@ -151,7 +151,7 @@ require (
 	go.etcd.io/bbolt v1.3.7 // indirect
 	golang.org/x/crypto v0.8.0 // indirect
 	golang.org/x/net v0.9.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/term v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
@@ -168,7 +168,7 @@ replace (
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
 	// using jackal labs free post proof ante handler - better way to do this in the future.
-	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230525190516-b9142076b70c
+	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230621230708-909a2d048774
 	//github.com/cosmos/cosmos-sdk => ../cosmos-sdk
 
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.

@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 func SimulateMsgPostContract(

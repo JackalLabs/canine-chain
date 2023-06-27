@@ -6,8 +6,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/app"
-	"github.com/jackalLabs/canine-chain/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v3/app"
+	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )

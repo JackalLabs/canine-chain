@@ -106,7 +106,7 @@ func (msg *MsgAttest) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid (%s)", err)
 	}
-	if prefix != "jklc" {
+	if prefix != CidPrefix {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklc`", prefix))
 	}
 	return nil

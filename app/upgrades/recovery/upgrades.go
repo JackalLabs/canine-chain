@@ -5,8 +5,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/jackalLabs/canine-chain/app/upgrades"
-	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
+	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}

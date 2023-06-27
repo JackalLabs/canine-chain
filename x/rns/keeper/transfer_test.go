@@ -2,15 +2,14 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/rns/keeper"
-	"github.com/jackalLabs/canine-chain/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgTransfer() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)

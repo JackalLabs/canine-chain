@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -53,4 +53,17 @@ func (k Keeper) Providers(c context.Context, req *types.QueryProviderRequest) (*
 	}
 
 	return &types.QueryProviderResponse{Providers: val}, nil
+}
+
+func (k Keeper) ActiveProviders(c context.Context, req *types.QueryActiveProvidersRequest) (*types.QueryActiveProvidersResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	providers := k.GetAllActiveProviders(
+		ctx,
+	)
+
+	return &types.QueryActiveProvidersResponse{Providers: providers}, nil
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	eciesgo "github.com/ecies/go/v2"
-	filetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+	filetypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -83,10 +83,9 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 	return encrypted, nil
 }
 
-func getCallerAddress(ctx client.Context, cmd *cobra.Command) (*string, error) {
-	_ = cmd
+func getCallerAddress(ctx client.Context) *string {
 	fromAddress := ctx.GetFromAddress().String()
-	return &fromAddress, nil
+	return &fromAddress
 }
 
 func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]string) ([]byte, []byte, error) {

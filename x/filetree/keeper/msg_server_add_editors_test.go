@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgAddEditors() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)

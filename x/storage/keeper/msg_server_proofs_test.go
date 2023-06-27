@@ -8,9 +8,9 @@ import (
 	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/testutil"
-	k "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
+	k "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
 	"github.com/wealdtech/go-merkletree"
 	"github.com/wealdtech/go-merkletree/sha3"
@@ -136,6 +136,9 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	testProvider, err := sdk.AccAddressFromBech32(testAddresses[2])
 	suite.Require().NoError(err)
 
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testProvider, sdk.NewCoins(sdk.NewInt64Coin("ujkl", 100000000)))
+	suite.Require().NoError(err)
+
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
 		DepositAccount:         depoAccount,
 		ProofWindow:            50,
@@ -144,6 +147,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		MissesToBurn:           3,
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     8,
+		CollateralPrice:        2,
 	})
 
 	// Init Provider

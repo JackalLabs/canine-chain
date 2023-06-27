@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	uuid "github.com/google/uuid"
-	filetypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+	filetypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -34,10 +34,7 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			fromAddress, err := getCallerAddress(clientCtx, cmd)
-			if err != nil {
-				return err
-			}
+			fromAddress := getCallerAddress(clientCtx)
 
 			if argKeys == "" {
 				return filetypes.ErrMissingAESKey

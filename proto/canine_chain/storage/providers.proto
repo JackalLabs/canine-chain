@@ -26,3 +26,13 @@ message AttestationForm {
   repeated Attestation attestations = 1;
   string cid = 2;
 }
+
+message ReportForm {
+  repeated Attestation attestations = 1;
+  string cid = 2;
+}
+
+message Collateral {
+  string address = 1;
+  int64 amount = 2;
+}

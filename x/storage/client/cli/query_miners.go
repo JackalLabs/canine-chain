@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 	"github.com/spf13/cobra"
 )
 
@@ -28,6 +28,30 @@ func CmdListProviders() *cobra.Command {
 			}
 
 			res, err := queryClient.ProvidersAll(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdListActiveProviders() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list-active-providers",
+		Short: "list all active providers",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+			params := &types.QueryActiveProvidersRequest{}
+			res, err := queryClient.ActiveProviders(context.Background(), params)
 			if err != nil {
 				return err
 			}

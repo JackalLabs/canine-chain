@@ -2,8 +2,8 @@ package storage
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis
@@ -35,6 +35,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.PaymentInfoList {
 		k.SetStoragePaymentInfo(ctx, elem)
 	}
+
+	// Set all the collateral
+	for _, elem := range genState.CollateralList {
+		k.SetCollateral(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -50,7 +55,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.StraysList = k.GetAllStrays(ctx)
 	genesis.FidCidList = k.GetAllFidCid(ctx)
 	genesis.PaymentInfoList = k.GetAllStoragePaymentInfo(ctx)
-
+	genesis.CollateralList = k.GetAllCollateral(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

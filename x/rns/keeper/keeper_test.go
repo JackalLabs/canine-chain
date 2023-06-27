@@ -11,11 +11,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"github.com/jackalLabs/canine-chain/testutil"
-	rns "github.com/jackalLabs/canine-chain/x/rns"
-	"github.com/jackalLabs/canine-chain/x/rns/keeper"
-	rnstestutil "github.com/jackalLabs/canine-chain/x/rns/testutil"
-	"github.com/jackalLabs/canine-chain/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
+	rns "github.com/jackalLabs/canine-chain/v3/x/rns"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
+	rnstestutil "github.com/jackalLabs/canine-chain/v3/x/rns/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -62,7 +62,7 @@ func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, goc
 	return keeper.NewMsgServerImpl(*k), *k, ctx
 }
 
-func (suite *KeeperTestSuite) setupNames() error {
+func (suite *KeeperTestSuite) setupNames() {
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
 
@@ -84,14 +84,11 @@ func (suite *KeeperTestSuite) setupNames() error {
 
 		suite.rnsKeeper.SetNames(suite.ctx, name)
 	}
-
-	return nil
 }
 
 func (suite *KeeperTestSuite) TestMakeBid() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)

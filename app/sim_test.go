@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
 	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -38,7 +38,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
-	minttypes "github.com/jackalLabs/canine-chain/x/jklmint/types"
+	minttypes "github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -162,8 +162,12 @@ func TestAppImportExport(t *testing.T) {
 
 	t.Log("importing genesis...")
 
-	_, newDB, newDir, _, _, err := SetupSimulation("leveldb-app-sim-2", "Simulation-2")
+	simConfig, newDB, newDir, simLogger, simFlag, err := SetupSimulation("leveldb-app-sim-2", "Simulation-2")
 	require.NoError(t, err, "simulation setup failed")
+
+	_ = simConfig
+	_ = simLogger
+	_ = simFlag
 
 	defer func() {
 		newDB.Close()

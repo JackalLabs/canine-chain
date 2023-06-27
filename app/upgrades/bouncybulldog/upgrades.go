@@ -2,14 +2,14 @@ package bouncybulldog
 
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/jackalLabs/canine-chain/app/upgrades"
-	"github.com/jackalLabs/canine-chain/types"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
-	oraclekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v3/types"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+	oraclekeeper "github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"

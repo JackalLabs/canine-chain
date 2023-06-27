@@ -12,8 +12,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	eciesgo "github.com/ecies/go/v2"
-	"github.com/jackalLabs/canine-chain/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 

@@ -4,16 +4,15 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/testutil"
-	"github.com/jackalLabs/canine-chain/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
+	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
 )
 
 const TestName = "test.jkl"
 
 func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -76,8 +75,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 
 func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -115,8 +113,7 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 
 func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	suite.SetupSuite()
-	err := suite.setupNames()
-	suite.Require().NoError(err)
+	suite.setupNames()
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)

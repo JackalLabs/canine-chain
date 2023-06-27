@@ -1,4 +1,4 @@
-package v4
+package v3
 
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -7,14 +7,14 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibcfeetypes "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/types"
 	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
-	"github.com/jackalLabs/canine-chain/app/upgrades"
-	storagekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
+	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
 
-// Upgrade represents the v4 upgrade
+// Upgrade represents the v3 upgrade
 type Upgrade struct {
 	mm           *module.Manager
 	configurator module.Configurator
@@ -32,7 +32,7 @@ func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk storage
 
 // Name implements upgrades.Upgrade
 func (u *Upgrade) Name() string {
-	return "v4"
+	return "v3"
 }
 
 // Handler implements upgrades.Upgrade

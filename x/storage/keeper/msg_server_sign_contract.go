@@ -9,7 +9,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContract) (*types.MsgSignContractResponse, error) {
@@ -68,8 +68,7 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 		if err != nil {
 			return nil, err
 		}
-
-		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(sdk.NewCoin("ujkl", cost)))
+		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, costCoins)
 		if err != nil {
 			return nil, err
 		}

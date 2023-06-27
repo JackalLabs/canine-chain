@@ -10,20 +10,20 @@ import (
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	v4 "github.com/jackalLabs/canine-chain/app/upgrades/v4"
+	v3 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
 
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
-	"github.com/jackalLabs/canine-chain/app/upgrades"
-	"github.com/jackalLabs/canine-chain/app/upgrades/recovery"
-	v121 "github.com/jackalLabs/canine-chain/app/upgrades/testnet/121"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha11"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/alpha13"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/async"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/beta6"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/beta7"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/fixstrays"
-	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/killdeals"
-	paramUpgrade "github.com/jackalLabs/canine-chain/app/upgrades/testnet/params"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/recovery"
+	v121 "github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/121"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/alpha11"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/alpha13"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/async"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/beta6"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/beta7"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/fixstrays"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/killdeals"
+	paramUpgrade "github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/params"
 
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -121,32 +121,32 @@ import (
 	"github.com/JackalLabs/jackal-wasmd/x/wasm"
 	wasmclient "github.com/JackalLabs/jackal-wasmd/x/wasm/client"
 	wasmkeeper "github.com/JackalLabs/jackal-wasmd/x/wasm/keeper"
-	wasmappparams "github.com/jackalLabs/canine-chain/app/params"
+	wasmappparams "github.com/jackalLabs/canine-chain/v3/app/params"
 	owasm "github.com/jackalLabs/canine-chain/wasmbinding"
 
-	mint "github.com/jackalLabs/canine-chain/x/jklmint"
-	mintkeeper "github.com/jackalLabs/canine-chain/x/jklmint/keeper"
-	minttypes "github.com/jackalLabs/canine-chain/x/jklmint/types"
+	mint "github.com/jackalLabs/canine-chain/v3/x/jklmint"
+	mintkeeper "github.com/jackalLabs/canine-chain/v3/x/jklmint/keeper"
+	minttypes "github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
 
-	rnsmodule "github.com/jackalLabs/canine-chain/x/rns"
-	rnsmodulekeeper "github.com/jackalLabs/canine-chain/x/rns/keeper"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/x/rns/types"
+	rnsmodule "github.com/jackalLabs/canine-chain/v3/x/rns"
+	rnsmodulekeeper "github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/rns/types"
 
-	oraclemodule "github.com/jackalLabs/canine-chain/x/oracle"
-	oraclemodulekeeper "github.com/jackalLabs/canine-chain/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/x/oracle/types"
+	oraclemodule "github.com/jackalLabs/canine-chain/v3/x/oracle"
+	oraclemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
 
-	storagemodule "github.com/jackalLabs/canine-chain/x/storage"
-	storagemodulekeeper "github.com/jackalLabs/canine-chain/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/x/storage/types"
+	storagemodule "github.com/jackalLabs/canine-chain/v3/x/storage"
+	storagemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
-	filetreemodule "github.com/jackalLabs/canine-chain/x/filetree"
-	filetreemodulekeeper "github.com/jackalLabs/canine-chain/x/filetree/keeper"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/x/filetree/types"
+	filetreemodule "github.com/jackalLabs/canine-chain/v3/x/filetree"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 
-	notificationsmodule "github.com/jackalLabs/canine-chain/x/notifications"
-	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/x/notifications/keeper"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/x/notifications/types"
+	notificationsmodule "github.com/jackalLabs/canine-chain/v3/x/notifications"
+	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v3/x/notifications/keeper"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 
 	/*
 
@@ -156,12 +156,12 @@ import (
 
 	*/
 
-	"github.com/jackalLabs/canine-chain/app/upgrades/bouncybulldog"
+	"github.com/jackalLabs/canine-chain/v3/app/upgrades/bouncybulldog"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
-	"github.com/jackalLabs/canine-chain/docs"
+	"github.com/jackalLabs/canine-chain/v3/docs"
 )
 
 const appName = "JackalApp"
@@ -265,21 +265,21 @@ var (
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:          nil,
-		distrtypes.ModuleName:               nil,
-		minttypes.ModuleName:                {authtypes.Minter},
-		stakingtypes.BondedPoolName:         {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:                 {authtypes.Burner},
-		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-		ibcfeetypes.ModuleName:              nil,
-		wasm.ModuleName:                     {authtypes.Burner},
-		rnsmoduletypes.ModuleName:           {authtypes.Minter, authtypes.Burner},
-		storagemoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
-		oraclemoduletypes.ModuleName:        nil,
-		notificationsmoduletypes.ModuleName: nil,
-		icatypes.ModuleName:                 nil,
-
+		authtypes.FeeCollectorName:                 nil,
+		distrtypes.ModuleName:                      nil,
+		minttypes.ModuleName:                       {authtypes.Minter},
+		stakingtypes.BondedPoolName:                {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:             {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                        {authtypes.Burner},
+		ibctransfertypes.ModuleName:                {authtypes.Minter, authtypes.Burner},
+		ibcfeetypes.ModuleName:                     nil,
+		wasm.ModuleName:                            {authtypes.Burner},
+		rnsmoduletypes.ModuleName:                  {authtypes.Minter, authtypes.Burner},
+		storagemoduletypes.ModuleName:              {authtypes.Minter, authtypes.Burner},
+		oraclemoduletypes.ModuleName:               nil,
+		notificationsmoduletypes.ModuleName:        nil,
+		icatypes.ModuleName:                        nil,
+		storagemoduletypes.CollateralCollectorName: nil,
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		*/
@@ -642,7 +642,7 @@ func NewJackalApp(
 		app.AccountKeeper,
 		app.OracleKeeper,
 	)
-	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper)
+	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(storagemoduletypes.ModuleName))
 
 	/*
 
@@ -1150,7 +1150,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
-	app.registerUpgrade(v4.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
