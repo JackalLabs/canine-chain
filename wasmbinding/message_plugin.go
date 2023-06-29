@@ -63,6 +63,9 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.BuyStorage != nil {
 			return m.buyStorage(ctx, contractAddr, contractMsg.BuyStorage, sender)
 		}
+		if contractMsg.PostAndSign != nil {
+			return m.postAndSign(ctx, contractAddr, contractMsg.PostAndSign, sender)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg, sender)
 }

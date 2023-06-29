@@ -4,11 +4,12 @@ type JackalMsg struct {
 	/// Contracts can create files
 	/// will they be namespaced under the contract's address?
 	/// A contract may create any number of independent files.
-	PostKey    *PostKey    `json:"post_key,omitempty"`
-	MakeRoot   *MakeRoot   `json:"make_root,omitempty"`
-	PostFiles  *PostFiles  `json:"post_files,omitempty"`
-	DeleteFile *DeleteFile `json:"delete_file,omitempty"`
-	BuyStorage *BuyStorage `json:"buy_storage,omitempty"`
+	PostKey     *PostKey     `json:"post_key,omitempty"`
+	MakeRoot    *MakeRoot    `json:"make_root,omitempty"`
+	PostFiles   *PostFiles   `json:"post_files,omitempty"`
+	DeleteFile  *DeleteFile  `json:"delete_file,omitempty"`
+	BuyStorage  *BuyStorage  `json:"buy_storage,omitempty"`
+	PostAndSign *PostAndSign `json:"post_and_sign,omitempty"`
 }
 
 type PostKey struct {
@@ -42,4 +43,16 @@ type BuyStorage struct {
 	Duration     string `json:"duration"`
 	Bytes        string `json:"bytes"` // the full merklePath
 	PaymentDenom string `json:"paymentdenom"`
+}
+
+type PostAndSign struct {
+	Account        string `json:"account"`
+	HashParent     string `json:"hashparent"`
+	HashChild      string `json:"hashchild"`
+	Contents       string `json:"contents"`
+	Viewers        string `json:"viewers"`
+	Editors        string `json:"editors"`
+	TrackingNumber string `json:"trackingnumber"`
+	Cid            string `json:"cid"`
+	PayOnce        bool   `json:"payonce"`
 }
