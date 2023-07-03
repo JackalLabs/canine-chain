@@ -50,7 +50,7 @@ func (k Keeper) Report(ctx sdk.Context, cid string, creator string) error {
 
 	k.RemoveReport(ctx, cid)
 
-	return k.DropDeal(ctx, deal)
+	return k.DropDeal(ctx, deal, true)
 }
 
 func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.MsgReportResponse, error) {

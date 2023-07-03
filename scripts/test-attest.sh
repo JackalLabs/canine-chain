@@ -72,6 +72,7 @@ from_scratch () {
     canined add-genesis-account jkl1ga0348r8zhn8k4xy3fagwvkwzvyh5lynxr5kak 1100000000000ujkl
     canined add-genesis-account jkl18encuf0esmxv3pxqjqvn0u4tgd6yzuc8urzlp0 1100000000000ujkl
     canined add-genesis-account jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 1100000000000ujkl
+    canined add-genesis-account jkl1yu099xns2qpslvyrymxq3hwrqhevs7qxksvu8p 1100000000000ujkl
 
     # Allocate genesis accounts
     canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING
@@ -112,7 +113,7 @@ sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $HOME/.canine/config/clie
 
 trap "cleanup" SIGINT
 
-rm screenlog.0
+rm "*.log"
 
 # Start the node
 screen -d -m -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
@@ -121,12 +122,13 @@ sleep 30
 
 echo "starting providers..."
 
-screen -d -m -L -S "provider0" bash -c "./scripts/start-provider.sh 54f86a701648e8324e920f9592c21cc591b244ae46eac935d45fe962bba1102c jkl1xclg3utp4yuvaxa54r39xzrudc988s82ykve3f 0"
-screen -d -m -L -S "provider1" bash -c "./scripts/start-provider.sh a29c5f0033606d1ac47db6a3327bc13a6b0c426dbfe5c15b2fcd7334b4165033 jkl1tcveayn80pe3d5wallj9kev3rfefctsmrqf6ks 1"
-screen -d -m -L -S "provider2" bash -c "./scripts/start-provider.sh a490cb438024cddca16470771fb9a21938c4cf61176a46005c6a7b25ee25a649 jkl1eg3gm3e3k4dypvvme26ejmajnyvtgwwlaaeu2y 2"
-screen -d -m -L -S "provider3" bash -c "./scripts/start-provider.sh 6c8a948c347079706e404ab48afc5f03203556e34ea921f3b132f2b2e9bcc87d jkl1ga0348r8zhn8k4xy3fagwvkwzvyh5lynxr5kak 3"
-screen -d -m -L -S "provider4" bash -c "./scripts/start-provider.sh 8144389a23c6535e276068ff9043b2b6ff95aa3c103c35486c8f2d2363606fd5 jkl18encuf0esmxv3pxqjqvn0u4tgd6yzuc8urzlp0 4"
-screen -d -m -L -S "provider5" bash -c "./scripts/start-provider.sh 0e019088a0fafa8f77cb5c0d0f6cb6b63a0015f20d2450480cbcdee44d170aab jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 5"
+screen -d -m -L -Logfile "provider0.log" -S "provider0" bash -c "./scripts/start-provider.sh 54f86a701648e8324e920f9592c21cc591b244ae46eac935d45fe962bba1102c jkl1xclg3utp4yuvaxa54r39xzrudc988s82ykve3f 0"
+screen -d -m -L -Logfile "provider1.log" -S "provider1" bash -c "./scripts/start-provider.sh a29c5f0033606d1ac47db6a3327bc13a6b0c426dbfe5c15b2fcd7334b4165033 jkl1tcveayn80pe3d5wallj9kev3rfefctsmrqf6ks 1"
+screen -d -m -L -Logfile "provider2.log" -S "provider2" bash -c "./scripts/start-provider.sh a490cb438024cddca16470771fb9a21938c4cf61176a46005c6a7b25ee25a649 jkl1eg3gm3e3k4dypvvme26ejmajnyvtgwwlaaeu2y 2"
+screen -d -m -L -Logfile "provider3.log" -S "provider3" bash -c "./scripts/start-provider.sh 6c8a948c347079706e404ab48afc5f03203556e34ea921f3b132f2b2e9bcc87d jkl1ga0348r8zhn8k4xy3fagwvkwzvyh5lynxr5kak 3"
+screen -d -m -L -Logfile "provider4.log" -S "provider4" bash -c "./scripts/start-provider.sh 8144389a23c6535e276068ff9043b2b6ff95aa3c103c35486c8f2d2363606fd5 jkl18encuf0esmxv3pxqjqvn0u4tgd6yzuc8urzlp0 4"
+screen -d -m -L -Logfile "provider5.log" -S "provider5" bash -c "./scripts/start-provider.sh 0e019088a0fafa8f77cb5c0d0f6cb6b63a0015f20d2450480cbcdee44d170aab jkl1sqt9v0zwwx362szrek7pr3lpq29aygw06hgyza 5"
+screen -d -m -L -Logfile "provider6.log" -S "provider6" bash -c "./scripts/start-provider.sh adf5a86ac54146b172c20b865c548e900c51439c3723af14aeab668ccd2b8ecf jkl1yu099xns2qpslvyrymxq3hwrqhevs7qxksvu8p 6"
 
 echo "done!"
 
@@ -134,27 +136,12 @@ sleep 60
 
 echo "starting file uploads"
 
-curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/test.txt http://localhost:3333/upload
-
-sleep 10
-
-canined tx storage sign-contract jklc102jpqmfj5w9pz555zfjd6e9v5nfcnjsy4vh08qhlmrnedrg5jvwqluwrl8 --from charlie -y --pay-upfront
-
-sleep 30
 
 curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/1.png http://localhost:3330/upload
 
 sleep 10
 
 canined tx storage sign-contract jklc107a4hj35fg4jlcapl9h3y7rhw4p24pjtunv8hwwg2hp9dcwatgwsw229ql --from charlie -y --pay-upfront
-
-sleep 30
-
-curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/2.png http://localhost:3334/upload
-
-sleep 10
-
-canined tx storage sign-contract jklc16xdn85h9fel3ruawc3dxjdu7xtkdfp23j66fkkl7dc4277t03rds2rf7g7 --from charlie -y --pay-upfront
 
 sleep 30
 
@@ -171,6 +158,38 @@ curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/
 sleep 10
 
 canined tx storage sign-contract jklc14y6hk074svd8dyjg5g6c2xzkcfv4ge0w2ey96plr98k4pyepk5xq46wjkn --from charlie -y --pay-upfront
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/test.txt http://localhost:3333/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc102jpqmfj5w9pz555zfjd6e9v5nfcnjsy4vh08qhlmrnedrg5jvwqluwrl8 --from charlie -y --pay-upfront
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/2.png http://localhost:3334/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc16xdn85h9fel3ruawc3dxjdu7xtkdfp23j66fkkl7dc4277t03rds2rf7g7 --from charlie -y --pay-upfront
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/5.svg http://localhost:3335/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc1g80djchxzjxztkff98wrelh86ha0alhwu0j9ce84sqvljy8vpddsg637q5 --from charlie -y --pay-upfront
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/6.wav http://localhost:3336/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc1sfwyeu8sz7vuhwhej5qclffjrcw99tc6t527y4jnu4t9cd8yc98sm7ufrc --from charlie -y --pay-upfront
 
 sleep 20
 
