@@ -82,19 +82,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 		missesToBurn := k.GetParams(ctx).MissesToBurn
 
 		if misses > missesToBurn {
-			provider, ok := k.GetProviders(ctx, deal.Provider)
-			if !ok {
-				return sdkerror.Wrapf(sdkerror.ErrKeyNotFound, "provider not found")
-			}
-
-			curburn, ok := sdk.NewIntFromString(provider.BurnedContracts)
-			if !ok {
-				return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
-			}
-			provider.BurnedContracts = fmt.Sprintf("%d", curburn.Int64()+1)
-			k.SetProviders(ctx, provider)
-
-			return k.DropDeal(ctx, deal)
+			return k.DropDeal(ctx, deal, true)
 		}
 
 		deal.Proofsmissed = fmt.Sprintf("%d", misses)
