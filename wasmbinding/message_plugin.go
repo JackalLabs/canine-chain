@@ -30,7 +30,6 @@ type CustomMessenger struct {
 	wrapped  wasmkeeper.Messenger
 	filetree *filetreekeeper.Keeper
 	storage  *storagekeeper.Keeper
-	handler  *SDKMessageHandler
 }
 
 var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
@@ -65,6 +64,9 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		}
 		if contractMsg.PostAndSign != nil {
 			return m.postAndSign(ctx, contractAddr, contractMsg.PostAndSign, sender)
+		}
+		if contractMsg.DeleteAndCancel != nil {
+			return m.deleteAndCancel(ctx, contractAddr, contractMsg.DeleteAndCancel, sender)
 		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg, sender)
