@@ -85,7 +85,13 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 		return nil, sdkerrors.Wrapf(types.ErrAttestAlreadyExists, "attestation form already exists")
 	}
 
-	providers := k.GetActiveProviders(ctx) // get a random list of active providers
+	dealProvider := deal.Provider
+	provider, found := k.GetProviders(ctx, dealProvider)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrProviderNotFound, "cannot find provider matching deal")
+	}
+
+	providers := k.GetActiveProviders(ctx, provider.Ip) // get a random list of active providers
 	params := k.GetParams(ctx)
 
 	if len(providers) < int(params.AttestFormSize) {
