@@ -220,6 +220,9 @@ func (suite *KeeperTestSuite) TestActiveProviders() {
 	foundProvider := suite.storageKeeper.GetActiveProviders(suite.ctx, "")
 	suite.Require().Equal(1, len(foundProvider))
 
+	foundProvider = suite.storageKeeper.GetActiveProviders(suite.ctx, "https://test.com")
+	suite.Require().Equal(0, len(foundProvider))
+
 	suite.storageKeeper.RemoveAllActiveProviders(suite.ctx)
 
 	foundProvider = suite.storageKeeper.GetActiveProviders(suite.ctx, "")
