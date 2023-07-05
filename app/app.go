@@ -19,6 +19,7 @@ import (
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/fixstrays"
 	"github.com/jackalLabs/canine-chain/app/upgrades/testnet/killdeals"
 	paramUpgrade "github.com/jackalLabs/canine-chain/app/upgrades/testnet/params"
+	v210 "github.com/jackalLabs/canine-chain/app/upgrades/v210"
 
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -1153,6 +1154,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v210.NewUpgrade(app.mm, app.configurator))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app

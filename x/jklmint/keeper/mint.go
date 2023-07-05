@@ -10,22 +10,34 @@ import (
 )
 
 func (k Keeper) BlockMint(ctx sdk.Context) {
-	var validatorRatio int64 = 4
-	var providerRatio int64 = 6
-
+	mintTokens := sdk.NewDec(6_000_000)
 	denom := k.GetParams(ctx).MintDenom
 
-	totalCoin := sdk.NewCoin(denom, sdk.NewInt((validatorRatio+providerRatio)*1000000))
+	providerRatio := sdk.NewDec(4)
+	providerRatio = providerRatio.QuoInt64(10)
+	validatorRatio := sdk.NewDec(6)
+	validatorRatio = validatorRatio.QuoInt64(10)
 
-	// mint coins, update supply
-	mintedCoin := sdk.NewCoin(denom, sdk.NewInt(validatorRatio*1000000))
-	mintedCoins := sdk.NewCoins(mintedCoin)
+	// get correct ratio
+	providerTokens := mintTokens.Mul(providerRatio)
+	validatorTokens := mintTokens.Mul(validatorRatio)
 
-	// mint coins, update supply
-	providerCoin := sdk.NewCoin(denom, sdk.NewInt(providerRatio*1000000))
+	// mint provider coins, update supply
+	provCount := providerTokens.TruncateInt()
+	providerCoin := sdk.NewCoin(denom, provCount)
 	providerCoins := sdk.NewCoins(providerCoin)
 
-	err := k.MintCoins(ctx, sdk.NewCoins(totalCoin))
+	// mint validator coins, update supply
+	valCount := validatorTokens.TruncateInt()
+	validatorCoin := sdk.NewCoin(denom, valCount)
+	validatorCoins := sdk.NewCoins(validatorCoin)
+
+	totalCount := provCount.Add(valCount)
+	// mint coins, update supply
+	totalIntCoin := sdk.NewCoin(denom, totalCount)
+	mintedCoin := totalIntCoin
+	mintedCoins := sdk.NewCoins(mintedCoin)
+	err := k.MintCoins(ctx, mintedCoins)
 	if err != nil {
 		panic(err)
 	}
@@ -35,20 +47,19 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 		panic(err)
 	}
 
-	// send the minted coins to the fee collector account
-	err = k.AddCollectedFees(ctx, mintedCoins)
+	// send the minted validator coins to the fee collector account
+	err = k.AddCollectedFees(ctx, validatorCoins)
 	if err != nil {
 		panic(err)
 	}
 
-	if totalCoin.Amount.IsInt64() {
-		defer telemetry.ModuleSetGauge(types.ModuleName, float32(totalCoin.Amount.Int64()), "minted_tokens")
-	}
+	// alerting network on mint amount
+	defer telemetry.ModuleSetGauge(types.ModuleName, float32(totalCount.Int64()), "minted_tokens")
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeMint,
-			sdk.NewAttribute(sdk.AttributeKeyAmount, fmt.Sprintf("%d", totalCoin.Amount.Int64())),
+			sdk.NewAttribute(sdk.AttributeKeyAmount, fmt.Sprintf("%d", totalCount.Int64())),
 		),
 	)
 }
