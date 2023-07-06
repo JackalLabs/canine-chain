@@ -15,6 +15,8 @@ func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 	// Set the module params
 	params := types.DefaultParams()
 
+	params.ProviderRatio = 0
+
 	paramsSubspace.SetParamSet(ctx, &params)
 
 	return nil

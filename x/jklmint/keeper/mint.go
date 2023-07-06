@@ -10,12 +10,17 @@ import (
 )
 
 func (k Keeper) BlockMint(ctx sdk.Context) {
-	mintTokens := sdk.NewDec(6_000_000)
+	tokensPerBlock := k.GetParams(ctx).TokensPerBlock
+
+	mintTokens := sdk.NewDec(tokensPerBlock * 1_000_000)
 	denom := k.GetParams(ctx).MintDenom
 
-	providerRatio := sdk.NewDec(4)
+	pRatio := k.GetParams(ctx).ProviderRatio
+	valRatio := 10 - pRatio
+
+	providerRatio := sdk.NewDec(pRatio)
 	providerRatio = providerRatio.QuoInt64(10)
-	validatorRatio := sdk.NewDec(6)
+	validatorRatio := sdk.NewDec(valRatio)
 	validatorRatio = validatorRatio.QuoInt64(10)
 
 	// get correct ratio
