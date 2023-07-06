@@ -21,7 +21,7 @@ func (k Keeper) GetActiveProviders(ctx sdk.Context) []types.ActiveProviders {
 
 	i64Size := int64(size)
 
-	rand.Seed(ctx.BlockTime().UnixNano())
+	rand.Seed(ctx.BlockHeight())
 
 	for i := 0; i < rounds; i++ {
 		x := rand.Int63n(i64Size)
