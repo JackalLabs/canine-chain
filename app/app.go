@@ -789,6 +789,7 @@ func NewJackalApp(
 	)
 
 	app.mm.SetOrderEndBlockers(
+		upgradetypes.ModuleName,
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
@@ -803,7 +804,6 @@ func NewJackalApp(
 		authz.ModuleName,
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
-		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		// additional non simd modules
 		icatypes.ModuleName,
