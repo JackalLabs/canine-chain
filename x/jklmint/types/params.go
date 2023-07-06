@@ -57,7 +57,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 }
 
 // Validate validates the set of params
-func (p Params) Validate() error {
+func (p *Params) Validate() error {
 	err := validateMintDenom(p.MintDenom)
 	if err != nil {
 		return err
@@ -76,7 +76,7 @@ func (p Params) Validate() error {
 }
 
 // String implements the Stringer interface.
-func (p Params) String() string {
+func (p *Params) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
 }
