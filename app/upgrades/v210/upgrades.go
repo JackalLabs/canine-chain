@@ -33,7 +33,7 @@ func (u *Upgrade) Name() string {
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		fromVM[mintmoduletypes.ModuleName] = 3
+		fromVM[mintmoduletypes.ModuleName] = 2
 
 		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
 		if err != nil {
