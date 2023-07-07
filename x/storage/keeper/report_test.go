@@ -99,7 +99,15 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	addresses, err := testutil.CreateTestAddresses("jkl", 50)
 	suite.NoError(err)
 
-	for _, address := range addresses {
+	for i, address := range addresses {
+		realProvider := types.Providers{
+			Address:         address,
+			Ip:              fmt.Sprintf("https://test%d.com", i),
+			BurnedContracts: "0",
+		}
+
+		suite.storageKeeper.SetProviders(suite.ctx, realProvider)
+
 		suite.storageKeeper.SetActiveProviders(suite.ctx, types.ActiveProviders{
 			Address: address,
 		})
