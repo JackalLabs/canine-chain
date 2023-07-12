@@ -50,7 +50,7 @@ func (k Keeper) Report(ctx sdk.Context, cid string, creator string) error {
 
 	k.RemoveReport(ctx, cid)
 
-	return k.DropDeal(ctx, deal)
+	return k.DropDeal(ctx, deal, true)
 }
 
 func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.MsgReportResponse, error) {
@@ -65,7 +65,7 @@ func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.M
 }
 
 func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
-	_, found := k.GetActiveDeals(ctx, cid)
+	deal, found := k.GetActiveDeals(ctx, cid)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal for report form")
 	}
@@ -75,7 +75,13 @@ func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
 		return nil, sdkerrors.Wrapf(types.ErrAttestAlreadyExists, "report form already exists")
 	}
 
-	providers := k.GetActiveProviders(ctx) // get a random list of active providers
+	dealProvider := deal.Provider
+	provider, found := k.GetProviders(ctx, dealProvider)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrProviderNotFound, "cannot find provider matching deal")
+	}
+
+	providers := k.GetActiveProviders(ctx, provider.Ip) // get a random list of active providers
 	params := k.GetParams(ctx)
 
 	if len(providers) < int(params.AttestFormSize) {

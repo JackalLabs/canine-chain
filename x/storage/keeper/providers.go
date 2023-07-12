@@ -1,6 +1,9 @@
 package keeper
 
 import (
+	"net/url"
+	"strings"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
@@ -12,8 +15,54 @@ const (
 )
 
 // GetActiveProviders returns a list of recently active providers in a random order
-func (k Keeper) GetActiveProviders(ctx sdk.Context) []types.ActiveProviders {
+func (k Keeper) GetActiveProviders(ctx sdk.Context, filterAddress string) []types.ActiveProviders {
 	providers := k.GetAllActiveProviders(ctx)
+	allowedProviders := make([]types.ActiveProviders, 0)
+
+	filterDomain := ""
+	filterTLD := ""
+
+	if len(filterAddress) > 0 {
+		url, err := url.Parse(filterAddress)
+		if err != nil {
+			return nil
+		}
+
+		parts := strings.Split(url.Hostname(), ".")
+		partCount := len(parts)
+		if partCount >= 2 {
+			filterDomain = parts[partCount-2]
+			filterTLD = parts[partCount-1]
+		}
+	}
+
+	for _, provider := range providers {
+		providerAccount, found := k.GetProviders(ctx, provider.Address)
+		if !found {
+			continue
+		}
+		url, err := url.Parse(providerAccount.Ip)
+		if err != nil {
+			continue
+		}
+
+		parts := strings.Split(url.Hostname(), ".")
+		partCount := len(parts)
+		if partCount < 2 {
+			continue
+		}
+
+		domain := parts[partCount-2]
+		tld := parts[partCount-1]
+
+		if domain == filterDomain && tld == filterTLD {
+			continue
+		}
+
+		allowedProviders = append(allowedProviders, provider)
+
+	}
+	providers = allowedProviders
 
 	size := len(providers)
 
@@ -21,7 +70,7 @@ func (k Keeper) GetActiveProviders(ctx sdk.Context) []types.ActiveProviders {
 
 	i64Size := int64(size)
 
-	rand.Seed(ctx.BlockTime().UnixNano())
+	rand.Seed(ctx.BlockHeight())
 
 	for i := 0; i < rounds; i++ {
 		x := rand.Int63n(i64Size)

@@ -83,8 +83,8 @@ github.com/DataDog/zstd v1.5.0/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwS
 github.com/DataDog/zstd v1.5.2 h1:vUG4lAyuPCXO0TLbXvPv7EB7cNK1QV/luu55UHLrrn8=
 github.com/DataDog/zstd v1.5.2/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
 github.com/HdrHistogram/hdrhistogram-go v1.1.2/go.mod h1:yDgFjdqOqDEKOvasDdhWNXYg9BVp4O+o5f6V/ehm6Oo=
-github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230621230708-909a2d048774 h1:V1YQeIBSzVWIyLdbfN3BPB+WOBncKc1UzSjnIYHayNY=
-github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230621230708-909a2d048774/go.mod h1:bScuNwWAP0TZJpUf+SHXRU3xGoUPp+X9nAzfeIXts40=
+github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230704034202-b88b1fbc9b2f h1:yiMZXfLKf8j60mcc78EGd4JthE23WAwxOC0UgQt6Mww=
+github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230704034202-b88b1fbc9b2f/go.mod h1:bScuNwWAP0TZJpUf+SHXRU3xGoUPp+X9nAzfeIXts40=
 github.com/JackalLabs/jackal-wasmd v0.32.2-0.20230602115639-d4bdce98503d h1:iyNC5Ww7D0Bdf3g4SfnJIojGraM1g4lCdMJYwfBFuFI=
 github.com/JackalLabs/jackal-wasmd v0.32.2-0.20230602115639-d4bdce98503d/go.mod h1:/WZSE46d8IGoRmrDzmKZgOKbpF7bgkvBF2irXXaUz4U=
 github.com/Joker/hpp v1.0.0/go.mod h1:8x5n+M1Hp5hC0g8okX3sR3vFQwynaX/UgSOM9MeBKzY=

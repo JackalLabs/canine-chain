@@ -54,8 +54,4 @@ dependency-graph.png
 contract_tests/*
 app.test
 
-mytestnet
-_build
-
-
 screenlog.0
