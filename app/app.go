@@ -10,7 +10,7 @@ import (
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
+	v3 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
 
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
@@ -161,6 +161,8 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
 	"github.com/jackalLabs/canine-chain/v3/docs"
+
+	gmpmiddleware "github.com/jackalLabs/canine-chain/v3/gmpmiddleware"
 )
 
 const appName = "JackalApp"
@@ -687,9 +689,15 @@ func NewJackalApp(
 	wasmStack = wasm.NewIBCHandler(app.wasmKeeper, app.ibcKeeper.ChannelKeeper, app.ibcFeeKeeper)
 	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, app.ibcFeeKeeper)
 
+	// gmp middleware
+	var gmpStack porttypes.IBCModule
+	var handler gmpmiddleware.GeneralMessageHandler
+	gmpStack = gmpmiddleware.NewIBCMiddleware(gmpStack, handler)
+
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
+		AddRoute(gmpmiddleware.ModuleName, gmpStack)
 
 	app.ibcKeeper.SetRouter(ibcRouter)
 
