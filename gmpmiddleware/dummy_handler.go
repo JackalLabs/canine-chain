@@ -26,15 +26,3 @@ func (h DummyHandler) HandleGeneralMessage(ctx sdk.Context, srcChain, srcAddress
 	)
 	return nil
 }
-
-func (h DummyHandler) HandleGeneralMessageWithToken(ctx sdk.Context, srcChain, srcAddress string, destAddress string, payload []byte, coin sdk.Coin) error {
-	ctx.Logger().Info("HandleGeneralMessageWithToken called",
-		"srcChain", srcChain,
-		"srcAddress", srcAddress,
-		"destAddress", destAddress,
-		"payload", payload,
-		"coin", coin,
-	)
-
-	return nil
-}
