@@ -1232,8 +1232,3 @@ func GetWasmOpts(appOpts servertypes.AppOptions) []wasm.Option {
 
 	return wasmOpts
 }
-
-// implement to satisfy ibctesting.TestingApp interface
-func (app *JackalApp) GetBaseApp() *baseapp.BaseApp {
-	return app.BaseApp
-}
