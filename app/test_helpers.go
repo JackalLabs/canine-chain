@@ -25,6 +25,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -55,7 +56,9 @@ var DefaultConsensusParams = &abci.ConsensusParams{
 }
 
 func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*JackalApp, GenesisState) {
+	logger, logFile := testutil.CreateLogger()
 	nodeHome := t.TempDir()
+
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
 	snapshotDB, err := sdk.NewLevelDB("metadata", snapshotDir)
 	require.NoError(t, err)
@@ -63,10 +66,14 @@ func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Opt
 	require.NoError(t, err)
 	baseAppOpts := []func(*bam.BaseApp){bam.SetSnapshotStore(snapshotStore), bam.SetSnapshotKeepRecent(2)}
 	db := dbm.NewMemDB()
+	logger.Println(" 't' is no longer nil.")
+	logger.Println("Fails here now ")
+
 	app := NewJackalApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, nodeHome, invCheckPeriod, MakeEncodingConfig(), wasm.EnableAllProposals, EmptyBaseAppOptions{}, opts, baseAppOpts...)
 	if withGenesis {
 		return app, NewDefaultGenesisState()
 	}
+	logFile.Close()
 	return app, GenesisState{}
 }
 
@@ -157,6 +164,41 @@ func SetupWithEmptyStore(t testing.TB) *JackalApp {
 	app, _ := setup(t, false, 0)
 	return app
 }
+
+// We tried to use 'SetupWithEmptyStore' for ibc middleware testing but it errored. Perhaps this is a remnant of igniteCLI that doesn't
+// work anymore?
+// Opting to write another custom set up instead.
+
+// func setupForIBCTesting(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*JackalApp, GenesisState) {
+// 	logger, logFile := testutil.CreateLogger()
+// 	// nodeHome := t.TempDir()
+// 	nodeHome := "default"
+
+// 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
+// 	snapshotDB, err := sdk.NewLevelDB("metadata", snapshotDir)
+// 	logger.Println("We fail right here?")
+// 	logger.Println("**********************")
+// 	logger.Println(t)
+
+// 	require.NoError(t, err)
+
+// 	snapshotStore, err := snapshots.NewStore(snapshotDB, snapshotDir)
+// 	require.NoError(t, err)
+
+// 	baseAppOpts := []func(*bam.BaseApp){bam.SetSnapshotStore(snapshotStore), bam.SetSnapshotKeepRecent(2)}
+// 	db := dbm.NewMemDB()
+// 	app := NewJackalApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, nodeHome, invCheckPeriod, MakeEncodingConfig(), wasm.EnableAllProposals, EmptyBaseAppOptions{}, opts, baseAppOpts...)
+// 	if withGenesis {
+// 		return app, NewDefaultGenesisState()
+// 	}
+// 	logFile.Close()
+// 	return app, GenesisState{}
+// }
+
+// func SetupForIBC(t *testing.TB) *JackalApp {
+// 	app, _ := setupForIBCTesting(t, false, 0)
+// 	return app
+// }
 
 type GenerateAccountStrategy func(int) []sdk.AccAddress
 

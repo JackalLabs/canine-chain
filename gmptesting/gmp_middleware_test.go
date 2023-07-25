@@ -29,7 +29,7 @@ func TestGMPTestSuite(t *testing.T) {
 }
 
 func (suite *GMPTestSuite) SetupTest() {
-	suite.Setup()
+	suite.Setup(suite.T())
 	ibctesting.DefaultTestingAppInit = SetupTestingApp
 	suite.coordinator = ibctesting.NewCoordinator(suite.T(), 2)
 	suite.chainA = TestChain{

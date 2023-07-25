@@ -25,8 +25,7 @@ type GMPTestHelper struct {
 }
 
 // Setup sets up basic environment for suite (App, Ctx, and test accounts)
-func (s *GMPTestHelper) Setup() {
-	var t *testing.T
+func (s *GMPTestHelper) Setup(t *testing.T) {
 	s.App = app.SetupWithEmptyStore(t) // Might need to replace with 'SetupWithGenesisValSet'
 	s.Ctx = s.App.BaseApp.NewContext(false, tmtypes.Header{Height: 1, ChainID: "jackal-1", Time: time.Now().UTC()})
 	s.QueryHelper = &baseapp.QueryServiceTestHelper{
