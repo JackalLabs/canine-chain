@@ -17,3 +17,9 @@ func SetupTestingApp() (ibctesting.TestingApp, map[string]json.RawMessage) {
 	jackalApp := app.SetupWithEmptyStore(t)
 	return jackalApp, app.NewDefaultGenesisState()
 }
+
+// GetJackalApp returns the current chain's app as a JackalApp
+func (chain *TestChain) GetJackalApp() *app.JackalApp {
+	v, _ := chain.App.(*app.JackalApp)
+	return v
+}

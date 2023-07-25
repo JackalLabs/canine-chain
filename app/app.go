@@ -341,6 +341,9 @@ type JackalApp struct {
 	FileTreeKeeper      filetreemodulekeeper.Keeper
 	NotificationsKeeper notificationsmodulekeeper.Keeper
 
+	// IBC modules
+	GmpStack gmpmiddleware.IBCMiddleware
+
 	/*
 
 		DsigKeeper     dsigmodulekeeper.Keeper

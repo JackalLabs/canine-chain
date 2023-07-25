@@ -6,7 +6,10 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
 	"github.com/stretchr/testify/suite"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 )
 
 type GMPTestSuite struct {
@@ -50,4 +53,37 @@ func NewTransferPath(chainA, chainB TestChain) *ibctesting.Path {
 	path.EndpointB.ChannelConfig.Version = transfertypes.Version
 
 	return path
+}
+
+func (suite *GMPTestSuite) TestOnRecvPacket() {
+	var (
+		trace    transfertypes.DenomTrace
+		amount   sdk.Int
+		receiver string
+		//  status   testutils.Status don't think we need for now
+	)
+
+	// need this later
+
+	suite.SetupTest() // reset
+
+	path := NewTransferPath(suite.chainA, suite.chainB)
+	suite.coordinator.Setup(path)
+	receiver = suite.chainB.SenderAccount.GetAddress().String() // looks like this is auto generated
+	// status = testutils.Status{} don't think we need a status for now
+
+	amount = sdk.NewInt(100)
+	seq := uint64(1)
+
+	trace = transfertypes.ParseDenomTrace(sdk.DefaultBondDenom)
+
+	// do we need to send coins first?
+
+	data := transfertypes.NewFungibleTokenPacketData(trace.GetFullDenomPath(), amount.String(), suite.chainA.SenderAccount.GetAddress().String(), receiver)
+	packet := channeltypes.NewPacket(data.GetBytes(), seq, path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, clienttypes.NewHeight(1, 100), 0)
+
+	// we expect a returned acknowledgement
+	ack := suite.chainB.GetJackalApp().GmpStack.OnRecvPacket(suite.chainB.GetContext(), packet, suite.chainA.SenderAccount.GetAddress())
+
+	suite.Require().True(ack.Success())
 }
