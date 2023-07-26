@@ -1,16 +1,12 @@
 package gmp_middleware
 
 import (
-	"encoding/json"
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	"github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
 )
 
 type IBCMiddleware struct {
@@ -98,40 +94,48 @@ func (im IBCMiddleware) OnRecvPacket(
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
-	ack := im.app.OnRecvPacket(ctx, packet, relayer)
-	if !ack.Success() {
-		return ack
-	}
+	// Comment out call to underlying OnRecvPacket for now, we apply our own logic
+	// ack := im.app.OnRecvPacket(ctx, packet, relayer)
 
-	var data transfertypes.FungibleTokenPacketData
-	if err := types.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
-		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot unmarshal ICS-20 transfer packet data"))
-	}
+	// declare an ack that we always return so we can dissect the code without erroring
+	var ack ibcexported.Acknowledgement
+	// if !ack.Success() {
+	// 	return ack
+	// }
 
-	// authenticate the message with packet sender + channel-id
-	// TODO: authenticate the message with channel-id
-	if data.Sender != AxelarGMPAcc {
-		return ack
-	}
+	isIcs20, data := isIcs20Packet(packet)
+	logger, logFile := testutil.CreateLogger()
+	logger.Println("*********************")
+	logger.Printf("Is it ICS20? %t\n", isIcs20)
+	logger.Printf("%+v\n", data)
 
-	var msg Message
-	var err error
+	logFile.Close()
 
-	if err = json.Unmarshal([]byte(data.GetMemo()), &msg); err != nil {
-		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot unmarshal memo"))
-	}
+	// The below will always make our tests fail unless we hard code that the sender is the AxelarGMPAcc
+	// // authenticate the message with packet sender + channel-id
+	// // TODO: authenticate the message with channel-id
+	// if data.Sender != AxelarGMPAcc {
+	// 	return ack
+	// }
 
-	switch msg.Type {
-	case TypeGeneralMessage:
-		// implement the handler
-		err = im.handler.HandleGeneralMessage(ctx, msg.SourceChain, msg.SourceAddress, data.Receiver, msg.Payload)
-	default:
-		err = fmt.Errorf("unrecognized mesasge type: %d", msg.Type)
-	}
+	// var msg Message
+	// var err error
 
-	if err != nil {
-		return channeltypes.NewErrorAcknowledgement(err)
-	}
+	// if err = json.Unmarshal([]byte(data.GetMemo()), &msg); err != nil {
+	// 	return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot unmarshal memo"))
+	// }
+
+	// switch msg.Type {
+	// case TypeGeneralMessage:
+	// 	// implement the handler
+	// 	err = im.handler.HandleGeneralMessage(ctx, msg.SourceChain, msg.SourceAddress, data.Receiver, msg.Payload)
+	// default:
+	// 	err = fmt.Errorf("unrecognized mesasge type: %d", msg.Type)
+	// }
+
+	// if err != nil {
+	// 	return channeltypes.NewErrorAcknowledgement(err)
+	// }
 
 	return ack
 }

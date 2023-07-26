@@ -1,6 +1,12 @@
 package gmp_middleware
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	"encoding/json"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
+)
 
 type BankK interface {
 	SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
@@ -25,4 +31,13 @@ func (h DummyHandler) HandleGeneralMessage(ctx sdk.Context, srcChain, srcAddress
 		"module", "x/gmp-middleware",
 	)
 	return nil
+}
+
+// Helper function. Might move to a helper file later.
+func isIcs20Packet(packet channeltypes.Packet) (isIcs20 bool, ics20data transfertypes.FungibleTokenPacketData) {
+	var data transfertypes.FungibleTokenPacketData
+	if err := json.Unmarshal(packet.GetData(), &data); err != nil {
+		return false, data
+	}
+	return true, data
 }
