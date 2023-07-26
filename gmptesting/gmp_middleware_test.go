@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/stretchr/testify/suite"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -29,20 +30,28 @@ func TestGMPTestSuite(t *testing.T) {
 }
 
 func (suite *GMPTestSuite) SetupTest() {
+	logger, logFile := testutil.CreateLogger()
 	suite.Setup(suite.T())
+	logger.Println("Setup finish?")
+
 	ibctesting.DefaultTestingAppInit = SetupTestingApp
+
 	suite.coordinator = ibctesting.NewCoordinator(suite.T(), 2)
+
 	suite.chainA = TestChain{
 		TestChain: suite.coordinator.GetChain(ibctesting.GetChainID(1)),
 	}
+
 	suite.chainB = TestChain{
 		TestChain: suite.coordinator.GetChain(ibctesting.GetChainID(2)),
 	}
 
 	suite.pathAB = NewTransferPath(suite.chainA, suite.chainB)
 	suite.coordinator.Setup(suite.pathAB)
+
 	suite.pathBA = NewTransferPath(suite.chainB, suite.chainA)
 	suite.coordinator.Setup(suite.pathBA)
+	logFile.Close()
 }
 
 func NewTransferPath(chainA, chainB TestChain) *ibctesting.Path {
