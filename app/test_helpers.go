@@ -54,6 +54,26 @@ var DefaultConsensusParams = &abci.ConsensusParams{
 	},
 }
 
+// Public Setup function that requires no 'testing.TB'
+func Setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*JackalApp, GenesisState) {
+	// nodeHome := t.TempDir()
+	nodeHome := "default"
+
+	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
+	snapshotDB, _ := sdk.NewLevelDB("metadata", snapshotDir)
+	// require.NoError(t, err)
+	snapshotStore, _ := snapshots.NewStore(snapshotDB, snapshotDir)
+	// require.NoError(t, err)
+	baseAppOpts := []func(*bam.BaseApp){bam.SetSnapshotStore(snapshotStore), bam.SetSnapshotKeepRecent(2)}
+	db := dbm.NewMemDB()
+
+	app := NewJackalApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, nodeHome, invCheckPeriod, MakeEncodingConfig(), wasm.EnableAllProposals, EmptyBaseAppOptions{}, opts, baseAppOpts...)
+	if withGenesis {
+		return app, NewDefaultGenesisState()
+	}
+	return app, GenesisState{}
+}
+
 func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*JackalApp, GenesisState) {
 	nodeHome := t.TempDir()
 
