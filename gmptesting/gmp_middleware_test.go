@@ -106,3 +106,8 @@ func (suite *GMPTestSuite) TestOnRecvPacket() {
 
 	// suite.Require().True(ack.Success())
 }
+
+func (suite *GMPTestSuite) TestRecvTransferWithMetadata() {
+	// Setup contract
+	suite.chainA.StoreContractCode(&suite.Suite, "./bytecode/echo.wasm")
+}
