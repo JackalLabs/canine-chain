@@ -1237,9 +1237,15 @@ func GetWasmOpts(appOpts servertypes.AppOptions) []wasm.Option {
 }
 
 // Helper function to return a clone of the govKeeper for testing purposes
-
 func (app *JackalApp) GetGovKeeper() govkeeper.Keeper {
 	// create a new instance and copy the values from app.govKeeper to the new instance
 	clonedKeeper := app.govKeeper
+	return clonedKeeper
+}
+
+// Helper function to return a clone of the wasmKeeper for testing purposes
+func (app *JackalApp) GetWasmKeeper() wasmkeeper.Keeper {
+	// create a new instance and copy the values from app.govKeeper to the new instance
+	clonedKeeper := app.wasmKeeper
 	return clonedKeeper
 }

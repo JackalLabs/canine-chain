@@ -1,6 +1,9 @@
 package gmp_middleware
 
 import (
+	"encoding/json"
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
@@ -10,6 +13,7 @@ import (
 )
 
 type IBCMiddleware struct {
+	channel porttypes.ICS4Wrapper
 	app     porttypes.IBCModule
 	handler GeneralMessageHandler
 }
@@ -157,4 +161,106 @@ func (im IBCMiddleware) OnTimeoutPacket(
 	relayer sdk.AccAddress,
 ) error {
 	return im.app.OnTimeoutPacket(ctx, packet, relayer)
+}
+
+func (im IBCMiddleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) error {
+	concretePacket, ok := packet.(channeltypes.Packet)
+	if !ok {
+		return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
+	}
+
+	isIcs20, data := isIcs20Packet(concretePacket)
+	if !isIcs20 {
+		return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
+	}
+
+	isCallbackRouted, _ := jsonStringHasKey(data.GetMemo(), IBCCallbackKey) // metadata was here
+	fmt.Println(isCallbackRouted)
+	// if !isCallbackRouted {
+	// 	return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
+	// }
+
+	// // We remove the callback metadata from the memo as it has already been processed.
+
+	// // If the only available key in the memo is the callback, we should remove the memo
+	// // from the data completely so the packet is sent without it.
+	// // This way receiver chains that are on old versions of IBC will be able to process the packet
+
+	// callbackRaw := metadata[types.IBCCallbackKey] // This will be used later.
+	// delete(metadata, types.IBCCallbackKey)
+	// bzMetadata, err := json.Marshal(metadata)
+	// if err != nil {
+	// 	return errorsmod.Wrap(err, "Send packet with callback error")
+	// }
+	// stringMetadata := string(bzMetadata)
+	// if stringMetadata == "{}" {
+	// 	data.Memo = ""
+	// } else {
+	// 	data.Memo = stringMetadata
+	// }
+	// dataBytes, err := json.Marshal(data)
+	// if err != nil {
+	// 	return errorsmod.Wrap(err, "Send packet with callback error")
+	// }
+
+	// packetWithoutCallbackMemo := channeltypes.Packet{
+	// 	Sequence:           concretePacket.Sequence,
+	// 	SourcePort:         concretePacket.SourcePort,
+	// 	SourceChannel:      concretePacket.SourceChannel,
+	// 	DestinationPort:    concretePacket.DestinationPort,
+	// 	DestinationChannel: concretePacket.DestinationChannel,
+	// 	Data:               dataBytes,
+	// 	TimeoutTimestamp:   concretePacket.TimeoutTimestamp,
+	// 	TimeoutHeight:      concretePacket.TimeoutHeight,
+	// }
+
+	// err = i.channel.SendPacket(ctx, chanCap, packetWithoutCallbackMemo)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// // Make sure the callback contract is a string and a valid bech32 addr. If it isn't, ignore this packet
+	// contract, ok := callbackRaw.(string)
+	// if !ok {
+	// 	return nil
+	// }
+	// _, err = sdk.AccAddressFromBech32(contract)
+	// if err != nil {
+	// 	return nil
+	// }
+
+	// h.ibcHooksKeeper.StorePacketCallback(ctx, packet.GetSourceChannel(), packet.GetSequence(), contract)
+	return nil
+}
+
+// jsonStringHasKey parses the memo as a json object and checks if it contains the key.
+func jsonStringHasKey(memo, key string) (found bool, jsonObject map[string]interface{}) {
+	logger, logFile := testutil.CreateLogger()
+	logger.Println(memo)
+	logger.Println(key)
+
+	jsonObject = make(map[string]interface{})
+
+	// If there is no memo, the packet was either sent with an earlier version of IBC, or the memo was
+	// intentionally left blank. Nothing to do here. Ignore the packet and pass it down the stack.
+	if len(memo) == 0 {
+		return false, jsonObject
+	}
+
+	// the jsonObject must be a valid JSON object
+	err := json.Unmarshal([]byte(memo), &jsonObject)
+	if err != nil {
+		return false, jsonObject
+	}
+	logger.Println(jsonObject)
+
+	// If the key doesn't exist, there's nothing to do on this hook. Continue by passing the packet
+	// down the stack
+	_, ok := jsonObject[key]
+	if !ok {
+		return false, jsonObject
+	}
+	logFile.Close()
+
+	return true, jsonObject
 }

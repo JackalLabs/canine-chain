@@ -28,5 +28,6 @@ const (
 	// TypeGeneralMessageWithToken is a general message with token
 	TypeGeneralMessageWithToken
 
-	ModuleName = "gmpmiddleware"
+	ModuleName     = "gmpmiddleware"
+	IBCCallbackKey = "ibc_callback"
 )

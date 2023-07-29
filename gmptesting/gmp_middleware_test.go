@@ -1,6 +1,7 @@
 package gmp_testing
 
 import (
+	"fmt"
 	"testing"
 
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
@@ -110,4 +111,68 @@ func (suite *GMPTestSuite) TestOnRecvPacket() {
 func (suite *GMPTestSuite) TestRecvTransferWithMetadata() {
 	// Setup contract
 	suite.chainA.StoreContractCode(&suite.Suite, "./bytecode/echo.wasm")
+	addr := suite.chainA.InstantiateContract(&suite.Suite, "{}", 1)
+	fmt.Println(addr)
+	ackBytes := suite.receivePacket(addr.String(), fmt.Sprintf(`{"wasm": {"contract": "%s", "msg": {"echo": {"msg": "test"} } } }`, addr))
+	fmt.Println(ackBytes)
+}
+
+func (suite *GMPTestSuite) receivePacket(receiver, memo string) []byte {
+	return suite.receivePacketWithSequence(receiver, memo, 0)
+}
+
+func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prevSequence uint64) []byte {
+	channelCap := suite.chainB.GetChannelCapability(
+		suite.pathAB.EndpointB.ChannelConfig.PortID,
+		suite.pathAB.EndpointB.ChannelID)
+	fmt.Println(channelCap)
+
+	packet := suite.makeMockPacket(receiver, memo, prevSequence)
+
+	err := suite.chainB.GetJackalApp().GmpStack.SendPacket(
+		suite.chainB.GetContext(), channelCap, packet)
+	suite.Require().NoError(err, "IBC send failed. Expected success. %s", err)
+
+	// // Update both clients
+	// err = suite.pathAB.EndpointB.UpdateClient()
+	// suite.Require().NoError(err)
+	// err = suite.pathAB.EndpointA.UpdateClient()
+	// suite.Require().NoError(err)
+
+	// // recv in chain a
+	// res, err := suite.pathAB.EndpointA.RecvPacketWithResult(packet)
+	// suite.Require().NoError(err)
+
+	// // get the ack from the chain a's response
+	// ack, err := ibctesting.ParseAckFromEvents(res.GetEvents())
+	// suite.Require().NoError(err)
+
+	// // manually send the acknowledgement to chain b
+	// err = suite.pathAB.EndpointA.AcknowledgePacket(packet, ack)
+	// suite.Require().NoError(err)
+	// return ack
+
+	var emptyBytes []byte
+	return emptyBytes
+}
+
+func (suite *GMPTestSuite) makeMockPacket(receiver, memo string, prevSequence uint64) channeltypes.Packet {
+	packetData := transfertypes.FungibleTokenPacketData{
+		Denom:    sdk.DefaultBondDenom,
+		Amount:   "1",
+		Sender:   suite.chainB.SenderAccount.GetAddress().String(),
+		Receiver: receiver,
+		Memo:     memo,
+	}
+
+	return channeltypes.NewPacket(
+		packetData.GetBytes(),
+		prevSequence+1,
+		suite.pathAB.EndpointB.ChannelConfig.PortID,
+		suite.pathAB.EndpointB.ChannelID,
+		suite.pathAB.EndpointA.ChannelConfig.PortID,
+		suite.pathAB.EndpointA.ChannelID,
+		clienttypes.NewHeight(0, 100),
+		0,
+	)
 }
