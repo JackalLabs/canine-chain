@@ -159,10 +159,10 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 func (suite *GMPTestSuite) makeMockPacket(receiver, memo string, prevSequence uint64) channeltypes.Packet {
 	packetData := transfertypes.FungibleTokenPacketData{
 		Denom:    sdk.DefaultBondDenom,
-		Amount:   "1",
+		Amount:   "1000",
 		Sender:   suite.chainB.SenderAccount.GetAddress().String(),
 		Receiver: receiver,
-		Memo:     memo,
+		Memo:     memo, // attempted removing memo but packet still won't send. Nil pointer de-reference error remains the same.
 	}
 
 	return channeltypes.NewPacket(
@@ -172,7 +172,7 @@ func (suite *GMPTestSuite) makeMockPacket(receiver, memo string, prevSequence ui
 		suite.pathAB.EndpointB.ChannelID,
 		suite.pathAB.EndpointA.ChannelConfig.PortID,
 		suite.pathAB.EndpointA.ChannelID,
-		clienttypes.NewHeight(0, 100),
+		clienttypes.NewHeight(0, 500),
 		0,
 	)
 }

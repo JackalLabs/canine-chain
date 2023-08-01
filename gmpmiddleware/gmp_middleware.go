@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	errorsmod "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
@@ -174,50 +176,62 @@ func (im IBCMiddleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Cap
 		return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
 	}
 
-	isCallbackRouted, _ := jsonStringHasKey(data.GetMemo(), IBCCallbackKey) // metadata was here
-	fmt.Println(isCallbackRouted)
-	// if !isCallbackRouted {
-	// 	return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
-	// }
+	isCallbackRouted, metadata := jsonStringHasKey(data.GetMemo(), IBCCallbackKey) // metadata was here
+	logger, logFile := testutil.CreateLogger()
+	logger.Println("********************")
+	logger.Println(isCallbackRouted)
+	logger.Printf("%#v\n", metadata)
 
-	// // We remove the callback metadata from the memo as it has already been processed.
+	/*
+		to do: what's the purpose for this call back?
+		older versions of IBC did not have a memo but will we ever interact with chains that are still running very old versions of IBC?
 
-	// // If the only available key in the memo is the callback, we should remove the memo
-	// // from the data completely so the packet is sent without it.
-	// // This way receiver chains that are on old versions of IBC will be able to process the packet
+		if !isCallbackRouted {
+			return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
+		}
+		// We remove the callback metadata from the memo as it has already been processed.
 
-	// callbackRaw := metadata[types.IBCCallbackKey] // This will be used later.
-	// delete(metadata, types.IBCCallbackKey)
-	// bzMetadata, err := json.Marshal(metadata)
-	// if err != nil {
-	// 	return errorsmod.Wrap(err, "Send packet with callback error")
-	// }
-	// stringMetadata := string(bzMetadata)
-	// if stringMetadata == "{}" {
-	// 	data.Memo = ""
-	// } else {
-	// 	data.Memo = stringMetadata
-	// }
-	// dataBytes, err := json.Marshal(data)
-	// if err != nil {
-	// 	return errorsmod.Wrap(err, "Send packet with callback error")
-	// }
+		// If the only available key in the memo is the callback, we should remove the memo
+		// from the data completely so the packet is sent without it.
+		// This way receiver chains that are on old versions of IBC will be able to process the packet
 
-	// packetWithoutCallbackMemo := channeltypes.Packet{
-	// 	Sequence:           concretePacket.Sequence,
-	// 	SourcePort:         concretePacket.SourcePort,
-	// 	SourceChannel:      concretePacket.SourceChannel,
-	// 	DestinationPort:    concretePacket.DestinationPort,
-	// 	DestinationChannel: concretePacket.DestinationChannel,
-	// 	Data:               dataBytes,
-	// 	TimeoutTimestamp:   concretePacket.TimeoutTimestamp,
-	// 	TimeoutHeight:      concretePacket.TimeoutHeight,
-	// }
+		callbackRaw := metadata[IBCCallbackKey] // This will be used later.
+		delete(metadata, IBCCallbackKey)
+	*/
+	bzMetadata, err := json.Marshal(metadata)
+	if err != nil {
+		return errorsmod.Wrap(err, "Send packet with callback error")
+	}
 
-	// err = i.channel.SendPacket(ctx, chanCap, packetWithoutCallbackMemo)
-	// if err != nil {
-	// 	return err
-	// }
+	stringMetadata := string(bzMetadata)
+	if stringMetadata == "{}" {
+		data.Memo = ""
+	} else {
+		data.Memo = stringMetadata
+	}
+	dataBytes, err := json.Marshal(data)
+	if err != nil {
+		return errorsmod.Wrap(err, "Send packet with callback error")
+	}
+	logger.Printf("%#v\n", dataBytes)
+
+	packetWithoutCallbackMemo := channeltypes.Packet{
+		Sequence:           concretePacket.Sequence,
+		SourcePort:         concretePacket.SourcePort,
+		SourceChannel:      concretePacket.SourceChannel,
+		DestinationPort:    concretePacket.DestinationPort,
+		DestinationChannel: concretePacket.DestinationChannel,
+		Data:               dataBytes,
+		TimeoutTimestamp:   concretePacket.TimeoutTimestamp,
+		TimeoutHeight:      concretePacket.TimeoutHeight,
+	}
+	logger.Printf("%#v\n", packetWithoutCallbackMemo)
+
+	err = SafeSendPacket(im.channel, ctx, chanCap, packetWithoutCallbackMemo)
+	if err != nil {
+		logger.Println(err)
+		return err
+	}
 
 	// // Make sure the callback contract is a string and a valid bech32 addr. If it isn't, ignore this packet
 	// contract, ok := callbackRaw.(string)
@@ -230,7 +244,24 @@ func (im IBCMiddleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Cap
 	// }
 
 	// h.ibcHooksKeeper.StorePacketCallback(ctx, packet.GetSourceChannel(), packet.GetSequence(), contract)
+	logFile.Close()
+
 	return nil
+}
+
+func SafeSendPacket(channel porttypes.ICS4Wrapper, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) (err error) {
+	logger, logFile := testutil.CreateLogger()
+
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("SendPacket panic: %v", r)
+			logger.Println(err)
+		}
+	}()
+
+	err = channel.SendPacket(ctx, chanCap, packet)
+	logFile.Close()
+	return err
 }
 
 // jsonStringHasKey parses the memo as a json object and checks if it contains the key.
