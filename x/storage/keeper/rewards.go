@@ -147,42 +147,47 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 }
 
 func (k Keeper) loopDeals(ctx sdk.Context, allDeals []types.ActiveDeals, networkSize sdk.Dec, balance sdk.Coin) {
+	currentBlock := ctx.BlockHeight()
 	for _, deal := range allDeals {
 		end, err := strconv.ParseInt(deal.Endblock, 10, 64)
 		if err != nil {
 			ctx.Logger().Error(err.Error())
 			continue
 		}
-		ctx.Logger().Info(fmt.Sprintf("Is %d < %d?", end, ctx.BlockHeight()))
-		if end < ctx.BlockHeight() {
-			ctx.Logger().Info(fmt.Sprintf("%d < %d = true", end, ctx.BlockHeight()))
 
-			info, found := k.GetStoragePaymentInfo(ctx, deal.Signee)
-			if !found {
+		info, found := k.GetStoragePaymentInfo(ctx, deal.Signee)
+		if !found { // user has no storage plan, we'll check if the deal was made with no plan before removing it
 
+			if end == 0 { // the deal was made with a plan yet the user has no plan, remove it
 				ctx.Logger().Debug(fmt.Sprintf("Removing %s due to no payment info", deal.Cid))
 				cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
 				if cerr != nil {
 					ctx.Logger().Error(cerr.Error())
 				}
 				continue
-
 			}
+		}
+
+		if end == 0 { // for deals that were made with a subscription, we remove them if there is not enough space in the plan
+			if info.SpaceUsed > info.SpaceAvailable { // remove file if the user doesn't have enough space
+				ctx.Logger().Debug(fmt.Sprintf("Removing %s for space used", deal.Cid))
+				err := k.CanContract(ctx, deal.Cid, deal.Signee)
+				if err != nil {
+					ctx.Logger().Error(err.Error())
+				}
+				continue
+			}
+		}
+
+		if currentBlock > end && end > 0 { // check if end block has passed and was made with a timed storage deal
+			ctx.Logger().Info(fmt.Sprintf("deal has expired at %d", ctx.BlockHeight()))
+
 			grace := info.End.Add(time.Hour * 24 * 30)
 			if grace.Before(ctx.BlockTime()) {
 				ctx.Logger().Debug(fmt.Sprintf("Removing %s after grace period", deal.Cid))
 				cerr := k.CanContract(ctx, deal.Cid, deal.Signee)
 				if cerr != nil {
 					ctx.Logger().Error(cerr.Error())
-				}
-				continue
-			}
-
-			if info.SpaceUsed > info.SpaceAvailable { // remove file if the user doesn't have enough space
-				ctx.Logger().Debug(fmt.Sprintf("Removing %s for space used", deal.Cid))
-				err := k.CanContract(ctx, deal.Cid, deal.Signee)
-				if err != nil {
-					ctx.Logger().Error(err.Error())
 				}
 				continue
 			}
