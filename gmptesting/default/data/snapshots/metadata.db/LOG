@@ -724,3 +724,48 @@
 16:40:57.740633 version@stat F·[] S·0B[] Sc·[]
 16:40:57.743773 db@janitor F·2 G·0
 16:40:57.743782 db@open done T·4.026081ms
+=============== Aug 2, 2023 (NZST) ===============
+16:44:16.614798 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:44:16.615004 version@stat F·[] S·0B[] Sc·[]
+16:44:16.615015 db@open opening
+16:44:16.615039 journal@recovery F·1
+16:44:16.615115 journal@recovery recovering @160
+16:44:16.615244 version@stat F·[] S·0B[] Sc·[]
+16:44:16.617917 db@janitor F·2 G·0
+16:44:16.617928 db@open done T·2.90929ms
+=============== Aug 2, 2023 (NZST) ===============
+16:46:54.787140 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:46:54.787402 version@stat F·[] S·0B[] Sc·[]
+16:46:54.787415 db@open opening
+16:46:54.787443 journal@recovery F·1
+16:46:54.787529 journal@recovery recovering @162
+16:46:54.787657 version@stat F·[] S·0B[] Sc·[]
+16:46:54.790474 db@janitor F·2 G·0
+16:46:54.790495 db@open done T·3.075651ms
+=============== Aug 2, 2023 (NZST) ===============
+16:50:31.497791 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:50:31.498012 version@stat F·[] S·0B[] Sc·[]
+16:50:31.498023 db@open opening
+16:50:31.498045 journal@recovery F·1
+16:50:31.498124 journal@recovery recovering @164
+16:50:31.498265 version@stat F·[] S·0B[] Sc·[]
+16:50:31.501044 db@janitor F·2 G·0
+16:50:31.501053 db@open done T·3.026726ms
+=============== Aug 2, 2023 (NZST) ===============
+17:31:04.134532 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+17:31:04.134628 version@stat F·[] S·0B[] Sc·[]
+17:31:04.134639 db@open opening
+17:31:04.134662 journal@recovery F·1
+17:31:04.134948 journal@recovery recovering @166
+17:31:04.135530 version@stat F·[] S·0B[] Sc·[]
+17:31:04.139476 db@janitor F·2 G·0
+17:31:04.139486 db@open done T·4.843212ms
+=============== Aug 2, 2023 (NZST) ===============
+19:59:32.653785 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+19:59:32.654184 version@stat F·[] S·0B[] Sc·[]
+19:59:32.654193 db@open opening
+19:59:32.654228 journal@recovery F·1
+19:59:32.654312 journal@recovery recovering @168
+19:59:32.654475 version@stat F·[] S·0B[] Sc·[]
+19:59:32.657454 db@janitor F·2 G·0
+19:59:32.657463 db@open done T·3.266372ms

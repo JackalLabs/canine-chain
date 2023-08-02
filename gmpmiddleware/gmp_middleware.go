@@ -229,15 +229,30 @@ func (im IBCMiddleware) SendPacket(capabilitykeeper capabilitykeeper.ScopedKeepe
 	logger.Printf("Channel state: %#v\n", channel.State)
 
 	// Does caller own capability for the channel?
-
 	isCapable := capabilitykeeper.AuthenticateCapability(ctx, chanCap, host.ChannelCapabilityPath(packet.GetSourcePort(), packet.GetSourceChannel()))
 	logger.Printf("isCapable? %t", isCapable)
 
-	err = SafeSendPacket(im.channel, ctx, chanCap, packetWithoutCallbackMemo)
-	if err != nil {
-		logger.Println(err)
-		return err
-	}
+	// packet destination port matches the counterparty's port?
+	portMatched := packet.GetDestPort() == channel.Counterparty.PortId
+	logger.Printf("ports match? %t", portMatched)
+
+	// packet destination channel match the counterparty's channel?
+	destinationMatch := packet.GetDestChannel() == channel.Counterparty.ChannelId
+	logger.Printf("channels match? %t", destinationMatch)
+
+	// has a connection even been established?
+	connectionEnd, found := ibcKeeper.ConnectionKeeper.GetConnection(ctx, channel.ConnectionHops[0])
+	logger.Printf("connection established? %t", found)
+	logger.Printf("connectionEnd: %#v\n", connectionEnd)
+
+	// bypass the ICS4 wrapper and call the channel keeper directly works O.o
+	err = ibcChannelKeeper.SendPacket(ctx, chanCap, packet)
+
+	// err = SafeSendPacket(im.channel, ctx, chanCap, packetWithoutCallbackMemo)
+	// if err != nil {
+	// 	logger.Println(err)
+	// 	return err
+	// }
 
 	// // Make sure the callback contract is a string and a valid bech32 addr. If it isn't, ignore this packet
 	// contract, ok := callbackRaw.(string)
@@ -255,20 +270,20 @@ func (im IBCMiddleware) SendPacket(capabilitykeeper capabilitykeeper.ScopedKeepe
 	return nil
 }
 
-func SafeSendPacket(channel porttypes.ICS4Wrapper, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) (err error) {
-	logger, logFile := testutil.CreateLogger()
+// func SafeSendPacket(channel porttypes.ICS4Wrapper, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) (err error) {
+// 	logger, logFile := testutil.CreateLogger()
 
-	defer func() {
-		if r := recover(); r != nil {
-			err = fmt.Errorf("SendPacket panic: %v", r)
-			logger.Println(err)
-		}
-	}()
+// 	defer func() {
+// 		if r := recover(); r != nil {
+// 			err = fmt.Errorf("SendPacket panic: %v", r)
+// 			logger.Println(err)
+// 		}
+// 	}()
 
-	err = channel.SendPacket(ctx, chanCap, packet)
-	logFile.Close()
-	return err
-}
+// 	err = channel.SendPacket(ctx, chanCap, packet)
+// 	logFile.Close()
+// 	return err
+// }
 
 // jsonStringHasKey parses the memo as a json object and checks if it contains the key.
 func jsonStringHasKey(memo, key string) (found bool, jsonObject map[string]interface{}) {
