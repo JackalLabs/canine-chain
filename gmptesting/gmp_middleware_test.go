@@ -123,8 +123,9 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 
 	app := suite.chainB.GetJackalApp()
 	ibcKeeper := app.GetIBCKeeper()
+	scopedIBCKeeper := app.GetScopedIBCKeeper()
 
-	err := suite.chainB.GetJackalApp().GmpStack.SendPacket(*ibcKeeper,
+	err := suite.chainB.GetJackalApp().GmpStack.SendPacket(scopedIBCKeeper, *ibcKeeper,
 		suite.chainB.GetContext(), channelCap, packet)
 
 	suite.Require().NoError(err, "IBC send failed. Expected success. %s", err)

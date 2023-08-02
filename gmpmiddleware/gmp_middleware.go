@@ -7,9 +7,11 @@ import (
 	errorsmod "cosmossdk.io/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
+	host "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
 
@@ -161,7 +163,7 @@ func (im IBCMiddleware) OnTimeoutPacket(
 	return im.app.OnTimeoutPacket(ctx, packet, relayer)
 }
 
-func (im IBCMiddleware) SendPacket(ibcKeeper ibckeeper.Keeper, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) error {
+func (im IBCMiddleware) SendPacket(capabilitykeeper capabilitykeeper.ScopedKeeper, ibcKeeper ibckeeper.Keeper, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) error {
 	concretePacket, ok := packet.(channeltypes.Packet)
 	if !ok {
 		return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
@@ -224,6 +226,13 @@ func (im IBCMiddleware) SendPacket(ibcKeeper ibckeeper.Keeper, ctx sdk.Context, 
 	channel, found := ibcChannelKeeper.GetChannel(ctx, packetWithoutCallbackMemo.GetSourcePort(), packetWithoutCallbackMemo.GetSourceChannel())
 	logger.Printf("Channel found? %t. Channel: %#v\n", found, channel)
 	logger.Printf("Channel: %#v\n", channel)
+	logger.Printf("Channel state: %#v\n", channel.State)
+
+	// Does caller own capability for the channel?
+
+	isCapable := capabilitykeeper.AuthenticateCapability(ctx, chanCap, host.ChannelCapabilityPath(packet.GetSourcePort(), packet.GetSourceChannel()))
+	logger.Printf("isCapable? %t", isCapable)
+
 	err = SafeSendPacket(im.channel, ctx, chanCap, packetWithoutCallbackMemo)
 	if err != nil {
 		logger.Println(err)

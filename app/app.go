@@ -1249,3 +1249,10 @@ func (app *JackalApp) GetWasmKeeper() wasmkeeper.Keeper {
 	clonedKeeper := app.wasmKeeper
 	return clonedKeeper
 }
+
+// // Helper function to return a clone of the scopedIBCKeeper for testing purposes
+// func (app *JackalApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+// 	// create a new instance and copy the values from app.scopedIBCKeeper to the new instance
+// 	clonedKeeper := app.scopedIBCKeeper
+// 	return clonedKeeper
+// }
