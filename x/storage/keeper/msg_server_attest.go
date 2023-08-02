@@ -98,7 +98,7 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 		return nil, sdkerrors.Wrapf(types.ErrInvalidLengthQuery, "not enough providers online")
 	}
 
-	rand.Seed(ctx.BlockTime().UnixNano())
+	rand.Seed(ctx.BlockHeight())
 
 	attestations := make([]*types.Attestation, params.AttestFormSize)
 
