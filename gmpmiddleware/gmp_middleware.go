@@ -11,6 +11,8 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
+	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
+
 	"github.com/jackalLabs/canine-chain/v3/testutil"
 )
 
@@ -109,13 +111,7 @@ func (im IBCMiddleware) OnRecvPacket(
 	// 	return ack
 	// }
 
-	isIcs20, data := isIcs20Packet(packet)
-	logger, logFile := testutil.CreateLogger()
-	logger.Println("*********************")
-	logger.Printf("Is it ICS20? %t\n", isIcs20)
-	logger.Printf("%+v\n", data)
-
-	logFile.Close()
+	// isIcs20, data := isIcs20Packet(packet)
 
 	// The below will always make our tests fail unless we hard code that the sender is the AxelarGMPAcc
 	// // authenticate the message with packet sender + channel-id
@@ -165,7 +161,7 @@ func (im IBCMiddleware) OnTimeoutPacket(
 	return im.app.OnTimeoutPacket(ctx, packet, relayer)
 }
 
-func (im IBCMiddleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) error {
+func (im IBCMiddleware) SendPacket(ibcKeeper ibckeeper.Keeper, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) error {
 	concretePacket, ok := packet.(channeltypes.Packet)
 	if !ok {
 		return im.channel.SendPacket(ctx, chanCap, packet) // send packet will return an error
@@ -177,11 +173,7 @@ func (im IBCMiddleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Cap
 	}
 
 	isCallbackRouted, metadata := jsonStringHasKey(data.GetMemo(), IBCCallbackKey) // metadata was here
-	logger, logFile := testutil.CreateLogger()
-	logger.Println("********************")
-	logger.Println(isCallbackRouted)
-	logger.Printf("%#v\n", metadata)
-
+	fmt.Println(isCallbackRouted)
 	/*
 		to do: what's the purpose for this call back?
 		older versions of IBC did not have a memo but will we ever interact with chains that are still running very old versions of IBC?
@@ -213,7 +205,6 @@ func (im IBCMiddleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Cap
 	if err != nil {
 		return errorsmod.Wrap(err, "Send packet with callback error")
 	}
-	logger.Printf("%#v\n", dataBytes)
 
 	packetWithoutCallbackMemo := channeltypes.Packet{
 		Sequence:           concretePacket.Sequence,
@@ -225,8 +216,14 @@ func (im IBCMiddleware) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Cap
 		TimeoutTimestamp:   concretePacket.TimeoutTimestamp,
 		TimeoutHeight:      concretePacket.TimeoutHeight,
 	}
-	logger.Printf("%#v\n", packetWithoutCallbackMemo)
 
+	ibcChannelKeeper := ibcKeeper.ChannelKeeper
+	logger, logFile := testutil.CreateLogger()
+
+	// Can the keeper retrieve the channel from our packet?
+	channel, found := ibcChannelKeeper.GetChannel(ctx, packetWithoutCallbackMemo.GetSourcePort(), packetWithoutCallbackMemo.GetSourceChannel())
+	logger.Printf("Channel found? %t. Channel: %#v\n", found, channel)
+	logger.Printf("Channel: %#v\n", channel)
 	err = SafeSendPacket(im.channel, ctx, chanCap, packetWithoutCallbackMemo)
 	if err != nil {
 		logger.Println(err)
@@ -266,10 +263,6 @@ func SafeSendPacket(channel porttypes.ICS4Wrapper, ctx sdk.Context, chanCap *cap
 
 // jsonStringHasKey parses the memo as a json object and checks if it contains the key.
 func jsonStringHasKey(memo, key string) (found bool, jsonObject map[string]interface{}) {
-	logger, logFile := testutil.CreateLogger()
-	logger.Println(memo)
-	logger.Println(key)
-
 	jsonObject = make(map[string]interface{})
 
 	// If there is no memo, the packet was either sent with an earlier version of IBC, or the memo was
@@ -283,7 +276,6 @@ func jsonStringHasKey(memo, key string) (found bool, jsonObject map[string]inter
 	if err != nil {
 		return false, jsonObject
 	}
-	logger.Println(jsonObject)
 
 	// If the key doesn't exist, there's nothing to do on this hook. Continue by passing the packet
 	// down the stack
@@ -291,7 +283,6 @@ func jsonStringHasKey(memo, key string) (found bool, jsonObject map[string]inter
 	if !ok {
 		return false, jsonObject
 	}
-	logFile.Close()
 
 	return true, jsonObject
 }

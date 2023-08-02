@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/stretchr/testify/suite"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -95,15 +94,8 @@ func (suite *GMPTestSuite) TestOnRecvPacket() {
 	packet := channeltypes.NewPacket(data.GetBytes(), seq, path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, clienttypes.NewHeight(1, 100), 0)
 
 	// we expect a returned acknowledgement
-	logger, logFile := testutil.CreateLogger()
-	logger.Println("*********************")
-	logger.Printf("%+v\n", suite.chainB.GetContext())
-	logger.Printf("%+v\n", packet)
-	logger.Printf("%+v\n", suite.chainA.SenderAccount.GetAddress())
 	ack := suite.chainB.GetJackalApp().GmpStack.OnRecvPacket(suite.chainB.GetContext(), packet, suite.chainA.SenderAccount.GetAddress())
-	logger.Printf("The ack is %+v\n", ack)
-
-	logFile.Close()
+	fmt.Println(ack)
 
 	// suite.Require().True(ack.Success())
 }
@@ -129,8 +121,12 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 
 	packet := suite.makeMockPacket(receiver, memo, prevSequence)
 
-	err := suite.chainB.GetJackalApp().GmpStack.SendPacket(
+	app := suite.chainB.GetJackalApp()
+	ibcKeeper := app.GetIBCKeeper()
+
+	err := suite.chainB.GetJackalApp().GmpStack.SendPacket(*ibcKeeper,
 		suite.chainB.GetContext(), channelCap, packet)
+
 	suite.Require().NoError(err, "IBC send failed. Expected success. %s", err)
 
 	// // Update both clients
@@ -156,10 +152,11 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 	return emptyBytes
 }
 
+// NOTE: Always make sure this resembles osmosis' mock packet
 func (suite *GMPTestSuite) makeMockPacket(receiver, memo string, prevSequence uint64) channeltypes.Packet {
 	packetData := transfertypes.FungibleTokenPacketData{
 		Denom:    sdk.DefaultBondDenom,
-		Amount:   "1000",
+		Amount:   "1",
 		Sender:   suite.chainB.SenderAccount.GetAddress().String(),
 		Receiver: receiver,
 		Memo:     memo, // attempted removing memo but packet still won't send. Nil pointer de-reference error remains the same.
@@ -172,7 +169,7 @@ func (suite *GMPTestSuite) makeMockPacket(receiver, memo string, prevSequence ui
 		suite.pathAB.EndpointB.ChannelID,
 		suite.pathAB.EndpointA.ChannelConfig.PortID,
 		suite.pathAB.EndpointA.ChannelID,
-		clienttypes.NewHeight(0, 500),
+		clienttypes.NewHeight(0, 100),
 		0,
 	)
 }
