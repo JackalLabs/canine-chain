@@ -163,6 +163,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/docs"
 
 	gmpmiddleware "github.com/jackalLabs/canine-chain/v3/gmpmiddleware"
+	gmpmiddlewaretypes "github.com/jackalLabs/canine-chain/v3/gmpmiddleware/types"
 )
 
 const appName = "JackalApp"
@@ -694,13 +695,13 @@ func NewJackalApp(
 
 	// gmp middleware
 	var gmpStack porttypes.IBCModule
-	var handler gmpmiddleware.GeneralMessageHandler
+	var handler gmpmiddlewaretypes.GeneralMessageHandler
 	gmpStack = gmpmiddleware.NewIBCMiddleware(gmpStack, handler)
 
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
-		AddRoute(gmpmiddleware.ModuleName, gmpStack)
+		AddRoute(gmpmiddlewaretypes.ModuleName, gmpStack)
 
 	app.ibcKeeper.SetRouter(ibcRouter)
 
