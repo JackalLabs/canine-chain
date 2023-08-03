@@ -40,6 +40,22 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.CollateralList {
 		k.SetCollateral(ctx, elem)
 	}
+
+	// Set all the attestations
+	for _, elem := range genState.AttestForms {
+		k.SetAttestationForm(ctx, elem)
+	}
+
+	// Set all the reports
+	for _, elem := range genState.ReportForms {
+		k.SetReportForm(ctx, elem)
+	}
+
+	// Set all the active providers
+	for _, elem := range genState.ActiveProvidersList {
+		k.SetActiveProviders(ctx, elem)
+	}
+
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -56,6 +72,10 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.FidCidList = k.GetAllFidCid(ctx)
 	genesis.PaymentInfoList = k.GetAllStoragePaymentInfo(ctx)
 	genesis.CollateralList = k.GetAllCollateral(ctx)
+	genesis.ActiveProvidersList = k.GetAllActiveProviders(ctx)
+	genesis.ReportForms = k.GetAllReport(ctx)
+	genesis.AttestForms = k.GetAllAttestation(ctx)
+
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis
