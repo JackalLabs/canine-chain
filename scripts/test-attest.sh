@@ -136,12 +136,15 @@ sleep 60
 
 echo "starting file uploads"
 
+canined tx storage buy-storage jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct 720h 3000000000 ujkl --from charlie -y
+
+sleep 10
 
 curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/1.png http://localhost:3330/upload
 
 sleep 10
 
-canined tx storage sign-contract jklc107a4hj35fg4jlcapl9h3y7rhw4p24pjtunv8hwwg2hp9dcwatgwsw229ql --from charlie -y --pay-upfront
+canined tx storage sign-contract jklc107a4hj35fg4jlcapl9h3y7rhw4p24pjtunv8hwwg2hp9dcwatgwsw229ql --from charlie -y
 
 sleep 30
 
@@ -149,7 +152,7 @@ curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/
 
 sleep 10
 
-canined tx storage sign-contract jklc1mnjchx4g27929y5wfm6luvx86lhca688vqh3vtts6hjllfupgvdqgmr04k --from charlie -y --pay-upfront
+canined tx storage sign-contract jklc1mnjchx4g27929y5wfm6luvx86lhca688vqh3vtts6hjllfupgvdqgmr04k --from charlie -y
 
 sleep 30
 
@@ -157,7 +160,7 @@ curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/
 
 sleep 10
 
-canined tx storage sign-contract jklc14y6hk074svd8dyjg5g6c2xzkcfv4ge0w2ey96plr98k4pyepk5xq46wjkn --from charlie -y --pay-upfront
+canined tx storage sign-contract jklc14y6hk074svd8dyjg5g6c2xzkcfv4ge0w2ey96plr98k4pyepk5xq46wjkn --from charlie -y
 
 sleep 30
 
@@ -165,7 +168,7 @@ curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/
 
 sleep 10
 
-canined tx storage sign-contract jklc102jpqmfj5w9pz555zfjd6e9v5nfcnjsy4vh08qhlmrnedrg5jvwqluwrl8 --from charlie -y --pay-upfront
+canined tx storage sign-contract jklc102jpqmfj5w9pz555zfjd6e9v5nfcnjsy4vh08qhlmrnedrg5jvwqluwrl8 --from charlie -y
 
 sleep 30
 
@@ -173,7 +176,7 @@ curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/
 
 sleep 10
 
-canined tx storage sign-contract jklc16xdn85h9fel3ruawc3dxjdu7xtkdfp23j66fkkl7dc4277t03rds2rf7g7 --from charlie -y --pay-upfront
+canined tx storage sign-contract jklc16xdn85h9fel3ruawc3dxjdu7xtkdfp23j66fkkl7dc4277t03rds2rf7g7 --from charlie -y
 
 sleep 30
 
@@ -181,7 +184,7 @@ curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/
 
 sleep 10
 
-canined tx storage sign-contract jklc1g80djchxzjxztkff98wrelh86ha0alhwu0j9ce84sqvljy8vpddsg637q5 --from charlie -y --pay-upfront
+canined tx storage sign-contract jklc1g80djchxzjxztkff98wrelh86ha0alhwu0j9ce84sqvljy8vpddsg637q5 --from charlie -y
 
 sleep 30
 

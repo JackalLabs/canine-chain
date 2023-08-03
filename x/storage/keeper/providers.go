@@ -70,11 +70,13 @@ func (k Keeper) GetActiveProviders(ctx sdk.Context, filterAddress string) []type
 
 	i64Size := int64(size)
 
-	rand.Seed(ctx.BlockHeight())
+	r := rand.NewRand() // creating a new random generator to ensure no interference
+
+	r.Seed(ctx.BlockHeight())
 
 	for i := 0; i < rounds; i++ {
-		x := rand.Int63n(i64Size)
-		y := rand.Int63n(i64Size)
+		x := r.Int63n(i64Size)
+		y := r.Int63n(i64Size)
 
 		providers[x], providers[y] = providers[y], providers[x]
 	}

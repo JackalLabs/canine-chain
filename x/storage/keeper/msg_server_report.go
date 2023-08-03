@@ -3,10 +3,8 @@ package keeper
 import (
 	"context"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tendermint/tendermint/libs/rand"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
@@ -87,8 +85,6 @@ func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
 	if len(providers) < int(params.AttestFormSize) {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidLengthQuery, "not enough providers online")
 	}
-
-	rand.Seed(ctx.BlockTime().UnixNano())
 
 	attestations := make([]*types.Attestation, params.AttestFormSize)
 
