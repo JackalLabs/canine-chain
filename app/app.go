@@ -165,6 +165,10 @@ import (
 
 	gmpmiddleware "github.com/jackalLabs/canine-chain/v3/gmpmiddleware"
 	gmpmiddlewaretypes "github.com/jackalLabs/canine-chain/v3/gmpmiddleware/types"
+
+	packetforward "github.com/strangelove-ventures/packet-forward-middleware/v4/router"
+	packetforwardkeeper "github.com/strangelove-ventures/packet-forward-middleware/v4/router/keeper"
+	packetforwardtypes "github.com/strangelove-ventures/packet-forward-middleware/v4/router/types"
 )
 
 const appName = "JackalApp"
@@ -342,6 +346,7 @@ type JackalApp struct {
 	StorageKeeper       storagemodulekeeper.Keeper
 	FileTreeKeeper      filetreemodulekeeper.Keeper
 	NotificationsKeeper notificationsmodulekeeper.Keeper
+	PacketForwardKeeper packetforwardkeeper.Keeper
 
 	// IBC modules
 	GmpMiddlewareStack gmpmiddleware.IBCMiddleware
@@ -392,7 +397,7 @@ func NewJackalApp(
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, rnsmoduletypes.StoreKey,
 		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
 		notificationsmoduletypes.StoreKey, ibcfeetypes.StoreKey, icacontrollertypes.StoreKey,
-		icahosttypes.StoreKey,
+		icahosttypes.StoreKey, packetforwardtypes.StoreKey,
 
 		/*
 			, dsigmoduletypes.StoreKey,
@@ -697,7 +702,7 @@ func NewJackalApp(
 	// gmp middleware
 	// This is just a placeholder for now. We need to initialize it with a valid object
 	// that satisfies the interface. Will implement it in later testing.
-	var ibcApp porttypes.IBCModule
+	// var ibcApp porttypes.IBCModule
 
 	// Placeholder also.
 	var handler gmpmiddlewaretypes.GeneralMessageHandler
@@ -705,7 +710,27 @@ func NewJackalApp(
 	// IBC-go channel keeper satisfies the ICS4 wrapper interface. It serves as the means of calling (keeper).SendPacket()
 	channelKeeper := app.ibcKeeper.ChannelKeeper
 
-	app.GmpMiddlewareStack = gmpmiddleware.NewIBCMiddleware(channelKeeper, ibcApp, handler)
+	app.PacketForwardKeeper = *packetforwardkeeper.NewKeeper(
+		appCodec,
+		keys[packetforwardtypes.StoreKey],
+		app.getSubspace(packetforwardtypes.ModuleName),
+		app.transferKeeper,
+		app.ibcKeeper.ChannelKeeper,
+		app.distrKeeper,
+		app.BankKeeper,
+		// The ICS4Wrapper is replaced by the HooksICS4Wrapper instead of the channel so that sending can be overridden by the middleware
+		app.ibcKeeper.ChannelKeeper,
+	)
+
+	packetForwardMiddleware := packetforward.NewIBCMiddleware(
+		transfer.NewIBCModule(app.transferKeeper),
+		&app.PacketForwardKeeper,
+		0,
+		packetforwardkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
+		packetforwardkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
+	)
+
+	app.GmpMiddlewareStack = gmpmiddleware.NewIBCMiddleware(channelKeeper, packetForwardMiddleware, handler)
 
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
@@ -1231,6 +1256,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(packetforwardtypes.ModuleName)
 
 	return paramsKeeper
 }

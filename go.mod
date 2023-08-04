@@ -50,6 +50,8 @@ require (
 	github.com/golang/mock v1.6.0
 )
 
+require github.com/iancoleman/orderedmap v0.2.0 // indirect
+
 require (
 	cosmossdk.io/api v0.2.6 // indirect
 	cosmossdk.io/core v0.5.1 // indirect
@@ -141,6 +143,7 @@ require (
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
+	github.com/strangelove-ventures/packet-forward-middleware/v4 v4.0.6
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
 	github.com/tendermint/go-amino v0.16.0 // indirect

@@ -124,10 +124,10 @@ func (im IBCMiddleware) OnRecvPacket(
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
 	// Comment out call to underlying OnRecvPacket for now, we apply our own logic
-	// ack := im.app.OnRecvPacket(ctx, packet, relayer)
+	ack := im.app.OnRecvPacket(ctx, packet, relayer)
 
 	// declare an ack that we always return so we can dissect the code without erroring
-	var ack ibcexported.Acknowledgement
+	// var ack ibcexported.Acknowledgement
 	// if !ack.Success() {
 	// 	return ack
 	// }
@@ -264,50 +264,23 @@ func (im IBCMiddleware) SendPacket(capabilitykeeper capabilitykeeper.ScopedKeepe
 	logger.Printf("connection established? %t", found)
 	logger.Printf("connectionEnd: %#v\n", connectionEnd)
 
-	// bypass the ICS4 wrapper and call the channel keeper directly works O.o
-	// err = ibcChannelKeeper.SendPacket(ctx, chanCap, packet)
-	logger.Println("Channel is******************")
-	logger.Println(im.channel)
-
 	logFile.Close()
 	err = im.channel.SendPacket(ctx, chanCap, packet)
 
-	// err = SafeSendPacket(im.channel, ctx, chanCap, packetWithoutCallbackMemo)
-	// if err != nil {
-	// 	logger.Println(err)
-	// 	return err
-	// }
-
-	// // Make sure the callback contract is a string and a valid bech32 addr. If it isn't, ignore this packet
-	// contract, ok := callbackRaw.(string)
-	// if !ok {
-	// 	return nil
-	// }
-	// _, err = sdk.AccAddressFromBech32(contract)
-	// if err != nil {
-	// 	return nil
-	// }
-
-	// h.ibcHooksKeeper.StorePacketCallback(ctx, packet.GetSourceChannel(), packet.GetSequence(), contract)
-	logFile.Close()
-
+	/*
+		// // Make sure the callback contract is a string and a valid bech32 addr. If it isn't, ignore this packet
+		// contract, ok := callbackRaw.(string)
+		// if !ok {
+		// 	return nil
+		// }
+		// _, err = sdk.AccAddressFromBech32(contract)
+		// if err != nil {
+		// 	return nil
+		// }
+		// h.ibcHooksKeeper.StorePacketCallback(ctx, packet.GetSourceChannel(), packet.GetSequence(), contract)
+	*/
 	return nil
 }
-
-// func SafeSendPacket(channel porttypes.ICS4Wrapper, ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI) (err error) {
-// 	logger, logFile := testutil.CreateLogger()
-
-// 	defer func() {
-// 		if r := recover(); r != nil {
-// 			err = fmt.Errorf("SendPacket panic: %v", r)
-// 			logger.Println(err)
-// 		}
-// 	}()
-
-// 	err = channel.SendPacket(ctx, chanCap, packet)
-// 	logFile.Close()
-// 	return err
-// }
 
 // jsonStringHasKey parses the memo as a json object and checks if it contains the key.
 func jsonStringHasKey(memo, key string) (found bool, jsonObject map[string]interface{}) {
