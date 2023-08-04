@@ -15,7 +15,6 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
 
-	keeper "github.com/jackalLabs/canine-chain/v3/gmpmiddleware/keeper"
 	"github.com/jackalLabs/canine-chain/v3/gmpmiddleware/types"
 	"github.com/jackalLabs/canine-chain/v3/testutil"
 )
@@ -24,14 +23,31 @@ type IBCMiddleware struct {
 	channel porttypes.ICS4Wrapper
 	app     porttypes.IBCModule
 	handler types.GeneralMessageHandler
-	keeper  keeper.Keeper
+	// keeper  keeper.Keeper
 }
 
-func NewIBCMiddleware(app porttypes.IBCModule, handler types.GeneralMessageHandler) IBCMiddleware {
+func NewIBCMiddleware(channel porttypes.ICS4Wrapper, app porttypes.IBCModule, handler types.GeneralMessageHandler) IBCMiddleware {
 	return IBCMiddleware{
+		channel: channel,
 		app:     app,
 		handler: handler,
+		// keeper:  keeper, Note: Don't need the keeper right now.
 	}
+}
+
+// GetChannel returns the 'channel' field of the IBCMiddleware struct.
+func (m IBCMiddleware) GetChannel() porttypes.ICS4Wrapper {
+	return m.channel
+}
+
+// GetApp returns the 'app' field of the IBCMiddleware struct.
+func (m IBCMiddleware) GetApp() porttypes.IBCModule {
+	return m.app
+}
+
+// GetHandler returns the 'handler' field of the IBCMiddleware struct.
+func (m IBCMiddleware) GetHandler() types.GeneralMessageHandler {
+	return m.handler
 }
 
 // OnChanOpenInit implements the IBCModule interface
@@ -250,10 +266,11 @@ func (im IBCMiddleware) SendPacket(capabilitykeeper capabilitykeeper.ScopedKeepe
 
 	// bypass the ICS4 wrapper and call the channel keeper directly works O.o
 	// err = ibcChannelKeeper.SendPacket(ctx, chanCap, packet)
-	logger.Println("******************")
-	logger.Println(im.keeper.Ics4Wrapper)
+	logger.Println("Channel is******************")
+	logger.Println(im.channel)
+
 	logFile.Close()
-	err = im.keeper.SendPacket(ctx, chanCap, packet)
+	err = im.channel.SendPacket(ctx, chanCap, packet)
 
 	// err = SafeSendPacket(im.channel, ctx, chanCap, packetWithoutCallbackMemo)
 	// if err != nil {

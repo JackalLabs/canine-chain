@@ -101,6 +101,7 @@ import (
 	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v4/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+
 	ibcclient "github.com/cosmos/ibc-go/v4/modules/core/02-client"
 	ibcclientclient "github.com/cosmos/ibc-go/v4/modules/core/02-client/client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
@@ -343,7 +344,7 @@ type JackalApp struct {
 	NotificationsKeeper notificationsmodulekeeper.Keeper
 
 	// IBC modules
-	GmpStack gmpmiddleware.IBCMiddleware
+	GmpMiddlewareStack gmpmiddleware.IBCMiddleware
 
 	/*
 
@@ -694,14 +695,22 @@ func NewJackalApp(
 	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, app.ibcFeeKeeper)
 
 	// gmp middleware
-	var gmpStack porttypes.IBCModule
+	// This is just a placeholder for now. We need to initialize it with a valid object
+	// that satisfies the interface. Will implement it in later testing.
+	var ibcApp porttypes.IBCModule
+
+	// Placeholder also.
 	var handler gmpmiddlewaretypes.GeneralMessageHandler
-	gmpStack = gmpmiddleware.NewIBCMiddleware(gmpStack, handler)
+
+	// IBC-go channel keeper satisfies the ICS4 wrapper interface. It serves as the means of calling (keeper).SendPacket()
+	channelKeeper := app.ibcKeeper.ChannelKeeper
+
+	app.GmpMiddlewareStack = gmpmiddleware.NewIBCMiddleware(channelKeeper, ibcApp, handler)
 
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
-		AddRoute(gmpmiddlewaretypes.ModuleName, gmpStack)
+		AddRoute(gmpmiddlewaretypes.ModuleName, app.GmpMiddlewareStack) // We don't have an inited porttypes.IBCModule object, so not a valid route yet. Tests will pass for now.
 
 	app.ibcKeeper.SetRouter(ibcRouter)
 

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
+	"github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/stretchr/testify/suite"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -94,7 +95,7 @@ func (suite *GMPTestSuite) TestOnRecvPacket() {
 	packet := channeltypes.NewPacket(data.GetBytes(), seq, path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, clienttypes.NewHeight(1, 100), 0)
 
 	// we expect a returned acknowledgement
-	ack := suite.chainB.GetJackalApp().GmpStack.OnRecvPacket(suite.chainB.GetContext(), packet, suite.chainA.SenderAccount.GetAddress())
+	ack := suite.chainB.GetJackalApp().GmpMiddlewareStack.OnRecvPacket(suite.chainB.GetContext(), packet, suite.chainA.SenderAccount.GetAddress())
 	fmt.Println(ack)
 
 	// suite.Require().True(ack.Success())
@@ -125,7 +126,17 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 	ibcKeeper := app.GetIBCKeeper()
 	scopedIBCKeeper := app.GetScopedIBCKeeper()
 
-	err := suite.chainB.GetJackalApp().GmpStack.SendPacket(scopedIBCKeeper, *ibcKeeper,
+	logger, logFile := testutil.CreateLogger()
+
+	chainApp := suite.chainB.GetJackalApp()
+	logger.Printf("chainApp channel is: %#v\n ", chainApp.GmpMiddlewareStack.GetChannel())
+
+	logger.Printf("chainApp app is: %#v\n ", chainApp.GmpMiddlewareStack.GetApp())
+	logger.Printf("chainApp handler is: %#v\n ", chainApp.GmpMiddlewareStack.GetHandler())
+
+	logFile.Close()
+
+	err := suite.chainB.GetJackalApp().GmpMiddlewareStack.SendPacket(scopedIBCKeeper, *ibcKeeper,
 		suite.chainB.GetContext(), channelCap, packet)
 
 	suite.Require().NoError(err, "IBC send failed. Expected success. %s", err)
