@@ -123,17 +123,12 @@ func (im IBCMiddleware) OnRecvPacket(
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
-	// Comment out call to underlying OnRecvPacket for now, we apply our own logic
+	// im.ProperlyConfigured()? // consider adding this function if there are keeprs involved
+	logger, logFile := testutil.CreateLogger()
+
 	ack := im.app.OnRecvPacket(ctx, packet, relayer)
 
-	// declare an ack that we always return so we can dissect the code without erroring
-	// var ack ibcexported.Acknowledgement
-	// if !ack.Success() {
-	// 	return ack
-	// }
-
-	// isIcs20, data := isIcs20Packet(packet)
-
+	isIcs20, data := isIcs20Packet(packet)
 	// The below will always make our tests fail unless we hard code that the sender is the AxelarGMPAcc
 	// // authenticate the message with packet sender + channel-id
 	// // TODO: authenticate the message with channel-id
@@ -141,12 +136,19 @@ func (im IBCMiddleware) OnRecvPacket(
 	// 	return ack
 	// }
 
-	// var msg Message
-	// var err error
+	var msg types.Message
 
-	// if err = json.Unmarshal([]byte(data.GetMemo()), &msg); err != nil {
-	// 	return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot unmarshal memo"))
-	// }
+	var err error
+
+	if err = json.Unmarshal([]byte(data.GetMemo()), &msg); err != nil {
+		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot unmarshal memo"))
+	}
+
+	logger.Println(isIcs20)
+	logger.Printf("The message is %v", msg)
+	logger.Printf("The ack is %v", ack.Success())
+
+	logFile.Close()
 
 	// switch msg.Type {
 	// case TypeGeneralMessage:
@@ -243,9 +245,9 @@ func (im IBCMiddleware) SendPacket(capabilitykeeper capabilitykeeper.ScopedKeepe
 
 	// Can the keeper retrieve the channel from our packet?
 	channel, found := ibcChannelKeeper.GetChannel(ctx, packetWithoutCallbackMemo.GetSourcePort(), packetWithoutCallbackMemo.GetSourceChannel())
-	logger.Printf("Channel found? %t. Channel: %#v\n", found, channel)
-	logger.Printf("Channel: %#v\n", channel)
-	logger.Printf("Channel state: %#v\n", channel.State)
+	// logger.Printf("Channel found? %t. Channel: %#v\n", found, channel)
+	// logger.Printf("Channel: %#v\n", channel)
+	// logger.Printf("Channel state: %#v\n", channel.State)
 
 	// Does caller own capability for the channel?
 	isCapable := capabilitykeeper.AuthenticateCapability(ctx, chanCap, host.ChannelCapabilityPath(packet.GetSourcePort(), packet.GetSourceChannel()))

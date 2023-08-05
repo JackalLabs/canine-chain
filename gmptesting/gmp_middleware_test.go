@@ -1,17 +1,18 @@
 package gmp_testing
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/stretchr/testify/suite"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
+	gmpmiddlewaretypes "github.com/jackalLabs/canine-chain/v3/gmpmiddleware/types"
 )
 
 type GMPTestSuite struct {
@@ -90,15 +91,24 @@ func (suite *GMPTestSuite) TestOnRecvPacket() {
 	_, err := suite.chainA.SendMsgs(transferMsg)
 	suite.Require().NoError(err) // message committed
 
+	axelargeneralmsg := gmpmiddlewaretypes.Message{
+		SourceChain:   "placeholderSourceChain",
+		SourceAddress: "placeholderSourceAddress",
+		Payload:       []byte("placeholder"),
+		Type:          1,
+	}
+
+	bz, err := json.Marshal(axelargeneralmsg)
+	suite.Require().NoError(err) // message committed
+
 	data := transfertypes.NewFungibleTokenPacketData(trace.GetFullDenomPath(), amount.String(), suite.chainA.SenderAccount.GetAddress().String(), receiver)
-	data.Memo = "placeholder memo"
+	data.Memo = string(bz)
 	packet := channeltypes.NewPacket(data.GetBytes(), seq, path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, clienttypes.NewHeight(1, 100), 0)
 
 	// we expect a returned acknowledgement
 	ack := suite.chainB.GetJackalApp().GmpMiddlewareStack.OnRecvPacket(suite.chainB.GetContext(), packet, suite.chainA.SenderAccount.GetAddress())
-	fmt.Println(ack)
 
-	// suite.Require().True(ack.Success())
+	suite.Require().True(ack.Success())
 }
 
 func (suite *GMPTestSuite) TestRecvTransferWithMetadata() {
@@ -125,16 +135,6 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 	app := suite.chainB.GetJackalApp()
 	ibcKeeper := app.GetIBCKeeper()
 	scopedIBCKeeper := app.GetScopedIBCKeeper()
-
-	logger, logFile := testutil.CreateLogger()
-
-	chainApp := suite.chainB.GetJackalApp()
-	logger.Printf("chainApp channel is: %#v\n ", chainApp.GmpMiddlewareStack.GetChannel())
-
-	logger.Printf("chainApp app is: %#v\n ", chainApp.GmpMiddlewareStack.GetApp())
-	logger.Printf("chainApp handler is: %#v\n ", chainApp.GmpMiddlewareStack.GetHandler())
-
-	logFile.Close()
 
 	err := suite.chainB.GetJackalApp().GmpMiddlewareStack.SendPacket(scopedIBCKeeper, *ibcKeeper,
 		suite.chainB.GetContext(), channelCap, packet)
