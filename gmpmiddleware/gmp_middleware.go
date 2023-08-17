@@ -14,24 +14,26 @@ import (
 	host "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 	ibcexported "github.com/cosmos/ibc-go/v4/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
+	filetreekeeper "github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
+	filetreetypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 
 	"github.com/jackalLabs/canine-chain/v3/gmpmiddleware/types"
 	"github.com/jackalLabs/canine-chain/v3/testutil"
 )
 
 type IBCMiddleware struct {
-	channel porttypes.ICS4Wrapper
-	app     porttypes.IBCModule
-	handler types.GeneralMessageHandler
-	// keeper  keeper.Keeper
+	channel        porttypes.ICS4Wrapper
+	app            porttypes.IBCModule
+	handler        types.GeneralMessageHandler
+	filetreekeeper filetreekeeper.Keeper
 }
 
-func NewIBCMiddleware(channel porttypes.ICS4Wrapper, app porttypes.IBCModule, handler types.GeneralMessageHandler) IBCMiddleware {
+func NewIBCMiddleware(channel porttypes.ICS4Wrapper, app porttypes.IBCModule, handler types.GeneralMessageHandler, filetreekeeper filetreekeeper.Keeper) IBCMiddleware {
 	return IBCMiddleware{
-		channel: channel,
-		app:     app,
-		handler: handler,
-		// keeper:  keeper, Note: Don't need the keeper right now.
+		channel:        channel,
+		app:            app,
+		handler:        handler,
+		filetreekeeper: filetreekeeper,
 	}
 }
 
@@ -147,6 +149,28 @@ func (im IBCMiddleware) OnRecvPacket(
 	logger.Println(isIcs20)
 	logger.Printf("The message is %v", msg)
 	logger.Printf("The ack is %v", ack.Success())
+
+	filetreeMsgServer := filetreekeeper.NewMsgServerImpl(im.filetreekeeper)
+
+	msgMakeRoot := filetreetypes.NewMsgMakeRootV2(
+		msg.SourceAddress,
+		msg.SourceChain,
+		string(msg.Payload),
+		"placeholder",
+	)
+
+	if err := msgMakeRoot.ValidateBasic(); err != nil {
+		return ack
+	}
+
+	// Post files
+	_, error := filetreeMsgServer.MakeRootV2(
+		sdk.WrapSDKContext(ctx),
+		msgMakeRoot,
+	)
+	if error != nil {
+		return ack
+	}
 
 	logFile.Close()
 

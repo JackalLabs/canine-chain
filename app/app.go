@@ -327,7 +327,7 @@ type JackalApp struct {
 	evidenceKeeper   evidencekeeper.Keeper
 	ibcKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	ibcFeeKeeper     ibcfeekeeper.Keeper
-	transferKeeper   ibctransferkeeper.Keeper
+	transferKeeper   ibctransferkeeper.Keeper // for cross-chain fungible token transfers
 	feeGrantKeeper   feegrantkeeper.Keeper
 	authzKeeper      authzkeeper.Keeper
 	wasmKeeper       wasm.Keeper
@@ -441,6 +441,7 @@ func NewJackalApp(
 		keys[capabilitytypes.StoreKey],
 		memKeys[capabilitytypes.MemStoreKey],
 	)
+	// grant capabilities for the ibc and ibc-transfer modules
 	scopedIBCKeeper := app.capabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	scopedTransferKeeper := app.capabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
@@ -730,7 +731,7 @@ func NewJackalApp(
 		packetforwardkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
 
-	app.GmpMiddlewareStack = gmpmiddleware.NewIBCMiddleware(channelKeeper, packetForwardMiddleware, handler)
+	app.GmpMiddlewareStack = gmpmiddleware.NewIBCMiddleware(channelKeeper, packetForwardMiddleware, handler, app.FileTreeKeeper)
 
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
