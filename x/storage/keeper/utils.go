@@ -66,6 +66,31 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 	return space
 }
 
+// GetStorageCostKbs calculates storage cost in ujkl
+// Uses kilobytes and months to calculate how much user has to pay
+func (k Keeper) GetStorageCostKbs(ctx sdk.Context, kbs int64, hours int64) sdk.Int {
+	pricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
+	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
+	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
+	pricePerMbPerMonth := pricePerGbPerMonth.QuoInt64(1000)
+	pricePerKbPerMonth := pricePerMbPerMonth.QuoInt64(1000)
+	pricePerKbPerHour := pricePerKbPerMonth.QuoInt64(720)
+
+	pricePerHour := pricePerKbPerHour.MulInt64(kbs)
+
+	totalCost := pricePerHour.MulInt64(hours)
+
+	jklPrice := k.GetJklPrice(ctx)
+
+	// TODO: fetch denom unit from bank module
+	var ujklUnit int64 = 1000000
+	jklCost := totalCost.Quo(jklPrice)
+
+	ujklCost := jklCost.MulInt64(ujklUnit)
+
+	return ujklCost.TruncateInt()
+}
+
 // GetStorageCost calculates storage cost in ujkl
 // Uses gigabytes and months to calculate how much user has to pay
 func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int {
