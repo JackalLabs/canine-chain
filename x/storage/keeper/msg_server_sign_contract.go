@@ -49,11 +49,11 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 
 	var end int64
 	if msg.PayOnce {
-		s := size.Quo(sdk.NewInt(1_000_000_000)).Int64()
+		s := size.Quo(sdk.NewInt(1_000_000)).Int64() // force file to be worth a mb or more
 		if s <= 0 {
 			s = 1
 		}
-		cost := k.GetStorageCost(ctx, s, 720*12*200) // pay for 200 years
+		cost := k.GetStorageCostKbs(ctx, s*1_000, 720*12*200) // pay for 200 years
 		deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
 		if err != nil {
 			return nil, err
