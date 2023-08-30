@@ -155,7 +155,8 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 		},
 	}
 
-	for _, tc := range cases {
+	for _, tcs := range cases {
+		tc := tcs
 		suite.Run(tc.testName, func() {
 			if tc.preRun != nil {
 				tc.preRun()

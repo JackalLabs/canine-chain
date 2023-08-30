@@ -302,7 +302,8 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		},
 	}
 
-	for _, tc := range cases {
+	for _, tcs := range cases {
+		tc := tcs
 		suite.Run(
 			tc.testName, func() {
 				res, err := msgSrvr.Postproof(context, &tc.msg)

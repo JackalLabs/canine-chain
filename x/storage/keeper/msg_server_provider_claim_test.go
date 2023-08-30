@@ -59,7 +59,8 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 			errMsg: "Provider not found. Please init your provider.",
 		},
 	}
-	for _, tc := range cases {
+	for _, tcs := range cases {
+		tc := tcs
 		suite.Run(tc.name, func() {
 			_, err := msgSrvr.AddProviderClaimer(context, &tc.msg)
 			if tc.expErr {
@@ -141,7 +142,8 @@ func (suite *KeeperTestSuite) TestRemoveProviderClaimer() {
 			errMsg: "Provider has no claimer addresses: conflict",
 		},
 	}
-	for _, tc := range cases {
+	for _, tcs := range cases {
+		tc := tcs
 		suite.Run(tc.name, func() {
 			_, err := msgSrvr.RemoveProviderClaimer(context, &tc.msg)
 			if tc.expErr {

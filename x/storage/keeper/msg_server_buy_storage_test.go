@@ -186,7 +186,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	suite.Require().NoError(err)
 	amt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl").Amount.Int64()
 
-	for _, tc := range cases {
+	for _, tcs := range cases {
+		tc := tcs
 		suite.Run(tc.testName, func() {
 			if tc.preRun != nil {
 				tc.preRun()
