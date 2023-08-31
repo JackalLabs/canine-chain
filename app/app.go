@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	v301 "github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/v301"
 	"io"
 	"net/http"
 	"os"
@@ -1141,6 +1142,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(beta7.NewUpgrade(app.mm, app.configurator, app.NotificationsKeeper))
 	app.registerUpgrade(v121.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v301.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
