@@ -14,10 +14,10 @@ func (k Keeper) Feed(c context.Context, req *types.QueryFeedRequest) (*types.Que
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
-	ctx.Logger().Error(req.Name)
+	ctx.Logger().Debug(req.Name)
 
 	feed, found := k.GetFeed(ctx, req.Name)
-	ctx.Logger().Error(feed.Name)
+	ctx.Logger().Debug(feed.Name)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
