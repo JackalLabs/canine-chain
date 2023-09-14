@@ -128,6 +128,7 @@ func (im IBCMiddleware) OnRecvPacket(
 ) ibcexported.Acknowledgement {
 	// im.ProperlyConfigured()? // consider adding this function if there are keepers involved
 	logger, logFile := testutil.CreateLogger()
+	logger.Println("Did we make it into the OnRecvpacket function???")
 
 	ack := im.app.OnRecvPacket(ctx, packet, relayer)
 
@@ -143,6 +144,7 @@ func (im IBCMiddleware) OnRecvPacket(
 		return im.app.OnRecvPacket(ctx, packet, relayer)
 	}
 	if err != nil {
+		fmt.Println("we failed to validate wasm: test")
 		return utils.NewEmitErrorAcknowledgement(ctx, types.ErrMsgValidation, err.Error())
 	}
 	fmt.Println(contractAddr)

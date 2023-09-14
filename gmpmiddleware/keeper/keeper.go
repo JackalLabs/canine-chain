@@ -14,7 +14,7 @@ import (
 )
 
 /*
-Are we properly doing the store key?
+Are we properly creating the store key?
 */
 
 // Keeper defines the gmp middleware keeper

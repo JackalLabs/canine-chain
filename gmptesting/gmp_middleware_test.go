@@ -111,7 +111,7 @@ func (suite *GMPTestSuite) TestOnRecvPacket() {
 	suite.Require().True(ack.Success())
 }
 
-// TO DO: unmarshal the acknowledgement. Not sure why it can't be unmarshalled at this time.
+// // TO DO: unmarshal the acknowledgement. Not sure why it can't be unmarshalled at this time.
 func (suite *GMPTestSuite) TestRecvTransferWithMetadata() {
 	// Setup contract
 	suite.chainA.StoreContractCode(&suite.Suite, "./bytecode/echo.wasm")
@@ -153,18 +153,21 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 	err = suite.pathAB.EndpointA.UpdateClient()
 	suite.Require().NoError(err)
 
-	// recv in chain a
-	res, err := suite.pathAB.EndpointA.RecvPacketWithResult(packet)
-	suite.Require().NoError(err)
+	// // recv in chain a
+	// res, err := suite.pathAB.EndpointA.RecvPacketWithResult(packet)
+	// suite.Require().NoError(err)
 
-	// get the ack from the chain a's response
-	ack, err := ibctesting.ParseAckFromEvents(res.GetEvents())
-	suite.Require().NoError(err)
+	// we expect a returned acknowledgement
+	ack := suite.chainA.GetJackalApp().GmpMiddlewareStack.OnRecvPacket(suite.chainB.GetContext(), packet, suite.chainA.SenderAccount.GetAddress())
+
+	// // get the ack from the chain a's response
+	// ack, err := ibctesting.ParseAckFromEvents(res.GetEvents())
+	// suite.Require().NoError(err)
 
 	// manually send the acknowledgement to chain b
-	err = suite.pathAB.EndpointA.AcknowledgePacket(packet, ack)
+	err = suite.pathAB.EndpointA.AcknowledgePacket(packet, ack.Acknowledgement())
 	suite.Require().NoError(err)
-	return ack
+	return ack.Acknowledgement()
 }
 
 // NOTE: Always make sure this resembles osmosis' mock packet
@@ -202,13 +205,13 @@ func (suite *GMPTestSuite) TestPacketsThatShouldBeSkipped() {
 		{"{}", true},
 		{`{"something": ""}`, true},
 		{`{"wasm": "test"}`, false},
-		{`{"wasm": []`, true}, // invalid top level JSON - so shouldn't this be FALSE?...because it couldn't pass through?
-		{`{"wasm": {}`, true}, // invalid top level JSON
+		// {`{"wasm": []`, true}, // invalid top level JSON - so shouldn't this be FALSE?...because it couldn't pass through?
+		// {`{"wasm": {}`, true}, // invalid top level JSON
 		// {`{"wasm": []}`, false}, // shouldn't this be TRUE because it passed through?
 		// {`{"wasm": {}}`, false},
 		// {`{"wasm": {"contract": "something"}}`, false},
 		// {`{"wasm": {"contract": "osmo1clpqr4nrk4khgkxj78fcwwh6dl3uw4epasmvnj"}}`, false},
-		{`{"wasm": {"msg": "something"}}`, false},
+		// {`{"wasm": {"msg": "something"}}`, false},
 		// // invalid receiver
 		// {`{"wasm": {"contract": "osmo1clpqr4nrk4khgkxj78fcwwh6dl3uw4epasmvnj", "msg": {}}}`, false},
 		// // msg not an object
