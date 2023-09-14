@@ -111,6 +111,7 @@ func (suite *GMPTestSuite) TestOnRecvPacket() {
 	suite.Require().True(ack.Success())
 }
 
+// TO DO: unmarshal the acknowledgement. Not sure why it can't be unmarshalled at this time.
 func (suite *GMPTestSuite) TestRecvTransferWithMetadata() {
 	// Setup contract
 	suite.chainA.StoreContractCode(&suite.Suite, "./bytecode/echo.wasm")
@@ -118,6 +119,11 @@ func (suite *GMPTestSuite) TestRecvTransferWithMetadata() {
 	fmt.Println(addr)
 	ackBytes := suite.receivePacket(addr.String(), fmt.Sprintf(`{"wasm": {"contract": "%s", "msg": {"echo": {"msg": "test"} } } }`, addr))
 	fmt.Println(ackBytes)
+	ackStr := string(ackBytes)
+	fmt.Println(ackStr)
+	// from osmosis:
+	// var ack map[string]string // This can't be unmarshalled to Acknowledgement because it's fetched from the events
+	// err := json.Unmarshal(ackBytes, &ack)
 }
 
 func (suite *GMPTestSuite) receivePacket(receiver, memo string) []byte {
@@ -141,27 +147,24 @@ func (suite *GMPTestSuite) receivePacketWithSequence(receiver, memo string, prev
 
 	suite.Require().NoError(err, "IBC send failed. Expected success. %s", err)
 
-	// // Update both clients
-	// err = suite.pathAB.EndpointB.UpdateClient()
-	// suite.Require().NoError(err)
-	// err = suite.pathAB.EndpointA.UpdateClient()
-	// suite.Require().NoError(err)
+	// Update both clients
+	err = suite.pathAB.EndpointB.UpdateClient()
+	suite.Require().NoError(err)
+	err = suite.pathAB.EndpointA.UpdateClient()
+	suite.Require().NoError(err)
 
-	// // recv in chain a
-	// res, err := suite.pathAB.EndpointA.RecvPacketWithResult(packet)
-	// suite.Require().NoError(err)
+	// recv in chain a
+	res, err := suite.pathAB.EndpointA.RecvPacketWithResult(packet)
+	suite.Require().NoError(err)
 
-	// // get the ack from the chain a's response
-	// ack, err := ibctesting.ParseAckFromEvents(res.GetEvents())
-	// suite.Require().NoError(err)
+	// get the ack from the chain a's response
+	ack, err := ibctesting.ParseAckFromEvents(res.GetEvents())
+	suite.Require().NoError(err)
 
-	// // manually send the acknowledgement to chain b
-	// err = suite.pathAB.EndpointA.AcknowledgePacket(packet, ack)
-	// suite.Require().NoError(err)
-	// return ack
-
-	var emptyBytes []byte
-	return emptyBytes
+	// manually send the acknowledgement to chain b
+	err = suite.pathAB.EndpointA.AcknowledgePacket(packet, ack)
+	suite.Require().NoError(err)
+	return ack
 }
 
 // NOTE: Always make sure this resembles osmosis' mock packet
@@ -184,4 +187,47 @@ func (suite *GMPTestSuite) makeMockPacket(receiver, memo string, prevSequence ui
 		clienttypes.NewHeight(0, 100),
 		0,
 	)
+}
+
+func (suite *GMPTestSuite) TestPacketsThatShouldBeSkipped() {
+	var sequence uint64
+	receiver := suite.chainB.SenderAccount.GetAddress().String()
+
+	testCases := []struct {
+		memo           string
+		expPassthrough bool
+	}{
+		{"", true},
+		{"{01]", true}, // bad json
+		{"{}", true},
+		{`{"something": ""}`, true},
+		{`{"wasm": "test"}`, false},
+		{`{"wasm": []`, true}, // invalid top level JSON - so shouldn't this be FALSE?...because it couldn't pass through?
+		{`{"wasm": {}`, true}, // invalid top level JSON
+		// {`{"wasm": []}`, false}, // shouldn't this be TRUE because it passed through?
+		// {`{"wasm": {}}`, false},
+		// {`{"wasm": {"contract": "something"}}`, false},
+		// {`{"wasm": {"contract": "osmo1clpqr4nrk4khgkxj78fcwwh6dl3uw4epasmvnj"}}`, false},
+		{`{"wasm": {"msg": "something"}}`, false},
+		// // invalid receiver
+		// {`{"wasm": {"contract": "osmo1clpqr4nrk4khgkxj78fcwwh6dl3uw4epasmvnj", "msg": {}}}`, false},
+		// // msg not an object
+		// {fmt.Sprintf(`{"wasm": {"contract": "%s", "msg": 1}}`, receiver), false},
+	}
+
+	for _, tc := range testCases {
+		ackBytes := suite.receivePacketWithSequence(receiver, tc.memo, sequence)
+		ackStr := string(ackBytes)
+		fmt.Println(ackStr)
+		var ack map[string]string // This can't be unmarshalled to Acknowledgement because it's fetched from the events
+		err := json.Unmarshal(ackBytes, &ack)
+		suite.Require().NoError(err)
+		if tc.expPassthrough {
+			suite.Require().Equal("AQ==", ack["result"], tc.memo)
+		} else {
+			fmt.Printf("The ackStr is %s", ackStr)
+			suite.Require().Contains(ackStr, "error", tc.memo)
+		}
+		sequence += 1
+	}
 }

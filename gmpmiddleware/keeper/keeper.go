@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,7 +13,12 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/gmpmiddleware/types"
 )
 
+/*
+Are we properly doing the store key?
+*/
+
 // Keeper defines the gmp middleware keeper
+// Not 100% sure we need a keeper right now
 type Keeper struct {
 	cdc        codec.BinaryCodec
 	storeKey   storetypes.StoreKey
@@ -31,4 +38,14 @@ func (k Keeper) SendPacket(
 	packet exported.PacketI,
 ) (err error) {
 	return k.Ics4Wrapper.SendPacket(ctx, chanCap, packet)
+}
+
+func GetPacketKey(channel string, packetSequence uint64) []byte {
+	return []byte(fmt.Sprintf("%s::%d", channel, packetSequence))
+}
+
+// StorePacketCallback stores which contract will be listening for the ack or timeout of a packet
+func (k Keeper) StorePacketCallback(ctx sdk.Context, channel string, packetSequence uint64, contract string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(GetPacketKey(channel, packetSequence), []byte(contract))
 }
