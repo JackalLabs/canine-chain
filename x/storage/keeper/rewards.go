@@ -53,6 +53,7 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 
 	deal.Blocktoprove = fmt.Sprintf("%d", iprove)
 
+	// assuming function is called on the day of the proof window (inclusive)
 	verified, errb := strconv.ParseBool(deal.Proofverified)
 
 	if errb != nil {
@@ -71,10 +72,17 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 			return sdkerror.Wrapf(sdkerror.ErrInvalidType, "int parse failed")
 		}
 
+		// insert into here the updated proof scheduler
 		DayBlocks := k.GetParams(ctx).ProofWindow
 
 		if sb.Int64() >= ctx.BlockHeight()-DayBlocks {
 			ctx.Logger().Info("ignore young deals")
+			return nil
+		}
+
+		// currently assuming this function is run every block.
+		if ctx.BlockHeight()-sb.Int64()%DayBlocks == 0 {
+			ctx.Logger().Info("did not post proof")
 			return nil
 		}
 
@@ -229,6 +237,7 @@ func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
 
 	DayBlocks := k.GetParams(ctx).ProofWindow
 
+	// remove this, or make it run every 24 hrs
 	if ctx.BlockHeight()%DayBlocks > 0 {
 		ctx.Logger().Debug("skipping reward handling for this block")
 		return nil
