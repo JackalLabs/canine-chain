@@ -362,6 +362,9 @@ type JackalApp struct {
 	ScopedInterTxKeeper     capabilitykeeper.ScopedKeeper
 	ScopedCCVConsumerKeeper capabilitykeeper.ScopedKeeper
 
+	// for testing purposes
+	ibcStack router.IBCMiddleware
+
 	/*
 
 		DsigKeeper     dsigmodulekeeper.Keeper
@@ -408,7 +411,7 @@ func NewJackalApp(
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, rnsmoduletypes.StoreKey,
 		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
 		notificationsmoduletypes.StoreKey, ibcfeetypes.StoreKey, icacontrollertypes.StoreKey,
-		icahosttypes.StoreKey,
+		icahosttypes.StoreKey, routertypes.StoreKey,
 
 		/*
 			, dsigmoduletypes.StoreKey,
@@ -732,9 +735,6 @@ func NewJackalApp(
 	ibcHooksMiddleware := ibchooks.NewIBCMiddleware(&transferIBCModule, &app.HooksICS4Wrapper)
 	app.HooksTransferIBCModule = &ibcHooksMiddleware
 
-	var transferStack porttypes.IBCModule
-	transferStack = ibcfee.NewIBCMiddleware(transferStack, app.ibcFeeKeeper)
-
 	var wasmStack porttypes.IBCModule
 	wasmStack = wasm.NewIBCHandler(app.wasmKeeper, app.ibcKeeper.ChannelKeeper, app.ibcFeeKeeper)
 	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, app.ibcFeeKeeper)
@@ -750,8 +750,9 @@ func NewJackalApp(
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
+	app.ibcStack = ibcStack
 
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
+	ibcRouter.
 		AddRoute(wasm.ModuleName, wasmStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, ibcStack)
@@ -846,6 +847,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		ibchookstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -883,6 +885,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		ibchookstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -927,6 +930,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		ibchookstypes.ModuleName, // must be declared after the auth keeper
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -962,6 +966,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		ibchookstypes.ModuleName,
 	)
 
 	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
@@ -994,6 +999,7 @@ func NewJackalApp(
 		icatypes.ModuleName,
 
 		crisistypes.ModuleName,
+		ibchookstypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -1275,6 +1281,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(routertypes.ModuleName)
 
 	return paramsKeeper
 }
@@ -1288,4 +1295,25 @@ func GetWasmOpts(appOpts servertypes.AppOptions) []wasm.Option {
 	wasmOpts = append(wasmOpts, wasmkeeper.WithGasRegister(NewJackalWasmGasRegister()))
 
 	return wasmOpts
+}
+
+// Helper function to return a clone of the govKeeper for testing purposes
+func (app *JackalApp) GetGovKeeper() govkeeper.Keeper {
+	// create a new instance and copy the values from app.govKeeper to the new instance
+	clonedKeeper := app.govKeeper
+	return clonedKeeper
+}
+
+// Helper function to return a clone of the wasmKeeper for testing purposes
+func (app *JackalApp) GetWasmKeeper() wasmkeeper.Keeper {
+	// create a new instance and copy the values from app.govKeeper to the new instance
+	clonedKeeper := app.wasmKeeper
+	return clonedKeeper
+}
+
+// Helper function to return a clone of the ibcStack for testing purposes
+func (app *JackalApp) GetIBCStack() router.IBCMiddleware {
+	// create a new instance and copy the values from app.ibcStack to the new instance
+	clonedIBCStack := app.ibcStack
+	return clonedIBCStack
 }
