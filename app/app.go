@@ -10,7 +10,7 @@ import (
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
+	v3 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
 
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
@@ -161,6 +161,14 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
 	"github.com/jackalLabs/canine-chain/v3/docs"
+
+	"github.com/strangelove-ventures/packet-forward-middleware/v4/router"
+	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v4/router/keeper"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v4/router/types"
+
+	ibchooks "github.com/jackalLabs/canine-chain/v3/x/ibc-hooks"
+	ibchookskeeper "github.com/jackalLabs/canine-chain/v3/x/ibc-hooks/keeper"
+	ibchookstypes "github.com/jackalLabs/canine-chain/v3/x/ibc-hooks/types"
 )
 
 const appName = "JackalApp"
@@ -318,11 +326,13 @@ type JackalApp struct {
 	paramsKeeper     paramskeeper.Keeper
 	evidenceKeeper   evidencekeeper.Keeper
 	ibcKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	ibcFeeKeeper     ibcfeekeeper.Keeper
-	transferKeeper   ibctransferkeeper.Keeper
-	feeGrantKeeper   feegrantkeeper.Keeper
-	authzKeeper      authzkeeper.Keeper
-	wasmKeeper       wasm.Keeper
+	ibcHooksKeeper   *ibchookskeeper.Keeper
+
+	ibcFeeKeeper   ibcfeekeeper.Keeper
+	transferKeeper ibctransferkeeper.Keeper
+	feeGrantKeeper feegrantkeeper.Keeper
+	authzKeeper    authzkeeper.Keeper
+	wasmKeeper     wasm.Keeper
 
 	scopedIBCKeeper           capabilitykeeper.ScopedKeeper
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
@@ -338,6 +348,19 @@ type JackalApp struct {
 	StorageKeeper       storagemodulekeeper.Keeper
 	FileTreeKeeper      filetreemodulekeeper.Keeper
 	NotificationsKeeper notificationsmodulekeeper.Keeper
+
+	RouterKeeper *routerkeeper.Keeper
+	RouterModule router.AppModule
+
+	HooksTransferIBCModule *ibchooks.IBCMiddleware
+	HooksICS4Wrapper       ibchooks.ICS4Middleware
+
+	// make scoped keepers public for test purposes
+	ScopedIBCKeeper         capabilitykeeper.ScopedKeeper
+	ScopedTransferKeeper    capabilitykeeper.ScopedKeeper
+	ScopedWasmKeeper        capabilitykeeper.ScopedKeeper
+	ScopedInterTxKeeper     capabilitykeeper.ScopedKeeper
+	ScopedCCVConsumerKeeper capabilitykeeper.ScopedKeeper
 
 	/*
 
@@ -544,18 +567,44 @@ func NewJackalApp(
 		&app.ibcKeeper.PortKeeper, app.AccountKeeper, app.BankKeeper,
 	)
 
+	// RouterKeeper must be created before TransferKeeper
+	app.RouterKeeper = routerkeeper.NewKeeper(
+		appCodec,
+		app.keys[routertypes.StoreKey],
+		app.getSubspace(routertypes.ModuleName),
+		app.transferKeeper, // Might need to wrap this for it to work?
+		app.ibcKeeper.ChannelKeeper,
+		app.distrKeeper, // Not sure how Neutron was able to put a FeeBurnerKeeper here
+		app.BankKeeper,
+		app.ibcKeeper.ChannelKeeper,
+	)
+
+	// Configure the hooks keeper
+	hooksKeeper := ibchookskeeper.NewKeeper(
+		app.keys[ibchookstypes.StoreKey],
+	)
+	app.ibcHooksKeeper = &hooksKeeper
+
+	wasmHooks := ibchooks.NewWasmHooks(app.ibcHooksKeeper, nil, sdk.GetConfig().GetBech32AccountAddrPrefix()) // The contract keeper needs to be set later
+	app.HooksICS4Wrapper = ibchooks.NewICS4Middleware(
+		app.RouterKeeper,
+		&wasmHooks,
+	)
+
 	// Create Transfer Keepers
 	app.transferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,
 		keys[ibctransfertypes.StoreKey],
 		app.getSubspace(ibctransfertypes.ModuleName),
-		app.ibcKeeper.ChannelKeeper,
+		app.HooksICS4Wrapper,
 		app.ibcKeeper.ChannelKeeper,
 		&app.ibcKeeper.PortKeeper,
 		app.AccountKeeper,
 		app.BankKeeper,
 		scopedTransferKeeper,
 	)
+	app.RouterKeeper.SetTransferKeeper(app.transferKeeper)
+
 	transferModule := transfer.NewAppModule(app.transferKeeper)
 
 	app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
@@ -679,18 +728,33 @@ func NewJackalApp(
 		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(app.wasmKeeper, enabledProposals))
 	}
 
+	transferIBCModule := transfer.NewIBCModule(app.transferKeeper)
+	ibcHooksMiddleware := ibchooks.NewIBCMiddleware(&transferIBCModule, &app.HooksICS4Wrapper)
+	app.HooksTransferIBCModule = &ibcHooksMiddleware
+
 	var transferStack porttypes.IBCModule
-	transferStack = transfer.NewIBCModule(app.transferKeeper)
 	transferStack = ibcfee.NewIBCMiddleware(transferStack, app.ibcFeeKeeper)
 
 	var wasmStack porttypes.IBCModule
 	wasmStack = wasm.NewIBCHandler(app.wasmKeeper, app.ibcKeeper.ChannelKeeper, app.ibcFeeKeeper)
 	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, app.ibcFeeKeeper)
 
+	ibcHooksModule := ibchooks.NewAppModule(app.AccountKeeper)
+
+	app.RouterModule = router.NewAppModule(app.RouterKeeper)
+
+	ibcStack := router.NewIBCMiddleware(
+		app.HooksTransferIBCModule,
+		app.RouterKeeper,
+		0,
+		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
+		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
+	)
+
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
-
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
+		AddRoute(ibctransfertypes.ModuleName, ibcStack)
 	app.ibcKeeper.SetRouter(ibcRouter)
 
 	app.govKeeper = govkeeper.NewKeeper(
@@ -741,6 +805,7 @@ func NewJackalApp(
 		oracleModule,
 		notificationsModule,
 		icaModule,
+		ibcHooksModule,
 
 		/*
 			dsigModule,

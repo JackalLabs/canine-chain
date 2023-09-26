@@ -48,7 +48,10 @@ require (
 require (
 	github.com/cosmos/interchain-accounts v0.2.6
 	github.com/golang/mock v1.6.0
+	github.com/strangelove-ventures/packet-forward-middleware/v4 v4.0.6
 )
+
+require github.com/iancoleman/orderedmap v0.2.0 // indirect
 
 require (
 	cosmossdk.io/api v0.2.6 // indirect
