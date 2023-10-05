@@ -1,7 +1,7 @@
 package types
 
 import (
-	"fmt"
+	fmt "fmt"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
@@ -9,42 +9,29 @@ import (
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
-var (
-	KeyMsgSubmitTxMaxMessages     = []byte("MsgSubmitTxMaxMessages")
-	DefaultMsgSubmitTxMaxMessages = int64(16)
-)
+var KeyMsgSubmitTxMaxMessages = []byte("MsgSubmitTxMaxMessages")
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable(
-		paramtypes.NewParamSetPair(
-			KeyMsgSubmitTxMaxMessages,
-			DefaultMsgSubmitTxMaxMessages,
-			validateMsgSubmitTxMaxMessages,
-		),
-	)
+	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
 
 // NewParams creates a new Params instance
-func NewParams(msgSubmitTxMaxMessages int64) Params {
+func NewParams() Params {
 	return Params{
-		MsgSubmitTxMaxMessages: msgSubmitTxMaxMessages,
+		MsgSubmitTxMaxMessages: 16,
 	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DefaultMsgSubmitTxMaxMessages)
+	return NewParams()
 }
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(
-			KeyMsgSubmitTxMaxMessages,
-			&p.MsgSubmitTxMaxMessages,
-			validateMsgSubmitTxMaxMessages,
-		),
+		paramtypes.NewParamSetPair(KeyMsgSubmitTxMaxMessages, &p.MsgSubmitTxMaxMessages, validateMsgSubmitTxMaxMessages),
 	}
 }
 
@@ -60,7 +47,7 @@ func (p Params) String() string {
 }
 
 func validateMsgSubmitTxMaxMessages(i interface{}) error {
-	v, ok := i.(uint64)
+	v, ok := i.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
