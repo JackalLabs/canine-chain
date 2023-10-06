@@ -154,8 +154,216 @@ func (m *ActiveDeals) GetFid() string {
 	return ""
 }
 
+type UFID struct {
+	Hash []byte `protobuf:"bytes,1,opt,name=hash,proto3" json:"hash,omitempty"`
+}
+
+func (m *UFID) Reset()         { *m = UFID{} }
+func (m *UFID) String() string { return proto.CompactTextString(m) }
+func (*UFID) ProtoMessage()    {}
+func (*UFID) Descriptor() ([]byte, []int) {
+	return fileDescriptor_71fa39f1fdaaaa6d, []int{1}
+}
+func (m *UFID) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UFID) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UFID.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UFID) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UFID.Merge(m, src)
+}
+func (m *UFID) XXX_Size() int {
+	return m.Size()
+}
+func (m *UFID) XXX_DiscardUnknown() {
+	xxx_messageInfo_UFID.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UFID proto.InternalMessageInfo
+
+func (m *UFID) GetHash() []byte {
+	if m != nil {
+		return m.Hash
+	}
+	return nil
+}
+
+type UniversalFile struct {
+	Id            *UFID                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Proofs        map[string]*FileProof `protobuf:"bytes,2,rep,name=proofs,proto3" json:"proofs,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	FileSize      int64                 `protobuf:"varint,3,opt,name=file_size,json=fileSize,proto3" json:"file_size,omitempty"`
+	Start         int64                 `protobuf:"varint,4,opt,name=start,proto3" json:"start,omitempty"`
+	Expires       int64                 `protobuf:"varint,5,opt,name=expires,proto3" json:"expires,omitempty"`
+	Owner         string                `protobuf:"bytes,6,opt,name=owner,proto3" json:"owner,omitempty"`
+	ProofInterval int64                 `protobuf:"varint,7,opt,name=proof_interval,json=proofInterval,proto3" json:"proof_interval,omitempty"`
+	Merkle        []byte                `protobuf:"bytes,8,opt,name=merkle,proto3" json:"merkle,omitempty"`
+}
+
+func (m *UniversalFile) Reset()         { *m = UniversalFile{} }
+func (m *UniversalFile) String() string { return proto.CompactTextString(m) }
+func (*UniversalFile) ProtoMessage()    {}
+func (*UniversalFile) Descriptor() ([]byte, []int) {
+	return fileDescriptor_71fa39f1fdaaaa6d, []int{2}
+}
+func (m *UniversalFile) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UniversalFile) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UniversalFile.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UniversalFile) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UniversalFile.Merge(m, src)
+}
+func (m *UniversalFile) XXX_Size() int {
+	return m.Size()
+}
+func (m *UniversalFile) XXX_DiscardUnknown() {
+	xxx_messageInfo_UniversalFile.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UniversalFile proto.InternalMessageInfo
+
+func (m *UniversalFile) GetId() *UFID {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
+func (m *UniversalFile) GetProofs() map[string]*FileProof {
+	if m != nil {
+		return m.Proofs
+	}
+	return nil
+}
+
+func (m *UniversalFile) GetFileSize() int64 {
+	if m != nil {
+		return m.FileSize
+	}
+	return 0
+}
+
+func (m *UniversalFile) GetStart() int64 {
+	if m != nil {
+		return m.Start
+	}
+	return 0
+}
+
+func (m *UniversalFile) GetExpires() int64 {
+	if m != nil {
+		return m.Expires
+	}
+	return 0
+}
+
+func (m *UniversalFile) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *UniversalFile) GetProofInterval() int64 {
+	if m != nil {
+		return m.ProofInterval
+	}
+	return 0
+}
+
+func (m *UniversalFile) GetMerkle() []byte {
+	if m != nil {
+		return m.Merkle
+	}
+	return nil
+}
+
+type FileProof struct {
+	Prover       string `protobuf:"bytes,1,opt,name=prover,proto3" json:"prover,omitempty"`
+	LastProven   int64  `protobuf:"varint,2,opt,name=last_proven,json=lastProven,proto3" json:"last_proven,omitempty"`
+	ChunkToProve int64  `protobuf:"varint,3,opt,name=chunk_to_prove,json=chunkToProve,proto3" json:"chunk_to_prove,omitempty"`
+}
+
+func (m *FileProof) Reset()         { *m = FileProof{} }
+func (m *FileProof) String() string { return proto.CompactTextString(m) }
+func (*FileProof) ProtoMessage()    {}
+func (*FileProof) Descriptor() ([]byte, []int) {
+	return fileDescriptor_71fa39f1fdaaaa6d, []int{3}
+}
+func (m *FileProof) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *FileProof) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_FileProof.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *FileProof) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FileProof.Merge(m, src)
+}
+func (m *FileProof) XXX_Size() int {
+	return m.Size()
+}
+func (m *FileProof) XXX_DiscardUnknown() {
+	xxx_messageInfo_FileProof.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FileProof proto.InternalMessageInfo
+
+func (m *FileProof) GetProver() string {
+	if m != nil {
+		return m.Prover
+	}
+	return ""
+}
+
+func (m *FileProof) GetLastProven() int64 {
+	if m != nil {
+		return m.LastProven
+	}
+	return 0
+}
+
+func (m *FileProof) GetChunkToProve() int64 {
+	if m != nil {
+		return m.ChunkToProve
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*ActiveDeals)(nil), "canine_chain.storage.ActiveDeals")
+	proto.RegisterType((*UFID)(nil), "canine_chain.storage.UFID")
+	proto.RegisterType((*UniversalFile)(nil), "canine_chain.storage.UniversalFile")
+	proto.RegisterMapType((map[string]*FileProof)(nil), "canine_chain.storage.UniversalFile.ProofsEntry")
+	proto.RegisterType((*FileProof)(nil), "canine_chain.storage.FileProof")
 }
 
 func init() {
@@ -163,28 +371,43 @@ func init() {
 }
 
 var fileDescriptor_71fa39f1fdaaaa6d = []byte{
-	// 326 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x54, 0x91, 0xcf, 0x4a, 0x03, 0x31,
-	0x18, 0xc4, 0xbb, 0xad, 0xf6, 0x4f, 0x5a, 0x41, 0x82, 0x48, 0xf0, 0x10, 0xa4, 0x08, 0x7a, 0xb1,
-	0x0b, 0xfa, 0x04, 0x8a, 0xc7, 0x9e, 0x3c, 0x7a, 0x29, 0xd9, 0xe4, 0xdb, 0xf6, 0xb3, 0xdb, 0xcd,
-	0x92, 0xc4, 0xa2, 0x3e, 0x85, 0x8f, 0xe5, 0xb1, 0x47, 0x2f, 0x82, 0xb4, 0x2f, 0x22, 0x49, 0xda,
-	0xb2, 0xbd, 0xed, 0xcc, 0xfc, 0x3e, 0x36, 0xcc, 0x90, 0x6b, 0x29, 0x4a, 0x2c, 0x61, 0x22, 0x67,
-	0x02, 0xcb, 0xd4, 0x3a, 0x6d, 0xc4, 0x14, 0x52, 0x21, 0x1d, 0x2e, 0x61, 0xa2, 0x40, 0x14, 0x76,
-	0x54, 0x19, 0xed, 0x34, 0x3d, 0xab, 0x83, 0xa3, 0x2d, 0x38, 0xfc, 0x6d, 0x92, 0xfe, 0x43, 0x80,
-	0x9f, 0x3c, 0x4b, 0x4f, 0x49, 0x4b, 0xa2, 0x62, 0xc9, 0x65, 0x72, 0xd3, 0x7b, 0xf6, 0x9f, 0xf4,
-	0x9c, 0xb4, 0x2d, 0x4e, 0x4b, 0x00, 0xd6, 0x0c, 0xe6, 0x56, 0xd1, 0x0b, 0xd2, 0xad, 0x8c, 0x5e,
-	0xa2, 0x02, 0xc3, 0x5a, 0x21, 0xd9, 0x6b, 0xca, 0x09, 0xb1, 0x4e, 0x18, 0x97, 0x15, 0x5a, 0xce,
-	0xd9, 0x51, 0x48, 0x6b, 0x8e, 0xbf, 0x85, 0x52, 0xc5, 0xf4, 0x38, 0xde, 0xee, 0xb4, 0xcf, 0x72,
-	0x2c, 0xc0, 0xe2, 0x27, 0xb0, 0x76, 0xcc, 0x76, 0x9a, 0x5e, 0x91, 0x93, 0xca, 0x68, 0x9d, 0x2f,
-	0xc1, 0x60, 0x8e, 0xa0, 0x58, 0x27, 0x00, 0x87, 0x26, 0x1d, 0x92, 0x41, 0x30, 0xec, 0x02, 0xad,
-	0x05, 0xc5, 0xba, 0x01, 0x3a, 0xf0, 0x3c, 0x13, 0x7e, 0xe7, 0xb4, 0x7f, 0x34, 0xb0, 0x5e, 0x64,
-	0xea, 0x1e, 0x65, 0xa4, 0x23, 0x0d, 0x08, 0xa7, 0x0d, 0x23, 0x21, 0xde, 0x49, 0xdf, 0xc9, 0x02,
-	0xcc, 0xbc, 0x00, 0xd6, 0x8f, 0x9d, 0x44, 0xe5, 0xdb, 0xcb, 0x51, 0xb1, 0x41, 0x6c, 0x2f, 0x47,
-	0xf5, 0x38, 0xfe, 0x5e, 0xf3, 0x64, 0xb5, 0xe6, 0xc9, 0xdf, 0x9a, 0x27, 0x5f, 0x1b, 0xde, 0x58,
-	0x6d, 0x78, 0xe3, 0x67, 0xc3, 0x1b, 0x2f, 0x77, 0x53, 0x74, 0xb3, 0xb7, 0x6c, 0x24, 0xf5, 0x22,
-	0x7d, 0x15, 0x72, 0x2e, 0x8a, 0xb1, 0xc8, 0x6c, 0x1a, 0x57, 0xba, 0x8d, 0x73, 0xbe, 0xef, 0x07,
-	0x75, 0x1f, 0x15, 0xd8, 0xac, 0x1d, 0xa6, 0xbc, 0xff, 0x0f, 0x00, 0x00, 0xff, 0xff, 0x9b, 0x74,
-	0x98, 0x75, 0xf5, 0x01, 0x00, 0x00,
+	// 575 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x93, 0x41, 0x6b, 0xdb, 0x3e,
+	0x18, 0xc6, 0x9b, 0xb8, 0x4d, 0x9b, 0xd7, 0x69, 0xf9, 0x23, 0xca, 0x1f, 0x91, 0x81, 0x5b, 0x42,
+	0xc7, 0xca, 0x60, 0x09, 0x64, 0x0c, 0xc6, 0x6e, 0x1b, 0x5d, 0x47, 0xa1, 0x87, 0xe2, 0xad, 0x97,
+	0x5e, 0x8c, 0x62, 0xbf, 0x69, 0x54, 0xbb, 0x56, 0x90, 0x54, 0xaf, 0xd9, 0x71, 0x9f, 0x60, 0x1f,
+	0x6b, 0xc7, 0x1e, 0x77, 0x19, 0x8c, 0xf6, 0x8b, 0x0c, 0xbd, 0x72, 0x82, 0x0b, 0xdd, 0xcd, 0xcf,
+	0xf3, 0x3e, 0xb2, 0xe4, 0xdf, 0x63, 0xc1, 0x8b, 0x54, 0x94, 0xb2, 0xc4, 0x24, 0x9d, 0x09, 0x59,
+	0x8e, 0x8c, 0x55, 0x5a, 0x5c, 0xe2, 0x48, 0xa4, 0x56, 0x56, 0x98, 0x64, 0x28, 0x0a, 0x33, 0x9c,
+	0x6b, 0x65, 0x15, 0xdb, 0x6d, 0x06, 0x87, 0x75, 0x70, 0xf0, 0xbb, 0x0d, 0xe1, 0x7b, 0x0a, 0x1f,
+	0xb9, 0x2c, 0xfb, 0x0f, 0x82, 0x54, 0x66, 0xbc, 0xb5, 0xdf, 0x3a, 0xec, 0xc6, 0xee, 0x91, 0xfd,
+	0x0f, 0x1d, 0x23, 0x2f, 0x4b, 0x44, 0xde, 0x26, 0xb3, 0x56, 0xac, 0x0f, 0x5b, 0x73, 0xad, 0x2a,
+	0x99, 0xa1, 0xe6, 0x01, 0x4d, 0x56, 0x9a, 0x45, 0x00, 0xc6, 0x0a, 0x6d, 0x27, 0x85, 0x4a, 0x73,
+	0xbe, 0x4e, 0xd3, 0x86, 0xe3, 0xd6, 0x62, 0x99, 0xf9, 0xe9, 0x86, 0x5f, 0xbb, 0xd4, 0x6e, 0x36,
+	0x95, 0x05, 0x1a, 0xf9, 0x0d, 0x79, 0xc7, 0xcf, 0x96, 0x9a, 0x1d, 0xc0, 0xf6, 0x5c, 0x2b, 0x35,
+	0xad, 0x50, 0xcb, 0xa9, 0xc4, 0x8c, 0x6f, 0x52, 0xe0, 0xb1, 0xc9, 0x06, 0xd0, 0x23, 0xc3, 0x5c,
+	0x4b, 0x63, 0x30, 0xe3, 0x5b, 0x14, 0x7a, 0xe4, 0xb9, 0x0c, 0x6d, 0x67, 0x95, 0x3b, 0x34, 0xf2,
+	0xae, 0xcf, 0x34, 0x3d, 0xc6, 0x61, 0x33, 0xd5, 0x28, 0xac, 0xd2, 0x1c, 0x68, 0xbc, 0x94, 0x8e,
+	0xc9, 0x35, 0xea, 0xbc, 0x40, 0x1e, 0x7a, 0x26, 0x5e, 0x39, 0x7a, 0x53, 0x99, 0xf1, 0x9e, 0xa7,
+	0x37, 0x95, 0xd9, 0xa0, 0x0f, 0xeb, 0xe7, 0xc7, 0x27, 0x47, 0x8c, 0xc1, 0xfa, 0x4c, 0x98, 0x19,
+	0x81, 0xed, 0xc5, 0xf4, 0x3c, 0xf8, 0x1e, 0xc0, 0xf6, 0x79, 0x29, 0x2b, 0xd4, 0x46, 0x14, 0xc7,
+	0xb2, 0x40, 0xf6, 0x12, 0xda, 0x35, 0xfc, 0x70, 0xdc, 0x1f, 0x3e, 0x55, 0xd8, 0xd0, 0xbd, 0x2d,
+	0x6e, 0xcb, 0x8c, 0x7d, 0x82, 0x8e, 0xff, 0x22, 0xde, 0xde, 0x0f, 0x0e, 0xc3, 0xf1, 0xe8, 0x1f,
+	0xf9, 0xe6, 0x06, 0xc3, 0x33, 0x5a, 0xf1, 0xb1, 0xb4, 0x7a, 0x11, 0xd7, 0xcb, 0xd9, 0x33, 0xe8,
+	0x3a, 0xc0, 0x09, 0x11, 0x77, 0x4d, 0x06, 0x9e, 0xf8, 0x67, 0x47, 0x7c, 0x17, 0x36, 0xa8, 0x37,
+	0x2a, 0x31, 0x88, 0xbd, 0x70, 0x64, 0xf0, 0x76, 0x2e, 0x35, 0x1a, 0xaa, 0x2f, 0x88, 0x97, 0xd2,
+	0xe5, 0xd5, 0xd7, 0x12, 0x75, 0x5d, 0x9d, 0x17, 0xec, 0x39, 0xec, 0xd0, 0x66, 0x89, 0x2c, 0x2d,
+	0xea, 0x4a, 0x14, 0x54, 0x5c, 0x50, 0x17, 0x77, 0x52, 0x9b, 0x0d, 0xac, 0x5b, 0x84, 0xa9, 0x56,
+	0xfd, 0x0b, 0x08, 0x1b, 0x07, 0x77, 0x94, 0x73, 0x5c, 0x2c, 0xff, 0xd1, 0x1c, 0x17, 0xec, 0x0d,
+	0x6c, 0x54, 0xa2, 0xb8, 0xf1, 0xbf, 0x68, 0x38, 0xde, 0x7b, 0x1a, 0x85, 0x23, 0x40, 0xef, 0x89,
+	0x7d, 0xfa, 0x5d, 0xfb, 0x6d, 0x6b, 0x70, 0x05, 0xdd, 0x95, 0xef, 0x0e, 0x40, 0xd5, 0xeb, 0xfa,
+	0xe5, 0xb5, 0x62, 0x7b, 0x10, 0x16, 0xc2, 0xd8, 0x84, 0x64, 0x49, 0xbb, 0x04, 0x31, 0x38, 0xeb,
+	0x8c, 0x1c, 0x76, 0x00, 0x3b, 0xe9, 0xec, 0xa6, 0xcc, 0x13, 0xab, 0x7c, 0xa8, 0x06, 0xd9, 0x23,
+	0xf7, 0x8b, 0xa2, 0xd8, 0x87, 0xd3, 0x9f, 0xf7, 0x51, 0xeb, 0xee, 0x3e, 0x6a, 0xfd, 0xb9, 0x8f,
+	0x5a, 0x3f, 0x1e, 0xa2, 0xb5, 0xbb, 0x87, 0x68, 0xed, 0xd7, 0x43, 0xb4, 0x76, 0x31, 0xbe, 0x94,
+	0x76, 0x76, 0x33, 0x19, 0xa6, 0xea, 0x7a, 0x74, 0x25, 0xd2, 0x5c, 0x14, 0xa7, 0x62, 0x62, 0x46,
+	0xfe, 0x33, 0x5e, 0xf9, 0xbb, 0x7d, 0xbb, 0xba, 0xdd, 0x76, 0x31, 0x47, 0x33, 0xe9, 0xd0, 0xbd,
+	0x7e, 0xfd, 0x37, 0x00, 0x00, 0xff, 0xff, 0x96, 0x48, 0x04, 0xdd, 0x02, 0x04, 0x00, 0x00,
 }
 
 func (m *ActiveDeals) Marshal() (dAtA []byte, err error) {
@@ -294,6 +517,171 @@ func (m *ActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *UFID) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UFID) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UFID) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Hash) > 0 {
+		i -= len(m.Hash)
+		copy(dAtA[i:], m.Hash)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Hash)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *UniversalFile) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UniversalFile) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UniversalFile) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Merkle) > 0 {
+		i -= len(m.Merkle)
+		copy(dAtA[i:], m.Merkle)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Merkle)))
+		i--
+		dAtA[i] = 0x42
+	}
+	if m.ProofInterval != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.ProofInterval))
+		i--
+		dAtA[i] = 0x38
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Owner)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.Expires != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.Expires))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.Start != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.Start))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.FileSize != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.FileSize))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Proofs) > 0 {
+		for k := range m.Proofs {
+			v := m.Proofs[k]
+			baseI := i
+			if v != nil {
+				{
+					size, err := v.MarshalToSizedBuffer(dAtA[:i])
+					if err != nil {
+						return 0, err
+					}
+					i -= size
+					i = encodeVarintActiveDeals(dAtA, i, uint64(size))
+				}
+				i--
+				dAtA[i] = 0x12
+			}
+			i -= len(k)
+			copy(dAtA[i:], k)
+			i = encodeVarintActiveDeals(dAtA, i, uint64(len(k)))
+			i--
+			dAtA[i] = 0xa
+			i = encodeVarintActiveDeals(dAtA, i, uint64(baseI-i))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if m.Id != nil {
+		{
+			size, err := m.Id.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintActiveDeals(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *FileProof) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *FileProof) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *FileProof) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ChunkToProve != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.ChunkToProve))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.LastProven != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.LastProven))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Prover) > 0 {
+		i -= len(m.Prover)
+		copy(dAtA[i:], m.Prover)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Prover)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintActiveDeals(dAtA []byte, offset int, v uint64) int {
 	offset -= sovActiveDeals(v)
 	base := offset
@@ -358,6 +746,84 @@ func (m *ActiveDeals) Size() (n int) {
 	l = len(m.Fid)
 	if l > 0 {
 		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	return n
+}
+
+func (m *UFID) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Hash)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	return n
+}
+
+func (m *UniversalFile) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Id != nil {
+		l = m.Id.Size()
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	if len(m.Proofs) > 0 {
+		for k, v := range m.Proofs {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.Size()
+				l += 1 + sovActiveDeals(uint64(l))
+			}
+			mapEntrySize := 1 + len(k) + sovActiveDeals(uint64(len(k))) + l
+			n += mapEntrySize + 1 + sovActiveDeals(uint64(mapEntrySize))
+		}
+	}
+	if m.FileSize != 0 {
+		n += 1 + sovActiveDeals(uint64(m.FileSize))
+	}
+	if m.Start != 0 {
+		n += 1 + sovActiveDeals(uint64(m.Start))
+	}
+	if m.Expires != 0 {
+		n += 1 + sovActiveDeals(uint64(m.Expires))
+	}
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	if m.ProofInterval != 0 {
+		n += 1 + sovActiveDeals(uint64(m.ProofInterval))
+	}
+	l = len(m.Merkle)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	return n
+}
+
+func (m *FileProof) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Prover)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	if m.LastProven != 0 {
+		n += 1 + sovActiveDeals(uint64(m.LastProven))
+	}
+	if m.ChunkToProve != 0 {
+		n += 1 + sovActiveDeals(uint64(m.ChunkToProve))
 	}
 	return n
 }
@@ -781,6 +1247,567 @@ func (m *ActiveDeals) Unmarshal(dAtA []byte) error {
 			}
 			m.Fid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActiveDeals(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UFID) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActiveDeals
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UFID: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UFID: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hash", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Hash = append(m.Hash[:0], dAtA[iNdEx:postIndex]...)
+			if m.Hash == nil {
+				m.Hash = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActiveDeals(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UniversalFile) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActiveDeals
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UniversalFile: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UniversalFile: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Id == nil {
+				m.Id = &UFID{}
+			}
+			if err := m.Id.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Proofs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Proofs == nil {
+				m.Proofs = make(map[string]*FileProof)
+			}
+			var mapkey string
+			var mapvalue *FileProof
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowActiveDeals
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowActiveDeals
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthActiveDeals
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey < 0 {
+						return ErrInvalidLengthActiveDeals
+					}
+					if postStringIndexmapkey > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowActiveDeals
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= int(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthActiveDeals
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if postmsgIndex < 0 {
+						return ErrInvalidLengthActiveDeals
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &FileProof{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipActiveDeals(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if (skippy < 0) || (iNdEx+skippy) < 0 {
+						return ErrInvalidLengthActiveDeals
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Proofs[mapkey] = mapvalue
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FileSize", wireType)
+			}
+			m.FileSize = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.FileSize |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Start", wireType)
+			}
+			m.Start = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Start |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Expires", wireType)
+			}
+			m.Expires = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Expires |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProofInterval", wireType)
+			}
+			m.ProofInterval = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ProofInterval |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Merkle", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Merkle = append(m.Merkle[:0], dAtA[iNdEx:postIndex]...)
+			if m.Merkle == nil {
+				m.Merkle = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActiveDeals(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *FileProof) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActiveDeals
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: FileProof: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: FileProof: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Prover", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Prover = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastProven", wireType)
+			}
+			m.LastProven = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LastProven |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChunkToProve", wireType)
+			}
+			m.ChunkToProve = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChunkToProve |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipActiveDeals(dAtA[iNdEx:])

@@ -306,7 +306,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		tc := tcs
 		suite.Run(
 			tc.testName, func() {
-				res, err := msgSrvr.Postproof(context, &tc.msg)
+				res, err := msgSrvr.PostProof(context, &tc.msg)
 				if tc.expErr {
 					suite.Require().Equal(false, res.Success)
 				} else {

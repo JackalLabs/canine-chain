@@ -42,7 +42,7 @@ func VerifyDeal(merkle string, hashList string, num int64, item string) bool {
 	return verified
 }
 
-func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*types.MsgPostproofResponse, error) {
+func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostproof) (*types.MsgPostproofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	meter := ctx.GasMeter()
 	usedGas := meter.GasConsumed()

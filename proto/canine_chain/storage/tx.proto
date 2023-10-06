@@ -6,7 +6,7 @@ option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 // Msg defines the Msg service.
 service Msg {
   rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
-  rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
+  rpc PostProof(MsgPostproof) returns (MsgPostproofResponse);
   rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
   rpc SetProviderKeybase(MsgSetProviderKeybase)

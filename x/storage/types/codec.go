@@ -10,7 +10,7 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPostContract{}, "storage/PostContract", nil)
-	cdc.RegisterConcrete(&MsgPostproof{}, "storage/Postproof", nil)
+	cdc.RegisterConcrete(&MsgPostproof{}, "storage/PostProof", nil)
 	cdc.RegisterConcrete(&MsgSignContract{}, "storage/SignContract", nil)
 	cdc.RegisterConcrete(&MsgSetProviderIP{}, "storage/SetProviderIp", nil)
 	cdc.RegisterConcrete(&MsgSetProviderTotalspace{}, "storage/SetProviderTotalspace", nil)

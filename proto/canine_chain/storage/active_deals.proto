@@ -17,3 +17,24 @@ message ActiveDeals {
   string merkle = 11;
   string fid = 12;
 }
+
+message UFID {
+  bytes hash = 1;
+}
+
+message UniversalFile {
+  UFID id = 1;
+  map<string, FileProof> proofs = 2;
+  int64 file_size = 3;
+  int64 start = 4;
+  int64 expires = 5;
+  string owner = 6;
+  int64 proof_interval = 7;
+  bytes merkle = 8;
+}
+
+message FileProof {
+  string prover = 1;
+  int64 last_proven = 2;
+  int64 chunk_to_prove = 3;
+}

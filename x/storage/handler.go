@@ -21,7 +21,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err := msgServer.PostContract(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgPostproof:
-			res, err := msgServer.Postproof(sdk.WrapSDKContext(ctx), msg)
+			res, err := msgServer.PostProof(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgSignContract:
 			res, err := msgServer.SignContract(sdk.WrapSDKContext(ctx), msg)
