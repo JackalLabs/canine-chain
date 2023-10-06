@@ -10,7 +10,7 @@ import (
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
+	v3 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
 
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
@@ -91,6 +91,7 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ica "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts"
+	icacontroller "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller"
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/keeper"
 	icacontrollertypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/types"
 	icahost "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host"
@@ -104,7 +105,7 @@ import (
 	ibcclient "github.com/cosmos/ibc-go/v4/modules/core/02-client"
 	ibcclientclient "github.com/cosmos/ibc-go/v4/modules/core/02-client/client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
-	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
+	ibcporttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
 
@@ -123,6 +124,7 @@ import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackalLabs/canine-chain/v3/app/params"
 
+	interchaintxs "github.com/jackalLabs/canine-chain/v3/x/interchaintxs"
 	mint "github.com/jackalLabs/canine-chain/v3/x/jklmint"
 	mintkeeper "github.com/jackalLabs/canine-chain/v3/x/jklmint/keeper"
 	minttypes "github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
@@ -146,6 +148,9 @@ import (
 	notificationsmodule "github.com/jackalLabs/canine-chain/v3/x/notifications"
 	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v3/x/notifications/keeper"
 	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+
+	interchaintxskeeper "github.com/jackalLabs/canine-chain/v3/x/interchaintxs/keeper"
+	interchaintxstypes "github.com/jackalLabs/canine-chain/v3/x/interchaintxs/types"
 
 	/*
 
@@ -257,6 +262,7 @@ var (
 		oraclemodule.AppModuleBasic{},
 		notificationsmodule.AppModuleBasic{},
 		ica.AppModuleBasic{},
+		interchaintxs.AppModuleBasic{},
 		/*
 			dsigmodule.AppModuleBasic{},
 		*/
@@ -329,6 +335,7 @@ type JackalApp struct {
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
 	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
+	scopedInterTxKeeper       capabilitykeeper.ScopedKeeper
 
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
@@ -338,6 +345,8 @@ type JackalApp struct {
 	StorageKeeper       storagemodulekeeper.Keeper
 	FileTreeKeeper      filetreemodulekeeper.Keeper
 	NotificationsKeeper notificationsmodulekeeper.Keeper
+
+	InterchainTxsKeeper interchaintxskeeper.Keeper
 
 	/*
 
@@ -434,6 +443,7 @@ func NewJackalApp(
 	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	scopedICAHostKeeper := app.capabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	scopedWasmKeeper := app.capabilityKeeper.ScopeToModule(wasm.ModuleName)
+	scopedInterTxKeeper := app.capabilityKeeper.ScopeToModule(interchaintxstypes.ModuleName)
 	app.capabilityKeeper.Seal()
 
 	// add keepers
@@ -568,10 +578,16 @@ func NewJackalApp(
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper,
 		app.AccountKeeper, scopedICAHostKeeper, app.MsgServiceRouter(),
 	)
-	icaModule := ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper)
 
-	// icaControllerIBCModule := icacontroller.NewIBCModule(app.ICAControllerKeeper, intergammIBCModule)
-	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
+	app.InterchainTxsKeeper = *interchaintxskeeper.NewKeeper(
+		appCodec,
+		keys[interchaintxstypes.StoreKey],
+		memKeys[interchaintxstypes.MemStoreKey],
+		app.getSubspace(interchaintxstypes.ModuleName),
+		app.ibcKeeper.ChannelKeeper,
+		app.ICAControllerKeeper,
+		scopedInterTxKeeper,
+	)
 
 	// create evidence keeper with router
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -671,25 +687,41 @@ func NewJackalApp(
 	)
 	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
 
+	// NOTE: renamed porttypes to ibcporttypes will
+	// create merge conflicts with ibc-hooks branch. Need to resolve
+
 	// Create static IBC router, add app routes, then set and seal it
-	ibcRouter := porttypes.NewRouter()
+	ibcRouter := ibcporttypes.NewRouter()
 
 	// The gov proposal types can be individually enabled
 	if len(enabledProposals) != 0 {
 		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(app.wasmKeeper, enabledProposals))
 	}
 
-	var transferStack porttypes.IBCModule
+	var transferStack ibcporttypes.IBCModule
 	transferStack = transfer.NewIBCModule(app.transferKeeper)
 	transferStack = ibcfee.NewIBCMiddleware(transferStack, app.ibcFeeKeeper)
 
-	var wasmStack porttypes.IBCModule
+	var wasmStack ibcporttypes.IBCModule
 	wasmStack = wasm.NewIBCHandler(app.wasmKeeper, app.ibcKeeper.ChannelKeeper, app.ibcFeeKeeper)
 	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, app.ibcFeeKeeper)
 
+	icaModule := ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper)
+
+	var icaControllerStack ibcporttypes.IBCModule
+	icaControllerStack = interchaintxs.NewIBCModule(app.InterchainTxsKeeper)
+	icaControllerStack = icacontroller.NewIBCMiddleware(icaControllerStack, app.ICAControllerKeeper)
+
+	// icaControllerIBCModule := icacontroller.NewIBCModule(app.ICAControllerKeeper, intergammIBCModule)
+	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
+	interchainTxsModule := interchaintxs.NewAppModule(appCodec, app.InterchainTxsKeeper, app.AccountKeeper, app.BankKeeper)
+
+	// NOTE: even though the chain builds successfully, this routing may still be problematic.
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
+		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
+		AddRoute(interchaintxstypes.ModuleName, icaControllerStack)
 
 	app.ibcKeeper.SetRouter(ibcRouter)
 
@@ -741,6 +773,7 @@ func NewJackalApp(
 		oracleModule,
 		notificationsModule,
 		icaModule,
+		interchainTxsModule,
 
 		/*
 			dsigModule,
@@ -781,6 +814,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		interchaintxstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -818,6 +852,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		interchaintxstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -862,6 +897,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		interchaintxstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -897,6 +933,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
+		interchaintxstypes.ModuleName,
 	)
 
 	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
@@ -929,6 +966,7 @@ func NewJackalApp(
 		icatypes.ModuleName,
 
 		crisistypes.ModuleName,
+		interchaintxstypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -968,6 +1006,7 @@ func NewJackalApp(
 		oracleModule,
 		filetreeModule,
 		notificationsModule,
+		// TODO: add interchainTxsModule
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -1210,6 +1249,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(interchaintxstypes.ModuleName)
 
 	return paramsKeeper
 }
