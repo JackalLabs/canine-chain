@@ -7,7 +7,7 @@ import (
 )
 
 // NewTxCmd creates and returns the tx command
-func NewTxCmd() *cobra.Command {
+func GetTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "controller",
 		Short:                      "IBC interchain accounts controller transaction subcommands",
