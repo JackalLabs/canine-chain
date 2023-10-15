@@ -31,10 +31,12 @@ message UniversalFile {
   string owner = 6;
   int64 proof_interval = 7;
   bytes merkle = 8;
+  int64 proof_type = 9;
 }
 
 message FileProof {
   string prover = 1;
-  int64 last_proven = 2;
-  int64 chunk_to_prove = 3;
+  UFID id = 2;
+  int64 last_proven = 3;
+  int64 chunk_to_prove = 4;
 }
