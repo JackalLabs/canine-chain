@@ -18,25 +18,24 @@ message ActiveDeals {
   string fid = 12;
 }
 
-message UFID {
-  bytes hash = 1;
-}
-
-message UniversalFile {
-  UFID id = 1;
-  map<string, FileProof> proofs = 2;
-  int64 file_size = 3;
-  int64 start = 4;
-  int64 expires = 5;
-  string owner = 6;
-  int64 proof_interval = 7;
-  bytes merkle = 8;
-  int64 proof_type = 9;
+message UnifiedFile {
+  bytes merkle = 1; // The merkle root is unique to every file based on its contents.
+  string owner = 2;
+  int64 start = 3; // Marks the block height the file started on.
+  int64 expires = 4; // If not zero, the end block determines when a file should be deleted.
+  int64 file_size = 5;
+  int64 proof_interval = 6; // How many blocks between proofs.
+  int64 proof_type = 7;
+  repeated string proofs = 8; // A list of every file proof.
+  int64 max_proofs = 9; // How many provers this file can have.
+  string note = 10; // Misc string to store extra details.
 }
 
 message FileProof {
   string prover = 1;
-  UFID id = 2;
-  int64 last_proven = 3;
-  int64 chunk_to_prove = 4;
+  bytes merkle = 2; //  Used to identify which deal this proof belongs to
+  string owner = 3; //  ''
+  int64 start = 4;  //  ''
+  int64 last_proven = 5;
+  int64 chunk_to_prove = 6;
 }
