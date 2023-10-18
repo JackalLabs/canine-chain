@@ -20,7 +20,7 @@ jprovd init "http://127.0.0.1:333$index" "1000000000" "" --home="$HOME/providers
 sleep 20
 
 # change this to where your providers main.go location:
-cd $HOME/Workplace/canine-provider/jprov/jprovd
+cd $(find $HOME -type d -name 'canine-provider')/jprov/jprovd
 gdlv debug start --home="$HOME/providers/provider$index" -y --port "333$index" --moniker="provider$index" --threads=1 --interval=5 &
 
 # wait for gdlv to start running the code
