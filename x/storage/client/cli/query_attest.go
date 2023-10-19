@@ -2,6 +2,8 @@ package cli
 
 import (
 	"context"
+	"encoding/hex"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -44,18 +46,33 @@ func CmdListAttestForms() *cobra.Command {
 
 func CmdShowAttestForms() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-attest-form [cid]",
+		Use:   "attest-form [prover] [merkle] [owner] [start]",
 		Short: "shows an attest form",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argCid := args[0]
+			argProver := args[0]
+			argMerkle := args[1]
+			argOwner := args[2]
+			argStart := args[3]
+
+			start, err := strconv.ParseInt(argStart, 10, 64)
+			if err != nil {
+				panic(err)
+			}
+			merkle, err := hex.DecodeString(argMerkle)
+			if err != nil {
+				panic(err)
+			}
 
 			params := &types.QueryAttestationRequest{
-				Cid: argCid,
+				Prover: argProver,
+				Merkle: merkle,
+				Owner:  argOwner,
+				Start:  start,
 			}
 
 			res, err := queryClient.Attestation(context.Background(), params)
@@ -107,18 +124,33 @@ func CmdListReportForms() *cobra.Command {
 
 func CmdShowReportForms() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-report-form [cid]",
+		Use:   "report-form [prover] [merkle] [owner] [start]",
 		Short: "shows an report form",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argCid := args[0]
+			argProver := args[1]
+			argMerkle := args[2]
+			argOwner := args[3]
+			argStart := args[4]
+
+			start, err := strconv.ParseInt(argStart, 10, 64)
+			if err != nil {
+				panic(err)
+			}
+			merkle, err := hex.DecodeString(argMerkle)
+			if err != nil {
+				panic(err)
+			}
 
 			params := &types.QueryReportRequest{
-				Cid: argCid,
+				Prover: argProver,
+				Merkle: merkle,
+				Owner:  argOwner,
+				Start:  start,
 			}
 
 			res, err := queryClient.Reports(context.Background(), params)

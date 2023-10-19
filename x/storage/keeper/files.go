@@ -87,6 +87,15 @@ func (k Keeper) RemoveFile(
 	owner string,
 	start int64,
 ) {
+	file, found := k.GetFile(ctx, merkle, owner, start)
+	if !found {
+		return
+	}
+
+	for _, proof := range file.Proofs { // deleting all the associated proofs too
+		k.RemoveProofWithBuiltKey(ctx, []byte(proof))
+	}
+
 	k.removeFilePrimary(ctx, merkle, owner, start)
 	k.removeFileSecondary(ctx, merkle, owner, start)
 }

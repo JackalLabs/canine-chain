@@ -11,19 +11,19 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDealsRequest) (*types.QueryAllActiveDealsResponse, error) {
+func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var activeDealss []types.ActiveDeals
+	var activeDealss []types.UnifiedFile
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	activeDealsStore := prefix.NewStore(store, types.KeyPrefix(types.ActiveDealsKeyPrefix))
+	activeDealsStore := prefix.NewStore(store, types.KeyPrefix(types.FilePrimaryKeyPrefix))
 
 	pageRes, err := query.Paginate(activeDealsStore, req.Pagination, func(key []byte, value []byte) error {
-		var activeDeals types.ActiveDeals
+		var activeDeals types.UnifiedFile
 		if err := k.cdc.Unmarshal(value, &activeDeals); err != nil {
 			return err
 		}
@@ -35,22 +35,24 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllActiveDealsResponse{ActiveDeals: activeDealss, Pagination: pageRes}, nil
+	return &types.QueryAllFilesResponse{Files: activeDealss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ActiveDeals(c context.Context, req *types.QueryActiveDealRequest) (*types.QueryActiveDealResponse, error) {
+func (k Keeper) ActiveDeals(c context.Context, req *types.QueryFileRequest) (*types.QueryFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetActiveDeals(
+	val, found := k.GetFile(
 		ctx,
-		req.Cid,
+		req.Merkle,
+		req.Owner,
+		req.Start,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryActiveDealResponse{ActiveDeals: val}, nil
+	return &types.QueryFileResponse{File: val}, nil
 }

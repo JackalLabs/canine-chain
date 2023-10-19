@@ -22,12 +22,19 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 
 	prover := msg.Creator
 
-	proof, err := file.GetProver(ctx, k, prover)
-	if err != nil {
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
+	var proof *types.FileProof
+
+	if len(file.Proofs) == int(file.MaxProofs) {
+		var err error
+		proof, err = file.GetProver(ctx, k, prover)
+		if err != nil {
+			return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
+		}
+	} else {
+		proof = file.AddProver(ctx, k, prover)
 	}
 
-	err = file.Prove(ctx, k, msg.Creator, msg.HashList, proof.ChunkToProve, msg.Item, proofSize)
+	err := file.Prove(ctx, k, msg.Creator, msg.HashList, proof.ChunkToProve, msg.Item, proofSize)
 	if err != nil {
 		ctx.Logger().Debug("%s\n", "Cannot verify")
 		return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil

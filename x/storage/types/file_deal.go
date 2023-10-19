@@ -36,9 +36,9 @@ func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item string) bo
 	return verified
 }
 
-func (f *UnifiedFile) AddProver(ctx sdk.Context, k ProofLoader, prover string) bool {
+func (f *UnifiedFile) AddProver(ctx sdk.Context, k ProofLoader, prover string) *FileProof {
 	if len(f.Proofs) >= int(f.MaxProofs) {
-		return false
+		return nil
 	}
 
 	pk := f.MakeProofKey(prover)
@@ -50,14 +50,14 @@ func (f *UnifiedFile) AddProver(ctx sdk.Context, k ProofLoader, prover string) b
 		Merkle:       f.Merkle,
 		Owner:        f.Owner,
 		Start:        f.Start,
-		LastProven:   0,
+		LastProven:   ctx.BlockHeight(),
 		ChunkToProve: 0,
 	}
 
 	k.SetProof(ctx, p)
 	k.SetFile(ctx, *f)
 
-	return true
+	return &p
 }
 
 func (f *UnifiedFile) RemoveProver(ctx sdk.Context, k ProofLoader, prover string) {

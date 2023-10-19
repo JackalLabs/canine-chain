@@ -9,7 +9,6 @@ import "canine_chain/storage/contracts.proto";
 import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
 import "canine_chain/storage/strays.proto";
-import "canine_chain/storage/fid_cid.proto";
 import "canine_chain/storage/payment_info.proto";
 
 // this line is used by starport scaffolding # 1
@@ -51,7 +50,7 @@ service Query {
   // Queries a Attestation by index.
   rpc Attestation(QueryAttestationRequest) returns (QueryAttestationResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/attestations/{cid}";
+        "/jackal-dao/canine-chain/storage/attestations/{prover}/{merkle}/{owner}/{start}";
   }
 
   // Queries a list of Attestation items.
@@ -63,7 +62,7 @@ service Query {
   // Queries a Report by index.
   rpc Reports(QueryReportRequest) returns (QueryReportResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/reports/{cid}";
+        "/jackal-dao/canine-chain/storage/reports/{prover}/{merkle}/{owner}/{start}";
   }
 
   // Queries a list of Attestation items.
@@ -152,7 +151,11 @@ message QueryParamsResponse {
 }
 
 
-message QueryFileRequest { string merkle = 1; }
+message QueryFileRequest {
+  bytes merkle = 1;
+  string owner = 2;
+  int64 start = 3;
+}
 
 message QueryFileResponse {
   UnifiedFile file = 1 [ (gogoproto.nullable) = false ];
@@ -183,7 +186,12 @@ message QueryAllProvidersResponse {
 }
 
 
-message QueryAttestationRequest { string cid = 1; }
+message QueryAttestationRequest {
+  string prover = 1;
+  bytes merkle = 2;
+  string owner = 3;
+  int64 start = 4;
+}
 
 message QueryAttestationResponse {
   AttestationForm attestation = 1 [ (gogoproto.nullable) = false ];
@@ -199,7 +207,12 @@ message QueryAllAttestationsResponse {
 }
 
 
-message QueryReportRequest { string cid = 1; }
+message QueryReportRequest {
+  string prover = 1;
+  bytes merkle = 2;
+  string owner = 3;
+  int64 start = 4;
+}
 
 message QueryReportResponse {
   ReportForm report = 1 [ (gogoproto.nullable) = false ];
@@ -232,9 +245,6 @@ message QueryFindFileResponse { string provider_ips = 1; }
 message QueryClientFreeSpaceRequest { string address = 1; }
 
 message QueryClientFreeSpaceResponse { int64 bytesfree = 1; }
-
-message QueryFidCidRequest { string fid = 1; }
-
 
 message QueryPayDataRequest { string address = 1; }
 

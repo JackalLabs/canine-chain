@@ -148,38 +148,47 @@ message MsgUpgradeStorageResponse {}
 
 message MsgRequestAttestationForm {
   string creator = 1;
-  string cid = 2;
+  bytes merkle = 2;
+  string owner = 3;
+  int64 start = 4;
 }
 
 message MsgRequestAttestationFormResponse {
   repeated string providers = 1;
   bool success = 2;
   string error = 3;
-  string cid = 4;
 }
 
 message MsgAttest {
   string creator = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3;
+  string owner = 4;
+  int64 start = 5;
 }
 
 message MsgAttestResponse {}
 
 message MsgRequestReportForm {
   string creator = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3;
+  string owner = 4;
+  int64 start = 5;
 }
 
 message MsgRequestReportFormResponse {
   repeated string providers = 1;
   bool success = 2;
   string error = 3;
-  string cid = 4;
 }
 
 message MsgReport {
   string creator = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3;
+  string owner = 4;
+  int64 start = 5;
 }
 
 message MsgReportResponse {}
