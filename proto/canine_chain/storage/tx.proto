@@ -5,9 +5,10 @@ option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
-  rpc PostProof(MsgPostproof) returns (MsgPostproofResponse);
-  rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
+  rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
+  rpc PostProof(MsgPostProof) returns (MsgPostProofResponse);
+  rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
+
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
   rpc SetProviderKeybase(MsgSetProviderKeybase)
       returns (MsgSetProviderKeybaseResponse);
@@ -15,50 +16,52 @@ service Msg {
       returns (MsgSetProviderTotalspaceResponse);
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
   rpc ShutdownProvider(MsgShutdownProvider) returns (MsgShutdownProviderResponse);
-  rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
-  rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
   rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
+
   rpc RequestAttestationForm(MsgRequestAttestationForm) returns (MsgRequestAttestationFormResponse);
   rpc Attest(MsgAttest) returns (MsgAttestResponse);
   rpc RequestReportForm(MsgRequestReportForm) returns (MsgRequestReportFormResponse);
   rpc Report(MsgReport) returns (MsgReportResponse);
 
-
-  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
-message MsgPostContract {
+message MsgPostFile {
   string creator = 1;
-  string merkle = 2;
-  string signee = 3;
-  string filesize = 4;
-  string fid = 5;
+  bytes merkle = 2;
+  int64 file_size = 3;
+  int64 proof_interval = 4; // How many blocks between proofs.
+  int64 proof_type = 5;
+  int64 max_proofs = 6; // How many provers this file can have.
+  string note = 7; // Misc string to store extra details.
 }
 
-message MsgPostContractResponse {}
+message MsgPostFileResponse {}
 
-message MsgPostproof {
+message MsgPostProof {
   string creator = 1;
   string item = 2;
-  string hashlist = 3;
-  string cid = 4;
+  bytes hash_list = 3;
+  bytes merkle = 4;
+  string owner = 5;
+  int64 start = 6;
 }
 
-message MsgPostproofResponse {
+message MsgPostProofResponse {
   bool success = 1;
   string errorMessage = 2;
 }
 
-message MsgSignContract {
+message MsgDeleteFile {
   string creator = 1;
-  string cid = 2;
-  bool pay_once = 3;
+  bytes merkle = 2;
+  int64 start = 3;
 }
 
-message MsgSignContractResponse {}
+message MsgDeleteFileResponse {}
+
 
 
 message MsgSetProviderIP {
@@ -113,12 +116,7 @@ message MsgShutdownProvider {
 
 message MsgShutdownProviderResponse {}
 
-message MsgCancelContract {
-  string creator = 1;
-  string cid = 2;
-}
 
-message MsgCancelContractResponse {}
 
 message MsgBuyStorage {
   string creator = 1;

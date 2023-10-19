@@ -22,23 +22,23 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type FidCid struct {
+type LegacyFidCid struct {
 	Fid  string `protobuf:"bytes,1,opt,name=fid,proto3" json:"fid,omitempty"`
 	Cids string `protobuf:"bytes,2,opt,name=cids,proto3" json:"cids,omitempty"`
 }
 
-func (m *FidCid) Reset()         { *m = FidCid{} }
-func (m *FidCid) String() string { return proto.CompactTextString(m) }
-func (*FidCid) ProtoMessage()    {}
-func (*FidCid) Descriptor() ([]byte, []int) {
+func (m *LegacyFidCid) Reset()         { *m = LegacyFidCid{} }
+func (m *LegacyFidCid) String() string { return proto.CompactTextString(m) }
+func (*LegacyFidCid) ProtoMessage()    {}
+func (*LegacyFidCid) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e2d91a93fd947ec8, []int{0}
 }
-func (m *FidCid) XXX_Unmarshal(b []byte) error {
+func (m *LegacyFidCid) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *FidCid) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *LegacyFidCid) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_FidCid.Marshal(b, m, deterministic)
+		return xxx_messageInfo_LegacyFidCid.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -48,26 +48,26 @@ func (m *FidCid) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *FidCid) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_FidCid.Merge(m, src)
+func (m *LegacyFidCid) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LegacyFidCid.Merge(m, src)
 }
-func (m *FidCid) XXX_Size() int {
+func (m *LegacyFidCid) XXX_Size() int {
 	return m.Size()
 }
-func (m *FidCid) XXX_DiscardUnknown() {
-	xxx_messageInfo_FidCid.DiscardUnknown(m)
+func (m *LegacyFidCid) XXX_DiscardUnknown() {
+	xxx_messageInfo_LegacyFidCid.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_FidCid proto.InternalMessageInfo
+var xxx_messageInfo_LegacyFidCid proto.InternalMessageInfo
 
-func (m *FidCid) GetFid() string {
+func (m *LegacyFidCid) GetFid() string {
 	if m != nil {
 		return m.Fid
 	}
 	return ""
 }
 
-func (m *FidCid) GetCids() string {
+func (m *LegacyFidCid) GetCids() string {
 	if m != nil {
 		return m.Cids
 	}
@@ -75,7 +75,7 @@ func (m *FidCid) GetCids() string {
 }
 
 func init() {
-	proto.RegisterType((*FidCid)(nil), "canine_chain.storage.FidCid")
+	proto.RegisterType((*LegacyFidCid)(nil), "canine_chain.storage.LegacyFidCid")
 }
 
 func init() {
@@ -83,22 +83,22 @@ func init() {
 }
 
 var fileDescriptor_e2d91a93fd947ec8 = []byte{
-	// 177 bytes of a gzipped FileDescriptorProto
+	// 183 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x4a, 0x4e, 0xcc, 0xcb,
 	0xcc, 0x4b, 0x8d, 0x4f, 0xce, 0x48, 0xcc, 0xcc, 0xd3, 0x2f, 0x2e, 0xc9, 0x2f, 0x4a, 0x4c, 0x4f,
 	0xd5, 0x4f, 0xcb, 0x4c, 0x89, 0x4f, 0xce, 0x4c, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12,
-	0x41, 0x56, 0xa3, 0x07, 0x55, 0xa3, 0xa4, 0xc7, 0xc5, 0xe6, 0x96, 0x99, 0xe2, 0x9c, 0x99, 0x22,
-	0x24, 0xc0, 0xc5, 0x9c, 0x96, 0x99, 0x22, 0xc1, 0xa8, 0xc0, 0xa8, 0xc1, 0x19, 0x04, 0x62, 0x0a,
-	0x09, 0x71, 0xb1, 0x24, 0x67, 0xa6, 0x14, 0x4b, 0x30, 0x81, 0x85, 0xc0, 0x6c, 0x27, 0x9f, 0x13,
-	0x8f, 0xe4, 0x18, 0x2f, 0x3c, 0x92, 0x63, 0x7c, 0xf0, 0x48, 0x8e, 0x71, 0xc2, 0x63, 0x39, 0x86,
-	0x0b, 0x8f, 0xe5, 0x18, 0x6e, 0x3c, 0x96, 0x63, 0x88, 0x32, 0x4a, 0xcf, 0x2c, 0xc9, 0x28, 0x4d,
-	0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0xcf, 0x4a, 0x4c, 0xce, 0x4e, 0xcc, 0xf1, 0x49, 0x4c, 0x2a, 0xd6,
-	0x87, 0xd8, 0xaa, 0x0b, 0x71, 0x59, 0x05, 0xdc, 0x6d, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c,
-	0x60, 0xa7, 0x19, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0xa2, 0xff, 0xea, 0x63, 0xc0, 0x00, 0x00,
-	0x00,
+	0x41, 0x56, 0xa3, 0x07, 0x55, 0xa3, 0x64, 0xc2, 0xc5, 0xe3, 0x93, 0x9a, 0x9e, 0x98, 0x5c, 0xe9,
+	0x96, 0x99, 0xe2, 0x9c, 0x99, 0x22, 0x24, 0xc0, 0xc5, 0x9c, 0x96, 0x99, 0x22, 0xc1, 0xa8, 0xc0,
+	0xa8, 0xc1, 0x19, 0x04, 0x62, 0x0a, 0x09, 0x71, 0xb1, 0x24, 0x67, 0xa6, 0x14, 0x4b, 0x30, 0x81,
+	0x85, 0xc0, 0x6c, 0x27, 0x9f, 0x13, 0x8f, 0xe4, 0x18, 0x2f, 0x3c, 0x92, 0x63, 0x7c, 0xf0, 0x48,
+	0x8e, 0x71, 0xc2, 0x63, 0x39, 0x86, 0x0b, 0x8f, 0xe5, 0x18, 0x6e, 0x3c, 0x96, 0x63, 0x88, 0x32,
+	0x4a, 0xcf, 0x2c, 0xc9, 0x28, 0x4d, 0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0xcf, 0x4a, 0x4c, 0xce, 0x4e,
+	0xcc, 0xf1, 0x49, 0x4c, 0x2a, 0xd6, 0x87, 0xd8, 0xad, 0x0b, 0x71, 0x5f, 0x05, 0xdc, 0x85, 0x25,
+	0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0x60, 0x07, 0x1a, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0x27,
+	0xfa, 0x1a, 0x41, 0xc6, 0x00, 0x00, 0x00,
 }
 
-func (m *FidCid) Marshal() (dAtA []byte, err error) {
+func (m *LegacyFidCid) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -108,12 +108,12 @@ func (m *FidCid) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *FidCid) MarshalTo(dAtA []byte) (int, error) {
+func (m *LegacyFidCid) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *FidCid) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *LegacyFidCid) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -146,7 +146,7 @@ func encodeVarintFidCid(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *FidCid) Size() (n int) {
+func (m *LegacyFidCid) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -169,7 +169,7 @@ func sovFidCid(x uint64) (n int) {
 func sozFidCid(x uint64) (n int) {
 	return sovFidCid(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *FidCid) Unmarshal(dAtA []byte) error {
+func (m *LegacyFidCid) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -192,10 +192,10 @@ func (m *FidCid) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: FidCid: wiretype end group for non-group")
+			return fmt.Errorf("proto: LegacyFidCid: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: FidCid: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: LegacyFidCid: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

@@ -3,7 +3,7 @@ package canine_chain.storage;
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
-message ActiveDeals {
+message LegacyActiveDeals {
   string cid = 1;
   string signee = 2;
   string provider = 3;

@@ -7,22 +7,22 @@ import (
 )
 
 // SetActiveDeals set a specific activeDeals in the store from its index
-func (k Keeper) SetActiveDeals(ctx sdk.Context, activeDeals types.ActiveDeals) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
+func (k Keeper) SetLegacyActiveDeals(ctx sdk.Context, activeDeals types.LegacyActiveDeals) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LegacyActiveDealsKeyPrefix))
 	b := k.cdc.MustMarshal(&activeDeals)
-	store.Set(types.ActiveDealsKey(
+	store.Set(types.LegacyActiveDealsKey(
 		activeDeals.Cid,
 	), b)
 }
 
 // GetActiveDeals returns a activeDeals from its index
-func (k Keeper) GetActiveDeals(
+func (k Keeper) GetLegacyActiveDeals(
 	ctx sdk.Context,
 	cid string,
-) (val types.ActiveDeals, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
+) (val types.LegacyActiveDeals, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LegacyActiveDealsKeyPrefix))
 
-	b := store.Get(types.ActiveDealsKey(
+	b := store.Get(types.LegacyActiveDealsKey(
 		cid,
 	))
 	if b == nil {
@@ -34,25 +34,25 @@ func (k Keeper) GetActiveDeals(
 }
 
 // RemoveActiveDeals removes a activeDeals from the store
-func (k Keeper) RemoveActiveDeals(
+func (k Keeper) RemoveLegacyActiveDeals(
 	ctx sdk.Context,
 	cid string,
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
-	store.Delete(types.ActiveDealsKey(
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LegacyActiveDealsKeyPrefix))
+	store.Delete(types.LegacyActiveDealsKey(
 		cid,
 	))
 }
 
 // GetAllActiveDeals returns all activeDeals
-func (k Keeper) GetAllActiveDeals(ctx sdk.Context) (list []types.ActiveDeals) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
+func (k Keeper) GetAllLegacyActiveDeals(ctx sdk.Context) (list []types.LegacyActiveDeals) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LegacyActiveDealsKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ActiveDeals
+		var val types.LegacyActiveDeals
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}

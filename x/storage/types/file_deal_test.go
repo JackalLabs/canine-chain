@@ -55,15 +55,17 @@ func TestFileProof(t *testing.T) {
 	tree, err := merkletree.NewUsing(data, sha3.New512(), false)
 	require.NoError(t, err)
 
-	f := &types.UniversalFile{
-		Id:            nil,
-		Proofs:        make(map[string]*types.FileProof),
-		FileSize:      1,
+	f := &types.UnifiedFile{
+		Merkle:        tree.Root(),
+		Owner:         "",
 		Start:         0,
 		Expires:       0,
-		Owner:         "",
-		ProofInterval: 0,
-		Merkle:        tree.Root(),
+		FileSize:      1,
+		ProofInterval: 10,
+		ProofType:     0,
+		Proofs:        make([]string, 0),
+		MaxProofs:     3,
+		Note:          "",
 	}
 
 	verified, proof, err := GenerateMerkleProof(*tree, 0, i)

@@ -3,7 +3,7 @@ package canine_chain.storage;
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
-message FidCid {
+message LegacyFidCid {
   string fid = 1;
   string cids = 2;
 }
