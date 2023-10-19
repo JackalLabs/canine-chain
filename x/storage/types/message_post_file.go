@@ -8,30 +8,31 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgPostProof = "post_proof"
+const TypeMsgPostFile = "post_file"
 
-var _ sdk.Msg = &MsgPostProof{}
+var _ sdk.Msg = &MsgPostFile{}
 
-func NewMsgPostProof(creator string, merkle []byte, owner string, start int64, item string, hashList []byte) *MsgPostProof {
-	return &MsgPostProof{
-		Creator:  creator,
-		Item:     item,
-		HashList: hashList,
-		Merkle:   merkle,
-		Owner:    owner,
-		Start:    start,
+func NewMsgPostContract(creator string, merkle []byte, fileSize int64, proofInterval int64, proofType int64, maxProofs int64, note string) *MsgPostFile {
+	return &MsgPostFile{
+		Creator:       creator,
+		Merkle:        merkle,
+		FileSize:      fileSize,
+		ProofInterval: proofInterval,
+		ProofType:     proofType,
+		MaxProofs:     maxProofs,
+		Note:          note,
 	}
 }
 
-func (msg *MsgPostProof) Route() string {
+func (msg *MsgPostFile) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgPostProof) Type() string {
-	return TypeMsgPostProof
+func (msg *MsgPostFile) Type() string {
+	return TypeMsgPostFile
 }
 
-func (msg *MsgPostProof) GetSigners() []sdk.AccAddress {
+func (msg *MsgPostFile) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -39,12 +40,12 @@ func (msg *MsgPostProof) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgPostProof) GetSignBytes() []byte {
+func (msg *MsgPostFile) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgPostProof) ValidateBasic() error {
+func (msg *MsgPostFile) ValidateBasic() error {
 	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

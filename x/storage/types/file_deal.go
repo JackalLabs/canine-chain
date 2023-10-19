@@ -55,6 +55,7 @@ func (f *UnifiedFile) AddProver(ctx sdk.Context, k ProofLoader, prover string) b
 	}
 
 	k.SetProof(ctx, p)
+	k.SetFile(ctx, *f)
 
 	return true
 }

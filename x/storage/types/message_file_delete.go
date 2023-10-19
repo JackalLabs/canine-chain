@@ -8,26 +8,27 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgCancelContract = "cancel_contract"
+const TypeMsgCancelContract = "delete_file"
 
-var _ sdk.Msg = &MsgCancelContract{}
+var _ sdk.Msg = &MsgDeleteFile{}
 
-func NewMsgCancelContract(creator string, cid string) *MsgCancelContract {
-	return &MsgCancelContract{
+func NewMsgDeleteFile(creator string, merkle []byte, start int64) *MsgDeleteFile {
+	return &MsgDeleteFile{
 		Creator: creator,
-		Cid:     cid,
+		Merkle:  merkle,
+		Start:   start,
 	}
 }
 
-func (msg *MsgCancelContract) Route() string {
+func (msg *MsgDeleteFile) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgCancelContract) Type() string {
+func (msg *MsgDeleteFile) Type() string {
 	return TypeMsgCancelContract
 }
 
-func (msg *MsgCancelContract) GetSigners() []sdk.AccAddress {
+func (msg *MsgDeleteFile) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -35,12 +36,12 @@ func (msg *MsgCancelContract) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgCancelContract) GetSignBytes() []byte {
+func (msg *MsgDeleteFile) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgCancelContract) ValidateBasic() error {
+func (msg *MsgDeleteFile) ValidateBasic() error {
 	prefix, _, err := bech32.DecodeAndConvert(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -49,12 +50,5 @@ func (msg *MsgCancelContract) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	prefix, _, err = bech32.DecodeAndConvert(msg.Cid)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid (%s)", err)
-	}
-	if prefix != CidPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklc`", prefix))
-	}
 	return nil
 }

@@ -12,4 +12,5 @@ type ProofLoader interface {
 		ctx sdk.Context,
 		key []byte,
 	)
+	SetFile(ctx sdk.Context, File UnifiedFile)
 }

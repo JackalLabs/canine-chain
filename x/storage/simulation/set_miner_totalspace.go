@@ -39,7 +39,7 @@ func SimulateMsgSetProviderTotalspace(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSetProviderTotalspace, "unable to generate fees"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{
