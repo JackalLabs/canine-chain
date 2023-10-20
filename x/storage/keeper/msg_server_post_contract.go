@@ -12,6 +12,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	_ = ctx
+	_ = msg
 
 	return &types.MsgPostFileResponse{}, nil
 }

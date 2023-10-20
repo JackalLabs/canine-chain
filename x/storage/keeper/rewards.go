@@ -50,7 +50,7 @@ func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) {
 }
 
 // ManageRewards loops through every file on the network and manages it in some way.
-func (k Keeper) manageRewards(ctx sdk.Context) {
+func (k Keeper) ManageRewards(ctx sdk.Context) {
 	var totalSize int64
 	s := make(map[string]int64)
 	sizeTracker := &s
@@ -80,5 +80,5 @@ func (k Keeper) RunRewardBlock(ctx sdk.Context) {
 		return
 	}
 
-	k.manageRewards(ctx)
+	k.ManageRewards(ctx)
 }

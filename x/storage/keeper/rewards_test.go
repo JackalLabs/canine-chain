@@ -44,20 +44,20 @@ func (suite *KeeperTestSuite) TestReward() {
 	})
 	providerOne := testAddresses[1]
 
-	dealOne := types.ActiveDeals{
-		Cid:           "cid1test",
-		Signee:        signer,
-		Provider:      providerOne,
-		Startblock:    "0",
-		Endblock:      "0",
-		Filesize:      "100",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "1",
-		Creator:       providerOne,
-		Merkle:        "nil",
-		Fid:           "fid1test",
+	dealOne := types.UnifiedFile{
+		Merkle:        []byte("merkle"),
+		Owner:         signer,
+		Start:         0,
+		Expires:       0,
+		FileSize:      1000,
+		ProofInterval: 100,
+		ProofType:     0,
+		Proofs:        make([]string, 0),
+		MaxProofs:     3,
+		Note:          "test",
 	}
+	suite.storageKeeper.SetFile(suite.ctx, dealOne)
+	dealOne.AddProver(suite.ctx, suite.storageKeeper, providerOne)
 
 	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
 
@@ -72,8 +72,6 @@ func (suite *KeeperTestSuite) TestReward() {
 	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
 	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
 
-	suite.storageKeeper.SetActiveDeals(suite.ctx, dealOne)
-
 	var blocks int64 = 10 * 5
 
 	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20})
@@ -81,8 +79,7 @@ func (suite *KeeperTestSuite) TestReward() {
 	suite.Require().Equal(blocks, ctx.BlockHeight())
 	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
 
-	err = suite.storageKeeper.HandleRewardBlock(ctx)
-	suite.NoError(err)
+	suite.storageKeeper.ManageRewards(ctx)
 
 	pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
 	suite.NoError(err)
@@ -118,31 +115,30 @@ func (suite *KeeperTestSuite) TestMultiReward() {
 		providers[i] = acc
 	}
 
-	deals := make([]types.ActiveDeals, l*2)
+	deals := make([]types.UnifiedFile, l*2)
 
 	total := 0
 
 	for i := 0; i < l*2; i++ {
 		p := providers[i%l]
-		deal := types.ActiveDeals{
-			Cid:           fmt.Sprintf("cid1test%d", i),
-			Signee:        signer,
-			Provider:      p.String(),
-			Startblock:    "0",
-			Endblock:      "0",
-			Filesize:      fmt.Sprintf("%d", i),
-			Proofverified: "true",
-			Proofsmissed:  "0",
-			Blocktoprove:  "1",
-			Creator:       p.String(),
-			Merkle:        "nil",
-			Fid:           fmt.Sprintf("fid1test%d", i),
+		deal := types.UnifiedFile{
+			Merkle:        []byte("merkle"),
+			Owner:         signer,
+			Start:         0,
+			Expires:       0,
+			FileSize:      1000,
+			ProofInterval: 100,
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          "test",
 		}
+		suite.storageKeeper.SetFile(suite.ctx, deal)
+		deal.AddProver(suite.ctx, suite.storageKeeper, p.String())
 
 		total += i
 
 		deals[i] = deal
-		suite.storageKeeper.SetActiveDeals(suite.ctx, deal)
 	}
 
 	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
@@ -165,8 +161,7 @@ func (suite *KeeperTestSuite) TestMultiReward() {
 	suite.Require().Equal(blocks, ctx.BlockHeight())
 	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
 
-	err = suite.storageKeeper.HandleRewardBlock(ctx)
-	suite.NoError(err)
+	suite.storageKeeper.ManageRewards(ctx)
 
 	nom := sdk.NewDec(20)
 	den := sdk.NewDec(int64(total))
