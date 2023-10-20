@@ -5,10 +5,8 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "canine_chain/storage/params.proto";
-import "canine_chain/storage/contracts.proto";
 import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
-import "canine_chain/storage/strays.proto";
 import "canine_chain/storage/payment_info.proto";
 
 // this line is used by starport scaffolding # 1
