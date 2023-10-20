@@ -680,15 +680,15 @@ func request_Query_FindFile_0(ctx context.Context, marshaler runtime.Marshaler, 
 		_   = err
 	)
 
-	val, ok = pathParams["fid"]
+	val, ok = pathParams["merkle"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "fid")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "merkle")
 	}
 
-	protoReq.Fid, err = runtime.String(val)
+	protoReq.Merkle, err = runtime.Bytes(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "fid", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "merkle", err)
 	}
 
 	msg, err := client.FindFile(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -707,15 +707,15 @@ func local_request_Query_FindFile_0(ctx context.Context, marshaler runtime.Marsh
 		_   = err
 	)
 
-	val, ok = pathParams["fid"]
+	val, ok = pathParams["merkle"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "fid")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "merkle")
 	}
 
-	protoReq.Fid, err = runtime.String(val)
+	protoReq.Merkle, err = runtime.Bytes(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "fid", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "merkle", err)
 	}
 
 	msg, err := server.FindFile(ctx, &protoReq)
@@ -2002,7 +2002,7 @@ var (
 
 	pattern_Query_StoreCount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "storing", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_FindFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "find_file", "fid"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_FindFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "find_file", "merkle"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_GetClientFreeSpace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "get_client_free_space", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 

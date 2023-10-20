@@ -86,7 +86,7 @@ service Query {
   // Queries a list of FindFile items.
   rpc FindFile(QueryFindFileRequest) returns (QueryFindFileResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/find_file/{fid}";
+        "/jackal-dao/canine-chain/storage/find_file/{merkle}";
   }
 
   // Queries a list of GetClientFreeSpace items.
@@ -236,7 +236,7 @@ message QueryFreespaceResponse { string space = 1; }
 message QueryStoreCountResponse { string count = 1; }
 
 
-message QueryFindFileRequest { string fid = 1; }
+message QueryFindFileRequest { bytes merkle = 1; }
 
 message QueryFindFileResponse { string provider_ips = 1; }
 

@@ -23,7 +23,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgPostProof:
 			res, err := msgServer.PostProof(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgSetProviderIP:
 			res, err := msgServer.SetProviderIP(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

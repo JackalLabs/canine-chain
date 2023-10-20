@@ -7,14 +7,14 @@ import (
 )
 
 // SetProof set a specific proof in the store from its index
-func (k Keeper) SetProof(ctx sdk.Context, Proof types.FileProof) {
+func (k Keeper) SetProof(ctx sdk.Context, proof types.FileProof) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofKeyPrefix))
-	b := k.cdc.MustMarshal(&Proof)
+	b := k.cdc.MustMarshal(&proof)
 	store.Set(types.ProofKey(
-		Proof.Prover,
-		Proof.Merkle,
-		Proof.Owner,
-		Proof.Start,
+		proof.Prover,
+		proof.Merkle,
+		proof.Owner,
+		proof.Start,
 	), b)
 }
 
@@ -84,6 +84,22 @@ func (k Keeper) RemoveProofWithBuiltKey(
 func (k Keeper) GetAllProofs(ctx sdk.Context) (list []types.FileProof) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.FileProof
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
+// GetAllProofsForProver returns all Proofs for the given prover
+func (k Keeper) GetAllProofsForProver(ctx sdk.Context, prover string) (list []types.FileProof) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte(prover))
 
 	defer iterator.Close()
 

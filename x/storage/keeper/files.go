@@ -6,30 +6,30 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-func (k Keeper) setFilePrimary(ctx sdk.Context, File types.UnifiedFile) {
+func (k Keeper) setFilePrimary(ctx sdk.Context, file types.UnifiedFile) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-	b := k.cdc.MustMarshal(&File)
+	b := k.cdc.MustMarshal(&file)
 	store.Set(types.FilesPrimaryKey(
-		File.Merkle,
-		File.Owner,
-		File.Start,
+		file.Merkle,
+		file.Owner,
+		file.Start,
 	), b)
 }
 
-func (k Keeper) setFileSecondary(ctx sdk.Context, File types.UnifiedFile) {
+func (k Keeper) setFileSecondary(ctx sdk.Context, file types.UnifiedFile) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FileSecondaryKeyPrefix))
-	b := k.cdc.MustMarshal(&File)
+	b := k.cdc.MustMarshal(&file)
 	store.Set(types.FilesSecondaryKey(
-		File.Merkle,
-		File.Owner,
-		File.Start,
+		file.Merkle,
+		file.Owner,
+		file.Start,
 	), b)
 }
 
 // SetFile set a specific File in the store from its index
-func (k Keeper) SetFile(ctx sdk.Context, File types.UnifiedFile) {
-	k.setFilePrimary(ctx, File)
-	k.setFileSecondary(ctx, File)
+func (k Keeper) SetFile(ctx sdk.Context, file types.UnifiedFile) {
+	k.setFilePrimary(ctx, file)
+	k.setFileSecondary(ctx, file)
 }
 
 // GetFile returns a File from its index
@@ -104,6 +104,34 @@ func (k Keeper) RemoveFile(
 func (k Keeper) GetAllFileByMerkle(ctx sdk.Context) (list []types.UnifiedFile) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.UnifiedFile
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
+// IterateFilesByMerkle iterates through every file
+func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, fn func(key []byte, val []byte)) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		fn(iterator.Key(), iterator.Value())
+	}
+}
+
+// GetAllFilesWithMerkle returns all Files that start with a specific merkle
+func (k Keeper) GetAllFilesWithMerkle(ctx sdk.Context, merkle []byte) (list []types.UnifiedFile) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, merkle)
 
 	defer iterator.Close()
 

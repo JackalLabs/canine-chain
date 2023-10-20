@@ -38,7 +38,9 @@ message MsgPostFile {
   string note = 7; // Misc string to store extra details.
 }
 
-message MsgPostFileResponse {}
+message MsgPostFileResponse {
+  repeated string provider_ips = 1; // list of providers that are pre-loaded into the file
+}
 
 message MsgPostProof {
   string creator = 1;

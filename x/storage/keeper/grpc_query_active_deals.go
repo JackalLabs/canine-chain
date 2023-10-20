@@ -38,7 +38,7 @@ func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*t
 	return &types.QueryAllFilesResponse{Files: activeDealss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ActiveDeals(c context.Context, req *types.QueryFileRequest) (*types.QueryFileResponse, error) {
+func (k Keeper) File(c context.Context, req *types.QueryFileRequest) (*types.QueryFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

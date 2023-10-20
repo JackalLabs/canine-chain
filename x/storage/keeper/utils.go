@@ -29,37 +29,22 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) int64 {
 }
 
 func (k Keeper) GetProviderDeals(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllActiveDeals(ctx)
+	allDeals := k.GetAllProofsForProver(ctx, provider)
 
-	var count int64
-	for i := 0; i < len(allDeals); i++ {
-		deal := allDeals[i]
-		if deal.Provider != provider {
-			continue
-		}
-
-		count++
-
-	}
-
-	return count
+	return int64(len(allDeals))
 }
 
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllActiveDeals(ctx)
+	allDeals := k.GetAllProofsForProver(ctx, provider)
 
 	var space int64
-	for i := 0; i < len(allDeals); i++ {
-		deal := allDeals[i]
-		if deal.Provider != provider {
-			continue
-		}
-		size, ok := sdk.NewIntFromString(deal.Filesize)
-		if !ok {
+	for _, proof := range allDeals {
+		deal, found := k.GetFile(ctx, proof.Merkle, proof.Owner, proof.Start)
+		if !found {
 			continue
 		}
 
-		space += size.Int64()
+		space += deal.FileSize
 
 	}
 
