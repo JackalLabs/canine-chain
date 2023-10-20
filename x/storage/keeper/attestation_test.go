@@ -15,7 +15,7 @@ func (suite *KeeperTestSuite) TestSetAttestationForm() {
 	attestation := types.AttestationForm{
 		Attestations: att,
 		Prover:       "prover",
-		Merkle:       []byte{},
+		Merkle:       []byte("merkle"),
 		Owner:        "owner",
 		Start:        0,
 	}
@@ -24,7 +24,7 @@ func (suite *KeeperTestSuite) TestSetAttestationForm() {
 
 	attestationRequest := types.QueryAttestationRequest{
 		Prover: "prover",
-		Merkle: []byte{},
+		Merkle: []byte("merkle"),
 		Owner:  "owner",
 		Start:  0,
 	}

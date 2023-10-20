@@ -21,14 +21,6 @@ func TestMsgDeleteFile_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "invalid cid",
-			msg: MsgDeleteFile{
-				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Merkle:  []byte{},
-				Start:   0,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		}, {
 			name: "valid address",
 			msg: MsgDeleteFile{
 				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",

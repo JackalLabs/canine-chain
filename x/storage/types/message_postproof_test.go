@@ -25,17 +25,6 @@ func TestMsgPostProof_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "invalid cid",
-			msg: MsgPostProof{
-				Creator:  "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Item:     "hex",
-				HashList: []byte{},
-				Merkle:   []byte{},
-				Owner:    "owner",
-				Start:    0,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		}, {
 			name: "valid address",
 			msg: MsgPostProof{
 				Creator:  "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",

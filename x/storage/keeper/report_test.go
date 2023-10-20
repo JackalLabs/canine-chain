@@ -137,6 +137,7 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	}
 	suite.storageKeeper.SetFile(suite.ctx, uf)
 	uf.AddProver(suite.ctx, suite.storageKeeper, addresses[10])
+	suite.storageKeeper.SetFile(suite.ctx, uf)
 
 	_, err = suite.storageKeeper.RequestReport(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
 	suite.NoError(err)
@@ -148,7 +149,6 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 		fmt.Printf("%s %t\n", attestation.Provider, attestation.Complete)
 	}
 
-	_ = form
 	allReportForm := suite.storageKeeper.GetAllReport(suite.ctx)
 	suite.Require().Equal(1, len(allReportForm))
 

@@ -106,7 +106,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 func (suite *KeeperTestSuite) TestRequestAttestation() {
 	params := suite.storageKeeper.GetParams(suite.ctx)
 
-	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+2)
+	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+10)
 	suite.Require().NoError(err)
 
 	cases := map[string]struct {

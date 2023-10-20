@@ -173,7 +173,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	merkleroot, filesize, err := makeContract(originalFile)
 	suite.Require().NoError(err)
 
-	suite.Require().Equal("11", filesize)
+	suite.Require().Equal(int64(11), filesize)
 
 	_, found := keeper.GetStoragePaymentInfo(suite.ctx, user.String())
 	suite.Require().Equal(true, found)
@@ -295,9 +295,9 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		tc := tcs
 		suite.Run(
 			tc.testName, func() {
-				res, err := msgSrvr.PostProof(context, &tc.msg)
+				res, _ := msgSrvr.PostProof(context, &tc.msg)
 				if tc.expErr {
-					suite.Require().Error(err)
+					suite.Require().Equal(tc.expErrMsg, res.ErrorMessage)
 					suite.Require().Equal(false, res.Success)
 				}
 				if tc.postRun != nil {
