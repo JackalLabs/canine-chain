@@ -35,7 +35,9 @@ message MsgPostFile {
   int64 proof_interval = 4; // How many blocks between proofs.
   int64 proof_type = 5;
   int64 max_proofs = 6; // How many provers this file can have.
-  string note = 7; // Misc string to store extra details.
+  int64 expires = 7;
+  string note = 8; // Misc string to store extra details.
+
 }
 
 message MsgPostFileResponse {

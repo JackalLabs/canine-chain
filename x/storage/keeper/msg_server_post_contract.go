@@ -2,17 +2,91 @@ package keeper
 
 import (
 	"context"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-// TODO: POST FILE
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	_ = ctx
-	_ = msg
+	providers := k.GetActiveProviders(ctx, "")
 
-	return &types.MsgPostFileResponse{}, nil
+	file := types.UnifiedFile{
+		Merkle:        msg.Merkle,
+		Owner:         msg.Creator,
+		Start:         ctx.BlockHeight(),
+		Expires:       msg.Expires,
+		FileSize:      msg.FileSize,
+		ProofInterval: msg.ProofInterval,
+		ProofType:     msg.ProofType,
+		Proofs:        make([]string, 0),
+		MaxProofs:     msg.MaxProofs,
+		Note:          msg.Note,
+	}
+	k.SetFile(ctx, file)
+
+	ips := make([]string, 0)
+
+	for i, provider := range providers { // adding all provers
+		if i >= int(msg.MaxProofs) {
+			break
+		}
+		file.AddProver(ctx, k, provider.Address)
+
+		prv, found := k.GetProviders(ctx, provider.Address)
+		if !found {
+			continue
+		}
+
+		ips = append(ips, prv.Ip)
+	}
+
+	res := &types.MsgPostFileResponse{ProviderIps: ips}
+
+	totalSize := msg.FileSize * msg.MaxProofs
+	if msg.Expires > 0 { // if the file is posted as a one-time payment
+		kbs := totalSize / 1000
+		var kbMin int64 = 1024
+		if kbs < kbMin { // minimum amount of kbs to post
+			kbs = kbMin
+		}
+
+		var minBlocks int64 = 600
+		blockDuration := msg.Expires - ctx.BlockHeight()
+		if blockDuration < minBlocks {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot post a file for less than %d blocks", minBlocks)
+		}
+
+		seconds := blockDuration * 6
+		minutes := seconds / 60
+		hours := minutes / 60
+
+		cost := k.GetStorageCostKbs(ctx, kbs, hours)
+
+		// TODO: charge user for cost using USDC
+		_ = cost
+
+		return res, nil
+	}
+
+	// traditional storage plan payment info
+
+	paymentInfo, found := k.GetStoragePaymentInfo(ctx, msg.Creator)
+	if !found {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrKeyNotFound, "storage account does not exist")
+	}
+	if paymentInfo.End.Before(ctx.BlockTime()) {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "storage account is expired")
+	}
+
+	paymentInfo.SpaceUsed += totalSize
+	if paymentInfo.SpaceUsed > paymentInfo.SpaceAvailable {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "storage account does not have enough space available %d > %d", paymentInfo.SpaceUsed, paymentInfo.SpaceAvailable)
+	}
+
+	k.SetStoragePaymentInfo(ctx, paymentInfo)
+
+	return res, nil
 }
