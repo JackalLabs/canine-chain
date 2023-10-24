@@ -46,7 +46,7 @@ message MsgPostFileResponse {
 
 message MsgPostProof {
   string creator = 1;
-  string item = 2;
+  bytes item = 2;
   bytes hash_list = 3;
   bytes merkle = 4;
   string owner = 5;

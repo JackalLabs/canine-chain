@@ -40,7 +40,7 @@ const (
 	CID2 = "jklc15ftkghzrx2ywyrpr6n7ge6prcej43efe3jvtzsxhenann69rcu8q7jl5uh"
 )
 
-func CreateMerkleForProof(file TestFile) (string, []byte, error) {
+func CreateMerkleForProof(file TestFile) ([]byte, []byte, error) {
 	f := []byte(file.Data)
 	index := 0
 	var data [][]byte
@@ -49,7 +49,7 @@ func CreateMerkleForProof(file TestFile) (string, []byte, error) {
 	h := sha256.New()
 	_, err := io.WriteString(h, fmt.Sprintf("%d%x", index, f))
 	if err != nil {
-		return "", nil, err
+		return nil, nil, err
 	}
 	hashName := h.Sum(nil)
 
@@ -57,24 +57,24 @@ func CreateMerkleForProof(file TestFile) (string, []byte, error) {
 
 	tree, err := merkletree.NewUsing(data, sha3.New512(), false)
 	if err != nil {
-		return "", nil, err
+		return nil, nil, err
 	}
 
 	h = sha256.New()
 	_, err = io.WriteString(h, fmt.Sprintf("%d%x", index, item))
 	if err != nil {
-		return "", nil, err
+		return nil, nil, err
 	}
 	ditem := h.Sum(nil)
 
 	proof, err := tree.GenerateProof(ditem, 0)
 	if err != nil {
-		return "", nil, err
+		return nil, nil, err
 	}
 
 	jproof, err := json.Marshal(*proof)
 	if err != nil {
-		return "", nil, err
+		return nil, nil, err
 	}
 
 	e := hex.EncodeToString(tree.Root())
@@ -83,14 +83,14 @@ func CreateMerkleForProof(file TestFile) (string, []byte, error) {
 
 	verified, err := merkletree.VerifyProofUsing(ditem, false, proof, [][]byte{k}, sha3.New512())
 	if err != nil {
-		return "", nil, err
+		return nil, nil, err
 	}
 
 	if !verified {
-		return "", nil, types.ErrCannotVerifyProof
+		return nil, nil, types.ErrCannotVerifyProof
 	}
 
-	return fmt.Sprintf("%x", item), jproof, nil
+	return item, jproof, nil
 }
 
 func makeContract(file TestFile) ([]byte, int64, error) {

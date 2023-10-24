@@ -76,14 +76,13 @@ func TestFileProof(t *testing.T) {
 
 	require.Equal(t, true, verified)
 
-	item := fmt.Sprintf("%x", i)
 	proofData := jproof
 
 	var chunk int64
 
-	validProof := f.VerifyProof(proofData, chunk, item)
+	validProof := f.VerifyProof(proofData, chunk, i)
 	require.Equal(t, true, validProof)
 
-	validProof = f.VerifyProof(proofData, chunk+1, item)
+	validProof = f.VerifyProof(proofData, chunk+1, i)
 	require.Equal(t, false, validProof)
 }

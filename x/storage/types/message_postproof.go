@@ -12,7 +12,7 @@ const TypeMsgPostProof = "post_proof"
 
 var _ sdk.Msg = &MsgPostProof{}
 
-func NewMsgPostProof(creator string, merkle []byte, owner string, start int64, item string, hashList []byte) *MsgPostProof {
+func NewMsgPostProof(creator string, merkle []byte, owner string, start int64, item []byte, hashList []byte) *MsgPostProof {
 	return &MsgPostProof{
 		Creator:  creator,
 		Item:     item,

@@ -14,9 +14,9 @@ import (
 )
 
 // VerifyProof checks whether a proof is valid against a file
-func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item string) bool {
+func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item []byte) bool {
 	h := sha256.New()
-	_, err := io.WriteString(h, fmt.Sprintf("%d%s", chunk, item))
+	_, err := io.WriteString(h, fmt.Sprintf("%d%x", chunk, item))
 	if err != nil {
 		return false
 	}
@@ -143,7 +143,7 @@ func (f *UnifiedFile) SetProven(ctx sdk.Context, k ProofLoader, prover string, c
 }
 
 // Prove checks the validity of a proof and updates the proof window & picks a new chunk to verify
-func (f *UnifiedFile) Prove(ctx sdk.Context, k ProofLoader, prover string, proofData []byte, chunk int64, item string, chunkSize int64) error {
+func (f *UnifiedFile) Prove(ctx sdk.Context, k ProofLoader, prover string, proofData []byte, chunk int64, item []byte, chunkSize int64) error {
 	valid := f.VerifyProof(proofData, chunk, item)
 
 	if !valid {

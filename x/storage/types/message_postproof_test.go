@@ -17,7 +17,7 @@ func TestMsgPostProof_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgPostProof{
 				Creator:  "invalid_address",
-				Item:     "hex",
+				Item:     []byte("hex"),
 				HashList: []byte{},
 				Merkle:   []byte{},
 				Owner:    "owner",
@@ -28,7 +28,7 @@ func TestMsgPostProof_ValidateBasic(t *testing.T) {
 			name: "valid address",
 			msg: MsgPostProof{
 				Creator:  "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Item:     "hex",
+				Item:     []byte("hex"),
 				HashList: []byte{},
 				Merkle:   []byte{},
 				Owner:    "owner",
