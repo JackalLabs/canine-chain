@@ -12,7 +12,7 @@ const TypeMsgPostFile = "post_file"
 
 var _ sdk.Msg = &MsgPostFile{}
 
-func NewMsgPostContract(creator string, merkle []byte, fileSize int64, proofInterval int64, proofType int64, maxProofs int64, note string) *MsgPostFile {
+func NewMsgPostFile(creator string, merkle []byte, fileSize int64, proofInterval int64, proofType int64, maxProofs int64, note string) *MsgPostFile {
 	return &MsgPostFile{
 		Creator:       creator,
 		Merkle:        merkle,

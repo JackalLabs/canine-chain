@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,6 +11,11 @@ import (
 
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	window := k.GetParams(ctx).ProofWindow
+	if msg.ProofInterval != window {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot create a file with a window different than %d", window)
+	}
 
 	providers := k.GetActiveProviders(ctx, "")
 

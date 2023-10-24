@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
@@ -117,14 +118,23 @@ func (k Keeper) GetAllFileByMerkle(ctx sdk.Context) (list []types.UnifiedFile) {
 }
 
 // IterateFilesByMerkle iterates through every file
-func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, fn func(key []byte, val []byte)) {
+func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key []byte, val []byte) bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	var iterator storetypes.Iterator
+	if reverse {
+		iterator = sdk.KVStoreReversePrefixIterator(store, []byte{})
+	} else {
+		iterator = sdk.KVStorePrefixIterator(store, []byte{})
+	}
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		fn(iterator.Key(), iterator.Value())
+		b := fn(iterator.Key(), iterator.Value())
+		if b {
+			return
+		}
 	}
 }
 

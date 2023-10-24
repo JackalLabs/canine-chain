@@ -55,7 +55,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 	s := make(map[string]int64)
 	sizeTracker := &s
 
-	k.IterateFilesByMerkle(ctx, func(key []byte, val []byte) {
+	k.IterateFilesByMerkle(ctx, false, func(key []byte, val []byte) bool {
 		var file types.UnifiedFile
 		k.cdc.MustUnmarshal(val, &file)
 
@@ -67,6 +67,8 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		for _, proof := range file.Proofs {
 			k.manageProofs(ctx, sizeTracker, &file, proof)
 		}
+
+		return false
 	})
 
 	k.rewardProviders(totalSize, sizeTracker)
