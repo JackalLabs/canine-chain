@@ -45,7 +45,9 @@ func (k Keeper) rewardProviders(totalSize int64, sizeTracker *map[string]int64) 
 
 func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) {
 	if len(file.Proofs) == 0 { // remove file if it
-		k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
+		if file.Start+file.ProofInterval < ctx.BlockHeight() {
+			k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
+		}
 	}
 }
 

@@ -30,7 +30,7 @@ func GetQueryCmd(_ string) *cobra.Command {
 	cmd.AddCommand(CmdListProviders())
 	cmd.AddCommand(CmdShowProviders())
 	cmd.AddCommand(CmdFreespace())
-
+	cmd.AddCommand(CmdShowProof())
 	cmd.AddCommand(CmdFindFile())
 
 	cmd.AddCommand(CmdGetClientFreeSpace())

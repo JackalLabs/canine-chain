@@ -42,6 +42,7 @@ message MsgPostFile {
 
 message MsgPostFileResponse {
   repeated string provider_ips = 1; // list of providers that are pre-loaded into the file
+  int64 start_block = 2;
 }
 
 message MsgPostProof {

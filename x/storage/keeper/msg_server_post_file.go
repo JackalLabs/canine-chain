@@ -49,7 +49,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		ips = append(ips, prv.Ip)
 	}
 
-	res := &types.MsgPostFileResponse{ProviderIps: ips}
+	res := &types.MsgPostFileResponse{ProviderIps: ips, StartBlock: ctx.BlockHeight()}
 
 	totalSize := msg.FileSize * msg.MaxProofs
 	if msg.Expires > 0 { // if the file is posted as a one-time payment

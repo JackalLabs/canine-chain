@@ -2,10 +2,19 @@ package cli
 
 import (
 	"bufio"
+	"bytes"
+	"context"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"net/url"
 	"os"
 	"strconv"
+
+	"github.com/cosmos/cosmos-sdk/client/flags"
 
 	"github.com/cosmos/cosmos-sdk/client/input"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,6 +28,10 @@ import (
 )
 
 var _ = strconv.Itoa(0)
+
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
 
 func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error) {
 	from := clientCtx.GetFromAddress()
@@ -46,7 +59,7 @@ func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error
 	return txf, nil
 }
 
-// GenerateOrBroadcastTxWithFactory is some dumb wrapper I had to make cause the sdk assumes I don't want to programmatically handle the
+// GenerateOrBroadcastTx is some dumb wrapper I had to make cause the sdk assumes I don't want to programmatically handle the
 // response but instead print it out like a doofus
 func GenerateOrBroadcastTx(clientCtx client.Context, flags *pflag.FlagSet, msgs ...sdk.Msg) (*sdk.TxResponse, error) {
 	txf := tx.NewFactoryCLI(clientCtx, flags)
@@ -113,6 +126,71 @@ func GenerateOrBroadcastTx(clientCtx client.Context, flags *pflag.FlagSet, msgs 
 	return clientCtx.BroadcastTx(txBytes)
 }
 
+func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address string) error {
+	cli := http.DefaultClient
+
+	u, err := url.Parse(ip)
+	if err != nil {
+		return err
+	}
+
+	u = u.JoinPath("upload")
+
+	var b bytes.Buffer
+	writer := multipart.NewWriter(&b)
+	defer writer.Close()
+
+	err = writer.WriteField("sender", address)
+	if err != nil {
+		return err
+	}
+
+	err = writer.WriteField("merkle", hex.EncodeToString(merkle))
+	if err != nil {
+		return err
+	}
+
+	err = writer.WriteField("start", fmt.Sprintf("%d", start))
+	if err != nil {
+		return err
+	}
+
+	fileWriter, err := writer.CreateFormFile("file", hex.EncodeToString(merkle))
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(fileWriter, r)
+	if err != nil {
+		return err
+	}
+	writer.Close()
+
+	req, _ := http.NewRequest("POST", u.String(), &b)
+	req.Header.Add("Content-Type", writer.FormDataContentType())
+
+	res, err := cli.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != 200 {
+
+		var errRes ErrorResponse
+
+		err := json.NewDecoder(res.Body).Decode(&errRes)
+		if err != nil {
+			return err
+		}
+
+		return fmt.Errorf("upload failed with code %d | %s", res.StatusCode, errRes.Error)
+	}
+
+	return nil
+}
+
 func CmdPostFile() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "post [file-path]",
@@ -121,12 +199,15 @@ func CmdPostFile() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			filePath := args[0]
 
-			file, err := os.OpenFile(filePath, os.O_RDONLY, os.ModePerm)
+			file, err := os.ReadFile(filePath)
 			if err != nil {
 				return err
 			}
 
-			root, _, _, size, err := utils.BuildTree(file, 1024)
+			buf := bytes.NewBuffer(file)
+			treeBuffer := bytes.NewBuffer(buf.Bytes())
+
+			root, _, _, size, err := utils.BuildTree(treeBuffer, 10240)
 			if err != nil {
 				return err
 			}
@@ -135,48 +216,94 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
+			address := clientCtx.GetFromAddress().String()
+
 			msg := types.NewMsgPostFile(
-				clientCtx.GetFromAddress().String(),
+				address,
 				root,
 				int64(size),
-				1800,
+				100,
 				0,
 				3,
 				"Uploaded with canined",
 			)
 			if err := msg.ValidateBasic(); err != nil {
-				return err
+				panic(err)
 			}
 
 			res, err := GenerateOrBroadcastTx(clientCtx, cmd.Flags(), msg)
 			if err != nil {
-				return err
+				panic(err)
 			}
+
+			fmt.Println(res.RawLog)
 
 			var postRes types.MsgPostFileResponse
 			data, err := hex.DecodeString(res.Data)
 			if err != nil {
-				return err
+				panic(err)
 			}
 
 			var txMsgData sdk.TxMsgData
-
 			err = clientCtx.Codec.Unmarshal(data, &txMsgData)
 			if err != nil {
-				return err
+				panic(err)
 			}
+
+			fmt.Println(txMsgData)
 
 			err = postRes.Unmarshal(txMsgData.Data[0].Data)
 			if err != nil {
-				return err
+				panic(err)
 			}
 
 			ips := postRes.ProviderIps
 			fmt.Println(ips)
 
+			fmt.Println(res.Code)
+			fmt.Println(res.RawLog)
+
+			fmt.Println(res.TxHash)
+
+			ipCount := len(ips)
+			randomCount := 3 - ipCount
+			for i := 0; i < ipCount; i++ {
+				ip := ips[i]
+				uploadBuffer := bytes.NewBuffer(buf.Bytes())
+				err := uploadFile(ip, uploadBuffer, root, postRes.StartBlock, address)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				panic(err)
+			}
+			cl := types.NewQueryClient(clientCtx)
+			provReq := types.QueryAllProvidersRequest{
+				Pagination: pageReq,
+			}
+
+			provRes, err := cl.ProvidersAll(context.Background(), &provReq)
+			if err != nil {
+				panic(err)
+			}
+
+			providers := provRes.Providers
+			for i, provider := range providers {
+				if i > randomCount {
+					break
+				}
+				uploadBuffer := bytes.NewBuffer(buf.Bytes())
+				err := uploadFile(provider.Ip, uploadBuffer, root, postRes.StartBlock, address)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+
 			return nil
 		},
 	}
-
+	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }

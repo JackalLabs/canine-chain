@@ -38,7 +38,7 @@ canined collect-gentxs --home=$JKL_HOME
 
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8/jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc/" $JKL_HOME/config/genesis.json
-sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"10\"/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"100\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"chunk_size\": \"1024\"/\"chunk_size\": \"10240\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml
@@ -47,13 +47,19 @@ sed -i.bak -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/' $J
 sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $JKL_HOME/config/client.toml
 screen -d -m canined start --home=$JKL_HOME --log_level info
 sleep 20
+canined tx storage buy-storage $(canined keys show charlie -a --home=$JKL_HOME) 720h 1000000000000 ujkl --from charlie --gas-prices=0.02ujkl --home=$JKL_HOME -y
 
 sequoia init --home=$PROV_HOME
 
 yq -i '.chunk_size=10240' $PROV_HOME/config.yaml
+yq -i '.proof_interval=10' $PROV_HOME/config.yaml
+yq -i '.queue_interval=5' $PROV_HOME/config.yaml
 yq -i '.chain_config.rpc_addr="http://localhost:26657"' $PROV_HOME/config.yaml
-yq -i '.chain_config.grpc_addr="localhost:26659"' $PROV_HOME/config.yaml
-yq -i '.domain="localhost:3333"' $PROV_HOME/config.yaml
+yq -i '.chain_config.grpc_addr="localhost:9090"' $PROV_HOME/config.yaml
+yq -i '.domain="http://localhost:3334"' $PROV_HOME/config.yaml
 yq -i '.data_directory="'$PROV_HOME'/data"' $PROV_HOME/config.yaml
+yq -i '.api_config.port=3334' $PROV_HOME/config.yaml
 
+rm $PROV_HOME/provider_wallet.json
+echo "{\"seed_phrase\":\"forward service profit benefit punch catch fan chief jealous steel harvest column spell rude warm home melody hat broccoli pulse say garlic you firm\",\"derivation_path\":\"m/44'/118'/0'/0/0\"}" > $PROV_HOME/provider_wallet.json
 sequoia start --home=$PROV_HOME
