@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
@@ -31,7 +30,15 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 			return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
 		}
 	} else {
-		proof = file.AddProver(ctx, k, prover)
+		if file.ContainsProver(prover) {
+			var err error
+			proof, err = file.GetProver(ctx, k, prover)
+			if err != nil {
+				return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
+			}
+		} else {
+			proof = file.AddProver(ctx, k, prover)
+		}
 	}
 
 	err := file.Prove(ctx, k, msg.Creator, msg.HashList, proof.ChunkToProve, msg.Item, proofSize)

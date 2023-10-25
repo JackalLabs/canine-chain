@@ -60,25 +60,37 @@ func (f *UnifiedFile) AddProver(ctx sdk.Context, k ProofLoader, prover string) *
 	return &p
 }
 
+func (f *UnifiedFile) Save(ctx sdk.Context, k ProofLoader) {
+	k.SetFile(ctx, *f)
+}
+
 func (f *UnifiedFile) RemoveProver(ctx sdk.Context, k ProofLoader, prover string) {
+	pk := f.MakeProofKey(prover)
+	f.RemoveProverWithKey(ctx, k, pk)
+
+}
+
+func (f *UnifiedFile) RemoveProverWithKey(ctx sdk.Context, k ProofLoader, proofKey string) {
 	if len(f.Proofs) == 0 {
 		return
 	}
 
-	pk := f.MakeProofKey(prover)
-
 	for i, proof := range f.Proofs {
-		if proof == pk {
+		ctx.Logger().Info(fmt.Sprintf("should we remove proof: %s == %s ?", proof, proofKey))
+		if proof == proofKey {
+			ctx.Logger().Info(fmt.Sprintf("removing proofs: %s == %s ?", proof, proofKey))
+
 			front := f.Proofs[:i]
 			back := f.Proofs[i+1:]
 
 			// nolint:all
 			f.Proofs = append(front, back...)
 
-			k.RemoveProofWithBuiltKey(ctx, []byte(pk))
-			return
+			k.RemoveProofWithBuiltKey(ctx, []byte(proofKey))
+			f.Save(ctx, k)
 		}
 	}
+
 }
 
 func (f *UnifiedFile) GetProver(ctx sdk.Context, k ProofLoader, prover string) (*FileProof, error) {

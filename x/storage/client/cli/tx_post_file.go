@@ -222,7 +222,7 @@ func CmdPostFile() *cobra.Command {
 				address,
 				root,
 				int64(size),
-				100,
+				40,
 				0,
 				3,
 				"Uploaded with canined",

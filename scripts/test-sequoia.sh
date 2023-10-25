@@ -38,7 +38,7 @@ canined collect-gentxs --home=$JKL_HOME
 
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8/jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc/" $JKL_HOME/config/genesis.json
-sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"100\"/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"40\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"chunk_size\": \"1024\"/\"chunk_size\": \"10240\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml

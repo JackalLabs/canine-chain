@@ -1,16 +1,19 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, prover string) {
+func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
 	st := *sizeTracker
 
-	proof, found := k.GetProof(ctx, prover, file.Merkle, file.Owner, file.Start)
+	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
 	if !found {
-		file.RemoveProver(ctx, k, prover)
+		ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
+		file.RemoveProverWithKey(ctx, k, proofKey)
 	}
 
 	currentHeight := ctx.BlockHeight()
@@ -18,11 +21,12 @@ func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, fil
 	windowStart := currentHeight - file.ProofInterval
 
 	if windowStart > proof.LastProven { // if the last time this file was proven was outside the proof window, burn their stake in the file
-		file.RemoveProver(ctx, k, prover)
+		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window: %d > %d", windowStart, proof.LastProven))
+		file.RemoveProverWithKey(ctx, k, proofKey)
 		return
 	}
 
-	st[prover] += file.FileSize
+	st[proof.Prover] += file.FileSize
 }
 
 func (k Keeper) rewardProviders(totalSize int64, sizeTracker *map[string]int64) {
