@@ -40,7 +40,7 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 
 func (suite *KeeperTestSuite) TestGetProviderUsing() {
 	suite.SetupSuite()
-	_, _, _ = setupMsgServer(suite)
+	setupMsgServer(suite)
 
 	cases := []struct {
 		name      string
