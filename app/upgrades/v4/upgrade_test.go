@@ -3,6 +3,7 @@ package v4_test
 import (
 	"encoding/json"
 	"fmt"
+
 	v4 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v4"
 	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
@@ -46,5 +47,4 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 
 		suite.Require().Equal([]byte(file.Address), mct.Merkles[0])
 	}
-
 }
