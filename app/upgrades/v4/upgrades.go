@@ -3,6 +3,7 @@ package v4
 import (
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"strconv"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -10,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
 	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
 
 	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
@@ -22,14 +24,16 @@ type Upgrade struct {
 	mm           *module.Manager
 	configurator module.Configurator
 	sk           storagekeeper.Keeper
+	fk           filetreemodulekeeper.Keeper
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk storagekeeper.Keeper) *Upgrade {
+func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk storagekeeper.Keeper, fk filetreemodulekeeper.Keeper) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,
 		sk:           sk,
+		fk:           fk,
 	}
 }
 
@@ -43,6 +47,122 @@ type LegacyMarker struct {
 	Cid string `json:"cid"`
 }
 
+type FidContents struct {
+	Fid []string `json:"fids"`
+}
+
+type MerkleContents struct {
+	Merkles [][]byte `json:"merkles"`
+}
+
+func UpdateFileTree(ctx sdk.Context, fk filetreemodulekeeper.Keeper, merkleMap map[string][]byte) {
+	allFiles := fk.GetAllFiles(ctx)
+
+	for _, file := range allFiles {
+		contents := file.Contents
+
+		var fidContents FidContents
+		err := json.Unmarshal([]byte(contents), &fidContents)
+		if err != nil {
+			ctx.Logger().Debug(fmt.Errorf("cannot unmarshal %s %w", file.Address, err).Error())
+			continue
+		}
+
+		merkles := make([][]byte, 0)
+
+		for _, fid := range fidContents.Fid {
+			m := merkleMap[fid]
+			if m == nil {
+				continue
+			}
+
+			merkles = append(merkles, m)
+
+		}
+
+		merkleContents := MerkleContents{Merkles: merkles}
+
+		merkleContentBytes, err := json.Marshal(merkleContents)
+		if err != nil {
+			ctx.Logger().Debug(fmt.Errorf("cannot marshal merkle contents of %s %w", file.Address, err).Error())
+			continue
+		}
+
+		file.Contents = string(merkleContentBytes)
+		fk.SetFiles(ctx, file)
+	}
+}
+
+func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
+	fidMerkle := make(map[string][]byte)
+
+	allDeals := u.sk.GetAllLegacyActiveDeals(ctx)
+
+	for _, deal := range allDeals {
+
+		merkle, err := hex.DecodeString(deal.Merkle)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		start, err := strconv.ParseInt(deal.Startblock, 10, 64)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		end, err := strconv.ParseInt(deal.Endblock, 10, 64)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		size, err := strconv.ParseInt(deal.Filesize, 10, 64)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		lm := LegacyMarker{
+			Fid: deal.Fid,
+			Cid: deal.Cid,
+		}
+
+		fidMerkle[deal.Fid] = merkle // creating fid -> merkle mapping
+
+		lmBytes, err := json.Marshal(lm)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		var uf storagemoduletypes.UnifiedFile
+
+		uf, found := u.sk.GetFile(ctx, merkle, deal.Signee, start)
+		if !found {
+			uf = storagemoduletypes.UnifiedFile{
+				Merkle:        merkle,
+				Owner:         deal.Signee,
+				Start:         start,
+				Expires:       end,
+				FileSize:      size,
+				ProofInterval: 1800, // TODO: Decide on default window
+				ProofType:     0,
+				Proofs:        make([]string, 0),
+				MaxProofs:     3,
+				Note:          string(lmBytes),
+			}
+		}
+
+		u.sk.SetFile(ctx, uf)
+		uf.AddProver(ctx, u.sk, deal.Provider)
+
+	}
+
+	return fidMerkle
+}
+
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
@@ -50,67 +170,9 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 
 		fromVM[storagemoduletypes.ModuleName] = 5
 
-		allDeals := u.sk.GetAllLegacyActiveDeals(ctx)
+		fidMerkleMap := UpdateFiles(ctx, u)
 
-		for _, deal := range allDeals {
-
-			merkle, err := hex.DecodeString(deal.Merkle)
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-
-			start, err := strconv.ParseInt(deal.Startblock, 10, 64)
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-
-			end, err := strconv.ParseInt(deal.Endblock, 10, 64)
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-
-			size, err := strconv.ParseInt(deal.Filesize, 10, 64)
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-
-			lm := LegacyMarker{
-				Fid: deal.Fid,
-				Cid: deal.Cid,
-			}
-
-			lmBytes, err := json.Marshal(lm)
-			if err != nil {
-				ctx.Logger().Error(err.Error())
-				continue
-			}
-
-			var uf storagemoduletypes.UnifiedFile
-
-			uf, found := u.sk.GetFile(ctx, merkle, deal.Signee, start)
-			if !found {
-				uf = storagemoduletypes.UnifiedFile{
-					Merkle:        merkle,
-					Owner:         deal.Signee,
-					Start:         start,
-					Expires:       end,
-					FileSize:      size,
-					ProofInterval: 1800, // TODO: Decide on default window
-					ProofType:     0,
-					Proofs:        make([]string, 0),
-					MaxProofs:     3,
-					Note:          string(lmBytes),
-				}
-			}
-
-			u.sk.SetFile(ctx, uf)
-			uf.AddProver(ctx, u.sk, deal.Provider)
-
-		}
+		UpdateFileTree(ctx, u.fk, fidMerkleMap)
 
 		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
 		if err != nil {

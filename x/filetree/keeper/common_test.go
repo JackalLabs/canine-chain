@@ -19,8 +19,8 @@ import (
 	types "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
 
-// setupFiletreeKeeper creates a filetreeKeeper as well as all its dependencies.
-func setupFiletreeKeeper(t *testing.T) (
+// SetupFiletreeKeeper creates a filetreeKeeper as well as all its dependencies.
+func SetupFiletreeKeeper(t *testing.T) (
 	*keeper.Keeper,
 	moduletestutil.TestEncodingConfig,
 	sdk.Context,
