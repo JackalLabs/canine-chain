@@ -3,6 +3,8 @@ package keeper
 import (
 	"fmt"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
@@ -29,10 +31,13 @@ func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, fil
 	st[proof.Prover] += file.FileSize
 }
 
-func (k Keeper) rewardProviders(totalSize int64, sizeTracker *map[string]int64) {
+func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
 	networkValue := sdk.NewDec(totalSize)
 
-	providersVault := sdk.NewDec(8000000) // TODO: Change this to the actual amount of tokens in the vault
+	storageWallet := k.accountkeeper.GetModuleAddress(types.ModuleName)
+
+	tokens := k.bankkeeper.GetBalance(ctx, storageWallet, "ujkl")
+	tokenAmountDec := tokens.Amount.ToDec()
 
 	for prover, worth := range *sizeTracker {
 
@@ -40,10 +45,21 @@ func (k Keeper) rewardProviders(totalSize int64, sizeTracker *map[string]int64) 
 
 		networkPercentage := providerValue.Quo(networkValue)
 
-		tokensValueOwed := networkPercentage.Mul(providersVault).TruncateInt64()
+		tokensValueOwed := networkPercentage.Mul(tokenAmountDec).TruncateInt64()
 
-		_ = tokensValueOwed // TODO: send actual tokens from some vault address to the providers
-		_ = prover
+		coin := sdk.NewInt64Coin("ujkl", tokensValueOwed)
+		coins := sdk.NewCoins(coin)
+
+		pAddress, err := sdk.AccAddressFromBech32(prover)
+		if err != nil {
+			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
+			continue
+		}
+		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, coins)
+		if err != nil {
+			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %d tokens to %s", tokensValueOwed, prover).Error())
+			continue
+		}
 	}
 }
 
@@ -65,7 +81,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		var file types.UnifiedFile
 		k.cdc.MustUnmarshal(val, &file)
 
-		s := file.FileSize * file.MaxProofs
+		s := file.FileSize * int64(len(file.Proofs))
 		totalSize += s
 
 		k.removeFileIfDeserved(ctx, &file) // delete file if it meets the conditions to be deleted
@@ -77,7 +93,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		return false
 	})
 
-	k.rewardProviders(totalSize, sizeTracker)
+	k.rewardProviders(ctx, totalSize, sizeTracker)
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
