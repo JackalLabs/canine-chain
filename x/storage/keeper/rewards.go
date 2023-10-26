@@ -31,6 +31,7 @@ func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, fil
 	st[proof.Prover] += file.FileSize
 }
 
+// TODO: Completely change the way this is done in Econ v2
 func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
 	networkValue := sdk.NewDec(totalSize)
 

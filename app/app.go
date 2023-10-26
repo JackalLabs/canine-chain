@@ -1099,7 +1099,6 @@ func (app *JackalApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.API
 	}
 
 	// register app's  routes.
-	// TODO: THIS MIGHT NEED TO BE CLEANED FURTHER.
 	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
 	// apiSvr.Router.HandleFunc("/", openapiconsole.Handler(appName, "/static/openapi.yml"))
 }

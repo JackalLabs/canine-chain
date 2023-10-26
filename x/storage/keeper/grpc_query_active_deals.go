@@ -38,6 +38,9 @@ func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*t
 	return &types.QueryAllFilesResponse{Files: activeDealss, Pagination: pageRes}, nil
 }
 
+// OpenFiles returns a paginated list of files with space that providers have yet to fill
+//
+// TODO: Create unit-test cases for this
 func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFilesRequest) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
