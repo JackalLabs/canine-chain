@@ -8,7 +8,7 @@ import (
 func (suite *KeeperTestSuite) TestAttest() {
 	params := suite.storageKeeper.GetParams(suite.ctx)
 
-	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+2)
+	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+20)
 	suite.Require().NoError(err)
 
 	cases := map[string]struct {

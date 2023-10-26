@@ -25,20 +25,10 @@ var originalFile = TestFile{
 	Data: "jackal maxi",
 }
 
-var fileFromSP = TestFile{
-	Name: "jackal_file",
-	Data: "jackal maxi",
-}
-
 var randomFile = TestFile{
 	Name: "random_file",
 	Data: "hello world",
 }
-
-const (
-	CID  = "jklc1dmcul9svpv0z2uzfv30lz0kcjrpdfmmfccskt06wpy8vfqrhp4nsgvgz32"
-	CID2 = "jklc15ftkghzrx2ywyrpr6n7ge6prcej43efe3jvtzsxhenann69rcu8q7jl5uh"
-)
 
 func CreateMerkleForProof(file TestFile) ([]byte, []byte, error) {
 	f := []byte(file.Data)
@@ -175,6 +165,9 @@ func (suite *KeeperTestSuite) TestPostProof() {
 
 	suite.Require().Equal(int64(11), filesize)
 
+	params := suite.storageKeeper.GetParams(suite.ctx)
+	suite.Require().Equal(int64(50), params.ProofWindow)
+
 	_, found := keeper.GetStoragePaymentInfo(suite.ctx, user.String())
 	suite.Require().Equal(true, found)
 	// Post Contract
@@ -182,7 +175,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		Creator:       user.String(),
 		Merkle:        merkleroot,
 		FileSize:      filesize,
-		ProofInterval: 1800,
+		ProofInterval: params.ProofWindow,
 		ProofType:     0,
 		MaxProofs:     3,
 		Note:          "",
@@ -195,9 +188,9 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	// Post Contract #2
 	_, err = msgSrvr.PostFile(context, &types.MsgPostFile{
 		Creator:       user.String(),
-		Merkle:        []byte{},
+		Merkle:        []byte("bad_merkle"),
 		FileSize:      1000,
-		ProofInterval: 1800,
+		ProofInterval: params.ProofWindow,
 		ProofType:     0,
 		MaxProofs:     3,
 		Note:          "",
@@ -209,7 +202,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 
 	// Storage Provider get file and create merkle for proof
 	// for tc 1 and 2
-	item, hashlist, err := CreateMerkleForProof(fileFromSP)
+	item, hashlist, err := CreateMerkleForProof(originalFile)
 	suite.Require().NoError(err)
 
 	// for tc 3: post proof from a different file
@@ -253,14 +246,14 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			testName: "proof fail to verify",
 			msg: types.MsgPostProof{
 				Creator:  testProvider.String(),
-				Item:     item,
-				HashList: hashlist2,
+				Item:     item2,
+				HashList: hashlist2, // using different file's proof
 				Merkle:   merkleroot,
 				Owner:    user.String(),
 				Start:    0,
 			},
 			expErr:    true,
-			expErrMsg: "file chunk was not verified",
+			expErrMsg: fmt.Sprintf("cannot verify %x against %x: cannot verify Proof", item2, merkleroot),
 		},
 		{
 			testName: "nonexisting contract",
@@ -268,26 +261,13 @@ func (suite *KeeperTestSuite) TestPostProof() {
 				Creator:  testProvider.String(),
 				Item:     item,
 				HashList: hashlist,
-				Merkle:   []byte{},
+				Merkle:   []byte("does_not_exist"),
 				Owner:    user.String(),
 				Start:    0,
 			},
 
 			expErr:    true,
-			expErrMsg: "contract not found",
-		},
-		{
-			testName: "contract with invalid merkleroot",
-			msg: types.MsgPostProof{
-				Creator:  testProvider.String(),
-				Item:     item2,
-				HashList: hashlist2,
-				Merkle:   []byte{},
-				Owner:    user.String(),
-				Start:    0,
-			},
-			expErr:    true,
-			expErrMsg: "could not build merkle tree",
+			expErrMsg: fmt.Sprintf("contract not found: %x/%s/%d", []byte("does_not_exist"), user.String(), 0),
 		},
 	}
 
@@ -297,6 +277,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			tc.testName, func() {
 				res, _ := msgSrvr.PostProof(context, &tc.msg)
 				if tc.expErr {
+
 					suite.Require().Equal(tc.expErrMsg, res.ErrorMessage)
 					suite.Require().Equal(false, res.Success)
 				}

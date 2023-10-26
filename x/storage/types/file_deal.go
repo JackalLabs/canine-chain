@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
@@ -67,7 +68,6 @@ func (f *UnifiedFile) Save(ctx sdk.Context, k ProofLoader) {
 func (f *UnifiedFile) RemoveProver(ctx sdk.Context, k ProofLoader, prover string) {
 	pk := f.MakeProofKey(prover)
 	f.RemoveProverWithKey(ctx, k, pk)
-
 }
 
 func (f *UnifiedFile) RemoveProverWithKey(ctx sdk.Context, k ProofLoader, proofKey string) {
@@ -90,7 +90,6 @@ func (f *UnifiedFile) RemoveProverWithKey(ctx sdk.Context, k ProofLoader, proofK
 			f.Save(ctx, k)
 		}
 	}
-
 }
 
 func (f *UnifiedFile) GetProver(ctx sdk.Context, k ProofLoader, prover string) (*FileProof, error) {
@@ -99,13 +98,14 @@ func (f *UnifiedFile) GetProver(ctx sdk.Context, k ProofLoader, prover string) (
 		if proofKey == f.MakeProofKey(prover) {
 			p, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
 			if found {
+				proof = &p
 				break
 			}
-			proof = &p
+
 		}
 	}
 	if proof == nil {
-		return nil, sdkerror.Wrapf(sdkerror.ErrKeyNotFound, "cannot find proof with prover %s on file %x/%s", prover, f.Merkle, f.Owner)
+		return nil, sdkerror.Wrapf(sdkerror.ErrKeyNotFound, "cannot find proof with prover %s on file %x/%s/%d | %s", prover, f.Merkle, f.Owner, f.Start, strings.Join(f.Proofs, ", "))
 	}
 
 	return proof, nil
