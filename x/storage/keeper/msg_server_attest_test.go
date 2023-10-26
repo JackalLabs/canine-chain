@@ -8,11 +8,12 @@ import (
 func (suite *KeeperTestSuite) TestAttest() {
 	params := suite.storageKeeper.GetParams(suite.ctx)
 
-	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+20)
+	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+2)
 	suite.Require().NoError(err)
 
+	badAddresses, err := testutil.CreateTestAddresses("cosmos", 10)
+
 	cases := map[string]struct {
-		prover  string
 		owner   string
 		merkle  []byte
 		start   int64
@@ -20,27 +21,24 @@ func (suite *KeeperTestSuite) TestAttest() {
 		expErr  bool
 	}{
 		"attestation form found": {
-			prover:  addresses[10],
 			merkle:  []byte("merkle"),
 			owner:   "owner",
 			start:   0,
-			creator: addresses[params.AttestFormSize],
+			creator: addresses[0],
 			expErr:  false,
 		},
 		"not requested provider": {
-			prover:  addresses[4],
 			merkle:  []byte("merkle"),
 			owner:   "owner",
 			start:   0,
-			creator: addresses[params.AttestFormSize],
+			creator: badAddresses[9],
 			expErr:  true,
 		},
 		"active deal not found": {
-			prover:  addresses[10],
 			merkle:  []byte("merkle_bad"),
 			owner:   "owner",
 			start:   0,
-			creator: addresses[params.AttestFormSize],
+			creator: addresses[0],
 			expErr:  true,
 		},
 	}
@@ -62,7 +60,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 				Note:          "test",
 			}
 			suite.storageKeeper.SetFile(suite.ctx, uf)
-			uf.AddProver(suite.ctx, suite.storageKeeper, addresses[10])
+			uf.AddProver(suite.ctx, suite.storageKeeper, addresses[4])
 
 			attestations := make([]*types.Attestation, params.AttestFormSize)
 
@@ -75,7 +73,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 
 			attestForm := types.AttestationForm{
 				Attestations: attestations,
-				Prover:       addresses[10],
+				Prover:       addresses[4],
 				Merkle:       uf.Merkle,
 				Owner:        uf.Owner,
 				Start:        uf.Start,
@@ -83,7 +81,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 
 			noActiveDealAttestForm := types.AttestationForm{
 				Attestations: attestations,
-				Prover:       addresses[10],
+				Prover:       addresses[4],
 				Merkle:       []byte("no_merkle"),
 				Owner:        uf.Owner,
 				Start:        uf.Start,
@@ -92,7 +90,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
 			suite.storageKeeper.SetAttestationForm(suite.ctx, noActiveDealAttestForm)
 
-			err = suite.storageKeeper.Attest(suite.ctx, tc.prover, tc.merkle, tc.owner, tc.start, tc.creator)
+			err = suite.storageKeeper.Attest(suite.ctx, addresses[4], tc.merkle, tc.owner, tc.start, tc.creator)
 
 			if tc.expErr {
 				suite.Error(err)
