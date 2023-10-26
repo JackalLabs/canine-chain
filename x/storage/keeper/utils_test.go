@@ -40,7 +40,7 @@ func (suite *KeeperTestSuite) TestGetPaidAmount() {
 
 func (suite *KeeperTestSuite) TestGetProviderUsing() {
 	suite.SetupSuite()
-	_, sKeeper, _ := setupMsgServer(suite)
+	_, _, _ = setupMsgServer(suite)
 
 	cases := []struct {
 		name      string
@@ -51,12 +51,13 @@ func (suite *KeeperTestSuite) TestGetProviderUsing() {
 			name: "No_provider_found",
 			preRun: func() {
 				ad := types.UnifiedFile{
-					Merkle:   make([]byte, 0),
-					Owner:    "owner",
-					Start:    0,
-					FileSize: 100000,
+					Merkle:    []byte("merkle"),
+					Owner:     "owner",
+					Start:     0,
+					FileSize:  100000,
+					MaxProofs: 3,
 				}
-				sKeeper.SetFile(suite.ctx, ad)
+				suite.storageKeeper.SetFile(suite.ctx, ad)
 			},
 			expReturn: 0,
 		},
@@ -65,12 +66,13 @@ func (suite *KeeperTestSuite) TestGetProviderUsing() {
 			name: "valid_active_deal_file_size",
 			preRun: func() {
 				ad := types.UnifiedFile{
-					Merkle:   make([]byte, 0),
-					Owner:    "owner",
-					Start:    0,
-					FileSize: 100000,
+					Merkle:    []byte("merkle"),
+					Owner:     "owner",
+					Start:     0,
+					FileSize:  100000,
+					MaxProofs: 3,
 				}
-				sKeeper.SetFile(suite.ctx, ad)
+				suite.storageKeeper.SetFile(suite.ctx, ad)
 				ad.AddProver(suite.ctx, suite.storageKeeper, "prover1")
 			},
 			expReturn: 100000,
@@ -81,7 +83,7 @@ func (suite *KeeperTestSuite) TestGetProviderUsing() {
 		suite.Run(tc.name, func() {
 			suite.Require().NotNil(tc.preRun)
 			tc.preRun()
-			result := sKeeper.GetProviderUsing(suite.ctx, "prover1")
+			result := suite.storageKeeper.GetProviderUsing(suite.ctx, "prover1")
 
 			suite.Require().Equal(tc.expReturn, result)
 		})

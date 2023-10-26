@@ -49,7 +49,7 @@ func (suite *KeeperTestSuite) TestGetReportForm() {
 
 	suite.storageKeeper.SetReportForm(suite.ctx, report)
 
-	foundReport, found := suite.storageKeeper.GetReportForm(suite.ctx, "prover", []byte{}, "owner", 0)
+	foundReport, found := suite.storageKeeper.GetReportForm(suite.ctx, "prover", []byte("merkle"), "owner", 0)
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundReport.Merkle, report.Merkle)
 	suite.Require().Equal(foundReport.Attestations, report.Attestations)
@@ -71,7 +71,7 @@ func (suite *KeeperTestSuite) TestGetAllReportForm() {
 		Prover:       "prover",
 		Merkle:       []byte("merkle"),
 		Owner:        "owner",
-		Start:        0,
+		Start:        1,
 	}
 
 	allReportFormsBefore := suite.storageKeeper.GetAllReport(suite.ctx)
