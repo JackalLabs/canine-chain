@@ -132,10 +132,10 @@ func CmdShowReportForms() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argProver := args[1]
-			argMerkle := args[2]
-			argOwner := args[3]
-			argStart := args[4]
+			argProver := args[0]
+			argMerkle := args[1]
+			argOwner := args[2]
+			argStart := args[3]
 
 			start, err := strconv.ParseInt(argStart, 10, 64)
 			if err != nil {

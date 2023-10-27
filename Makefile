@@ -56,8 +56,8 @@ build_tags_comma_sep := $(subst $(empty),$(comma),$(build_tags))
 
 # Add check to make sure we are using the proper Go version before proceeding with anything
 check-go-version:
-	@if ! go version | grep -q "go1.20"; then \
-		echo "\033[0;31mERROR:\033[0m Go version 1.20 is required for compiling canined. It looks like you are using" "$(shell go version) \nThere are potential consensus-breaking changes that can occur when running binaries compiled with different versions of Go. Please download Go version 1.20 and retry. Thank you!"; \
+	@if ! go version | grep -q "go1.21"; then \
+		echo "\033[0;31mERROR:\033[0m Go version 1.21 is required for compiling canined. It looks like you are using" "$(shell go version) \nThere are potential consensus-breaking changes that can occur when running binaries compiled with different versions of Go. Please download Go version 1.21 and retry. Thank you!"; \
 		exit 1; \
 	fi
 
