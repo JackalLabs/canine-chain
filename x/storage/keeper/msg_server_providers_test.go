@@ -104,7 +104,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderIP() {
 				)
 			},
 			expErr:    true,
-			expErrMsg: "Provider not found. Please init your provider.",
+			expErrMsg: "provider not found please init your provider",
 			name:      "set provider ip fail",
 		},
 	}
@@ -170,7 +170,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 				)
 			},
 			expErr:    true,
-			expErrMsg: "Provider not found. Please init your provider.",
+			expErrMsg: "provider not found please init your provider",
 			name:      "set provider total space fail",
 		},
 		{
@@ -181,7 +181,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 				)
 			},
 			expErr:    true,
-			expErrMsg: "Not a valid total space. Please enter total number of bytes to provide.",
+			expErrMsg: "not valid total space please enter total number of bytes to provide",
 			name:      "invalid space param",
 		},
 	}
@@ -247,7 +247,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderKeybase() {
 				)
 			},
 			expErr:    true,
-			expErrMsg: "Provider not found. Please init your provider.",
+			expErrMsg: "provider not found please init your provider",
 			name:      "set provider keybase fail",
 		},
 	}

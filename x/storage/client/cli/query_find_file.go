@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/hex"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -13,11 +14,16 @@ var _ = strconv.Itoa(0)
 
 func CmdFindFile() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "find-file [fid]",
-		Short: "Query find-file",
+		Use:   "find-file [merkle]",
+		Short: "Query the chain to find which provider a file is on",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqFid := args[0]
+			reqMerkle := args[0]
+
+			merkle, err := hex.DecodeString(reqMerkle)
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -27,7 +33,7 @@ func CmdFindFile() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryFindFileRequest{
-				Fid: reqFid,
+				Merkle: merkle,
 			}
 
 			res, err := queryClient.FindFile(cmd.Context(), params)

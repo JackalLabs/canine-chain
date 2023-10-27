@@ -14,8 +14,8 @@ const ( // TODO: Figure out optimal values for these and replace them with chain
 	True = "true"
 )
 
-func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
-	form, found := k.GetAttestationForm(ctx, cid)
+func (k Keeper) Attest(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {
+	form, found := k.GetAttestationForm(ctx, prover, merkle, owner, start)
 	if !found {
 		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this attestation")
 	}
@@ -46,15 +46,22 @@ func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 		return nil
 	}
 
-	deal, found := k.GetActiveDeals(ctx, cid)
+	deal, found := k.GetFile(ctx, form.Merkle, form.Owner, form.Start)
 
 	if !found {
 		return sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal from form")
 	}
 
-	deal.Proofverified = True // flip deal to verified if the minimum attestation threshold is met
-	k.SetActiveDeals(ctx, deal)
-	k.RemoveAttestation(ctx, cid)
+	proof, err := deal.GetProver(ctx, k, form.Prover)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "can't find proof for attestation")
+	}
+
+	proof.LastProven = ctx.BlockHeight()
+
+	k.SetProof(ctx, *proof)
+
+	k.RemoveAttestation(ctx, form.Prover, form.Merkle, form.Owner, form.Start)
 
 	return nil
 }
@@ -62,7 +69,7 @@ func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.MsgAttestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.Keeper.Attest(ctx, msg.Cid, msg.Creator)
+	err := k.Keeper.Attest(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
 	if err != nil {
 		ctx.Logger().Debug(err.Error())
 	}
@@ -70,23 +77,23 @@ func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.M
 	return &types.MsgAttestResponse{}, nil
 }
 
-func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) ([]string, error) {
-	deal, found := k.GetActiveDeals(ctx, cid)
+func (k Keeper) RequestAttestation(ctx sdk.Context, merkle []byte, owner string, start int64, creator string) ([]string, error) {
+	deal, found := k.GetFile(ctx, merkle, owner, start)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal for attestation form")
 	}
 
-	if deal.Provider != creator {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "you do not own this deal")
+	_, err := deal.GetProver(ctx, k, creator)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "you are not a prover for this file")
 	}
 
-	_, found = k.GetAttestationForm(ctx, cid)
+	_, found = k.GetAttestationForm(ctx, creator, merkle, owner, start)
 	if found {
 		return nil, sdkerrors.Wrapf(types.ErrAttestAlreadyExists, "attestation form already exists")
 	}
 
-	dealProvider := deal.Provider
-	provider, found := k.GetProviders(ctx, dealProvider)
+	provider, found := k.GetProviders(ctx, creator)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrProviderNotFound, "cannot find provider matching deal")
 	}
@@ -117,7 +124,10 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 
 	form := types.AttestationForm{
 		Attestations: attestations,
-		Cid:          cid,
+		Prover:       creator,
+		Merkle:       merkle,
+		Owner:        owner,
+		Start:        start,
 	}
 
 	k.SetAttestationForm(ctx, form)
@@ -127,10 +137,13 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 
 func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgRequestAttestationForm) (*types.MsgRequestAttestationFormResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	cid := msg.Cid
 	creator := msg.Creator
 
-	providerAddresses, err := k.RequestAttestation(ctx, cid, creator)
+	merkle := msg.Merkle
+	owner := msg.Owner
+	start := msg.Start
+
+	providerAddresses, err := k.RequestAttestation(ctx, merkle, owner, start, creator)
 
 	success := true
 
@@ -145,6 +158,5 @@ func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgR
 		Providers: providerAddresses,
 		Success:   success,
 		Error:     errorString,
-		Cid:       cid,
 	}, nil
 }

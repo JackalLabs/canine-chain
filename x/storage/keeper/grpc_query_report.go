@@ -46,7 +46,10 @@ func (k Keeper) Reports(c context.Context, req *types.QueryReportRequest) (*type
 
 	val, found := k.GetReportForm(
 		ctx,
-		req.Cid,
+		req.Prover,
+		req.Merkle,
+		req.Owner,
+		req.Start,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")

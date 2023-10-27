@@ -17,18 +17,6 @@ service Query {
     option (google.api.http).get = "/jackaldao/canine/filetree/params";
   }
 
-  // Queries a list of Encrypt items.
-  rpc Encrypt(QueryEncryptRequest) returns (QueryEncryptResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/encrypt/{address}/{message}";
-  }
-
-  // Queries a list of Decrypt items.
-  rpc Decrypt(QueryDecryptRequest) returns (QueryDecryptResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/decrypt/{message}";
-  }
-
   // Queries a Files by index.
   rpc Files(QueryFileRequest) returns (QueryFileResponse) {
     option (google.api.http).get =
@@ -60,17 +48,6 @@ message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
-
-message QueryEncryptRequest {
-  string address = 1;
-  string message = 2;
-}
-
-message QueryEncryptResponse { string encryptionData = 1; }
-
-message QueryDecryptRequest { string message = 1; }
-
-message QueryDecryptResponse { string data = 1; }
 
 message QueryFileRequest {
   string address = 1;

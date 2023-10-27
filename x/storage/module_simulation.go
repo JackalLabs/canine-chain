@@ -23,21 +23,6 @@ var (
 
 const (
 	//nolint:all
-	opWeightMsgPostContract = "op_weight_msg_post_contract"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgPostContract int = 100
-
-	//nolint:all
-	opWeightMsgPostproof = "op_weight_msg_postproof"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgPostproof int = 80
-
-	//nolint:all
-	opWeightMsgSignContract = "op_weight_msg_sign_contract"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgSignContract int = 90
-
-	//nolint:all
 	opWeightMsgSetProviderIP = "op_weight_msg_set_provider_ip"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgSetProviderIP int = 10
@@ -53,11 +38,6 @@ const (
 	defaultWeightMsgInitProvider int = 60
 
 	//nolint:all
-	opWeightMsgCancelContract = "op_weight_msg_cancel_contract"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCancelContract int = 10
-
-	//nolint:all
 	opWeightMsgBuyStorage = "op_weight_msg_buy_storage"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgBuyStorage int = 100
@@ -65,10 +45,6 @@ const (
 	//nolint:all
 	opWeightMsgUpgradeStorage          = "op_weight_msg_upgrade_storage"
 	defaultWeightMsgUpgradeStorage int = 100
-
-	//nolint:all
-	opWeightMsgClaimStray          = "op_weight_msg_claim_stray"
-	defaultWeightMsgClaimStray int = 100
 
 	//nolint:all
 	opWeightMsgAddProviderClaimer          = "op_weight_msg_add_provider_claimer"
@@ -100,38 +76,6 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
-	var weightMsgPostContract int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPostContract, &weightMsgPostContract, nil,
-		func(_ *rand.Rand) {
-			weightMsgPostContract = defaultWeightMsgPostContract
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgPostContract,
-		storagesimulation.SimulateMsgPostContract(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgPostproof int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPostproof, &weightMsgPostproof, nil,
-		func(_ *rand.Rand) {
-			weightMsgPostproof = defaultWeightMsgPostproof
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgPostproof,
-		storagesimulation.SimulateMsgPostproof(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgSignContract int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSignContract, &weightMsgSignContract, nil,
-		func(_ *rand.Rand) {
-			weightMsgSignContract = defaultWeightMsgSignContract
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgSignContract,
-		storagesimulation.SimulateMsgSignContract(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
 
 	var weightMsgSetProviderIP int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetProviderIP, &weightMsgSetProviderIP, nil,
@@ -166,17 +110,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		storagesimulation.SimulateMsgInitProvider(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgCancelContract int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCancelContract, &weightMsgCancelContract, nil,
-		func(_ *rand.Rand) {
-			weightMsgCancelContract = defaultWeightMsgCancelContract
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCancelContract,
-		storagesimulation.SimulateMsgCancelContract(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
 	var weightMsgBuyStorage int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgBuyStorage, &weightMsgBuyStorage, nil,
 		func(_ *rand.Rand) {
@@ -197,17 +130,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgUpgradeStorage,
 		storagesimulation.SimulateMsgUpgradeStorage(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgClaimStray int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaimStray, &weightMsgClaimStray, nil,
-		func(_ *rand.Rand) {
-			weightMsgClaimStray = defaultWeightMsgClaimStray
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgClaimStray,
-		storagesimulation.SimulateMsgClaimStray(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgAddProviderClaimer int

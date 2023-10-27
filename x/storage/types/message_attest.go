@@ -18,10 +18,12 @@ var (
 	_ sdk.Msg = &MsgAttest{}
 )
 
-func NewMsgRequestAttestationForm(creator string, cid string) *MsgRequestAttestationForm {
+func NewMsgRequestAttestationForm(creator string, merkle []byte, owner string, start int64) *MsgRequestAttestationForm {
 	return &MsgRequestAttestationForm{
 		Creator: creator,
-		Cid:     cid,
+		Merkle:  merkle,
+		Owner:   owner,
+		Start:   start,
 	}
 }
 
@@ -55,20 +57,16 @@ func (msg *MsgRequestAttestationForm) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	prefix, _, err = bech32.DecodeAndConvert(msg.Cid)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid (%s)", err)
-	}
-	if prefix != CidPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklc`", prefix))
-	}
 	return nil
 }
 
-func NewMsgAttest(creator string, cid string) *MsgAttest {
+func NewMsgAttest(creator string, prover string, merkle []byte, owner string, start int64) *MsgAttest {
 	return &MsgAttest{
 		Creator: creator,
-		Cid:     cid,
+		Prover:  prover,
+		Merkle:  merkle,
+		Owner:   owner,
+		Start:   start,
 	}
 }
 
@@ -102,12 +100,5 @@ func (msg *MsgAttest) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	prefix, _, err = bech32.DecodeAndConvert(msg.Cid)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid (%s)", err)
-	}
-	if prefix != CidPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid cid prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jklc`", prefix))
-	}
 	return nil
 }
