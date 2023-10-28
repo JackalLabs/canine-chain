@@ -46,7 +46,10 @@ func (k Keeper) Attestation(c context.Context, req *types.QueryAttestationReques
 
 	val, found := k.GetAttestationForm(
 		ctx,
-		req.Cid,
+		req.Prover,
+		req.Merkle,
+		req.Owner,
+		req.Start,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")

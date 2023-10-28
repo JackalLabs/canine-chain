@@ -3,12 +3,9 @@ package keeper_test
 import (
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
-
-const cid = "jklc123"
 
 // testing attestations.go file
 func (suite *KeeperTestSuite) TestSetAttestationForm() {
@@ -17,53 +14,28 @@ func (suite *KeeperTestSuite) TestSetAttestationForm() {
 	var att []*types.Attestation
 	attestation := types.AttestationForm{
 		Attestations: att,
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        0,
 	}
 
 	suite.storageKeeper.SetAttestationForm(suite.ctx, attestation)
 
 	attestationRequest := types.QueryAttestationRequest{
-		Cid: cid,
+		Prover: "prover",
+		Merkle: []byte("merkle"),
+		Owner:  "owner",
+		Start:  0,
 	}
 
 	res, err := suite.queryClient.Attestation(suite.ctx.Context(), &attestationRequest)
 	suite.Require().NoError(err)
-	suite.Require().Equal(attestation.Cid, res.Attestation.Cid)
+	suite.Require().Equal(attestation.Prover, res.Attestation.Prover)
+	suite.Require().Equal(attestation.Owner, res.Attestation.Owner)
+	suite.Require().Equal(attestation.Start, res.Attestation.Start)
+	suite.Require().Equal(attestation.Merkle, res.Attestation.Merkle)
 	suite.Require().Equal(attestation.Attestations, res.Attestation.Attestations)
-}
-
-// testing attestations.go file
-func (suite *KeeperTestSuite) TestRewardsAttestationForm() {
-	suite.SetupSuite()
-
-	var att []*types.Attestation
-	attestation := types.AttestationForm{
-		Attestations: att,
-		Cid:          cid,
-	}
-
-	suite.storageKeeper.SetAttestationForm(suite.ctx, attestation)
-
-	attestationRequest := types.QueryAttestationRequest{
-		Cid: cid,
-	}
-
-	addresses, err := testutil.CreateTestAddresses("cosmos", 50)
-	suite.NoError(err)
-
-	res, err := suite.queryClient.Attestation(suite.ctx.Context(), &attestationRequest)
-	suite.Require().NoError(err)
-	suite.Require().Equal(attestation.Cid, res.Attestation.Cid)
-	suite.Require().Equal(attestation.Attestations, res.Attestation.Attestations)
-
-	address, err := sdk.AccAddressFromBech32(addresses[0])
-	suite.Require().NoError(err)
-
-	err = suite.storageKeeper.InternalRewards(suite.ctx, make([]types.ActiveDeals, 0), address)
-	suite.Require().NoError(err)
-
-	_, found := suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
-	suite.Require().Equal(false, found)
 }
 
 func (suite *KeeperTestSuite) TestGetAttestationForm() {
@@ -72,14 +44,17 @@ func (suite *KeeperTestSuite) TestGetAttestationForm() {
 	var att []*types.Attestation
 	attestation := types.AttestationForm{
 		Attestations: att,
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte{},
+		Owner:        "owner",
+		Start:        0,
 	}
 
 	suite.storageKeeper.SetAttestationForm(suite.ctx, attestation)
 
-	foundAttestation, found := suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
+	foundAttestation, found := suite.storageKeeper.GetAttestationForm(suite.ctx, "prover", []byte{}, "owner", 0)
 	suite.Require().Equal(found, true)
-	suite.Require().Equal(foundAttestation.Cid, attestation.Cid)
+	suite.Require().Equal(foundAttestation.Prover, attestation.Prover)
 	suite.Require().Equal(foundAttestation.Attestations, attestation.Attestations)
 }
 
@@ -88,12 +63,18 @@ func (suite *KeeperTestSuite) TestGetAllAttestationForm() {
 
 	attestation := types.AttestationForm{
 		Attestations: []*types.Attestation{},
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        0,
 	}
 
 	attestation2 := types.AttestationForm{
 		Attestations: []*types.Attestation{},
-		Cid:          "jklc1321",
+		Prover:       "prover2",
+		Merkle:       []byte("merkle2"),
+		Owner:        "owner2",
+		Start:        0,
 	}
 
 	allAttestationFormbefore := suite.storageKeeper.GetAllAttestation(suite.ctx)
@@ -111,22 +92,17 @@ func (suite *KeeperTestSuite) TestRemoveAttestationForm() {
 
 	attestation := types.AttestationForm{
 		Attestations: []*types.Attestation{},
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        0,
 	}
 	suite.storageKeeper.SetAttestationForm(suite.ctx, attestation)
 
-	suite.storageKeeper.RemoveAttestation(suite.ctx, cid)
+	suite.storageKeeper.RemoveAttestation(suite.ctx, "prover", []byte{}, "owner", 0)
 
-	foundAttestation, found := suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
+	_, found := suite.storageKeeper.GetAttestationForm(suite.ctx, "prover", []byte{}, "owner", 0)
 	suite.Require().Equal(found, false)
-
-	var atts []*types.Attestation
-	ghostAttestation := types.AttestationForm{
-		Attestations: atts,
-		Cid:          "",
-	}
-
-	suite.Require().Equal(foundAttestation, ghostAttestation)
 }
 
 func (suite *KeeperTestSuite) TestMakeAttestation() {
@@ -148,27 +124,26 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 		})
 	}
 
-	deal := types.ActiveDeals{
-		Cid:           cid,
-		Signee:        "",
-		Provider:      addresses[10],
-		Startblock:    "",
-		Endblock:      "",
-		Filesize:      "10",
-		Proofverified: "false",
-		Proofsmissed:  "0",
-		Blocktoprove:  "0",
-		Creator:       "",
-		Merkle:        "",
-		Fid:           "",
+	file := types.UnifiedFile{
+		Merkle:        []byte("merkle"),
+		Owner:         "owner",
+		Start:         0,
+		Expires:       0,
+		FileSize:      100,
+		ProofInterval: 100,
+		ProofType:     0,
+		Proofs:        make([]string, 0),
+		MaxProofs:     3,
+		Note:          "test",
 	}
+	suite.storageKeeper.SetFile(suite.ctx, file) // creating storage deal
 
-	suite.storageKeeper.SetActiveDeals(suite.ctx, deal) // creating storage deal
+	file.AddProver(suite.ctx, suite.storageKeeper, addresses[10])
 
-	_, err = suite.storageKeeper.RequestAttestation(suite.ctx, cid, addresses[10])
+	_, err = suite.storageKeeper.RequestAttestation(suite.ctx, []byte("merkle"), "owner", 0, addresses[10])
 	suite.NoError(err)
 
-	form, found := suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
+	form, found := suite.storageKeeper.GetAttestationForm(suite.ctx, addresses[10], []byte("merkle"), "owner", 0)
 	suite.Equal(true, found)
 
 	for _, attestation := range form.Attestations {
@@ -179,12 +154,12 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 	allAttestationForm := suite.storageKeeper.GetAllAttestation(suite.ctx)
 	suite.Require().Equal(1, len(allAttestationForm))
 
-	d, found := suite.storageKeeper.GetActiveDeals(suite.ctx, cid)
+	d, found := suite.storageKeeper.GetProof(suite.ctx, addresses[10], []byte("merkle"), "owner", 0)
 	suite.Equal(true, found)
-	suite.Equal("false", d.Proofverified)
+	suite.Equal(int64(0), d.LastProven)
 
 	for i, attestation := range form.Attestations {
-		err := suite.storageKeeper.Attest(suite.ctx, cid, attestation.Provider)
+		err := suite.storageKeeper.Attest(suite.ctx, addresses[10], []byte("merkle"), "owner", 0, attestation.Provider)
 		if i >= int(params.AttestMinToPass) {
 			suite.Require().Error(err)
 		} else {
@@ -192,10 +167,10 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 		}
 	}
 
-	_, found = suite.storageKeeper.GetAttestationForm(suite.ctx, cid)
+	_, found = suite.storageKeeper.GetAttestationForm(suite.ctx, addresses[10], []byte("merkle"), "owner", 0)
 	suite.Equal(false, found)
 
-	d, found = suite.storageKeeper.GetActiveDeals(suite.ctx, cid)
+	d, found = suite.storageKeeper.GetProof(suite.ctx, addresses[10], []byte("merkle"), "owner", 0)
 	suite.Equal(true, found)
-	suite.Equal("true", d.Proofverified)
+	suite.Equal(int64(0), d.LastProven)
 }

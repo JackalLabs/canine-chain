@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
@@ -10,20 +11,25 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ListFiles(ctx sdk.Context, fid string) []string {
-	allDeals := k.GetAllActiveDeals(ctx)
+func (k Keeper) ListFiles(ctx sdk.Context, merkle []byte) []string {
+	allDeals := k.GetAllFilesWithMerkle(ctx, merkle)
 
-	providers := []string{}
+	providers := make([]string, 0)
 
-	for i := 0; i < len(allDeals); i++ {
-		if allDeals[i].Fid == fid {
-			provider, ok := k.GetProviders(ctx, allDeals[i].Provider)
+	for _, deal := range allDeals {
+		proofs := deal.GetProofs()
+		for _, proof := range proofs {
+			ss := strings.Split(proof, "/")
+			prov := ss[0]
+
+			provider, ok := k.GetProviders(ctx, prov)
 			if !ok {
 				continue
 			}
 
 			providers = append(providers, provider.Ip)
 		}
+
 	}
 
 	return providers
@@ -36,7 +42,7 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest)
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	ls := k.ListFiles(ctx, req.Fid)
+	ls := k.ListFiles(ctx, req.Merkle)
 
 	ProviderIps, err := json.Marshal(ls)
 	if err != nil {

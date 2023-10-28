@@ -9,15 +9,13 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgPostContract{}, "storage/PostContract", nil)
-	cdc.RegisterConcrete(&MsgPostproof{}, "storage/Postproof", nil)
-	cdc.RegisterConcrete(&MsgSignContract{}, "storage/SignContract", nil)
+	cdc.RegisterConcrete(&MsgPostFile{}, "storage/PostFile", nil)
+	cdc.RegisterConcrete(&MsgPostProof{}, "storage/PostProof", nil)
 	cdc.RegisterConcrete(&MsgSetProviderIP{}, "storage/SetProviderIp", nil)
 	cdc.RegisterConcrete(&MsgSetProviderTotalspace{}, "storage/SetProviderTotalspace", nil)
 	cdc.RegisterConcrete(&MsgInitProvider{}, "storage/InitProvider", nil)
-	cdc.RegisterConcrete(&MsgCancelContract{}, "storage/CancelContract", nil)
+	cdc.RegisterConcrete(&MsgDeleteFile{}, "storage/DeleteFile", nil)
 	cdc.RegisterConcrete(&MsgBuyStorage{}, "storage/BuyStorage", nil)
-	cdc.RegisterConcrete(&MsgClaimStray{}, "storage/ClaimStray", nil)
 	cdc.RegisterConcrete(&MsgUpgradeStorage{}, "storage/UpgradeStorage", nil)
 	cdc.RegisterConcrete(&MsgSetProviderKeybase{}, "storage/SetProviderKeybase", nil)
 	cdc.RegisterConcrete(&MsgAddClaimer{}, "storage/AddClaimer", nil)
@@ -26,14 +24,12 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgPostContract{},
+		&MsgPostFile{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgPostproof{},
+		&MsgPostProof{},
 	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgSignContract{},
-	)
+
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSetProviderIP{},
 	)
@@ -44,14 +40,12 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgInitProvider{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCancelContract{},
+		&MsgDeleteFile{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgBuyStorage{},
 	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgClaimStray{},
-	)
+
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpgradeStorage{},
 	)

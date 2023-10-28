@@ -6,14 +6,14 @@ on:
     branches: ["master"]
 
 jobs:
-  test:
-    name: Test
+  io-sim:
+    name: Import Export Sim Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v4.1.1
       - uses: actions/setup-go@v4
         with:
           go-version: 1.20.2 # The Go version to download (if necessary) and use.
-      - name: Test
+      - name: Simulation
         shell: bash
         run: make test-sim-import-export
