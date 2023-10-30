@@ -342,4 +342,5 @@ message QueryStorageStatsResponse {
     (gogoproto.nullable)   = false
   ];
   uint64 activeUsers = 4;
+  map<int64, int64> users_by_plan= 5;
 }
