@@ -28,7 +28,7 @@ func (suite *KeeperTestSuite) SetupSuite() {
 }
 
 func (suite *KeeperTestSuite) reset() {
-	filetreeKeeper, encCfg, ctx := setupFiletreeKeeper(suite.T())
+	filetreeKeeper, encCfg, ctx := SetupFiletreeKeeper(suite.T())
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, encCfg.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, filetreeKeeper)
