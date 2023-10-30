@@ -24,7 +24,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
-	app.registerUpgrade(v4.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
+	app.registerUpgrade(v4.NewUpgrade(app.mm, app.configurator, app.StorageKeeper, app.FileTreeKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
