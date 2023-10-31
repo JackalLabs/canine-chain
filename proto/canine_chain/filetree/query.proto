@@ -36,6 +36,11 @@ service Query {
   }
 
   // Queries a list of Files items.
+  rpc FilesAllByOwner(QueryAllFilesByOwnerRequest) returns (QueryAllFilesResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/filetree/files/{owner}";
+  }
+
+  // Queries a list of Files items.
   rpc FilesAll(QueryAllFilesRequest) returns (QueryAllFilesResponse) {
     option (google.api.http).get = "/jackal-dao/canine-chain/filetree/files";
   }
@@ -78,6 +83,11 @@ message QueryFileRequest {
 }
 
 message QueryFileResponse { Files files = 1 [ (gogoproto.nullable) = false ]; }
+
+message QueryAllFilesByOwnerRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string owner = 2;
+}
 
 message QueryAllFilesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
