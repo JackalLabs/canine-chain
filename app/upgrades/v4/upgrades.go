@@ -157,6 +157,45 @@ func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
 			continue
 		}
 
+	for _, deal := range allDeals {
+
+		merkle, err := hex.DecodeString(deal.Merkle)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		start, err := strconv.ParseInt(deal.Startblock, 10, 64)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		end, err := strconv.ParseInt(deal.Endblock, 10, 64)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		size, err := strconv.ParseInt(deal.Filesize, 10, 64)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
+		lm := LegacyMarker{
+			Fid: deal.Fid,
+			Cid: deal.Cid,
+		}
+
+		fidMerkle[deal.Fid] = merkle // creating fid -> merkle mapping
+
+		lmBytes, err := json.Marshal(lm)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			continue
+		}
+
 		var uf storagemoduletypes.UnifiedFile
 
 		uf, found := u.sk.GetFile(ctx, merkle, deal.Signee, start)
