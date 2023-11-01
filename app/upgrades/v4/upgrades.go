@@ -93,6 +93,26 @@ func UpdateFileTree(ctx sdk.Context, fk filetreemodulekeeper.Keeper, merkleMap m
 	}
 }
 
+func UpdatePaymentInfo(ctx sdk.Context, sk storagekeeper.Keeper) {
+	paymentInfo := sk.GetAllStoragePaymentInfo(ctx)
+	for _, info := range paymentInfo {
+
+		planTime := info.End.Sub(info.Start)
+		millis := planTime.Milliseconds()
+		seconds := millis / 1000
+		minutes := seconds / 60
+		hours := minutes / 60
+
+		cost := sk.GetStorageCostKbs(ctx, info.SpaceAvailable, hours)
+
+		price := sdk.NewCoin("ujkl", cost)
+
+		info.Coins = sdk.NewCoins(price)
+
+		sk.SetStoragePaymentInfo(ctx, info)
+	}
+}
+
 func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
 	fidMerkle := make(map[string][]byte)
 
@@ -173,6 +193,8 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		fidMerkleMap := UpdateFiles(ctx, u)
 
 		UpdateFileTree(ctx, u.fk, fidMerkleMap)
+
+		UpdatePaymentInfo(ctx, u.sk) // updating payment info with values at time of upgrade
 
 		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
 		if err != nil {

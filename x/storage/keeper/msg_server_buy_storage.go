@@ -50,11 +50,13 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
 	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64()))
 
+	priceTokenList := sdk.NewCoins(priceTokens)
+
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, sdk.NewCoins(priceTokens))
+	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, priceTokenList)
 	if err != nil {
 		return nil, err
 	}
@@ -77,12 +79,15 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 			return nil, fmt.Errorf("please use MsgUpgradeStorage if you want to upgrade/downgrade")
 		}
 
+		c := payInfo.Coins.Add(priceTokens)
+
 		spi = types.StoragePaymentInfo{
 			Start:          ctx.BlockTime(),
 			End:            ctx.BlockTime().Add(duration),
 			SpaceAvailable: bytes,
 			SpaceUsed:      payInfo.SpaceUsed,
 			Address:        msg.ForAddress,
+			Coins:          c,
 		}
 	} else {
 		spi = types.StoragePaymentInfo{
@@ -91,6 +96,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 			SpaceAvailable: bytes,
 			SpaceUsed:      0,
 			Address:        msg.ForAddress,
+			Coins:          priceTokenList,
 		}
 	}
 
