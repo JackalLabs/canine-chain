@@ -10,8 +10,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/tendermint/libs/rand"
-	"github.com/wealdtech/go-merkletree"
-	"github.com/wealdtech/go-merkletree/sha3"
+	"github.com/wealdtech/go-merkletree/v2"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 // VerifyProof checks whether a proof is valid against a file

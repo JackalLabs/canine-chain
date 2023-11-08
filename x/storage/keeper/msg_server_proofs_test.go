@@ -11,8 +11,8 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
-	"github.com/wealdtech/go-merkletree"
-	"github.com/wealdtech/go-merkletree/sha3"
+	"github.com/wealdtech/go-merkletree/v2"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 type TestFile struct {
