@@ -3,11 +3,12 @@ package utils
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 
-	"github.com/wealdtech/go-merkletree"
-	"github.com/wealdtech/go-merkletree/sha3"
+	"github.com/wealdtech/go-merkletree/v2"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 func BuildTree(buf io.Reader, chunkSize int64) ([]byte, []byte, [][]byte, int, error) {
@@ -50,7 +51,7 @@ func BuildTree(buf io.Reader, chunkSize int64) ([]byte, []byte, [][]byte, int, e
 
 	r := tree.Root()
 
-	exportedTree, err := tree.Export()
+	exportedTree, err := json.Marshal(tree)
 	if err != nil {
 		return nil, nil, nil, 0, err
 	}

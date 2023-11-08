@@ -12,8 +12,8 @@ import (
 
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 	"github.com/stretchr/testify/require"
-	"github.com/wealdtech/go-merkletree"
-	"github.com/wealdtech/go-merkletree/sha3"
+	"github.com/wealdtech/go-merkletree/v2"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 // copied from the provider code, we should probably make this an import for the providers
