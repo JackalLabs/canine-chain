@@ -147,14 +147,14 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 
 	cases := []struct {
-		preRun    func() *types.MsgSetProviderTotalspace
+		preRun    func() *types.MsgSetProviderTotalSpace
 		expErr    bool
 		expErrMsg string
 		name      string
 	}{
 		{
-			preRun: func() *types.MsgSetProviderTotalspace {
-				return types.NewMsgSetProviderTotalspace(
+			preRun: func() *types.MsgSetProviderTotalSpace {
+				return types.NewMsgSetProviderTotalSpace(
 					user,
 					"1000000",
 				)
@@ -163,8 +163,8 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 			name:   "set provider total space success",
 		},
 		{
-			preRun: func() *types.MsgSetProviderTotalspace {
-				return types.NewMsgSetProviderTotalspace(
+			preRun: func() *types.MsgSetProviderTotalSpace {
+				return types.NewMsgSetProviderTotalSpace(
 					"wrong address",
 					"1000000",
 				)
@@ -174,8 +174,8 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 			name:      "set provider total space fail",
 		},
 		{
-			preRun: func() *types.MsgSetProviderTotalspace {
-				return types.NewMsgSetProviderTotalspace(
+			preRun: func() *types.MsgSetProviderTotalSpace {
+				return types.NewMsgSetProviderTotalSpace(
 					user,
 					"9@!0",
 				)
@@ -190,7 +190,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
-			res, err := msgSrvr.SetProviderTotalspace(context, msg)
+			res, err := msgSrvr.SetProviderTotalSpace(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)

@@ -18,7 +18,7 @@ func TestMsgInitProvider_ValidateBasic(t *testing.T) {
 			msg: MsgInitProvider{
 				Creator:    "invalid_address",
 				Ip:         "http://localhost:3333",
-				Totalspace: "1000000000",
+				TotalSpace: "1000000000",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
@@ -26,7 +26,7 @@ func TestMsgInitProvider_ValidateBasic(t *testing.T) {
 			msg: MsgInitProvider{
 				Creator:    "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				Ip:         "fake/localhost:3333",
-				Totalspace: "1000000000",
+				TotalSpace: "1000000000",
 			},
 			err: sdkerrors.ErrInvalidType,
 		}, {
@@ -34,7 +34,7 @@ func TestMsgInitProvider_ValidateBasic(t *testing.T) {
 			msg: MsgInitProvider{
 				Creator:    "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				Ip:         "https://node.jackalprotocol.com",
-				Totalspace: "abd",
+				TotalSpace: "abd",
 			},
 			err: sdkerrors.ErrInvalidType,
 		}, {
@@ -42,14 +42,14 @@ func TestMsgInitProvider_ValidateBasic(t *testing.T) {
 			msg: MsgInitProvider{
 				Creator:    "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				Ip:         "https://node.jackalprotocol.com",
-				Totalspace: "1000000000",
+				TotalSpace: "1000000000",
 			},
 		}, {
 			name: "valid ip localhost",
 			msg: MsgInitProvider{
 				Creator:    "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
 				Ip:         "localhost:3333",
-				Totalspace: "1000000000",
+				TotalSpace: "1000000000",
 			},
 		},
 	}

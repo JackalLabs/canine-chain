@@ -18,8 +18,8 @@ func (k Keeper) GetClientFreeSpace(goCtx context.Context, req *types.QueryClient
 
 	payInfo, found := k.GetStoragePaymentInfo(ctx, req.Address)
 	if !found {
-		return &types.QueryClientFreeSpaceResponse{Bytesfree: 0}, nil
+		return &types.QueryClientFreeSpaceResponse{BytesFree: 0}, nil
 	}
 
-	return &types.QueryClientFreeSpaceResponse{Bytesfree: payInfo.SpaceAvailable - payInfo.SpaceUsed}, nil
+	return &types.QueryClientFreeSpaceResponse{BytesFree: payInfo.SpaceAvailable - payInfo.SpaceUsed}, nil
 }

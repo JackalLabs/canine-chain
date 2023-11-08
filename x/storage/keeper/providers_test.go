@@ -61,7 +61,7 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 		Creator:    user,
 		Ip:         "192.158.1.38",
 		Keybase:    "",
-		Totalspace: "9000",
+		TotalSpace: "9000",
 	}
 
 	_, err = msgSrvr.InitProvider(ctx, &initMsg)
@@ -75,7 +75,7 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Providers.Address, user)
 	suite.Require().Equal(res.Providers.Ip, initMsg.Ip)
-	suite.Require().Equal(res.Providers.Totalspace, initMsg.Totalspace)
+	suite.Require().Equal(res.Providers.Totalspace, initMsg.TotalSpace)
 	suite.Require().Equal(res.Providers.BurnedContracts, "0")
 	suite.Require().Equal(res.Providers.Creator, initMsg.Creator)
 

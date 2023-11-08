@@ -18,7 +18,7 @@ func NewMsgInitProvider(creator string, ip string, totalspace string, keybase st
 	return &MsgInitProvider{
 		Creator:    creator,
 		Ip:         ip,
-		Totalspace: totalspace,
+		TotalSpace: totalspace,
 		Keybase:    keybase,
 	}
 }
@@ -58,7 +58,7 @@ func (msg *MsgInitProvider) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "invalid provider ip (%s)", err)
 	}
 
-	if _, err := strconv.Atoi(msg.Totalspace); err != nil {
+	if _, err := strconv.Atoi(msg.TotalSpace); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse totalspace (%s)", err)
 	}
 	return nil

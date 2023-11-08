@@ -8,7 +8,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-func (k msgServer) SetProviderTotalspace(goCtx context.Context, msg *types.MsgSetProviderTotalspace) (*types.MsgSetProviderTotalspaceResponse, error) {
+func (k msgServer) SetProviderTotalSpace(goCtx context.Context, msg *types.MsgSetProviderTotalSpace) (*types.MsgSetProviderTotalSpaceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)
@@ -27,7 +27,7 @@ func (k msgServer) SetProviderTotalspace(goCtx context.Context, msg *types.MsgSe
 
 	k.SetProviders(ctx, provider)
 
-	return &types.MsgSetProviderTotalspaceResponse{}, nil
+	return &types.MsgSetProviderTotalSpaceResponse{}, nil
 }
 
 func isValidTotalSpace(totalSpace string) bool {

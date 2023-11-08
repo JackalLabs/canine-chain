@@ -11,7 +11,7 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetProviderTotalspace() *cobra.Command {
+func CmdSetProviderTotalSpace() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-totalspace [space]",
 		Short: "Broadcast message set-provider-totalspace",
@@ -24,7 +24,7 @@ func CmdSetProviderTotalspace() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgSetProviderTotalspace(
+			msg := types.NewMsgSetProviderTotalSpace(
 				clientCtx.GetFromAddress().String(),
 				argSpace,
 			)

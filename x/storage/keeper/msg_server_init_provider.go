@@ -40,7 +40,7 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 	provider := types.Providers{
 		Address:         msg.Creator,
 		Ip:              msg.Ip,
-		Totalspace:      msg.Totalspace,
+		Totalspace:      msg.TotalSpace,
 		Creator:         msg.Creator,
 		BurnedContracts: "0",
 		KeybaseIdentity: msg.Keybase,

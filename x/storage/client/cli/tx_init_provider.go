@@ -19,7 +19,7 @@ func CmdInitProvider() *cobra.Command {
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argIP := args[0]
-			argTotalspace := args[1]
+			argTotalSpace := args[1]
 			argKeybase := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -30,7 +30,7 @@ func CmdInitProvider() *cobra.Command {
 			msg := types.NewMsgInitProvider(
 				clientCtx.GetFromAddress().String(),
 				argIP,
-				argTotalspace,
+				argTotalSpace,
 				argKeybase,
 			)
 			if err := msg.ValidateBasic(); err != nil {

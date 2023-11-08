@@ -28,9 +28,9 @@ const (
 	defaultWeightMsgSetProviderIP int = 10
 
 	//nolint:all
-	opWeightMsgSetProviderTotalspace = "op_weight_msg_set_provider_totalspace"
+	opWeightMsgSetProviderTotalSpace = "op_weight_msg_set_provider_totalspace"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetProviderTotalspace int = 10
+	defaultWeightMsgSetProviderTotalSpace int = 10
 
 	//nolint:all
 	opWeightMsgInitProvider = "op_weight_msg_init_provider"
@@ -88,15 +88,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		storagesimulation.SimulateMsgSetProviderIP(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgSetProviderTotalspace int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetProviderTotalspace, &weightMsgSetProviderTotalspace, nil,
+	var weightMsgSetProviderTotalSpace int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetProviderTotalSpace, &weightMsgSetProviderTotalSpace, nil,
 		func(_ *rand.Rand) {
-			weightMsgSetProviderTotalspace = defaultWeightMsgSetProviderTotalspace
+			weightMsgSetProviderTotalSpace = defaultWeightMsgSetProviderTotalSpace
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgSetProviderTotalspace,
-		storagesimulation.SimulateMsgSetProviderTotalspace(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgSetProviderTotalSpace,
+		storagesimulation.SimulateMsgSetProviderTotalSpace(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgInitProvider int

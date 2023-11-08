@@ -29,8 +29,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgSetProviderKeybase:
 			res, err := msgServer.SetProviderKeybase(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgSetProviderTotalspace:
-			res, err := msgServer.SetProviderTotalspace(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgSetProviderTotalSpace:
+			res, err := msgServer.SetProviderTotalSpace(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgInitProvider:
 			res, err := msgServer.InitProvider(sdk.WrapSDKContext(ctx), msg)

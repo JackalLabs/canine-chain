@@ -84,9 +84,9 @@ service Query {
   }
 
   // Queries a list of Freespace items.
-  rpc Freespace(QueryFreespaceRequest) returns (QueryFreespaceResponse) {
+  rpc Freespace(QueryFreeSpaceRequest) returns (QueryFreeSpaceResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/storage/freespace/{address}";
+        "/jackal-dao/canine-chain/storage/free_space/{address}";
   }
 
   // Queries a list of Freespace items.
@@ -266,11 +266,11 @@ message QueryAllReportResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryFreespaceRequest { string address = 1; }
+message QueryFreeSpaceRequest { string address = 1; }
 
 message QueryStoreCountRequest { string address = 1; }
 
-message QueryFreespaceResponse { string space = 1; }
+message QueryFreeSpaceResponse { string space = 1; }
 
 message QueryStoreCountResponse { string count = 1; }
 
@@ -283,7 +283,7 @@ message QueryFindFileResponse { string provider_ips = 1; }
 
 message QueryClientFreeSpaceRequest { string address = 1; }
 
-message QueryClientFreeSpaceResponse { int64 bytesfree = 1; }
+message QueryClientFreeSpaceResponse { int64 bytes_free = 1; }
 
 message QueryPayDataRequest { string address = 1; }
 
@@ -337,10 +337,10 @@ message QueryStorageStatsRequest {}
 message QueryStorageStatsResponse {
   uint64 purchased = 1;
   uint64 used = 2;
-  bytes usedRatio = 3 [
+  bytes used_ratio = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
   ];
-  uint64 activeUsers = 4;
+  uint64 active_users = 4;
   map<int64, int64> users_by_plan= 5;
 }

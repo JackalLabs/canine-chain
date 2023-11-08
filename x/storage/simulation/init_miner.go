@@ -40,7 +40,7 @@ func SimulateMsgInitProvider(
 		msg := &types.MsgInitProvider{
 			Creator:    simAccount.Address.String(),
 			Ip:         RandIPv4Url(r),
-			Totalspace: strconv.Itoa(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
+			TotalSpace: strconv.Itoa(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
 			Keybase:    simtypes.RandStringOfLength(r, 10),
 		}
 

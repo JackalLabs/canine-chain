@@ -780,7 +780,7 @@ func local_request_Query_ReportsAll_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func request_Query_Freespace_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFreespaceRequest
+	var protoReq QueryFreeSpaceRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -807,7 +807,7 @@ func request_Query_Freespace_0(ctx context.Context, marshaler runtime.Marshaler,
 }
 
 func local_request_Query_Freespace_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFreespaceRequest
+	var protoReq QueryFreeSpaceRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -2306,7 +2306,7 @@ var (
 
 	pattern_Query_ReportsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal-dao", "canine-chain", "storage", "reports"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Freespace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "freespace", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Freespace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "free_space", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_StoreCount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal-dao", "canine-chain", "storage", "storing", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 

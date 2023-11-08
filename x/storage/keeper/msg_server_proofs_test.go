@@ -143,7 +143,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	_, err = msgSrvr.InitProvider(context, &types.MsgInitProvider{
 		Creator:    testProvider.String(),
 		Ip:         "192.168.0.1",
-		Totalspace: "1_000_000",
+		TotalSpace: "1_000_000",
 	})
 	suite.Require().NoError(err)
 
