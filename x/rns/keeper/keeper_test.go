@@ -110,7 +110,7 @@ func (suite *KeeperTestSuite) TestMakeBid() {
 		Index: fmt.Sprintf("%s%s", address.String(), name),
 	}
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
 }
 
@@ -141,16 +141,16 @@ func (suite *KeeperTestSuite) TestUpdateName() {
 		Index: "validname.jkl",
 	}
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	newData := "{\"A\":\"192.168.0.1\"}"
 	name.Data = newData
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	res, err := suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Names.Data, newData)
+	suite.Require().Equal(res.Name.Data, newData)
 }
 
 func (suite *KeeperTestSuite) TestRemoveName() {
@@ -180,12 +180,12 @@ func (suite *KeeperTestSuite) TestRemoveName() {
 		Index: "validname.jkl",
 	}
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	suite.rnsKeeper.RemoveNames(suite.ctx, "validname", "jkl")
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().Error(err)
 }
 
@@ -216,7 +216,7 @@ func (suite *KeeperTestSuite) TestSetName() {
 		Index: "validname.jkl",
 	}
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	badname := types.Names{
@@ -233,7 +233,7 @@ func (suite *KeeperTestSuite) TestSetName() {
 	nameReq = types.QueryNameRequest{
 		Index: "badname.jkl",
 	}
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().Error(err)
 }
 

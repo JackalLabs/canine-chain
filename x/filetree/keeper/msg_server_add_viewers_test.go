@@ -166,16 +166,16 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 					OwnerAddress: ownerAddress,
 				}
 
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				validViewer, err := keeper.HasViewingAccess(res.Files, bob)
+				validViewer, err := keeper.HasViewingAccess(res.File, bob)
 				suite.Require().NoError(err)
 				suite.Require().Equal(validViewer, true)
 
 				// Let's see if Bob can decrypt and recover pepe's AES iv and key using his private key
 
-				viewers := res.Files.ViewingAccess
+				viewers := res.File.ViewingAccess
 				var m map[string]string
 
 				err = json.Unmarshal([]byte(viewers), &m)

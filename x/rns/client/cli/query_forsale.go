@@ -23,11 +23,11 @@ func CmdListForsale() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllForSalesRequest{
+			params := &types.QueryAllForSaleRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ForSaleAll(context.Background(), params)
+			res, err := queryClient.AllForSale(context.Background(), params)
 			if err != nil {
 				return err
 			}

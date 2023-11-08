@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) StoragePaymentInfoAll(c context.Context, req *types.QueryAllStoragePaymentInfoRequest) (*types.QueryAllStoragePaymentInfoResponse, error) {
+func (k Keeper) AllStoragePaymentInfo(c context.Context, req *types.QueryAllStoragePaymentInfoRequest) (*types.QueryAllStoragePaymentInfoResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

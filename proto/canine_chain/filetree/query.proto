@@ -14,29 +14,29 @@ option go_package = "github.com/jackalLabs/canine-chain/x/filetree/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackaldao/canine/filetree/params";
+    option (google.api.http).get = "/jackal/canine/filetree/params";
   }
 
   // Queries a Files by index.
-  rpc Files(QueryFileRequest) returns (QueryFileResponse) {
+  rpc File(QueryFileRequest) returns (QueryFileResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/files/{address}/{owner_address}";
+        "/jackal/canine-chain/filetree/files/{address}/{owner_address}";
   }
 
   // Queries a list of Files items.
-  rpc FilesAll(QueryAllFilesRequest) returns (QueryAllFilesResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/filetree/files";
+  rpc AllFiles(QueryAllFilesRequest) returns (QueryAllFilesResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/filetree/files";
   }
 
   // Queries a Pubkey by index.
   rpc PubKey(QueryPubKeyRequest) returns (QueryPubKeyResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/pubkeys/{address}";
+        "/jackal/canine-chain/filetree/pubkeys/{address}";
   }
 
   // Queries a list of Pubkey items.
-  rpc PubKeyAll(QueryAllPubKeysRequest) returns (QueryAllPubKeysResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/filetree/pubkeys";
+  rpc AllPubKeys(QueryAllPubKeysRequest) returns (QueryAllPubKeysResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/filetree/pubkeys";
   }
 }
 
@@ -54,7 +54,7 @@ message QueryFileRequest {
   string owner_address = 2;
 }
 
-message QueryFileResponse { Files files = 1 [ (gogoproto.nullable) = false ]; }
+message QueryFileResponse { Files file = 1 [ (gogoproto.nullable) = false ]; }
 
 message QueryAllFilesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;

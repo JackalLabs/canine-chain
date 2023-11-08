@@ -27,7 +27,7 @@ func CmdListStoragePaymentInfo() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.StoragePaymentInfoAll(context.Background(), params)
+			res, err := queryClient.AllStoragePaymentInfo(context.Background(), params)
 			if err != nil {
 				return err
 			}

@@ -29,7 +29,7 @@ func CmdListActiveDeals() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.FilesAll(context.Background(), params)
+			res, err := queryClient.AllFiles(context.Background(), params)
 			if err != nil {
 				return err
 			}

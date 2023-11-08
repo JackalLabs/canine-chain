@@ -68,9 +68,9 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 		Index: TestName,
 	}
 
-	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	res, err := suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Names.Value, address.String())
+	suite.Require().Equal(res.Name.Value, address.String())
 }
 
 func (suite *KeeperTestSuite) TestMsgMakeBid() {
@@ -107,7 +107,7 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	var leftover int64 = 1000
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
 }
 
@@ -145,7 +145,7 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	var leftover int64 = 1000                       // they spent 1000ujkl so they should have 1000ujkl less
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.CancelOneBid(suite.ctx, address.String(), TestName)
@@ -158,6 +158,6 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	leftover = 0                                    // they cancelled the bid and thus should receive their money back
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().Error(err)
 }

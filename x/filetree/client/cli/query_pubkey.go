@@ -27,7 +27,7 @@ func CmdListPubkey() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.PubKeyAll(context.Background(), params)
+			res, err := queryClient.AllPubKeys(context.Background(), params)
 			if err != nil {
 				return err
 			}

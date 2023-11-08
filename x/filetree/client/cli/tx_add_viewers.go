@@ -71,12 +71,12 @@ func CmdAddViewers() *cobra.Command {
 					OwnerAddress: ownerChainAddress,
 				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
+				file, err := fileQueryClient.File(context.Background(), params)
 				if err != nil {
 					return types.ErrFileNotFound
 				}
 
-				viewers := file.Files.ViewingAccess
+				viewers := file.File.ViewingAccess
 				var m map[string]string
 
 				err = json.Unmarshal([]byte(viewers), &m)
@@ -84,7 +84,7 @@ func CmdAddViewers() *cobra.Command {
 					return types.ErrCantUnmarshall
 				}
 
-				ownerViewingAddress := keeper.MakeViewerAddress(file.Files.TrackingNumber, argOwner)
+				ownerViewingAddress := keeper.MakeViewerAddress(file.File.TrackingNumber, argOwner)
 
 				hexMessage, err := hex.DecodeString(m[ownerViewingAddress])
 				if err != nil {
@@ -109,7 +109,7 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v)
+				newViewerID := keeper.MakeViewerAddress(file.File.TrackingNumber, v)
 				viewerIds = append(viewerIds, newViewerID)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 

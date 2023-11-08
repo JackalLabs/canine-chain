@@ -13,15 +13,15 @@ option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/params";
+    option (google.api.http).get = "/jackal/canine-chain/oracle/params";
   }
 
   rpc Feed(QueryFeedRequest) returns (QueryFeedResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds/{name}";
+    option (google.api.http).get = "/jackal/canine-chain/oracle/feeds/{name}";
   }
 
   rpc AllFeeds(QueryAllFeedsRequest) returns (QueryAllFeedsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds";
+    option (google.api.http).get = "/jackal/canine-chain/oracle/feeds";
   }
 }
 

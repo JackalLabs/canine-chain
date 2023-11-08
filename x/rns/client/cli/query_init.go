@@ -27,7 +27,7 @@ func CmdListInit() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.InitAll(context.Background(), params)
+			res, err := queryClient.AllInits(context.Background(), params)
 			if err != nil {
 				return err
 			}

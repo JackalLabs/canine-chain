@@ -30,7 +30,7 @@ func CmdFreespace() *cobra.Command {
 				Address: reqAddress,
 			}
 
-			res, err := queryClient.Freespace(cmd.Context(), params)
+			res, err := queryClient.FreeSpace(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

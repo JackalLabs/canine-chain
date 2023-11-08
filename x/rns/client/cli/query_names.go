@@ -27,7 +27,7 @@ func CmdListNames() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.NamesAll(context.Background(), params)
+			res, err := queryClient.AllNames(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -58,7 +58,7 @@ func CmdShowNames() *cobra.Command {
 				Index: argIndex,
 			}
 
-			res, err := queryClient.Names(context.Background(), params)
+			res, err := queryClient.Name(context.Background(), params)
 			if err != nil {
 				return err
 			}

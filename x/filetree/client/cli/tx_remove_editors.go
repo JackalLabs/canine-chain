@@ -48,12 +48,12 @@ func CmdRemoveEditors() *cobra.Command {
 					OwnerAddress: ownerChainAddress,
 				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
+				file, err := fileQueryClient.File(context.Background(), params)
 				if err != nil {
 					return types.ErrFileNotFound
 				}
 
-				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
+				newEditorID := keeper.MakeEditorAddress(file.File.TrackingNumber, v) // This used to just be argAddress
 				editorIds = append(editorIds, newEditorID)
 
 			}

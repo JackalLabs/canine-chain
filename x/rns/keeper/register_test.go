@@ -49,7 +49,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	leftover := 2 * cost
 	suite.Require().Equal(leftover, newamt.Int64()) // cost them the price of the registration
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), capname, "{}", 2) // adding time to registration
@@ -61,6 +61,6 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	newamt = amt.Sub(newamt)
 	suite.Require().Equal(leftover, newamt.Int64()) // cost them the price of the registration
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 }

@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ProvidersAll(c context.Context, req *types.QueryAllProvidersRequest) (*types.QueryAllProvidersResponse, error) {
+func (k Keeper) AllProviders(c context.Context, req *types.QueryAllProvidersRequest) (*types.QueryAllProvidersResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -38,7 +38,7 @@ func (k Keeper) ProvidersAll(c context.Context, req *types.QueryAllProvidersRequ
 	return &types.QueryAllProvidersResponse{Providers: providerss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Providers(c context.Context, req *types.QueryProviderRequest) (*types.QueryProviderResponse, error) {
+func (k Keeper) Provider(c context.Context, req *types.QueryProviderRequest) (*types.QueryProviderResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,7 +52,7 @@ func (k Keeper) Providers(c context.Context, req *types.QueryProviderRequest) (*
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryProviderResponse{Providers: val}, nil
+	return &types.QueryProviderResponse{Provider: val}, nil
 }
 
 func (k Keeper) ActiveProviders(c context.Context, req *types.QueryActiveProvidersRequest) (*types.QueryActiveProvidersResponse, error) {

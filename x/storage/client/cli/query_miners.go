@@ -27,7 +27,7 @@ func CmdListProviders() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ProvidersAll(context.Background(), params)
+			res, err := queryClient.AllProviders(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -82,7 +82,7 @@ func CmdShowProviders() *cobra.Command {
 				Address: argAddress,
 			}
 
-			res, err := queryClient.Providers(context.Background(), params)
+			res, err := queryClient.Provider(context.Background(), params)
 			if err != nil {
 				return err
 			}

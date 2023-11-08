@@ -30,7 +30,7 @@ func CmdListFiles() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.FilesAll(context.Background(), params)
+			res, err := queryClient.AllFiles(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -64,7 +64,7 @@ func CmdShowFiles() *cobra.Command {
 				OwnerAddress: argOwnerAddress,
 			}
 
-			res, err := queryClient.Files(context.Background(), params)
+			res, err := queryClient.File(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -112,7 +112,7 @@ func CmdShowFileFromPath() *cobra.Command {
 				OwnerAddress: ownerAddress,
 			}
 
-			res, err := queryClient.Files(context.Background(), params)
+			res, err := queryClient.File(context.Background(), params)
 			if err != nil {
 				return err
 			}

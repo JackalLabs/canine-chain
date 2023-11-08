@@ -30,13 +30,13 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 		Address: user,
 	}
 
-	res, err := suite.queryClient.Providers(suite.ctx.Context(), &providerRequest)
+	res, err := suite.queryClient.Provider(suite.ctx.Context(), &providerRequest)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Providers.Address, provider.Address)
-	suite.Require().Equal(res.Providers.Ip, provider.Ip)
-	suite.Require().Equal(res.Providers.Totalspace, provider.Totalspace)
-	suite.Require().Equal(res.Providers.BurnedContracts, provider.BurnedContracts)
-	suite.Require().Equal(res.Providers.Creator, provider.Creator)
+	suite.Require().Equal(res.Provider.Address, provider.Address)
+	suite.Require().Equal(res.Provider.Ip, provider.Ip)
+	suite.Require().Equal(res.Provider.Totalspace, provider.Totalspace)
+	suite.Require().Equal(res.Provider.BurnedContracts, provider.BurnedContracts)
+	suite.Require().Equal(res.Provider.Creator, provider.Creator)
 }
 
 // testing providers.go file
@@ -71,13 +71,13 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 		Address: user,
 	}
 
-	res, err := suite.queryClient.Providers(suite.ctx.Context(), &providerRequest)
+	res, err := suite.queryClient.Provider(suite.ctx.Context(), &providerRequest)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Providers.Address, user)
-	suite.Require().Equal(res.Providers.Ip, initMsg.Ip)
-	suite.Require().Equal(res.Providers.Totalspace, initMsg.TotalSpace)
-	suite.Require().Equal(res.Providers.BurnedContracts, "0")
-	suite.Require().Equal(res.Providers.Creator, initMsg.Creator)
+	suite.Require().Equal(res.Provider.Address, user)
+	suite.Require().Equal(res.Provider.Ip, initMsg.Ip)
+	suite.Require().Equal(res.Provider.Totalspace, initMsg.TotalSpace)
+	suite.Require().Equal(res.Provider.BurnedContracts, "0")
+	suite.Require().Equal(res.Provider.Creator, initMsg.Creator)
 
 	coin := suite.bankKeeper.GetBalance(suite.ctx, userAcc, "ujkl")
 

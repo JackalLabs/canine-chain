@@ -29,7 +29,7 @@ func CmdListAttestForms() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.AttestationsAll(context.Background(), params)
+			res, err := queryClient.AllAttestations(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -103,11 +103,11 @@ func CmdListReportForms() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllReportRequest{
+			params := &types.QueryAllReportsRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ReportsAll(context.Background(), params)
+			res, err := queryClient.AllReports(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -153,7 +153,7 @@ func CmdShowReportForms() *cobra.Command {
 				Start:  start,
 			}
 
-			res, err := queryClient.Reports(context.Background(), params)
+			res, err := queryClient.Report(context.Background(), params)
 			if err != nil {
 				return err
 			}

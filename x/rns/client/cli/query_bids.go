@@ -27,7 +27,7 @@ func CmdListBids() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.BidsAll(context.Background(), params)
+			res, err := queryClient.AllBids(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -58,7 +58,7 @@ func CmdShowBids() *cobra.Command {
 				Index: argIndex,
 			}
 
-			res, err := queryClient.Bids(context.Background(), params)
+			res, err := queryClient.Bid(context.Background(), params)
 			if err != nil {
 				return err
 			}

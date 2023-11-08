@@ -22,7 +22,7 @@ func SimulateMsgCancelBid(
 		// choosing a random account with a bid open
 		nreq := &types.QueryAllBidsRequest{}
 		wctx := sdk.WrapSDKContext(ctx)
-		allBidsResp, err := k.BidsAll(wctx, nreq)
+		allBidsResp, err := k.AllBids(wctx, nreq)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "Unable to collect bids"), nil, err
 		}

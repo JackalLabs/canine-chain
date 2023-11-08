@@ -48,12 +48,12 @@ func CmdRemoveViewers() *cobra.Command {
 					OwnerAddress: ownerChainAddress,
 				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
+				file, err := fileQueryClient.File(context.Background(), params)
 				if err != nil {
 					return types.ErrFileNotFound
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
+				newViewerID := keeper.MakeViewerAddress(file.File.TrackingNumber, v) // This used to just be argAddress
 				viewerIds = append(viewerIds, newViewerID)
 
 			}

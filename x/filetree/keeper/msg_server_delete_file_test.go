@@ -54,11 +54,11 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 		OwnerAddress: types.MakeOwnerAddress(types.MerklePath("s/home/"), aliceAccountHash),
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Files, *aliceHomeFolder)
+	suite.Require().Equal(res.File, *aliceHomeFolder)
 
-	validEditor, err := keeper.HasEditAccess(res.Files, bob)
+	validEditor, err := keeper.HasEditAccess(res.File, bob)
 	suite.Require().NoError(err)
 	suite.Require().Equal(validEditor, true)
 

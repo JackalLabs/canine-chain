@@ -45,10 +45,10 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 		OwnerAddress: aliceOwnerAddress,
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	aliceIsOwner := keeper.IsOwner(res.Files, alice)
+	aliceIsOwner := keeper.IsOwner(res.File, alice)
 	suite.Require().Equal(aliceIsOwner, true)
 
 	// we make a pepe.jpg for charlie as well to show that alice cannot give charlie her 'pepe.jpg' if he already has one--i.e., duplicates are not permitted
@@ -146,7 +146,7 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}
-				_, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq1)
+				_, err := suite.queryClient.File(suite.ctx.Context(), &fileReq1)
 				suite.Require().Error(err)
 
 				// we will find a pepe.jpg that belongs to bob
@@ -158,13 +158,13 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 					Address:      pepeMerklePath,
 					OwnerAddress: bobOwnerAddress,
 				}
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq2)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq2)
 				suite.Require().NoError(err)
 
-				bobIsOwner := keeper.IsOwner(res.Files, bob)
+				bobIsOwner := keeper.IsOwner(res.File, bob)
 				suite.Require().Equal(bobIsOwner, true)
 
-				aliceIsOwner := keeper.IsOwner(res.Files, alice)
+				aliceIsOwner := keeper.IsOwner(res.File, alice)
 				suite.Require().Equal(aliceIsOwner, false)
 
 			}

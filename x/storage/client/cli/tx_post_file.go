@@ -284,7 +284,7 @@ func CmdPostFile() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			provRes, err := cl.ProvidersAll(context.Background(), &provReq)
+			provRes, err := cl.AllProviders(context.Background(), &provReq)
 			if err != nil {
 				panic(err)
 			}

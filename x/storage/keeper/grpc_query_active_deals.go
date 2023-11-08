@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFilesRequest) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -116,7 +116,7 @@ func (k Keeper) Proof(c context.Context, req *types.QueryProofRequest) (*types.Q
 	return &types.QueryProofResponse{Proof: val}, nil
 }
 
-func (k Keeper) ProofsAll(c context.Context, req *types.QueryProofsByAddressRequest) (*types.QueryProofsByAddressResponse, error) {
+func (k Keeper) AllProofs(c context.Context, req *types.QueryProofsByAddressRequest) (*types.QueryProofsByAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
