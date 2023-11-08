@@ -15,7 +15,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCancelBid{}, "rns/CancelBid", nil)
 	cdc.RegisterConcrete(&MsgList{}, "rns/List", nil)
 	cdc.RegisterConcrete(&MsgBuy{}, "rns/Buy", nil)
-	cdc.RegisterConcrete(&MsgDelist{}, "rns/Delist", nil)
+	cdc.RegisterConcrete(&MsgDeList{}, "rns/DeList", nil)
 	cdc.RegisterConcrete(&MsgTransfer{}, "rns/Transfer", nil)
 	cdc.RegisterConcrete(&MsgAddRecord{}, "rns/AddRecord", nil)
 	cdc.RegisterConcrete(&MsgDelRecord{}, "rns/DelRecord", nil)
@@ -43,7 +43,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgBuy{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgDelist{},
+		&MsgDeList{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgTransfer{},

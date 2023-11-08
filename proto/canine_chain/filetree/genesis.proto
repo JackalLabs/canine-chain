@@ -11,6 +11,6 @@ option go_package = "github.com/jackalLabs/canine-chain/x/filetree/types";
 // GenesisState defines the filetree module's genesis state.
 message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
-  repeated Files filesList = 2 [ (gogoproto.nullable) = false ];
-  repeated Pubkey pubkeyList = 3 [ (gogoproto.nullable) = false ];
+  repeated Files files_list = 2 [ (gogoproto.nullable) = false ];
+  repeated Pubkey pub_key_list = 3 [ (gogoproto.nullable) = false ];
 }

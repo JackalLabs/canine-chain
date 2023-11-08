@@ -59,7 +59,7 @@ func SimulateMsgAddEditors(
 			EditorIds:  editIds,
 			EditorKeys: editKeys,
 			Address:    merklePath,
-			Fileowner:  ownerAddress,
+			FileOwner:  ownerAddress,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

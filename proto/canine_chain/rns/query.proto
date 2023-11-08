@@ -41,14 +41,14 @@ service Query {
   }
 
   // Queries a Listing by index.
-  rpc Forsale(QueryForsaleRequest) returns (QueryForsaleResponse) {
+  rpc ForSale(QueryForSaleRequest) returns (QueryForSaleResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/rns/forsale/{name}";
+        "/jackal-dao/canine-chain/rns/for_sale/{name}";
   }
 
   // Queries all Listings.
-  rpc ForsaleAll(QueryAllForsalesRequest) returns (QueryAllForsalesResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/rns/forsale";
+  rpc ForSaleAll(QueryAllForSalesRequest) returns (QueryAllForSalesResponse) {
+    option (google.api.http).get = "/jackal-dao/canine-chain/rns/for_sale";
   }
 
   // Queries a Init by index.
@@ -118,18 +118,18 @@ message QueryAllBidsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryForsaleRequest { string name = 1; }
+message QueryForSaleRequest { string name = 1; }
 
-message QueryForsaleResponse {
-  Forsale forsale = 1 [ (gogoproto.nullable) = false ];
+message QueryForSaleResponse {
+  Forsale for_sale = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllForsalesRequest {
+message QueryAllForSalesRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllForsalesResponse {
-  repeated Forsale forsale = 1 [ (gogoproto.nullable) = false ];
+message QueryAllForSalesResponse {
+  repeated Forsale for_sale = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

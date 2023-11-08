@@ -7,24 +7,24 @@ import (
 
 const TypeMsgDelist = "delist"
 
-var _ sdk.Msg = &MsgDelist{}
+var _ sdk.Msg = &MsgDeList{}
 
-func NewMsgDelist(creator string, name string) *MsgDelist {
-	return &MsgDelist{
+func NewMsgDeList(creator string, name string) *MsgDeList {
+	return &MsgDeList{
 		Creator: creator,
 		Name:    name,
 	}
 }
 
-func (msg *MsgDelist) Route() string {
+func (msg *MsgDeList) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgDelist) Type() string {
+func (msg *MsgDeList) Type() string {
 	return TypeMsgDelist
 }
 
-func (msg *MsgDelist) GetSigners() []sdk.AccAddress {
+func (msg *MsgDeList) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -32,12 +32,12 @@ func (msg *MsgDelist) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgDelist) GetSignBytes() []byte {
+func (msg *MsgDeList) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgDelist) ValidateBasic() error {
+func (msg *MsgDeList) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

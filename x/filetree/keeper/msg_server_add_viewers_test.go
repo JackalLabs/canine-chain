@@ -85,14 +85,14 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 
 	// If alice wants to share pepe with bob, she will take bob's public key from chain and use ECIES to encrypt pepeAESKeyAndIV
 
-	pubKeyReq := types.QueryPubkeyRequest{
+	pubKeyReq := types.QueryPubKeyRequest{
 		Address: bob,
 	}
 
-	res, err := suite.queryClient.Pubkey(suite.ctx.Context(), &pubKeyReq)
+	res, err := suite.queryClient.PubKey(suite.ctx.Context(), &pubKeyReq)
 	suite.Require().NoError(err)
 	// bob uploaded his public key in hex format so we decode it from hex format
-	pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+	pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 	suite.Require().NoError(err)
 
 	encryptedPepeAESKeyAndIV, err := eciesgo.Encrypt(pkey, []byte(pepeAESKeyAndIV)) // convert to hex

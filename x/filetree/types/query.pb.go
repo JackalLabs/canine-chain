@@ -115,7 +115,7 @@ func (m *QueryParamsResponse) GetParams() Params {
 
 type QueryFileRequest struct {
 	Address      string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	OwnerAddress string `protobuf:"bytes,2,opt,name=ownerAddress,proto3" json:"ownerAddress,omitempty"`
+	OwnerAddress string `protobuf:"bytes,2,opt,name=owner_address,json=ownerAddress,proto3" json:"owner_address,omitempty"`
 }
 
 func (m *QueryFileRequest) Reset()         { *m = QueryFileRequest{} }
@@ -305,22 +305,22 @@ func (m *QueryAllFilesResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-type QueryPubkeyRequest struct {
+type QueryPubKeyRequest struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *QueryPubkeyRequest) Reset()         { *m = QueryPubkeyRequest{} }
-func (m *QueryPubkeyRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryPubkeyRequest) ProtoMessage()    {}
-func (*QueryPubkeyRequest) Descriptor() ([]byte, []int) {
+func (m *QueryPubKeyRequest) Reset()         { *m = QueryPubKeyRequest{} }
+func (m *QueryPubKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryPubKeyRequest) ProtoMessage()    {}
+func (*QueryPubKeyRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f2d116acb9d238bd, []int{6}
 }
-func (m *QueryPubkeyRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryPubKeyRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryPubkeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPubKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryPubkeyRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPubKeyRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -330,41 +330,41 @@ func (m *QueryPubkeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-func (m *QueryPubkeyRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryPubkeyRequest.Merge(m, src)
+func (m *QueryPubKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPubKeyRequest.Merge(m, src)
 }
-func (m *QueryPubkeyRequest) XXX_Size() int {
+func (m *QueryPubKeyRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryPubkeyRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryPubkeyRequest.DiscardUnknown(m)
+func (m *QueryPubKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPubKeyRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryPubkeyRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryPubKeyRequest proto.InternalMessageInfo
 
-func (m *QueryPubkeyRequest) GetAddress() string {
+func (m *QueryPubKeyRequest) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-type QueryPubkeyResponse struct {
-	Pubkey Pubkey `protobuf:"bytes,1,opt,name=pubkey,proto3" json:"pubkey"`
+type QueryPubKeyResponse struct {
+	PubKey Pubkey `protobuf:"bytes,1,opt,name=pub_key,json=pubKey,proto3" json:"pub_key"`
 }
 
-func (m *QueryPubkeyResponse) Reset()         { *m = QueryPubkeyResponse{} }
-func (m *QueryPubkeyResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryPubkeyResponse) ProtoMessage()    {}
-func (*QueryPubkeyResponse) Descriptor() ([]byte, []int) {
+func (m *QueryPubKeyResponse) Reset()         { *m = QueryPubKeyResponse{} }
+func (m *QueryPubKeyResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryPubKeyResponse) ProtoMessage()    {}
+func (*QueryPubKeyResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f2d116acb9d238bd, []int{7}
 }
-func (m *QueryPubkeyResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryPubKeyResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryPubkeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPubKeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryPubkeyResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPubKeyResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -374,41 +374,41 @@ func (m *QueryPubkeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *QueryPubkeyResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryPubkeyResponse.Merge(m, src)
+func (m *QueryPubKeyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPubKeyResponse.Merge(m, src)
 }
-func (m *QueryPubkeyResponse) XXX_Size() int {
+func (m *QueryPubKeyResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryPubkeyResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryPubkeyResponse.DiscardUnknown(m)
+func (m *QueryPubKeyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPubKeyResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryPubkeyResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryPubKeyResponse proto.InternalMessageInfo
 
-func (m *QueryPubkeyResponse) GetPubkey() Pubkey {
+func (m *QueryPubKeyResponse) GetPubKey() Pubkey {
 	if m != nil {
-		return m.Pubkey
+		return m.PubKey
 	}
 	return Pubkey{}
 }
 
-type QueryAllPubkeysRequest struct {
+type QueryAllPubKeysRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAllPubkeysRequest) Reset()         { *m = QueryAllPubkeysRequest{} }
-func (m *QueryAllPubkeysRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAllPubkeysRequest) ProtoMessage()    {}
-func (*QueryAllPubkeysRequest) Descriptor() ([]byte, []int) {
+func (m *QueryAllPubKeysRequest) Reset()         { *m = QueryAllPubKeysRequest{} }
+func (m *QueryAllPubKeysRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllPubKeysRequest) ProtoMessage()    {}
+func (*QueryAllPubKeysRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f2d116acb9d238bd, []int{8}
 }
-func (m *QueryAllPubkeysRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryAllPubKeysRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllPubkeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAllPubKeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllPubkeysRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAllPubKeysRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -418,42 +418,42 @@ func (m *QueryAllPubkeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *QueryAllPubkeysRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllPubkeysRequest.Merge(m, src)
+func (m *QueryAllPubKeysRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllPubKeysRequest.Merge(m, src)
 }
-func (m *QueryAllPubkeysRequest) XXX_Size() int {
+func (m *QueryAllPubKeysRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllPubkeysRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllPubkeysRequest.DiscardUnknown(m)
+func (m *QueryAllPubKeysRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllPubKeysRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllPubkeysRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryAllPubKeysRequest proto.InternalMessageInfo
 
-func (m *QueryAllPubkeysRequest) GetPagination() *query.PageRequest {
+func (m *QueryAllPubKeysRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QueryAllPubkeysResponse struct {
-	Pubkey     []Pubkey            `protobuf:"bytes,1,rep,name=pubkey,proto3" json:"pubkey"`
+type QueryAllPubKeysResponse struct {
+	PubKey     []Pubkey            `protobuf:"bytes,1,rep,name=pub_key,json=pubKey,proto3" json:"pub_key"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAllPubkeysResponse) Reset()         { *m = QueryAllPubkeysResponse{} }
-func (m *QueryAllPubkeysResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllPubkeysResponse) ProtoMessage()    {}
-func (*QueryAllPubkeysResponse) Descriptor() ([]byte, []int) {
+func (m *QueryAllPubKeysResponse) Reset()         { *m = QueryAllPubKeysResponse{} }
+func (m *QueryAllPubKeysResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllPubKeysResponse) ProtoMessage()    {}
+func (*QueryAllPubKeysResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f2d116acb9d238bd, []int{9}
 }
-func (m *QueryAllPubkeysResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryAllPubKeysResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllPubkeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAllPubKeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllPubkeysResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAllPubKeysResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -463,26 +463,26 @@ func (m *QueryAllPubkeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryAllPubkeysResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllPubkeysResponse.Merge(m, src)
+func (m *QueryAllPubKeysResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllPubKeysResponse.Merge(m, src)
 }
-func (m *QueryAllPubkeysResponse) XXX_Size() int {
+func (m *QueryAllPubKeysResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllPubkeysResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllPubkeysResponse.DiscardUnknown(m)
+func (m *QueryAllPubKeysResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllPubKeysResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllPubkeysResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryAllPubKeysResponse proto.InternalMessageInfo
 
-func (m *QueryAllPubkeysResponse) GetPubkey() []Pubkey {
+func (m *QueryAllPubKeysResponse) GetPubKey() []Pubkey {
 	if m != nil {
-		return m.Pubkey
+		return m.PubKey
 	}
 	return nil
 }
 
-func (m *QueryAllPubkeysResponse) GetPagination() *query.PageResponse {
+func (m *QueryAllPubKeysResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
@@ -496,57 +496,58 @@ func init() {
 	proto.RegisterType((*QueryFileResponse)(nil), "canine_chain.filetree.QueryFileResponse")
 	proto.RegisterType((*QueryAllFilesRequest)(nil), "canine_chain.filetree.QueryAllFilesRequest")
 	proto.RegisterType((*QueryAllFilesResponse)(nil), "canine_chain.filetree.QueryAllFilesResponse")
-	proto.RegisterType((*QueryPubkeyRequest)(nil), "canine_chain.filetree.QueryPubkeyRequest")
-	proto.RegisterType((*QueryPubkeyResponse)(nil), "canine_chain.filetree.QueryPubkeyResponse")
-	proto.RegisterType((*QueryAllPubkeysRequest)(nil), "canine_chain.filetree.QueryAllPubkeysRequest")
-	proto.RegisterType((*QueryAllPubkeysResponse)(nil), "canine_chain.filetree.QueryAllPubkeysResponse")
+	proto.RegisterType((*QueryPubKeyRequest)(nil), "canine_chain.filetree.QueryPubKeyRequest")
+	proto.RegisterType((*QueryPubKeyResponse)(nil), "canine_chain.filetree.QueryPubKeyResponse")
+	proto.RegisterType((*QueryAllPubKeysRequest)(nil), "canine_chain.filetree.QueryAllPubKeysRequest")
+	proto.RegisterType((*QueryAllPubKeysResponse)(nil), "canine_chain.filetree.QueryAllPubKeysResponse")
 }
 
 func init() { proto.RegisterFile("canine_chain/filetree/query.proto", fileDescriptor_f2d116acb9d238bd) }
 
 var fileDescriptor_f2d116acb9d238bd = []byte{
-	// 649 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0x3d, 0x6f, 0xd3, 0x40,
-	0x18, 0xc7, 0xe3, 0x96, 0x06, 0x7a, 0x30, 0xc0, 0x91, 0x42, 0x65, 0x15, 0x43, 0x8d, 0x44, 0x9a,
-	0x96, 0xdc, 0x29, 0x8d, 0x90, 0x90, 0xba, 0x90, 0x0c, 0x85, 0x81, 0x4a, 0x21, 0x23, 0x03, 0x70,
-	0x4e, 0x0e, 0xd7, 0xd4, 0xf1, 0xb9, 0x3e, 0x07, 0xa8, 0xaa, 0x2e, 0x8c, 0x4c, 0x48, 0x95, 0x18,
-	0x10, 0x88, 0x85, 0x0f, 0xd3, 0xb1, 0x12, 0x0b, 0x13, 0x42, 0x09, 0x1f, 0x04, 0xf9, 0xee, 0x4c,
-	0xec, 0xbc, 0x39, 0x95, 0xba, 0xc5, 0xbe, 0xff, 0xf3, 0x7f, 0x7e, 0x7e, 0x5e, 0x2e, 0x60, 0xb5,
-	0x45, 0x3c, 0xc7, 0xa3, 0x2f, 0x5b, 0xbb, 0xc4, 0xf1, 0xf0, 0x6b, 0xc7, 0xa5, 0x61, 0x40, 0x29,
-	0xde, 0xef, 0xd2, 0xe0, 0x00, 0xf9, 0x01, 0x0b, 0x19, 0x5c, 0x4a, 0x4a, 0x50, 0x2c, 0xd1, 0x0b,
-	0x36, 0xb3, 0x99, 0x50, 0xe0, 0xe8, 0x97, 0x14, 0xeb, 0x2b, 0x36, 0x63, 0xb6, 0x4b, 0x31, 0xf1,
-	0x1d, 0x4c, 0x3c, 0x8f, 0x85, 0x24, 0x74, 0x98, 0xc7, 0xd5, 0xe9, 0x7a, 0x8b, 0xf1, 0x0e, 0xe3,
-	0xd8, 0x22, 0x5c, 0xe5, 0xc0, 0x6f, 0x2b, 0x16, 0x0d, 0x49, 0x05, 0xfb, 0xc4, 0x76, 0x3c, 0x21,
-	0x56, 0x5a, 0x73, 0x3c, 0x99, 0x4f, 0x02, 0xd2, 0x89, 0xfd, 0x26, 0xd0, 0x47, 0x3f, 0x78, 0x86,
-	0x4d, 0xd7, 0xda, 0xa3, 0xea, 0x0b, 0xcd, 0x02, 0x80, 0xcf, 0x22, 0x98, 0x86, 0xf0, 0x6e, 0xd2,
-	0xfd, 0x2e, 0xe5, 0xa1, 0xd9, 0x04, 0xd7, 0x53, 0x6f, 0xb9, 0xcf, 0x3c, 0x4e, 0xe1, 0x16, 0xc8,
-	0x4b, 0x86, 0x65, 0xed, 0x8e, 0xb6, 0x76, 0x79, 0xf3, 0x16, 0x1a, 0x5b, 0x1f, 0x24, 0xc3, 0xea,
-	0x17, 0x4e, 0x7e, 0xdf, 0xce, 0x35, 0x55, 0x88, 0xd9, 0x00, 0x57, 0x85, 0xe7, 0xb6, 0xe3, 0x52,
-	0x95, 0x07, 0x2e, 0x83, 0x8b, 0xa4, 0xdd, 0x0e, 0x28, 0x97, 0x8e, 0x8b, 0xcd, 0xf8, 0x11, 0x9a,
-	0xe0, 0x0a, 0x7b, 0xe7, 0xd1, 0xa0, 0xa6, 0x8e, 0xe7, 0xc4, 0x71, 0xea, 0x9d, 0xb9, 0x03, 0xae,
-	0x25, 0x1c, 0x15, 0xe3, 0x43, 0xb0, 0x20, 0x6a, 0xa0, 0x10, 0x57, 0x26, 0x20, 0x46, 0x31, 0x31,
-	0xa1, 0x0c, 0x30, 0x5f, 0x80, 0x82, 0xb0, 0xab, 0xb9, 0xae, 0x38, 0x8d, 0x21, 0xb7, 0x01, 0x18,
-	0x74, 0x48, 0xd9, 0xde, 0x43, 0xb2, 0x9d, 0x28, 0x6a, 0x27, 0x92, 0x23, 0xa3, 0xda, 0x89, 0x1a,
-	0xc4, 0x8e, 0x3f, 0xb0, 0x99, 0x88, 0x34, 0xbf, 0x68, 0x60, 0x69, 0x28, 0xc1, 0x28, 0xf3, 0xfc,
-	0x99, 0x98, 0xe1, 0xe3, 0x14, 0xdb, 0x9c, 0x60, 0x2b, 0x66, 0xb2, 0xc9, 0xb4, 0x29, 0x38, 0x14,
-	0xcf, 0x81, 0x18, 0x8e, 0xcc, 0xfe, 0x0c, 0x26, 0x44, 0xe9, 0x13, 0x13, 0x22, 0xde, 0x64, 0x4d,
-	0x88, 0x10, 0xfd, 0x9f, 0x10, 0xf1, 0x64, 0xbe, 0x02, 0x37, 0xe2, 0xfa, 0xc8, 0xf3, 0x73, 0x6f,
-	0xc1, 0x77, 0x0d, 0xdc, 0x1c, 0x49, 0x31, 0x06, 0x7d, 0xfe, 0x8c, 0xe8, 0xe7, 0xd6, 0x87, 0xcd,
-	0xe3, 0x3c, 0x58, 0x10, 0x84, 0xf0, 0xa3, 0x06, 0xf2, 0x72, 0x91, 0x60, 0x69, 0x02, 0xca, 0xe8,
-	0xe6, 0xea, 0xeb, 0xb3, 0x48, 0x65, 0x5e, 0xb3, 0xf4, 0xe1, 0xe7, 0xdf, 0xe3, 0xb9, 0xbb, 0x70,
-	0x15, 0xbf, 0x21, 0xad, 0x3d, 0xe2, 0xb6, 0x09, 0xc3, 0x32, 0x7a, 0xf8, 0xce, 0x81, 0x3f, 0x34,
-	0xb0, 0x20, 0xc6, 0x0f, 0x16, 0xa7, 0x25, 0x48, 0xec, 0xb6, 0xbe, 0x96, 0x2d, 0x54, 0x1c, 0x4f,
-	0x04, 0x47, 0x1d, 0x3e, 0x52, 0x1c, 0xe5, 0x01, 0x48, 0x79, 0xdc, 0xf5, 0x86, 0x0f, 0xd5, 0x14,
-	0x1e, 0xe1, 0xc3, 0xe4, 0x85, 0x70, 0x04, 0x3f, 0x6b, 0xe0, 0x92, 0xc0, 0xac, 0xb9, 0x2e, 0xdc,
-	0x98, 0x06, 0x30, 0xb4, 0xe4, 0xfa, 0xfd, 0xd9, 0xc4, 0x8a, 0x18, 0x0b, 0xe2, 0x12, 0x2c, 0xce,
-	0x48, 0x0c, 0xbf, 0x46, 0xcd, 0x94, 0xa3, 0x32, 0xbd, 0x99, 0xc9, 0xf5, 0xcb, 0x68, 0x66, 0x6a,
-	0xf3, 0xcc, 0x2d, 0x81, 0xf4, 0x00, 0x56, 0xb3, 0x91, 0xe4, 0xcc, 0x26, 0xca, 0x08, 0xbf, 0x69,
-	0x60, 0x51, 0xfa, 0x45, 0x85, 0x2b, 0x67, 0xd4, 0x22, 0xbd, 0x9c, 0x3a, 0x9a, 0x55, 0xae, 0x48,
-	0x2b, 0x82, 0x74, 0x03, 0x96, 0x66, 0x26, 0xad, 0xef, 0x9c, 0xf4, 0x0c, 0xed, 0xb4, 0x67, 0x68,
-	0x7f, 0x7a, 0x86, 0xf6, 0xa9, 0x6f, 0xe4, 0x4e, 0xfb, 0x46, 0xee, 0x57, 0xdf, 0xc8, 0x3d, 0xaf,
-	0xda, 0x4e, 0xb8, 0xdb, 0xb5, 0x50, 0x8b, 0x75, 0x94, 0xdd, 0x53, 0x62, 0xf1, 0xb4, 0xdd, 0xfb,
-	0x81, 0x61, 0x78, 0xe0, 0x53, 0x6e, 0xe5, 0xc5, 0x7f, 0x5f, 0xf5, 0x5f, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0xb5, 0xb4, 0xdc, 0x21, 0x02, 0x08, 0x00, 0x00,
+	// 666 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0x4d, 0x6b, 0x13, 0x41,
+	0x18, 0xc7, 0xb3, 0xad, 0x49, 0xed, 0xa8, 0xa0, 0x63, 0xaa, 0x65, 0xa9, 0xab, 0xdd, 0x82, 0x69,
+	0x5a, 0xb3, 0x43, 0x1a, 0x04, 0xa1, 0x5e, 0x52, 0xa1, 0x22, 0x5a, 0x68, 0xe3, 0xcd, 0x83, 0x71,
+	0x36, 0x19, 0xb7, 0x6b, 0x36, 0x3b, 0xdb, 0x7d, 0x51, 0x43, 0xe9, 0xc5, 0xa3, 0x27, 0x41, 0xf1,
+	0x20, 0x0a, 0x5e, 0xfc, 0x2e, 0x3d, 0x16, 0xbc, 0x78, 0x12, 0x49, 0xfc, 0x20, 0xb2, 0x33, 0xb3,
+	0x66, 0x37, 0x6f, 0x9b, 0x42, 0x6f, 0xc9, 0xce, 0xff, 0xf9, 0x3f, 0xbf, 0x7d, 0x5e, 0x66, 0xc1,
+	0x72, 0x03, 0xdb, 0xa6, 0x4d, 0xea, 0x8d, 0x7d, 0x6c, 0xda, 0xe8, 0xa5, 0x69, 0x11, 0xdf, 0x25,
+	0x04, 0x1d, 0x04, 0xc4, 0xed, 0x68, 0x8e, 0x4b, 0x7d, 0x0a, 0x17, 0xe2, 0x12, 0x2d, 0x92, 0xc8,
+	0x79, 0x83, 0x1a, 0x94, 0x29, 0x50, 0xf8, 0x8b, 0x8b, 0xe5, 0x25, 0x83, 0x52, 0xc3, 0x22, 0x08,
+	0x3b, 0x26, 0xc2, 0xb6, 0x4d, 0x7d, 0xec, 0x9b, 0xd4, 0xf6, 0xc4, 0xe9, 0x5a, 0x83, 0x7a, 0x6d,
+	0xea, 0x21, 0x1d, 0x7b, 0x22, 0x07, 0x7a, 0x5d, 0xd6, 0x89, 0x8f, 0xcb, 0xc8, 0xc1, 0x86, 0x69,
+	0x33, 0xb1, 0xd0, 0xaa, 0xa3, 0xc9, 0x1c, 0xec, 0xe2, 0x76, 0xe4, 0x37, 0x86, 0x3e, 0xfc, 0xe1,
+	0xa5, 0xd8, 0x04, 0x7a, 0x8b, 0x88, 0x37, 0x54, 0xf3, 0x00, 0xee, 0x85, 0x30, 0xbb, 0xcc, 0xbb,
+	0x46, 0x0e, 0x02, 0xe2, 0xf9, 0x6a, 0x0d, 0x5c, 0x4d, 0x3c, 0xf5, 0x1c, 0x6a, 0x7b, 0x04, 0x6e,
+	0x82, 0x1c, 0x67, 0x58, 0x94, 0x6e, 0x49, 0xab, 0x17, 0x36, 0x6e, 0x68, 0x23, 0xeb, 0xa3, 0xf1,
+	0xb0, 0xad, 0x73, 0xc7, 0xbf, 0x6f, 0x66, 0x6a, 0x22, 0x44, 0xdd, 0x03, 0x97, 0x99, 0xe7, 0xb6,
+	0x69, 0x11, 0x91, 0x07, 0x2e, 0x82, 0x39, 0xdc, 0x6c, 0xba, 0xc4, 0xe3, 0x8e, 0xf3, 0xb5, 0xe8,
+	0x2f, 0x5c, 0x01, 0x97, 0xe8, 0x1b, 0x9b, 0xb8, 0xf5, 0xe8, 0x7c, 0x86, 0x9d, 0x5f, 0x64, 0x0f,
+	0xab, 0xfc, 0x99, 0xba, 0x03, 0xae, 0xc4, 0x2c, 0x05, 0xe4, 0x3d, 0x90, 0x65, 0x45, 0x10, 0x8c,
+	0x4b, 0x63, 0x18, 0xc3, 0x98, 0x08, 0x91, 0x07, 0xa8, 0xcf, 0x41, 0x9e, 0xd9, 0x55, 0x2d, 0x8b,
+	0x9d, 0x46, 0x94, 0xdb, 0x00, 0xf4, 0x5b, 0x24, 0x6c, 0x6f, 0x6b, 0xbc, 0x9f, 0x5a, 0xd8, 0x4f,
+	0x8d, 0xcf, 0x8c, 0xe8, 0xa7, 0xb6, 0x8b, 0x8d, 0xe8, 0x0d, 0x6b, 0xb1, 0x48, 0xf5, 0x8b, 0x04,
+	0x16, 0x06, 0x12, 0x0c, 0x33, 0xcf, 0x9e, 0x8a, 0x19, 0x3e, 0x4c, 0xb0, 0xcd, 0x30, 0xb6, 0x42,
+	0x2a, 0x1b, 0x4f, 0x9b, 0x80, 0xd3, 0xa2, 0x41, 0x08, 0xf4, 0xc7, 0xa4, 0x93, 0xda, 0x20, 0xf5,
+	0x69, 0x34, 0x22, 0x42, 0x2f, 0xde, 0xe4, 0x3e, 0x98, 0x73, 0x02, 0xbd, 0xde, 0x22, 0x9d, 0xb4,
+	0x19, 0x61, 0x53, 0xf8, 0x7f, 0x46, 0x98, 0x8b, 0xfa, 0x02, 0x5c, 0x8b, 0x0a, 0xc4, 0x7d, 0xcf,
+	0xbc, 0x07, 0xdf, 0x25, 0x70, 0x7d, 0x28, 0xc5, 0x28, 0xf6, 0xd9, 0x53, 0xb2, 0x9f, 0x59, 0x27,
+	0x36, 0x3e, 0xe5, 0x40, 0x96, 0x21, 0xc2, 0xf7, 0x12, 0xc8, 0xf1, 0x5d, 0x82, 0xc5, 0x31, 0x28,
+	0xc3, 0xcb, 0x2b, 0xaf, 0x4d, 0x23, 0xe5, 0x79, 0xd5, 0xe2, 0xbb, 0x9f, 0x7f, 0x3f, 0xce, 0xac,
+	0xc0, 0x65, 0xf4, 0x0a, 0x37, 0x5a, 0xd8, 0x6a, 0x62, 0x8a, 0x78, 0xf4, 0xe0, 0xb5, 0x03, 0x7f,
+	0x48, 0x20, 0xcb, 0x06, 0x10, 0x16, 0x26, 0x25, 0x88, 0xad, 0xb7, 0xbc, 0x9a, 0x2e, 0x14, 0x1c,
+	0x8f, 0x18, 0xc7, 0x03, 0x58, 0x15, 0x1c, 0xa5, 0x3e, 0x48, 0x69, 0xd4, 0x0d, 0x87, 0x0e, 0xc5,
+	0x1c, 0x1e, 0xa1, 0xc3, 0xc4, 0x3d, 0x71, 0x04, 0x3f, 0x4b, 0xe0, 0x3c, 0xe3, 0xac, 0x5a, 0x16,
+	0x5c, 0x9f, 0x44, 0x30, 0xb0, 0xe7, 0xf2, 0x9d, 0xe9, 0xc4, 0x02, 0x19, 0x31, 0xe4, 0x22, 0x2c,
+	0x4c, 0x89, 0x0c, 0xbf, 0x86, 0xdd, 0xe4, 0xb3, 0x32, 0xb9, 0x9b, 0xf1, 0x0d, 0x4c, 0xe9, 0x66,
+	0x62, 0xf9, 0xd4, 0x4d, 0x86, 0x74, 0x17, 0x56, 0xd2, 0x91, 0xf8, 0x47, 0x20, 0x56, 0x47, 0xf8,
+	0x4d, 0x02, 0xf3, 0xdc, 0x2f, 0x2c, 0x5c, 0x29, 0xa5, 0x16, 0xc9, 0xf5, 0x94, 0xb5, 0x69, 0xe5,
+	0x82, 0xb4, 0xcc, 0x48, 0xd7, 0x61, 0x71, 0x6a, 0xd2, 0xad, 0x9d, 0xe3, 0xae, 0x22, 0x9d, 0x74,
+	0x15, 0xe9, 0x4f, 0x57, 0x91, 0x3e, 0xf4, 0x94, 0xcc, 0x49, 0x4f, 0xc9, 0xfc, 0xea, 0x29, 0x99,
+	0x67, 0x15, 0xc3, 0xf4, 0xf7, 0x03, 0x5d, 0x6b, 0xd0, 0xb6, 0xb0, 0x7b, 0x82, 0x75, 0x2f, 0x69,
+	0xf7, 0xb6, 0x6f, 0xe8, 0x77, 0x1c, 0xe2, 0xe9, 0x39, 0xf6, 0xfd, 0xab, 0xfc, 0x0b, 0x00, 0x00,
+	0xff, 0xff, 0xbd, 0x1a, 0x63, 0x65, 0x06, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -568,9 +569,9 @@ type QueryClient interface {
 	// Queries a list of Files items.
 	FilesAll(ctx context.Context, in *QueryAllFilesRequest, opts ...grpc.CallOption) (*QueryAllFilesResponse, error)
 	// Queries a Pubkey by index.
-	Pubkey(ctx context.Context, in *QueryPubkeyRequest, opts ...grpc.CallOption) (*QueryPubkeyResponse, error)
+	PubKey(ctx context.Context, in *QueryPubKeyRequest, opts ...grpc.CallOption) (*QueryPubKeyResponse, error)
 	// Queries a list of Pubkey items.
-	PubkeyAll(ctx context.Context, in *QueryAllPubkeysRequest, opts ...grpc.CallOption) (*QueryAllPubkeysResponse, error)
+	PubKeyAll(ctx context.Context, in *QueryAllPubKeysRequest, opts ...grpc.CallOption) (*QueryAllPubKeysResponse, error)
 }
 
 type queryClient struct {
@@ -608,18 +609,18 @@ func (c *queryClient) FilesAll(ctx context.Context, in *QueryAllFilesRequest, op
 	return out, nil
 }
 
-func (c *queryClient) Pubkey(ctx context.Context, in *QueryPubkeyRequest, opts ...grpc.CallOption) (*QueryPubkeyResponse, error) {
-	out := new(QueryPubkeyResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Query/Pubkey", in, out, opts...)
+func (c *queryClient) PubKey(ctx context.Context, in *QueryPubKeyRequest, opts ...grpc.CallOption) (*QueryPubKeyResponse, error) {
+	out := new(QueryPubKeyResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Query/PubKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) PubkeyAll(ctx context.Context, in *QueryAllPubkeysRequest, opts ...grpc.CallOption) (*QueryAllPubkeysResponse, error) {
-	out := new(QueryAllPubkeysResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Query/PubkeyAll", in, out, opts...)
+func (c *queryClient) PubKeyAll(ctx context.Context, in *QueryAllPubKeysRequest, opts ...grpc.CallOption) (*QueryAllPubKeysResponse, error) {
+	out := new(QueryAllPubKeysResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Query/PubKeyAll", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -635,9 +636,9 @@ type QueryServer interface {
 	// Queries a list of Files items.
 	FilesAll(context.Context, *QueryAllFilesRequest) (*QueryAllFilesResponse, error)
 	// Queries a Pubkey by index.
-	Pubkey(context.Context, *QueryPubkeyRequest) (*QueryPubkeyResponse, error)
+	PubKey(context.Context, *QueryPubKeyRequest) (*QueryPubKeyResponse, error)
 	// Queries a list of Pubkey items.
-	PubkeyAll(context.Context, *QueryAllPubkeysRequest) (*QueryAllPubkeysResponse, error)
+	PubKeyAll(context.Context, *QueryAllPubKeysRequest) (*QueryAllPubKeysResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -653,11 +654,11 @@ func (*UnimplementedQueryServer) Files(ctx context.Context, req *QueryFileReques
 func (*UnimplementedQueryServer) FilesAll(ctx context.Context, req *QueryAllFilesRequest) (*QueryAllFilesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FilesAll not implemented")
 }
-func (*UnimplementedQueryServer) Pubkey(ctx context.Context, req *QueryPubkeyRequest) (*QueryPubkeyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Pubkey not implemented")
+func (*UnimplementedQueryServer) PubKey(ctx context.Context, req *QueryPubKeyRequest) (*QueryPubKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PubKey not implemented")
 }
-func (*UnimplementedQueryServer) PubkeyAll(ctx context.Context, req *QueryAllPubkeysRequest) (*QueryAllPubkeysResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PubkeyAll not implemented")
+func (*UnimplementedQueryServer) PubKeyAll(ctx context.Context, req *QueryAllPubKeysRequest) (*QueryAllPubKeysResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PubKeyAll not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -718,38 +719,38 @@ func _Query_FilesAll_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_Pubkey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryPubkeyRequest)
+func _Query_PubKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPubKeyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).Pubkey(ctx, in)
+		return srv.(QueryServer).PubKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.filetree.Query/Pubkey",
+		FullMethod: "/canine_chain.filetree.Query/PubKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Pubkey(ctx, req.(*QueryPubkeyRequest))
+		return srv.(QueryServer).PubKey(ctx, req.(*QueryPubKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_PubkeyAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAllPubkeysRequest)
+func _Query_PubKeyAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllPubKeysRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).PubkeyAll(ctx, in)
+		return srv.(QueryServer).PubKeyAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.filetree.Query/PubkeyAll",
+		FullMethod: "/canine_chain.filetree.Query/PubKeyAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).PubkeyAll(ctx, req.(*QueryAllPubkeysRequest))
+		return srv.(QueryServer).PubKeyAll(ctx, req.(*QueryAllPubKeysRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -771,12 +772,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_FilesAll_Handler,
 		},
 		{
-			MethodName: "Pubkey",
-			Handler:    _Query_Pubkey_Handler,
+			MethodName: "PubKey",
+			Handler:    _Query_PubKey_Handler,
 		},
 		{
-			MethodName: "PubkeyAll",
-			Handler:    _Query_PubkeyAll_Handler,
+			MethodName: "PubKeyAll",
+			Handler:    _Query_PubKeyAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -993,7 +994,7 @@ func (m *QueryAllFilesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryPubkeyRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryPubKeyRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1003,12 +1004,12 @@ func (m *QueryPubkeyRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryPubkeyRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPubKeyRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryPubkeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPubKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1023,7 +1024,7 @@ func (m *QueryPubkeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryPubkeyResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryPubKeyResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1033,18 +1034,18 @@ func (m *QueryPubkeyResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryPubkeyResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPubKeyResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryPubkeyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPubKeyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.Pubkey.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.PubKey.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -1056,7 +1057,7 @@ func (m *QueryPubkeyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllPubkeysRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryAllPubKeysRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1066,12 +1067,12 @@ func (m *QueryAllPubkeysRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllPubkeysRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAllPubKeysRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllPubkeysRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAllPubKeysRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1091,7 +1092,7 @@ func (m *QueryAllPubkeysRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllPubkeysResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryAllPubKeysResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1101,12 +1102,12 @@ func (m *QueryAllPubkeysResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllPubkeysResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAllPubKeysResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllPubkeysResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAllPubKeysResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1123,10 +1124,10 @@ func (m *QueryAllPubkeysResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.Pubkey) > 0 {
-		for iNdEx := len(m.Pubkey) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.PubKey) > 0 {
+		for iNdEx := len(m.PubKey) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.Pubkey[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.PubKey[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1231,7 +1232,7 @@ func (m *QueryAllFilesResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryPubkeyRequest) Size() (n int) {
+func (m *QueryPubKeyRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1244,18 +1245,18 @@ func (m *QueryPubkeyRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryPubkeyResponse) Size() (n int) {
+func (m *QueryPubKeyResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.Pubkey.Size()
+	l = m.PubKey.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
-func (m *QueryAllPubkeysRequest) Size() (n int) {
+func (m *QueryAllPubKeysRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1268,14 +1269,14 @@ func (m *QueryAllPubkeysRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryAllPubkeysResponse) Size() (n int) {
+func (m *QueryAllPubKeysResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.Pubkey) > 0 {
-		for _, e := range m.Pubkey {
+	if len(m.PubKey) > 0 {
+		for _, e := range m.PubKey {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1829,7 +1830,7 @@ func (m *QueryAllFilesResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryPubkeyRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryPubKeyRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1852,10 +1853,10 @@ func (m *QueryPubkeyRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryPubkeyRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPubKeyRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryPubkeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPubKeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1911,7 +1912,7 @@ func (m *QueryPubkeyRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryPubkeyResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryPubKeyResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1934,15 +1935,15 @@ func (m *QueryPubkeyResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryPubkeyResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPubKeyResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryPubkeyResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPubKeyResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pubkey", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PubKey", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1969,7 +1970,7 @@ func (m *QueryPubkeyResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Pubkey.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.PubKey.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1994,7 +1995,7 @@ func (m *QueryPubkeyResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllPubkeysRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryAllPubKeysRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2017,10 +2018,10 @@ func (m *QueryAllPubkeysRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllPubkeysRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllPubKeysRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllPubkeysRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllPubKeysRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2080,7 +2081,7 @@ func (m *QueryAllPubkeysRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllPubkeysResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryAllPubKeysResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2103,15 +2104,15 @@ func (m *QueryAllPubkeysResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllPubkeysResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllPubKeysResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllPubkeysResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllPubKeysResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pubkey", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PubKey", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2138,8 +2139,8 @@ func (m *QueryAllPubkeysResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Pubkey = append(m.Pubkey, Pubkey{})
-			if err := m.Pubkey[len(m.Pubkey)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.PubKey = append(m.PubKey, Pubkey{})
+			if err := m.PubKey[len(m.PubKey)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

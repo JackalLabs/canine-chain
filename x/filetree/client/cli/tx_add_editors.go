@@ -57,12 +57,12 @@ func CmdAddEditors() *cobra.Command {
 				}
 
 				queryClient := types.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &types.QueryPubkeyRequest{Address: key.String()})
+				res, err := queryClient.PubKey(cmd.Context(), &types.QueryPubKeyRequest{Address: key.String()})
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}
 
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+				pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 				if err != nil {
 					return err
 				}

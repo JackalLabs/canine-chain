@@ -29,7 +29,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
-				PubkeyList: []types.Pubkey{
+				PubKeyList: []types.Pubkey{
 					{
 						Address: "0",
 					},
@@ -58,7 +58,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated pubkey",
 			genState: &types.GenesisState{
-				PubkeyList: []types.Pubkey{
+				PubKeyList: []types.Pubkey{
 					{
 						Address: "0",
 					},

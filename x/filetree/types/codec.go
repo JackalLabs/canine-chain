@@ -11,7 +11,7 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPostFile{}, "filetree/PostFile", nil)
 	cdc.RegisterConcrete(&MsgAddViewers{}, "filetree/AddViewers", nil)
-	cdc.RegisterConcrete(&MsgPostkey{}, "filetree/Postkey", nil)
+	cdc.RegisterConcrete(&MsgPostKey{}, "filetree/PostKey", nil)
 	cdc.RegisterConcrete(&MsgDeleteFile{}, "filetree/DeleteFile", nil)
 	cdc.RegisterConcrete(&MsgRemoveViewers{}, "filetree/RemoveViewers", nil)
 	cdc.RegisterConcrete(&MsgMakeRoot{}, "filetree/MakeRoot", nil)
@@ -20,7 +20,6 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgResetEditors{}, "filetree/ResetEditors", nil)
 	cdc.RegisterConcrete(&MsgResetViewers{}, "filetree/ResetViewers", nil)
 	cdc.RegisterConcrete(&MsgChangeOwner{}, "filetree/ChangeOwner", nil)
-	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -31,7 +30,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgAddViewers{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgPostkey{},
+		&MsgPostKey{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgDeleteFile{},

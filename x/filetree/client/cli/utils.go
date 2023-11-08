@@ -66,12 +66,12 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 
 	queryClient := filetypes.NewQueryClient(clientCtx)
 
-	res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryPubkeyRequest{Address: key})
+	res, err := queryClient.PubKey(cmd.Context(), &filetypes.QueryPubKeyRequest{Address: key})
 	if err != nil {
 		return nil, filetypes.ErrPubKeyNotFound
 	}
 
-	pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+	pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 	if err != nil {
 		return nil, err
 	}

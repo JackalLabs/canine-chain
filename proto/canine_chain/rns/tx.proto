@@ -11,7 +11,7 @@ service Msg {
   rpc CancelBid(MsgCancelBid) returns (MsgCancelBidResponse);
   rpc List(MsgList) returns (MsgListResponse);
   rpc Buy(MsgBuy) returns (MsgBuyResponse);
-  rpc Delist(MsgDelist) returns (MsgDelistResponse);
+  rpc DeList(MsgDeList) returns (MsgDeListResponse);
   rpc Transfer(MsgTransfer) returns (MsgTransferResponse);
   rpc AddRecord(MsgAddRecord) returns (MsgAddRecordResponse);
   rpc DelRecord(MsgDelRecord) returns (MsgDelRecordResponse);
@@ -23,7 +23,7 @@ service Msg {
 message MsgRegister {
   string creator = 1;
   string name = 2;
-  string years = 3;
+  int64 years = 3;
   string data = 4;
 }
 
@@ -75,12 +75,12 @@ message MsgBuy {
 
 message MsgBuyResponse {}
 
-message MsgDelist {
+message MsgDeList {
   string creator = 1;
   string name = 2;
 }
 
-message MsgDelistResponse {}
+message MsgDeListResponse {}
 
 message MsgTransfer {
   string creator = 1;

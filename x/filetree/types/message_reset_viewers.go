@@ -13,7 +13,7 @@ func NewMsgResetViewers(creator string, address string, fileowner string) *MsgRe
 	return &MsgResetViewers{
 		Creator:   creator,
 		Address:   address,
-		Fileowner: fileowner,
+		FileOwner: fileowner,
 	}
 }
 
@@ -48,9 +48,9 @@ func (msg *MsgResetViewers) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid address: %s", msg.Address)
 	}
-	if msg.Fileowner == "" {
+	if msg.FileOwner == "" {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
-			"invalid file owner: %s", msg.Fileowner)
+			"invalid file owner: %s", msg.FileOwner)
 	}
 
 	return nil

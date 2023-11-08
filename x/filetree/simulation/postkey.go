@@ -25,11 +25,11 @@ func SimulateMsgPostkey(
 
 		privateKey, err := types.MakePrivateKey(address)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostkey, "unable to create privateKey"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostKey, "unable to create privateKey"), nil, err
 		}
 		pubKey := privateKey.PublicKey.Bytes(false)
 
-		msg := &types.MsgPostkey{
+		msg := &types.MsgPostKey{
 			Creator: simAccount.Address.String(),
 			Key:     fmt.Sprintf("%x", pubKey),
 		}
@@ -37,7 +37,7 @@ func SimulateMsgPostkey(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostkey, "failed to generate fee"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostKey, "failed to generate fee"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

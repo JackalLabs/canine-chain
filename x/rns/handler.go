@@ -35,8 +35,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgBuy:
 			res, err := msgServer.Buy(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgDelist:
-			res, err := msgServer.Delist(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgDeList:
+			res, err := msgServer.DeList(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgTransfer:
 			res, err := msgServer.Transfer(sdk.WrapSDKContext(ctx), msg)

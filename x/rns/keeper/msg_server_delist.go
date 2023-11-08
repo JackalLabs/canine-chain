@@ -10,7 +10,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
 )
 
-func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.MsgDelistResponse, error) {
+func (k msgServer) DeList(goCtx context.Context, msg *types.MsgDeList) (*types.MsgDeListResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	mname := strings.ToLower(msg.Name)
 
@@ -41,5 +41,5 @@ func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.M
 
 	k.RemoveForsale(ctx, mname)
 
-	return &types.MsgDelistResponse{}, nil
+	return &types.MsgDeListResponse{}, nil
 }
