@@ -23,7 +23,7 @@ func CmdListPubkey() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllPubKeysRequest{
+			params := &types.QueryAllPubKeys{
 				Pagination: pageReq,
 			}
 
@@ -54,7 +54,7 @@ func CmdShowPubkey() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryPubKeyRequest{
+			params := &types.QueryPubKey{
 				Address: argAddress,
 			}
 

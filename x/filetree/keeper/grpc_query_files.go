@@ -12,7 +12,7 @@ import (
 )
 
 // To remove
-func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFilesRequest) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -39,7 +39,7 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFilesRequest) (*t
 	return &types.QueryAllFilesResponse{Files: filess, Pagination: pageRes}, nil
 }
 
-func (k Keeper) File(c context.Context, req *types.QueryFileRequest) (*types.QueryFileResponse, error) {
+func (k Keeper) File(c context.Context, req *types.QueryFile) (*types.QueryFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

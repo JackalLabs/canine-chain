@@ -99,7 +99,7 @@ func (suite *KeeperTestSuite) TestMsgAddEditors() {
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(types.MsgAddEditorsResponse{}, *res)
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      aliceHomeMerklePath,
 					OwnerAddress: ownerAddress,
 				}

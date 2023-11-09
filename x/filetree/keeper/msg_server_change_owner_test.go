@@ -40,7 +40,7 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 
 	// Let's query the file after it was set to confirm that alice is the owner
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
@@ -142,7 +142,7 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 				// Because filetree entries are indexed (keyed) by address and ownerAddress, querying for a pepe.jpg that belongs to alice as an owner
 				// should fail here because alice gave away pepe.jpg to bob
 
-				fileReq1 := types.QueryFileRequest{
+				fileReq1 := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}
@@ -154,7 +154,7 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 				bobAccountHash := types.HashThenHex(bob)
 				bobOwnerAddress := types.MakeOwnerAddress(pepeMerklePath, bobAccountHash)
 
-				fileReq2 := types.QueryFileRequest{
+				fileReq2 := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: bobOwnerAddress,
 				}

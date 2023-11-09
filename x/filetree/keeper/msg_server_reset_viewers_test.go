@@ -60,7 +60,7 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 
 	// Let's query the file after it was set to confirm that alice, bob, and charlie are viewers
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
@@ -144,7 +144,7 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 				suite.Require().EqualValues(types.MsgRemoveViewersResponse{}, *res)
 				// Let's confirm that bob and charlie are no longer viewers
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}

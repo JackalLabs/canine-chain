@@ -48,7 +48,7 @@ func CmdGetKeys() *cobra.Command {
 			Hash := H.Sum(nil)
 			ownerString := fmt.Sprintf("%x", Hash) // Make the owner string to find the file
 
-			params := &types.QueryFileRequest{
+			params := &types.QueryFile{
 				Address:      merklePath,
 				OwnerAddress: ownerString,
 			}

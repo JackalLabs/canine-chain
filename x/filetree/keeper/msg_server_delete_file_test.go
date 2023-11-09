@@ -49,7 +49,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 
 	// Let's confirm that bob has edit access before moving on
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      types.MerklePath("s/home/"),
 		OwnerAddress: types.MakeOwnerAddress(types.MerklePath("s/home/"), aliceAccountHash),
 	}

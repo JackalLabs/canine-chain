@@ -46,7 +46,7 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 
 	// Let's query the file after it was set to confirm that alice and bob are editors
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
@@ -130,7 +130,7 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 				suite.Require().EqualValues(types.MsgRemoveEditorsResponse{}, *res)
 				// Let's confirm that bob is no longer an editor
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}

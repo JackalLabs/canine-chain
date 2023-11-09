@@ -56,7 +56,7 @@ func CmdAddViewers() *cobra.Command {
 				}
 
 				queryClient := types.NewQueryClient(clientCtx)
-				res, err := queryClient.PubKey(cmd.Context(), &types.QueryPubKeyRequest{Address: key.String()})
+				res, err := queryClient.PubKey(cmd.Context(), &types.QueryPubKey{Address: key.String()})
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}
@@ -66,7 +66,7 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 				// Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
-				params := &types.QueryFileRequest{
+				params := &types.QueryFile{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}

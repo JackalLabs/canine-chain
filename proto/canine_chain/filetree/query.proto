@@ -13,35 +13,35 @@ option go_package = "github.com/jackalLabs/canine-chain/x/filetree/types";
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+  rpc Params(QueryParams) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackal/canine/filetree/params";
   }
 
   // Queries a Files by index.
-  rpc File(QueryFileRequest) returns (QueryFileResponse) {
+  rpc File(QueryFile) returns (QueryFileResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/filetree/files/{address}/{owner_address}";
   }
 
   // Queries a list of Files items.
-  rpc AllFiles(QueryAllFilesRequest) returns (QueryAllFilesResponse) {
+  rpc AllFiles(QueryAllFiles) returns (QueryAllFilesResponse) {
     option (google.api.http).get = "/jackal/canine-chain/filetree/files";
   }
 
   // Queries a Pubkey by index.
-  rpc PubKey(QueryPubKeyRequest) returns (QueryPubKeyResponse) {
+  rpc PubKey(QueryPubKey) returns (QueryPubKeyResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/filetree/pubkeys/{address}";
   }
 
   // Queries a list of Pubkey items.
-  rpc AllPubKeys(QueryAllPubKeysRequest) returns (QueryAllPubKeysResponse) {
+  rpc AllPubKeys(QueryAllPubKeys) returns (QueryAllPubKeysResponse) {
     option (google.api.http).get = "/jackal/canine-chain/filetree/pubkeys";
   }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
+// QueryParams is request type for the Query/Params RPC method.
+message QueryParams {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
@@ -49,14 +49,14 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryFileRequest {
+message QueryFile {
   string address = 1;
   string owner_address = 2;
 }
 
 message QueryFileResponse { Files file = 1 [ (gogoproto.nullable) = false ]; }
 
-message QueryAllFilesRequest {
+message QueryAllFiles {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
@@ -65,13 +65,13 @@ message QueryAllFilesResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryPubKeyRequest { string address = 1; }
+message QueryPubKey { string address = 1; }
 
 message QueryPubKeyResponse {
   Pubkey pub_key = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllPubKeysRequest {
+message QueryAllPubKeys {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 

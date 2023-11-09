@@ -34,7 +34,7 @@ var _ = descriptor.ForMessage
 var _ = metadata.Join
 
 func request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryParamsRequest
+	var protoReq QueryParams
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.Params(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -43,7 +43,7 @@ func request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, cl
 }
 
 func local_request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryParamsRequest
+	var protoReq QueryParams
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.Params(ctx, &protoReq)
@@ -52,7 +52,7 @@ func local_request_Query_Params_0(ctx context.Context, marshaler runtime.Marshal
 }
 
 func request_Query_File_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFileRequest
+	var protoReq QueryFile
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -90,7 +90,7 @@ func request_Query_File_0(ctx context.Context, marshaler runtime.Marshaler, clie
 }
 
 func local_request_Query_File_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFileRequest
+	var protoReq QueryFile
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -132,7 +132,7 @@ var (
 )
 
 func request_Query_AllFiles_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllFilesRequest
+	var protoReq QueryAllFiles
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -148,7 +148,7 @@ func request_Query_AllFiles_0(ctx context.Context, marshaler runtime.Marshaler, 
 }
 
 func local_request_Query_AllFiles_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllFilesRequest
+	var protoReq QueryAllFiles
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -164,7 +164,7 @@ func local_request_Query_AllFiles_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func request_Query_PubKey_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPubKeyRequest
+	var protoReq QueryPubKey
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -191,7 +191,7 @@ func request_Query_PubKey_0(ctx context.Context, marshaler runtime.Marshaler, cl
 }
 
 func local_request_Query_PubKey_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPubKeyRequest
+	var protoReq QueryPubKey
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -222,7 +222,7 @@ var (
 )
 
 func request_Query_AllPubKeys_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllPubKeysRequest
+	var protoReq QueryAllPubKeys
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -238,7 +238,7 @@ func request_Query_AllPubKeys_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_Query_AllPubKeys_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllPubKeysRequest
+	var protoReq QueryAllPubKeys
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {

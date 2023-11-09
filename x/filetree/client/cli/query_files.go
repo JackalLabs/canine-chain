@@ -26,7 +26,7 @@ func CmdListFiles() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllFilesRequest{
+			params := &types.QueryAllFiles{
 				Pagination: pageReq,
 			}
 
@@ -59,7 +59,7 @@ func CmdShowFiles() *cobra.Command {
 			argAddress := args[0]
 			argOwnerAddress := args[1]
 
-			params := &types.QueryFileRequest{
+			params := &types.QueryFile{
 				Address:      argAddress,
 				OwnerAddress: argOwnerAddress,
 			}
@@ -107,7 +107,7 @@ func CmdShowFileFromPath() *cobra.Command {
 			Hash := H.Sum(nil)
 			ownerAddress := fmt.Sprintf("%x", Hash)
 
-			params := &types.QueryFileRequest{
+			params := &types.QueryFile{
 				Address:      merklePath,
 				OwnerAddress: ownerAddress,
 			}
