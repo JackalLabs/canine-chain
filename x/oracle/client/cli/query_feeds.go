@@ -19,7 +19,7 @@ func CmdQueryAllFeeds() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.AllFeeds(context.Background(), &types.QueryAllFeedsRequest{})
+			res, err := queryClient.AllFeeds(context.Background(), &types.QueryAllFeeds{})
 			if err != nil {
 				return err
 			}
@@ -43,7 +43,7 @@ func CmdQueryFeed() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.Feed(context.Background(), &types.QueryFeedRequest{Name: args[0]})
+			res, err := queryClient.Feed(context.Background(), &types.QueryFeed{Name: args[0]})
 			if err != nil {
 				return err
 			}

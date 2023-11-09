@@ -75,7 +75,7 @@ func CreateRandomAccounts(numAccs int) []sdk.AccAddress {
 
 func (suite *KeeperTestSuite) TestGRPCParams() {
 	suite.SetupSuite()
-	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParamsRequest{})
+	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParams{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(params.Params, suite.oracleKeeper.GetParams(suite.ctx))
 }

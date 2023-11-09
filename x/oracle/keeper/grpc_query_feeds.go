@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) Feed(c context.Context, req *types.QueryFeedRequest) (*types.QueryFeedResponse, error) {
+func (k Keeper) Feed(c context.Context, req *types.QueryFeed) (*types.QueryFeedResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -25,7 +25,7 @@ func (k Keeper) Feed(c context.Context, req *types.QueryFeedRequest) (*types.Que
 	return &types.QueryFeedResponse{Feed: feed}, nil
 }
 
-func (k Keeper) AllFeeds(c context.Context, req *types.QueryAllFeedsRequest) (*types.QueryAllFeedsResponse, error) {
+func (k Keeper) AllFeeds(c context.Context, req *types.QueryAllFeeds) (*types.QueryAllFeedsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
