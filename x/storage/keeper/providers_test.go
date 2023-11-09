@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
@@ -75,7 +76,7 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(res.Provider.Address, user)
 	suite.Require().Equal(res.Provider.Ip, initMsg.Ip)
-	suite.Require().Equal(res.Provider.Totalspace, initMsg.TotalSpace)
+	suite.Require().Equal(res.Provider.Totalspace, fmt.Sprintf("%d", initMsg.TotalSpace))
 	suite.Require().Equal(res.Provider.BurnedContracts, "0")
 	suite.Require().Equal(res.Provider.Creator, initMsg.Creator)
 
