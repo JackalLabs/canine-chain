@@ -23,7 +23,7 @@ func CmdListProviders() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllProvidersRequest{
+			params := &types.QueryAllProviders{
 				Pagination: pageReq,
 			}
 
@@ -50,7 +50,7 @@ func CmdListActiveProviders() *cobra.Command {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
-			params := &types.QueryActiveProvidersRequest{}
+			params := &types.QueryActiveProviders{}
 			res, err := queryClient.ActiveProviders(context.Background(), params)
 			if err != nil {
 				return err
@@ -78,7 +78,7 @@ func CmdShowProviders() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryProviderRequest{
+			params := &types.QueryProvider{
 				Address: argAddress,
 			}
 

@@ -32,7 +32,7 @@ func CmdFindFile() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryFindFileRequest{
+			params := &types.QueryFindFile{
 				Merkle: merkle,
 			}
 

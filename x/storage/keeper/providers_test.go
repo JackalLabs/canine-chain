@@ -26,7 +26,7 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 	suite.Require().NoError(err)
 
-	providerRequest := types.QueryProviderRequest{
+	providerRequest := types.QueryProvider{
 		Address: user,
 	}
 
@@ -67,7 +67,7 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 	_, err = msgSrvr.InitProvider(ctx, &initMsg)
 	suite.Require().NoError(err)
 
-	providerRequest := types.QueryProviderRequest{
+	providerRequest := types.QueryProvider{
 		Address: user,
 	}
 

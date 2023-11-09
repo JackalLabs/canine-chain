@@ -34,7 +34,7 @@ var _ = descriptor.ForMessage
 var _ = metadata.Join
 
 func request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryParamsRequest
+	var protoReq QueryParams
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.Params(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -43,7 +43,7 @@ func request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, cl
 }
 
 func local_request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryParamsRequest
+	var protoReq QueryParams
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.Params(ctx, &protoReq)
@@ -52,7 +52,7 @@ func local_request_Query_Params_0(ctx context.Context, marshaler runtime.Marshal
 }
 
 func request_Query_File_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFileRequest
+	var protoReq QueryFile
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -101,7 +101,7 @@ func request_Query_File_0(ctx context.Context, marshaler runtime.Marshaler, clie
 }
 
 func local_request_Query_File_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFileRequest
+	var protoReq QueryFile
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -154,7 +154,7 @@ var (
 )
 
 func request_Query_AllFiles_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllFilesRequest
+	var protoReq QueryAllFiles
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -170,7 +170,7 @@ func request_Query_AllFiles_0(ctx context.Context, marshaler runtime.Marshaler, 
 }
 
 func local_request_Query_AllFiles_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllFilesRequest
+	var protoReq QueryAllFiles
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -190,7 +190,7 @@ var (
 )
 
 func request_Query_OpenFiles_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryOpenFilesRequest
+	var protoReq QueryOpenFiles
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -224,7 +224,7 @@ func request_Query_OpenFiles_0(ctx context.Context, marshaler runtime.Marshaler,
 }
 
 func local_request_Query_OpenFiles_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryOpenFilesRequest
+	var protoReq QueryOpenFiles
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -258,7 +258,7 @@ func local_request_Query_OpenFiles_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func request_Query_Proof_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProofRequest
+	var protoReq QueryProof
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -318,7 +318,7 @@ func request_Query_Proof_0(ctx context.Context, marshaler runtime.Marshaler, cli
 }
 
 func local_request_Query_Proof_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProofRequest
+	var protoReq QueryProof
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -378,7 +378,7 @@ func local_request_Query_Proof_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func request_Query_Provider_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProviderRequest
+	var protoReq QueryProvider
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -405,7 +405,7 @@ func request_Query_Provider_0(ctx context.Context, marshaler runtime.Marshaler, 
 }
 
 func local_request_Query_Provider_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProviderRequest
+	var protoReq QueryProvider
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -436,7 +436,7 @@ var (
 )
 
 func request_Query_AllProviders_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllProvidersRequest
+	var protoReq QueryAllProviders
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -452,7 +452,7 @@ func request_Query_AllProviders_0(ctx context.Context, marshaler runtime.Marshal
 }
 
 func local_request_Query_AllProviders_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllProvidersRequest
+	var protoReq QueryAllProviders
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -468,7 +468,7 @@ func local_request_Query_AllProviders_0(ctx context.Context, marshaler runtime.M
 }
 
 func request_Query_Attestation_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAttestationRequest
+	var protoReq QueryAttestation
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -528,7 +528,7 @@ func request_Query_Attestation_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func local_request_Query_Attestation_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAttestationRequest
+	var protoReq QueryAttestation
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -592,7 +592,7 @@ var (
 )
 
 func request_Query_AllAttestations_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllAttestationsRequest
+	var protoReq QueryAllAttestations
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -608,7 +608,7 @@ func request_Query_AllAttestations_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_Query_AllAttestations_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllAttestationsRequest
+	var protoReq QueryAllAttestations
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -624,7 +624,7 @@ func local_request_Query_AllAttestations_0(ctx context.Context, marshaler runtim
 }
 
 func request_Query_Report_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryReportRequest
+	var protoReq QueryReport
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -684,7 +684,7 @@ func request_Query_Report_0(ctx context.Context, marshaler runtime.Marshaler, cl
 }
 
 func local_request_Query_Report_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryReportRequest
+	var protoReq QueryReport
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -748,7 +748,7 @@ var (
 )
 
 func request_Query_AllReports_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllReportsRequest
+	var protoReq QueryAllReports
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -764,7 +764,7 @@ func request_Query_AllReports_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_Query_AllReports_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllReportsRequest
+	var protoReq QueryAllReports
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -780,7 +780,7 @@ func local_request_Query_AllReports_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func request_Query_FreeSpace_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFreeSpaceRequest
+	var protoReq QueryFreeSpace
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -807,7 +807,7 @@ func request_Query_FreeSpace_0(ctx context.Context, marshaler runtime.Marshaler,
 }
 
 func local_request_Query_FreeSpace_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFreeSpaceRequest
+	var protoReq QueryFreeSpace
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -834,7 +834,7 @@ func local_request_Query_FreeSpace_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func request_Query_StoreCount_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryStoreCountRequest
+	var protoReq QueryStoreCount
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -861,7 +861,7 @@ func request_Query_StoreCount_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_Query_StoreCount_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryStoreCountRequest
+	var protoReq QueryStoreCount
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -888,7 +888,7 @@ func local_request_Query_StoreCount_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func request_Query_FindFile_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFindFileRequest
+	var protoReq QueryFindFile
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -915,7 +915,7 @@ func request_Query_FindFile_0(ctx context.Context, marshaler runtime.Marshaler, 
 }
 
 func local_request_Query_FindFile_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFindFileRequest
+	var protoReq QueryFindFile
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -942,7 +942,7 @@ func local_request_Query_FindFile_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func request_Query_GetClientFreeSpace_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryClientFreeSpaceRequest
+	var protoReq QueryClientFreeSpace
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -969,7 +969,7 @@ func request_Query_GetClientFreeSpace_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_Query_GetClientFreeSpace_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryClientFreeSpaceRequest
+	var protoReq QueryClientFreeSpace
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -996,7 +996,7 @@ func local_request_Query_GetClientFreeSpace_0(ctx context.Context, marshaler run
 }
 
 func request_Query_GetPayData_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPayDataRequest
+	var protoReq QueryPayData
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -1023,7 +1023,7 @@ func request_Query_GetPayData_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_Query_GetPayData_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPayDataRequest
+	var protoReq QueryPayData
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -1050,7 +1050,7 @@ func local_request_Query_GetPayData_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func request_Query_StoragePaymentInfo_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryStoragePaymentInfoRequest
+	var protoReq QueryStoragePaymentInfo
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -1077,7 +1077,7 @@ func request_Query_StoragePaymentInfo_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_Query_StoragePaymentInfo_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryStoragePaymentInfoRequest
+	var protoReq QueryStoragePaymentInfo
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -1108,7 +1108,7 @@ var (
 )
 
 func request_Query_AllStoragePaymentInfo_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllStoragePaymentInfoRequest
+	var protoReq QueryAllStoragePaymentInfo
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -1124,7 +1124,7 @@ func request_Query_AllStoragePaymentInfo_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_Query_AllStoragePaymentInfo_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAllStoragePaymentInfoRequest
+	var protoReq QueryAllStoragePaymentInfo
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -1144,7 +1144,7 @@ var (
 )
 
 func request_Query_FileUploadCheck_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFileUploadCheckRequest
+	var protoReq QueryFileUploadCheck
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -1160,7 +1160,7 @@ func request_Query_FileUploadCheck_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_Query_FileUploadCheck_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryFileUploadCheckRequest
+	var protoReq QueryFileUploadCheck
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -1176,7 +1176,7 @@ func local_request_Query_FileUploadCheck_0(ctx context.Context, marshaler runtim
 }
 
 func request_Query_PriceCheck_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPriceCheckRequest
+	var protoReq QueryPriceCheck
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -1214,7 +1214,7 @@ func request_Query_PriceCheck_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_Query_PriceCheck_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPriceCheckRequest
+	var protoReq QueryPriceCheck
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -1252,7 +1252,7 @@ func local_request_Query_PriceCheck_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func request_Query_ActiveProviders_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryActiveProvidersRequest
+	var protoReq QueryActiveProviders
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ActiveProviders(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1261,7 +1261,7 @@ func request_Query_ActiveProviders_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_Query_ActiveProviders_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryActiveProvidersRequest
+	var protoReq QueryActiveProviders
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ActiveProviders(ctx, &protoReq)
@@ -1270,7 +1270,7 @@ func local_request_Query_ActiveProviders_0(ctx context.Context, marshaler runtim
 }
 
 func request_Query_StorageStats_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryStorageStatsRequest
+	var protoReq QueryStorageStats
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.StorageStats(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1279,7 +1279,7 @@ func request_Query_StorageStats_0(ctx context.Context, marshaler runtime.Marshal
 }
 
 func local_request_Query_StorageStats_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryStorageStatsRequest
+	var protoReq QueryStorageStats
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.StorageStats(ctx, &protoReq)

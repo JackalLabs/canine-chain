@@ -25,7 +25,7 @@ func CmdListActiveDeals() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllFilesRequest{
+			params := &types.QueryAllFiles{
 				Pagination: pageReq,
 			}
 
@@ -67,7 +67,7 @@ func CmdShowActiveDeals() *cobra.Command {
 				panic(err)
 			}
 
-			params := &types.QueryFileRequest{
+			params := &types.QueryFile{
 				Merkle: merkle,
 				Start:  start,
 				Owner:  argOwner,
@@ -110,7 +110,7 @@ func CmdShowProof() *cobra.Command {
 				panic(err)
 			}
 
-			params := &types.QueryProofRequest{
+			params := &types.QueryProof{
 				ProviderAddress: argProver,
 				Merkle:          merkle,
 				Start:           start,

@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) GetClientFreeSpace(goCtx context.Context, req *types.QueryClientFreeSpaceRequest) (*types.QueryClientFreeSpaceResponse, error) {
+func (k Keeper) GetClientFreeSpace(goCtx context.Context, req *types.QueryClientFreeSpace) (*types.QueryClientFreeSpaceResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

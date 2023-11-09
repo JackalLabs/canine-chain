@@ -25,7 +25,7 @@ func CmdListAttestForms() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllAttestationsRequest{
+			params := &types.QueryAllAttestations{
 				Pagination: pageReq,
 			}
 
@@ -68,7 +68,7 @@ func CmdShowAttestForms() *cobra.Command {
 				panic(err)
 			}
 
-			params := &types.QueryAttestationRequest{
+			params := &types.QueryAttestation{
 				Prover: argProver,
 				Merkle: merkle,
 				Owner:  argOwner,
@@ -103,7 +103,7 @@ func CmdListReportForms() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllReportsRequest{
+			params := &types.QueryAllReports{
 				Pagination: pageReq,
 			}
 
@@ -146,7 +146,7 @@ func CmdShowReportForms() *cobra.Command {
 				panic(err)
 			}
 
-			params := &types.QueryReportRequest{
+			params := &types.QueryReport{
 				Prover: argProver,
 				Merkle: merkle,
 				Owner:  argOwner,

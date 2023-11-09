@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllStoragePaymentInfo(c context.Context, req *types.QueryAllStoragePaymentInfoRequest) (*types.QueryAllStoragePaymentInfoResponse, error) {
+func (k Keeper) AllStoragePaymentInfo(c context.Context, req *types.QueryAllStoragePaymentInfo) (*types.QueryAllStoragePaymentInfoResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -38,7 +38,7 @@ func (k Keeper) AllStoragePaymentInfo(c context.Context, req *types.QueryAllStor
 	return &types.QueryAllStoragePaymentInfoResponse{StoragePaymentInfo: storagePaymentInfos, Pagination: pageRes}, nil
 }
 
-func (k Keeper) StoragePaymentInfo(c context.Context, req *types.QueryStoragePaymentInfoRequest) (*types.QueryStoragePaymentInfoResponse, error) {
+func (k Keeper) StoragePaymentInfo(c context.Context, req *types.QueryStoragePaymentInfo) (*types.QueryStoragePaymentInfoResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

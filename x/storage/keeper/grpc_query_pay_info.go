@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) PaymentInfo(goCtx context.Context, req *types.QueryStoragePaymentInfoRequest) (*types.QueryStoragePaymentInfoResponse, error) {
+func (k Keeper) PaymentInfo(goCtx context.Context, req *types.QueryStoragePaymentInfo) (*types.QueryStoragePaymentInfoResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

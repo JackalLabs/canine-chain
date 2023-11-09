@@ -18,7 +18,7 @@ func CmdGetStorageStats() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryStorageStatsRequest{}
+			params := &types.QueryStorageStats{}
 
 			res, err := queryClient.StorageStats(context.Background(), params)
 			if err != nil {

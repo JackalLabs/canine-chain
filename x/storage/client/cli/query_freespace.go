@@ -26,7 +26,7 @@ func CmdFreespace() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryFreeSpaceRequest{
+			params := &types.QueryFreeSpace{
 				Address: reqAddress,
 			}
 
@@ -59,7 +59,7 @@ func CmdFileCount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryStoreCountRequest{
+			params := &types.QueryStoreCount{
 				Address: reqAddress,
 			}
 

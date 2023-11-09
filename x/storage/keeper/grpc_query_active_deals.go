@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFilesRequest) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -41,7 +41,7 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFilesRequest) (*t
 // OpenFiles returns a paginated list of files with space that providers have yet to fill
 //
 // TODO: Create unit-test cases for this
-func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFilesRequest) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -77,7 +77,7 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFilesRequest) (
 	return &types.QueryAllFilesResponse{Files: files, Pagination: &qpr}, nil
 }
 
-func (k Keeper) File(c context.Context, req *types.QueryFileRequest) (*types.QueryFileResponse, error) {
+func (k Keeper) File(c context.Context, req *types.QueryFile) (*types.QueryFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -96,7 +96,7 @@ func (k Keeper) File(c context.Context, req *types.QueryFileRequest) (*types.Que
 	return &types.QueryFileResponse{File: val}, nil
 }
 
-func (k Keeper) Proof(c context.Context, req *types.QueryProofRequest) (*types.QueryProofResponse, error) {
+func (k Keeper) Proof(c context.Context, req *types.QueryProof) (*types.QueryProofResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -116,7 +116,7 @@ func (k Keeper) Proof(c context.Context, req *types.QueryProofRequest) (*types.Q
 	return &types.QueryProofResponse{Proof: val}, nil
 }
 
-func (k Keeper) AllProofs(c context.Context, req *types.QueryProofsByAddressRequest) (*types.QueryProofsByAddressResponse, error) {
+func (k Keeper) AllProofs(c context.Context, req *types.QueryProofsByAddress) (*types.QueryProofsByAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

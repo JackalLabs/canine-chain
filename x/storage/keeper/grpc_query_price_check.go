@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) PriceCheck(c context.Context, req *types.QueryPriceCheckRequest) (*types.QueryPriceCheckResponse, error) {
+func (k Keeper) PriceCheck(c context.Context, req *types.QueryPriceCheck) (*types.QueryPriceCheckResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

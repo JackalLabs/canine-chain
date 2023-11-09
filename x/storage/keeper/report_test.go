@@ -22,7 +22,7 @@ func (suite *KeeperTestSuite) TestSetReportForm() {
 
 	suite.storageKeeper.SetReportForm(suite.ctx, report)
 
-	reportRequest := types.QueryReportRequest{
+	reportRequest := types.QueryReport{
 		Prover: "prover",
 		Merkle: []byte("merkle"),
 		Owner:  "owner",
