@@ -3,7 +3,6 @@ package types
 import (
 	fmt "fmt"
 	"net/url"
-	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
@@ -14,7 +13,7 @@ const TypeMsgInitProvider = "init_provider"
 
 var _ sdk.Msg = &MsgInitProvider{}
 
-func NewMsgInitProvider(creator string, ip string, totalspace string, keybase string) *MsgInitProvider {
+func NewMsgInitProvider(creator string, ip string, totalspace int64, keybase string) *MsgInitProvider {
 	return &MsgInitProvider{
 		Creator:    creator,
 		Ip:         ip,
@@ -58,8 +57,5 @@ func (msg *MsgInitProvider) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "invalid provider ip (%s)", err)
 	}
 
-	if _, err := strconv.Atoi(msg.TotalSpace); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse totalspace (%s)", err)
-	}
 	return nil
 }

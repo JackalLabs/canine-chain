@@ -40,8 +40,7 @@ func MakePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 	return newKey, nil
 }
 
-func CreateMsgMakeRoot(creator string) (*MsgMakeRoot, error) {
-	merklePath := MerklePath("s/")
+func CreateMsgMakeRoot(creator string) (*MsgMakeRootV2, error) {
 	trackingNumber := uuid.NewString()
 
 	editorIds := strings.Split(creator, ",")
@@ -50,13 +49,8 @@ func CreateMsgMakeRoot(creator string) (*MsgMakeRoot, error) {
 		return nil, err
 	}
 
-	accountHash := HashThenHex(creator)
-
-	msg := NewMsgMakeRoot(
+	msg := NewMsgMakeRootV2(
 		creator,
-		accountHash,
-		merklePath,
-		"Contents",
 		string(jsonEditors),
 		"Viewers",
 		trackingNumber,

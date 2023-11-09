@@ -81,7 +81,7 @@ message QueryParamsResponse {
 
 message QueryName { string index = 1; }
 
-message QueryNameResponse { Names name = 1 [ (gogoproto.nullable) = false ]; }
+message QueryNameResponse { Names name = 1 [ (gogoproto.nullable) = false ]; } // TODO: Check if this breaks everything to change it to Name
 
 message QueryAllNames {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;

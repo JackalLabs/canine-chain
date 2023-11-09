@@ -691,23 +691,23 @@ func (m *MsgBuyResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgBuyResponse proto.InternalMessageInfo
 
-type MsgDeList struct {
+type MsgDelist struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Name    string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (m *MsgDeList) Reset()         { *m = MsgDeList{} }
-func (m *MsgDeList) String() string { return proto.CompactTextString(m) }
-func (*MsgDeList) ProtoMessage()    {}
-func (*MsgDeList) Descriptor() ([]byte, []int) {
+func (m *MsgDelist) Reset()         { *m = MsgDelist{} }
+func (m *MsgDelist) String() string { return proto.CompactTextString(m) }
+func (*MsgDelist) ProtoMessage()    {}
+func (*MsgDelist) Descriptor() ([]byte, []int) {
 	return fileDescriptor_26cd098678d4da9c, []int{14}
 }
-func (m *MsgDeList) XXX_Unmarshal(b []byte) error {
+func (m *MsgDelist) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDeList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDelist) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDeList.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDelist.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -717,47 +717,47 @@ func (m *MsgDeList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *MsgDeList) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeList.Merge(m, src)
+func (m *MsgDelist) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDelist.Merge(m, src)
 }
-func (m *MsgDeList) XXX_Size() int {
+func (m *MsgDelist) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDeList) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeList.DiscardUnknown(m)
+func (m *MsgDelist) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDelist.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDeList proto.InternalMessageInfo
+var xxx_messageInfo_MsgDelist proto.InternalMessageInfo
 
-func (m *MsgDeList) GetCreator() string {
+func (m *MsgDelist) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgDeList) GetName() string {
+func (m *MsgDelist) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
 }
 
-type MsgDeListResponse struct {
+type MsgDelistResponse struct {
 }
 
-func (m *MsgDeListResponse) Reset()         { *m = MsgDeListResponse{} }
-func (m *MsgDeListResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDeListResponse) ProtoMessage()    {}
-func (*MsgDeListResponse) Descriptor() ([]byte, []int) {
+func (m *MsgDelistResponse) Reset()         { *m = MsgDelistResponse{} }
+func (m *MsgDelistResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDelistResponse) ProtoMessage()    {}
+func (*MsgDelistResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_26cd098678d4da9c, []int{15}
 }
-func (m *MsgDeListResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgDelistResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDeListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDelistResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDeListResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDelistResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -767,17 +767,17 @@ func (m *MsgDeListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, e
 		return b[:n], nil
 	}
 }
-func (m *MsgDeListResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeListResponse.Merge(m, src)
+func (m *MsgDelistResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDelistResponse.Merge(m, src)
 }
-func (m *MsgDeListResponse) XXX_Size() int {
+func (m *MsgDelistResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDeListResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeListResponse.DiscardUnknown(m)
+func (m *MsgDelistResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDelistResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDeListResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgDelistResponse proto.InternalMessageInfo
 
 type MsgTransfer struct {
 	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
@@ -1170,8 +1170,8 @@ func init() {
 	proto.RegisterType((*MsgListResponse)(nil), "canine_chain.rns.MsgListResponse")
 	proto.RegisterType((*MsgBuy)(nil), "canine_chain.rns.MsgBuy")
 	proto.RegisterType((*MsgBuyResponse)(nil), "canine_chain.rns.MsgBuyResponse")
-	proto.RegisterType((*MsgDeList)(nil), "canine_chain.rns.MsgDeList")
-	proto.RegisterType((*MsgDeListResponse)(nil), "canine_chain.rns.MsgDeListResponse")
+	proto.RegisterType((*MsgDelist)(nil), "canine_chain.rns.MsgDelist")
+	proto.RegisterType((*MsgDelistResponse)(nil), "canine_chain.rns.MsgDelistResponse")
 	proto.RegisterType((*MsgTransfer)(nil), "canine_chain.rns.MsgTransfer")
 	proto.RegisterType((*MsgTransferResponse)(nil), "canine_chain.rns.MsgTransferResponse")
 	proto.RegisterType((*MsgAddRecord)(nil), "canine_chain.rns.MsgAddRecord")
@@ -1205,28 +1205,28 @@ var fileDescriptor_26cd098678d4da9c = []byte{
 	0x29, 0xbd, 0xe1, 0x4a, 0x6f, 0x51, 0xec, 0xe3, 0x49, 0x6d, 0x25, 0xc9, 0xaa, 0x76, 0x17, 0xea,
 	0xbf, 0xe3, 0xd1, 0xf0, 0x2c, 0xa2, 0x59, 0xfd, 0xce, 0xa7, 0x24, 0xf2, 0xb1, 0x3c, 0xbb, 0x08,
 	0x9c, 0x5d, 0x78, 0x20, 0xe9, 0x94, 0xc2, 0x2b, 0x51, 0xfd, 0xd9, 0xbc, 0xe6, 0x89, 0x65, 0xad,
-	0x67, 0x73, 0xc5, 0xf4, 0x9a, 0xcf, 0xca, 0x00, 0xd7, 0x3f, 0xad, 0x9c, 0x0b, 0xb1, 0x55, 0xf1,
-	0x7d, 0xe6, 0x93, 0xff, 0x91, 0xa0, 0x98, 0x9e, 0xd7, 0x9e, 0x7c, 0x0b, 0x5a, 0x04, 0xfb, 0x38,
-	0xba, 0xc4, 0x44, 0x96, 0x40, 0xc5, 0x72, 0xd6, 0x73, 0x62, 0xa5, 0xf7, 0x43, 0xcc, 0x4a, 0x10,
-	0x8c, 0xb0, 0x9f, 0x90, 0xa0, 0x7e, 0xc1, 0x2f, 0xd1, 0x64, 0xa6, 0x0a, 0xce, 0x83, 0x32, 0xab,
-	0x19, 0x07, 0xd0, 0x24, 0x5c, 0xc1, 0xdc, 0xe6, 0x4f, 0x65, 0x94, 0x4f, 0x56, 0xae, 0xbf, 0x36,
-	0x59, 0x03, 0x3c, 0xf9, 0x9f, 0x73, 0x49, 0x56, 0xb5, 0x5b, 0xb1, 0x1e, 0xf1, 0xc9, 0x7a, 0x17,
-	0x47, 0x1b, 0x7a, 0x25, 0xe7, 0x85, 0x25, 0xe5, 0xfb, 0x5e, 0xfc, 0xda, 0x01, 0xdd, 0xa3, 0xa1,
-	0x31, 0x84, 0x96, 0xfa, 0x28, 0x3d, 0x76, 0xd7, 0x3f, 0x5b, 0x6e, 0xe1, 0x63, 0x62, 0x3d, 0xdd,
-	0x08, 0xe7, 0xcc, 0xc6, 0x09, 0xe8, 0xdc, 0x38, 0xa5, 0xd9, 0xfd, 0x28, 0xb0, 0xba, 0x55, 0x88,
-	0xa2, 0xf8, 0x00, 0xed, 0x95, 0xd7, 0xed, 0xd2, 0x74, 0x85, 0x5b, 0xcf, 0x36, 0xe3, 0x45, 0xd2,
-	0x95, 0xad, 0xcb, 0x49, 0x15, 0x5e, 0x41, 0x7a, 0xcb, 0xd8, 0xc6, 0x00, 0x1a, 0xdc, 0x27, 0x87,
-	0xa5, 0xf9, 0x0c, 0xb2, 0x9e, 0x54, 0x42, 0x37, 0x4a, 0xc6, 0x9c, 0x5b, 0x5e, 0x98, 0xd9, 0xbc,
-	0xaa, 0x64, 0x2b, 0xd7, 0x1a, 0xef, 0xa1, 0x29, 0x2d, 0xfb, 0xa8, 0x34, 0x57, 0x80, 0xd6, 0xd1,
-	0x06, 0x50, 0x71, 0x0d, 0xa1, 0xa5, 0xec, 0x5a, 0x3e, 0x13, 0x39, 0x5c, 0x31, 0x13, 0xeb, 0x9e,
-	0xe4, 0x0d, 0x55, 0x86, 0xac, 0x68, 0x68, 0x8e, 0x57, 0x35, 0x74, 0xdd, 0x50, 0x8c, 0x74, 0xe5,
-	0x26, 0xbb, 0xe2, 0xc5, 0x26, 0x1b, 0x49, 0x6f, 0xf9, 0x89, 0x35, 0x94, 0x9b, 0xa9, 0xbc, 0xa1,
+	0x67, 0x73, 0xc5, 0xf4, 0x9a, 0xcf, 0xca, 0x00, 0x4f, 0x6a, 0x9f, 0x56, 0xce, 0x85, 0xd8, 0xaa,
+	0xf8, 0x3e, 0xf3, 0xc9, 0xff, 0x48, 0x50, 0x4c, 0xcf, 0x6b, 0x4f, 0xbe, 0x05, 0x2d, 0x82, 0x7d,
+	0x1c, 0x5d, 0x62, 0x22, 0x4b, 0xa0, 0x62, 0x39, 0xeb, 0x39, 0xb1, 0xd2, 0xfb, 0x21, 0x66, 0x25,
+	0x08, 0x46, 0xd8, 0x4f, 0x48, 0x50, 0xbf, 0xe0, 0x97, 0x68, 0x32, 0x53, 0x05, 0xe7, 0x41, 0x99,
+	0xd5, 0x8c, 0x03, 0x68, 0x12, 0xae, 0x60, 0x6e, 0xf3, 0xa7, 0x32, 0xca, 0x27, 0x2b, 0xd7, 0x5f,
+	0x9b, 0xac, 0x01, 0x9e, 0xfc, 0xcf, 0xb9, 0x24, 0xab, 0xda, 0xad, 0x58, 0x8f, 0xf8, 0x64, 0xbd,
+	0x8b, 0xa3, 0x0d, 0xbd, 0x92, 0xf3, 0xc2, 0x92, 0xf2, 0x7d, 0x2f, 0x7e, 0xed, 0x80, 0xee, 0xd1,
+	0xd0, 0x18, 0x42, 0x4b, 0x7d, 0x94, 0x1e, 0xbb, 0xeb, 0x9f, 0x2d, 0xb7, 0xf0, 0x31, 0xb1, 0x9e,
+	0x6e, 0x84, 0x73, 0x66, 0xe3, 0x04, 0x74, 0x6e, 0x9c, 0xd2, 0xec, 0x7e, 0x14, 0x58, 0xdd, 0x2a,
+	0x44, 0x51, 0x7c, 0x80, 0xf6, 0xca, 0xeb, 0x76, 0x69, 0xba, 0xc2, 0xad, 0x67, 0x9b, 0xf1, 0x22,
+	0xe9, 0xca, 0xd6, 0xe5, 0xa4, 0x0a, 0xaf, 0x20, 0xbd, 0x65, 0x6c, 0x63, 0x00, 0x0d, 0xee, 0xea,
+	0xc3, 0xd2, 0x7c, 0x06, 0x59, 0x4f, 0x2a, 0xa1, 0x1b, 0x25, 0x63, 0xce, 0x2d, 0x2f, 0xcc, 0x6c,
+	0x5e, 0x55, 0xb2, 0x95, 0x6b, 0x8d, 0xf7, 0xd0, 0x94, 0x96, 0x7d, 0x54, 0x9a, 0x2b, 0x40, 0xeb,
+	0x68, 0x03, 0xa8, 0xb8, 0x86, 0xd0, 0x52, 0x76, 0x2d, 0x9f, 0x89, 0x1c, 0xae, 0x98, 0x89, 0x75,
+	0x4f, 0xf2, 0x86, 0x2a, 0x43, 0x56, 0x34, 0x34, 0xc7, 0xab, 0x1a, 0xba, 0x6e, 0x28, 0x46, 0xba,
+	0x72, 0x93, 0x5d, 0xf5, 0x62, 0x1b, 0x49, 0x6f, 0xf9, 0x89, 0x35, 0x94, 0x9b, 0xa9, 0xbc, 0xa1,
 	0x0c, 0xaa, 0x68, 0x68, 0xd1, 0x5d, 0xac, 0x1b, 0xf2, 0x67, 0x5b, 0xde, 0x0d, 0x01, 0x56, 0x74,
 	0xe3, 0xe6, 0x7f, 0xb5, 0x7f, 0xfa, 0x7b, 0x61, 0x6b, 0xd7, 0x0b, 0x5b, 0xfb, 0xbb, 0xb0, 0xb5,
 	0x9f, 0x4b, 0x7b, 0xeb, 0x7a, 0x69, 0x6f, 0xfd, 0x59, 0xda, 0x5b, 0x5f, 0xdc, 0x30, 0xca, 0x2e,
 	0x66, 0x63, 0xd7, 0x4f, 0xa6, 0xbd, 0x6f, 0xc8, 0xff, 0x8e, 0x26, 0x67, 0x68, 0x4c, 0x7b, 0x82,
 	0xf3, 0xb9, 0xb8, 0x96, 0x5c, 0x89, 0x8b, 0xc9, 0x3c, 0xc5, 0x74, 0xdc, 0xe4, 0x97, 0x93, 0x97,
-	0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0x24, 0x39, 0xa3, 0x5a, 0xb9, 0x08, 0x00, 0x00,
+	0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0xa9, 0x9c, 0x8a, 0xc6, 0xb9, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1247,7 +1247,7 @@ type MsgClient interface {
 	CancelBid(ctx context.Context, in *MsgCancelBid, opts ...grpc.CallOption) (*MsgCancelBidResponse, error)
 	List(ctx context.Context, in *MsgList, opts ...grpc.CallOption) (*MsgListResponse, error)
 	Buy(ctx context.Context, in *MsgBuy, opts ...grpc.CallOption) (*MsgBuyResponse, error)
-	DeList(ctx context.Context, in *MsgDeList, opts ...grpc.CallOption) (*MsgDeListResponse, error)
+	Delist(ctx context.Context, in *MsgDelist, opts ...grpc.CallOption) (*MsgDelistResponse, error)
 	Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error)
 	AddRecord(ctx context.Context, in *MsgAddRecord, opts ...grpc.CallOption) (*MsgAddRecordResponse, error)
 	DelRecord(ctx context.Context, in *MsgDelRecord, opts ...grpc.CallOption) (*MsgDelRecordResponse, error)
@@ -1317,9 +1317,9 @@ func (c *msgClient) Buy(ctx context.Context, in *MsgBuy, opts ...grpc.CallOption
 	return out, nil
 }
 
-func (c *msgClient) DeList(ctx context.Context, in *MsgDeList, opts ...grpc.CallOption) (*MsgDeListResponse, error) {
-	out := new(MsgDeListResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.rns.Msg/DeList", in, out, opts...)
+func (c *msgClient) Delist(ctx context.Context, in *MsgDelist, opts ...grpc.CallOption) (*MsgDelistResponse, error) {
+	out := new(MsgDelistResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.rns.Msg/Delist", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1379,7 +1379,7 @@ type MsgServer interface {
 	CancelBid(context.Context, *MsgCancelBid) (*MsgCancelBidResponse, error)
 	List(context.Context, *MsgList) (*MsgListResponse, error)
 	Buy(context.Context, *MsgBuy) (*MsgBuyResponse, error)
-	DeList(context.Context, *MsgDeList) (*MsgDeListResponse, error)
+	Delist(context.Context, *MsgDelist) (*MsgDelistResponse, error)
 	Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error)
 	AddRecord(context.Context, *MsgAddRecord) (*MsgAddRecordResponse, error)
 	DelRecord(context.Context, *MsgDelRecord) (*MsgDelRecordResponse, error)
@@ -1409,8 +1409,8 @@ func (*UnimplementedMsgServer) List(ctx context.Context, req *MsgList) (*MsgList
 func (*UnimplementedMsgServer) Buy(ctx context.Context, req *MsgBuy) (*MsgBuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Buy not implemented")
 }
-func (*UnimplementedMsgServer) DeList(ctx context.Context, req *MsgDeList) (*MsgDeListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeList not implemented")
+func (*UnimplementedMsgServer) Delist(ctx context.Context, req *MsgDelist) (*MsgDelistResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delist not implemented")
 }
 func (*UnimplementedMsgServer) Transfer(ctx context.Context, req *MsgTransfer) (*MsgTransferResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Transfer not implemented")
@@ -1540,20 +1540,20 @@ func _Msg_Buy_Handler(srv interface{}, ctx context.Context, dec func(interface{}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_DeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgDeList)
+func _Msg_Delist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDelist)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).DeList(ctx, in)
+		return srv.(MsgServer).Delist(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.rns.Msg/DeList",
+		FullMethod: "/canine_chain.rns.Msg/Delist",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).DeList(ctx, req.(*MsgDeList))
+		return srv.(MsgServer).Delist(ctx, req.(*MsgDelist))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1677,8 +1677,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_Buy_Handler,
 		},
 		{
-			MethodName: "DeList",
-			Handler:    _Msg_DeList_Handler,
+			MethodName: "Delist",
+			Handler:    _Msg_Delist_Handler,
 		},
 		{
 			MethodName: "Transfer",
@@ -2165,7 +2165,7 @@ func (m *MsgBuyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDeList) Marshal() (dAtA []byte, err error) {
+func (m *MsgDelist) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2175,12 +2175,12 @@ func (m *MsgDeList) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgDeList) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgDelist) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgDeList) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgDelist) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2202,7 +2202,7 @@ func (m *MsgDeList) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDeListResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgDelistResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2212,12 +2212,12 @@ func (m *MsgDeListResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgDeListResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgDelistResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgDeListResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgDelistResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2702,7 +2702,7 @@ func (m *MsgBuyResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgDeList) Size() (n int) {
+func (m *MsgDelist) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2719,7 +2719,7 @@ func (m *MsgDeList) Size() (n int) {
 	return n
 }
 
-func (m *MsgDeListResponse) Size() (n int) {
+func (m *MsgDelistResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4177,7 +4177,7 @@ func (m *MsgBuyResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDeList) Unmarshal(dAtA []byte) error {
+func (m *MsgDelist) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4200,10 +4200,10 @@ func (m *MsgDeList) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeList: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDelist: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeList: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDelist: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4291,7 +4291,7 @@ func (m *MsgDeList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDeListResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgDelistResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4314,10 +4314,10 @@ func (m *MsgDeListResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeListResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDelistResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeListResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDelistResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

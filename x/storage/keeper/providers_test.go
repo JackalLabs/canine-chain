@@ -61,7 +61,7 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 		Creator:    user,
 		Ip:         "192.158.1.38",
 		Keybase:    "",
-		TotalSpace: "9000",
+		TotalSpace: 9000,
 	}
 
 	_, err = msgSrvr.InitProvider(ctx, &initMsg)

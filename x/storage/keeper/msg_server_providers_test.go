@@ -34,7 +34,7 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 				return types.NewMsgInitProvider(
 					user,
 					"127.0.0.1",
-					"1000000000",
+					1000000000,
 					"test-key",
 				)
 			},
@@ -156,7 +156,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 			preRun: func() *types.MsgSetProviderTotalSpace {
 				return types.NewMsgSetProviderTotalSpace(
 					user,
-					"1000000",
+					1000000,
 				)
 			},
 			expErr: false,
@@ -166,23 +166,12 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 			preRun: func() *types.MsgSetProviderTotalSpace {
 				return types.NewMsgSetProviderTotalSpace(
 					"wrong address",
-					"1000000",
+					1000000,
 				)
 			},
 			expErr:    true,
 			expErrMsg: "provider not found please init your provider",
 			name:      "set provider total space fail",
-		},
-		{
-			preRun: func() *types.MsgSetProviderTotalSpace {
-				return types.NewMsgSetProviderTotalSpace(
-					user,
-					"9@!0",
-				)
-			},
-			expErr:    true,
-			expErrMsg: "not valid total space please enter total number of bytes to provide",
-			name:      "invalid space param",
 		},
 	}
 

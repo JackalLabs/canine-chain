@@ -32,7 +32,7 @@ func (k Keeper) FreeSpace(goCtx context.Context, req *types.QueryFreeSpace) (*ty
 	}
 
 	return &types.QueryFreeSpaceResponse{
-		Space: fmt.Sprintf("%d", space.Int64()-num),
+		Space: space.Int64() - num,
 	}, nil
 }
 
@@ -46,6 +46,6 @@ func (k Keeper) StoreCount(goCtx context.Context, req *types.QueryStoreCount) (*
 	num := k.GetProviderDeals(ctx, req.Address)
 
 	return &types.QueryStoreCountResponse{
-		Count: fmt.Sprintf("%d", num),
+		Count: num,
 	}, nil
 }

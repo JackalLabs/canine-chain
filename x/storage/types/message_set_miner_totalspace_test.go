@@ -17,21 +17,14 @@ func TestMsgSetProviderTotalSpace_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: MsgSetProviderTotalSpace{
 				Creator: "invalid_address",
-				Space:   "1000000000",
+				Space:   1000000000,
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "invalid ip",
-			msg: MsgSetProviderTotalSpace{
-				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Space:   "abd",
-			},
-			err: sdkerrors.ErrInvalidType,
 		}, {
 			name: "valid ip",
 			msg: MsgSetProviderTotalSpace{
 				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Space:   "1000000000",
+				Space:   1000000000,
 			},
 		},
 	}

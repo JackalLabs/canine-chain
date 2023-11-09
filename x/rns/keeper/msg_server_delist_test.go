@@ -36,14 +36,14 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 	// Use postRun to return it to original state
 	cases := []struct {
 		testName  string
-		preRun    func() *types.MsgDeList
+		preRun    func() *types.MsgDelist
 		postRun   func()
 		expErr    bool
 		expErrMsg string
 	}{
 		{
 			testName: "Name_listed",
-			preRun: func() *types.MsgDeList {
+			preRun: func() *types.MsgDelist {
 				// Check if name is actually saved
 				name, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
@@ -54,7 +54,7 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 					Owner: nameOwner.String(),
 				}
 				keeper.SetForsale(suite.ctx, newsale)
-				return &types.MsgDeList{
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    fmt.Sprintf("%s,%s", name.Name, name.Tld),
 				}
@@ -73,8 +73,8 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 
 		{
 			testName: "name_not_found",
-			preRun: func() *types.MsgDeList {
-				return &types.MsgDeList{
+			preRun: func() *types.MsgDelist {
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    "nonexistent.jkl",
 				}
@@ -85,8 +85,8 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 
 		{
 			testName: "wrong_onwer",
-			preRun: func() *types.MsgDeList {
-				return &types.MsgDeList{
+			preRun: func() *types.MsgDelist {
+				return &types.MsgDelist{
 					Creator: "wrong_account",
 					Name:    "Nuggie.jkl",
 				}
@@ -97,13 +97,13 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 
 		{
 			testName: "cannot_transfer_free_name",
-			preRun: func() *types.MsgDeList {
+			preRun: func() *types.MsgDelist {
 				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
 				names.Locked = blockHeight + 1
 				keeper.SetNames(suite.ctx, names)
-				return &types.MsgDeList{
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    "Nuggie.jkl",
 				}
@@ -121,13 +121,13 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 
 		{
 			testName: "expired_name",
-			preRun: func() *types.MsgDeList {
+			preRun: func() *types.MsgDelist {
 				blockHeight := suite.ctx.BlockHeight()
 				names, found := keeper.GetNames(suite.ctx, "Nuggie", "jkl")
 				suite.Require().True(found)
 				names.Expires = blockHeight - 1
 				keeper.SetNames(suite.ctx, names)
-				return &types.MsgDeList{
+				return &types.MsgDelist{
 					Creator: nameOwner.String(),
 					Name:    "Nuggie.jkl",
 				}
@@ -148,7 +148,7 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 		suite.Run(tc.testName, func() {
 			msg := tc.preRun()
 
-			_, err := msgSrvr.DeList(ctx, msg)
+			_, err := msgSrvr.Delist(ctx, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)

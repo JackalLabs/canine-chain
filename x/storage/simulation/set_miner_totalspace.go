@@ -2,7 +2,6 @@ package simulation
 
 import (
 	"math/rand"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -33,7 +32,7 @@ func SimulateMsgSetProviderTotalSpace(
 
 		msg := &types.MsgSetProviderTotalSpace{
 			Creator: provider.Creator,
-			Space:   strconv.Itoa(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
+			Space:   int64(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

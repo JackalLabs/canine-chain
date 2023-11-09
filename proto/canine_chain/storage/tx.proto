@@ -85,7 +85,7 @@ message MsgSetProviderKeybaseResponse {}
 
 message MsgSetProviderTotalSpace {
   string creator = 1;
-  string space = 2;
+  int64 space = 2;
 }
 
 message MsgSetProviderTotalSpaceResponse {}
@@ -109,7 +109,7 @@ message MsgInitProvider {
   string creator = 1;
   string ip = 2;
   string keybase = 3;
-  string total_space = 4;
+  int64 total_space = 4;
 }
 
 message MsgInitProviderResponse {}

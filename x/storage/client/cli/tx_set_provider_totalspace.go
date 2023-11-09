@@ -18,6 +18,10 @@ func CmdSetProviderTotalSpace() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argSpace := args[0]
+			space, err := strconv.ParseInt(argSpace, 10, 64)
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -26,7 +30,7 @@ func CmdSetProviderTotalSpace() *cobra.Command {
 
 			msg := types.NewMsgSetProviderTotalSpace(
 				clientCtx.GetFromAddress().String(),
-				argSpace,
+				space,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

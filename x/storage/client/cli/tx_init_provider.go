@@ -21,7 +21,10 @@ func CmdInitProvider() *cobra.Command {
 			argIP := args[0]
 			argTotalSpace := args[1]
 			argKeybase := args[2]
-
+			space, err := strconv.ParseInt(argTotalSpace, 10, 64)
+			if err != nil {
+				return err
+			}
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
@@ -30,7 +33,7 @@ func CmdInitProvider() *cobra.Command {
 			msg := types.NewMsgInitProvider(
 				clientCtx.GetFromAddress().String(),
 				argIP,
-				argTotalSpace,
+				space,
 				argKeybase,
 			)
 			if err := msg.ValidateBasic(); err != nil {

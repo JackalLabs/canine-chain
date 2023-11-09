@@ -36,7 +36,7 @@ func SimulateMsgDelist(
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelist, "name is expired"), nil, nil
 		}
 
-		msg := &types.MsgDeList{
+		msg := &types.MsgDelist{
 			Creator: forsale.Owner,
 			Name:    forsale.Name,
 		}

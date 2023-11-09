@@ -18,13 +18,13 @@ func (suite *KeeperTestSuite) TestMsgMakeRoot() {
 	suite.Require().NoError(err)
 
 	cases := []struct {
-		preRun    func() *types.MsgMakeRoot
+		preRun    func() *types.MsgMakeRootV2
 		expErr    bool
 		expErrMsg string
 		name      string
 	}{
 		{
-			preRun: func() *types.MsgMakeRoot {
+			preRun: func() *types.MsgMakeRootV2 {
 				return msg
 			},
 			expErr: false,
@@ -36,7 +36,7 @@ func (suite *KeeperTestSuite) TestMsgMakeRoot() {
 		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
-			res, err := msgSrvr.MakeRoot(context, msg)
+			res, err := msgSrvr.MakeRootV2(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)

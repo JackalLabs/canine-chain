@@ -2,7 +2,6 @@ package types
 
 import (
 	fmt "fmt"
-	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
@@ -13,7 +12,7 @@ const TypeMsgSetProviderTotalSpace = "set_provider_total_space"
 
 var _ sdk.Msg = &MsgSetProviderTotalSpace{}
 
-func NewMsgSetProviderTotalSpace(creator string, space string) *MsgSetProviderTotalSpace {
+func NewMsgSetProviderTotalSpace(creator string, space int64) *MsgSetProviderTotalSpace {
 	return &MsgSetProviderTotalSpace{
 		Creator: creator,
 		Space:   space,
@@ -50,8 +49,5 @@ func (msg *MsgSetProviderTotalSpace) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	if _, err := strconv.Atoi(msg.Space); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse space (%s)", err)
-	}
 	return nil
 }

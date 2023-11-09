@@ -10,7 +10,6 @@ service Msg {
   rpc PostKey(MsgPostKey) returns (MsgPostKeyResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
-  rpc MakeRoot(MsgMakeRoot) returns (MsgMakeRootResponse);
   rpc MakeRootV2(MsgMakeRootV2) returns (MsgMakeRootResponse);
 
   rpc AddEditors(MsgAddEditors) returns (MsgAddEditorsResponse);
@@ -67,15 +66,6 @@ message MsgRemoveViewers {
 
 message MsgRemoveViewersResponse {}
 
-message MsgMakeRoot {
-  string creator = 1;
-  string account = 2;
-  string root_hash_path = 3;
-  string contents = 4;
-  string editors = 5;
-  string viewers = 6;
-  string tracking_number = 7;
-}
 
 message MsgMakeRootResponse {}
 
@@ -125,7 +115,7 @@ message MsgChangeOwner {
   string creator = 1;
   string address = 2;
   string file_owner = 3;
-  string newOwner = 4;
+  string new_owner = 4;
 }
 
 message MsgChangeOwnerResponse {}

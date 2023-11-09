@@ -268,9 +268,9 @@ message QueryFreeSpace { string address = 1; }
 
 message QueryStoreCount { string address = 1; }
 
-message QueryFreeSpaceResponse { string space = 1; }
+message QueryFreeSpaceResponse { int64 space = 1; }
 
-message QueryStoreCountResponse { string count = 1; }
+message QueryStoreCountResponse { int64 count = 1; }
 
 
 message QueryFindFile { bytes merkle = 1; }
@@ -315,7 +315,7 @@ message QueryFileUploadCheckResponse {
 }
 
 message QueryPriceCheck {
-  string duration = 1;
+  string duration = 1; // formatted as time
   int64 bytes = 2;
 }
 
