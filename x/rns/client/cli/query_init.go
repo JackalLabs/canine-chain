@@ -23,7 +23,7 @@ func CmdListInit() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllInitsRequest{
+			params := &types.QueryAllInits{
 				Pagination: pageReq,
 			}
 
@@ -54,7 +54,7 @@ func CmdShowInit() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryInitRequest{
+			params := &types.QueryInit{
 				Address: argAddress,
 			}
 

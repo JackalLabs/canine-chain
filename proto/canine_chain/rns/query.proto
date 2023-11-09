@@ -16,62 +16,62 @@ option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+  rpc Params(QueryParams) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/params";
   }
 
   // Queries a Name by index.
-  rpc Name(QueryNameRequest) returns (QueryNameResponse) {
+  rpc Name(QueryName) returns (QueryNameResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/names/{index}";
   }
 
   // Queries a list of Names.
-  rpc AllNames(QueryAllNamesRequest) returns (QueryAllNamesResponse) {
+  rpc AllNames(QueryAllNames) returns (QueryAllNamesResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/names";
   }
 
   // Queries a Bid by index.
-  rpc Bid(QueryBidRequest) returns (QueryBidResponse) {
+  rpc Bid(QueryBid) returns (QueryBidResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/bids/{index}";
   }
 
   // Queries a list of Bids.
-  rpc AllBids(QueryAllBidsRequest) returns (QueryAllBidsResponse) {
+  rpc AllBids(QueryAllBids) returns (QueryAllBidsResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/bids";
   }
 
   // Queries a Listing by index.
-  rpc ForSale(QueryForSaleRequest) returns (QueryForSaleResponse) {
+  rpc ForSale(QueryForSale) returns (QueryForSaleResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/rns/for_sale/{name}";
   }
 
   // Queries all Listings.
-  rpc AllForSale(QueryAllForSaleRequest) returns (QueryAllForSaleResponse) {
+  rpc AllForSale(QueryAllForSale) returns (QueryAllForSaleResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/for_sale";
   }
 
   // Queries a Init by index.
-  rpc Init(QueryInitRequest) returns (QueryInitResponse) {
+  rpc Init(QueryInit) returns (QueryInitResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/rns/init/{address}";
   }
 
   // Queries a list of Init items.
-  rpc AllInits(QueryAllInitsRequest) returns (QueryAllInitsResponse) {
+  rpc AllInits(QueryAllInits) returns (QueryAllInitsResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/init";
   }
 
   // Queries a list of ListOwnedNames items.
-  rpc ListOwnedNames(QueryListOwnedNamesRequest)
+  rpc ListOwnedNames(QueryListOwnedNames)
       returns (QueryListOwnedNamesResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/rns/list_owned_names/{address}";
   }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
+// QueryParams is request type for the Query/Params RPC method.
+message QueryParams {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
@@ -79,11 +79,11 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryNameRequest { string index = 1; }
+message QueryName { string index = 1; }
 
 message QueryNameResponse { Names name = 1 [ (gogoproto.nullable) = false ]; }
 
-message QueryAllNamesRequest {
+message QueryAllNames {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
@@ -92,11 +92,11 @@ message QueryAllNamesResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryBidRequest { string index = 1; }
+message QueryBid { string index = 1; }
 
 message QueryBidResponse { Bids bids = 1 [ (gogoproto.nullable) = false ]; }
 
-message QueryAllBidsRequest {
+message QueryAllBids {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
@@ -105,13 +105,13 @@ message QueryAllBidsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryForSaleRequest { string name = 1; }
+message QueryForSale { string name = 1; }
 
 message QueryForSaleResponse {
   Forsale for_sale = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllForSaleRequest {
+message QueryAllForSale {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
@@ -120,11 +120,11 @@ message QueryAllForSaleResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryInitRequest { string address = 1; }
+message QueryInit { string address = 1; }
 
 message QueryInitResponse { bool init = 1; }
 
-message QueryAllInitsRequest {
+message QueryAllInits {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
@@ -133,7 +133,7 @@ message QueryAllInitsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryListOwnedNamesRequest {
+message QueryListOwnedNames {
   string address = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }

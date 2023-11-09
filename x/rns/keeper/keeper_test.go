@@ -106,7 +106,7 @@ func (suite *KeeperTestSuite) TestMakeBid() {
 
 	suite.rnsKeeper.SetBids(suite.ctx, bid)
 
-	bidReq := types.QueryBidRequest{
+	bidReq := types.QueryBid{
 		Index: fmt.Sprintf("%s%s", address.String(), name),
 	}
 
@@ -137,7 +137,7 @@ func (suite *KeeperTestSuite) TestUpdateName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryNameRequest{
+	nameReq := types.QueryName{
 		Index: "validname.jkl",
 	}
 
@@ -176,7 +176,7 @@ func (suite *KeeperTestSuite) TestRemoveName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryNameRequest{
+	nameReq := types.QueryName{
 		Index: "validname.jkl",
 	}
 
@@ -212,7 +212,7 @@ func (suite *KeeperTestSuite) TestSetName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryNameRequest{
+	nameReq := types.QueryName{
 		Index: "validname.jkl",
 	}
 
@@ -230,7 +230,7 @@ func (suite *KeeperTestSuite) TestSetName() {
 	}
 	suite.rnsKeeper.SetNames(suite.ctx, badname)
 
-	nameReq = types.QueryNameRequest{
+	nameReq = types.QueryName{
 		Index: "badname.jkl",
 	}
 	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
@@ -239,7 +239,7 @@ func (suite *KeeperTestSuite) TestSetName() {
 
 func (suite *KeeperTestSuite) TestGRPCParams() {
 	suite.SetupSuite()
-	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParamsRequest{})
+	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParams{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(params.Params, suite.rnsKeeper.GetParams(suite.ctx))
 }

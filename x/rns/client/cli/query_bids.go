@@ -23,7 +23,7 @@ func CmdListBids() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllBidsRequest{
+			params := &types.QueryAllBids{
 				Pagination: pageReq,
 			}
 
@@ -54,7 +54,7 @@ func CmdShowBids() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryBidRequest{
+			params := &types.QueryBid{
 				Index: argIndex,
 			}
 

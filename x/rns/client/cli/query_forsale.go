@@ -23,7 +23,7 @@ func CmdListForsale() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllForSaleRequest{
+			params := &types.QueryAllForSale{
 				Pagination: pageReq,
 			}
 
@@ -54,7 +54,7 @@ func CmdShowForsale() *cobra.Command {
 
 			argName := args[0]
 
-			params := &types.QueryForSaleRequest{
+			params := &types.QueryForSale{
 				Name: argName,
 			}
 
