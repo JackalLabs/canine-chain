@@ -2391,9 +2391,9 @@ type QueryClient interface {
 	File(ctx context.Context, in *QueryFile, opts ...grpc.CallOption) (*QueryFileResponse, error)
 	// Queries a list of File items.
 	AllFiles(ctx context.Context, in *QueryAllFiles, opts ...grpc.CallOption) (*QueryAllFilesResponse, error)
-	// Queries a list of File items.
+	// Queries a list of open files.
 	OpenFiles(ctx context.Context, in *QueryOpenFiles, opts ...grpc.CallOption) (*QueryAllFilesResponse, error)
-	// Queries a list of File items.
+	// Queries a list of Proofs.
 	Proof(ctx context.Context, in *QueryProof, opts ...grpc.CallOption) (*QueryProofResponse, error)
 	// Queries a Providers by index.
 	Provider(ctx context.Context, in *QueryProvider, opts ...grpc.CallOption) (*QueryProviderResponse, error)
@@ -2409,9 +2409,9 @@ type QueryClient interface {
 	AllReports(ctx context.Context, in *QueryAllReports, opts ...grpc.CallOption) (*QueryAllReportsResponse, error)
 	// Queries a list of FreeSpace items.
 	FreeSpace(ctx context.Context, in *QueryFreeSpace, opts ...grpc.CallOption) (*QueryFreeSpaceResponse, error)
-	// Queries a list of FreeSpace items.
+	// Queries how many files a provider is storing.
 	StoreCount(ctx context.Context, in *QueryStoreCount, opts ...grpc.CallOption) (*QueryStoreCountResponse, error)
-	// Queries a list of FindFile items.
+	// Queries where a file is located.
 	FindFile(ctx context.Context, in *QueryFindFile, opts ...grpc.CallOption) (*QueryFindFileResponse, error)
 	// Queries a list of GetClientFreeSpace items.
 	GetClientFreeSpace(ctx context.Context, in *QueryClientFreeSpace, opts ...grpc.CallOption) (*QueryClientFreeSpaceResponse, error)
@@ -2645,9 +2645,9 @@ type QueryServer interface {
 	File(context.Context, *QueryFile) (*QueryFileResponse, error)
 	// Queries a list of File items.
 	AllFiles(context.Context, *QueryAllFiles) (*QueryAllFilesResponse, error)
-	// Queries a list of File items.
+	// Queries a list of open files.
 	OpenFiles(context.Context, *QueryOpenFiles) (*QueryAllFilesResponse, error)
-	// Queries a list of File items.
+	// Queries a list of Proofs.
 	Proof(context.Context, *QueryProof) (*QueryProofResponse, error)
 	// Queries a Providers by index.
 	Provider(context.Context, *QueryProvider) (*QueryProviderResponse, error)
@@ -2663,9 +2663,9 @@ type QueryServer interface {
 	AllReports(context.Context, *QueryAllReports) (*QueryAllReportsResponse, error)
 	// Queries a list of FreeSpace items.
 	FreeSpace(context.Context, *QueryFreeSpace) (*QueryFreeSpaceResponse, error)
-	// Queries a list of FreeSpace items.
+	// Queries how many files a provider is storing.
 	StoreCount(context.Context, *QueryStoreCount) (*QueryStoreCountResponse, error)
-	// Queries a list of FindFile items.
+	// Queries where a file is located.
 	FindFile(context.Context, *QueryFindFile) (*QueryFindFileResponse, error)
 	// Queries a list of GetClientFreeSpace items.
 	GetClientFreeSpace(context.Context, *QueryClientFreeSpace) (*QueryClientFreeSpaceResponse, error)

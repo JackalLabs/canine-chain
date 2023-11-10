@@ -9,8 +9,6 @@ import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
 import "canine_chain/storage/payment_info.proto";
 
-// this line is used by starport scaffolding # 1
-
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
 // Query defines the gRPC querier service.
@@ -33,14 +31,14 @@ service Query {
         "/jackal/canine-chain/storage/files";
   }
 
-  // Queries a list of File items.
+  // Queries a list of open files.
   rpc OpenFiles(QueryOpenFiles)
       returns (QueryAllFilesResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/open_files/{provider_address}";
   }
 
-  // Queries a list of File items.
+  // Queries a list of Proofs.
   rpc Proof(QueryProof)
       returns (QueryProofResponse) {
     option (google.api.http).get =
@@ -89,13 +87,13 @@ service Query {
         "/jackal/canine-chain/storage/free_space/{address}";
   }
 
-  // Queries a list of FreeSpace items.
+  // Queries how many files a provider is storing.
   rpc StoreCount(QueryStoreCount) returns (QueryStoreCountResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/storing/{address}";
   }
 
-  // Queries a list of FindFile items.
+  // Queries where a file is located.
   rpc FindFile(QueryFindFile) returns (QueryFindFileResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/find_file/{merkle}";
