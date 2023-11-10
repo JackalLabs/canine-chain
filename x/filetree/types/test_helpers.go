@@ -40,7 +40,7 @@ func MakePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 	return newKey, nil
 }
 
-func CreateMsgMakeRoot(creator string) (*MsgMakeRootV2, error) {
+func CreateMsgMakeRoot(creator string) (*MsgProvisionFileTree, error) {
 	trackingNumber := uuid.NewString()
 
 	editorIds := strings.Split(creator, ",")
@@ -49,7 +49,7 @@ func CreateMsgMakeRoot(creator string) (*MsgMakeRootV2, error) {
 		return nil, err
 	}
 
-	msg := NewMsgMakeRootV2(
+	msg := NewMsgProvisionFileTree(
 		creator,
 		string(jsonEditors),
 		"Viewers",

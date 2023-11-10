@@ -18,8 +18,8 @@ var _ = strconv.Itoa(0)
 
 func CmdMakeRootV2() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "make-root-v2",
-		Short: "Broadcast message make root",
+		Use:   "provision",
+		Short: "Provision your file tree",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			if err != nil {
@@ -51,7 +51,7 @@ func CmdMakeRootV2() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgMakeRootV2(
+			msg := types.NewMsgProvisionFileTree(
 				clientCtx.GetFromAddress().String(),
 				string(jsonEditors),
 				"Viewers",

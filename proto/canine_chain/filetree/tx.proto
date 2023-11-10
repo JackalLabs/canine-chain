@@ -10,7 +10,7 @@ service Msg {
   rpc PostKey(MsgPostKey) returns (MsgPostKeyResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
-  rpc MakeRootV2(MsgMakeRootV2) returns (MsgMakeRootResponse);
+  rpc ProvisionFileTree(MsgProvisionFileTree) returns (MsgProvisionFileTreeResponse);
 
   rpc AddEditors(MsgAddEditors) returns (MsgAddEditorsResponse);
   rpc RemoveEditors(MsgRemoveEditors) returns (MsgRemoveEditorsResponse);
@@ -67,9 +67,9 @@ message MsgRemoveViewers {
 message MsgRemoveViewersResponse {}
 
 
-message MsgMakeRootResponse {}
+message MsgProvisionFileTreeResponse {}
 
-message MsgMakeRootV2 {
+message MsgProvisionFileTree {
   string creator = 1;
   string editors = 2;
   string viewers = 3;

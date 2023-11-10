@@ -32,10 +32,10 @@ func (k msgServer) MakeRootFolder(ctx sdk.Context, creator string, viewers strin
 	k.SetFiles(ctx, file)
 }
 
-func (k msgServer) MakeRootV2(goCtx context.Context, msg *types.MsgMakeRootV2) (*types.MsgMakeRootResponse, error) {
+func (k msgServer) ProvisionFileTree(goCtx context.Context, msg *types.MsgProvisionFileTree) (*types.MsgProvisionFileTreeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	k.MakeRootFolder(ctx, msg.Creator, msg.Viewers, msg.Editors, msg.TrackingNumber)
 
-	return &types.MsgMakeRootResponse{}, nil
+	return &types.MsgProvisionFileTreeResponse{}, nil
 }

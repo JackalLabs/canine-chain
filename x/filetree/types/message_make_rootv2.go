@@ -5,12 +5,12 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgMakeRootV2 = "make_root_v2"
+const TypeMsgProvisionFileTree = "provision_file_tree"
 
-var _ sdk.Msg = &MsgMakeRootV2{}
+var _ sdk.Msg = &MsgProvisionFileTree{}
 
-func NewMsgMakeRootV2(creator string, editors string, viewers string, trackingNumber string) *MsgMakeRootV2 {
-	return &MsgMakeRootV2{
+func NewMsgProvisionFileTree(creator string, editors string, viewers string, trackingNumber string) *MsgProvisionFileTree {
+	return &MsgProvisionFileTree{
 		Creator:        creator,
 		Editors:        editors,
 		Viewers:        viewers,
@@ -18,15 +18,15 @@ func NewMsgMakeRootV2(creator string, editors string, viewers string, trackingNu
 	}
 }
 
-func (msg *MsgMakeRootV2) Route() string {
+func (msg *MsgProvisionFileTree) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgMakeRootV2) Type() string {
-	return TypeMsgMakeRootV2
+func (msg *MsgProvisionFileTree) Type() string {
+	return TypeMsgProvisionFileTree
 }
 
-func (msg *MsgMakeRootV2) GetSigners() []sdk.AccAddress {
+func (msg *MsgProvisionFileTree) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -34,12 +34,12 @@ func (msg *MsgMakeRootV2) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgMakeRootV2) GetSignBytes() []byte {
+func (msg *MsgProvisionFileTree) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgMakeRootV2) ValidateBasic() error {
+func (msg *MsgProvisionFileTree) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
