@@ -44,7 +44,7 @@ func (k Keeper) Name(c context.Context, req *types.QueryName) (*types.QueryNameR
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	n, tld, err := GetNameAndTLD(req.Index)
+	n, tld, err := GetNameAndTLD(req.Name)
 	if err != nil {
 		return nil, err
 	}

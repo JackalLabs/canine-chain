@@ -22,7 +22,7 @@ service Query {
 
   // Queries a Name by index.
   rpc Name(QueryName) returns (QueryNameResponse) {
-    option (google.api.http).get = "/jackal/canine-chain/rns/names/{index}";
+    option (google.api.http).get = "/jackal/canine-chain/rns/names/{name}";
   }
 
   // Queries a list of Names.
@@ -32,7 +32,7 @@ service Query {
 
   // Queries a Bid by index.
   rpc Bid(QueryBid) returns (QueryBidResponse) {
-    option (google.api.http).get = "/jackal/canine-chain/rns/bids/{index}";
+    option (google.api.http).get = "/jackal/canine-chain/rns/bids/{name}";
   }
 
   // Queries a list of Bids.
@@ -79,7 +79,7 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryName { string index = 1; }
+message QueryName { string name = 1; }
 
 message QueryNameResponse { Names name = 1 [ (gogoproto.nullable) = false ]; } // TODO: Check if this breaks everything to change it to Name
 
@@ -92,7 +92,7 @@ message QueryAllNamesResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryBid { string index = 1; }
+message QueryBid { string name = 1; }
 
 message QueryBidResponse { Bids bids = 1 [ (gogoproto.nullable) = false ]; }
 

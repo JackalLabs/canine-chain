@@ -34,7 +34,7 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 	suite.Require().NoError(err)
 
 	nameReq := types.QueryName{
-		Index: name,
+		Name: name,
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)

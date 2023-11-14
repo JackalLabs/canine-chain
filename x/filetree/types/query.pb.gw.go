@@ -525,9 +525,9 @@ var (
 
 	pattern_Query_AllFiles_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal", "canine-chain", "filetree", "files"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_PubKey_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal", "canine-chain", "filetree", "pubkeys", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_PubKey_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"jackal", "canine-chain", "filetree", "pub_keys", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_AllPubKeys_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal", "canine-chain", "filetree", "pubkeys"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AllPubKeys_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"jackal", "canine-chain", "filetree", "pub_keys"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (

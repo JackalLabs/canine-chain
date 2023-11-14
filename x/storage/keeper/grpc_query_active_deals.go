@@ -116,7 +116,34 @@ func (k Keeper) Proof(c context.Context, req *types.QueryProof) (*types.QueryPro
 	return &types.QueryProofResponse{Proof: val}, nil
 }
 
-func (k Keeper) AllProofs(c context.Context, req *types.QueryProofsByAddress) (*types.QueryProofsByAddressResponse, error) {
+func (k Keeper) AllProofs(c context.Context, req *types.QueryAllProofs) (*types.QueryAllProofsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var proofs []types.FileProof
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(k.storeKey)
+	proofStore := prefix.NewStore(store, types.KeyPrefix(types.ProofKeyPrefix))
+
+	pageRes, err := query.Paginate(proofStore, req.Pagination, func(key []byte, value []byte) error {
+		var proof types.FileProof
+		if err := k.cdc.Unmarshal(value, &proof); err != nil {
+			return err
+		}
+
+		proofs = append(proofs, proof)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllProofsResponse{Proofs: proofs, Pagination: pageRes}, nil
+}
+
+func (k Keeper) ProofsByAddress(c context.Context, req *types.QueryProofsByAddress) (*types.QueryProofsByAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -140,5 +167,5 @@ func (k Keeper) AllProofs(c context.Context, req *types.QueryProofsByAddress) (*
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryProofsByAddressResponse{Proof: proofs, Pagination: pageRes}, nil
+	return &types.QueryProofsByAddressResponse{Proofs: proofs, Pagination: pageRes}, nil
 }

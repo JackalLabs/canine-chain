@@ -65,7 +65,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.Require().Equal(eamt.Int64(), biddee) // cost them the amount they bid
 
 	nameReq := types.QueryName{
-		Index: TestName,
+		Name: TestName,
 	}
 
 	res, err := suite.queryClient.Name(suite.ctx.Context(), &nameReq)
@@ -97,7 +97,7 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	suite.Require().NoError(err)
 
 	bidReq := types.QueryBid{
-		Index: fmt.Sprintf("%s%s", address.String(), TestName),
+		Name: fmt.Sprintf("%s%s", address.String(), TestName),
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -135,7 +135,7 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	suite.Require().NoError(err)
 
 	bidReq := types.QueryBid{
-		Index: fmt.Sprintf("%s%s", address.String(), TestName),
+		Name: fmt.Sprintf("%s%s", address.String(), TestName),
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)

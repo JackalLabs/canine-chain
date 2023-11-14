@@ -46,7 +46,7 @@ func (k Keeper) Bid(c context.Context, req *types.QueryBid) (*types.QueryBidResp
 
 	val, found := k.GetBids(
 		ctx,
-		req.Index,
+		req.Name,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")

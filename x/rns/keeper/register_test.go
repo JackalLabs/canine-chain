@@ -39,7 +39,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.Require().NoError(err)
 
 	nameReq := types.QueryName{
-		Index: name,
+		Name: name,
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
