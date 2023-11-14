@@ -1,27 +1,31 @@
-![canine banner](banner.png)
-# Jackal Core
-**Jackal Core** is a blockchain built using Cosmos SDK and Tendermint.
+![canine banner](assets/jackal_logo.png)
+# Canine Chain
+**Canine Chain** is a core component to the Jackal Protocol, a distributed cloud storage platform running on blockchain rails. This component is the replicated state machine that manages storage deals, payments and data-permissions. It is built using the Cosmos-SDK and CometBFT (formerly Tendermint).
 
 [![golangci-lint](https://github.com/JackalLabs/canine-chain/actions/workflows/golangci.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/golangci.yml)
 [![Test](https://github.com/JackalLabs/canine-chain/actions/workflows/test-unit.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/test-unit.yml)
 [![Build](https://github.com/JackalLabs/canine-chain/actions/workflows/build.yml/badge.svg)](https://github.com/JackalLabs/canine-chain/actions/workflows/build.yml)
 
-## Pages
+## Wiki Pages
 
 1. [Modules](x/README.md)
 2. [Tokens](TOKENS.md)
-3. [Storage Providers](/cmd/canined/README.md)
+3. [Storage Providers](cmd/canined/README.md)
 
 
 ## Installing the Canine CLI
 ### Prerequisites
-* Install GoLang 1.20 [here](https://go.dev/dl/)
+* Install GoLang 1.21 [here](https://go.dev/dl/)
 * Install build essentials (GNU Make)
 
 ### Installing
 To install `canined` on your Linux machine:
 
-`go install ./...`
+```shell
+git clone https://github.com/JackalLabs/canine-chain.git
+cd canine-chain
+make install
+```
 
 ### Pre-built Binary
 [Releases](https://github.com/jackalLabs/canine-chain-chain/releases) and download the latest release. Move the executable to a folder in your `$PATH` and download [this](https://github.com/CosmWasm/wasmvm/raw/v1.1.1/internal/api/libwasmvm.x86_64.so) to `/lib/libwasmvm.x86_64.so` 
@@ -34,7 +38,9 @@ You may also need to run `sudo chmod +x canined` inside the executables director
 
 ## Testing this chain
 
-`go test ./...`
+```shell
+make test
+```
 
 ## Version Map
 
