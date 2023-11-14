@@ -41,7 +41,7 @@ func (k Keeper) AddBid(ctx sdk.Context, sender string, name string, bid string) 
 func (k msgServer) Bid(goCtx context.Context, msg *types.MsgBid) (*types.MsgBidResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.AddBid(ctx, msg.Creator, msg.Name, msg.Bid)
+	err := k.AddBid(ctx, msg.Creator, msg.Name, msg.Bid.String())
 
 	return &types.MsgBidResponse{}, err
 }
