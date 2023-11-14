@@ -126,8 +126,15 @@ func (f *UnifiedFile) ResetChunk(ctx sdk.Context, k ProofLoader, prover string, 
 	var newChunk int64
 	if pieces > 0 { // if there is more than one piece we pick a random to prove
 
+		var gs int64
+		gasMeter := ctx.BlockGasMeter()
+		if gasMeter != nil {
+			gs = int64(gasMeter.GasConsumed())
+		}
+		h := ctx.BlockHeight()
+
 		r := rand.NewRand()
-		r.Seed(ctx.BlockHeight() + int64(ctx.BlockGasMeter().GasConsumed()))
+		r.Seed(gs + h)
 		newChunk = r.Int63n(pieces)
 	}
 

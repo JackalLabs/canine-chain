@@ -123,7 +123,7 @@ func GenerateOrBroadcastTx(clientCtx client.Context, flags *pflag.FlagSet, msgs 
 	}
 
 	// broadcast to a Tendermint node
-	return clientCtx.BroadcastTx(txBytes)
+	return clientCtx.BroadcastTxCommit(txBytes)
 }
 
 func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address string) error {
@@ -191,6 +191,153 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 	return nil
 }
 
+func postFile(fileData []byte, cmd *cobra.Command) {
+	buf := bytes.NewBuffer(fileData)
+	treeBuffer := bytes.NewBuffer(buf.Bytes())
+	clientCtx, err := client.GetClientTxContext(cmd)
+	if err != nil {
+		panic(err)
+	}
+	cl := types.NewQueryClient(clientCtx)
+
+	params, err := cl.Params(context.Background(), &types.QueryParams{})
+	if err != nil {
+		panic(err)
+	}
+
+	root, _, _, size, err := utils.BuildTree(treeBuffer, params.Params.ChunkSize)
+	if err != nil {
+		panic(err)
+	}
+
+	address := clientCtx.GetFromAddress().String()
+
+	msg := types.NewMsgPostFile(
+		address,
+		root,
+		int64(size),
+		40,
+		0,
+		3,
+		"Uploaded with canined",
+	)
+	if err := msg.ValidateBasic(); err != nil {
+		panic(err)
+	}
+
+	res, err := GenerateOrBroadcastTx(clientCtx, cmd.Flags(), msg)
+	if err != nil {
+		panic(err)
+	}
+
+	if res.Code != 0 {
+		panic("tx failed!")
+	}
+
+	fmt.Println(res.RawLog)
+
+	var postRes types.MsgPostFileResponse
+	data, err := hex.DecodeString(res.Data)
+	if err != nil {
+		panic(err)
+	}
+
+	var txMsgData sdk.TxMsgData
+	err = clientCtx.Codec.Unmarshal(data, &txMsgData)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(txMsgData)
+	if len(txMsgData.Data) == 0 {
+		panic("no message data")
+	}
+
+	err = postRes.Unmarshal(txMsgData.Data[0].Data)
+	if err != nil {
+		panic(err)
+	}
+
+	ips := postRes.ProviderIps
+	fmt.Println(ips)
+
+	fmt.Println(res.Code)
+	fmt.Println(res.RawLog)
+	fmt.Println(res.TxHash)
+
+	ipCount := len(ips)
+	randomCount := 3 - ipCount
+	for i := 0; i < ipCount; i++ {
+		ip := ips[i]
+		uploadBuffer := bytes.NewBuffer(buf.Bytes())
+		err := uploadFile(ip, uploadBuffer, root, postRes.StartBlock, address)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	pageReq, err := client.ReadPageRequest(cmd.Flags())
+	if err != nil {
+		panic(err)
+	}
+	provReq := types.QueryAllProviders{
+		Pagination: pageReq,
+	}
+
+	provRes, err := cl.AllProviders(context.Background(), &provReq)
+	if err != nil {
+		panic(err)
+	}
+
+	providers := provRes.Providers
+	for i, provider := range providers {
+		if i > randomCount {
+			break
+		}
+		uploadBuffer := bytes.NewBuffer(buf.Bytes())
+		err := uploadFile(provider.Ip, uploadBuffer, root, postRes.StartBlock, address)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+}
+
+func CmdPostRandomFile() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "post-random [p-count]",
+		Short: "Post random file to chain",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			countArg := args[0]
+			count, err := strconv.ParseInt(countArg, 10, 64)
+			if err != nil {
+				panic(err)
+			}
+
+			url := fmt.Sprintf("https://baconipsum.com/api/?type=meat-and-filler&paras=%d&format=text", count)
+			hcli := http.DefaultClient
+			resp, err := hcli.Get(url)
+			if err != nil {
+				panic(err)
+			}
+			defer resp.Body.Close()
+
+			if resp.StatusCode != http.StatusOK {
+				return nil
+			}
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				panic(err)
+			}
+
+			postFile(bodyBytes, cmd)
+
+			return nil
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+
 func CmdPostFile() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "post [file-path]",
@@ -204,102 +351,7 @@ func CmdPostFile() *cobra.Command {
 				return err
 			}
 
-			buf := bytes.NewBuffer(file)
-			treeBuffer := bytes.NewBuffer(buf.Bytes())
-
-			root, _, _, size, err := utils.BuildTree(treeBuffer, 10240)
-			if err != nil {
-				return err
-			}
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			address := clientCtx.GetFromAddress().String()
-
-			msg := types.NewMsgPostFile(
-				address,
-				root,
-				int64(size),
-				40,
-				0,
-				3,
-				"Uploaded with canined",
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				panic(err)
-			}
-
-			res, err := GenerateOrBroadcastTx(clientCtx, cmd.Flags(), msg)
-			if err != nil {
-				panic(err)
-			}
-
-			fmt.Println(res.RawLog)
-
-			var postRes types.MsgPostFileResponse
-			data, err := hex.DecodeString(res.Data)
-			if err != nil {
-				panic(err)
-			}
-
-			var txMsgData sdk.TxMsgData
-			err = clientCtx.Codec.Unmarshal(data, &txMsgData)
-			if err != nil {
-				panic(err)
-			}
-
-			fmt.Println(txMsgData)
-
-			err = postRes.Unmarshal(txMsgData.Data[0].Data)
-			if err != nil {
-				panic(err)
-			}
-
-			ips := postRes.ProviderIps
-			fmt.Println(ips)
-
-			fmt.Println(res.Code)
-			fmt.Println(res.RawLog)
-
-			fmt.Println(res.TxHash)
-
-			ipCount := len(ips)
-			randomCount := 3 - ipCount
-			for i := 0; i < ipCount; i++ {
-				ip := ips[i]
-				uploadBuffer := bytes.NewBuffer(buf.Bytes())
-				err := uploadFile(ip, uploadBuffer, root, postRes.StartBlock, address)
-				if err != nil {
-					fmt.Println(err)
-				}
-			}
-			pageReq, err := client.ReadPageRequest(cmd.Flags())
-			if err != nil {
-				panic(err)
-			}
-			cl := types.NewQueryClient(clientCtx)
-			provReq := types.QueryAllProviders{
-				Pagination: pageReq,
-			}
-
-			provRes, err := cl.AllProviders(context.Background(), &provReq)
-			if err != nil {
-				panic(err)
-			}
-
-			providers := provRes.Providers
-			for i, provider := range providers {
-				if i > randomCount {
-					break
-				}
-				uploadBuffer := bytes.NewBuffer(buf.Bytes())
-				err := uploadFile(provider.Ip, uploadBuffer, root, postRes.StartBlock, address)
-				if err != nil {
-					fmt.Println(err)
-				}
-			}
+			postFile(file, cmd)
 
 			return nil
 		},

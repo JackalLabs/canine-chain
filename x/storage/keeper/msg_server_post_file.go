@@ -13,9 +13,9 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	window := k.GetParams(ctx).ProofWindow
-	if msg.ProofInterval != window {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot create a file with a window different than %d", window)
-	}
+	// if msg.ProofInterval != window {
+	//	return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot create a file with a window different than %d", window)
+	//}
 
 	providers := k.GetActiveProviders(ctx, "")
 
@@ -25,7 +25,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		Start:         ctx.BlockHeight(),
 		Expires:       msg.Expires,
 		FileSize:      msg.FileSize,
-		ProofInterval: msg.ProofInterval,
+		ProofInterval: window,
 		ProofType:     msg.ProofType,
 		Proofs:        make([]string, 0),
 		MaxProofs:     msg.MaxProofs,
