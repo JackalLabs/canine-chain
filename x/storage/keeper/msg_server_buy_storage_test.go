@@ -41,7 +41,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		expErrMsg string
 	}{
 		{
-			testName: "buy storage while having an active plan",
+			testName: "buy less storage than active while having an active plan",
 			preRun: func() {
 				initialPayInfo := types.StoragePaymentInfo{
 					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
@@ -60,7 +60,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
-			expErrMsg: "please use MsgUpgradeStorage if you want to upgrade/downgrade",
+			expErrMsg: "cannot downgrade until current plan expires: invalid request",
 		},
 		{
 			testName: "buy 3gb which is less than current usage of 5gb",

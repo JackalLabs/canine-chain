@@ -109,7 +109,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			expErrMsg: "",
 		},
 		{
-			testName: "upgrading expired plan",
+			testName: "upgrading expired plan", // upgrading an expired plan is the same as buying a new plan
 			preRun: func() {
 				// Set a 3 months plan of 5GB starts 2 months ago, ends a month ago
 				initialPayInfo := types.StoragePaymentInfo{
@@ -128,8 +128,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				Bytes:        "8000000000",
 				PaymentDenom: "ujkl",
 			},
-			expErr:    true,
-			expErrMsg: "old plan is expired, use MsgBuyStorage: invalid request",
+			expErr: false,
 		},
 		{
 			testName: "downgrading to buy less gb than current usage",
@@ -151,7 +150,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
-			expErrMsg: "cannot downgrade below current usage: invalid request",
+			expErrMsg: "cannot buy less than your current gb usage", // fail a downgrade
 		},
 	}
 
