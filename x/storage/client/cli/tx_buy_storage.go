@@ -23,6 +23,16 @@ func CmdBuyStorage() *cobra.Command {
 			argBytes := args[2]
 			argPaymentDenom := args[3]
 
+			bytes, err := strconv.ParseInt(argBytes, 10, 64)
+			if err != nil {
+				return err
+			}
+
+			duration, err := strconv.ParseInt(argDuration, 10, 64)
+			if err != nil {
+				return err
+			}
+
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
@@ -31,8 +41,8 @@ func CmdBuyStorage() *cobra.Command {
 			msg := types.NewMsgBuyStorage(
 				clientCtx.GetFromAddress().String(),
 				argForAddress,
-				argDuration,
-				argBytes,
+				duration,
+				bytes,
 				argPaymentDenom,
 			)
 			if err := msg.ValidateBasic(); err != nil {

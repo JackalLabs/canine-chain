@@ -153,8 +153,8 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	_, err = msgSrvr.BuyStorage(context, &types.MsgBuyStorage{
 		Creator:      user.String(),
 		ForAddress:   user.String(),
-		Bytes:        "4000000000",
-		Duration:     "720h",
+		Bytes:        4000000000,
+		DurationDays: 30,
 		PaymentDenom: "ujkl",
 	})
 	suite.Require().NoError(err)

@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,20 +19,14 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
-	duration, err := time.ParseDuration(msg.Duration)
-	if err != nil {
-		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
-	}
+	duration := time.Duration(msg.DurationDays) * time.Hour * 24
 
 	timeMonth := time.Hour * 24 * 30
-	if duration.Truncate(timeMonth) <= 0 {
+	if duration < timeMonth {
 		return nil, fmt.Errorf("duration can't be less than 1 month")
 	}
 
-	bytes, err := strconv.ParseInt(msg.Bytes, 10, 64)
-	if err != nil {
-		return nil, fmt.Errorf("bytes can't be parsed: %s", err.Error())
-	}
+	bytes := msg.Bytes
 
 	denom := msg.PaymentDenom
 	if denom != "ujkl" {
