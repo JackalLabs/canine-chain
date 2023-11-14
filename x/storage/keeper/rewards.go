@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -9,13 +11,33 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
+func (k Keeper) burnContract(ctx sdk.Context, providerAddress string) {
+	prov, found := k.GetProviders(ctx, providerAddress)
+	if !found {
+		return
+	}
+
+	burned, err := strconv.ParseInt(prov.BurnedContracts, 10, 64)
+	if err != nil {
+		ctx.Logger().Error("cannot parse providers burn count")
+		return
+	}
+
+	prov.BurnedContracts = fmt.Sprintf("%d", burned+1)
+	k.SetProviders(ctx, prov)
+}
+
 func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
 	st := *sizeTracker
+
+	pks := strings.Split(proofKey, "/")
+	providerAddress := pks[0]
 
 	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
 	if !found {
 		ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
 		file.RemoveProverWithKey(ctx, k, proofKey)
+		k.burnContract(ctx, providerAddress)
 	}
 
 	currentHeight := ctx.BlockHeight()
@@ -25,6 +47,7 @@ func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, fil
 	if windowStart > proof.LastProven { // if the last time this file was proven was outside the proof window, burn their stake in the file
 		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window: %d > %d", windowStart, proof.LastProven))
 		file.RemoveProverWithKey(ctx, k, proofKey)
+		k.burnContract(ctx, providerAddress)
 		return
 	}
 
