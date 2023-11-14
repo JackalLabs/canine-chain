@@ -47,7 +47,7 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 
 	newsale := types.Forsale{
 		Name:  mname,
-		Price: msg.Price,
+		Price: msg.Price.String(),
 		Owner: msg.Creator,
 	}
 

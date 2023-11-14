@@ -132,14 +132,6 @@ message MsgBuyStorage {
 
 message MsgBuyStorageResponse {}
 
-message MsgClaimStray {
-  string creator = 1;
-  string cid = 2;
-  string for_address = 3;
-}
-
-message MsgClaimStrayResponse {}
-
 message MsgRequestAttestationForm {
   string creator = 1;
   bytes merkle = 2;
