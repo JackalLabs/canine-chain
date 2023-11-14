@@ -16,7 +16,7 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 		case types.QueryParameters:
 			return queryParams(ctx, k, legacyQuerierCdc)
 
-		case types.QueryInflation:
+		case types.QueryInflationKey:
 			return queryInflation(ctx, k, legacyQuerierCdc)
 
 		default:

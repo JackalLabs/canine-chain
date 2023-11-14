@@ -32,24 +32,10 @@ func (k msgServer) MakeRootFolder(ctx sdk.Context, creator string, viewers strin
 	k.SetFiles(ctx, file)
 }
 
-/*
-Deprecated: MakeRoot is being replaced by MakeRootV2
-*/
-func (k msgServer) MakeRoot(goCtx context.Context, msg *types.MsgMakeRoot) (*types.MsgMakeRootResponse, error) {
-	newMsg := types.MsgMakeRootV2{
-		Creator:        msg.Creator,
-		Editors:        msg.Editors,
-		Viewers:        msg.Editors,
-		TrackingNumber: msg.TrackingNumber,
-	}
-
-	return k.MakeRootV2(goCtx, &newMsg)
-}
-
-func (k msgServer) MakeRootV2(goCtx context.Context, msg *types.MsgMakeRootV2) (*types.MsgMakeRootResponse, error) {
+func (k msgServer) ProvisionFileTree(goCtx context.Context, msg *types.MsgProvisionFileTree) (*types.MsgProvisionFileTreeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	k.MakeRootFolder(ctx, msg.Creator, msg.Viewers, msg.Editors, msg.TrackingNumber)
 
-	return &types.MsgMakeRootResponse{}, nil
+	return &types.MsgProvisionFileTreeResponse{}, nil
 }

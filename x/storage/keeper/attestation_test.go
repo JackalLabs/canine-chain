@@ -22,7 +22,7 @@ func (suite *KeeperTestSuite) TestSetAttestationForm() {
 
 	suite.storageKeeper.SetAttestationForm(suite.ctx, attestation)
 
-	attestationRequest := types.QueryAttestationRequest{
+	attestationRequest := types.QueryAttestation{
 		Prover: "prover",
 		Merkle: []byte("merkle"),
 		Owner:  "owner",

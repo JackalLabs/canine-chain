@@ -34,7 +34,7 @@ func TestMsgPostkey_ValidateBasic(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			msg := NewMsgPostkey(
+			msg := NewMsgPostKey(
 				tt.Creator, tt.Key,
 			)
 

@@ -14,7 +14,7 @@ message StoragePaymentInfo {
 
   google.protobuf.Timestamp start = 1 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
   google.protobuf.Timestamp end = 2 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false];
-  int64 spaceAvailable = 3;
+  int64 spaceAvailable = 3; // TODO: same as params
   int64 spaceUsed = 4;
   string address = 5;
 

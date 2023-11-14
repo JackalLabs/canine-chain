@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -79,7 +78,7 @@ func SimulateMsgRegister(
 		}
 		// filling the appropriate message fields
 		msg.Data = ""
-		msg.Years = fmt.Sprint(numYears)
+		msg.Years = int64(numYears)
 		msg.Name = name + "." + tld
 
 		// generating the transaction

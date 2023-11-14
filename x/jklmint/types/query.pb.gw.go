@@ -34,7 +34,7 @@ var _ = descriptor.ForMessage
 var _ = metadata.Join
 
 func request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryParamsRequest
+	var protoReq QueryParams
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.Params(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -43,7 +43,7 @@ func request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, cl
 }
 
 func local_request_Query_Params_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryParamsRequest
+	var protoReq QueryParams
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.Params(ctx, &protoReq)
@@ -52,7 +52,7 @@ func local_request_Query_Params_0(ctx context.Context, marshaler runtime.Marshal
 }
 
 func request_Query_Inflation_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryInflationRequest
+	var protoReq QueryInflation
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.Inflation(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -61,7 +61,7 @@ func request_Query_Inflation_0(ctx context.Context, marshaler runtime.Marshaler,
 }
 
 func local_request_Query_Inflation_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryInflationRequest
+	var protoReq QueryInflation
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.Inflation(ctx, &protoReq)

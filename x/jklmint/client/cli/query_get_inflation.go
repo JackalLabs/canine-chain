@@ -24,7 +24,7 @@ func CmdGetInflation() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryInflationRequest{}
+			params := &types.QueryInflation{}
 
 			res, err := queryClient.Inflation(cmd.Context(), params)
 			if err != nil {

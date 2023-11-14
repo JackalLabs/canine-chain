@@ -12,8 +12,8 @@ service Msg {
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
   rpc SetProviderKeybase(MsgSetProviderKeybase)
       returns (MsgSetProviderKeybaseResponse);
-  rpc SetProviderTotalspace(MsgSetProviderTotalspace)
-      returns (MsgSetProviderTotalspaceResponse);
+  rpc SetProviderTotalSpace(MsgSetProviderTotalSpace)
+      returns (MsgSetProviderTotalSpaceResponse);
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
   rpc ShutdownProvider(MsgShutdownProvider) returns (MsgShutdownProviderResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
@@ -56,7 +56,7 @@ message MsgPostProof {
 
 message MsgPostProofResponse {
   bool success = 1;
-  string errorMessage = 2;
+  string error_message = 2;
 }
 
 message MsgDeleteFile {
@@ -83,12 +83,12 @@ message MsgSetProviderKeybase {
 
 message MsgSetProviderKeybaseResponse {}
 
-message MsgSetProviderTotalspace {
+message MsgSetProviderTotalSpace {
   string creator = 1;
-  string space = 2;
+  int64 space = 2;
 }
 
-message MsgSetProviderTotalspaceResponse {}
+message MsgSetProviderTotalSpaceResponse {}
 
 message MsgAddClaimer {
   string creator = 1;
@@ -109,7 +109,7 @@ message MsgInitProvider {
   string creator = 1;
   string ip = 2;
   string keybase = 3;
-  string totalspace = 4;
+  int64 total_space = 4;
 }
 
 message MsgInitProviderResponse {}

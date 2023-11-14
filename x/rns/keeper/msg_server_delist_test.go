@@ -27,7 +27,7 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 	// Init rns account and register rns
 	rnsName := "Nuggie.jkl"
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", 2)
 	suite.Require().NoError(err)
 
 	keeper := suite.rnsKeeper

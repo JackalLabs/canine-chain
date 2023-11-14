@@ -12,7 +12,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPostFile{}, "storage/PostFile", nil)
 	cdc.RegisterConcrete(&MsgPostProof{}, "storage/PostProof", nil)
 	cdc.RegisterConcrete(&MsgSetProviderIP{}, "storage/SetProviderIp", nil)
-	cdc.RegisterConcrete(&MsgSetProviderTotalspace{}, "storage/SetProviderTotalspace", nil)
+	cdc.RegisterConcrete(&MsgSetProviderTotalSpace{}, "storage/SetProviderTotalSpace", nil)
 	cdc.RegisterConcrete(&MsgInitProvider{}, "storage/InitProvider", nil)
 	cdc.RegisterConcrete(&MsgDeleteFile{}, "storage/DeleteFile", nil)
 	cdc.RegisterConcrete(&MsgBuyStorage{}, "storage/BuyStorage", nil)
@@ -34,7 +34,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgSetProviderIP{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgSetProviderTotalspace{},
+		&MsgSetProviderTotalSpace{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgInitProvider{},

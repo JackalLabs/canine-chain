@@ -48,18 +48,18 @@ func CmdGetKeys() *cobra.Command {
 			Hash := H.Sum(nil)
 			ownerString := fmt.Sprintf("%x", Hash) // Make the owner string to find the file
 
-			params := &types.QueryFileRequest{
+			params := &types.QueryFile{
 				Address:      merklePath,
 				OwnerAddress: ownerString,
 			}
 
-			res, err := queryClient.Files(context.Background(), params)
+			res, err := queryClient.File(context.Background(), params)
 			if err != nil {
 				fmt.Println("cannot find file")
 				return err
 			}
 
-			viewers := res.Files.ViewingAccess
+			viewers := res.File.ViewingAccess
 			var m map[string]string
 
 			jerr := json.Unmarshal([]byte(viewers), &m)
@@ -68,7 +68,7 @@ func CmdGetKeys() *cobra.Command {
 				return jerr
 			}
 
-			addressString := keeper.MakeViewerAddress(res.Files.TrackingNumber, clientCtx.GetFromAddress().String())
+			addressString := keeper.MakeViewerAddress(res.File.TrackingNumber, clientCtx.GetFromAddress().String())
 
 			todec := m[addressString]
 

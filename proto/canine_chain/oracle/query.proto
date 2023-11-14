@@ -12,21 +12,21 @@ option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/params";
+  rpc Params(QueryParams) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/oracle/params";
   }
 
-  rpc Feed(QueryFeedRequest) returns (QueryFeedResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds/{name}";
+  rpc Feed(QueryFeed) returns (QueryFeedResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/oracle/feeds/{name}";
   }
 
-  rpc AllFeeds(QueryAllFeedsRequest) returns (QueryAllFeedsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds";
+  rpc AllFeeds(QueryAllFeeds) returns (QueryAllFeedsResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/oracle/feeds";
   }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
+message QueryParams {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
@@ -34,7 +34,7 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryFeedRequest {
+message QueryFeed {
   string name = 1;
 }
 
@@ -43,7 +43,7 @@ message QueryFeedResponse {
   Feed feed = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllFeedsRequest {}
+message QueryAllFeeds {}
 
 message QueryAllFeedsResponse {
   // params holds all the parameters of this module.

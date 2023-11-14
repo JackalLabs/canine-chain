@@ -23,7 +23,7 @@ service Msg {
 message MsgRegister {
   string creator = 1;
   string name = 2;
-  string years = 3;
+  int64 years = 3;
   string data = 4;
 }
 

@@ -34,7 +34,7 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 				return types.NewMsgInitProvider(
 					user,
 					"127.0.0.1",
-					"1000000000",
+					1000000000,
 					"test-key",
 				)
 			},
@@ -147,42 +147,31 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 
 	cases := []struct {
-		preRun    func() *types.MsgSetProviderTotalspace
+		preRun    func() *types.MsgSetProviderTotalSpace
 		expErr    bool
 		expErrMsg string
 		name      string
 	}{
 		{
-			preRun: func() *types.MsgSetProviderTotalspace {
-				return types.NewMsgSetProviderTotalspace(
+			preRun: func() *types.MsgSetProviderTotalSpace {
+				return types.NewMsgSetProviderTotalSpace(
 					user,
-					"1000000",
+					1000000,
 				)
 			},
 			expErr: false,
 			name:   "set provider total space success",
 		},
 		{
-			preRun: func() *types.MsgSetProviderTotalspace {
-				return types.NewMsgSetProviderTotalspace(
+			preRun: func() *types.MsgSetProviderTotalSpace {
+				return types.NewMsgSetProviderTotalSpace(
 					"wrong address",
-					"1000000",
+					1000000,
 				)
 			},
 			expErr:    true,
 			expErrMsg: "provider not found please init your provider",
 			name:      "set provider total space fail",
-		},
-		{
-			preRun: func() *types.MsgSetProviderTotalspace {
-				return types.NewMsgSetProviderTotalspace(
-					user,
-					"9@!0",
-				)
-			},
-			expErr:    true,
-			expErrMsg: "not valid total space please enter total number of bytes to provide",
-			name:      "invalid space param",
 		},
 	}
 
@@ -190,7 +179,7 @@ func (suite *KeeperTestSuite) TestMsgSetProviderTotalSpace() {
 		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
-			res, err := msgSrvr.SetProviderTotalspace(context, msg)
+			res, err := msgSrvr.SetProviderTotalSpace(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)

@@ -8,7 +8,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-func (k Keeper) Report(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {
+func (k Keeper) DoReport(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {
 	form, found := k.GetReportForm(ctx, prover, merkle, owner, start)
 	if !found {
 		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this report")
@@ -55,7 +55,7 @@ func (k Keeper) Report(ctx sdk.Context, prover string, merkle []byte, owner stri
 func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.MsgReportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.Keeper.Report(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
+	err := k.Keeper.DoReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
 	if err != nil {
 		return nil, err
 	}

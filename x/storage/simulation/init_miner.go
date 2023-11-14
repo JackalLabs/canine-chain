@@ -2,7 +2,6 @@ package simulation
 
 import (
 	"math/rand"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -40,7 +39,7 @@ func SimulateMsgInitProvider(
 		msg := &types.MsgInitProvider{
 			Creator:    simAccount.Address.String(),
 			Ip:         RandIPv4Url(r),
-			Totalspace: strconv.Itoa(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
+			TotalSpace: int64(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
 			Keybase:    simtypes.RandStringOfLength(r, 10),
 		}
 

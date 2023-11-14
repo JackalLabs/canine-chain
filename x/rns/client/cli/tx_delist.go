@@ -25,7 +25,7 @@ func CmdDelist() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgDelist(
+			msg := types.NewMsgDeList(
 				clientCtx.GetFromAddress().String(),
 				argName,
 			)

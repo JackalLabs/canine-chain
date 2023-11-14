@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AttestationsAll(c context.Context, req *types.QueryAllAttestationsRequest) (*types.QueryAllAttestationsResponse, error) {
+func (k Keeper) AllAttestations(c context.Context, req *types.QueryAllAttestations) (*types.QueryAllAttestationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -38,7 +38,7 @@ func (k Keeper) AttestationsAll(c context.Context, req *types.QueryAllAttestatio
 	return &types.QueryAllAttestationsResponse{Attestations: attestations, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Attestation(c context.Context, req *types.QueryAttestationRequest) (*types.QueryAttestationResponse, error) {
+func (k Keeper) Attestation(c context.Context, req *types.QueryAttestation) (*types.QueryAttestationResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

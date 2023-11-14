@@ -23,11 +23,11 @@ func CmdListNames() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllNamesRequest{
+			params := &types.QueryAllNames{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.NamesAll(context.Background(), params)
+			res, err := queryClient.AllNames(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,11 +54,11 @@ func CmdShowNames() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryNameRequest{
-				Index: argIndex,
+			params := &types.QueryName{
+				Name: argIndex,
 			}
 
-			res, err := queryClient.Names(context.Background(), params)
+			res, err := queryClient.Name(context.Background(), params)
 			if err != nil {
 				return err
 			}

@@ -9,7 +9,7 @@ const TypeMsgRegister = "register"
 
 var _ sdk.Msg = &MsgRegister{}
 
-func NewMsgRegister(creator string, name string, years string, data string) *MsgRegister {
+func NewMsgRegister(creator string, name string, years int64, data string) *MsgRegister {
 	return &MsgRegister{
 		Creator: creator,
 		Name:    name,
@@ -51,9 +51,6 @@ func (msg *MsgRegister) ValidateBasic() error {
 	if !IsValidName(name) {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid name")
 	}
-	_, ok := sdk.NewIntFromString(msg.Years)
-	if !ok {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "invalid years")
-	}
+
 	return nil
 }

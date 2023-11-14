@@ -22,14 +22,14 @@ func (suite *KeeperTestSuite) TestSetReportForm() {
 
 	suite.storageKeeper.SetReportForm(suite.ctx, report)
 
-	reportRequest := types.QueryReportRequest{
+	reportRequest := types.QueryReport{
 		Prover: "prover",
 		Merkle: []byte("merkle"),
 		Owner:  "owner",
 		Start:  0,
 	}
 
-	res, err := suite.queryClient.Reports(suite.ctx.Context(), &reportRequest)
+	res, err := suite.queryClient.Report(suite.ctx.Context(), &reportRequest)
 	suite.Require().NoError(err)
 	suite.Require().Equal(report.Prover, res.Report.Prover)
 	suite.Require().Equal(report.Attestations, res.Report.Attestations)
@@ -156,7 +156,7 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	suite.Equal(true, found)
 
 	for i, attestation := range form.Attestations {
-		err := suite.storageKeeper.Report(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start, attestation.Provider)
+		err := suite.storageKeeper.DoReport(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start, attestation.Provider)
 		if i >= int(params.AttestMinToPass) {
 			suite.Require().Error(err)
 		} else {

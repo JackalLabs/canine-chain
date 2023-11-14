@@ -23,11 +23,11 @@ func CmdListBids() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllBidsRequest{
+			params := &types.QueryAllBids{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.BidsAll(context.Background(), params)
+			res, err := queryClient.AllBids(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,11 +54,11 @@ func CmdShowBids() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryBidRequest{
-				Index: argIndex,
+			params := &types.QueryBid{
+				Name: argIndex,
 			}
 
-			res, err := queryClient.Bids(context.Background(), params)
+			res, err := queryClient.Bid(context.Background(), params)
 			if err != nil {
 				return err
 			}

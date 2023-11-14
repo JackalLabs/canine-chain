@@ -25,11 +25,11 @@ func CmdListAttestForms() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllAttestationsRequest{
+			params := &types.QueryAllAttestations{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.AttestationsAll(context.Background(), params)
+			res, err := queryClient.AllAttestations(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -68,7 +68,7 @@ func CmdShowAttestForms() *cobra.Command {
 				panic(err)
 			}
 
-			params := &types.QueryAttestationRequest{
+			params := &types.QueryAttestation{
 				Prover: argProver,
 				Merkle: merkle,
 				Owner:  argOwner,
@@ -103,11 +103,11 @@ func CmdListReportForms() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllReportRequest{
+			params := &types.QueryAllReports{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ReportsAll(context.Background(), params)
+			res, err := queryClient.AllReports(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -146,14 +146,14 @@ func CmdShowReportForms() *cobra.Command {
 				panic(err)
 			}
 
-			params := &types.QueryReportRequest{
+			params := &types.QueryReport{
 				Prover: argProver,
 				Merkle: merkle,
 				Owner:  argOwner,
 				Start:  start,
 			}
 
-			res, err := queryClient.Reports(context.Background(), params)
+			res, err := queryClient.Report(context.Background(), params)
 			if err != nil {
 				return err
 			}

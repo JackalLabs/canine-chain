@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequest) (*types.QueryStorageStatsResponse, error) {
+func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*types.QueryStorageStatsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

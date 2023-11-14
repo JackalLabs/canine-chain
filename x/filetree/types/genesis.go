@@ -11,7 +11,7 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		FilesList:  []Files{},
-		PubkeyList: []Pubkey{},
+		PubKeyList: []Pubkey{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -33,7 +33,7 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in pubkey
 	pubkeyIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.PubkeyList {
+	for _, elem := range gs.PubKeyList {
 		index := string(PubkeyKey(elem.Address))
 		if _, ok := pubkeyIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for pubkey")

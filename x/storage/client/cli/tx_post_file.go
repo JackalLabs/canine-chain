@@ -280,11 +280,11 @@ func CmdPostFile() *cobra.Command {
 				panic(err)
 			}
 			cl := types.NewQueryClient(clientCtx)
-			provReq := types.QueryAllProvidersRequest{
+			provReq := types.QueryAllProviders{
 				Pagination: pageReq,
 			}
 
-			provRes, err := cl.ProvidersAll(context.Background(), &provReq)
+			provRes, err := cl.AllProviders(context.Background(), &provReq)
 			if err != nil {
 				panic(err)
 			}

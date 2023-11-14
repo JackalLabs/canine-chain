@@ -26,7 +26,7 @@ func CmdListOwnedNames() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryListOwnedNamesRequest{
+			params := &types.QueryListOwnedNames{
 				Address: reqAddress,
 			}
 

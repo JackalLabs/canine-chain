@@ -106,11 +106,11 @@ func (suite *KeeperTestSuite) TestMakeBid() {
 
 	suite.rnsKeeper.SetBids(suite.ctx, bid)
 
-	bidReq := types.QueryBidRequest{
-		Index: fmt.Sprintf("%s%s", address.String(), name),
+	bidReq := types.QueryBid{
+		Name: fmt.Sprintf("%s%s", address.String(), name),
 	}
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
 }
 
@@ -137,20 +137,20 @@ func (suite *KeeperTestSuite) TestUpdateName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryNameRequest{
-		Index: "validname.jkl",
+	nameReq := types.QueryName{
+		Name: "validname.jkl",
 	}
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	newData := "{\"A\":\"192.168.0.1\"}"
 	name.Data = newData
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	res, err := suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Names.Data, newData)
+	suite.Require().Equal(res.Name.Data, newData)
 }
 
 func (suite *KeeperTestSuite) TestRemoveName() {
@@ -176,16 +176,16 @@ func (suite *KeeperTestSuite) TestRemoveName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryNameRequest{
-		Index: "validname.jkl",
+	nameReq := types.QueryName{
+		Name: "validname.jkl",
 	}
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	suite.rnsKeeper.RemoveNames(suite.ctx, "validname", "jkl")
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().Error(err)
 }
 
@@ -212,11 +212,11 @@ func (suite *KeeperTestSuite) TestSetName() {
 
 	suite.rnsKeeper.SetNames(suite.ctx, name)
 
-	nameReq := types.QueryNameRequest{
-		Index: "validname.jkl",
+	nameReq := types.QueryName{
+		Name: "validname.jkl",
 	}
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	badname := types.Names{
@@ -230,16 +230,16 @@ func (suite *KeeperTestSuite) TestSetName() {
 	}
 	suite.rnsKeeper.SetNames(suite.ctx, badname)
 
-	nameReq = types.QueryNameRequest{
-		Index: "badname.jkl",
+	nameReq = types.QueryName{
+		Name: "badname.jkl",
 	}
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().Error(err)
 }
 
 func (suite *KeeperTestSuite) TestGRPCParams() {
 	suite.SetupSuite()
-	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParamsRequest{})
+	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParams{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(params.Params, suite.rnsKeeper.GetParams(suite.ctx))
 }

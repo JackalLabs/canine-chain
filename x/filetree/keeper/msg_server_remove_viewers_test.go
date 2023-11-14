@@ -60,23 +60,23 @@ func (suite *KeeperTestSuite) TestMsgRemoveViewers() {
 
 	// Let's query the file after it was set to confirm that alice and bob are viewers
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	bobIsViewer, err := keeper.HasViewingAccess(res.Files, alice)
+	bobIsViewer, err := keeper.HasViewingAccess(res.File, alice)
 	suite.Require().NoError(err)
 	suite.Require().Equal(bobIsViewer, true)
 
-	aliceIsViewer, err := keeper.HasViewingAccess(res.Files, alice)
+	aliceIsViewer, err := keeper.HasViewingAccess(res.File, alice)
 	suite.Require().NoError(err)
 	suite.Require().Equal(aliceIsViewer, true)
 
-	bobViewerAddress := keeper.MakeViewerAddress(res.Files.TrackingNumber, bob)
+	bobViewerAddress := keeper.MakeViewerAddress(res.File.TrackingNumber, bob)
 
 	cases := []struct {
 		preRun    func() *types.MsgRemoveViewers
@@ -138,22 +138,22 @@ func (suite *KeeperTestSuite) TestMsgRemoveViewers() {
 				suite.Require().EqualValues(types.MsgRemoveViewersResponse{}, *res)
 				// Let's confirm that bob is no longer a viewer
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				bobIsViewer, err := keeper.HasViewingAccess(res.Files, bob)
+				bobIsViewer, err := keeper.HasViewingAccess(res.File, bob)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(bobIsViewer, false)
 
-				aliceIsViewer, err := keeper.HasViewingAccess(res.Files, alice)
+				aliceIsViewer, err := keeper.HasViewingAccess(res.File, alice)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(aliceIsViewer, true)
 
-				pvacc := res.Files.ViewingAccess
+				pvacc := res.File.ViewingAccess
 				jvacc := make(map[string]string)
 
 				err = json.Unmarshal([]byte(pvacc), &jvacc)

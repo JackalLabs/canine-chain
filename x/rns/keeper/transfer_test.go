@@ -30,11 +30,11 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 	beforebal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
 	amt := beforebal.AmountOf("ujkl")
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", 2)
 	suite.Require().NoError(err)
 
-	nameReq := types.QueryNameRequest{
-		Index: name,
+	nameReq := types.QueryName{
+		Name: name,
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -50,20 +50,20 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 	leftover := cost * 2
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.TransferName(suite.ctx, address.String(), receiver.String(), name) // will pass as the user owns the name
 	suite.Require().NoError(err)
 
-	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	res, err := suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Names.Value, receiver.String())
+	suite.Require().Equal(res.Name.Value, receiver.String())
 
 	err = suite.rnsKeeper.TransferName(suite.ctx, address.String(), receiver.String(), name) // should fail sending a name from an address that doesn't have ownership
 	suite.Require().Error(err)
 
-	res, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	res, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Names.Value, receiver.String())
+	suite.Require().Equal(res.Name.Value, receiver.String())
 }

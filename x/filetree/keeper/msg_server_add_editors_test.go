@@ -99,15 +99,15 @@ func (suite *KeeperTestSuite) TestMsgAddEditors() {
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(types.MsgAddEditorsResponse{}, *res)
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      aliceHomeMerklePath,
 					OwnerAddress: ownerAddress,
 				}
 
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				validEditor, err := keeper.HasEditAccess(res.Files, bob)
+				validEditor, err := keeper.HasEditAccess(res.File, bob)
 				suite.Require().NoError(err)
 				suite.Require().Equal(validEditor, true)
 
