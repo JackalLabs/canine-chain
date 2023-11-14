@@ -133,14 +133,6 @@ message MsgBuyStorage {
 
 message MsgBuyStorageResponse {}
 
-message MsgClaimStray {
-  string creator = 1;
-  string cid = 2;
-  string for_address = 3;
-}
-
-message MsgClaimStrayResponse {}
-
 message MsgUpgradeStorage {
   string creator = 1;
   string for_address = 2;
