@@ -2,8 +2,6 @@ package simulation
 
 import (
 	"math/rand"
-	"strconv"
-	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -35,12 +33,13 @@ func SimulateMsgBuyStorage(
 
 		size := simtypes.RandIntBetween(r, 1_000_000_000, 10_000_000_000)
 
-		t := time.Hour * 720
-		hours := sdk.NewDec(t.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
+		var t int64 = 30
+
+		hours := sdk.NewDec(t * 24)
 		cost := k.GetStorageCost(ctx, int64(size), hours.TruncateInt64())
 
-		msg.Bytes = strconv.Itoa(size)
-		msg.Duration = t.String()
+		msg.Bytes = int64(size)
+		msg.DurationDays = t
 
 		jBalance := bk.GetBalance(ctx, simAccount.Address, "ujkl")
 		// It is impossible to specify default bond denom through param.json

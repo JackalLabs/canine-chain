@@ -17,7 +17,6 @@ service Msg {
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
   rpc ShutdownProvider(MsgShutdownProvider) returns (MsgShutdownProviderResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
-  rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
 
@@ -126,8 +125,8 @@ message MsgShutdownProviderResponse {}
 message MsgBuyStorage {
   string creator = 1;
   string for_address = 2;
-  string duration = 3;
-  string bytes = 4;
+  int64 duration_days = 3;
+  int64 bytes = 4;
   string payment_denom = 5;
 }
 
@@ -140,16 +139,6 @@ message MsgClaimStray {
 }
 
 message MsgClaimStrayResponse {}
-
-message MsgUpgradeStorage {
-  string creator = 1;
-  string for_address = 2;
-  string duration = 3;
-  string bytes = 4;
-  string payment_denom = 5;
-}
-
-message MsgUpgradeStorageResponse {}
 
 message MsgRequestAttestationForm {
   string creator = 1;

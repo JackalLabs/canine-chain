@@ -2,8 +2,6 @@ package types
 
 import (
 	fmt "fmt"
-	"strconv"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
@@ -14,11 +12,11 @@ const TypeMsgBuyStorage = "buy_storage"
 
 var _ sdk.Msg = &MsgBuyStorage{}
 
-func NewMsgBuyStorage(creator string, forAddress string, duration string, bytes string, paymentDenom string) *MsgBuyStorage {
+func NewMsgBuyStorage(creator string, forAddress string, duration int64, bytes int64, paymentDenom string) *MsgBuyStorage {
 	return &MsgBuyStorage{
 		Creator:      creator,
 		ForAddress:   forAddress,
-		Duration:     duration,
+		DurationDays: duration,
 		Bytes:        bytes,
 		PaymentDenom: paymentDenom,
 	}
@@ -62,17 +60,8 @@ func (msg *MsgBuyStorage) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
 	}
 
-	if _, err := strconv.ParseInt(msg.Bytes, 10, 64); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse bytes (%s)", err)
-	}
-
-	duration, err := time.ParseDuration(msg.Duration)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot parse bytes (%s)", err)
-	}
-
-	if duration < 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "duration cannot be negative (%s)", msg.Duration)
+	if msg.DurationDays <= 0 {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "duration cannot be less than 1 (%d)", msg.DurationDays)
 	}
 
 	return nil

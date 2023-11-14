@@ -35,7 +35,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 	cases := []struct {
 		testName  string
 		preRun    func()
-		msg       types.MsgUpgradeStorage
+		msg       types.MsgBuyStorage
 		expErr    bool
 		expErrMsg string
 	}{
@@ -52,11 +52,11 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "1440h",
-				Bytes:        "6000000000",
+				DurationDays: 30,
+				Bytes:        6000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
@@ -75,11 +75,11 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "4000000000",
+				DurationDays: 30,
+				Bytes:        4000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -98,18 +98,18 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "2160h",
-				Bytes:        "8000000000",
+				DurationDays: 30 * 4,
+				Bytes:        8000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
 			expErrMsg: "",
 		},
 		{
-			testName: "upgrading expired plan",
+			testName: "upgrading expired plan", // upgrading an expired plan is the same as buying a new plan
 			preRun: func() {
 				// Set a 3 months plan of 5GB starts 2 months ago, ends a month ago
 				initialPayInfo := types.StoragePaymentInfo{
@@ -121,15 +121,14 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "2160h",
-				Bytes:        "8000000000",
+				DurationDays: 30,
+				Bytes:        8000000000,
 				PaymentDenom: "ujkl",
 			},
-			expErr:    true,
-			expErrMsg: "old plan is expired, use MsgBuyStorage: invalid request",
+			expErr: false,
 		},
 		{
 			testName: "downgrading to buy less gb than current usage",
@@ -143,15 +142,15 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "2160h",
-				Bytes:        "3000000000",
+				DurationDays: 30,
+				Bytes:        3000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
-			expErrMsg: "cannot downgrade below current usage: invalid request",
+			expErrMsg: "cannot buy less than your current gb usage", // fail a downgrade
 		},
 	}
 
@@ -161,7 +160,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			if tc.preRun != nil {
 				tc.preRun()
 			}
-			_, err := msgSrvr.UpgradeStorage(ctx, &tc.msg)
+			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 			if tc.expErr {
 				suite.Require().EqualError(err, tc.expErrMsg)
 			} else {

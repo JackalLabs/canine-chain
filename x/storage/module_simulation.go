@@ -43,10 +43,6 @@ const (
 	defaultWeightMsgBuyStorage int = 100
 
 	//nolint:all
-	opWeightMsgUpgradeStorage          = "op_weight_msg_upgrade_storage"
-	defaultWeightMsgUpgradeStorage int = 100
-
-	//nolint:all
 	opWeightMsgAddProviderClaimer          = "op_weight_msg_add_provider_claimer"
 	defaultWeightMsgAddProviderClaimer int = 100
 
@@ -119,17 +115,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgBuyStorage,
 		storagesimulation.SimulateMsgBuyStorage(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpgradeStorage int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpgradeStorage, &weightMsgUpgradeStorage, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpgradeStorage = defaultWeightMsgUpgradeStorage
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpgradeStorage,
-		storagesimulation.SimulateMsgUpgradeStorage(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgAddProviderClaimer int
