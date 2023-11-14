@@ -37,15 +37,15 @@ func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, fil
 	if !found {
 		ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
 		file.RemoveProverWithKey(ctx, k, proofKey)
-		k.burnContract(ctx, providerAddress)
+		return
 	}
 
 	currentHeight := ctx.BlockHeight()
 
-	windowStart := currentHeight - file.ProofInterval
+	proven := file.Proven(ctx, k, currentHeight, providerAddress)
 
-	if windowStart > proof.LastProven { // if the last time this file was proven was outside the proof window, burn their stake in the file
-		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window: %d > %d", windowStart, proof.LastProven))
+	if !proven { // if file has not been proven yet
+		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
 		file.RemoveProverWithKey(ctx, k, proofKey)
 		k.burnContract(ctx, providerAddress)
 		return
