@@ -48,7 +48,8 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
-	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64()))
+	storageCost := k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64())
+	priceTokens := sdk.NewCoin(denom, storageCost)
 
 	priceTokenList := sdk.NewCoins(priceTokens)
 
@@ -76,7 +77,12 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		}
 
 		if payInfo.End.After(ctx.BlockTime()) {
-			return nil, fmt.Errorf("please use MsgUpgradeStorage if you want to upgrade/downgrade")
+
+			err := k.UpgradeStorage(ctx, msg.Creator, bytes, payInfo, duration, storageCost, denom)
+			if err != nil {
+				return nil, err
+			}
+			return &types.MsgBuyStorageResponse{}, nil
 		}
 
 		c := payInfo.Coins.Add(priceTokens)

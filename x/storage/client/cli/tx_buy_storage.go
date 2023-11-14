@@ -15,7 +15,7 @@ var _ = strconv.Itoa(0)
 func CmdBuyStorage() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "buy-storage [for-address] [duration] [bytes] [payment-denom]",
-		Short: "Broadcast message buy-storage",
+		Short: "Buy or upgrade storage plan",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argForAddress := args[0]

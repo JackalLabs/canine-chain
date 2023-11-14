@@ -35,7 +35,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 	cases := []struct {
 		testName  string
 		preRun    func()
-		msg       types.MsgUpgradeStorage
+		msg       types.MsgBuyStorage
 		expErr    bool
 		expErrMsg string
 	}{
@@ -52,7 +52,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
 				Duration:     "1440h",
@@ -75,7 +75,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
 				Duration:     "720h",
@@ -98,7 +98,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
 				Duration:     "2160h",
@@ -121,7 +121,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
 				Duration:     "2160h",
@@ -143,7 +143,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
-			msg: types.MsgUpgradeStorage{
+			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
 				Duration:     "2160h",
@@ -161,7 +161,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			if tc.preRun != nil {
 				tc.preRun()
 			}
-			_, err := msgSrvr.UpgradeStorage(ctx, &tc.msg)
+			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 			if tc.expErr {
 				suite.Require().EqualError(err, tc.expErrMsg)
 			} else {
