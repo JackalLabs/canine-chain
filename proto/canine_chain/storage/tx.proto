@@ -125,22 +125,12 @@ message MsgShutdownProviderResponse {}
 message MsgBuyStorage {
   string creator = 1;
   string for_address = 2;
-  string duration = 3;
-  string bytes = 4;
+  int64 duration_days = 3;
+  int64 bytes = 4;
   string payment_denom = 5;
 }
 
 message MsgBuyStorageResponse {}
-
-message MsgUpgradeStorage {
-  string creator = 1;
-  string for_address = 2;
-  string duration = 3;
-  string bytes = 4;
-  string payment_denom = 5;
-}
-
-message MsgUpgradeStorageResponse {}
 
 message MsgRequestAttestationForm {
   string creator = 1;
