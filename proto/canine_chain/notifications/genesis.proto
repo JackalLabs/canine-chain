@@ -8,9 +8,8 @@ import "canine_chain/notifications/noti_counter.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
 
-// GenesisState defines the notifications module's genesis state.
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
-  repeated Notifications notificationsList = 2 [(gogoproto.nullable) = false];
-  repeated NotiCounter notiCounterList = 3 [(gogoproto.nullable) = false];
+  repeated Notifications notificationsList = 2 [(gogoproto.nullable) = false]; // TODO: fix casing
+  repeated NotiCounter notiCounterList = 3 [(gogoproto.nullable) = false]; // TODO: fix casing
 }
