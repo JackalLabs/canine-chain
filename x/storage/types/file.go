@@ -31,8 +31,8 @@ func (f *UnifiedFile) Proven(ctx sdk.Context, k ProofLoader, height int64, prove
 	return lastProven > lastWindowStart
 }
 
-func FileNeedsProven(start int64, interval int64, height int64) bool {
-	lastWindowEnd := start - (start % interval)
+func (f *UnifiedFile) NeedsProven(height int64) bool {
+	lastWindowEnd := f.Start - (f.Start % f.ProofInterval)
 
 	return height > lastWindowEnd
 }

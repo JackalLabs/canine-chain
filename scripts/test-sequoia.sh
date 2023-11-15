@@ -47,7 +47,7 @@ sed -i.bak -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/' $J
 sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $JKL_HOME/config/client.toml
 screen -d -m canined start --home=$JKL_HOME --log_level info
 sleep 20
-canined tx storage buy-storage $(canined keys show charlie -a --home=$JKL_HOME) 720h 1000000000000 ujkl --from charlie --gas-prices=0.02ujkl --home=$JKL_HOME -y
+canined tx storage buy-storage $(canined keys show charlie -a --home=$JKL_HOME) 30 1000000000000 ujkl --from charlie --gas-prices=0.02ujkl --home=$JKL_HOME -y
 
 sequoia init --home=$PROV_HOME
 
