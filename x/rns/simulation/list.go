@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -91,7 +90,7 @@ func SimulateMsgList(
 		}
 
 		msg.Name = tName.Name + "." + tName.Tld
-		msg.Price = fmt.Sprint(simtypes.RandIntBetween(r, 0, 10000000)) + "ujkl"
+		msg.Price = sdk.NewInt64Coin("ujkl", int64(simtypes.RandIntBetween(r, 0, 10000000)))
 
 		txCtx := simulation.OperationInput{
 			R:             r,

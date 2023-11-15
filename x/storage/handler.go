@@ -44,9 +44,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgBuyStorage:
 			res, err := msgServer.BuyStorage(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgUpgradeStorage:
-			res, err := msgServer.UpgradeStorage(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
+
 		case *types.MsgAddClaimer:
 			res, err := msgServer.AddProviderClaimer(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

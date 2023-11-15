@@ -33,7 +33,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), nuggieName, "{}", 2)
 	suite.Require().NoError(err)
 
-	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: nuggieName, Price: "200ujkl"})
+	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: nuggieName, Price: sdk.NewInt64Coin("ujkl", 200)})
 
 	coin = sdk.NewCoin("ujkl", sdk.NewInt(10000))
 	coins = sdk.NewCoins(coin)
@@ -52,7 +52,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 				return types.NewMsgBid(
 					bidder.String(),
 					nuggieName,
-					"1000ujkl",
+					sdk.NewInt64Coin("ujkl", 1000),
 				)
 			},
 			expErr: false,
@@ -63,7 +63,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 				return types.NewMsgBid(
 					bidder.String(),
 					nuggieName,
-					"100000000ujkl",
+					sdk.NewInt64Coin("ujkl", 100000000),
 				)
 			},
 			expErr:    true,
