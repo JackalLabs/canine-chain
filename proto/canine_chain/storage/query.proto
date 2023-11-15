@@ -11,17 +11,22 @@ import "canine_chain/storage/payment_info.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
-// Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
   rpc Params(QueryParams) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackal/canine-chain/storage/params";
   }
 
-  // Queries a File by index.
+  // Queries a File by merkle, owner, and start.
   rpc File(QueryFile) returns (QueryFileResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/files/{merkle}/{owner}/{start}";
+  }
+
+  // Queries a list of open files by provider_address.
+  rpc OpenFiles(QueryOpenFiles)
+      returns (QueryAllFilesResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/open_files/{provider_address}";
   }
 
   // Queries a list of File items.
@@ -31,47 +36,40 @@ service Query {
         "/jackal/canine-chain/storage/files";
   }
 
-  // Queries a list of open files.
-  rpc OpenFiles(QueryOpenFiles)
-      returns (QueryAllFilesResponse) {
-    option (google.api.http).get =
-        "/jackal/canine-chain/storage/open_files/{provider_address}";
-  }
-
-  // Queries a Proof.
+  // Queries a Proof by provider_address, merkle, owner, and start.
   rpc Proof(QueryProof)
       returns (QueryProofResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/proofs/{provider_address}/{merkle}/{owner}/{start}";
   }
 
-  // Queries a list of Proofs.
+  // Queries a list of Proof items.
   rpc AllProofs(QueryAllProofs)
       returns (QueryAllProofsResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/proofs";
   }
 
-  // Queries a list of Proofs.
+  // Queries a list of Proof items by provider_address.
   rpc ProofsByAddress(QueryProofsByAddress)
       returns (QueryProofsByAddressResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/proofs/{provider_address}";
   }
 
-  // Queries a Providers by index.
+  // Queries a Provider by address.
   rpc Provider(QueryProvider) returns (QueryProviderResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/providers/{address}";
   }
 
-  // Queries a list of Providers items.
+  // Queries a list of Provider items.
   rpc AllProviders(QueryAllProviders)
       returns (QueryAllProvidersResponse) {
     option (google.api.http).get = "/jackal/canine-chain/storage/providers";
   }
 
-  // Queries a Attestation by index.
+  // Queries an Attestation by prover, merkle, owner, and start.
   rpc Attestation(QueryAttestation) returns (QueryAttestationResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/attestations/{prover}/{merkle}/{owner}/{start}";
@@ -83,44 +81,44 @@ service Query {
     option (google.api.http).get = "/jackal/canine-chain/storage/attestations";
   }
 
-  // Queries a Report by index.
+  // Queries a Report by prover, merkle, owner, and start.
   rpc Report(QueryReport) returns (QueryReportResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/reports/{prover}/{merkle}/{owner}/{start}";
   }
 
-  // Queries a list of Attestation items.
+  // Queries a list of Report items.
   rpc AllReports(QueryAllReports)
       returns (QueryAllReportsResponse) {
     option (google.api.http).get = "/jackal/canine-chain/storage/reports";
   }
 
-  // Queries a list of FreeSpace items.
-  rpc FreeSpace(QueryFreeSpace) returns (QueryFreeSpaceResponse) {
+  // Queries free space by address.
+  rpc FreeSpace(QueryFreeSpace) returns (QueryFreeSpaceResponse) { // TODO: how is this different from GetClientFreeSpace
     option (google.api.http).get =
         "/jackal/canine-chain/storage/free_space/{address}";
   }
 
-  // Queries how many files a provider is storing.
+  // Queries how many files a provider has stored by address.
   rpc StoreCount(QueryStoreCount) returns (QueryStoreCountResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/storing/{address}";
   }
 
-  // Queries where a file is located.
+  // Queries where a file is located by merkle.
   rpc FindFile(QueryFindFile) returns (QueryFindFileResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/find_file/{merkle}";
   }
 
-  // Queries a list of GetClientFreeSpace items.
-  rpc GetClientFreeSpace(QueryClientFreeSpace)
+  // Queries free space by address.
+  rpc GetClientFreeSpace(QueryClientFreeSpace) // TODO: how is this different from FreeSpace
       returns (QueryClientFreeSpaceResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/get_client_free_space/{address}";
   }
 
-  // Queries a list of GetPayData items.
+  // Queries a PayData by address.
   rpc GetPayData(QueryPayData) returns (QueryPayDataResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/get_pay_data/{address}";
@@ -139,38 +137,34 @@ service Query {
         "/jackal/canine-chain/storage/payment_info";
   }
 
-  // Queries whether user can upload a file based on size
+  // Queries whether user can upload a file based on size.
   rpc FileUploadCheck(QueryFileUploadCheck) returns (QueryFileUploadCheckResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/file_upload_check";
   }
 
-  // Queries whether user can upload a file based on size
+  // Queries current price of storage.
   rpc PriceCheck(QueryPriceCheck) returns (QueryPriceCheckResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/price_check/{duration}/{bytes}";
   }
 
-  // Queries whether user can upload a file based on size
+  // Queries a list of ActiveProviders items.
   rpc ActiveProviders(QueryActiveProviders) returns (QueryActiveProvidersResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/active_providers";
   }
 
-
-  // Queries the storage space used and purchased
+  // Queries protocol storage space used and purchased.
   rpc StorageStats(QueryStorageStats) returns (QueryStorageStatsResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/storage_stats";
   }
 }
 
-// QueryParams is request type for the Query/Params RPC method.
 message QueryParams {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
-  // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
@@ -214,13 +208,13 @@ message QueryFileResponse {
   UnifiedFile file = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllFiles {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
-
 message QueryOpenFiles {
   string provider_address= 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllFiles {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QueryAllFilesResponse {
@@ -243,7 +237,6 @@ message QueryAllProvidersResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-
 message QueryAttestation {
   string prover = 1;
   bytes merkle = 2;
@@ -263,7 +256,6 @@ message QueryAllAttestationsResponse {
   repeated AttestationForm attestations = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
-
 
 message QueryReport {
   string prover = 1;
@@ -287,18 +279,15 @@ message QueryAllReportsResponse {
 
 message QueryFreeSpace { string address = 1; }
 
-message QueryStoreCount { string address = 1; }
-
 message QueryFreeSpaceResponse { int64 space = 1; }
 
-message QueryStoreCountResponse { int64 count = 1; }
+message QueryStoreCount { string address = 1; }
 
+message QueryStoreCountResponse { int64 count = 1; }
 
 message QueryFindFile { bytes merkle = 1; }
 
 message QueryFindFileResponse { string provider_ips = 1; }
-
-
 
 message QueryClientFreeSpace { string address = 1; }
 
@@ -344,8 +333,7 @@ message QueryPriceCheckResponse {
   int64 price = 1;
 }
 
-message QueryActiveProviders {
-}
+message QueryActiveProviders {}
 
 message QueryActiveProvidersResponse {
   repeated ActiveProviders providers = 1 [ (gogoproto.nullable) = false ];
