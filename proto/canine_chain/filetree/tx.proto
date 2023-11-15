@@ -3,7 +3,6 @@ package canine_chain.filetree;
 
 option go_package = "github.com/jackalLabs/canine-chain/x/filetree/types";
 
-// Msg defines the Msg service.
 service Msg {
   rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
   rpc AddViewers(MsgAddViewers) returns (MsgAddViewersResponse);
@@ -66,15 +65,14 @@ message MsgRemoveViewers {
 
 message MsgRemoveViewersResponse {}
 
-
-message MsgProvisionFileTreeResponse {}
-
 message MsgProvisionFileTree {
   string creator = 1;
   string editors = 2;
   string viewers = 3;
   string tracking_number = 4;
 }
+
+message MsgProvisionFileTreeResponse {}
 
 message MsgAddEditors {
   string creator = 1;

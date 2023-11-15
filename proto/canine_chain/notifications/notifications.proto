@@ -9,4 +9,3 @@ message Notifications {
   string address = 3; 
   string sender = 4;
 }
-
