@@ -27,31 +27,37 @@ func (k Keeper) burnContract(ctx sdk.Context, providerAddress string) {
 	k.SetProviders(ctx, prov)
 }
 
-func (k Keeper) manageProofs(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
+// manageProof checks the status of a given proof, if the file is too young, we skip it. If it's old enough and the
+// prover has either failed to prove it or the proof simply never existed we remove it.
+func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
 	st := *sizeTracker
 
 	pks := strings.Split(proofKey, "/")
 	providerAddress := pks[0]
 
 	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
-	if !found {
-		ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
-		file.RemoveProverWithKey(ctx, k, proofKey)
-		return
+	// If we check the file and there is a proof delegated but the provider hasn't proven it yet we remove it.
+	// However, we need to check if the file is new and is being caught by accident
+	if !file.IsYoung(ctx.BlockHeight()) { // give first window grace before removal
+		if !found {
+			ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
+			file.RemoveProverWithKey(ctx, k, proofKey)
+			return
+		}
+
+		currentHeight := ctx.BlockHeight()
+
+		proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
+
+		if !proven { // if file has not been proven yet
+			ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
+			file.RemoveProverWithKey(ctx, k, proofKey)
+			k.burnContract(ctx, providerAddress)
+			return
+		}
+
+		st[proof.Prover] += file.FileSize // only give rewards to providers who have held onto the file for a full window
 	}
-
-	currentHeight := ctx.BlockHeight()
-
-	proven := file.Proven(ctx, k, currentHeight, providerAddress)
-
-	if !proven { // if file has not been proven yet
-		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
-		file.RemoveProverWithKey(ctx, k, proofKey)
-		k.burnContract(ctx, providerAddress)
-		return
-	}
-
-	st[proof.Prover] += file.FileSize
 }
 
 // TODO: Completely change the way this is done in Econ v2
@@ -89,7 +95,7 @@ func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *m
 
 func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) {
 	if len(file.Proofs) == 0 { // remove file if it
-		if file.Start+file.ProofInterval < ctx.BlockHeight() {
+		if !file.IsYoung(ctx.BlockHeight()) { // give first window grace
 			k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
 		}
 	}
@@ -110,8 +116,8 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 
 		k.removeFileIfDeserved(ctx, &file) // delete file if it meets the conditions to be deleted
 
-		for _, proof := range file.Proofs {
-			k.manageProofs(ctx, sizeTracker, &file, proof)
+		for _, proof := range file.Proofs { // manage all proofs in proof list
+			k.manageProof(ctx, sizeTracker, &file, proof)
 		}
 
 		return false
@@ -121,7 +127,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
-	DayBlocks := k.GetParams(ctx).ProofWindow // TODO: Change this window to 14400
+	DayBlocks := k.GetParams(ctx).CheckWindow // checks more often than proofs take to catch them more frequently
 
 	if ctx.BlockHeight()%DayBlocks > 0 { // runs once each window (usually a full days worth of blocks)
 		ctx.Logger().Debug("skipping reward handling for this block")

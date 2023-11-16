@@ -22,4 +22,5 @@ message Params {
   int64 attestFormSize = 8; // TODO: needs more research on if this messes up reading from protos
   int64 attestMinToPass = 9;
   int64 collateralPrice = 10;
+  int64 check_window = 11;
 }

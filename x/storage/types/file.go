@@ -15,24 +15,37 @@ func (f *UnifiedFile) ContainsProver(prover string) bool {
 	return false
 }
 
-func (f *UnifiedFile) Proven(ctx sdk.Context, k ProofLoader, height int64, prover string) bool {
-	interval := f.ProofInterval
-
-	lastWindowEnd := height - (height % interval)
-	lastWindowStart := lastWindowEnd - interval
-
+func (f *UnifiedFile) ProvenProviderLastBlock(ctx sdk.Context, k ProofLoader, height int64, prover string) bool {
 	proof, err := f.GetProver(ctx, k, prover)
 	if err != nil {
 		return false
 	}
 
-	lastProven := proof.LastProven
-
-	return lastProven > lastWindowStart
+	return f.ProvenLastBlock(height, proof.LastProven)
 }
 
-func (f *UnifiedFile) NeedsProven(height int64) bool {
-	lastWindowEnd := f.Start - (f.Start % f.ProofInterval)
+func (f *UnifiedFile) ProvenLastBlock(height int64, lastProven int64) bool {
+	if lastProven == 0 {
+		return false
+	}
 
-	return height > lastWindowEnd
+	k := height - f.Start                                       // total blocks
+	ws := k - (k % f.ProofInterval) + f.Start - f.ProofInterval // window start
+
+	return lastProven > ws // if last proven has been since the window start we can ski it
+}
+
+func (f *UnifiedFile) ProvenThisBlock(height int64, lastProven int64) bool {
+	if lastProven == 0 {
+		return false
+	}
+
+	k := height - f.Start                     // total blocks
+	ws := k - (k % f.ProofInterval) + f.Start // window start
+
+	return lastProven > ws // if last proven has been since the window start we can ski it
+}
+
+func (f *UnifiedFile) IsYoung(height int64) bool {
+	return f.Start+f.ProofInterval > height
 }

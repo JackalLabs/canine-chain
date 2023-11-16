@@ -38,7 +38,8 @@ canined collect-gentxs --home=$JKL_HOME
 
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8/jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc/" $JKL_HOME/config/genesis.json
-sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"900\"/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"450\"/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/\"check_window\": \"100\"/\"check_window\": \"30\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"chunk_size\": \"1024\"/\"chunk_size\": \"1024\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml
@@ -51,7 +52,7 @@ canined tx storage buy-storage $(canined keys show charlie -a --home=$JKL_HOME) 
 
 sequoia init --home=$PROV_HOME
 
-yq -i '.proof_interval=300' $PROV_HOME/config.yaml
+yq -i '.proof_interval=120' $PROV_HOME/config.yaml
 yq -i '.queue_interval=7' $PROV_HOME/config.yaml
 yq -i '.chain_config.rpc_addr="http://localhost:26657"' $PROV_HOME/config.yaml
 yq -i '.chain_config.grpc_addr="localhost:9090"' $PROV_HOME/config.yaml

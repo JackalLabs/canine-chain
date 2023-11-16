@@ -12,8 +12,6 @@ import (
 func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*types.MsgPostProofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	proofSize := k.GetParams(ctx).ChunkSize
-
 	file, found := k.GetFile(ctx, msg.Merkle, msg.Owner, msg.Start)
 	if !found {
 		s := fmt.Sprintf("contract not found: %x/%s/%d", msg.Merkle, msg.Owner, msg.Start)
@@ -42,6 +40,12 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 			proof = file.AddProver(ctx, k, prover)
 		}
 	}
+
+	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
+		return &types.MsgPostProofResponse{Success: true}, nil
+	}
+
+	proofSize := k.GetParams(ctx).ChunkSize
 
 	err := file.Prove(ctx, k, msg.Creator, msg.HashList, proof.ChunkToProve, msg.Item, proofSize)
 	if err != nil {
