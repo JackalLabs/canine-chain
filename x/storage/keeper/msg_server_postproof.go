@@ -12,12 +12,14 @@ import (
 func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*types.MsgPostProofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	file, found := k.GetFile(ctx, msg.Merkle, msg.Owner, msg.Start)
+	f, found := k.GetFile(ctx, msg.Merkle, msg.Owner, msg.Start)
 	if !found {
 		s := fmt.Sprintf("contract not found: %x/%s/%d", msg.Merkle, msg.Owner, msg.Start)
 		ctx.Logger().Debug(s)
 		return &types.MsgPostProofResponse{Success: false, ErrorMessage: s}, nil
 	}
+
+	file := &f
 
 	prover := msg.Creator
 
@@ -41,20 +43,20 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 		}
 	}
 
-	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
-		return &types.MsgPostProofResponse{Success: true}, nil
-	}
-
 	proofSize := k.GetParams(ctx).ChunkSize
+
+	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
+		ctx.Logger().Info("file was already proven")
+	}
 
 	err := file.Prove(ctx, k, msg.Creator, msg.HashList, proof.ChunkToProve, msg.Item, proofSize)
 	if err != nil {
 		e := sdkerrors.Wrapf(err, "cannot verify %x against %x", msg.Item, file.Merkle)
-		ctx.Logger().Debug(e.Error())
+		ctx.Logger().Info(e.Error())
 		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
 	}
 
-	k.SetFile(ctx, file)
+	k.SetFile(ctx, *file)
 
 	return &types.MsgPostProofResponse{Success: true, ErrorMessage: ""}, nil
 }

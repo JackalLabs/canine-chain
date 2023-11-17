@@ -24,28 +24,27 @@ func (f *UnifiedFile) ProvenProviderLastBlock(ctx sdk.Context, k ProofLoader, he
 	return f.ProvenLastBlock(height, proof.LastProven)
 }
 
+func getRoundedWindow(currentHeight int64, start int64, window int64) int64 {
+	k := currentHeight - start
+	we := k - (k % window) + start
+
+	return we
+}
+
 func (f *UnifiedFile) ProvenLastBlock(height int64, lastProven int64) bool {
-	if lastProven == 0 {
-		return false
-	}
+	window := getRoundedWindow(height, f.Start, f.ProofInterval)
 
-	k := height - f.Start                                       // total blocks
-	ws := k - (k % f.ProofInterval) + f.Start - f.ProofInterval // window start
+	lastWindowStart := window - f.ProofInterval
 
-	return lastProven > ws // if last proven has been since the window start we can ski it
+	return lastProven >= lastWindowStart // if last proven has been since the window start we can ski it
 }
 
 func (f *UnifiedFile) ProvenThisBlock(height int64, lastProven int64) bool {
-	if lastProven == 0 {
-		return false
-	}
+	window := getRoundedWindow(height, f.Start, f.ProofInterval)
 
-	k := height - f.Start                     // total blocks
-	ws := k - (k % f.ProofInterval) + f.Start // window start
-
-	return lastProven > ws // if last proven has been since the window start we can ski it
+	return lastProven >= window // if last proven has been since the window start we can ski it
 }
 
 func (f *UnifiedFile) IsYoung(height int64) bool {
-	return f.Start+f.ProofInterval > height
+	return f.Start+f.ProofInterval >= height
 }
