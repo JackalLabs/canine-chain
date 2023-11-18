@@ -3,12 +3,10 @@ package canine_chain.storage;
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
-// Msg defines the Msg service.
 service Msg {
   rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
   rpc PostProof(MsgPostProof) returns (MsgPostProofResponse);
   rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
-
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
   rpc SetProviderKeybase(MsgSetProviderKeybase)
       returns (MsgSetProviderKeybaseResponse);
@@ -19,12 +17,10 @@ service Msg {
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
-
   rpc RequestAttestationForm(MsgRequestAttestationForm) returns (MsgRequestAttestationFormResponse);
   rpc Attest(MsgAttest) returns (MsgAttestResponse);
   rpc RequestReportForm(MsgRequestReportForm) returns (MsgRequestReportFormResponse);
   rpc Report(MsgReport) returns (MsgReportResponse);
-
 }
 
 message MsgPostFile {
@@ -36,7 +32,6 @@ message MsgPostFile {
   int64 max_proofs = 6; // How many provers this file can have.
   int64 expires = 7;
   string note = 8; // Misc string to store extra details.
-
 }
 
 message MsgPostFileResponse {
@@ -66,8 +61,6 @@ message MsgDeleteFile {
 }
 
 message MsgDeleteFileResponse {}
-
-
 
 message MsgSetProviderIP {
   string creator = 1;
@@ -104,7 +97,6 @@ message MsgRemoveClaimer {
 
 message MsgRemoveClaimerResponse {}
 
-
 message MsgInitProvider {
   string creator = 1;
   string ip = 2;
@@ -114,14 +106,11 @@ message MsgInitProvider {
 
 message MsgInitProviderResponse {}
 
-
 message MsgShutdownProvider {
   string creator = 1;
 }
 
 message MsgShutdownProviderResponse {}
-
-
 
 message MsgBuyStorage {
   string creator = 1;

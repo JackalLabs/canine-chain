@@ -7,32 +7,29 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "canine_chain/notifications/params.proto";
 import "canine_chain/notifications/notifications.proto";
 import "canine_chain/notifications/noti_counter.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
 
-// Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackalLabs/canine-chain/notifications/params";
   }
-  // Queries a Notifications by index.
+  // Queries a Notification by count and address.
 	rpc Notifications(QueryGetNotificationsRequest) returns (QueryGetNotificationsResponse) {
 		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications/{count}/{address}";
 	}
 
-	// Queries a list of Notifications items.
+	// Queries a list of Notification items.
 	rpc NotificationsAll(QueryAllNotificationsRequest) returns (QueryAllNotificationsResponse) {
 		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications";
 	}
 
-	// Queries a list of Notifications items by address.
+	// Queries a list of Notification items by address.
 	rpc NotificationsByAddress(QueryAllNotificationsByAddressRequest) returns (QueryAllNotificationsByAddressResponse) {
 		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/notifications/{address}";
 	}
 
-// Queries a NotiCounter by index.
+// Queries a NotiCounter by address.
 	rpc NotiCounter(QueryGetNotiCounterRequest) returns (QueryGetNotiCounterResponse) {
 		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/noti_counter/{address}";
 	}
@@ -41,23 +38,17 @@ service Query {
 	rpc NotiCounterAll(QueryAllNotiCounterRequest) returns (QueryAllNotiCounterResponse) {
 		option (google.api.http).get = "/jackalLabs/canine-chain/notifications/noti_counter";
 	}
-
-// this line is used by starport scaffolding # 2
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
-  // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryGetNotificationsRequest {
 	  uint64 count = 1;
 	  string address = 2; 
-
 }
 
 message QueryGetNotificationsResponse {
@@ -85,7 +76,6 @@ message QueryAllNotificationsByAddressResponse {
 
 message QueryGetNotiCounterRequest {
 	  string address = 1;
-
 }
 
 message QueryGetNotiCounterResponse {
@@ -100,5 +90,3 @@ message QueryAllNotiCounterResponse {
 	repeated NotiCounter notiCounter = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
-
-// this line is used by starport scaffolding # 3

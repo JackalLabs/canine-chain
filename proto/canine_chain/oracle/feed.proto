@@ -12,4 +12,3 @@ message Feed {
   google.protobuf.Timestamp last_update = 3 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
   string name = 4;
 }
-

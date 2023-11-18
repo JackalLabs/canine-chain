@@ -7,10 +7,8 @@ import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
 import "canine_chain/storage/payment_info.proto";
 
-
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
-// GenesisState defines the storage module's genesis state.
 message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   repeated UnifiedFile file_list = 2 [ (gogoproto.nullable) = false ];
@@ -20,6 +18,4 @@ message GenesisState {
   repeated ActiveProviders active_providers_list = 6 [ (gogoproto.nullable) = false ];
   repeated ReportForm report_forms = 7 [ (gogoproto.nullable) = false ];
   repeated AttestationForm attest_forms = 8 [ (gogoproto.nullable) = false ];
-
-
 }
