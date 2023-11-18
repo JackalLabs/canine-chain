@@ -56,7 +56,7 @@ func (suite *KeeperTestSuite) TestReward() {
 		Note:          "test",
 	}
 
-	var blocks = dealOne.ProofInterval * 3
+	blocks := dealOne.ProofInterval * 3
 
 	suite.storageKeeper.SetFile(suite.ctx, dealOne)
 	dealOne.AddProver(suite.ctx, suite.storageKeeper, providerOne)
