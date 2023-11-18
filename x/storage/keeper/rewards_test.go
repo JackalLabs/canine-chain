@@ -55,8 +55,19 @@ func (suite *KeeperTestSuite) TestReward() {
 		MaxProofs:     3,
 		Note:          "test",
 	}
+
+	var blocks = dealOne.ProofInterval * 3
+
 	suite.storageKeeper.SetFile(suite.ctx, dealOne)
 	dealOne.AddProver(suite.ctx, suite.storageKeeper, providerOne)
+	suite.storageKeeper.SetProof(suite.ctx, types.FileProof{
+		Prover:       providerOne,
+		Merkle:       dealOne.Merkle,
+		Owner:        dealOne.Owner,
+		Start:        dealOne.Start,
+		LastProven:   blocks - 1,
+		ChunkToProve: 0,
+	})
 
 	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
 
@@ -70,8 +81,6 @@ func (suite *KeeperTestSuite) TestReward() {
 
 	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
 	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
-
-	var blocks int64 = 10 * 5
 
 	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20})
 

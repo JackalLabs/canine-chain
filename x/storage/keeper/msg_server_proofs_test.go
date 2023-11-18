@@ -137,6 +137,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     8,
 		CollateralPrice:        2,
+		CheckWindow:            10,
 	})
 
 	// Init Provider

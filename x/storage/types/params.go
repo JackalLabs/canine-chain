@@ -93,8 +93,8 @@ func validateCheckWindow(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v <= 0 {
-		return errors.New("collateral price must be greater than 0")
+	if v <= 1 {
+		return errors.New("check window must be greater than than 1")
 	}
 
 	return nil
