@@ -14,3 +14,7 @@ type ProofLoader interface {
 	)
 	SetFile(ctx sdk.Context, File UnifiedFile)
 }
+
+func (p *FileProof) Save(ctx sdk.Context, k ProofLoader) {
+	k.SetProof(ctx, *p)
+}

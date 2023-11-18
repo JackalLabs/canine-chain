@@ -145,15 +145,38 @@ func (f *UnifiedFile) ResetChunk(ctx sdk.Context, k ProofLoader, prover string, 
 	return nil
 }
 
-// SetProven sets the proofs proven status to true and updates the proof window & picks a new chunk to verify
-func (f *UnifiedFile) SetProven(ctx sdk.Context, k ProofLoader, prover string, chunkSize int64) error {
-	proof, err := f.GetProver(ctx, k, prover)
-	if err != nil {
-		return err
+// ResetChunkWithProof picks a new chunk to prove for a file
+func (f *UnifiedFile) ResetChunkWithProof(ctx sdk.Context, proof *FileProof, chunkSize int64) error {
+	pieces := f.FileSize / chunkSize
+	d := f.FileSize % chunkSize
+	if d == 0 { // handle edge case where there is exactly full chunks with no extra bits
+		pieces--
+	}
+	var newChunk int64
+	if pieces > 0 { // if there is more than one piece we pick a random to prove
+
+		var gs int64
+		gasMeter := ctx.BlockGasMeter()
+		if gasMeter != nil {
+			gs = int64(gasMeter.GasConsumed())
+		}
+		h := ctx.BlockHeight()
+
+		r := rand.NewRand()
+		r.Seed(gs + h)
+		newChunk = r.Int63n(pieces)
 	}
 
-	proof.LastProven = ctx.BlockHeight()
-	err = f.ResetChunk(ctx, k, prover, chunkSize)
+	proof.ChunkToProve = newChunk
+
+	return nil
+}
+
+// SetProven sets the proofs proven status to true and updates the proof window & picks a new chunk to verify
+func (f *UnifiedFile) SetProven(ctx sdk.Context, proof *FileProof, chunkSize int64) error {
+	proof.LastProven = ctx.BlockHeight() // sets the newest proof window
+
+	err := f.ResetChunkWithProof(ctx, proof, chunkSize)
 	if err != nil {
 		return err
 	}
@@ -162,14 +185,14 @@ func (f *UnifiedFile) SetProven(ctx sdk.Context, k ProofLoader, prover string, c
 }
 
 // Prove checks the validity of a proof and updates the proof window & picks a new chunk to verify
-func (f *UnifiedFile) Prove(ctx sdk.Context, k ProofLoader, prover string, proofData []byte, chunk int64, item []byte, chunkSize int64) error {
-	valid := f.VerifyProof(proofData, chunk, item)
+func (f *UnifiedFile) Prove(ctx sdk.Context, proof *FileProof, proofData []byte, item []byte, chunkSize int64) error {
+	valid := f.VerifyProof(proofData, proof.ChunkToProve, item)
 
 	if !valid {
 		return ErrCannotVerifyProof
 	}
 
-	err := f.SetProven(ctx, k, prover, chunkSize)
+	err := f.SetProven(ctx, proof, chunkSize)
 	if err != nil {
 		return err
 	}

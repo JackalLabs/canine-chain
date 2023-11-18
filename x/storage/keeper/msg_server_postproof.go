@@ -43,20 +43,26 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 		}
 	}
 
-	proofSize := k.GetParams(ctx).ChunkSize
+	if msg.ToProve != proof.ChunkToProve {
+		e := fmt.Errorf("wrong chunk to prove for %x. Was %d should be %d", file.Merkle, msg.ToProve, proof.ChunkToProve)
+		ctx.Logger().Info(e.Error())
+		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
+	}
+
+	chunkSize := k.GetParams(ctx).ChunkSize
 
 	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
 		ctx.Logger().Info("file was already proven")
 	}
 
-	err := file.Prove(ctx, k, msg.Creator, msg.HashList, proof.ChunkToProve, msg.Item, proofSize)
+	err := file.Prove(ctx, proof, msg.HashList, msg.Item, chunkSize)
 	if err != nil {
 		e := sdkerrors.Wrapf(err, "cannot verify %x against %x", msg.Item, file.Merkle)
 		ctx.Logger().Info(e.Error())
 		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
 	}
 
-	k.SetFile(ctx, *file)
+	k.SetProof(ctx, *proof)
 
 	return &types.MsgPostProofResponse{Success: true, ErrorMessage: ""}, nil
 }
