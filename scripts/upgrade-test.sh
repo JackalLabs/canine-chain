@@ -33,7 +33,7 @@ sleep 30
 
 ./../_build/old/canined q storage params --home $HOME
 
-./../_build/old/canined tx storage buy-storage jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 30 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage buy-storage jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 720h 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
