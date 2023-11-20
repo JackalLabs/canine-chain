@@ -230,11 +230,12 @@ func postFile(fileData []byte, cmd *cobra.Command) {
 		panic(err)
 	}
 
+	if res != nil {
+		fmt.Println(res.RawLog)
+	}
 	if res.Code != 0 {
 		panic("tx failed!")
 	}
-
-	fmt.Println(res.RawLog)
 
 	var postRes types.MsgPostFileResponse
 	data, err := hex.DecodeString(res.Data)

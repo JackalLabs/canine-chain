@@ -4,11 +4,32 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/exported"
+	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
 func MigrateStore(ctx sdk.Context, legacySubspace exported.Subspace, paramsSubspace *paramstypes.Subspace) error {
-	_ = ctx
-	_ = legacySubspace
-	_ = paramsSubspace
+	var currParams v4Params
+	legacySubspace.GetParamSet(ctx, &currParams)
+
+	params := types.Params{
+		DepositAccount:         currParams.DepositAccount,
+		ProofWindow:            currParams.ProofWindow,
+		ChunkSize:              currParams.ChunkSize,
+		MissesToBurn:           currParams.MissesToBurn,
+		PriceFeed:              currParams.PriceFeed,
+		MaxContractAgeInBlocks: currParams.MaxContractAgeInBlocks,
+		PricePerTbPerMonth:     currParams.PricePerTbPerMonth,
+		AttestFormSize:         5,
+		AttestMinToPass:        3,
+		CollateralPrice:        10_000_000_000,
+		CheckWindow:            100,
+	}
+
+	if err := params.Validate(); err != nil {
+		return err
+	}
+
+	paramsSubspace.SetParamSet(ctx, &params)
+
 	return nil
 }

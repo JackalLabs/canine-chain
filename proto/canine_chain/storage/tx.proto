@@ -46,6 +46,7 @@ message MsgPostProof {
   bytes merkle = 4;
   string owner = 5;
   int64 start = 6;
+  int64 to_prove = 7;
 }
 
 message MsgPostProofResponse {

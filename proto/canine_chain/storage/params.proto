@@ -18,4 +18,5 @@ message Params {
   int64 attestFormSize = 8; // TODO: fix casing
   int64 attestMinToPass = 9; // TODO: fix casing
   int64 collateralPrice = 10; // TODO: fix casing
+  int64 check_window = 11;
 }
