@@ -24,6 +24,8 @@ make install
 # start old node
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
+sleep 30
+
 ./../_build/old/canined version --home $HOME
 ./../_build/old/canined config broadcast-mode block --home $HOME
 
