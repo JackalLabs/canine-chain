@@ -103,7 +103,7 @@ func UpdatePaymentInfo(ctx sdk.Context, sk storagekeeper.Keeper) {
 		minutes := seconds / 60
 		hours := minutes / 60
 
-		cost := sk.GetStorageCostKbsWithPrice(ctx, info.SpaceAvailable, hours, 8)
+		cost := sk.GetStorageCostKbs(ctx, info.SpaceAvailable, hours)
 
 		price := sdk.NewCoin("ujkl", cost)
 
