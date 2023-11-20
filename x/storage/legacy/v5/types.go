@@ -27,7 +27,6 @@ type v4Params struct {
 	AttestFormSize         int64 `protobuf:"varint,8,opt,name=attestFormSize,proto3" json:"attestFormSize,omitempty"`
 	AttestMinToPass        int64 `protobuf:"varint,9,opt,name=attestMinToPass,proto3" json:"attestMinToPass,omitempty"`
 	CollateralPrice        int64 `protobuf:"varint,10,opt,name=collateralPrice,proto3" json:"collateralPrice,omitempty"`
-	CheckWindow            int64 `protobuf:"varint,11,opt,name=check_window,json=checkWindow,proto3" json:"check_window,omitempty"`
 }
 
 var (
@@ -41,7 +40,6 @@ var (
 	KeyAttestFormSize         = []byte("AttestFormSize")
 	KeyAttestMinToPass        = []byte("AttestMinToPass")
 	KeyCollateralPrice        = []byte("CollateralPrice")
-	KeyCheckWindow            = []byte("CheckWindow")
 )
 
 // ParamSetPairs get the params.ParamSet
