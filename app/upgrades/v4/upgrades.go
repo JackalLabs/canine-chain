@@ -113,10 +113,10 @@ func UpdatePaymentInfo(ctx sdk.Context, sk storagekeeper.Keeper) {
 	}
 }
 
-func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
+func UpdateFiles(ctx sdk.Context, sk storagekeeper.Keeper) map[string][]byte {
 	fidMerkle := make(map[string][]byte)
 
-	allDeals := u.sk.GetAllLegacyActiveDeals(ctx)
+	allDeals := sk.GetAllLegacyActiveDeals(ctx)
 
 	for _, deal := range allDeals {
 
@@ -159,7 +159,7 @@ func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
 
 		var uf storagemoduletypes.UnifiedFile
 
-		uf, found := u.sk.GetFile(ctx, merkle, deal.Signee, start)
+		uf, found := sk.GetFile(ctx, merkle, deal.Signee, start)
 		if !found {
 			uf = storagemoduletypes.UnifiedFile{
 				Merkle:        merkle,
@@ -175,8 +175,8 @@ func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
 			}
 		}
 
-		u.sk.SetFile(ctx, uf)
-		uf.AddProver(ctx, u.sk, deal.Provider)
+		sk.SetFile(ctx, uf)
+		uf.AddProver(ctx, sk, deal.Provider)
 
 	}
 
@@ -190,7 +190,7 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 
 		fromVM[storagemoduletypes.ModuleName] = 5
 
-		fidMerkleMap := UpdateFiles(ctx, u)
+		fidMerkleMap := UpdateFiles(ctx, u.sk)
 
 		UpdateFileTree(ctx, u.fk, fidMerkleMap)
 
