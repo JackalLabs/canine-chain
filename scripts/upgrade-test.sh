@@ -46,12 +46,7 @@ sleep 6
 
 sleep 6
 
-
-./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id test --home $HOME -y
-
-sleep 6
-
-./../_build/old/canined tx gov deposit 1 "20000000${DENOM}" --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id test --home $HOME -y --deposit "20000000${DENOM}"
 
 sleep 6
 
@@ -61,7 +56,7 @@ sleep 6
 
 ./../_build/old/canined tx gov vote 1 yes --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 6
+sleep 12
 
 ./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf16yfjl9t8u9ztt0e5wzudpfr3e2u5cxwsru6l6jh930zrvav5cz2q2wrfkc --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
