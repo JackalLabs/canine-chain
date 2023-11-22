@@ -124,25 +124,25 @@ func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 
 		merkle, err := hex.DecodeString(deal.Merkle)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse merkle string: '%s' | %s", deal.Merkle, err.Error()))
 			continue
 		}
 
 		start, err := strconv.ParseInt(deal.Startblock, 10, 64)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse start block | %s", err.Error()))
 			continue
 		}
 
 		end, err := strconv.ParseInt(deal.Endblock, 10, 64)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse end block | %s", err.Error()))
 			continue
 		}
 
 		size, err := strconv.ParseInt(deal.Filesize, 10, 64)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse file size | %s", err.Error()))
 			continue
 		}
 
@@ -155,30 +155,25 @@ func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 
 		lmBytes, err := json.Marshal(lm)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot marshal legacy marker | %s", err.Error()))
 			continue
 		}
 
-		var uf storagemoduletypes.UnifiedFile
-
-		uf, found := sk.GetFile(ctx, merkle, deal.Signee, start)
-		if !found {
-			uf = storagemoduletypes.UnifiedFile{
-				Merkle:        merkle,
-				Owner:         deal.Signee,
-				Start:         start,
-				Expires:       end,
-				FileSize:      size,
-				ProofInterval: 1800, // TODO: Decide on default window
-				ProofType:     0,
-				Proofs:        make([]string, 0),
-				MaxProofs:     3,
-				Note:          string(lmBytes),
-			}
-			sk.SetFile(ctx, uf)
+		uf := storagemoduletypes.UnifiedFile{
+			Merkle:        merkle,
+			Owner:         deal.Signee,
+			Start:         start,
+			Expires:       end,
+			FileSize:      size,
+			ProofInterval: 1800, // TODO: Decide on default window
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          string(lmBytes),
 		}
+		sk.SetFile(ctx, uf)
 
-		_, found = sk.GetFile(ctx, merkle, deal.Signee, start)
+		_, found := sk.GetFile(ctx, merkle, deal.Signee, start)
 		if !found {
 			ctx.Logger().Error("Failed to migrate file")
 		}
