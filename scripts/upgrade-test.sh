@@ -66,7 +66,7 @@ sleep 6
 
 echo "signing contract"
 
-./../_build/old/canined tx storage sign-contract jklc1p8u0a9yhqc9vr2rq2ksz8jekkq002y4chcv4k7thw5ntaqgdrvss5mqx3s --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage sign-contract jklc1hft5yqlqermu9l337et6mn6ljs7x9tuqgv2elatlk3w8s8w5uyls3ktp22 --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
 sleep 6
 
