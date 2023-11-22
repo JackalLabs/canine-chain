@@ -16,26 +16,25 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var activeDealss []types.UnifiedFile
+	var files []types.UnifiedFile
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := ctx.KVStore(k.storeKey)
-	activeDealsStore := prefix.NewStore(store, types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
 
-	pageRes, err := query.Paginate(activeDealsStore, req.Pagination, func(key []byte, value []byte) error {
-		var activeDeals types.UnifiedFile
-		if err := k.cdc.Unmarshal(value, &activeDeals); err != nil {
+	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(value, &file); err != nil {
 			return err
 		}
 
-		activeDealss = append(activeDealss, activeDeals)
+		files = append(files, file)
 		return nil
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllFilesResponse{Files: activeDealss, Pagination: pageRes}, nil
+	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
 }
 
 // OpenFiles returns a paginated list of files with space that providers have yet to fill
