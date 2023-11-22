@@ -1,8 +1,9 @@
 package v4_test
 
 import (
-	gocontext "context"
 	"fmt"
+	"testing"
+
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/golang/mock/gomock"
@@ -11,7 +12,6 @@ import (
 	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
 	storagetestutil "github.com/jackalLabs/canine-chain/v3/x/storage/testutil"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
-	"testing"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -138,7 +138,7 @@ func (suite *UpgradeTestKeeper) SetupSuite() {
 }
 
 func (suite *UpgradeTestKeeper) reset() {
-	filetreeKeeper, encCfg, ctx := SetupFileTreeKeeper(suite.T())
+	filetreeKeeper, _, _ := SetupFileTreeKeeper(suite.T())
 	storageKeeper, _, _, encCfg, ctx := SetupStorageKeeper(suite.T())
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, encCfg.InterfaceRegistry)
@@ -153,11 +153,9 @@ func (suite *UpgradeTestKeeper) reset() {
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.filetreeKeeper)
 }
 
-func setupMsgServer(suite *UpgradeTestKeeper) (types.MsgServer, gocontext.Context) {
+func setupMsgServer(suite *UpgradeTestKeeper) {
 	k := suite.filetreeKeeper
 	filetree.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
-	ctx := sdk.WrapSDKContext(suite.ctx)
-	return keeper.NewMsgServerImpl(*k), ctx
 }
 
 func TestFiletreeTestSuite(t *testing.T) {
