@@ -127,9 +127,6 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
-	f := k.GetAllFileByMerkle(ctx)
-
-	ctx.Logger().Info(fmt.Sprintf("There are %d files on the system at block height: %d", len(f), ctx.BlockHeight()))
 
 	DayBlocks := k.GetParams(ctx).CheckWindow // checks more often than proofs take to catch them more frequently
 

@@ -122,8 +122,6 @@ func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 
 	for _, deal := range allDeals {
 
-		ctx.Logger().Info(fmt.Sprintf("Active Deal: \n%s", deal.String()))
-
 		merkle, err := hex.DecodeString(deal.Merkle)
 		if err != nil {
 			ctx.Logger().Error(fmt.Sprintf("cannot parse merkle string: '%s' | %s", deal.Merkle, err.Error()))
