@@ -175,9 +175,13 @@ func UpdateFiles(ctx sdk.Context, sk storagekeeper.Keeper) map[string][]byte {
 				MaxProofs:     3,
 				Note:          string(lmBytes),
 			}
+			sk.SetFile(ctx, uf)
 		}
 
-		sk.SetFile(ctx, uf)
+		_, found = sk.GetFile(ctx, merkle, deal.Signee, start)
+		if !found {
+			ctx.Logger().Error("Failed to migrate file")
+		}
 		uf.AddProver(ctx, sk, deal.Provider)
 
 	}
