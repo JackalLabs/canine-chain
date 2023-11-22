@@ -118,6 +118,8 @@ func UpdateFiles(ctx sdk.Context, sk storagekeeper.Keeper) map[string][]byte {
 
 	allDeals := sk.GetAllLegacyActiveDeals(ctx)
 
+	ctx.Logger().Info(fmt.Sprintf("There are %d active deals being migrated", len(allDeals)))
+
 	for _, deal := range allDeals {
 
 		merkle, err := hex.DecodeString(deal.Merkle)

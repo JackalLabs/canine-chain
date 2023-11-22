@@ -73,12 +73,7 @@ func (suite *UpgradeTestKeeper) TestStorageUpgrade() {
 
 	v4.UpdateFiles(suite.ctx, *suite.storageKeeper)
 
-	k := 0
+	f := suite.storageKeeper.GetAllFileByMerkle(suite.ctx)
 
-	suite.storageKeeper.IterateFilesByMerkle(suite.ctx, false, func(key []byte, val []byte) bool {
-		k++
-		return false
-	})
-
-	suite.Require().Equal(1, k)
+	suite.Require().Equal(1, len(f))
 }
