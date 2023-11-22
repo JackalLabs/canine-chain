@@ -134,5 +134,9 @@ func (k Keeper) RunRewardBlock(ctx sdk.Context) {
 		return
 	}
 
+	f := k.GetAllFileByMerkle(ctx)
+
+	ctx.Logger().Info(fmt.Sprintf("There are %d files on the system at block height: %d", len(f), ctx.BlockHeight()))
+
 	k.ManageRewards(ctx)
 }
