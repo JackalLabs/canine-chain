@@ -2,6 +2,8 @@ package keeper_test
 
 import (
 	"context"
+	"encoding/json"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
@@ -10,8 +12,6 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-
-	"encoding/json"
 
 	abci "github.com/tendermint/tendermint/abci/types"
 

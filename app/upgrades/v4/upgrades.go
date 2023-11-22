@@ -23,12 +23,12 @@ var _ upgrades.Upgrade = &Upgrade{}
 type Upgrade struct {
 	mm           *module.Manager
 	configurator module.Configurator
-	sk           storagekeeper.Keeper
-	fk           filetreemodulekeeper.Keeper
+	sk           *storagekeeper.Keeper
+	fk           *filetreemodulekeeper.Keeper
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk storagekeeper.Keeper, fk filetreemodulekeeper.Keeper) *Upgrade {
+func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk *storagekeeper.Keeper, fk *filetreemodulekeeper.Keeper) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,
@@ -55,7 +55,7 @@ type MerkleContents struct {
 	Merkles [][]byte `json:"merkles"`
 }
 
-func UpdateFileTree(ctx sdk.Context, fk filetreemodulekeeper.Keeper, merkleMap map[string][]byte) {
+func UpdateFileTree(ctx sdk.Context, fk *filetreemodulekeeper.Keeper, merkleMap map[string][]byte) {
 	allFiles := fk.GetAllFiles(ctx)
 
 	for _, file := range allFiles {
@@ -93,7 +93,7 @@ func UpdateFileTree(ctx sdk.Context, fk filetreemodulekeeper.Keeper, merkleMap m
 	}
 }
 
-func UpdatePaymentInfo(ctx sdk.Context, sk storagekeeper.Keeper) {
+func UpdatePaymentInfo(ctx sdk.Context, sk *storagekeeper.Keeper) {
 	paymentInfo := sk.GetAllStoragePaymentInfo(ctx)
 	for _, info := range paymentInfo {
 
@@ -113,7 +113,7 @@ func UpdatePaymentInfo(ctx sdk.Context, sk storagekeeper.Keeper) {
 	}
 }
 
-func UpdateFiles(ctx sdk.Context, sk storagekeeper.Keeper) map[string][]byte {
+func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 	fidMerkle := make(map[string][]byte)
 
 	allDeals := sk.GetAllLegacyActiveDeals(ctx)

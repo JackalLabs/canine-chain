@@ -37,7 +37,7 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 		suite.filetreeKeeper.SetFiles(suite.ctx, f)
 	}
 
-	v4.UpdateFileTree(suite.ctx, *suite.filetreeKeeper, fidMerkleMap)
+	v4.UpdateFileTree(suite.ctx, suite.filetreeKeeper, fidMerkleMap)
 
 	allFiles := suite.filetreeKeeper.GetAllFiles(suite.ctx)
 
@@ -71,7 +71,7 @@ func (suite *UpgradeTestKeeper) TestStorageUpgrade() {
 	}
 	suite.storageKeeper.SetLegacyActiveDeals(suite.ctx, ad)
 
-	v4.UpdateFiles(suite.ctx, *suite.storageKeeper)
+	v4.UpdateFiles(suite.ctx, suite.storageKeeper)
 
 	f := suite.storageKeeper.GetAllFileByMerkle(suite.ctx)
 
