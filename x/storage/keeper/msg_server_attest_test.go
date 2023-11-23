@@ -6,6 +6,7 @@ import (
 )
 
 func (suite *KeeperTestSuite) TestAttest() {
+	suite.SetupSuite()
 	params := suite.storageKeeper.GetParams(suite.ctx)
 
 	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+2)
@@ -102,6 +103,7 @@ func (suite *KeeperTestSuite) TestAttest() {
 }
 
 func (suite *KeeperTestSuite) TestRequestAttestation() {
+	suite.SetupSuite()
 	params := suite.storageKeeper.GetParams(suite.ctx)
 
 	addresses, err := testutil.CreateTestAddresses("cosmos", int(params.AttestFormSize)+10)

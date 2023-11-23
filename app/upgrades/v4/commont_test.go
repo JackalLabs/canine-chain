@@ -40,7 +40,7 @@ func SetupFileTreeKeeper(t *testing.T) (
 ) {
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, sdk.NewTransientStoreKey("transient_test"))
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, sdk.NewTransientStoreKey("transient_test"), key)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()
@@ -78,7 +78,7 @@ func SetupStorageKeeper(t *testing.T) (
 	key := sdk.NewKVStoreKey(storagemoduletypes.StoreKey)
 	// memStoreKey := storetypes.NewMemoryStoreKey(storagemoduletypes.MemStoreKey)
 	tkey := sdk.NewTransientStoreKey("transient_test")
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, tkey)
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, tkey, key)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()
@@ -122,6 +122,77 @@ func SetupStorageKeeper(t *testing.T) (
 	return storageKeeper, bankKeeper, accountKeeper, encCfg, ctx
 }
 
+// SetupStorageKeeper creates a storageKeeper as well as all its dependencies.
+func SetUpKeepers(t *testing.T) (
+	*storagekeeper.Keeper,
+	*keeper.Keeper,
+	*storagetestutil.MockBankKeeper,
+	*storagetestutil.MockAccountKeeper,
+	moduletestutil.TestEncodingConfig,
+	sdk.Context,
+) {
+	skey := sdk.NewKVStoreKey(storagemoduletypes.StoreKey)
+	fkey := sdk.NewKVStoreKey(types.StoreKey)
+
+	// memStoreKey := storetypes.NewMemoryStoreKey(storagemoduletypes.MemStoreKey)
+	tkey := sdk.NewTransientStoreKey("transient_test")
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, tkey, skey, fkey)
+	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
+
+	encCfg := moduletestutil.MakeTestEncodingConfig()
+	storagemoduletypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+	types.RegisterInterfaces(encCfg.InterfaceRegistry)
+	banktypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+	authtypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+
+	// Create MsgServiceRouter, but don't populate it before creating the storage keeper.
+	msr := baseapp.NewMsgServiceRouter()
+
+	// gomock initializations
+	ctrl := gomock.NewController(t)
+	bankKeeper := storagetestutil.NewMockBankKeeper(ctrl)
+	accountKeeper := storagetestutil.NewMockAccountKeeper(ctrl)
+	oracleKeeper := storagetestutil.NewMockOracleKeeper(ctrl)
+	trackMockBalances(bankKeeper)
+	accountKeeper.EXPECT().GetModuleAddress(storagemoduletypes.ModuleName).Return(modAccount).AnyTimes()
+
+	oracleKeeper.EXPECT().GetFeed(gomock.Any(), gomock.Any()).Return(oracletypes.Feed{
+		Data:  `{"price":"0.24","24h_change":"0"}`,
+		Name:  "jklprice",
+		Owner: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+	}, true).AnyTimes()
+
+	storParamsSubspace := typesparams.NewSubspace(encCfg.Codec,
+		storagemoduletypes.Amino,
+		skey,
+		tkey,
+		"StorageParams",
+	)
+	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+
+	filParamsSubspace := typesparams.NewSubspace(encCfg.Codec,
+		types.Amino,
+		fkey,
+		memStoreKey,
+		"FiletreeParams",
+	)
+
+	// storage keeper initializations
+	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, skey, storParamsSubspace, bankKeeper, accountKeeper, oracleKeeper)
+	storageKeeper.SetParams(ctx, storagemoduletypes.DefaultParams())
+
+	filetreeKeeper := keeper.NewKeeper(encCfg.Codec, fkey, memStoreKey, filParamsSubspace)
+	filetreeKeeper.SetParams(ctx, types.DefaultParams())
+
+	// Register all handlers for the MegServiceRouter.
+	msr.SetInterfaceRegistry(encCfg.InterfaceRegistry)
+	storagemoduletypes.RegisterMsgServer(msr, storagekeeper.NewMsgServerImpl(*storageKeeper))
+	banktypes.RegisterMsgServer(msr, nil) // Nil is fine here as long as we never execute the proposal's Msgs.
+	types.RegisterMsgServer(msr, keeper.NewMsgServerImpl(*filetreeKeeper))
+
+	return storageKeeper, filetreeKeeper, bankKeeper, accountKeeper, encCfg, ctx
+}
+
 type UpgradeTestKeeper struct {
 	suite.Suite
 
@@ -138,8 +209,7 @@ func (suite *UpgradeTestKeeper) SetupSuite() {
 }
 
 func (suite *UpgradeTestKeeper) reset() {
-	filetreeKeeper, _, _ := SetupFileTreeKeeper(suite.T())
-	storageKeeper, _, _, encCfg, ctx := SetupStorageKeeper(suite.T())
+	storageKeeper, filetreeKeeper, _, _, encCfg, ctx := SetUpKeepers(suite.T())
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, encCfg.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, filetreeKeeper)

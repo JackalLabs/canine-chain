@@ -34,10 +34,12 @@ type TestContext struct {
 	CMS store.CommitMultiStore
 }
 
-func DefaultContextWithDB(t *testing.T, key storetypes.StoreKey, tkey storetypes.StoreKey) TestContext {
+func DefaultContextWithDB(t *testing.T, tkey storetypes.StoreKey, key ...storetypes.StoreKey) TestContext {
 	db := dbm.NewMemDB()
 	cms := store.NewCommitMultiStore(db)
-	cms.MountStoreWithDB(key, storetypes.StoreTypeIAVL, db)
+	for _, storeKey := range key {
+		cms.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, db)
+	}
 	cms.MountStoreWithDB(tkey, storetypes.StoreTypeTransient, db)
 	err := cms.LoadLatestVersion()
 	assert.NoError(t, err)

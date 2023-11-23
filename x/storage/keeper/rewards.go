@@ -127,7 +127,6 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
-
 	DayBlocks := k.GetParams(ctx).CheckWindow // checks more often than proofs take to catch them more frequently
 
 	if ctx.BlockHeight()%DayBlocks > 0 { // runs once each window (usually a full days worth of blocks)

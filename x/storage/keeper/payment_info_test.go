@@ -21,6 +21,7 @@ func createStoragePaymentInfo(keeper *keeper.Keeper, ctx sdk.Context, n int) []t
 }
 
 func (suite *KeeperTestSuite) TestGetStoragePaymentInfo() {
+	suite.SetupSuite()
 	k := suite.storageKeeper
 	ctx := suite.ctx
 
@@ -33,6 +34,7 @@ func (suite *KeeperTestSuite) TestGetStoragePaymentInfo() {
 }
 
 func (suite *KeeperTestSuite) TestRemoveStoragePaymentInfo() {
+	suite.SetupSuite()
 	k := suite.storageKeeper
 	ctx := suite.ctx
 
@@ -48,6 +50,7 @@ func (suite *KeeperTestSuite) TestRemoveStoragePaymentInfo() {
 
 // fix this last test boi!
 func (suite *KeeperTestSuite) TestGetAllStoragePaymentInfo() {
+	suite.SetupSuite()
 	k := suite.storageKeeper
 	ctx := suite.ctx
 
