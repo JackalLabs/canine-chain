@@ -2,7 +2,7 @@
 
 OLD_VERSION=$1
 NEW_VERSION=$2
-UPGRADE_HEIGHT=30
+UPGRADE_HEIGHT=35
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=ujkl
@@ -24,56 +24,51 @@ make install
 # start old node
 screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
+sleep 30
+
 ./../_build/old/canined version --home $HOME
 ./../_build/old/canined config broadcast-mode block --home $HOME
 
-sleep 30
+sleep 35
 
 ./../_build/old/canined q storage params --home $HOME
 
 ./../_build/old/canined tx storage buy-storage jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 720h 1000000000 ujkl --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 6
+sleep 7
 
 ./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test1 --keyring-backend test --chain-id test --home $HOME -y
 ./../_build/old/canined provider init http://localhost:3333 10000000 ""  --from test2 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 6
+sleep 7
 
 ./../_build/old/canined tx rns init --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 6
+sleep 7
 
-./../_build/old/canined tx storage post-contract jklc10zpctnu6qu4dkvzx2u9jpvk6hr8z3qnfpzlmf63ejqdgjgr5h5qszdqylf jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf16yfjl9t8u9ztt0e5wzudpfr3e2u5cxwsru6l6jh930zrvav5cz2q2wrfkc --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id test --home $HOME -y --deposit "20000000${DENOM}"
 
-sleep 6
-
-echo "signing contract"
-./../_build/old/canined tx storage sign-contract jklc1p8u0a9yhqc9vr2rq2ksz8jekkq002y4chcv4k7thw5ntaqgdrvss5mqx3s --from test1 --keyring-backend test --chain-id test --home $HOME -y
-
-sleep 6
-
-./../_build/old/canined tx gov submit-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "temp" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id test --home $HOME -y
-
-sleep 6
-
-./../_build/old/canined tx gov deposit 1 "20000000${DENOM}" --from test1 --keyring-backend test --chain-id test --home $HOME -y
-
-sleep 6
+sleep 7
 
 ./../_build/old/canined tx gov vote 1 yes --from test --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 6
+sleep 7
 
 ./../_build/old/canined tx gov vote 1 yes --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 6
+sleep 12
 
-./../_build/old/canined tx storage post-contract jklc1hufzy29uulvfcpw9xsat0fs87vglyslj8sc0cz270necl9u23hzsczp0s3 jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf1rqry0q7a55tanxkv34rnza82pewfm292pr77m78vc8avjk5p3e9sc6qgnq --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined tx storage post-contract 1688dc719d1a41ff567fd54e66953f5c518044f6fed6ce814ba777b7dead4ab7d1c193448dc1c04eac05e6708dfd7a8999e9afdf6ba5c525ab7fb9c7f1e2bd4c jkl12g4qwenvpzqeakavx5adqkw203s629tf6k8vdg 10000 jklf1p5cm3z47rrcyaskqge3yc33xm7hdq7lken99ahluvuz67ugctleqmwv43a --from test1 --keyring-backend test --chain-id test --home $HOME -y
 
-sleep 6
+sleep 7
 
-./../_build/old/canined tx storage sign-contract jklc1hufzy29uulvfcpw9xsat0fs87vglyslj8sc0cz270necl9u23hzsczp0s3 --from test1 --keyring-backend test --chain-id test --home $HOME -y
+./../_build/old/canined q storage list-contracts --home $HOME
+
+echo "signing contract"
+
+./../_build/old/canined tx storage sign-contract jklc1hft5yqlqermu9l337et6mn6ljs7x9tuqgv2elatlk3w8s8w5uyls3ktp22 --from test1 --keyring-backend test --chain-id test --home $HOME -y
+
+sleep 7
 
 
 # determine block_height to halt

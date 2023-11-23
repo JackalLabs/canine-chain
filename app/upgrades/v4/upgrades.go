@@ -23,12 +23,12 @@ var _ upgrades.Upgrade = &Upgrade{}
 type Upgrade struct {
 	mm           *module.Manager
 	configurator module.Configurator
-	sk           storagekeeper.Keeper
-	fk           filetreemodulekeeper.Keeper
+	sk           *storagekeeper.Keeper
+	fk           *filetreemodulekeeper.Keeper
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk storagekeeper.Keeper, fk filetreemodulekeeper.Keeper) *Upgrade {
+func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk *storagekeeper.Keeper, fk *filetreemodulekeeper.Keeper) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,
@@ -55,7 +55,7 @@ type MerkleContents struct {
 	Merkles [][]byte `json:"merkles"`
 }
 
-func UpdateFileTree(ctx sdk.Context, fk filetreemodulekeeper.Keeper, merkleMap map[string][]byte) {
+func UpdateFileTree(ctx sdk.Context, fk *filetreemodulekeeper.Keeper, merkleMap map[string][]byte) {
 	allFiles := fk.GetAllFiles(ctx)
 
 	for _, file := range allFiles {
@@ -93,7 +93,7 @@ func UpdateFileTree(ctx sdk.Context, fk filetreemodulekeeper.Keeper, merkleMap m
 	}
 }
 
-func UpdatePaymentInfo(ctx sdk.Context, sk storagekeeper.Keeper) {
+func UpdatePaymentInfo(ctx sdk.Context, sk *storagekeeper.Keeper) {
 	paymentInfo := sk.GetAllStoragePaymentInfo(ctx)
 	for _, info := range paymentInfo {
 
@@ -113,34 +113,36 @@ func UpdatePaymentInfo(ctx sdk.Context, sk storagekeeper.Keeper) {
 	}
 }
 
-func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
+func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 	fidMerkle := make(map[string][]byte)
 
-	allDeals := u.sk.GetAllLegacyActiveDeals(ctx)
+	allDeals := sk.GetAllLegacyActiveDeals(ctx)
+
+	ctx.Logger().Info(fmt.Sprintf("There are %d active deals being migrated", len(allDeals)))
 
 	for _, deal := range allDeals {
 
 		merkle, err := hex.DecodeString(deal.Merkle)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse merkle string: '%s' | %s", deal.Merkle, err.Error()))
 			continue
 		}
 
 		start, err := strconv.ParseInt(deal.Startblock, 10, 64)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse start block | %s", err.Error()))
 			continue
 		}
 
 		end, err := strconv.ParseInt(deal.Endblock, 10, 64)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse end block | %s", err.Error()))
 			continue
 		}
 
 		size, err := strconv.ParseInt(deal.Filesize, 10, 64)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot parse file size | %s", err.Error()))
 			continue
 		}
 
@@ -153,30 +155,29 @@ func UpdateFiles(ctx sdk.Context, u *Upgrade) map[string][]byte {
 
 		lmBytes, err := json.Marshal(lm)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			ctx.Logger().Error(fmt.Sprintf("cannot marshal legacy marker | %s", err.Error()))
 			continue
 		}
 
-		var uf storagemoduletypes.UnifiedFile
-
-		uf, found := u.sk.GetFile(ctx, merkle, deal.Signee, start)
-		if !found {
-			uf = storagemoduletypes.UnifiedFile{
-				Merkle:        merkle,
-				Owner:         deal.Signee,
-				Start:         start,
-				Expires:       end,
-				FileSize:      size,
-				ProofInterval: 1800, // TODO: Decide on default window
-				ProofType:     0,
-				Proofs:        make([]string, 0),
-				MaxProofs:     3,
-				Note:          string(lmBytes),
-			}
+		uf := storagemoduletypes.UnifiedFile{
+			Merkle:        merkle,
+			Owner:         deal.Signee,
+			Start:         start,
+			Expires:       end,
+			FileSize:      size,
+			ProofInterval: 1800, // TODO: Decide on default window
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          string(lmBytes),
 		}
+		sk.SetFile(ctx, uf)
 
-		u.sk.SetFile(ctx, uf)
-		uf.AddProver(ctx, u.sk, deal.Provider)
+		_, found := sk.GetFile(ctx, merkle, deal.Signee, start)
+		if !found {
+			ctx.Logger().Error("Failed to migrate file")
+		}
+		uf.AddProver(ctx, sk, deal.Provider)
 
 	}
 
@@ -190,7 +191,7 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 
 		fromVM[storagemoduletypes.ModuleName] = 5
 
-		fidMerkleMap := UpdateFiles(ctx, u)
+		fidMerkleMap := UpdateFiles(ctx, u.sk)
 
 		UpdateFileTree(ctx, u.fk, fidMerkleMap)
 

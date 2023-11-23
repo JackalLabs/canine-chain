@@ -8,6 +8,8 @@ import (
 )
 
 func MigrateStore(ctx sdk.Context, legacySubspace exported.Subspace, paramsSubspace *paramstypes.Subspace) error {
+	ctx.Logger().Info("Migrating params to v4...")
+
 	var currParams v4Params
 	legacySubspace.GetParamSet(ctx, &currParams)
 
