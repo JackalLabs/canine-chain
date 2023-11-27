@@ -23,7 +23,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// GenesisState defines the filetree module's genesis state.
 type GenesisState struct {
 	Params     Params   `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 	FilesList  []Files  `protobuf:"bytes,2,rep,name=files_list,json=filesList,proto3" json:"files_list"`
