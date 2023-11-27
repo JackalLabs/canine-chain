@@ -1,33 +1,31 @@
 package cli
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
-func CmdCreateNotifications() *cobra.Command {
+func CmdCreateNotification() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-notifications [notification] [address]",
+		Use:   "create-notifications [to] [content]",
 		Short: "Create a new notifications",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			// Get value arguments
-			argNotification := args[0]
-			argAddress := args[1]
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgCreateNotifications(
+			msg := types.NewMsgCreateNotification(
 				clientCtx.GetFromAddress().String(),
-				argNotification,
-				argAddress,
+				args[0],
+				args[1],
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -41,58 +39,28 @@ func CmdCreateNotifications() *cobra.Command {
 	return cmd
 }
 
-func CmdUpdateNotifications() *cobra.Command {
+func CmdDeleteNotification() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-notifications [count] [notification] [address]",
-		Short: "Update a notifications",
-		Args:  cobra.ExactArgs(3),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			// Get indexes
-			indexCount, err := cast.ToUint64E(args[0])
-			if err != nil {
-				return err
-			}
-
-			// Get value arguments
-			argNotification := args[1]
-			argAddress := args[2]
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgUpdateNotifications(
-				clientCtx.GetFromAddress().String(),
-				indexCount,
-				argNotification,
-				argAddress,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-func CmdDeleteNotifications() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "delete-notifications",
-		Short: "Delete a notifications",
-		Args:  cobra.ExactArgs(0),
+		Use:   "delete-notification [from] [time]",
+		Short: "Delete a notification",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgDeleteNotifications(
+			ts, err := strconv.ParseInt(args[1], 10, 64)
+			if err != nil {
+				return err
+			}
+
+			t := time.UnixMicro(ts)
+
+			msg := types.NewMsgDeleteNotification(
 				clientCtx.GetFromAddress().String(),
+				args[0],
+				t,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

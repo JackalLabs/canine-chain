@@ -1,8 +1,6 @@
 package keeper_test
 
 import (
-	"encoding/json"
-
 	"github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
@@ -18,58 +16,46 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 	bob := testAddresses[1]
 	charlie := testAddresses[2]
 
-	// set noti counter for bob
-
-	blockedSendersMap := make([]string, 0, 1000)
-	blockedSendersMap = append(blockedSendersMap, charlie)
-
-	marshalledBlockedSenders, err := json.Marshal(blockedSendersMap)
-	suite.Require().NoError(err)
-	BlockedSenders := string(marshalledBlockedSenders)
-
-	notiCounter := types.NotiCounter{
+	suite.notificationsKeeper.SetBlock(suite.ctx, types.Block{
 		Address:        bob,
-		Counter:        0,
-		BlockedSenders: BlockedSenders,
-	}
-	suite.Require().NoError(err)
-	suite.notificationsKeeper.SetNotiCounter(suite.ctx, notiCounter)
+		BlockedAddress: charlie,
+	})
 
 	cases := []struct {
-		preRun    func() *types.MsgCreateNotifications
+		preRun    func() *types.MsgCreateNotification
 		expErr    bool
 		expErrMsg string
 		name      string
 	}{
 		{ // alice sends a notification to bob
-			preRun: func() *types.MsgCreateNotifications {
-				return types.NewMsgCreateNotifications(
+			preRun: func() *types.MsgCreateNotification {
+				return types.NewMsgCreateNotification(
 					alice,
-					"hey bob it's alice here",
 					bob,
+					"{\"msg\": \"hey bob it's alice here\"}",
 				)
 			},
 			expErr: false,
 			name:   "alice successfully sends a notification to bob",
 		},
-		{ // alice can't notify casper if he doesn't have his notiCounter set
-			preRun: func() *types.MsgCreateNotifications {
-				return types.NewMsgCreateNotifications(
+		{
+			preRun: func() *types.MsgCreateNotification {
+				return types.NewMsgCreateNotification(
 					alice,
-					"hey casper it's alice here",
-					"casper",
+					bob,
+					"hey bob it's alice here",
 				)
 			},
 			expErr:    true,
-			name:      "alice cannot notify casper",
-			expErrMsg: "User's notiCounter not set",
+			name:      "cannot parse json",
+			expErrMsg: "",
 		},
-		{ // charlie cannot notify bob
-			preRun: func() *types.MsgCreateNotifications {
-				return types.NewMsgCreateNotifications(
+		{
+			preRun: func() *types.MsgCreateNotification {
+				return types.NewMsgCreateNotification(
 					charlie,
-					"hey bob it's charlie",
 					bob,
+					"{\"msg\": \"hey bob it's charlie here\"}",
 				)
 			},
 			expErr:    true,
@@ -82,15 +68,12 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
-			res, err := msgSrvr.CreateNotifications(context, msg)
+			_, err := msgSrvr.CreateNotification(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
-
 				suite.Require().NoError(err)
-				suite.Require().EqualValues(types.MsgCreateNotificationsResponse{NotiCounter: 1}, *res)
-
 			}
 		})
 	}

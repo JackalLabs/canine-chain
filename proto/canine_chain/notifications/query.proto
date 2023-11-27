@@ -16,7 +16,7 @@ service Query {
   }
 
   // Queries a Notification object
-	rpc Notification(QueryNotification) returns (QueryNotification) {
+	rpc Notification(QueryNotification) returns (QueryNotificationResponse) {
 		option (google.api.http).get = "/jackal/canine-chain/notifications/notifications/{to}/{from}/{time}";
 	}
 
@@ -41,7 +41,7 @@ message QueryParamsResponse {
 message QueryNotification {
 	  string to = 1;
 	  string from = 2;
-	  google.protobuf.Timestamp time = 3 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+	  int64 time = 3; // unix timestamp
 
 }
 

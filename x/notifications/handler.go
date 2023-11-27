@@ -9,7 +9,6 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
 
-// NewHandler ...
 func NewHandler(k keeper.Keeper) sdk.Handler {
 	msgServer := keeper.NewMsgServerImpl(k)
 

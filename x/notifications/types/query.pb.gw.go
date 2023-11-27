@@ -89,7 +89,7 @@ func request_Query_Notification_0(ctx context.Context, marshaler runtime.Marshal
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "time")
 	}
 
-	protoReq.Time, err = runtime.Timestamp(val)
+	protoReq.Time, err = runtime.Int64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "time", err)
@@ -138,7 +138,7 @@ func local_request_Query_Notification_0(ctx context.Context, marshaler runtime.M
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "time")
 	}
 
-	protoReq.Time, err = runtime.Timestamp(val)
+	protoReq.Time, err = runtime.Int64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "time", err)

@@ -1,8 +1,9 @@
 package keeper
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"strings"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -95,6 +96,10 @@ func (k Keeper) CheckExistence(ctx sdk.Context) bool {
 }
 
 func (k Keeper) Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error) {
+	adr, err := sdk.AccAddressFromBech32(name) // the name passed was actually already bech32
+	if err == nil {
+		return adr, nil
+	}
 
 	n, tld, err := GetNameAndTLD(name)
 	if err != nil {

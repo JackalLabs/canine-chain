@@ -19,6 +19,13 @@ func NotificationsKey(
 	from string,
 	time time.Time,
 ) []byte {
-
 	return []byte(fmt.Sprintf("%s/%s/%d", to, from, time.Unix()))
+}
+
+// BlockKey returns the store key to retrieve a block object from the index fields
+func BlockKey(
+	owner string,
+	address string,
+) []byte {
+	return []byte(fmt.Sprintf("%s/%s", owner, address))
 }

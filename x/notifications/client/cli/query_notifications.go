@@ -2,11 +2,11 @@ package cli
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
@@ -24,11 +24,11 @@ func CmdListNotifications() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllNotificationsRequest{
+			params := &types.QueryAllNotifications{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.NotificationsAll(context.Background(), params)
+			res, err := queryClient.AllNotifications(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -58,12 +58,12 @@ func CmdListNotificationsByAddress() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllNotificationsByAddressRequest{
+			params := &types.QueryAllNotificationsByAddress{
 				Pagination: pageReq,
-				Address:    args[0],
+				To:         args[0],
 			}
 
-			res, err := queryClient.NotificationsByAddress(context.Background(), params)
+			res, err := queryClient.AllNotificationsByAddress(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -78,9 +78,9 @@ func CmdListNotificationsByAddress() *cobra.Command {
 	return cmd
 }
 
-func CmdShowNotifications() *cobra.Command {
+func CmdShowNotification() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-notifications [count]",
+		Use:   "show-notification [to] [from] [unix-timestamp]",
 		Short: "shows a notifications",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -88,16 +88,18 @@ func CmdShowNotifications() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argCount, err := cast.ToUint64E(args[0])
+			ts, err := strconv.ParseInt(args[2], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			params := &types.QueryGetNotificationsRequest{
-				Count: argCount,
+			params := &types.QueryNotification{
+				To:   args[0],
+				From: args[1],
+				Time: ts,
 			}
 
-			res, err := queryClient.Notifications(context.Background(), params)
+			res, err := queryClient.Notification(context.Background(), params)
 			if err != nil {
 				return err
 			}

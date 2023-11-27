@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -26,7 +27,6 @@ func (k Keeper) GetNotification(
 	from string,
 	timeStamp time.Time,
 ) (val types.Notification, found bool) {
-
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 
 	key := types.NotificationsKey(
@@ -62,6 +62,21 @@ func (k Keeper) RemoveNotification(
 func (k Keeper) GetAllNotifications(ctx sdk.Context) (list []types.Notification) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.Notification
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
+// GetAllNotificationsByAddress returns all notifications that belong to a given address
+func (k Keeper) GetAllNotificationsByAddress(ctx sdk.Context, address string) (list []types.Notification) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte(fmt.Sprintf("%s/", address)))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
