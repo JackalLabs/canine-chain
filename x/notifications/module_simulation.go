@@ -48,8 +48,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	notificationsGenesis := types.GenesisState{
-		Params:            types.DefaultParams(),
-		NotificationsList: []types.Notifications{},
+		Params:        types.DefaultParams(),
+		Notifications: []types.Notification{},
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&notificationsGenesis)
 }
