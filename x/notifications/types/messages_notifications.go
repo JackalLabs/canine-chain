@@ -1,39 +1,40 @@
 package types
 
 import (
+	"encoding/json"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"time"
 )
 
 const (
-	TypeMsgCreateNotifications = "create_notifications"
-	TypeMsgUpdateNotifications = "update_notifications"
-	TypeMsgDeleteNotifications = "delete_notifications"
+	TypeMsgCreateNotification = "create_notification"
+	TypeMsgDeleteNotification = "delete_notification"
 )
 
-var _ sdk.Msg = &MsgCreateNotifications{}
+var _ sdk.Msg = &MsgCreateNotification{}
 
-func NewMsgCreateNotifications(
-	creator string,
-	notification string,
-	address string,
-) *MsgCreateNotifications {
-	return &MsgCreateNotifications{
-		Creator:      creator,
-		Notification: notification,
-		Address:      address,
+func NewMsgCreateNotification(
+	from string,
+	to string,
+	contents string,
+) *MsgCreateNotification {
+	return &MsgCreateNotification{
+		Creator:  from,
+		To:       to,
+		Contents: contents,
 	}
 }
 
-func (msg *MsgCreateNotifications) Route() string {
+func (msg *MsgCreateNotification) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgCreateNotifications) Type() string {
-	return TypeMsgCreateNotifications
+func (msg *MsgCreateNotification) Type() string {
+	return TypeMsgCreateNotification
 }
 
-func (msg *MsgCreateNotifications) GetSigners() []sdk.AccAddress {
+func (msg *MsgCreateNotification) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -41,44 +42,47 @@ func (msg *MsgCreateNotifications) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgCreateNotifications) GetSignBytes() []byte {
+func (msg *MsgCreateNotification) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgCreateNotifications) ValidateBasic() error {
+func (msg *MsgCreateNotification) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if !json.Valid([]byte(msg.Contents)) {
+		return sdkerrors.Wrapf(ErrInvalidContents, "cannot verify contents")
+	}
+
 	return nil
 }
 
-var _ sdk.Msg = &MsgUpdateNotifications{}
+var _ sdk.Msg = &MsgDeleteNotification{}
 
-func NewMsgUpdateNotifications(
-	creator string,
-	count uint64,
-	notification string,
-	address string,
-) *MsgUpdateNotifications {
-	return &MsgUpdateNotifications{
-		Creator:      creator,
-		Count:        count,
-		Notification: notification,
-		Address:      address,
+func NewMsgDeleteNotification(
+	to string,
+	from string,
+	timeStamp time.Time,
+) *MsgDeleteNotification {
+	return &MsgDeleteNotification{
+		Creator: to,
+		From:    from,
+		Time:    timeStamp,
 	}
 }
 
-func (msg *MsgUpdateNotifications) Route() string {
+func (msg *MsgDeleteNotification) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgUpdateNotifications) Type() string {
-	return TypeMsgUpdateNotifications
+func (msg *MsgDeleteNotification) Type() string {
+	return TypeMsgDeleteNotification
 }
 
-func (msg *MsgUpdateNotifications) GetSigners() []sdk.AccAddress {
+func (msg *MsgDeleteNotification) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -86,51 +90,12 @@ func (msg *MsgUpdateNotifications) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgUpdateNotifications) GetSignBytes() []byte {
+func (msg *MsgDeleteNotification) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgUpdateNotifications) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-	return nil
-}
-
-var _ sdk.Msg = &MsgDeleteNotifications{}
-
-func NewMsgDeleteNotifications(
-	creator string,
-) *MsgDeleteNotifications {
-	return &MsgDeleteNotifications{
-		Creator: creator,
-	}
-}
-
-func (msg *MsgDeleteNotifications) Route() string {
-	return RouterKey
-}
-
-func (msg *MsgDeleteNotifications) Type() string {
-	return TypeMsgDeleteNotifications
-}
-
-func (msg *MsgDeleteNotifications) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-func (msg *MsgDeleteNotifications) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-func (msg *MsgDeleteNotifications) ValidateBasic() error {
+func (msg *MsgDeleteNotification) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

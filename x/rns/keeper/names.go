@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -91,4 +92,26 @@ func (k Keeper) CheckExistence(ctx sdk.Context) bool {
 		exist = true
 	}
 	return exist
+}
+
+func (k Keeper) Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error) {
+
+	n, tld, err := GetNameAndTLD(name)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot parse the name and tld from given rns")
+	}
+
+	rnsName, found := k.GetNames(ctx, n, tld)
+	if !found {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "cannot find name in key store")
+	}
+
+	val := rnsName.Value
+
+	address, err := sdk.AccAddressFromBech32(val)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot parse an address from rns entry")
+	}
+
+	return address, nil
 }
