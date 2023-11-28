@@ -27,12 +27,12 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 		expErrMsg string
 		name      string
 	}{
-		{ // alice sends a notification to bob
+		{
 			preRun: func() *types.MsgCreateNotification {
 				return types.NewMsgCreateNotification(
 					alice,
 					bob,
-					"{\"msg\": \"hey bob it's alice here\"}",
+					"{\"msg\":\"hey bob it's alice here\"}",
 				)
 			},
 			expErr: false,
@@ -48,7 +48,7 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 			},
 			expErr:    true,
 			name:      "cannot parse json",
-			expErrMsg: "",
+			expErrMsg: "contents are not valid `hey bob it's alice here`: failed to unmarshal JSON bytes",
 		},
 		{
 			preRun: func() *types.MsgCreateNotification {
@@ -59,16 +59,15 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 				)
 			},
 			expErr:    true,
-			name:      "charlie cannot notify bob",
-			expErrMsg: "You are a blocked sender",
+			name:      "charlie is blocked",
+			expErrMsg: "you are blocked from sending this user notifications: unauthorized",
 		},
 	}
 
 	for _, tc := range cases {
 		suite.Run(tc.name, func() {
 			msg := tc.preRun()
-			suite.Require().NoError(err)
-			_, err := msgSrvr.CreateNotification(context, msg)
+			_, err = msgSrvr.CreateNotification(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -10,6 +11,11 @@ import (
 
 func (k msgServer) CreateNotification(goCtx context.Context, msg *types.MsgCreateNotification) (*types.MsgCreateNotificationResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	validContents := json.Valid([]byte(msg.Contents))
+	if !validContents {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrJSONUnmarshal, "contents are not valid `%s`", msg.Contents)
+	}
 
 	sender := msg.Creator
 	owner := msg.To
