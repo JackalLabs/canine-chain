@@ -17,6 +17,7 @@ message MsgCreateNotification {
   string creator = 1; // who the notification is from
   string to = 2; // address receiving the notification
   string contents = 3; // must be valid json
+  bytes private_contents = 4; // private contents can be any byte array (meant to be encrypted data)
 }
 
 message MsgCreateNotificationResponse {}

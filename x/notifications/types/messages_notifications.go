@@ -19,11 +19,13 @@ func NewMsgCreateNotification(
 	from string,
 	to string,
 	contents string,
+	privateData []byte,
 ) *MsgCreateNotification {
 	return &MsgCreateNotification{
-		Creator:  from,
-		To:       to,
-		Contents: contents,
+		Creator:         from,
+		To:              to,
+		Contents:        contents,
+		PrivateContents: privateData,
 	}
 }
 

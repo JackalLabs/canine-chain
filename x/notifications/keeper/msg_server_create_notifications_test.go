@@ -33,6 +33,7 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 					alice,
 					bob,
 					"{\"msg\":\"hey bob it's alice here\"}",
+					make([]byte, 0),
 				)
 			},
 			expErr: false,
@@ -44,6 +45,7 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 					alice,
 					bob,
 					"hey bob it's alice here",
+					make([]byte, 0),
 				)
 			},
 			expErr:    true,
@@ -56,6 +58,7 @@ func (suite *KeeperTestSuite) TestMsgCreateNotifications() {
 					charlie,
 					bob,
 					"{\"msg\": \"hey bob it's charlie here\"}",
+					make([]byte, 0),
 				)
 			},
 			expErr:    true,

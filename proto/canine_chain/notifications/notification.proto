@@ -11,6 +11,7 @@ message Notification {
   string from = 2; // the address receiving the notification
   google.protobuf.Timestamp time = 3 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
   string contents = 4; // must be valid json string
+  bytes private_contents = 5; // allowing for arbitrary data that is supposed to be decrypted using a private key
 }
 
 message Block {

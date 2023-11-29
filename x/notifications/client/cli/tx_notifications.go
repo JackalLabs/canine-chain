@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/hex"
 	"strconv"
 	"time"
 
@@ -13,11 +14,16 @@ import (
 
 func CmdCreateNotification() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-notifications [to] [content]",
+		Use:   "create-notifications [to] [content] [private-contents]",
 		Short: "Create a new notifications",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			byteData, err := hex.DecodeString(args[2])
 			if err != nil {
 				return err
 			}
@@ -26,6 +32,7 @@ func CmdCreateNotification() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				args[1],
+				byteData,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
