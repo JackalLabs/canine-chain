@@ -63,7 +63,7 @@ from_scratch () {
     update_test_genesis '.app_state["oracle"]["params"]["deposit"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
     update_test_genesis '.app_state["rns"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
 
-
+    update_test_genesis '.app_state["interchainaccounts"]["host_genesis_state"]["params"]["allow_messages"]=["*"] | map(.)'
 
     # Allocate genesis accounts
     canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING
