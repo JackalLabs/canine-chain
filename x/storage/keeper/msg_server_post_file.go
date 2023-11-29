@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"encoding/json"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -11,6 +12,10 @@ import (
 
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	if !json.Valid([]byte(msg.Note)) {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrJSONUnmarshal, "note is not valid json `%s`", msg.Note)
+	}
 
 	window := k.GetParams(ctx).ProofWindow
 	// if msg.ProofInterval != window {
