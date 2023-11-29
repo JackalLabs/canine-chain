@@ -41,7 +41,7 @@ message QueryParamsResponse {
 message QueryNotification {
 	  string to = 1;
 	  string from = 2;
-	  int64 time = 3; // unix timestamp
+	  int64 time = 3; // unix timestamp in microseconds
 
 }
 
