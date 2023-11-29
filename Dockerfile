@@ -1,5 +1,9 @@
 # syntax=docker/dockerfile:1
 FROM golang:1.21
+
+# Update package list and install jq
+RUN apt-get update && apt-get install -y jq
+
 WORKDIR /canine-chain
 COPY . /canine-chain
 RUN ls
