@@ -17,7 +17,7 @@ func (suite *KeeperTestSuite) TestMsgDeleteNotifications() {
 	alice := testAddresses[0]
 	bob := testAddresses[1]
 
-	t := time.Now()
+	t := time.Now().UnixMicro()
 
 	notification := types.Notification{
 		To:       bob,

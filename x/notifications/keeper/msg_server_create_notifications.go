@@ -32,7 +32,7 @@ func (k msgServer) CreateNotification(goCtx context.Context, msg *types.MsgCreat
 	noti := types.Notification{
 		To:              address.String(),
 		From:            sender,
-		Time:            ctx.BlockTime(),
+		Time:            ctx.BlockTime().UnixMicro(),
 		Contents:        msg.Contents,
 		PrivateContents: msg.PrivateContents,
 	}

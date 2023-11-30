@@ -3,7 +3,6 @@ package cli
 import (
 	"encoding/hex"
 	"strconv"
-	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -62,12 +61,10 @@ func CmdDeleteNotification() *cobra.Command {
 				return err
 			}
 
-			t := time.UnixMicro(ts)
-
 			msg := types.NewMsgDeleteNotification(
 				clientCtx.GetFromAddress().String(),
 				args[0],
-				t,
+				ts,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -25,7 +24,7 @@ func (k Keeper) GetNotification(
 	ctx sdk.Context,
 	to string,
 	from string,
-	timeStamp time.Time,
+	timeStamp int64,
 ) (val types.Notification, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 
@@ -48,7 +47,7 @@ func (k Keeper) RemoveNotification(
 	ctx sdk.Context,
 	to string,
 	from string,
-	timeStamp time.Time,
+	timeStamp int64,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 	store.Delete(types.NotificationsKey(
