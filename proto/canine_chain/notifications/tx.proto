@@ -25,7 +25,7 @@ message MsgCreateNotificationResponse {}
 message MsgDeleteNotification {
   string creator = 1; // the address deleting the notification
   string from = 2; // the address receiving the notification
-  google.protobuf.Timestamp time = 3 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  int64 time = 3; // time of notification creation in microseconds
 }
 
 message MsgDeleteNotificationResponse {}

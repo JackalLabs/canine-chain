@@ -2,7 +2,6 @@ package types
 
 import (
 	"encoding/json"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -68,7 +67,7 @@ var _ sdk.Msg = &MsgDeleteNotification{}
 func NewMsgDeleteNotification(
 	to string,
 	from string,
-	timeStamp time.Time,
+	timeStamp int64,
 ) *MsgDeleteNotification {
 	return &MsgDeleteNotification{
 		Creator: to,

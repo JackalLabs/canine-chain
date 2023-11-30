@@ -3,7 +3,6 @@ package types
 import (
 	"encoding/binary"
 	"fmt"
-	"time"
 )
 
 var _ binary.ByteOrder
@@ -17,9 +16,9 @@ const (
 func NotificationsKey(
 	to string,
 	from string,
-	time time.Time,
+	time int64,
 ) []byte {
-	return []byte(fmt.Sprintf("%s/%s/%d", to, from, time.Unix()))
+	return []byte(fmt.Sprintf("%s/%s/%d", to, from, time))
 }
 
 // BlockKey returns the store key to retrieve a block object from the index fields

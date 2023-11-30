@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"time"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -84,13 +83,11 @@ func (k Keeper) Notification(c context.Context, req *types.QueryNotification) (*
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	t := time.UnixMicro(req.Time)
-
 	val, found := k.GetNotification(
 		ctx,
 		req.To,
 		req.From,
-		t,
+		req.Time,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
