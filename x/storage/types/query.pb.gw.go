@@ -1299,7 +1299,7 @@ func request_Query_PriceCheck_0(ctx context.Context, marshaler runtime.Marshaler
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "duration")
 	}
 
-	protoReq.Duration, err = runtime.String(val)
+	protoReq.Duration, err = runtime.Int64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "duration", err)
@@ -1337,7 +1337,7 @@ func local_request_Query_PriceCheck_0(ctx context.Context, marshaler runtime.Mar
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "duration")
 	}
 
-	protoReq.Duration, err = runtime.String(val)
+	protoReq.Duration, err = runtime.Int64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "duration", err)
