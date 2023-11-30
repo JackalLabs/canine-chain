@@ -19,6 +19,13 @@ import (
 	types "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
 
+type DummyRns struct{}
+
+func (d DummyRns) Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error) {
+	_ = ctx
+	return sdk.AccAddressFromBech32(name)
+}
+
 // setupNotificationsKeeper creates a NotificationsKeeper as well as all its dependencies.
 func setupNotificationsKeeper(t *testing.T) (
 	*keeper.Keeper,
@@ -44,7 +51,7 @@ func setupNotificationsKeeper(t *testing.T) (
 	)
 
 	// Notifications keeper initializations
-	notificationsKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace)
+	notificationsKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace, DummyRns{})
 	notificationsKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.

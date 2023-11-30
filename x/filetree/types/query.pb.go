@@ -30,7 +30,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParams is request type for the Query/Params RPC method.
 type QueryParams struct {
 }
 
@@ -67,9 +66,7 @@ func (m *QueryParams) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParams proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -562,15 +559,14 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// Queries a Files by index.
+	// Queries a File by address and owner_address.
 	File(ctx context.Context, in *QueryFile, opts ...grpc.CallOption) (*QueryFileResponse, error)
-	// Queries a list of Files items.
+	// Queries a list of File items.
 	AllFiles(ctx context.Context, in *QueryAllFiles, opts ...grpc.CallOption) (*QueryAllFilesResponse, error)
-	// Queries a Pubkey by index.
+	// Queries a PubKey by address.
 	PubKey(ctx context.Context, in *QueryPubKey, opts ...grpc.CallOption) (*QueryPubKeyResponse, error)
-	// Queries a list of Pubkey items.
+	// Queries a list of PubKey items.
 	AllPubKeys(ctx context.Context, in *QueryAllPubKeys, opts ...grpc.CallOption) (*QueryAllPubKeysResponse, error)
 }
 
@@ -629,15 +625,14 @@ func (c *queryClient) AllPubKeys(ctx context.Context, in *QueryAllPubKeys, opts 
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParams) (*QueryParamsResponse, error)
-	// Queries a Files by index.
+	// Queries a File by address and owner_address.
 	File(context.Context, *QueryFile) (*QueryFileResponse, error)
-	// Queries a list of Files items.
+	// Queries a list of File items.
 	AllFiles(context.Context, *QueryAllFiles) (*QueryAllFilesResponse, error)
-	// Queries a Pubkey by index.
+	// Queries a PubKey by address.
 	PubKey(context.Context, *QueryPubKey) (*QueryPubKeyResponse, error)
-	// Queries a list of Pubkey items.
+	// Queries a list of PubKey items.
 	AllPubKeys(context.Context, *QueryAllPubKeys) (*QueryAllPubKeysResponse, error)
 }
 

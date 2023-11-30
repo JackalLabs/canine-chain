@@ -23,7 +23,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Params defines the parameters for the module.
 type Params struct {
 	MintDenom      string `protobuf:"bytes,1,opt,name=mint_denom,json=mintDenom,proto3" json:"mint_denom,omitempty" yaml:"mint_denom"`
 	ProviderRatio  int64  `protobuf:"varint,2,opt,name=providerRatio,proto3" json:"providerRatio,omitempty" yaml:"provider_ratio"`

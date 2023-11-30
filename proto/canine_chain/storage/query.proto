@@ -277,30 +277,50 @@ message QueryAllReportsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryFreeSpace { string address = 1; }
+message QueryFreeSpace {
+  string address = 1;
+}
 
-message QueryFreeSpaceResponse { int64 space = 1; }
+message QueryFreeSpaceResponse {
+  int64 space = 1;
+}
 
-message QueryStoreCount { string address = 1; }
+message QueryStoreCount {
+  string address = 1;
+}
 
-message QueryStoreCountResponse { int64 count = 1; }
+message QueryStoreCountResponse {
+  int64 count = 1;
+}
 
-message QueryFindFile { bytes merkle = 1; }
+message QueryFindFile {
+  bytes merkle = 1;
+}
 
-message QueryFindFileResponse { string provider_ips = 1; }
+message QueryFindFileResponse {
+  repeated string provider_ips = 1;
+}
 
-message QueryClientFreeSpace { string address = 1; }
+message QueryClientFreeSpace {
+  string address = 1;
+}
 
-message QueryClientFreeSpaceResponse { int64 bytes_free = 1; }
+message QueryClientFreeSpaceResponse {
+  int64 bytes_free = 1;
+}
 
-message QueryPayData { string address = 1; }
+message QueryPayData {
+  string address = 1;
+}
 
 message QueryPayDataResponse {
   int64 time_remaining = 1;
   int64 bytes = 2;
 }
 
-message QueryStoragePaymentInfo { string address = 1; }
+message QueryStoragePaymentInfo {
+  string address = 1;
+}
 
 message QueryStoragePaymentInfoResponse {
   StoragePaymentInfo storage_payment_info = 1 [ (gogoproto.nullable) = false ];
@@ -325,7 +345,7 @@ message QueryFileUploadCheckResponse {
 }
 
 message QueryPriceCheck {
-  string duration = 1; // formatted as time
+  int64 duration = 1; // days to check for
   int64 bytes = 2;
 }
 

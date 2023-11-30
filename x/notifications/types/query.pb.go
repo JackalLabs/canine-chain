@@ -10,6 +10,7 @@ import (
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
+	_ "github.com/gogo/protobuf/types"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -30,22 +31,21 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
-type QueryParamsRequest struct {
+type QueryParams struct {
 }
 
-func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
-func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryParamsRequest) ProtoMessage()    {}
-func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryParams) Reset()         { *m = QueryParams{} }
+func (m *QueryParams) String() string { return proto.CompactTextString(m) }
+func (*QueryParams) ProtoMessage()    {}
+func (*QueryParams) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0e7e3c82750b3d9e, []int{0}
 }
-func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryParams) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParamsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParams.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -55,21 +55,19 @@ func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-func (m *QueryParamsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParamsRequest.Merge(m, src)
+func (m *QueryParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParams.Merge(m, src)
 }
-func (m *QueryParamsRequest) XXX_Size() int {
+func (m *QueryParams) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParamsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParamsRequest.DiscardUnknown(m)
+func (m *QueryParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParams.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryParams proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -113,23 +111,24 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-type QueryGetNotificationsRequest struct {
-	Count   uint64 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
-	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+type QueryNotification struct {
+	To   string `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
+	From string `protobuf:"bytes,2,opt,name=from,proto3" json:"from,omitempty"`
+	Time int64  `protobuf:"varint,3,opt,name=time,proto3" json:"time,omitempty"`
 }
 
-func (m *QueryGetNotificationsRequest) Reset()         { *m = QueryGetNotificationsRequest{} }
-func (m *QueryGetNotificationsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryGetNotificationsRequest) ProtoMessage()    {}
-func (*QueryGetNotificationsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryNotification) Reset()         { *m = QueryNotification{} }
+func (m *QueryNotification) String() string { return proto.CompactTextString(m) }
+func (*QueryNotification) ProtoMessage()    {}
+func (*QueryNotification) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0e7e3c82750b3d9e, []int{2}
 }
-func (m *QueryGetNotificationsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryNotification) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetNotificationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryNotification) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetNotificationsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryNotification.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -139,48 +138,55 @@ func (m *QueryGetNotificationsRequest) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *QueryGetNotificationsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetNotificationsRequest.Merge(m, src)
+func (m *QueryNotification) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryNotification.Merge(m, src)
 }
-func (m *QueryGetNotificationsRequest) XXX_Size() int {
+func (m *QueryNotification) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetNotificationsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetNotificationsRequest.DiscardUnknown(m)
+func (m *QueryNotification) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryNotification.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetNotificationsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryNotification proto.InternalMessageInfo
 
-func (m *QueryGetNotificationsRequest) GetCount() uint64 {
+func (m *QueryNotification) GetTo() string {
 	if m != nil {
-		return m.Count
-	}
-	return 0
-}
-
-func (m *QueryGetNotificationsRequest) GetAddress() string {
-	if m != nil {
-		return m.Address
+		return m.To
 	}
 	return ""
 }
 
-type QueryGetNotificationsResponse struct {
-	Notifications Notifications `protobuf:"bytes,1,opt,name=notifications,proto3" json:"notifications"`
+func (m *QueryNotification) GetFrom() string {
+	if m != nil {
+		return m.From
+	}
+	return ""
 }
 
-func (m *QueryGetNotificationsResponse) Reset()         { *m = QueryGetNotificationsResponse{} }
-func (m *QueryGetNotificationsResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryGetNotificationsResponse) ProtoMessage()    {}
-func (*QueryGetNotificationsResponse) Descriptor() ([]byte, []int) {
+func (m *QueryNotification) GetTime() int64 {
+	if m != nil {
+		return m.Time
+	}
+	return 0
+}
+
+type QueryNotificationResponse struct {
+	Notification Notification `protobuf:"bytes,1,opt,name=notification,proto3" json:"notification"`
+}
+
+func (m *QueryNotificationResponse) Reset()         { *m = QueryNotificationResponse{} }
+func (m *QueryNotificationResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryNotificationResponse) ProtoMessage()    {}
+func (*QueryNotificationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0e7e3c82750b3d9e, []int{3}
 }
-func (m *QueryGetNotificationsResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryNotificationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetNotificationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryNotificationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetNotificationsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryNotificationResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -190,41 +196,41 @@ func (m *QueryGetNotificationsResponse) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *QueryGetNotificationsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetNotificationsResponse.Merge(m, src)
+func (m *QueryNotificationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryNotificationResponse.Merge(m, src)
 }
-func (m *QueryGetNotificationsResponse) XXX_Size() int {
+func (m *QueryNotificationResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetNotificationsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetNotificationsResponse.DiscardUnknown(m)
+func (m *QueryNotificationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryNotificationResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetNotificationsResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryNotificationResponse proto.InternalMessageInfo
 
-func (m *QueryGetNotificationsResponse) GetNotifications() Notifications {
+func (m *QueryNotificationResponse) GetNotification() Notification {
 	if m != nil {
-		return m.Notifications
+		return m.Notification
 	}
-	return Notifications{}
+	return Notification{}
 }
 
-type QueryAllNotificationsRequest struct {
+type QueryAllNotifications struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAllNotificationsRequest) Reset()         { *m = QueryAllNotificationsRequest{} }
-func (m *QueryAllNotificationsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAllNotificationsRequest) ProtoMessage()    {}
-func (*QueryAllNotificationsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryAllNotifications) Reset()         { *m = QueryAllNotifications{} }
+func (m *QueryAllNotifications) String() string { return proto.CompactTextString(m) }
+func (*QueryAllNotifications) ProtoMessage()    {}
+func (*QueryAllNotifications) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0e7e3c82750b3d9e, []int{4}
 }
-func (m *QueryAllNotificationsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryAllNotifications) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllNotificationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAllNotifications) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllNotificationsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAllNotifications.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -234,19 +240,19 @@ func (m *QueryAllNotificationsRequest) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *QueryAllNotificationsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllNotificationsRequest.Merge(m, src)
+func (m *QueryAllNotifications) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllNotifications.Merge(m, src)
 }
-func (m *QueryAllNotificationsRequest) XXX_Size() int {
+func (m *QueryAllNotifications) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllNotificationsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllNotificationsRequest.DiscardUnknown(m)
+func (m *QueryAllNotifications) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllNotifications.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllNotificationsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryAllNotifications proto.InternalMessageInfo
 
-func (m *QueryAllNotificationsRequest) GetPagination() *query.PageRequest {
+func (m *QueryAllNotifications) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
@@ -254,7 +260,7 @@ func (m *QueryAllNotificationsRequest) GetPagination() *query.PageRequest {
 }
 
 type QueryAllNotificationsResponse struct {
-	Notifications []Notifications     `protobuf:"bytes,1,rep,name=notifications,proto3" json:"notifications"`
+	Notifications []Notification      `protobuf:"bytes,1,rep,name=notifications,proto3" json:"notifications"`
 	Pagination    *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -291,7 +297,7 @@ func (m *QueryAllNotificationsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryAllNotificationsResponse proto.InternalMessageInfo
 
-func (m *QueryAllNotificationsResponse) GetNotifications() []Notifications {
+func (m *QueryAllNotificationsResponse) GetNotifications() []Notification {
 	if m != nil {
 		return m.Notifications
 	}
@@ -305,23 +311,23 @@ func (m *QueryAllNotificationsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-type QueryAllNotificationsByAddressRequest struct {
+type QueryAllNotificationsByAddress struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	Address    string             `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	To         string             `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
 }
 
-func (m *QueryAllNotificationsByAddressRequest) Reset()         { *m = QueryAllNotificationsByAddressRequest{} }
-func (m *QueryAllNotificationsByAddressRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAllNotificationsByAddressRequest) ProtoMessage()    {}
-func (*QueryAllNotificationsByAddressRequest) Descriptor() ([]byte, []int) {
+func (m *QueryAllNotificationsByAddress) Reset()         { *m = QueryAllNotificationsByAddress{} }
+func (m *QueryAllNotificationsByAddress) String() string { return proto.CompactTextString(m) }
+func (*QueryAllNotificationsByAddress) ProtoMessage()    {}
+func (*QueryAllNotificationsByAddress) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0e7e3c82750b3d9e, []int{6}
 }
-func (m *QueryAllNotificationsByAddressRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryAllNotificationsByAddress) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllNotificationsByAddressRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAllNotificationsByAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllNotificationsByAddressRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAllNotificationsByAddress.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -331,34 +337,34 @@ func (m *QueryAllNotificationsByAddressRequest) XXX_Marshal(b []byte, determinis
 		return b[:n], nil
 	}
 }
-func (m *QueryAllNotificationsByAddressRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllNotificationsByAddressRequest.Merge(m, src)
+func (m *QueryAllNotificationsByAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllNotificationsByAddress.Merge(m, src)
 }
-func (m *QueryAllNotificationsByAddressRequest) XXX_Size() int {
+func (m *QueryAllNotificationsByAddress) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllNotificationsByAddressRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllNotificationsByAddressRequest.DiscardUnknown(m)
+func (m *QueryAllNotificationsByAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllNotificationsByAddress.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllNotificationsByAddressRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryAllNotificationsByAddress proto.InternalMessageInfo
 
-func (m *QueryAllNotificationsByAddressRequest) GetPagination() *query.PageRequest {
+func (m *QueryAllNotificationsByAddress) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-func (m *QueryAllNotificationsByAddressRequest) GetAddress() string {
+func (m *QueryAllNotificationsByAddress) GetTo() string {
 	if m != nil {
-		return m.Address
+		return m.To
 	}
 	return ""
 }
 
 type QueryAllNotificationsByAddressResponse struct {
-	Notifications []Notifications     `protobuf:"bytes,1,rep,name=notifications,proto3" json:"notifications"`
+	Notifications []Notification      `protobuf:"bytes,1,rep,name=notifications,proto3" json:"notifications"`
 	Pagination    *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -397,7 +403,7 @@ func (m *QueryAllNotificationsByAddressResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryAllNotificationsByAddressResponse proto.InternalMessageInfo
 
-func (m *QueryAllNotificationsByAddressResponse) GetNotifications() []Notifications {
+func (m *QueryAllNotificationsByAddressResponse) GetNotifications() []Notification {
 	if m != nil {
 		return m.Notifications
 	}
@@ -411,203 +417,15 @@ func (m *QueryAllNotificationsByAddressResponse) GetPagination() *query.PageResp
 	return nil
 }
 
-type QueryGetNotiCounterRequest struct {
-	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-}
-
-func (m *QueryGetNotiCounterRequest) Reset()         { *m = QueryGetNotiCounterRequest{} }
-func (m *QueryGetNotiCounterRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryGetNotiCounterRequest) ProtoMessage()    {}
-func (*QueryGetNotiCounterRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{8}
-}
-func (m *QueryGetNotiCounterRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryGetNotiCounterRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryGetNotiCounterRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryGetNotiCounterRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetNotiCounterRequest.Merge(m, src)
-}
-func (m *QueryGetNotiCounterRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryGetNotiCounterRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetNotiCounterRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryGetNotiCounterRequest proto.InternalMessageInfo
-
-func (m *QueryGetNotiCounterRequest) GetAddress() string {
-	if m != nil {
-		return m.Address
-	}
-	return ""
-}
-
-type QueryGetNotiCounterResponse struct {
-	NotiCounter NotiCounter `protobuf:"bytes,1,opt,name=notiCounter,proto3" json:"notiCounter"`
-}
-
-func (m *QueryGetNotiCounterResponse) Reset()         { *m = QueryGetNotiCounterResponse{} }
-func (m *QueryGetNotiCounterResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryGetNotiCounterResponse) ProtoMessage()    {}
-func (*QueryGetNotiCounterResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{9}
-}
-func (m *QueryGetNotiCounterResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryGetNotiCounterResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryGetNotiCounterResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryGetNotiCounterResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetNotiCounterResponse.Merge(m, src)
-}
-func (m *QueryGetNotiCounterResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryGetNotiCounterResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetNotiCounterResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryGetNotiCounterResponse proto.InternalMessageInfo
-
-func (m *QueryGetNotiCounterResponse) GetNotiCounter() NotiCounter {
-	if m != nil {
-		return m.NotiCounter
-	}
-	return NotiCounter{}
-}
-
-type QueryAllNotiCounterRequest struct {
-	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllNotiCounterRequest) Reset()         { *m = QueryAllNotiCounterRequest{} }
-func (m *QueryAllNotiCounterRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAllNotiCounterRequest) ProtoMessage()    {}
-func (*QueryAllNotiCounterRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{10}
-}
-func (m *QueryAllNotiCounterRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllNotiCounterRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllNotiCounterRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllNotiCounterRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllNotiCounterRequest.Merge(m, src)
-}
-func (m *QueryAllNotiCounterRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllNotiCounterRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllNotiCounterRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllNotiCounterRequest proto.InternalMessageInfo
-
-func (m *QueryAllNotiCounterRequest) GetPagination() *query.PageRequest {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryAllNotiCounterResponse struct {
-	NotiCounter []NotiCounter       `protobuf:"bytes,1,rep,name=notiCounter,proto3" json:"notiCounter"`
-	Pagination  *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllNotiCounterResponse) Reset()         { *m = QueryAllNotiCounterResponse{} }
-func (m *QueryAllNotiCounterResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllNotiCounterResponse) ProtoMessage()    {}
-func (*QueryAllNotiCounterResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0e7e3c82750b3d9e, []int{11}
-}
-func (m *QueryAllNotiCounterResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllNotiCounterResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllNotiCounterResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllNotiCounterResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllNotiCounterResponse.Merge(m, src)
-}
-func (m *QueryAllNotiCounterResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllNotiCounterResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllNotiCounterResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllNotiCounterResponse proto.InternalMessageInfo
-
-func (m *QueryAllNotiCounterResponse) GetNotiCounter() []NotiCounter {
-	if m != nil {
-		return m.NotiCounter
-	}
-	return nil
-}
-
-func (m *QueryAllNotiCounterResponse) GetPagination() *query.PageResponse {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
 func init() {
-	proto.RegisterType((*QueryParamsRequest)(nil), "canine_chain.notifications.QueryParamsRequest")
+	proto.RegisterType((*QueryParams)(nil), "canine_chain.notifications.QueryParams")
 	proto.RegisterType((*QueryParamsResponse)(nil), "canine_chain.notifications.QueryParamsResponse")
-	proto.RegisterType((*QueryGetNotificationsRequest)(nil), "canine_chain.notifications.QueryGetNotificationsRequest")
-	proto.RegisterType((*QueryGetNotificationsResponse)(nil), "canine_chain.notifications.QueryGetNotificationsResponse")
-	proto.RegisterType((*QueryAllNotificationsRequest)(nil), "canine_chain.notifications.QueryAllNotificationsRequest")
+	proto.RegisterType((*QueryNotification)(nil), "canine_chain.notifications.QueryNotification")
+	proto.RegisterType((*QueryNotificationResponse)(nil), "canine_chain.notifications.QueryNotificationResponse")
+	proto.RegisterType((*QueryAllNotifications)(nil), "canine_chain.notifications.QueryAllNotifications")
 	proto.RegisterType((*QueryAllNotificationsResponse)(nil), "canine_chain.notifications.QueryAllNotificationsResponse")
-	proto.RegisterType((*QueryAllNotificationsByAddressRequest)(nil), "canine_chain.notifications.QueryAllNotificationsByAddressRequest")
+	proto.RegisterType((*QueryAllNotificationsByAddress)(nil), "canine_chain.notifications.QueryAllNotificationsByAddress")
 	proto.RegisterType((*QueryAllNotificationsByAddressResponse)(nil), "canine_chain.notifications.QueryAllNotificationsByAddressResponse")
-	proto.RegisterType((*QueryGetNotiCounterRequest)(nil), "canine_chain.notifications.QueryGetNotiCounterRequest")
-	proto.RegisterType((*QueryGetNotiCounterResponse)(nil), "canine_chain.notifications.QueryGetNotiCounterResponse")
-	proto.RegisterType((*QueryAllNotiCounterRequest)(nil), "canine_chain.notifications.QueryAllNotiCounterRequest")
-	proto.RegisterType((*QueryAllNotiCounterResponse)(nil), "canine_chain.notifications.QueryAllNotiCounterResponse")
 }
 
 func init() {
@@ -615,53 +433,47 @@ func init() {
 }
 
 var fileDescriptor_0e7e3c82750b3d9e = []byte{
-	// 726 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x96, 0xcf, 0x4f, 0x13, 0x41,
-	0x14, 0xc7, 0x3b, 0xfc, 0x32, 0x0c, 0xc1, 0x98, 0x91, 0x18, 0xb2, 0x62, 0x25, 0x9b, 0x08, 0x68,
-	0xc2, 0x4e, 0x00, 0xa9, 0x18, 0x7f, 0xd1, 0x1a, 0xc1, 0x83, 0x41, 0x6c, 0x62, 0x4c, 0xbc, 0x90,
-	0xe9, 0x32, 0x2c, 0xab, 0x65, 0xa6, 0x74, 0xb7, 0x44, 0x42, 0xb8, 0x78, 0xf3, 0x66, 0xe2, 0x3f,
-	0xe0, 0x7f, 0xe1, 0xc5, 0xe8, 0xc9, 0x84, 0x23, 0x89, 0x1e, 0x3c, 0x19, 0x03, 0x26, 0xfe, 0x1b,
-	0xa6, 0x33, 0xaf, 0x61, 0xa7, 0x74, 0xdb, 0x6d, 0xe9, 0xc5, 0x5b, 0x67, 0xfb, 0x7e, 0x7c, 0x3f,
-	0xef, 0xbd, 0x79, 0xbb, 0x78, 0xc2, 0x65, 0xc2, 0x17, 0x7c, 0xcd, 0xdd, 0x64, 0xbe, 0xa0, 0x42,
-	0x86, 0xfe, 0x86, 0xef, 0xb2, 0xd0, 0x97, 0x22, 0xa0, 0xdb, 0x15, 0x5e, 0xde, 0x75, 0x4a, 0x65,
-	0x19, 0x4a, 0x62, 0x45, 0xed, 0x1c, 0xc3, 0xce, 0x1a, 0xf1, 0xa4, 0x27, 0x95, 0x19, 0xad, 0xfe,
-	0xd2, 0x1e, 0xd6, 0x98, 0x27, 0xa5, 0x57, 0xe4, 0x94, 0x95, 0x7c, 0xca, 0x84, 0x90, 0xa1, 0xb6,
-	0x86, 0x7f, 0x6f, 0xb8, 0x32, 0xd8, 0x92, 0x01, 0x2d, 0xb0, 0x80, 0xeb, 0x44, 0x74, 0x67, 0xa6,
-	0xc0, 0x43, 0x36, 0x43, 0x4b, 0xcc, 0xf3, 0x85, 0x32, 0x06, 0xdb, 0xc9, 0x26, 0x1a, 0x4b, 0xac,
-	0xcc, 0xb6, 0x6a, 0x41, 0x9d, 0x26, 0x86, 0xc6, 0x09, 0xec, 0xa7, 0x5b, 0xd8, 0xaf, 0xb9, 0xb2,
-	0x22, 0x42, 0x5e, 0xd6, 0xe6, 0xf6, 0x08, 0x26, 0xcf, 0xaa, 0x4a, 0x57, 0x55, 0xce, 0x3c, 0xdf,
-	0xae, 0xf0, 0x20, 0xb4, 0x5f, 0xe0, 0x8b, 0xc6, 0xd3, 0xa0, 0x24, 0x45, 0xc0, 0xc9, 0x22, 0x1e,
-	0xd0, 0xda, 0x46, 0xd1, 0x38, 0x9a, 0x1a, 0x9a, 0xb5, 0x9d, 0xf8, 0x0a, 0x3a, 0xda, 0x37, 0xd7,
-	0x77, 0xf0, 0xeb, 0x6a, 0x2a, 0x0f, 0x7e, 0xf6, 0x0a, 0x1e, 0x53, 0x81, 0x97, 0x79, 0xb8, 0x12,
-	0xb5, 0x86, 0xc4, 0x64, 0x04, 0xf7, 0x2b, 0x7d, 0x2a, 0x41, 0x5f, 0x5e, 0x1f, 0xc8, 0x28, 0x3e,
-	0xc7, 0xd6, 0xd7, 0xcb, 0x3c, 0x08, 0x46, 0x7b, 0xc6, 0xd1, 0xd4, 0x60, 0xbe, 0x76, 0xb4, 0x77,
-	0xf0, 0x95, 0x98, 0x78, 0x20, 0xf9, 0x39, 0x1e, 0x36, 0x64, 0x81, 0xf2, 0xeb, 0xcd, 0x94, 0x1b,
-	0x91, 0x00, 0xc0, 0x8c, 0x62, 0x6f, 0x00, 0x47, 0xb6, 0x58, 0x6c, 0xc8, 0xb1, 0x84, 0xf1, 0x49,
-	0xcb, 0x21, 0xe7, 0x84, 0xa3, 0xe7, 0xc3, 0xa9, 0xce, 0x87, 0xa3, 0x07, 0x11, 0xe6, 0xc3, 0x59,
-	0x65, 0x1e, 0x07, 0xdf, 0x7c, 0xc4, 0xd3, 0xfe, 0x8a, 0x00, 0xf0, 0x74, 0xa2, 0x78, 0xc0, 0xde,
-	0xb3, 0x03, 0x92, 0x65, 0x03, 0xa0, 0x47, 0x01, 0x4c, 0xb6, 0x04, 0xd0, 0x9a, 0x0c, 0x82, 0x77,
-	0x08, 0x5f, 0x6b, 0x48, 0x90, 0xdb, 0xcd, 0xea, 0x26, 0x76, 0xb9, 0x66, 0x4d, 0xa6, 0xe5, 0x00,
-	0xe1, 0x89, 0x56, 0x5a, 0xfe, 0x93, 0xb2, 0x66, 0xb0, 0x15, 0x1d, 0xfc, 0x87, 0xfa, 0x52, 0xd7,
-	0x4a, 0x19, 0x29, 0x01, 0x32, 0x4b, 0x20, 0xf0, 0xe5, 0x86, 0x7e, 0x80, 0xfd, 0x14, 0x0f, 0x89,
-	0x93, 0xc7, 0xd0, 0x84, 0xc9, 0x56, 0xd0, 0x60, 0x0e, 0xc8, 0xd1, 0x08, 0xf6, 0x3a, 0xe8, 0x84,
-	0x8a, 0xd7, 0xe9, 0xec, 0xd6, 0x35, 0xf9, 0x84, 0x00, 0xab, 0x3e, 0x4d, 0x1c, 0x56, 0xef, 0xd9,
-	0xb0, 0xba, 0xd6, 0xc7, 0xd9, 0xcf, 0x83, 0xb8, 0x5f, 0x29, 0x27, 0x1f, 0x11, 0x1e, 0xd0, 0x3b,
-	0x93, 0x38, 0xcd, 0x94, 0x9d, 0x5e, 0xd7, 0x16, 0x4d, 0x6c, 0xaf, 0x15, 0xd8, 0xf3, 0x6f, 0xbf,
-	0xff, 0xf9, 0xd0, 0x43, 0xc9, 0x34, 0x7d, 0xc5, 0xdc, 0xd7, 0xac, 0xf8, 0x84, 0x15, 0x02, 0xaa,
-	0x63, 0x4c, 0xc7, 0xbf, 0x91, 0xc8, 0x0f, 0x84, 0x87, 0x8d, 0x21, 0x27, 0x0b, 0x2d, 0x33, 0xc7,
-	0x6c, 0x7a, 0xeb, 0x76, 0x07, 0x9e, 0xa0, 0x7e, 0x45, 0xa9, 0x7f, 0x4c, 0x96, 0x12, 0xaa, 0x37,
-	0x4f, 0x7b, 0xea, 0x9d, 0xb2, 0x4f, 0xf7, 0xe0, 0x4a, 0xec, 0x93, 0x6f, 0x08, 0x5f, 0x30, 0x32,
-	0x65, 0x8b, 0xc5, 0x04, 0x64, 0x31, 0xbb, 0x3f, 0x01, 0x59, 0xdc, 0x32, 0xb7, 0xef, 0x2a, 0xb2,
-	0x0c, 0xb9, 0xd9, 0x09, 0x19, 0xf9, 0x8b, 0xf0, 0xa5, 0xc6, 0x6b, 0x8d, 0x64, 0xdb, 0xd6, 0x54,
-	0xbf, 0x9e, 0xad, 0xdc, 0x59, 0x42, 0x00, 0xdf, 0x92, 0xe2, 0x5b, 0x24, 0xf7, 0x3b, 0xeb, 0x5c,
-	0xb4, 0x63, 0x43, 0x91, 0x1b, 0x4a, 0x32, 0x49, 0x87, 0xc9, 0xdc, 0x3f, 0xd6, 0xad, 0xb6, 0xfd,
-	0x00, 0xe4, 0x91, 0x02, 0x79, 0x40, 0xee, 0xb5, 0x01, 0x52, 0xfb, 0xf2, 0x8a, 0x70, 0x7c, 0x41,
-	0xf8, 0x7c, 0x24, 0x7c, 0x75, 0xee, 0x32, 0x49, 0xcb, 0xdc, 0x36, 0x4a, 0xe3, 0xdd, 0x68, 0xdf,
-	0x51, 0x28, 0xf3, 0x64, 0xae, 0x03, 0x94, 0x5c, 0xfe, 0xe0, 0x28, 0x8d, 0x0e, 0x8f, 0xd2, 0xe8,
-	0xf7, 0x51, 0x1a, 0xbd, 0x3f, 0x4e, 0xa7, 0x0e, 0x8f, 0xd3, 0xa9, 0x9f, 0xc7, 0xe9, 0xd4, 0xcb,
-	0x05, 0xcf, 0x0f, 0x37, 0x2b, 0x05, 0xc7, 0x95, 0x5b, 0xb1, 0x81, 0xdf, 0xd4, 0x85, 0x0e, 0x77,
-	0x4b, 0x3c, 0x28, 0x0c, 0xa8, 0x2f, 0xd3, 0xb9, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x1a, 0x7a,
-	0xaf, 0x06, 0xc7, 0x0b, 0x00, 0x00,
+	// 629 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x55, 0x4f, 0x6b, 0x13, 0x4f,
+	0x18, 0xce, 0x6c, 0xff, 0xc0, 0x6f, 0xda, 0xfe, 0xd0, 0x51, 0x21, 0x5d, 0x74, 0x1b, 0xf6, 0x90,
+	0x44, 0x25, 0x3b, 0x26, 0x52, 0xac, 0x82, 0x60, 0x23, 0xea, 0xa1, 0x22, 0x75, 0x11, 0x04, 0x2f,
+	0x65, 0x76, 0x3b, 0xd9, 0xae, 0x66, 0x77, 0xb6, 0x99, 0x89, 0x34, 0x84, 0x5c, 0xfc, 0x04, 0x82,
+	0xf8, 0x65, 0x3c, 0x08, 0x9e, 0xec, 0xb1, 0xe0, 0x45, 0x3c, 0x88, 0x24, 0x7e, 0x0d, 0x41, 0x76,
+	0x76, 0xb3, 0xee, 0xb6, 0x4d, 0xd2, 0x04, 0x2f, 0xde, 0x66, 0x36, 0xcf, 0xf3, 0xbc, 0xcf, 0x33,
+	0xef, 0xbc, 0x13, 0x58, 0xb4, 0x89, 0xef, 0xfa, 0x74, 0xc7, 0xde, 0x23, 0xae, 0x8f, 0x7d, 0x26,
+	0xdc, 0x86, 0x6b, 0x13, 0xe1, 0x32, 0x9f, 0xe3, 0xfd, 0x36, 0x6d, 0x75, 0x8c, 0xa0, 0xc5, 0x04,
+	0x43, 0x6a, 0x1a, 0x67, 0x64, 0x70, 0xea, 0x45, 0x87, 0x39, 0x4c, 0xc2, 0x70, 0xb8, 0x8a, 0x18,
+	0xea, 0x9a, 0xc3, 0x98, 0xd3, 0xa4, 0x58, 0xee, 0xac, 0x76, 0x03, 0x0b, 0xd7, 0xa3, 0x5c, 0x10,
+	0x2f, 0x88, 0x01, 0x97, 0x63, 0x00, 0x09, 0x5c, 0x4c, 0x7c, 0x9f, 0x89, 0x48, 0x2e, 0xfe, 0xf5,
+	0x9a, 0xcd, 0xb8, 0xc7, 0x38, 0xb6, 0x08, 0xa7, 0x91, 0x13, 0xfc, 0xba, 0x6a, 0x51, 0x41, 0xaa,
+	0x38, 0x20, 0x8e, 0xeb, 0x4b, 0x70, 0x8c, 0x2d, 0x8d, 0x09, 0x11, 0x90, 0x16, 0xf1, 0x86, 0xa2,
+	0x95, 0x31, 0xc0, 0xf4, 0x2e, 0x82, 0xeb, 0x2b, 0x70, 0xe9, 0x69, 0x58, 0x79, 0x5b, 0x6a, 0xe8,
+	0xcf, 0xe1, 0x85, 0xd4, 0xd6, 0xa4, 0x3c, 0x60, 0x3e, 0xa7, 0xe8, 0x1e, 0x5c, 0x8c, 0x8a, 0xe4,
+	0x41, 0x01, 0x94, 0x97, 0x6a, 0xba, 0x31, 0xfa, 0xac, 0x8c, 0x88, 0x5b, 0x9f, 0x3f, 0xfc, 0xbe,
+	0x96, 0x33, 0x63, 0x9e, 0xbe, 0x05, 0xcf, 0x4b, 0xe1, 0x27, 0x29, 0x28, 0xfa, 0x1f, 0x2a, 0x82,
+	0x49, 0xc9, 0xff, 0x4c, 0x45, 0x30, 0x84, 0xe0, 0x7c, 0xa3, 0xc5, 0xbc, 0xbc, 0x22, 0xbf, 0xc8,
+	0x75, 0xf8, 0x2d, 0x3c, 0xd5, 0xfc, 0x5c, 0x01, 0x94, 0xe7, 0x4c, 0xb9, 0xd6, 0x19, 0x5c, 0x3d,
+	0x21, 0x96, 0x78, 0x35, 0xe1, 0x72, 0xda, 0x4f, 0xec, 0xb8, 0x3c, 0xce, 0x71, 0x5a, 0x27, 0xf6,
+	0x9d, 0xd1, 0xd0, 0x77, 0xe0, 0x25, 0x59, 0x70, 0xb3, 0xd9, 0x4c, 0x63, 0x39, 0x7a, 0x08, 0xe1,
+	0x9f, 0x56, 0xc5, 0xa5, 0x8a, 0x46, 0xd4, 0x57, 0x23, 0xec, 0xab, 0x11, 0xdd, 0xb0, 0xb8, 0xaf,
+	0xc6, 0x36, 0x71, 0xa8, 0x49, 0xf7, 0xdb, 0x94, 0x0b, 0x33, 0xc5, 0xd4, 0x3f, 0x02, 0x78, 0xe5,
+	0xd4, 0x0a, 0x49, 0xac, 0x67, 0x70, 0x25, 0x63, 0x3a, 0x0f, 0x0a, 0x73, 0x33, 0xe4, 0xca, 0x8a,
+	0xa0, 0x47, 0x19, 0xff, 0x8a, 0xf4, 0x5f, 0x9a, 0xe8, 0x3f, 0xb2, 0x94, 0x09, 0x70, 0x00, 0xb5,
+	0x53, 0xfd, 0xd7, 0x3b, 0x9b, 0xbb, 0xbb, 0x2d, 0xca, 0xff, 0xda, 0x51, 0xc5, 0x97, 0x46, 0x19,
+	0x5e, 0x1a, 0xfd, 0x33, 0x80, 0xc5, 0xf1, 0xa5, 0xff, 0x91, 0x33, 0xac, 0xfd, 0x5a, 0x80, 0x0b,
+	0x32, 0x09, 0x7a, 0x0f, 0xe0, 0x62, 0x34, 0x46, 0xa8, 0x34, 0xce, 0x5c, 0x6a, 0x56, 0x55, 0x7c,
+	0x46, 0xe0, 0xb0, 0xb4, 0x5e, 0x7d, 0xf3, 0xe5, 0xe7, 0x3b, 0xe5, 0x3a, 0xba, 0x8a, 0x5f, 0x12,
+	0xfb, 0x15, 0x69, 0xe2, 0x88, 0x5f, 0x19, 0xfd, 0xc4, 0xa0, 0x4f, 0x00, 0x2e, 0x67, 0x26, 0xb8,
+	0x32, 0xb1, 0x68, 0x1a, 0xae, 0xae, 0x4f, 0x05, 0x4f, 0x9c, 0x6e, 0x49, 0xa7, 0x0f, 0xd0, 0xfd,
+	0x33, 0x38, 0xcd, 0xee, 0xba, 0x82, 0xf5, 0x70, 0x37, 0x7c, 0x48, 0x7a, 0xb8, 0x1b, 0xbe, 0x1d,
+	0x3d, 0xf4, 0x01, 0xc0, 0x73, 0x27, 0xe6, 0xb8, 0x3a, 0xd1, 0xd8, 0x71, 0x8a, 0x7a, 0x7b, 0x6a,
+	0x4a, 0x92, 0x67, 0x43, 0xe6, 0xa9, 0xa1, 0x1b, 0xd3, 0xe6, 0x41, 0xdf, 0x00, 0x5c, 0x1d, 0x3d,
+	0x62, 0x77, 0xa6, 0xb6, 0x94, 0x70, 0xd5, 0xfa, 0xec, 0xdc, 0x24, 0xd7, 0x5d, 0x99, 0xeb, 0x16,
+	0x5a, 0x9f, 0xa9, 0x4f, 0x75, 0xf3, 0xb0, 0xaf, 0x81, 0xa3, 0xbe, 0x06, 0x7e, 0xf4, 0x35, 0xf0,
+	0x76, 0xa0, 0xe5, 0x8e, 0x06, 0x5a, 0xee, 0xeb, 0x40, 0xcb, 0xbd, 0xd8, 0x70, 0x5c, 0xb1, 0xd7,
+	0xb6, 0x0c, 0x9b, 0x79, 0xb1, 0xf4, 0x63, 0x62, 0xf1, 0xac, 0xfc, 0xc1, 0x31, 0x49, 0xd1, 0x09,
+	0x28, 0xb7, 0x16, 0xe5, 0xdf, 0xdc, 0xcd, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x4e, 0xff, 0xeb,
+	0xb3, 0x05, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -676,18 +488,13 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	// Parameters queries the parameters of the module.
-	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// Queries a Notifications by index.
-	Notifications(ctx context.Context, in *QueryGetNotificationsRequest, opts ...grpc.CallOption) (*QueryGetNotificationsResponse, error)
-	// Queries a list of Notifications items.
-	NotificationsAll(ctx context.Context, in *QueryAllNotificationsRequest, opts ...grpc.CallOption) (*QueryAllNotificationsResponse, error)
-	// Queries a list of Notifications items by address.
-	NotificationsByAddress(ctx context.Context, in *QueryAllNotificationsByAddressRequest, opts ...grpc.CallOption) (*QueryAllNotificationsByAddressResponse, error)
-	// Queries a NotiCounter by index.
-	NotiCounter(ctx context.Context, in *QueryGetNotiCounterRequest, opts ...grpc.CallOption) (*QueryGetNotiCounterResponse, error)
-	// Queries a list of NotiCounter items.
-	NotiCounterAll(ctx context.Context, in *QueryAllNotiCounterRequest, opts ...grpc.CallOption) (*QueryAllNotiCounterResponse, error)
+	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Queries a Notification object
+	Notification(ctx context.Context, in *QueryNotification, opts ...grpc.CallOption) (*QueryNotificationResponse, error)
+	// Queries a list of Notification items.
+	AllNotifications(ctx context.Context, in *QueryAllNotifications, opts ...grpc.CallOption) (*QueryAllNotificationsResponse, error)
+	// Queries a list of Notification items by address.
+	AllNotificationsByAddress(ctx context.Context, in *QueryAllNotificationsByAddress, opts ...grpc.CallOption) (*QueryAllNotificationsByAddressResponse, error)
 }
 
 type queryClient struct {
@@ -698,7 +505,7 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
 }
 
-func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
+func (c *queryClient) Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
 	out := new(QueryParamsResponse)
 	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/Params", in, out, opts...)
 	if err != nil {
@@ -707,45 +514,27 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
-func (c *queryClient) Notifications(ctx context.Context, in *QueryGetNotificationsRequest, opts ...grpc.CallOption) (*QueryGetNotificationsResponse, error) {
-	out := new(QueryGetNotificationsResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/Notifications", in, out, opts...)
+func (c *queryClient) Notification(ctx context.Context, in *QueryNotification, opts ...grpc.CallOption) (*QueryNotificationResponse, error) {
+	out := new(QueryNotificationResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/Notification", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) NotificationsAll(ctx context.Context, in *QueryAllNotificationsRequest, opts ...grpc.CallOption) (*QueryAllNotificationsResponse, error) {
+func (c *queryClient) AllNotifications(ctx context.Context, in *QueryAllNotifications, opts ...grpc.CallOption) (*QueryAllNotificationsResponse, error) {
 	out := new(QueryAllNotificationsResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/NotificationsAll", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/AllNotifications", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) NotificationsByAddress(ctx context.Context, in *QueryAllNotificationsByAddressRequest, opts ...grpc.CallOption) (*QueryAllNotificationsByAddressResponse, error) {
+func (c *queryClient) AllNotificationsByAddress(ctx context.Context, in *QueryAllNotificationsByAddress, opts ...grpc.CallOption) (*QueryAllNotificationsByAddressResponse, error) {
 	out := new(QueryAllNotificationsByAddressResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/NotificationsByAddress", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryClient) NotiCounter(ctx context.Context, in *QueryGetNotiCounterRequest, opts ...grpc.CallOption) (*QueryGetNotiCounterResponse, error) {
-	out := new(QueryGetNotiCounterResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/NotiCounter", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryClient) NotiCounterAll(ctx context.Context, in *QueryAllNotiCounterRequest, opts ...grpc.CallOption) (*QueryAllNotiCounterResponse, error) {
-	out := new(QueryAllNotiCounterResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/NotiCounterAll", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Query/AllNotificationsByAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -754,41 +543,30 @@ func (c *queryClient) NotiCounterAll(ctx context.Context, in *QueryAllNotiCounte
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	// Parameters queries the parameters of the module.
-	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
-	// Queries a Notifications by index.
-	Notifications(context.Context, *QueryGetNotificationsRequest) (*QueryGetNotificationsResponse, error)
-	// Queries a list of Notifications items.
-	NotificationsAll(context.Context, *QueryAllNotificationsRequest) (*QueryAllNotificationsResponse, error)
-	// Queries a list of Notifications items by address.
-	NotificationsByAddress(context.Context, *QueryAllNotificationsByAddressRequest) (*QueryAllNotificationsByAddressResponse, error)
-	// Queries a NotiCounter by index.
-	NotiCounter(context.Context, *QueryGetNotiCounterRequest) (*QueryGetNotiCounterResponse, error)
-	// Queries a list of NotiCounter items.
-	NotiCounterAll(context.Context, *QueryAllNotiCounterRequest) (*QueryAllNotiCounterResponse, error)
+	Params(context.Context, *QueryParams) (*QueryParamsResponse, error)
+	// Queries a Notification object
+	Notification(context.Context, *QueryNotification) (*QueryNotificationResponse, error)
+	// Queries a list of Notification items.
+	AllNotifications(context.Context, *QueryAllNotifications) (*QueryAllNotificationsResponse, error)
+	// Queries a list of Notification items by address.
+	AllNotificationsByAddress(context.Context, *QueryAllNotificationsByAddress) (*QueryAllNotificationsByAddressResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
 type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
+func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParams) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
-func (*UnimplementedQueryServer) Notifications(ctx context.Context, req *QueryGetNotificationsRequest) (*QueryGetNotificationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Notifications not implemented")
+func (*UnimplementedQueryServer) Notification(ctx context.Context, req *QueryNotification) (*QueryNotificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Notification not implemented")
 }
-func (*UnimplementedQueryServer) NotificationsAll(ctx context.Context, req *QueryAllNotificationsRequest) (*QueryAllNotificationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method NotificationsAll not implemented")
+func (*UnimplementedQueryServer) AllNotifications(ctx context.Context, req *QueryAllNotifications) (*QueryAllNotificationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllNotifications not implemented")
 }
-func (*UnimplementedQueryServer) NotificationsByAddress(ctx context.Context, req *QueryAllNotificationsByAddressRequest) (*QueryAllNotificationsByAddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method NotificationsByAddress not implemented")
-}
-func (*UnimplementedQueryServer) NotiCounter(ctx context.Context, req *QueryGetNotiCounterRequest) (*QueryGetNotiCounterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method NotiCounter not implemented")
-}
-func (*UnimplementedQueryServer) NotiCounterAll(ctx context.Context, req *QueryAllNotiCounterRequest) (*QueryAllNotiCounterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method NotiCounterAll not implemented")
+func (*UnimplementedQueryServer) AllNotificationsByAddress(ctx context.Context, req *QueryAllNotificationsByAddress) (*QueryAllNotificationsByAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllNotificationsByAddress not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -796,7 +574,7 @@ func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 }
 
 func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryParamsRequest)
+	in := new(QueryParams)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -808,97 +586,61 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/canine_chain.notifications.Query/Params",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Params(ctx, req.(*QueryParamsRequest))
+		return srv.(QueryServer).Params(ctx, req.(*QueryParams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_Notifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryGetNotificationsRequest)
+func _Query_Notification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryNotification)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).Notifications(ctx, in)
+		return srv.(QueryServer).Notification(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Query/Notifications",
+		FullMethod: "/canine_chain.notifications.Query/Notification",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Notifications(ctx, req.(*QueryGetNotificationsRequest))
+		return srv.(QueryServer).Notification(ctx, req.(*QueryNotification))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_NotificationsAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAllNotificationsRequest)
+func _Query_AllNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllNotifications)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).NotificationsAll(ctx, in)
+		return srv.(QueryServer).AllNotifications(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Query/NotificationsAll",
+		FullMethod: "/canine_chain.notifications.Query/AllNotifications",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).NotificationsAll(ctx, req.(*QueryAllNotificationsRequest))
+		return srv.(QueryServer).AllNotifications(ctx, req.(*QueryAllNotifications))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_NotificationsByAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAllNotificationsByAddressRequest)
+func _Query_AllNotificationsByAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllNotificationsByAddress)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).NotificationsByAddress(ctx, in)
+		return srv.(QueryServer).AllNotificationsByAddress(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Query/NotificationsByAddress",
+		FullMethod: "/canine_chain.notifications.Query/AllNotificationsByAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).NotificationsByAddress(ctx, req.(*QueryAllNotificationsByAddressRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Query_NotiCounter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryGetNotiCounterRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).NotiCounter(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Query/NotiCounter",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).NotiCounter(ctx, req.(*QueryGetNotiCounterRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Query_NotiCounterAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAllNotiCounterRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).NotiCounterAll(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Query/NotiCounterAll",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).NotiCounterAll(ctx, req.(*QueryAllNotiCounterRequest))
+		return srv.(QueryServer).AllNotificationsByAddress(ctx, req.(*QueryAllNotificationsByAddress))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -912,31 +654,23 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Params_Handler,
 		},
 		{
-			MethodName: "Notifications",
-			Handler:    _Query_Notifications_Handler,
+			MethodName: "Notification",
+			Handler:    _Query_Notification_Handler,
 		},
 		{
-			MethodName: "NotificationsAll",
-			Handler:    _Query_NotificationsAll_Handler,
+			MethodName: "AllNotifications",
+			Handler:    _Query_AllNotifications_Handler,
 		},
 		{
-			MethodName: "NotificationsByAddress",
-			Handler:    _Query_NotificationsByAddress_Handler,
-		},
-		{
-			MethodName: "NotiCounter",
-			Handler:    _Query_NotiCounter_Handler,
-		},
-		{
-			MethodName: "NotiCounterAll",
-			Handler:    _Query_NotiCounterAll_Handler,
+			MethodName: "AllNotificationsByAddress",
+			Handler:    _Query_AllNotificationsByAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "canine_chain/notifications/query.proto",
 }
 
-func (m *QueryParamsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryParams) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -946,12 +680,12 @@ func (m *QueryParamsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryParamsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParams) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParamsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -992,7 +726,7 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetNotificationsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryNotification) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1002,32 +736,39 @@ func (m *QueryGetNotificationsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetNotificationsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryNotification) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetNotificationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryNotification) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+	if m.Time != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Time))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.From) > 0 {
+		i -= len(m.From)
+		copy(dAtA[i:], m.From)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.From)))
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.Count != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Count))
+	if len(m.To) > 0 {
+		i -= len(m.To)
+		copy(dAtA[i:], m.To)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.To)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetNotificationsResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryNotificationResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1037,18 +778,18 @@ func (m *QueryGetNotificationsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetNotificationsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryNotificationResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetNotificationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryNotificationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.Notifications.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.Notification.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -1060,7 +801,7 @@ func (m *QueryGetNotificationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllNotificationsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryAllNotifications) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1070,12 +811,12 @@ func (m *QueryAllNotificationsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllNotificationsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAllNotifications) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllNotificationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAllNotifications) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1144,7 +885,7 @@ func (m *QueryAllNotificationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllNotificationsByAddressRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryAllNotificationsByAddress) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1154,20 +895,20 @@ func (m *QueryAllNotificationsByAddressRequest) Marshal() (dAtA []byte, err erro
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllNotificationsByAddressRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAllNotificationsByAddress) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllNotificationsByAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAllNotificationsByAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+	if len(m.To) > 0 {
+		i -= len(m.To)
+		copy(dAtA[i:], m.To)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.To)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -1235,153 +976,6 @@ func (m *QueryAllNotificationsByAddressResponse) MarshalToSizedBuffer(dAtA []byt
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetNotiCounterRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryGetNotiCounterRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryGetNotiCounterRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryGetNotiCounterResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryGetNotiCounterResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryGetNotiCounterResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.NotiCounter.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintQuery(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryAllNotiCounterRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryAllNotiCounterRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryAllNotiCounterRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryAllNotiCounterResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryAllNotiCounterResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryAllNotiCounterResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.NotiCounter) > 0 {
-		for iNdEx := len(m.NotiCounter) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.NotiCounter[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintQuery(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
-	return len(dAtA) - i, nil
-}
-
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -1393,7 +987,7 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *QueryParamsRequest) Size() (n int) {
+func (m *QueryParams) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1413,34 +1007,38 @@ func (m *QueryParamsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetNotificationsRequest) Size() (n int) {
+func (m *QueryNotification) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Count != 0 {
-		n += 1 + sovQuery(uint64(m.Count))
-	}
-	l = len(m.Address)
+	l = len(m.To)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.From)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	if m.Time != 0 {
+		n += 1 + sovQuery(uint64(m.Time))
 	}
 	return n
 }
 
-func (m *QueryGetNotificationsResponse) Size() (n int) {
+func (m *QueryNotificationResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.Notifications.Size()
+	l = m.Notification.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
-func (m *QueryAllNotificationsRequest) Size() (n int) {
+func (m *QueryAllNotifications) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1472,7 +1070,7 @@ func (m *QueryAllNotificationsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryAllNotificationsByAddressRequest) Size() (n int) {
+func (m *QueryAllNotificationsByAddress) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1482,7 +1080,7 @@ func (m *QueryAllNotificationsByAddressRequest) Size() (n int) {
 		l = m.Pagination.Size()
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	l = len(m.Address)
+	l = len(m.To)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -1508,69 +1106,13 @@ func (m *QueryAllNotificationsByAddressResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetNotiCounterRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Address)
-	if l > 0 {
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	return n
-}
-
-func (m *QueryGetNotiCounterResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = m.NotiCounter.Size()
-	n += 1 + l + sovQuery(uint64(l))
-	return n
-}
-
-func (m *QueryAllNotiCounterRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		l = m.Pagination.Size()
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	return n
-}
-
-func (m *QueryAllNotiCounterResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.NotiCounter) > 0 {
-		for _, e := range m.NotiCounter {
-			l = e.Size()
-			n += 1 + l + sovQuery(uint64(l))
-		}
-	}
-	if m.Pagination != nil {
-		l = m.Pagination.Size()
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	return n
-}
-
 func sovQuery(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryParams) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1593,10 +1135,10 @@ func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParamsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParams: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParamsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParams: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -1703,7 +1245,7 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetNotificationsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryNotification) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1726,34 +1268,15 @@ func (m *QueryGetNotificationsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetNotificationsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryNotification: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetNotificationsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryNotification: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Count", wireType)
-			}
-			m.Count = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Count |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field To", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1781,8 +1304,59 @@ func (m *QueryGetNotificationsRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Address = string(dAtA[iNdEx:postIndex])
+			m.To = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field From", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.From = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Time", wireType)
+			}
+			m.Time = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Time |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -1804,7 +1378,7 @@ func (m *QueryGetNotificationsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetNotificationsResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryNotificationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1827,15 +1401,15 @@ func (m *QueryGetNotificationsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetNotificationsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryNotificationResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetNotificationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryNotificationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Notifications", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Notification", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1862,7 +1436,7 @@ func (m *QueryGetNotificationsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Notifications.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Notification.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1887,7 +1461,7 @@ func (m *QueryGetNotificationsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllNotificationsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryAllNotifications) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1910,10 +1484,10 @@ func (m *QueryAllNotificationsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllNotificationsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllNotifications: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllNotificationsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllNotifications: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2031,7 +1605,7 @@ func (m *QueryAllNotificationsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Notifications = append(m.Notifications, Notifications{})
+			m.Notifications = append(m.Notifications, Notification{})
 			if err := m.Notifications[len(m.Notifications)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -2093,7 +1667,7 @@ func (m *QueryAllNotificationsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllNotificationsByAddressRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryAllNotificationsByAddress) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2116,10 +1690,10 @@ func (m *QueryAllNotificationsByAddressRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllNotificationsByAddressRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllNotificationsByAddress: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllNotificationsByAddressRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllNotificationsByAddress: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2160,7 +1734,7 @@ func (m *QueryAllNotificationsByAddressRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field To", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2188,7 +1762,7 @@ func (m *QueryAllNotificationsByAddressRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Address = string(dAtA[iNdEx:postIndex])
+			m.To = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2269,379 +1843,8 @@ func (m *QueryAllNotificationsByAddressResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Notifications = append(m.Notifications, Notifications{})
+			m.Notifications = append(m.Notifications, Notification{})
 			if err := m.Notifications[len(m.Notifications)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageResponse{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryGetNotiCounterRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetNotiCounterRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetNotiCounterRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Address = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryGetNotiCounterResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetNotiCounterResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetNotiCounterResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NotiCounter", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.NotiCounter.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryAllNotiCounterRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllNotiCounterRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllNotiCounterRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageRequest{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryAllNotiCounterResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllNotiCounterResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllNotiCounterResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NotiCounter", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.NotiCounter = append(m.NotiCounter, NotiCounter{})
-			if err := m.NotiCounter[len(m.NotiCounter)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

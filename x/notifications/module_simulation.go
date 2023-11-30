@@ -32,10 +32,6 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteNotifications int = 100
 
-	opWeightMsgSetCounter = "op_weight_msg_set_counter"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetCounter int = 100
-
 	opWeightMsgBlockSenders = "op_weight_msg_block_senders"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgBlockSenders int = 2
@@ -48,8 +44,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	notificationsGenesis := types.GenesisState{
-		Params:            types.DefaultParams(),
-		NotificationsList: []types.Notifications{},
+		Params:        types.DefaultParams(),
+		Notifications: []types.Notification{},
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&notificationsGenesis)
 }
@@ -91,17 +87,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgDeleteNotifications,
 		notificationssimulation.SimulateMsgDeleteNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgSetCounter int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetCounter, &weightMsgSetCounter, nil,
-		func(_ *rand.Rand) {
-			weightMsgSetCounter = defaultWeightMsgSetCounter
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgSetCounter,
-		notificationssimulation.SimulateMsgSetCounter(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgBlockSenders int

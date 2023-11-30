@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -209,7 +211,11 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 // StoreUpgrades implements upgrades.Upgrade
 func (u *Upgrade) StoreUpgrades() *storetypes.StoreUpgrades {
 	return &storetypes.StoreUpgrades{
-		Added:   []string{},
-		Deleted: []string{},
+		Added: []string{
+			notificationsmoduletypes.ModuleName, // swapping to brand-new notification module completely
+		},
+		Deleted: []string{
+			"notifications",
+		},
 	}
 }

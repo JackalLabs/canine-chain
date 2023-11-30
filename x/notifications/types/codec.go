@@ -9,27 +9,20 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgCreateNotifications{}, "notifications/CreateNotifications", nil)
-	cdc.RegisterConcrete(&MsgUpdateNotifications{}, "notifications/UpdateNotifications", nil)
-	cdc.RegisterConcrete(&MsgDeleteNotifications{}, "notifications/DeleteNotifications", nil)
-	cdc.RegisterConcrete(&MsgSetCounter{}, "notifications/SetCounter", nil)
+	cdc.RegisterConcrete(&MsgCreateNotification{}, "notifications/CreateNotification", nil)
+	cdc.RegisterConcrete(&MsgDeleteNotification{}, "notifications/DeleteNotification", nil)
 	cdc.RegisterConcrete(&MsgBlockSenders{}, "notifications/BlockSenders", nil)
-	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateNotifications{},
-		&MsgUpdateNotifications{},
-		&MsgDeleteNotifications{},
+		&MsgCreateNotification{},
+		&MsgDeleteNotification{},
 	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgSetCounter{},
-	)
+
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgBlockSenders{},
 	)
-	// this line is used by starport scaffolding # 3
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

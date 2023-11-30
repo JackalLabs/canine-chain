@@ -3,13 +3,11 @@ package canine_chain.notifications;
 
 import "gogoproto/gogo.proto";
 import "canine_chain/notifications/params.proto";
-import "canine_chain/notifications/notifications.proto";
-import "canine_chain/notifications/noti_counter.proto";
+import "canine_chain/notifications/notification.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
 
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
-  repeated Notifications notificationsList = 2 [(gogoproto.nullable) = false]; // TODO: fix casing
-  repeated NotiCounter notiCounterList = 3 [(gogoproto.nullable) = false]; // TODO: fix casing
+  repeated Notification notifications = 2 [(gogoproto.nullable) = false];
 }

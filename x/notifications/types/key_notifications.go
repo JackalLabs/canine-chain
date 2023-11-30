@@ -1,25 +1,31 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"fmt"
+	"time"
+)
 
 var _ binary.ByteOrder
 
 const (
 	// NotificationsKeyPrefix is the prefix to retrieve all Notifications
-	NotificationsKeyPrefix = "Notifications/"
+	NotificationsKeyPrefix = "Notification/"
 )
 
 // NotificationsKey returns the store key to retrieve a Notifications from the index fields
 func NotificationsKey(
-	count uint64,
+	to string,
+	from string,
+	time time.Time,
 ) []byte {
-	var key []byte
+	return []byte(fmt.Sprintf("%s/%s/%d", to, from, time.Unix()))
+}
 
-	countBytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(countBytes, count)
-	key = append(key, countBytes...)
-	key = append(key, []byte("/")...)
-	key = append(key, []byte("/")...)
-
-	return key
+// BlockKey returns the store key to retrieve a block object from the index fields
+func BlockKey(
+	owner string,
+	address string,
+) []byte {
+	return []byte(fmt.Sprintf("%s/%s", owner, address))
 }

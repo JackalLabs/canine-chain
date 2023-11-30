@@ -30,7 +30,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
 type QueryParams struct {
 }
 
@@ -67,9 +66,7 @@ func (m *QueryParams) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParams proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -113,7 +110,6 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-// QueryInflationRequest is the request type for the Query/Inflation RPC method.
 type QueryInflation struct {
 }
 
@@ -150,10 +146,7 @@ func (m *QueryInflation) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryInflation proto.InternalMessageInfo
 
-// QueryInflationResponse is the response type for the Query/Inflation RPC
-// method.
 type QueryInflationResponse struct {
-	// inflation is the current minting inflation value.
 	Inflation github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=inflation,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"inflation"`
 }
 
@@ -239,7 +232,6 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Inflation returns the current minting inflation value.
 	Inflation(ctx context.Context, in *QueryInflation, opts ...grpc.CallOption) (*QueryInflationResponse, error)
@@ -273,7 +265,6 @@ func (c *queryClient) Inflation(ctx context.Context, in *QueryInflation, opts ..
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParams) (*QueryParamsResponse, error)
 	// Inflation returns the current minting inflation value.
 	Inflation(context.Context, *QueryInflation) (*QueryInflationResponse, error)
