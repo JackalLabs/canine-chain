@@ -1,40 +1,19 @@
 package types
 
 import (
-	"crypto/sha256"
-	"encoding/json"
 	"fmt"
-	"io"
 	"strings"
+
+	"github.com/jackalLabs/canine-chain/v3/x/storage/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/tendermint/libs/rand"
-	"github.com/wealdtech/go-merkletree/v2"
-	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 // VerifyProof checks whether a proof is valid against a file
 func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item []byte) bool {
-	h := sha256.New()
-	_, err := io.WriteString(h, fmt.Sprintf("%d%x", chunk, item))
-	if err != nil {
-		return false
-	}
-	hashName := h.Sum(nil)
-
-	var proof merkletree.Proof // unmarshal proof
-	err = json.Unmarshal(proofData, &proof)
-	if err != nil {
-		return false
-	}
-
-	verified, err := merkletree.VerifyProofUsing(hashName, false, &proof, [][]byte{f.Merkle}, sha3.New512())
-	if err != nil {
-		return false
-	}
-
-	return verified
+	return utils.VerifyProof(f.Merkle, proofData, chunk, item)
 }
 
 func (f *UnifiedFile) AddProver(ctx sdk.Context, k ProofLoader, prover string) *FileProof {

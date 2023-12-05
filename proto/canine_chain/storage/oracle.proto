@@ -1,0 +1,22 @@
+syntax = "proto3";
+package canine_chain.storage;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+
+message OracleRequest {
+  string requester = 1;
+  bytes merkle = 2; //  file identifier that we want
+  int64 chunk = 3; //  the chunk we want to have accessible on chain
+  cosmos.base.v1beta1.Coin bid = 4 [ (gogoproto.nullable) = false ];
+}
+
+message OracleEntry {
+  string owner = 1;
+  bytes merkle = 2; //  file identifier that we want
+  int64 chunk = 3; //  the chunk we want to have accessible on chain
+  bytes data = 4; // the data from the file
+}
