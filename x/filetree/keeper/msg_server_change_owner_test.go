@@ -40,15 +40,15 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 
 	// Let's query the file after it was set to confirm that alice is the owner
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	aliceIsOwner := keeper.IsOwner(res.Files, alice)
+	aliceIsOwner := keeper.IsOwner(res.File, alice)
 	suite.Require().Equal(aliceIsOwner, true)
 
 	// we make a pepe.jpg for charlie as well to show that alice cannot give charlie her 'pepe.jpg' if he already has one--i.e., duplicates are not permitted
@@ -142,11 +142,11 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 				// Because filetree entries are indexed (keyed) by address and ownerAddress, querying for a pepe.jpg that belongs to alice as an owner
 				// should fail here because alice gave away pepe.jpg to bob
 
-				fileReq1 := types.QueryFileRequest{
+				fileReq1 := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}
-				_, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq1)
+				_, err := suite.queryClient.File(suite.ctx.Context(), &fileReq1)
 				suite.Require().Error(err)
 
 				// we will find a pepe.jpg that belongs to bob
@@ -154,17 +154,17 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 				bobAccountHash := types.HashThenHex(bob)
 				bobOwnerAddress := types.MakeOwnerAddress(pepeMerklePath, bobAccountHash)
 
-				fileReq2 := types.QueryFileRequest{
+				fileReq2 := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: bobOwnerAddress,
 				}
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq2)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq2)
 				suite.Require().NoError(err)
 
-				bobIsOwner := keeper.IsOwner(res.Files, bob)
+				bobIsOwner := keeper.IsOwner(res.File, bob)
 				suite.Require().Equal(bobIsOwner, true)
 
-				aliceIsOwner := keeper.IsOwner(res.Files, alice)
+				aliceIsOwner := keeper.IsOwner(res.File, alice)
 				suite.Require().Equal(aliceIsOwner, false)
 
 			}

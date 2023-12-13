@@ -2,7 +2,6 @@ package simulation
 
 import (
 	"math/rand"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -13,7 +12,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-func SimulateMsgSetProviderTotalspace(
+func SimulateMsgSetProviderTotalSpace(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -31,15 +30,15 @@ func SimulateMsgSetProviderTotalspace(
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSetProviderIP, "unable to find provider"), nil, nil
 		}
 
-		msg := &types.MsgSetProviderTotalspace{
+		msg := &types.MsgSetProviderTotalSpace{
 			Creator: provider.Creator,
-			Space:   strconv.Itoa(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
+			Space:   int64(simtypes.RandIntBetween(r, 1_000_000_000, 1_000_000_000_000_000)),
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSignContract, "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSetProviderTotalSpace, "unable to generate fees"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

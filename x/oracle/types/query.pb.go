@@ -30,22 +30,21 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
-type QueryParamsRequest struct {
+type QueryParams struct {
 }
 
-func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
-func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryParamsRequest) ProtoMessage()    {}
-func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryParams) Reset()         { *m = QueryParams{} }
+func (m *QueryParams) String() string { return proto.CompactTextString(m) }
+func (*QueryParams) ProtoMessage()    {}
+func (*QueryParams) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2a4eedcae49363dd, []int{0}
 }
-func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryParams) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParamsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParams.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -55,21 +54,19 @@ func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-func (m *QueryParamsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParamsRequest.Merge(m, src)
+func (m *QueryParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParams.Merge(m, src)
 }
-func (m *QueryParamsRequest) XXX_Size() int {
+func (m *QueryParams) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParamsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParamsRequest.DiscardUnknown(m)
+func (m *QueryParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParams.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryParams proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -113,22 +110,22 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-type QueryFeedRequest struct {
+type QueryFeed struct {
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (m *QueryFeedRequest) Reset()         { *m = QueryFeedRequest{} }
-func (m *QueryFeedRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryFeedRequest) ProtoMessage()    {}
-func (*QueryFeedRequest) Descriptor() ([]byte, []int) {
+func (m *QueryFeed) Reset()         { *m = QueryFeed{} }
+func (m *QueryFeed) String() string { return proto.CompactTextString(m) }
+func (*QueryFeed) ProtoMessage()    {}
+func (*QueryFeed) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2a4eedcae49363dd, []int{2}
 }
-func (m *QueryFeedRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryFeed) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryFeedRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryFeed) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryFeedRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryFeed.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -138,19 +135,19 @@ func (m *QueryFeedRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 		return b[:n], nil
 	}
 }
-func (m *QueryFeedRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryFeedRequest.Merge(m, src)
+func (m *QueryFeed) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryFeed.Merge(m, src)
 }
-func (m *QueryFeedRequest) XXX_Size() int {
+func (m *QueryFeed) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryFeedRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryFeedRequest.DiscardUnknown(m)
+func (m *QueryFeed) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryFeed.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryFeedRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryFeed proto.InternalMessageInfo
 
-func (m *QueryFeedRequest) GetName() string {
+func (m *QueryFeed) GetName() string {
 	if m != nil {
 		return m.Name
 	}
@@ -158,7 +155,6 @@ func (m *QueryFeedRequest) GetName() string {
 }
 
 type QueryFeedResponse struct {
-	// params holds all the parameters of this module.
 	Feed Feed `protobuf:"bytes,1,opt,name=feed,proto3" json:"feed"`
 }
 
@@ -202,21 +198,21 @@ func (m *QueryFeedResponse) GetFeed() Feed {
 	return Feed{}
 }
 
-type QueryAllFeedsRequest struct {
+type QueryAllFeeds struct {
 }
 
-func (m *QueryAllFeedsRequest) Reset()         { *m = QueryAllFeedsRequest{} }
-func (m *QueryAllFeedsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAllFeedsRequest) ProtoMessage()    {}
-func (*QueryAllFeedsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryAllFeeds) Reset()         { *m = QueryAllFeeds{} }
+func (m *QueryAllFeeds) String() string { return proto.CompactTextString(m) }
+func (*QueryAllFeeds) ProtoMessage()    {}
+func (*QueryAllFeeds) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2a4eedcae49363dd, []int{4}
 }
-func (m *QueryAllFeedsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryAllFeeds) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllFeedsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAllFeeds) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllFeedsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAllFeeds.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -226,20 +222,19 @@ func (m *QueryAllFeedsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *QueryAllFeedsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllFeedsRequest.Merge(m, src)
+func (m *QueryAllFeeds) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllFeeds.Merge(m, src)
 }
-func (m *QueryAllFeedsRequest) XXX_Size() int {
+func (m *QueryAllFeeds) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllFeedsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllFeedsRequest.DiscardUnknown(m)
+func (m *QueryAllFeeds) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllFeeds.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllFeedsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryAllFeeds proto.InternalMessageInfo
 
 type QueryAllFeedsResponse struct {
-	// params holds all the parameters of this module.
 	Feed       []Feed              `protobuf:"bytes,1,rep,name=feed,proto3" json:"feed"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
@@ -292,49 +287,48 @@ func (m *QueryAllFeedsResponse) GetPagination() *query.PageResponse {
 }
 
 func init() {
-	proto.RegisterType((*QueryParamsRequest)(nil), "canine_chain.oracle.QueryParamsRequest")
+	proto.RegisterType((*QueryParams)(nil), "canine_chain.oracle.QueryParams")
 	proto.RegisterType((*QueryParamsResponse)(nil), "canine_chain.oracle.QueryParamsResponse")
-	proto.RegisterType((*QueryFeedRequest)(nil), "canine_chain.oracle.QueryFeedRequest")
+	proto.RegisterType((*QueryFeed)(nil), "canine_chain.oracle.QueryFeed")
 	proto.RegisterType((*QueryFeedResponse)(nil), "canine_chain.oracle.QueryFeedResponse")
-	proto.RegisterType((*QueryAllFeedsRequest)(nil), "canine_chain.oracle.QueryAllFeedsRequest")
+	proto.RegisterType((*QueryAllFeeds)(nil), "canine_chain.oracle.QueryAllFeeds")
 	proto.RegisterType((*QueryAllFeedsResponse)(nil), "canine_chain.oracle.QueryAllFeedsResponse")
 }
 
 func init() { proto.RegisterFile("canine_chain/oracle/query.proto", fileDescriptor_2a4eedcae49363dd) }
 
 var fileDescriptor_2a4eedcae49363dd = []byte{
-	// 490 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0x3f, 0x6f, 0xd3, 0x40,
-	0x18, 0xc6, 0x73, 0x6d, 0x88, 0xe0, 0x58, 0xe0, 0x1a, 0x50, 0x31, 0xc8, 0xad, 0x2c, 0x35, 0x09,
-	0x15, 0xb9, 0x53, 0x5a, 0x16, 0x46, 0x3a, 0x00, 0x12, 0x0c, 0x21, 0x23, 0x0b, 0x7a, 0xed, 0x1c,
-	0xae, 0xc1, 0xb9, 0x73, 0x7d, 0x0e, 0xa2, 0x42, 0x2c, 0xac, 0x2c, 0x95, 0x10, 0x5f, 0x85, 0xcf,
-	0xd0, 0xb1, 0x12, 0x0b, 0x13, 0x42, 0x09, 0x1f, 0x04, 0xdd, 0x1f, 0x83, 0xdb, 0x3a, 0x4a, 0x36,
-	0x2b, 0xef, 0xf3, 0x3e, 0xbf, 0xe7, 0xee, 0xb9, 0xe0, 0xad, 0x08, 0x44, 0x22, 0xf8, 0xeb, 0xe8,
-	0x10, 0x12, 0xc1, 0x64, 0x0e, 0x51, 0xca, 0xd9, 0xd1, 0x94, 0xe7, 0xc7, 0x34, 0xcb, 0x65, 0x21,
-	0xc9, 0x46, 0x55, 0x40, 0xad, 0xc0, 0x6b, 0xc7, 0x32, 0x96, 0x66, 0xce, 0xf4, 0x97, 0x95, 0x7a,
-	0xf7, 0x62, 0x29, 0xe3, 0x94, 0x33, 0xc8, 0x12, 0x06, 0x42, 0xc8, 0x02, 0x8a, 0x44, 0x0a, 0xe5,
-	0xa6, 0xbb, 0x91, 0x54, 0x13, 0xa9, 0x58, 0x08, 0xca, 0x11, 0xd8, 0xfb, 0x41, 0xc8, 0x0b, 0x18,
-	0xb0, 0x0c, 0xe2, 0x44, 0x18, 0xb1, 0xd3, 0x6e, 0xd7, 0xa5, 0xca, 0x20, 0x87, 0x49, 0xe9, 0xe6,
-	0xd7, 0x29, 0xde, 0x70, 0x3e, 0xb6, 0xf3, 0xa0, 0x8d, 0xc9, 0x4b, 0xcd, 0x18, 0x9a, 0xa5, 0x11,
-	0x3f, 0x9a, 0x72, 0x55, 0x04, 0x43, 0xbc, 0x71, 0xee, 0x57, 0x95, 0x49, 0xa1, 0x38, 0x79, 0x84,
-	0x5b, 0xd6, 0x7c, 0x13, 0x6d, 0xa3, 0xde, 0xf5, 0xbd, 0xbb, 0xb4, 0xe6, 0xd0, 0xd4, 0x2e, 0x1d,
-	0x34, 0x4f, 0x7f, 0x6d, 0x35, 0x46, 0x6e, 0x21, 0xe8, 0xe0, 0x1b, 0xc6, 0xf1, 0x09, 0xe7, 0x63,
-	0x47, 0x21, 0x04, 0x37, 0x05, 0x4c, 0xb8, 0x31, 0xbb, 0x36, 0x32, 0xdf, 0xc1, 0x33, 0x7c, 0xb3,
-	0xa2, 0x73, 0xdc, 0x7d, 0xdc, 0xd4, 0x91, 0x1d, 0xf5, 0x4e, 0x2d, 0x55, 0x2f, 0x38, 0xa6, 0x11,
-	0x07, 0xb7, 0x71, 0xdb, 0x38, 0x3d, 0x4e, 0x53, 0x3d, 0xfb, 0x77, 0xb6, 0x6f, 0x08, 0xdf, 0xba,
-	0x30, 0xb8, 0x84, 0x59, 0x5f, 0x19, 0x43, 0x9e, 0x62, 0xfc, 0xbf, 0x96, 0xcd, 0x35, 0x93, 0xb0,
-	0x4b, 0x6d, 0x87, 0x54, 0x77, 0x48, 0xed, 0x2b, 0x71, 0x1d, 0xd2, 0x21, 0xc4, 0xbc, 0x24, 0x8e,
-	0x2a, 0xab, 0x7b, 0xdf, 0xd7, 0xf1, 0x15, 0x93, 0x8b, 0x7c, 0x41, 0xb8, 0x65, 0x2f, 0x91, 0x74,
-	0x6b, 0x43, 0x5c, 0x6e, 0xcc, 0xeb, 0x2d, 0x17, 0x5a, 0x66, 0x40, 0x3f, 0xff, 0xf8, 0xf3, 0x75,
-	0xad, 0x47, 0x3a, 0xec, 0x2d, 0x44, 0xef, 0x20, 0xed, 0x8f, 0x41, 0x32, 0xbb, 0xdc, 0xaf, 0x79,
-	0x47, 0x3a, 0x4d, 0x53, 0x9f, 0x9a, 0xec, 0x2c, 0x46, 0x54, 0x5a, 0xf5, 0x3a, 0xcb, 0x64, 0x2e,
-	0xc7, 0x43, 0x93, 0x83, 0x92, 0x07, 0xcb, 0x72, 0xe8, 0x6b, 0x56, 0xec, 0xa3, 0x7e, 0x1e, 0x9f,
-	0xc8, 0x09, 0xc2, 0x57, 0xcb, 0xe2, 0xc8, 0xfd, 0xc5, 0xa8, 0x0b, 0xad, 0x7b, 0xbb, 0xab, 0x48,
-	0x5d, 0xb2, 0xbe, 0x49, 0xd6, 0x25, 0x3b, 0x2b, 0x25, 0x3b, 0x78, 0x7e, 0x3a, 0xf3, 0xd1, 0xd9,
-	0xcc, 0x47, 0xbf, 0x67, 0x3e, 0x3a, 0x99, 0xfb, 0x8d, 0xb3, 0xb9, 0xdf, 0xf8, 0x39, 0xf7, 0x1b,
-	0xaf, 0x06, 0x71, 0x52, 0x1c, 0x4e, 0x43, 0x1a, 0xc9, 0x89, 0xb3, 0x7a, 0x01, 0xa1, 0x3a, 0x6f,
-	0xf5, 0xa1, 0x34, 0x2b, 0x8e, 0x33, 0xae, 0xc2, 0x96, 0xf9, 0x5b, 0xee, 0xff, 0x0d, 0x00, 0x00,
-	0xff, 0xff, 0x73, 0x5e, 0xae, 0xea, 0x70, 0x04, 0x00, 0x00,
+	// 475 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x53, 0x4d, 0x6b, 0x13, 0x41,
+	0x18, 0xce, 0xb4, 0x31, 0xd8, 0x29, 0x45, 0x9c, 0x2a, 0xd4, 0x55, 0x26, 0x71, 0x14, 0x8d, 0x01,
+	0x67, 0x4c, 0x7b, 0xf2, 0x68, 0x0f, 0x2a, 0xe8, 0x21, 0xe6, 0xe8, 0x45, 0xde, 0xdd, 0x8e, 0xdb,
+	0xd5, 0xcd, 0xcc, 0x9a, 0xd9, 0x8a, 0x45, 0x04, 0x11, 0xbc, 0x0b, 0xd2, 0xff, 0xd4, 0x63, 0xc1,
+	0x8b, 0x27, 0x91, 0xc4, 0x1f, 0x22, 0xf3, 0xb1, 0x71, 0x0b, 0xdb, 0xc6, 0xdb, 0xec, 0xbe, 0xcf,
+	0xd7, 0xce, 0xf3, 0x2e, 0xee, 0x26, 0xa0, 0x32, 0x25, 0x5f, 0x25, 0xfb, 0x90, 0x29, 0xa1, 0xa7,
+	0x90, 0xe4, 0x52, 0xbc, 0x3b, 0x90, 0xd3, 0x43, 0x5e, 0x4c, 0x75, 0xa9, 0xc9, 0x66, 0x1d, 0xc0,
+	0x3d, 0x20, 0xba, 0x92, 0xea, 0x54, 0xbb, 0xb9, 0xb0, 0x27, 0x0f, 0x8d, 0x6e, 0xa4, 0x5a, 0xa7,
+	0xb9, 0x14, 0x50, 0x64, 0x02, 0x94, 0xd2, 0x25, 0x94, 0x99, 0x56, 0x26, 0x4c, 0x07, 0x89, 0x36,
+	0x13, 0x6d, 0x44, 0x0c, 0x26, 0x38, 0x88, 0xf7, 0xc3, 0x58, 0x96, 0x30, 0x14, 0x05, 0xa4, 0x99,
+	0x72, 0xe0, 0x80, 0xed, 0x35, 0xa5, 0x2a, 0x60, 0x0a, 0x93, 0x4a, 0x8d, 0x36, 0x21, 0x5e, 0x4b,
+	0xb9, 0xe7, 0xe7, 0x6c, 0x03, 0xaf, 0xbf, 0xb0, 0x1e, 0x23, 0x47, 0x62, 0x23, 0xbc, 0x59, 0x7b,
+	0x1c, 0x4b, 0x53, 0x68, 0x65, 0x24, 0x79, 0x88, 0x3b, 0x5e, 0x75, 0x0b, 0xf5, 0x50, 0x7f, 0x7d,
+	0xfb, 0x3a, 0x6f, 0xf8, 0x5a, 0xee, 0x49, 0xbb, 0xed, 0xe3, 0x5f, 0xdd, 0xd6, 0x38, 0x10, 0x58,
+	0x17, 0xaf, 0x39, 0xc5, 0xc7, 0x52, 0xee, 0x11, 0x82, 0xdb, 0x0a, 0x26, 0xd2, 0xa9, 0xac, 0x8d,
+	0xdd, 0x99, 0x3d, 0xc5, 0x97, 0x17, 0x80, 0x85, 0xe1, 0x0e, 0x6e, 0xdb, 0x90, 0xc1, 0xee, 0x5a,
+	0xa3, 0x9d, 0x25, 0x04, 0x33, 0x07, 0x66, 0x97, 0xf0, 0x86, 0x53, 0x7a, 0x94, 0xe7, 0x76, 0x66,
+	0xd8, 0x11, 0xc2, 0x57, 0x4f, 0xbd, 0x69, 0xd0, 0x5f, 0xfd, 0x6f, 0x7d, 0xf2, 0x04, 0xe3, 0x7f,
+	0x0d, 0x6c, 0xad, 0xb8, 0x68, 0x77, 0xb9, 0xaf, 0x8b, 0xdb, 0xba, 0xb8, 0x5f, 0x88, 0x50, 0x17,
+	0x1f, 0x41, 0x2a, 0x2b, 0xc7, 0x71, 0x8d, 0xba, 0x7d, 0xb4, 0x8a, 0x2f, 0xb8, 0x5c, 0xe4, 0x33,
+	0xc2, 0x1d, 0x7f, 0x6d, 0xa4, 0xd7, 0x18, 0xa2, 0xd6, 0x46, 0xd4, 0x5f, 0x86, 0xa8, 0xcc, 0xd8,
+	0xe0, 0xcb, 0x8f, 0x3f, 0xdf, 0x57, 0x6e, 0x13, 0x26, 0xde, 0x40, 0xf2, 0x16, 0x72, 0xe1, 0x89,
+	0xf7, 0x1b, 0xf6, 0xc4, 0x46, 0x68, 0xbb, 0x72, 0xe8, 0xd9, 0xf2, 0x76, 0x1e, 0xdd, 0x39, 0x7f,
+	0xbe, 0x30, 0x7f, 0xe0, 0xcc, 0x07, 0xa4, 0x7f, 0x9e, 0xb9, 0xbd, 0x50, 0x23, 0x3e, 0xda, 0x0d,
+	0xf8, 0x44, 0xbe, 0x22, 0x7c, 0xb1, 0xaa, 0x88, 0xb0, 0xb3, 0x6d, 0x2a, 0x4c, 0x34, 0x58, 0x8e,
+	0x59, 0xc4, 0xb9, 0xe7, 0xe2, 0xdc, 0x22, 0x37, 0x97, 0xc6, 0xd9, 0x7d, 0x76, 0x3c, 0xa3, 0xe8,
+	0x64, 0x46, 0xd1, 0xef, 0x19, 0x45, 0xdf, 0xe6, 0xb4, 0x75, 0x32, 0xa7, 0xad, 0x9f, 0x73, 0xda,
+	0x7a, 0x39, 0x4c, 0xb3, 0x72, 0xff, 0x20, 0xe6, 0x89, 0x9e, 0x04, 0x99, 0xe7, 0x10, 0x9b, 0xd3,
+	0x52, 0x1f, 0x2a, 0xb1, 0xf2, 0xb0, 0x90, 0x26, 0xee, 0xb8, 0x1f, 0x6c, 0xe7, 0x6f, 0x00, 0x00,
+	0x00, 0xff, 0xff, 0xa1, 0xda, 0x9c, 0x7f, 0x3a, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -349,10 +343,11 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	// Parameters queries the parameters of the module.
-	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	Feed(ctx context.Context, in *QueryFeedRequest, opts ...grpc.CallOption) (*QueryFeedResponse, error)
-	AllFeeds(ctx context.Context, in *QueryAllFeedsRequest, opts ...grpc.CallOption) (*QueryAllFeedsResponse, error)
+	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Queries a Feed by name.
+	Feed(ctx context.Context, in *QueryFeed, opts ...grpc.CallOption) (*QueryFeedResponse, error)
+	// Queries a list of Feed items.
+	AllFeeds(ctx context.Context, in *QueryAllFeeds, opts ...grpc.CallOption) (*QueryAllFeedsResponse, error)
 }
 
 type queryClient struct {
@@ -363,7 +358,7 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
 }
 
-func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
+func (c *queryClient) Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
 	out := new(QueryParamsResponse)
 	err := c.cc.Invoke(ctx, "/canine_chain.oracle.Query/Params", in, out, opts...)
 	if err != nil {
@@ -372,7 +367,7 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
-func (c *queryClient) Feed(ctx context.Context, in *QueryFeedRequest, opts ...grpc.CallOption) (*QueryFeedResponse, error) {
+func (c *queryClient) Feed(ctx context.Context, in *QueryFeed, opts ...grpc.CallOption) (*QueryFeedResponse, error) {
 	out := new(QueryFeedResponse)
 	err := c.cc.Invoke(ctx, "/canine_chain.oracle.Query/Feed", in, out, opts...)
 	if err != nil {
@@ -381,7 +376,7 @@ func (c *queryClient) Feed(ctx context.Context, in *QueryFeedRequest, opts ...gr
 	return out, nil
 }
 
-func (c *queryClient) AllFeeds(ctx context.Context, in *QueryAllFeedsRequest, opts ...grpc.CallOption) (*QueryAllFeedsResponse, error) {
+func (c *queryClient) AllFeeds(ctx context.Context, in *QueryAllFeeds, opts ...grpc.CallOption) (*QueryAllFeedsResponse, error) {
 	out := new(QueryAllFeedsResponse)
 	err := c.cc.Invoke(ctx, "/canine_chain.oracle.Query/AllFeeds", in, out, opts...)
 	if err != nil {
@@ -392,23 +387,24 @@ func (c *queryClient) AllFeeds(ctx context.Context, in *QueryAllFeedsRequest, op
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	// Parameters queries the parameters of the module.
-	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
-	Feed(context.Context, *QueryFeedRequest) (*QueryFeedResponse, error)
-	AllFeeds(context.Context, *QueryAllFeedsRequest) (*QueryAllFeedsResponse, error)
+	Params(context.Context, *QueryParams) (*QueryParamsResponse, error)
+	// Queries a Feed by name.
+	Feed(context.Context, *QueryFeed) (*QueryFeedResponse, error)
+	// Queries a list of Feed items.
+	AllFeeds(context.Context, *QueryAllFeeds) (*QueryAllFeedsResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
 type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
+func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParams) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
-func (*UnimplementedQueryServer) Feed(ctx context.Context, req *QueryFeedRequest) (*QueryFeedResponse, error) {
+func (*UnimplementedQueryServer) Feed(ctx context.Context, req *QueryFeed) (*QueryFeedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Feed not implemented")
 }
-func (*UnimplementedQueryServer) AllFeeds(ctx context.Context, req *QueryAllFeedsRequest) (*QueryAllFeedsResponse, error) {
+func (*UnimplementedQueryServer) AllFeeds(ctx context.Context, req *QueryAllFeeds) (*QueryAllFeedsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllFeeds not implemented")
 }
 
@@ -417,7 +413,7 @@ func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 }
 
 func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryParamsRequest)
+	in := new(QueryParams)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -429,13 +425,13 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/canine_chain.oracle.Query/Params",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Params(ctx, req.(*QueryParamsRequest))
+		return srv.(QueryServer).Params(ctx, req.(*QueryParams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_Feed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryFeedRequest)
+	in := new(QueryFeed)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -447,13 +443,13 @@ func _Query_Feed_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: "/canine_chain.oracle.Query/Feed",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Feed(ctx, req.(*QueryFeedRequest))
+		return srv.(QueryServer).Feed(ctx, req.(*QueryFeed))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_AllFeeds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAllFeedsRequest)
+	in := new(QueryAllFeeds)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -465,7 +461,7 @@ func _Query_AllFeeds_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: "/canine_chain.oracle.Query/AllFeeds",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).AllFeeds(ctx, req.(*QueryAllFeedsRequest))
+		return srv.(QueryServer).AllFeeds(ctx, req.(*QueryAllFeeds))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -491,7 +487,7 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	Metadata: "canine_chain/oracle/query.proto",
 }
 
-func (m *QueryParamsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryParams) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -501,12 +497,12 @@ func (m *QueryParamsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryParamsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParams) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParamsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -547,7 +543,7 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryFeedRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryFeed) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -557,12 +553,12 @@ func (m *QueryFeedRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryFeedRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryFeed) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryFeedRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryFeed) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -610,7 +606,7 @@ func (m *QueryFeedResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllFeedsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryAllFeeds) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -620,12 +616,12 @@ func (m *QueryAllFeedsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllFeedsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAllFeeds) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllFeedsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAllFeeds) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -693,7 +689,7 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *QueryParamsRequest) Size() (n int) {
+func (m *QueryParams) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -713,7 +709,7 @@ func (m *QueryParamsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryFeedRequest) Size() (n int) {
+func (m *QueryFeed) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -737,7 +733,7 @@ func (m *QueryFeedResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryAllFeedsRequest) Size() (n int) {
+func (m *QueryAllFeeds) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -771,7 +767,7 @@ func sovQuery(x uint64) (n int) {
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryParams) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -794,10 +790,10 @@ func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParamsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParams: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParamsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParams: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -904,7 +900,7 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryFeedRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryFeed) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -927,10 +923,10 @@ func (m *QueryFeedRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryFeedRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryFeed: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryFeedRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryFeed: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1069,7 +1065,7 @@ func (m *QueryFeedResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllFeedsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryAllFeeds) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1092,10 +1088,10 @@ func (m *QueryAllFeedsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllFeedsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllFeeds: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllFeedsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllFeeds: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

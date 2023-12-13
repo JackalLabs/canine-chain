@@ -85,14 +85,14 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 
 	// If alice wants to share pepe with bob, she will take bob's public key from chain and use ECIES to encrypt pepeAESKeyAndIV
 
-	pubKeyReq := types.QueryPubkeyRequest{
+	pubKeyReq := types.QueryPubKey{
 		Address: bob,
 	}
 
-	res, err := suite.queryClient.Pubkey(suite.ctx.Context(), &pubKeyReq)
+	res, err := suite.queryClient.PubKey(suite.ctx.Context(), &pubKeyReq)
 	suite.Require().NoError(err)
 	// bob uploaded his public key in hex format so we decode it from hex format
-	pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+	pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 	suite.Require().NoError(err)
 
 	encryptedPepeAESKeyAndIV, err := eciesgo.Encrypt(pkey, []byte(pepeAESKeyAndIV)) // convert to hex
@@ -161,21 +161,21 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 				suite.Require().EqualValues(types.MsgAddViewersResponse{}, *res)
 				// Let's confirm that bob is a viewer
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: ownerAddress,
 				}
 
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				validViewer, err := keeper.HasViewingAccess(res.Files, bob)
+				validViewer, err := keeper.HasViewingAccess(res.File, bob)
 				suite.Require().NoError(err)
 				suite.Require().Equal(validViewer, true)
 
 				// Let's see if Bob can decrypt and recover pepe's AES iv and key using his private key
 
-				viewers := res.Files.ViewingAccess
+				viewers := res.File.ViewingAccess
 				var m map[string]string
 
 				err = json.Unmarshal([]byte(viewers), &m)

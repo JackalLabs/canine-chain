@@ -37,7 +37,7 @@ func setupStorageKeeper(t *testing.T) (
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	// memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 	tkey := sdk.NewTransientStoreKey("transient_test")
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, tkey)
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, tkey, key)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()

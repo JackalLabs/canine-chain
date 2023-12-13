@@ -23,13 +23,9 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdPostContract())
-	cmd.AddCommand(CmdPostproof())
-	cmd.AddCommand(CmdSignContract())
 	cmd.AddCommand(CmdCancelContract())
 	cmd.AddCommand(CmdBuyStorage())
-	cmd.AddCommand(CmdClaimStray())
-	cmd.AddCommand(CmdUpgradeStorage())
+	cmd.AddCommand(CmdPostFile(), CmdPostRandomFile())
 
 	return cmd
 }

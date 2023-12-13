@@ -26,7 +26,7 @@ func CmdPayInfo() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryStoragePaymentInfoRequest{
+			params := &types.QueryStoragePaymentInfo{
 				Address: reqAddress,
 			}
 

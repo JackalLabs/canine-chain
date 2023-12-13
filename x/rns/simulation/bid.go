@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -85,7 +84,7 @@ func SimulateMsgBid(
 		}
 
 		// building the message
-		msg.Bid = fmt.Sprint(sdkPrice) + "ujkl"
+		msg.Bid = sdk.NewCoin("ujkl", sdkPrice)
 		msg.Name = bidDomain.Name
 
 		txCtx := simulation.OperationInput{

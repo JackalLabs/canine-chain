@@ -10,7 +10,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
 )
 
-func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data string, years string) error {
+func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data string, years int64) error {
 	nm = strings.ToLower(nm)
 	name, tld, err := GetNameAndTLD(nm)
 	if err != nil {
@@ -24,21 +24,16 @@ func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data str
 	whois, isFound := k.GetNames(ctx, name, tld)
 	// Set the price at which the name has to be bought if it didn't have an owner before
 
-	numYears, ok := sdk.NewIntFromString(years)
-	if !ok {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidHeight, "cannot parse years")
-	}
-
 	cost, err := GetCostOfName(name, tld)
 	if err != nil {
 		return sdkerrors.Wrap(err, "failed to get cost")
 	}
 
-	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost*numYears.Int64())}
+	price := sdk.Coins{sdk.NewInt64Coin("ujkl", cost*years)}
 
 	blockHeight := ctx.BlockHeight()
 
-	time := numYears.Int64() * 5733818
+	time := years * 5733818
 
 	owner, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {

@@ -25,22 +25,16 @@ func GetQueryCmd(_ string) *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdQueryParams())
-	cmd.AddCommand(CmdListContracts())
-	cmd.AddCommand(CmdShowContracts())
 	cmd.AddCommand(CmdListActiveDeals())
 	cmd.AddCommand(CmdShowActiveDeals())
 	cmd.AddCommand(CmdListProviders())
 	cmd.AddCommand(CmdShowProviders())
 	cmd.AddCommand(CmdFreespace())
-
+	cmd.AddCommand(CmdShowProof())
 	cmd.AddCommand(CmdFindFile())
 
-	cmd.AddCommand(CmdListStrays())
-	cmd.AddCommand(CmdShowStrays())
 	cmd.AddCommand(CmdGetClientFreeSpace())
 
-	cmd.AddCommand(CmdListFidCid())
-	cmd.AddCommand(CmdShowFidCid())
 	cmd.AddCommand(CmdGetPayData())
 
 	cmd.AddCommand(CmdFileUploadCheck())
@@ -57,7 +51,6 @@ func GetQueryCmd(_ string) *cobra.Command {
 	cmd.AddCommand(CmdShowReportForms())
 
 	cmd.AddCommand(CmdListActiveProviders())
-	// this line is used by starport scaffolding # 1
 	cmd.AddCommand(CmdGetStorageStats())
 
 	return cmd

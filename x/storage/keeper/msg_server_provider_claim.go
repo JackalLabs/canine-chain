@@ -45,7 +45,7 @@ func (k msgServer) RemoveProviderClaimer(goCtx context.Context, msg *types.MsgRe
 	}
 	p := len(authClaimers)
 	if p == 0 {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrConflict, "Provider has no claimer addresses")
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrConflict, "provider has no claimer addresses")
 	}
 
 	newClaim := []string{}

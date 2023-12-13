@@ -1,0 +1,20 @@
+syntax = "proto3";
+package canine_chain.notifications;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
+
+message Notification {
+  string to = 1; // the address sending the notification
+  string from = 2; // the address receiving the notification
+  int64 time = 3; // time of creation in microseconds
+  string contents = 4; // must be valid json string
+  bytes private_contents = 5; // allowing for arbitrary data that is supposed to be decrypted using a private key
+}
+
+message Block {
+  string address = 1; // the address controlling the profile
+  string blocked_address = 2; // the address being blocked
+}

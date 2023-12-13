@@ -33,7 +33,7 @@ func SimulateMsgAddRecord(
 		for {
 			// finding all registered domain names
 			wctx := sdk.WrapSDKContext(ctx)
-			nReq := &types.QueryListOwnedNamesRequest{
+			nReq := &types.QueryListOwnedNames{
 				Address: simAccount.Address.String(),
 			}
 			// requesting the domain names

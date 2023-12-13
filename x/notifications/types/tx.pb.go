@@ -6,8 +6,10 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
+	_ "github.com/gogo/protobuf/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,24 +29,25 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type MsgCreateNotifications struct {
-	Creator      string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Notification string `protobuf:"bytes,2,opt,name=notification,proto3" json:"notification,omitempty"`
-	Address      string `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
+type MsgCreateNotification struct {
+	Creator         string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	To              string `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
+	Contents        string `protobuf:"bytes,3,opt,name=contents,proto3" json:"contents,omitempty"`
+	PrivateContents []byte `protobuf:"bytes,4,opt,name=private_contents,json=privateContents,proto3" json:"private_contents,omitempty"`
 }
 
-func (m *MsgCreateNotifications) Reset()         { *m = MsgCreateNotifications{} }
-func (m *MsgCreateNotifications) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateNotifications) ProtoMessage()    {}
-func (*MsgCreateNotifications) Descriptor() ([]byte, []int) {
+func (m *MsgCreateNotification) Reset()         { *m = MsgCreateNotification{} }
+func (m *MsgCreateNotification) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateNotification) ProtoMessage()    {}
+func (*MsgCreateNotification) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d25d9a7c35c7fe37, []int{0}
 }
-func (m *MsgCreateNotifications) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateNotification) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateNotifications) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateNotification) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateNotifications.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateNotification.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -54,55 +57,61 @@ func (m *MsgCreateNotifications) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateNotifications) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateNotifications.Merge(m, src)
+func (m *MsgCreateNotification) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateNotification.Merge(m, src)
 }
-func (m *MsgCreateNotifications) XXX_Size() int {
+func (m *MsgCreateNotification) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateNotifications) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateNotifications.DiscardUnknown(m)
+func (m *MsgCreateNotification) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateNotification.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateNotifications proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateNotification proto.InternalMessageInfo
 
-func (m *MsgCreateNotifications) GetCreator() string {
+func (m *MsgCreateNotification) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgCreateNotifications) GetNotification() string {
+func (m *MsgCreateNotification) GetTo() string {
 	if m != nil {
-		return m.Notification
+		return m.To
 	}
 	return ""
 }
 
-func (m *MsgCreateNotifications) GetAddress() string {
+func (m *MsgCreateNotification) GetContents() string {
 	if m != nil {
-		return m.Address
+		return m.Contents
 	}
 	return ""
 }
 
-type MsgCreateNotificationsResponse struct {
-	NotiCounter uint64 `protobuf:"varint,1,opt,name=notiCounter,proto3" json:"notiCounter,omitempty"`
+func (m *MsgCreateNotification) GetPrivateContents() []byte {
+	if m != nil {
+		return m.PrivateContents
+	}
+	return nil
 }
 
-func (m *MsgCreateNotificationsResponse) Reset()         { *m = MsgCreateNotificationsResponse{} }
-func (m *MsgCreateNotificationsResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateNotificationsResponse) ProtoMessage()    {}
-func (*MsgCreateNotificationsResponse) Descriptor() ([]byte, []int) {
+type MsgCreateNotificationResponse struct {
+}
+
+func (m *MsgCreateNotificationResponse) Reset()         { *m = MsgCreateNotificationResponse{} }
+func (m *MsgCreateNotificationResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateNotificationResponse) ProtoMessage()    {}
+func (*MsgCreateNotificationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d25d9a7c35c7fe37, []int{1}
 }
-func (m *MsgCreateNotificationsResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateNotificationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateNotificationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateNotificationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateNotificationsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateNotificationResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -112,44 +121,36 @@ func (m *MsgCreateNotificationsResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateNotificationsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateNotificationsResponse.Merge(m, src)
+func (m *MsgCreateNotificationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateNotificationResponse.Merge(m, src)
 }
-func (m *MsgCreateNotificationsResponse) XXX_Size() int {
+func (m *MsgCreateNotificationResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateNotificationsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateNotificationsResponse.DiscardUnknown(m)
+func (m *MsgCreateNotificationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateNotificationResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateNotificationsResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateNotificationResponse proto.InternalMessageInfo
 
-func (m *MsgCreateNotificationsResponse) GetNotiCounter() uint64 {
-	if m != nil {
-		return m.NotiCounter
-	}
-	return 0
+type MsgDeleteNotification struct {
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	From    string `protobuf:"bytes,2,opt,name=from,proto3" json:"from,omitempty"`
+	Time    int64  `protobuf:"varint,3,opt,name=time,proto3" json:"time,omitempty"`
 }
 
-type MsgUpdateNotifications struct {
-	Creator      string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Count        uint64 `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
-	Notification string `protobuf:"bytes,3,opt,name=notification,proto3" json:"notification,omitempty"`
-	Address      string `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
-}
-
-func (m *MsgUpdateNotifications) Reset()         { *m = MsgUpdateNotifications{} }
-func (m *MsgUpdateNotifications) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateNotifications) ProtoMessage()    {}
-func (*MsgUpdateNotifications) Descriptor() ([]byte, []int) {
+func (m *MsgDeleteNotification) Reset()         { *m = MsgDeleteNotification{} }
+func (m *MsgDeleteNotification) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteNotification) ProtoMessage()    {}
+func (*MsgDeleteNotification) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d25d9a7c35c7fe37, []int{2}
 }
-func (m *MsgUpdateNotifications) XXX_Unmarshal(b []byte) error {
+func (m *MsgDeleteNotification) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateNotifications) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDeleteNotification) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateNotifications.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDeleteNotification.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -159,61 +160,54 @@ func (m *MsgUpdateNotifications) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateNotifications) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateNotifications.Merge(m, src)
+func (m *MsgDeleteNotification) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteNotification.Merge(m, src)
 }
-func (m *MsgUpdateNotifications) XXX_Size() int {
+func (m *MsgDeleteNotification) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateNotifications) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateNotifications.DiscardUnknown(m)
+func (m *MsgDeleteNotification) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteNotification.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateNotifications proto.InternalMessageInfo
+var xxx_messageInfo_MsgDeleteNotification proto.InternalMessageInfo
 
-func (m *MsgUpdateNotifications) GetCreator() string {
+func (m *MsgDeleteNotification) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgUpdateNotifications) GetCount() uint64 {
+func (m *MsgDeleteNotification) GetFrom() string {
 	if m != nil {
-		return m.Count
+		return m.From
+	}
+	return ""
+}
+
+func (m *MsgDeleteNotification) GetTime() int64 {
+	if m != nil {
+		return m.Time
 	}
 	return 0
 }
 
-func (m *MsgUpdateNotifications) GetNotification() string {
-	if m != nil {
-		return m.Notification
-	}
-	return ""
+type MsgDeleteNotificationResponse struct {
 }
 
-func (m *MsgUpdateNotifications) GetAddress() string {
-	if m != nil {
-		return m.Address
-	}
-	return ""
-}
-
-type MsgUpdateNotificationsResponse struct {
-}
-
-func (m *MsgUpdateNotificationsResponse) Reset()         { *m = MsgUpdateNotificationsResponse{} }
-func (m *MsgUpdateNotificationsResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateNotificationsResponse) ProtoMessage()    {}
-func (*MsgUpdateNotificationsResponse) Descriptor() ([]byte, []int) {
+func (m *MsgDeleteNotificationResponse) Reset()         { *m = MsgDeleteNotificationResponse{} }
+func (m *MsgDeleteNotificationResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteNotificationResponse) ProtoMessage()    {}
+func (*MsgDeleteNotificationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d25d9a7c35c7fe37, []int{3}
 }
-func (m *MsgUpdateNotificationsResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgDeleteNotificationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateNotificationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDeleteNotificationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateNotificationsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDeleteNotificationResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -223,204 +217,28 @@ func (m *MsgUpdateNotificationsResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateNotificationsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateNotificationsResponse.Merge(m, src)
+func (m *MsgDeleteNotificationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteNotificationResponse.Merge(m, src)
 }
-func (m *MsgUpdateNotificationsResponse) XXX_Size() int {
+func (m *MsgDeleteNotificationResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateNotificationsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateNotificationsResponse.DiscardUnknown(m)
+func (m *MsgDeleteNotificationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteNotificationResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateNotificationsResponse proto.InternalMessageInfo
-
-type MsgDeleteNotifications struct {
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-}
-
-func (m *MsgDeleteNotifications) Reset()         { *m = MsgDeleteNotifications{} }
-func (m *MsgDeleteNotifications) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteNotifications) ProtoMessage()    {}
-func (*MsgDeleteNotifications) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d25d9a7c35c7fe37, []int{4}
-}
-func (m *MsgDeleteNotifications) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteNotifications) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteNotifications.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteNotifications) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteNotifications.Merge(m, src)
-}
-func (m *MsgDeleteNotifications) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteNotifications) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteNotifications.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteNotifications proto.InternalMessageInfo
-
-func (m *MsgDeleteNotifications) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
-type MsgDeleteNotificationsResponse struct {
-	NotiCounter uint64 `protobuf:"varint,1,opt,name=notiCounter,proto3" json:"notiCounter,omitempty"`
-}
-
-func (m *MsgDeleteNotificationsResponse) Reset()         { *m = MsgDeleteNotificationsResponse{} }
-func (m *MsgDeleteNotificationsResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteNotificationsResponse) ProtoMessage()    {}
-func (*MsgDeleteNotificationsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d25d9a7c35c7fe37, []int{5}
-}
-func (m *MsgDeleteNotificationsResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteNotificationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteNotificationsResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteNotificationsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteNotificationsResponse.Merge(m, src)
-}
-func (m *MsgDeleteNotificationsResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteNotificationsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteNotificationsResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteNotificationsResponse proto.InternalMessageInfo
-
-func (m *MsgDeleteNotificationsResponse) GetNotiCounter() uint64 {
-	if m != nil {
-		return m.NotiCounter
-	}
-	return 0
-}
-
-type MsgSetCounter struct {
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-}
-
-func (m *MsgSetCounter) Reset()         { *m = MsgSetCounter{} }
-func (m *MsgSetCounter) String() string { return proto.CompactTextString(m) }
-func (*MsgSetCounter) ProtoMessage()    {}
-func (*MsgSetCounter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d25d9a7c35c7fe37, []int{6}
-}
-func (m *MsgSetCounter) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgSetCounter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgSetCounter.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgSetCounter) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSetCounter.Merge(m, src)
-}
-func (m *MsgSetCounter) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgSetCounter) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSetCounter.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgSetCounter proto.InternalMessageInfo
-
-func (m *MsgSetCounter) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
-type MsgSetCounterResponse struct {
-	NotiCounter uint64 `protobuf:"varint,1,opt,name=notiCounter,proto3" json:"notiCounter,omitempty"`
-}
-
-func (m *MsgSetCounterResponse) Reset()         { *m = MsgSetCounterResponse{} }
-func (m *MsgSetCounterResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgSetCounterResponse) ProtoMessage()    {}
-func (*MsgSetCounterResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d25d9a7c35c7fe37, []int{7}
-}
-func (m *MsgSetCounterResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgSetCounterResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgSetCounterResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgSetCounterResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSetCounterResponse.Merge(m, src)
-}
-func (m *MsgSetCounterResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgSetCounterResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSetCounterResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgSetCounterResponse proto.InternalMessageInfo
-
-func (m *MsgSetCounterResponse) GetNotiCounter() uint64 {
-	if m != nil {
-		return m.NotiCounter
-	}
-	return 0
-}
+var xxx_messageInfo_MsgDeleteNotificationResponse proto.InternalMessageInfo
 
 type MsgBlockSenders struct {
-	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	SenderIds string `protobuf:"bytes,2,opt,name=senderIds,proto3" json:"senderIds,omitempty"`
+	Creator string   `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	ToBlock []string `protobuf:"bytes,2,rep,name=to_block,json=toBlock,proto3" json:"to_block,omitempty"`
 }
 
 func (m *MsgBlockSenders) Reset()         { *m = MsgBlockSenders{} }
 func (m *MsgBlockSenders) String() string { return proto.CompactTextString(m) }
 func (*MsgBlockSenders) ProtoMessage()    {}
 func (*MsgBlockSenders) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d25d9a7c35c7fe37, []int{8}
+	return fileDescriptor_d25d9a7c35c7fe37, []int{4}
 }
 func (m *MsgBlockSenders) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -456,11 +274,11 @@ func (m *MsgBlockSenders) GetCreator() string {
 	return ""
 }
 
-func (m *MsgBlockSenders) GetSenderIds() string {
+func (m *MsgBlockSenders) GetToBlock() []string {
 	if m != nil {
-		return m.SenderIds
+		return m.ToBlock
 	}
-	return ""
+	return nil
 }
 
 type MsgBlockSendersResponse struct {
@@ -470,7 +288,7 @@ func (m *MsgBlockSendersResponse) Reset()         { *m = MsgBlockSendersResponse
 func (m *MsgBlockSendersResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgBlockSendersResponse) ProtoMessage()    {}
 func (*MsgBlockSendersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d25d9a7c35c7fe37, []int{9}
+	return fileDescriptor_d25d9a7c35c7fe37, []int{5}
 }
 func (m *MsgBlockSendersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -500,14 +318,10 @@ func (m *MsgBlockSendersResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgBlockSendersResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*MsgCreateNotifications)(nil), "canine_chain.notifications.MsgCreateNotifications")
-	proto.RegisterType((*MsgCreateNotificationsResponse)(nil), "canine_chain.notifications.MsgCreateNotificationsResponse")
-	proto.RegisterType((*MsgUpdateNotifications)(nil), "canine_chain.notifications.MsgUpdateNotifications")
-	proto.RegisterType((*MsgUpdateNotificationsResponse)(nil), "canine_chain.notifications.MsgUpdateNotificationsResponse")
-	proto.RegisterType((*MsgDeleteNotifications)(nil), "canine_chain.notifications.MsgDeleteNotifications")
-	proto.RegisterType((*MsgDeleteNotificationsResponse)(nil), "canine_chain.notifications.MsgDeleteNotificationsResponse")
-	proto.RegisterType((*MsgSetCounter)(nil), "canine_chain.notifications.MsgSetCounter")
-	proto.RegisterType((*MsgSetCounterResponse)(nil), "canine_chain.notifications.MsgSetCounterResponse")
+	proto.RegisterType((*MsgCreateNotification)(nil), "canine_chain.notifications.MsgCreateNotification")
+	proto.RegisterType((*MsgCreateNotificationResponse)(nil), "canine_chain.notifications.MsgCreateNotificationResponse")
+	proto.RegisterType((*MsgDeleteNotification)(nil), "canine_chain.notifications.MsgDeleteNotification")
+	proto.RegisterType((*MsgDeleteNotificationResponse)(nil), "canine_chain.notifications.MsgDeleteNotificationResponse")
 	proto.RegisterType((*MsgBlockSenders)(nil), "canine_chain.notifications.MsgBlockSenders")
 	proto.RegisterType((*MsgBlockSendersResponse)(nil), "canine_chain.notifications.MsgBlockSendersResponse")
 }
@@ -517,36 +331,34 @@ func init() {
 }
 
 var fileDescriptor_d25d9a7c35c7fe37 = []byte{
-	// 449 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0x4d, 0xaf, 0x93, 0x40,
-	0x14, 0x2d, 0x16, 0x35, 0xef, 0xfa, 0x8c, 0x09, 0x7e, 0x21, 0x31, 0xa4, 0xc1, 0x8d, 0x2f, 0x46,
-	0x88, 0x7d, 0x1b, 0x75, 0xd9, 0xe7, 0xa6, 0x89, 0xb8, 0xa0, 0x71, 0xe3, 0xc6, 0x4c, 0x87, 0x91,
-	0xd2, 0xd6, 0x19, 0xc2, 0x4c, 0x93, 0xfa, 0x03, 0x74, 0xed, 0xcf, 0x72, 0xd9, 0xa5, 0x4b, 0xd3,
-	0xfe, 0x0c, 0x37, 0x86, 0x01, 0x5a, 0xa8, 0xf3, 0xa0, 0x2c, 0xef, 0x9d, 0x73, 0xcf, 0x39, 0x77,
-	0x38, 0x0c, 0x3c, 0xc3, 0x88, 0xc6, 0x94, 0x7c, 0xc6, 0x33, 0x14, 0x53, 0x8f, 0x32, 0x11, 0x7f,
-	0x89, 0x31, 0x12, 0x31, 0xa3, 0xdc, 0x13, 0x6b, 0x37, 0x49, 0x99, 0x60, 0x86, 0x55, 0x05, 0xb9,
-	0x35, 0x90, 0xe5, 0x36, 0x10, 0xd4, 0xaa, 0x9c, 0xcb, 0x49, 0xe0, 0x91, 0xcf, 0xa3, 0xab, 0x94,
-	0x20, 0x41, 0x3e, 0x54, 0xcf, 0x0d, 0x13, 0x6e, 0xe3, 0xac, 0xcd, 0x52, 0x53, 0x1b, 0x68, 0xcf,
-	0xcf, 0x82, 0xb2, 0x34, 0x1c, 0x38, 0xaf, 0x52, 0x99, 0x37, 0xe4, 0x71, 0xad, 0x97, 0x4d, 0xa3,
-	0x30, 0x4c, 0x09, 0xe7, 0x66, 0x3f, 0x9f, 0x2e, 0x4a, 0x67, 0x04, 0xb6, 0x5a, 0x31, 0x20, 0x3c,
-	0x61, 0x94, 0x13, 0x63, 0x00, 0x77, 0x32, 0xae, 0x2b, 0xb6, 0xa2, 0x82, 0xe4, 0xea, 0x7a, 0x50,
-	0x6d, 0x39, 0x3f, 0x34, 0x69, 0xfb, 0x63, 0x12, 0x76, 0xb0, 0xfd, 0x00, 0x6e, 0xe2, 0x6c, 0x5e,
-	0xfa, 0xd5, 0x83, 0xbc, 0xf8, 0x6f, 0x99, 0x7e, 0xf3, 0x32, 0x7a, 0x7d, 0x99, 0x81, 0x5c, 0x46,
-	0xe1, 0xa3, 0x5c, 0xc6, 0x19, 0x4a, 0xa7, 0xef, 0xc8, 0x92, 0x9c, 0xec, 0xb4, 0xb8, 0x22, 0xc5,
-	0x4c, 0x87, 0x2b, 0xba, 0x80, 0xbb, 0x3e, 0x8f, 0x26, 0x44, 0x14, 0x8d, 0x06, 0xb9, 0x37, 0xf0,
-	0xb0, 0x06, 0xed, 0xa0, 0x32, 0x86, 0x7b, 0x3e, 0x8f, 0x46, 0x4b, 0x86, 0x17, 0x13, 0x42, 0x43,
-	0x92, 0x36, 0x7d, 0x80, 0xa7, 0x70, 0xc6, 0x25, 0x68, 0x1c, 0xf2, 0x22, 0x34, 0x87, 0x86, 0xf3,
-	0x04, 0x1e, 0x1f, 0x51, 0x95, 0x3e, 0x86, 0x7f, 0x75, 0xe8, 0xfb, 0x3c, 0x32, 0xbe, 0x6b, 0x70,
-	0x5f, 0x15, 0xd5, 0xa1, 0x7b, 0xfd, 0x1f, 0xe1, 0xaa, 0xc3, 0x66, 0xbd, 0xed, 0x3e, 0xb3, 0xbf,
-	0x97, 0xcc, 0x87, 0x2a, 0x7b, 0x6d, 0x3e, 0x14, 0x33, 0xad, 0x3e, 0x1a, 0xb2, 0x25, 0x7d, 0xa8,
-	0x92, 0xd5, 0xe6, 0x43, 0x31, 0xd3, 0xea, 0xa3, 0x29, 0x8d, 0x73, 0x80, 0x4a, 0xd0, 0x2e, 0x5a,
-	0x98, 0x0e, 0x50, 0xeb, 0xd5, 0xc9, 0xd0, 0xbd, 0x56, 0x02, 0xe7, 0xb5, 0xb8, 0xbd, 0x68, 0xa1,
-	0xa8, 0x82, 0xad, 0xcb, 0x0e, 0xe0, 0x52, 0x71, 0x14, 0xfc, 0xda, 0xda, 0xda, 0x66, 0x6b, 0x6b,
-	0x7f, 0xb6, 0xb6, 0xf6, 0x73, 0x67, 0xf7, 0x36, 0x3b, 0xbb, 0xf7, 0x7b, 0x67, 0xf7, 0x3e, 0xbd,
-	0x8e, 0x62, 0x31, 0x5b, 0x4d, 0x5d, 0xcc, 0xbe, 0x7a, 0x73, 0x84, 0x17, 0x68, 0xf9, 0x1e, 0x4d,
-	0xb9, 0x97, 0x6b, 0xbc, 0xcc, 0x9f, 0xe0, 0xf5, 0xf1, 0x2b, 0xfe, 0x2d, 0x21, 0x7c, 0x7a, 0x4b,
-	0xbe, 0xbe, 0x97, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0xa9, 0x75, 0xe7, 0x54, 0xf0, 0x05, 0x00,
-	0x00,
+	// 425 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0x31, 0x6f, 0xd3, 0x40,
+	0x14, 0xce, 0xd9, 0x15, 0x94, 0x53, 0x45, 0xd1, 0x09, 0x84, 0x6b, 0x09, 0x37, 0x32, 0x4b, 0x11,
+	0xaa, 0x2d, 0xe8, 0x02, 0x6b, 0x8b, 0x98, 0x08, 0x83, 0x99, 0x60, 0x89, 0xce, 0xc7, 0xe5, 0x7a,
+	0xd4, 0xbe, 0x67, 0xf9, 0xae, 0xa8, 0x8c, 0x30, 0x31, 0xf2, 0xb3, 0x18, 0x3b, 0x32, 0xa2, 0xe4,
+	0x8f, 0x20, 0x9f, 0xed, 0xc8, 0x49, 0x9c, 0x84, 0x6c, 0xef, 0x7d, 0xf7, 0xbd, 0xf7, 0x7d, 0xf9,
+	0xe2, 0x87, 0x9f, 0x32, 0xaa, 0xa4, 0xe2, 0x63, 0x76, 0x49, 0xa5, 0x8a, 0x15, 0x18, 0x39, 0x91,
+	0x8c, 0x1a, 0x09, 0x4a, 0xc7, 0xe6, 0x26, 0x2a, 0x4a, 0x30, 0x40, 0xfc, 0x2e, 0x29, 0x5a, 0x20,
+	0xf9, 0x0f, 0x05, 0x08, 0xb0, 0xb4, 0xb8, 0xaa, 0xea, 0x09, 0xff, 0x58, 0x00, 0x88, 0x8c, 0xc7,
+	0xb6, 0x4b, 0xaf, 0x27, 0xb1, 0x91, 0x39, 0xd7, 0x86, 0xe6, 0x45, 0x43, 0x38, 0xdd, 0xa0, 0xdb,
+	0xed, 0x6a, 0x7a, 0xf8, 0x13, 0xe1, 0x47, 0x23, 0x2d, 0x2e, 0x4a, 0x4e, 0x0d, 0x7f, 0xdf, 0x79,
+	0x27, 0x1e, 0xbe, 0xcb, 0x2a, 0x14, 0x4a, 0x0f, 0x0d, 0xd1, 0xc9, 0xbd, 0xa4, 0x6d, 0xc9, 0x7d,
+	0xec, 0x18, 0xf0, 0x1c, 0x0b, 0x3a, 0xd5, 0xaf, 0xc0, 0xfb, 0x0c, 0x94, 0xe1, 0xca, 0x68, 0xcf,
+	0xb5, 0xe8, 0xbc, 0x27, 0xcf, 0xf0, 0x83, 0xa2, 0x94, 0x5f, 0xa9, 0xe1, 0xe3, 0x39, 0x67, 0x6f,
+	0x88, 0x4e, 0x0e, 0x92, 0xc3, 0x06, 0xbf, 0x68, 0xe0, 0xf0, 0x18, 0x3f, 0xe9, 0x75, 0x92, 0x70,
+	0x5d, 0x80, 0xd2, 0x3c, 0xfc, 0x68, 0xad, 0xbe, 0xe1, 0x19, 0xff, 0x6f, 0xab, 0x04, 0xef, 0x4d,
+	0x4a, 0xc8, 0x1b, 0xb3, 0xb6, 0xae, 0xb0, 0x2a, 0x34, 0x6b, 0xd5, 0x4d, 0x6c, 0xdd, 0x68, 0xaf,
+	0xae, 0x9e, 0x6b, 0xbf, 0xc5, 0x87, 0x23, 0x2d, 0xce, 0x33, 0x60, 0x57, 0x1f, 0xb8, 0xfa, 0xcc,
+	0x4b, 0xbd, 0x41, 0xf5, 0x08, 0xef, 0x1b, 0x18, 0xa7, 0x15, 0xd9, 0x73, 0x86, 0x6e, 0xf5, 0x64,
+	0xc0, 0xce, 0x86, 0x47, 0xf8, 0xf1, 0xd2, 0x9e, 0x56, 0xe2, 0xe5, 0x77, 0x17, 0xbb, 0x23, 0x2d,
+	0xc8, 0x0f, 0x84, 0x49, 0xcf, 0xff, 0xf1, 0x22, 0x5a, 0xff, 0xb1, 0x44, 0xbd, 0xc1, 0xf9, 0xaf,
+	0x77, 0x1e, 0x69, 0xcd, 0x58, 0x13, 0x3d, 0x49, 0x6f, 0x33, 0xb1, 0x3a, 0xb2, 0xd5, 0xc4, 0xfa,
+	0xd0, 0x49, 0x81, 0x0f, 0x16, 0x12, 0x7f, 0xbe, 0x65, 0x55, 0x97, 0xec, 0x9f, 0xed, 0x40, 0x6e,
+	0x15, 0xcf, 0x93, 0xdf, 0xd3, 0x00, 0xdd, 0x4e, 0x03, 0xf4, 0x77, 0x1a, 0xa0, 0x5f, 0xb3, 0x60,
+	0x70, 0x3b, 0x0b, 0x06, 0x7f, 0x66, 0xc1, 0xe0, 0xd3, 0x2b, 0x21, 0xcd, 0xe5, 0x75, 0x1a, 0x31,
+	0xc8, 0xe3, 0x2f, 0x94, 0x5d, 0xd1, 0xec, 0x1d, 0x4d, 0x75, 0x5c, 0x6b, 0x9c, 0xd6, 0xd7, 0x76,
+	0xb3, 0x7c, 0xe7, 0xdf, 0x0a, 0xae, 0xd3, 0x3b, 0xf6, 0xd2, 0xce, 0xfe, 0x05, 0x00, 0x00, 0xff,
+	0xff, 0x16, 0x64, 0x5b, 0x02, 0x12, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -561,10 +373,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	CreateNotifications(ctx context.Context, in *MsgCreateNotifications, opts ...grpc.CallOption) (*MsgCreateNotificationsResponse, error)
-	UpdateNotifications(ctx context.Context, in *MsgUpdateNotifications, opts ...grpc.CallOption) (*MsgUpdateNotificationsResponse, error)
-	DeleteNotifications(ctx context.Context, in *MsgDeleteNotifications, opts ...grpc.CallOption) (*MsgDeleteNotificationsResponse, error)
-	SetCounter(ctx context.Context, in *MsgSetCounter, opts ...grpc.CallOption) (*MsgSetCounterResponse, error)
+	CreateNotification(ctx context.Context, in *MsgCreateNotification, opts ...grpc.CallOption) (*MsgCreateNotificationResponse, error)
+	DeleteNotification(ctx context.Context, in *MsgDeleteNotification, opts ...grpc.CallOption) (*MsgDeleteNotificationResponse, error)
 	BlockSenders(ctx context.Context, in *MsgBlockSenders, opts ...grpc.CallOption) (*MsgBlockSendersResponse, error)
 }
 
@@ -576,36 +386,18 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) CreateNotifications(ctx context.Context, in *MsgCreateNotifications, opts ...grpc.CallOption) (*MsgCreateNotificationsResponse, error) {
-	out := new(MsgCreateNotificationsResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Msg/CreateNotifications", in, out, opts...)
+func (c *msgClient) CreateNotification(ctx context.Context, in *MsgCreateNotification, opts ...grpc.CallOption) (*MsgCreateNotificationResponse, error) {
+	out := new(MsgCreateNotificationResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Msg/CreateNotification", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) UpdateNotifications(ctx context.Context, in *MsgUpdateNotifications, opts ...grpc.CallOption) (*MsgUpdateNotificationsResponse, error) {
-	out := new(MsgUpdateNotificationsResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Msg/UpdateNotifications", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgClient) DeleteNotifications(ctx context.Context, in *MsgDeleteNotifications, opts ...grpc.CallOption) (*MsgDeleteNotificationsResponse, error) {
-	out := new(MsgDeleteNotificationsResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Msg/DeleteNotifications", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgClient) SetCounter(ctx context.Context, in *MsgSetCounter, opts ...grpc.CallOption) (*MsgSetCounterResponse, error) {
-	out := new(MsgSetCounterResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Msg/SetCounter", in, out, opts...)
+func (c *msgClient) DeleteNotification(ctx context.Context, in *MsgDeleteNotification, opts ...grpc.CallOption) (*MsgDeleteNotificationResponse, error) {
+	out := new(MsgDeleteNotificationResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.notifications.Msg/DeleteNotification", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -623,10 +415,8 @@ func (c *msgClient) BlockSenders(ctx context.Context, in *MsgBlockSenders, opts 
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	CreateNotifications(context.Context, *MsgCreateNotifications) (*MsgCreateNotificationsResponse, error)
-	UpdateNotifications(context.Context, *MsgUpdateNotifications) (*MsgUpdateNotificationsResponse, error)
-	DeleteNotifications(context.Context, *MsgDeleteNotifications) (*MsgDeleteNotificationsResponse, error)
-	SetCounter(context.Context, *MsgSetCounter) (*MsgSetCounterResponse, error)
+	CreateNotification(context.Context, *MsgCreateNotification) (*MsgCreateNotificationResponse, error)
+	DeleteNotification(context.Context, *MsgDeleteNotification) (*MsgDeleteNotificationResponse, error)
 	BlockSenders(context.Context, *MsgBlockSenders) (*MsgBlockSendersResponse, error)
 }
 
@@ -634,17 +424,11 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) CreateNotifications(ctx context.Context, req *MsgCreateNotifications) (*MsgCreateNotificationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateNotifications not implemented")
+func (*UnimplementedMsgServer) CreateNotification(ctx context.Context, req *MsgCreateNotification) (*MsgCreateNotificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateNotification not implemented")
 }
-func (*UnimplementedMsgServer) UpdateNotifications(ctx context.Context, req *MsgUpdateNotifications) (*MsgUpdateNotificationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateNotifications not implemented")
-}
-func (*UnimplementedMsgServer) DeleteNotifications(ctx context.Context, req *MsgDeleteNotifications) (*MsgDeleteNotificationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteNotifications not implemented")
-}
-func (*UnimplementedMsgServer) SetCounter(ctx context.Context, req *MsgSetCounter) (*MsgSetCounterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetCounter not implemented")
+func (*UnimplementedMsgServer) DeleteNotification(ctx context.Context, req *MsgDeleteNotification) (*MsgDeleteNotificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteNotification not implemented")
 }
 func (*UnimplementedMsgServer) BlockSenders(ctx context.Context, req *MsgBlockSenders) (*MsgBlockSendersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlockSenders not implemented")
@@ -654,74 +438,38 @@ func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_CreateNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgCreateNotifications)
+func _Msg_CreateNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateNotification)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).CreateNotifications(ctx, in)
+		return srv.(MsgServer).CreateNotification(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Msg/CreateNotifications",
+		FullMethod: "/canine_chain.notifications.Msg/CreateNotification",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).CreateNotifications(ctx, req.(*MsgCreateNotifications))
+		return srv.(MsgServer).CreateNotification(ctx, req.(*MsgCreateNotification))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UpdateNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdateNotifications)
+func _Msg_DeleteNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDeleteNotification)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdateNotifications(ctx, in)
+		return srv.(MsgServer).DeleteNotification(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Msg/UpdateNotifications",
+		FullMethod: "/canine_chain.notifications.Msg/DeleteNotification",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateNotifications(ctx, req.(*MsgUpdateNotifications))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Msg_DeleteNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgDeleteNotifications)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).DeleteNotifications(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Msg/DeleteNotifications",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).DeleteNotifications(ctx, req.(*MsgDeleteNotifications))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Msg_SetCounter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSetCounter)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).SetCounter(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/canine_chain.notifications.Msg/SetCounter",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SetCounter(ctx, req.(*MsgSetCounter))
+		return srv.(MsgServer).DeleteNotification(ctx, req.(*MsgDeleteNotification))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -749,20 +497,12 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateNotifications",
-			Handler:    _Msg_CreateNotifications_Handler,
+			MethodName: "CreateNotification",
+			Handler:    _Msg_CreateNotification_Handler,
 		},
 		{
-			MethodName: "UpdateNotifications",
-			Handler:    _Msg_UpdateNotifications_Handler,
-		},
-		{
-			MethodName: "DeleteNotifications",
-			Handler:    _Msg_DeleteNotifications_Handler,
-		},
-		{
-			MethodName: "SetCounter",
-			Handler:    _Msg_SetCounter_Handler,
+			MethodName: "DeleteNotification",
+			Handler:    _Msg_DeleteNotification_Handler,
 		},
 		{
 			MethodName: "BlockSenders",
@@ -773,7 +513,7 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	Metadata: "canine_chain/notifications/tx.proto",
 }
 
-func (m *MsgCreateNotifications) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreateNotification) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -783,27 +523,34 @@ func (m *MsgCreateNotifications) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateNotifications) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreateNotification) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateNotifications) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreateNotification) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+	if len(m.PrivateContents) > 0 {
+		i -= len(m.PrivateContents)
+		copy(dAtA[i:], m.PrivateContents)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.PrivateContents)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Contents) > 0 {
+		i -= len(m.Contents)
+		copy(dAtA[i:], m.Contents)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Contents)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.Notification) > 0 {
-		i -= len(m.Notification)
-		copy(dAtA[i:], m.Notification)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Notification)))
+	if len(m.To) > 0 {
+		i -= len(m.To)
+		copy(dAtA[i:], m.To)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.To)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -817,7 +564,7 @@ func (m *MsgCreateNotifications) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgCreateNotificationsResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreateNotificationResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -827,25 +574,20 @@ func (m *MsgCreateNotificationsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateNotificationsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreateNotificationResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateNotificationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreateNotificationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.NotiCounter != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.NotiCounter))
-		i--
-		dAtA[i] = 0x8
-	}
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateNotifications) Marshal() (dAtA []byte, err error) {
+func (m *MsgDeleteNotification) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -855,34 +597,27 @@ func (m *MsgUpdateNotifications) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateNotifications) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgDeleteNotification) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateNotifications) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgDeleteNotification) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+	if m.Time != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Time))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x18
 	}
-	if len(m.Notification) > 0 {
-		i -= len(m.Notification)
-		copy(dAtA[i:], m.Notification)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Notification)))
+	if len(m.From) > 0 {
+		i -= len(m.From)
+		copy(dAtA[i:], m.From)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.From)))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Count != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.Count))
-		i--
-		dAtA[i] = 0x10
+		dAtA[i] = 0x12
 	}
 	if len(m.Creator) > 0 {
 		i -= len(m.Creator)
@@ -894,7 +629,7 @@ func (m *MsgUpdateNotifications) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateNotificationsResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgDeleteNotificationResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -904,132 +639,16 @@ func (m *MsgUpdateNotificationsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateNotificationsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgDeleteNotificationResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateNotificationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgDeleteNotificationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgDeleteNotifications) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteNotifications) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteNotifications) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgDeleteNotificationsResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteNotificationsResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteNotificationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.NotiCounter != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.NotiCounter))
-		i--
-		dAtA[i] = 0x8
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgSetCounter) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgSetCounter) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgSetCounter) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgSetCounterResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgSetCounterResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgSetCounterResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.NotiCounter != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.NotiCounter))
-		i--
-		dAtA[i] = 0x8
-	}
 	return len(dAtA) - i, nil
 }
 
@@ -1053,12 +672,14 @@ func (m *MsgBlockSenders) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.SenderIds) > 0 {
-		i -= len(m.SenderIds)
-		copy(dAtA[i:], m.SenderIds)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.SenderIds)))
-		i--
-		dAtA[i] = 0x12
+	if len(m.ToBlock) > 0 {
+		for iNdEx := len(m.ToBlock) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.ToBlock[iNdEx])
+			copy(dAtA[i:], m.ToBlock[iNdEx])
+			i = encodeVarintTx(dAtA, i, uint64(len(m.ToBlock[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
 	}
 	if len(m.Creator) > 0 {
 		i -= len(m.Creator)
@@ -1104,7 +725,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgCreateNotifications) Size() (n int) {
+func (m *MsgCreateNotification) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1114,54 +735,22 @@ func (m *MsgCreateNotifications) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Notification)
+	l = len(m.To)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Address)
+	l = len(m.Contents)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	return n
-}
-
-func (m *MsgCreateNotificationsResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.NotiCounter != 0 {
-		n += 1 + sovTx(uint64(m.NotiCounter))
-	}
-	return n
-}
-
-func (m *MsgUpdateNotifications) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	if m.Count != 0 {
-		n += 1 + sovTx(uint64(m.Count))
-	}
-	l = len(m.Notification)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Address)
+	l = len(m.PrivateContents)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
 
-func (m *MsgUpdateNotificationsResponse) Size() (n int) {
+func (m *MsgCreateNotificationResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1170,7 +759,7 @@ func (m *MsgUpdateNotificationsResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgDeleteNotifications) Size() (n int) {
+func (m *MsgDeleteNotification) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1180,43 +769,22 @@ func (m *MsgDeleteNotifications) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	return n
-}
-
-func (m *MsgDeleteNotificationsResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.NotiCounter != 0 {
-		n += 1 + sovTx(uint64(m.NotiCounter))
-	}
-	return n
-}
-
-func (m *MsgSetCounter) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Creator)
+	l = len(m.From)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
+	if m.Time != 0 {
+		n += 1 + sovTx(uint64(m.Time))
+	}
 	return n
 }
 
-func (m *MsgSetCounterResponse) Size() (n int) {
+func (m *MsgDeleteNotificationResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.NotiCounter != 0 {
-		n += 1 + sovTx(uint64(m.NotiCounter))
-	}
 	return n
 }
 
@@ -1230,9 +798,11 @@ func (m *MsgBlockSenders) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.SenderIds)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
+	if len(m.ToBlock) > 0 {
+		for _, s := range m.ToBlock {
+			l = len(s)
+			n += 1 + l + sovTx(uint64(l))
+		}
 	}
 	return n
 }
@@ -1252,7 +822,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgCreateNotifications) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateNotification) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1275,10 +845,10 @@ func (m *MsgCreateNotifications) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateNotifications: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateNotification: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateNotifications: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateNotification: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1315,7 +885,7 @@ func (m *MsgCreateNotifications) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Notification", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field To", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1343,11 +913,11 @@ func (m *MsgCreateNotifications) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Notification = string(dAtA[iNdEx:postIndex])
+			m.To = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Contents", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1375,215 +945,13 @@ func (m *MsgCreateNotifications) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Address = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgCreateNotificationsResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateNotificationsResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateNotificationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NotiCounter", wireType)
-			}
-			m.NotiCounter = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.NotiCounter |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUpdateNotifications) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateNotifications: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateNotifications: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Count", wireType)
-			}
-			m.Count = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Count |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Notification", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Notification = string(dAtA[iNdEx:postIndex])
+			m.Contents = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PrivateContents", wireType)
 			}
-			var stringLen uint64
+			var byteLen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1593,23 +961,25 @@ func (m *MsgUpdateNotifications) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				byteLen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+			if byteLen < 0 {
 				return ErrInvalidLengthTx
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + byteLen
 			if postIndex < 0 {
 				return ErrInvalidLengthTx
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Address = string(dAtA[iNdEx:postIndex])
+			m.PrivateContents = append(m.PrivateContents[:0], dAtA[iNdEx:postIndex]...)
+			if m.PrivateContents == nil {
+				m.PrivateContents = []byte{}
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1632,7 +1002,7 @@ func (m *MsgUpdateNotifications) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateNotificationsResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateNotificationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1655,10 +1025,10 @@ func (m *MsgUpdateNotificationsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateNotificationsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateNotificationResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateNotificationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateNotificationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -1682,7 +1052,7 @@ func (m *MsgUpdateNotificationsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDeleteNotifications) Unmarshal(dAtA []byte) error {
+func (m *MsgDeleteNotification) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1705,10 +1075,10 @@ func (m *MsgDeleteNotifications) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteNotifications: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDeleteNotification: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteNotifications: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDeleteNotification: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1743,128 +1113,9 @@ func (m *MsgDeleteNotifications) Unmarshal(dAtA []byte) error {
 			}
 			m.Creator = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgDeleteNotificationsResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteNotificationsResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteNotificationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NotiCounter", wireType)
-			}
-			m.NotiCounter = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.NotiCounter |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgSetCounter) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSetCounter: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSetCounter: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
+		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field From", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1892,8 +1143,27 @@ func (m *MsgSetCounter) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
+			m.From = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Time", wireType)
+			}
+			m.Time = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Time |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -1915,7 +1185,7 @@ func (m *MsgSetCounter) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgSetCounterResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgDeleteNotificationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1938,31 +1208,12 @@ func (m *MsgSetCounterResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSetCounterResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDeleteNotificationResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSetCounterResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDeleteNotificationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NotiCounter", wireType)
-			}
-			m.NotiCounter = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.NotiCounter |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -2047,7 +1298,7 @@ func (m *MsgBlockSenders) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SenderIds", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ToBlock", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2075,7 +1326,7 @@ func (m *MsgBlockSenders) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.SenderIds = string(dAtA[iNdEx:postIndex])
+			m.ToBlock = append(m.ToBlock, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

@@ -11,7 +11,7 @@ import (
 func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewers) (*types.MsgResetViewersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	file, found := k.GetFiles(ctx, msg.Address, msg.Fileowner)
+	file, found := k.GetFiles(ctx, msg.Address, msg.FileOwner)
 	if !found {
 		return nil, types.ErrFileNotFound
 	}

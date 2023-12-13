@@ -1,61 +1,39 @@
 syntax = "proto3";
 package canine_chain.notifications;
 
-import "canine_chain/notifications/notifications.proto";
-// this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "canine_chain/notifications/notification.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/notifications/types";
 
-// Msg defines the Msg service.
 service Msg {
-      rpc CreateNotifications(MsgCreateNotifications) returns (MsgCreateNotificationsResponse);
-  rpc UpdateNotifications(MsgUpdateNotifications) returns (MsgUpdateNotificationsResponse);
-  rpc DeleteNotifications(MsgDeleteNotifications) returns (MsgDeleteNotificationsResponse);
-  rpc SetCounter(MsgSetCounter) returns (MsgSetCounterResponse);
+  rpc CreateNotification(MsgCreateNotification) returns (MsgCreateNotificationResponse);
+  rpc DeleteNotification(MsgDeleteNotification) returns (MsgDeleteNotificationResponse);
   rpc BlockSenders(MsgBlockSenders) returns (MsgBlockSendersResponse);
-// this line is used by starport scaffolding # proto/tx/rpc
 }
 
-message MsgCreateNotifications {
-  string creator = 1;
-  string notification = 2;
-  string address = 3;
-}
-message MsgCreateNotificationsResponse {
-  uint64 notiCounter = 1;
+message MsgCreateNotification {
+  string creator = 1; // who the notification is from
+  string to = 2; // address receiving the notification
+  string contents = 3; // must be valid json
+  bytes private_contents = 4; // private contents can be any byte array (meant to be encrypted data)
 }
 
-message MsgUpdateNotifications {
-  string creator = 1;
-  uint64 count = 2;
+message MsgCreateNotificationResponse {}
 
-  string notification = 3;
-  string address = 4;
-}
-message MsgUpdateNotificationsResponse {}
-
-message MsgDeleteNotifications {
-  string creator = 1;
+message MsgDeleteNotification {
+  string creator = 1; // the address deleting the notification
+  string from = 2; // the address receiving the notification
+  int64 time = 3; // time of notification creation in microseconds
 }
 
-message MsgDeleteNotificationsResponse {
-  uint64 notiCounter = 1;
-}
+message MsgDeleteNotificationResponse {}
 
-message MsgSetCounter {
-  string creator = 1;
-}
-
-message MsgSetCounterResponse {
-  uint64 notiCounter = 1;
-}
 
 message MsgBlockSenders {
   string creator = 1;
-  string senderIds = 2;
+  repeated string to_block = 2;
 }
 
-message MsgBlockSendersResponse {
-}
-
-// this line is used by starport scaffolding # proto/tx/message
+message MsgBlockSendersResponse {}

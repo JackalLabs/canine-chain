@@ -31,7 +31,7 @@ func CmdPostkey() *cobra.Command {
 
 			pubKey := newKey.PublicKey.Bytes(false)
 
-			msg := types.NewMsgPostkey(
+			msg := types.NewMsgPostKey(
 				clientCtx.GetFromAddress().String(),
 				fmt.Sprintf("%x", pubKey),
 			)

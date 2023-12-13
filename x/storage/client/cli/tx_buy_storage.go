@@ -15,13 +15,23 @@ var _ = strconv.Itoa(0)
 func CmdBuyStorage() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "buy-storage [for-address] [duration] [bytes] [payment-denom]",
-		Short: "Broadcast message buy-storage",
+		Short: "Buy or upgrade storage plan",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argForAddress := args[0]
 			argDuration := args[1]
 			argBytes := args[2]
 			argPaymentDenom := args[3]
+
+			bytes, err := strconv.ParseInt(argBytes, 10, 64)
+			if err != nil {
+				return err
+			}
+
+			duration, err := strconv.ParseInt(argDuration, 10, 64)
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -31,8 +41,8 @@ func CmdBuyStorage() *cobra.Command {
 			msg := types.NewMsgBuyStorage(
 				clientCtx.GetFromAddress().String(),
 				argForAddress,
-				argDuration,
-				argBytes,
+				duration,
+				bytes,
 				argPaymentDenom,
 			)
 			if err := msg.ValidateBasic(); err != nil {

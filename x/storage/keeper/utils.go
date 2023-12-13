@@ -29,37 +29,22 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) int64 {
 }
 
 func (k Keeper) GetProviderDeals(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllActiveDeals(ctx)
+	allDeals := k.GetAllProofsForProver(ctx, provider)
 
-	var count int64
-	for i := 0; i < len(allDeals); i++ {
-		deal := allDeals[i]
-		if deal.Provider != provider {
-			continue
-		}
-
-		count++
-
-	}
-
-	return count
+	return int64(len(allDeals))
 }
 
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllActiveDeals(ctx)
+	allDeals := k.GetAllProofsForProver(ctx, provider)
 
 	var space int64
-	for i := 0; i < len(allDeals); i++ {
-		deal := allDeals[i]
-		if deal.Provider != provider {
-			continue
-		}
-		size, ok := sdk.NewIntFromString(deal.Filesize)
-		if !ok {
+	for _, proof := range allDeals {
+		deal, found := k.GetFile(ctx, proof.Merkle, proof.Owner, proof.Start)
+		if !found {
 			continue
 		}
 
-		space += size.Int64()
+		space += deal.FileSize
 
 	}
 
@@ -69,7 +54,13 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 // GetStorageCostKbs calculates storage cost in ujkl
 // Uses kilobytes and months to calculate how much user has to pay
 func (k Keeper) GetStorageCostKbs(ctx sdk.Context, kbs int64, hours int64) sdk.Int {
-	pricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
+	return k.GetStorageCostKbsWithPrice(ctx, kbs, hours, k.GetParams(ctx).PricePerTbPerMonth)
+}
+
+// GetStorageCostKbs calculates storage cost in ujkl
+// Uses kilobytes and months to calculate how much user has to pay
+func (k Keeper) GetStorageCostKbsWithPrice(ctx sdk.Context, kbs int64, hours int64, pricePerTBMonth int64) sdk.Int {
+	pricePerTBPerMonth := sdk.NewDec(pricePerTBMonth)
 	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
 	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
 	pricePerMbPerMonth := pricePerGbPerMonth.QuoInt64(1000)

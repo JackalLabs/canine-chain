@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedNamesRequest) (*types.QueryListOwnedNamesResponse, error) {
+func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedNames) (*types.QueryListOwnedNamesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

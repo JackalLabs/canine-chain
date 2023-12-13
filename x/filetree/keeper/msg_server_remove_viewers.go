@@ -12,7 +12,7 @@ import (
 func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveViewers) (*types.MsgRemoveViewersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	file, found := k.GetFiles(ctx, msg.Address, msg.Fileowner)
+	file, found := k.GetFiles(ctx, msg.Address, msg.FileOwner)
 	if !found {
 		return nil, types.ErrFileNotFound
 	}

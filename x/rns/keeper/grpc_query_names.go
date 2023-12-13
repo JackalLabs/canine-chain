@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*types.QueryAllNamesResponse, error) {
+func (k Keeper) AllNames(c context.Context, req *types.QueryAllNames) (*types.QueryAllNamesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,16 +35,16 @@ func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*t
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllNamesResponse{Names: namess, Pagination: pageRes}, nil
+	return &types.QueryAllNamesResponse{Name: namess, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Names(c context.Context, req *types.QueryNameRequest) (*types.QueryNameResponse, error) {
+func (k Keeper) Name(c context.Context, req *types.QueryName) (*types.QueryNameResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	n, tld, err := GetNameAndTLD(req.Index)
+	n, tld, err := GetNameAndTLD(req.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -63,10 +63,10 @@ func (k Keeper) Names(c context.Context, req *types.QueryNameRequest) (*types.Qu
 	if hasSub {
 		for _, domain := range val.Subdomains {
 			if domain.Name == sub {
-				return &types.QueryNameResponse{Names: *domain}, nil
+				return &types.QueryNameResponse{Name: *domain}, nil
 			}
 		}
 	}
 
-	return &types.QueryNameResponse{Names: val}, nil
+	return &types.QueryNameResponse{Name: val}, nil
 }

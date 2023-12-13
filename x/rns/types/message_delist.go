@@ -9,7 +9,7 @@ const TypeMsgDelist = "delist"
 
 var _ sdk.Msg = &MsgDelist{}
 
-func NewMsgDelist(creator string, name string) *MsgDelist {
+func NewMsgDeList(creator string, name string) *MsgDelist {
 	return &MsgDelist{
 		Creator: creator,
 		Name:    name,

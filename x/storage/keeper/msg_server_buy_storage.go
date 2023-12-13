@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,20 +19,14 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
-	duration, err := time.ParseDuration(msg.Duration)
-	if err != nil {
-		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
-	}
+	duration := time.Duration(msg.DurationDays) * time.Hour * 24
 
 	timeMonth := time.Hour * 24 * 30
-	if duration.Truncate(timeMonth) <= 0 {
+	if duration < timeMonth {
 		return nil, fmt.Errorf("duration can't be less than 1 month")
 	}
 
-	bytes, err := strconv.ParseInt(msg.Bytes, 10, 64)
-	if err != nil {
-		return nil, fmt.Errorf("bytes can't be parsed: %s", err.Error())
-	}
+	bytes := msg.Bytes
 
 	denom := msg.PaymentDenom
 	if denom != "ujkl" {
@@ -48,13 +41,16 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
-	priceTokens := sdk.NewCoin(denom, k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64()))
+	storageCost := k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64())
+	priceTokens := sdk.NewCoin(denom, storageCost)
+
+	priceTokenList := sdk.NewCoins(priceTokens)
 
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, sdk.NewCoins(priceTokens))
+	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, priceTokenList)
 	if err != nil {
 		return nil, err
 	}
@@ -74,8 +70,15 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		}
 
 		if payInfo.End.After(ctx.BlockTime()) {
-			return nil, fmt.Errorf("please use MsgUpgradeStorage if you want to upgrade/downgrade")
+
+			err := k.UpgradeStorage(ctx, msg.Creator, bytes, payInfo, duration, storageCost, denom)
+			if err != nil {
+				return nil, err
+			}
+			return &types.MsgBuyStorageResponse{}, nil
 		}
+
+		c := payInfo.Coins.Add(priceTokens)
 
 		spi = types.StoragePaymentInfo{
 			Start:          ctx.BlockTime(),
@@ -83,6 +86,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 			SpaceAvailable: bytes,
 			SpaceUsed:      payInfo.SpaceUsed,
 			Address:        msg.ForAddress,
+			Coins:          c,
 		}
 	} else {
 		spi = types.StoragePaymentInfo{
@@ -91,6 +95,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 			SpaceAvailable: bytes,
 			SpaceUsed:      0,
 			Address:        msg.ForAddress,
+			Coins:          priceTokenList,
 		}
 	}
 

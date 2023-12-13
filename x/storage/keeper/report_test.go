@@ -14,18 +14,24 @@ func (suite *KeeperTestSuite) TestSetReportForm() {
 	var att []*types.Attestation
 	report := types.ReportForm{
 		Attestations: att,
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        0,
 	}
 
 	suite.storageKeeper.SetReportForm(suite.ctx, report)
 
-	reportRequest := types.QueryReportRequest{
-		Cid: cid,
+	reportRequest := types.QueryReport{
+		Prover: "prover",
+		Merkle: []byte("merkle"),
+		Owner:  "owner",
+		Start:  0,
 	}
 
-	res, err := suite.queryClient.Reports(suite.ctx.Context(), &reportRequest)
+	res, err := suite.queryClient.Report(suite.ctx.Context(), &reportRequest)
 	suite.Require().NoError(err)
-	suite.Require().Equal(report.Cid, res.Report.Cid)
+	suite.Require().Equal(report.Prover, res.Report.Prover)
 	suite.Require().Equal(report.Attestations, res.Report.Attestations)
 }
 
@@ -35,14 +41,17 @@ func (suite *KeeperTestSuite) TestGetReportForm() {
 	var att []*types.Attestation
 	report := types.ReportForm{
 		Attestations: att,
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        0,
 	}
 
 	suite.storageKeeper.SetReportForm(suite.ctx, report)
 
-	foundReport, found := suite.storageKeeper.GetReportForm(suite.ctx, cid)
+	foundReport, found := suite.storageKeeper.GetReportForm(suite.ctx, "prover", []byte("merkle"), "owner", 0)
 	suite.Require().Equal(found, true)
-	suite.Require().Equal(foundReport.Cid, report.Cid)
+	suite.Require().Equal(foundReport.Merkle, report.Merkle)
 	suite.Require().Equal(foundReport.Attestations, report.Attestations)
 }
 
@@ -51,12 +60,18 @@ func (suite *KeeperTestSuite) TestGetAllReportForm() {
 
 	report := types.ReportForm{
 		Attestations: []*types.Attestation{},
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        0,
 	}
 
 	report2 := types.ReportForm{
 		Attestations: []*types.Attestation{},
-		Cid:          "jklc1321",
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        1,
 	}
 
 	allReportFormsBefore := suite.storageKeeper.GetAllReport(suite.ctx)
@@ -74,22 +89,17 @@ func (suite *KeeperTestSuite) TestRemoveReportForm() {
 
 	report := types.ReportForm{
 		Attestations: []*types.Attestation{},
-		Cid:          cid,
+		Prover:       "prover",
+		Merkle:       []byte("merkle"),
+		Owner:        "owner",
+		Start:        0,
 	}
 	suite.storageKeeper.SetReportForm(suite.ctx, report)
 
-	suite.storageKeeper.RemoveReport(suite.ctx, cid)
+	suite.storageKeeper.RemoveReport(suite.ctx, "prover", []byte{}, "owner", 0)
 
-	foundReport, found := suite.storageKeeper.GetReportForm(suite.ctx, cid)
+	_, found := suite.storageKeeper.GetReportForm(suite.ctx, "prover", []byte{}, "owner", 0)
 	suite.Require().Equal(found, false)
-
-	var atts []*types.Attestation
-	ghostReport := types.ReportForm{
-		Attestations: atts,
-		Cid:          "",
-	}
-
-	suite.Require().Equal(foundReport, ghostReport)
 }
 
 func (suite *KeeperTestSuite) TestMakeReport() {
@@ -113,43 +123,40 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 		})
 	}
 
-	deal := types.ActiveDeals{
-		Cid:           cid,
-		Signee:        "",
-		Provider:      addresses[10],
-		Startblock:    "",
-		Endblock:      "0",
-		Filesize:      "",
-		Proofverified: "false",
-		Proofsmissed:  "",
-		Blocktoprove:  "",
-		Creator:       "",
-		Merkle:        "",
-		Fid:           "",
+	uf := types.UnifiedFile{
+		Merkle:        []byte("merkle"),
+		Owner:         "owner",
+		Start:         0,
+		Expires:       0,
+		FileSize:      1000,
+		ProofInterval: 100,
+		ProofType:     0,
+		Proofs:        make([]string, 0),
+		MaxProofs:     3,
+		Note:          "test",
 	}
+	suite.storageKeeper.SetFile(suite.ctx, uf)
+	uf.AddProver(suite.ctx, suite.storageKeeper, addresses[10])
+	suite.storageKeeper.SetFile(suite.ctx, uf)
 
-	suite.storageKeeper.SetActiveDeals(suite.ctx, deal) // creating storage deal
-
-	_, err = suite.storageKeeper.RequestReport(suite.ctx, cid)
+	_, err = suite.storageKeeper.RequestReport(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
 	suite.NoError(err)
 
-	form, found := suite.storageKeeper.GetReportForm(suite.ctx, cid)
+	form, found := suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
 	suite.Equal(true, found)
 
 	for _, attestation := range form.Attestations {
 		fmt.Printf("%s %t\n", attestation.Provider, attestation.Complete)
 	}
 
-	_ = form
 	allReportForm := suite.storageKeeper.GetAllReport(suite.ctx)
 	suite.Require().Equal(1, len(allReportForm))
 
-	d, found := suite.storageKeeper.GetActiveDeals(suite.ctx, cid)
+	_, found = suite.storageKeeper.GetProof(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
 	suite.Equal(true, found)
-	suite.Equal("false", d.Proofverified)
 
 	for i, attestation := range form.Attestations {
-		err := suite.storageKeeper.Report(suite.ctx, cid, attestation.Provider)
+		err := suite.storageKeeper.DoReport(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start, attestation.Provider)
 		if i >= int(params.AttestMinToPass) {
 			suite.Require().Error(err)
 		} else {
@@ -157,12 +164,6 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 		}
 	}
 
-	_, found = suite.storageKeeper.GetReportForm(suite.ctx, cid)
+	_, found = suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
 	suite.Equal(false, found)
-
-	_, found = suite.storageKeeper.GetActiveDeals(suite.ctx, cid)
-	suite.Equal(false, found)
-
-	_, found = suite.storageKeeper.GetStrays(suite.ctx, cid)
-	suite.Equal(true, found)
 }

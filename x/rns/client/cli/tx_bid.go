@@ -3,6 +3,8 @@ package cli
 import (
 	"strconv"
 
+	types2 "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -26,10 +28,14 @@ func CmdBid() *cobra.Command {
 				return err
 			}
 
+			coin, err := types2.ParseCoinNormalized(argBid)
+			if err != nil {
+				return err
+			}
 			msg := types.NewMsgBid(
 				clientCtx.GetFromAddress().String(),
 				argName,
-				argBid,
+				coin,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

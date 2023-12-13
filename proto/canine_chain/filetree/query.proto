@@ -10,76 +10,48 @@ import "canine_chain/filetree/pubkey.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/filetree/types";
 
-// Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackaldao/canine/filetree/params";
+  rpc Params(QueryParams) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/jackal/canine/filetree/params";
   }
 
-  // Queries a list of Encrypt items.
-  rpc Encrypt(QueryEncryptRequest) returns (QueryEncryptResponse) {
+  // Queries a File by address and owner_address.
+  rpc File(QueryFile) returns (QueryFileResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/encrypt/{address}/{message}";
+        "/jackal/canine-chain/filetree/files/{address}/{owner_address}";
   }
 
-  // Queries a list of Decrypt items.
-  rpc Decrypt(QueryDecryptRequest) returns (QueryDecryptResponse) {
+  // Queries a list of File items.
+  rpc AllFiles(QueryAllFiles) returns (QueryAllFilesResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/filetree/files";
+  }
+
+  // Queries a PubKey by address.
+  rpc PubKey(QueryPubKey) returns (QueryPubKeyResponse) {
     option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/decrypt/{message}";
+        "/jackal/canine-chain/filetree/pub_keys/{address}";
   }
 
-  // Queries a Files by index.
-  rpc Files(QueryFileRequest) returns (QueryFileResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/files/{address}/{ownerAddress}";
-  }
-
-  // Queries a list of Files items.
-  rpc FilesAll(QueryAllFilesRequest) returns (QueryAllFilesResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/filetree/files";
-  }
-
-  // Queries a Pubkey by index.
-  rpc Pubkey(QueryPubkeyRequest) returns (QueryPubkeyResponse) {
-    option (google.api.http).get =
-        "/jackal-dao/canine-chain/filetree/pubkeys/{address}";
-  }
-
-  // Queries a list of Pubkey items.
-  rpc PubkeyAll(QueryAllPubkeysRequest) returns (QueryAllPubkeysResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/filetree/pubkeys";
+  // Queries a list of PubKey items.
+  rpc AllPubKeys(QueryAllPubKeys) returns (QueryAllPubKeysResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/filetree/pub_keys";
   }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
+message QueryParams {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
-  // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryEncryptRequest {
+message QueryFile {
   string address = 1;
-  string message = 2;
+  string owner_address = 2;
 }
 
-message QueryEncryptResponse { string encryptionData = 1; }
+message QueryFileResponse { Files file = 1 [ (gogoproto.nullable) = false ]; }
 
-message QueryDecryptRequest { string message = 1; }
-
-message QueryDecryptResponse { string data = 1; }
-
-message QueryFileRequest {
-  string address = 1;
-  string ownerAddress = 2;
-}
-
-message QueryFileResponse { Files files = 1 [ (gogoproto.nullable) = false ]; }
-
-message QueryAllFilesRequest {
+message QueryAllFiles {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
@@ -88,17 +60,17 @@ message QueryAllFilesResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryPubkeyRequest { string address = 1; }
+message QueryPubKey { string address = 1; }
 
-message QueryPubkeyResponse {
-  Pubkey pubkey = 1 [ (gogoproto.nullable) = false ];
+message QueryPubKeyResponse {
+  Pubkey pub_key = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllPubkeysRequest {
+message QueryAllPubKeys {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllPubkeysResponse {
-  repeated Pubkey pubkey = 1 [ (gogoproto.nullable) = false ];
+message QueryAllPubKeysResponse {
+  repeated Pubkey pub_key = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

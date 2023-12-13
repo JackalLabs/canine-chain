@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryPayDataRequest) (*types.QueryPayDataResponse, error) {
+func (k Keeper) GetPayData(goCtx context.Context, req *types.QueryPayData) (*types.QueryPayDataResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

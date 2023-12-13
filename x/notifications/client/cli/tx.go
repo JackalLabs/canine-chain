@@ -23,10 +23,9 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdCreateNotifications())
+	cmd.AddCommand(CmdCreateNotification())
 	// cmd.AddCommand(CmdUpdateNotifications())
-	cmd.AddCommand(CmdDeleteNotifications())
-	cmd.AddCommand(CmdSetCounter())
+	cmd.AddCommand(CmdDeleteNotification())
 	cmd.AddCommand(CmdBlockSenders())
 	// this line is used by starport scaffolding # 1
 
