@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"encoding/json"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ListFiles(ctx sdk.Context, merkle []byte) []string {
+func (k Keeper) ListFileLocations(ctx sdk.Context, merkle []byte) []string {
 	allDeals := k.GetAllFilesWithMerkle(ctx, merkle)
 
 	providers := make([]string, 0)
@@ -42,12 +41,7 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	ls := k.ListFiles(ctx, req.Merkle)
+	ls := k.ListFileLocations(ctx, req.Merkle)
 
-	ProviderIps, err := json.Marshal(ls)
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.QueryFindFileResponse{ProviderIps: string(ProviderIps)}, nil
+	return &types.QueryFindFileResponse{ProviderIps: ls}, nil
 }

@@ -30,7 +30,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
 type QueryParams struct {
 }
 
@@ -67,9 +66,7 @@ func (m *QueryParams) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParams proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -158,7 +155,6 @@ func (m *QueryFeed) GetName() string {
 }
 
 type QueryFeedResponse struct {
-	// params holds all the parameters of this module.
 	Feed Feed `protobuf:"bytes,1,opt,name=feed,proto3" json:"feed"`
 }
 
@@ -239,7 +235,6 @@ func (m *QueryAllFeeds) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryAllFeeds proto.InternalMessageInfo
 
 type QueryAllFeedsResponse struct {
-	// params holds all the parameters of this module.
 	Feed       []Feed              `protobuf:"bytes,1,rep,name=feed,proto3" json:"feed"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
@@ -348,9 +343,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Queries a Feed by name.
 	Feed(ctx context.Context, in *QueryFeed, opts ...grpc.CallOption) (*QueryFeedResponse, error)
+	// Queries a list of Feed items.
 	AllFeeds(ctx context.Context, in *QueryAllFeeds, opts ...grpc.CallOption) (*QueryAllFeedsResponse, error)
 }
 
@@ -391,9 +387,10 @@ func (c *queryClient) AllFeeds(ctx context.Context, in *QueryAllFeeds, opts ...g
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParams) (*QueryParamsResponse, error)
+	// Queries a Feed by name.
 	Feed(context.Context, *QueryFeed) (*QueryFeedResponse, error)
+	// Queries a list of Feed items.
 	AllFeeds(context.Context, *QueryAllFeeds) (*QueryAllFeedsResponse, error)
 }
 

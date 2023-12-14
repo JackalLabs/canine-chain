@@ -31,9 +31,12 @@ func CmdCheckPrice() *cobra.Command {
 			if err != nil {
 				return err
 			}
-
+			dur, err := strconv.ParseInt(reqDuration, 10, 64)
+			if err != nil {
+				return err
+			}
 			params := &types.QueryPriceCheck{
-				Duration: reqDuration,
+				Duration: dur,
 				Bytes:    i,
 			}
 

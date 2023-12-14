@@ -30,7 +30,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParams is request type for the Query/Params RPC method.
 type QueryParams struct {
 }
 
@@ -67,9 +66,7 @@ func (m *QueryParams) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParams proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -201,654 +198,6 @@ func (m *QueryNameResponse) GetName() Names {
 	return Names{}
 }
 
-type QueryAllNames struct {
-	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllNames) Reset()         { *m = QueryAllNames{} }
-func (m *QueryAllNames) String() string { return proto.CompactTextString(m) }
-func (*QueryAllNames) ProtoMessage()    {}
-func (*QueryAllNames) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{4}
-}
-func (m *QueryAllNames) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllNames) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllNames.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllNames) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllNames.Merge(m, src)
-}
-func (m *QueryAllNames) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllNames) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllNames.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllNames proto.InternalMessageInfo
-
-func (m *QueryAllNames) GetPagination() *query.PageRequest {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryAllNamesResponse struct {
-	Name       []Names             `protobuf:"bytes,1,rep,name=name,proto3" json:"name"`
-	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllNamesResponse) Reset()         { *m = QueryAllNamesResponse{} }
-func (m *QueryAllNamesResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllNamesResponse) ProtoMessage()    {}
-func (*QueryAllNamesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{5}
-}
-func (m *QueryAllNamesResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllNamesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllNamesResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllNamesResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllNamesResponse.Merge(m, src)
-}
-func (m *QueryAllNamesResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllNamesResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllNamesResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllNamesResponse proto.InternalMessageInfo
-
-func (m *QueryAllNamesResponse) GetName() []Names {
-	if m != nil {
-		return m.Name
-	}
-	return nil
-}
-
-func (m *QueryAllNamesResponse) GetPagination() *query.PageResponse {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryBid struct {
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-}
-
-func (m *QueryBid) Reset()         { *m = QueryBid{} }
-func (m *QueryBid) String() string { return proto.CompactTextString(m) }
-func (*QueryBid) ProtoMessage()    {}
-func (*QueryBid) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{6}
-}
-func (m *QueryBid) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryBid) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryBid.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryBid) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBid.Merge(m, src)
-}
-func (m *QueryBid) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryBid) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBid.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryBid proto.InternalMessageInfo
-
-func (m *QueryBid) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-type QueryBidResponse struct {
-	Bids Bids `protobuf:"bytes,1,opt,name=bids,proto3" json:"bids"`
-}
-
-func (m *QueryBidResponse) Reset()         { *m = QueryBidResponse{} }
-func (m *QueryBidResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBidResponse) ProtoMessage()    {}
-func (*QueryBidResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{7}
-}
-func (m *QueryBidResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryBidResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryBidResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryBidResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBidResponse.Merge(m, src)
-}
-func (m *QueryBidResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryBidResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBidResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryBidResponse proto.InternalMessageInfo
-
-func (m *QueryBidResponse) GetBids() Bids {
-	if m != nil {
-		return m.Bids
-	}
-	return Bids{}
-}
-
-type QueryAllBids struct {
-	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllBids) Reset()         { *m = QueryAllBids{} }
-func (m *QueryAllBids) String() string { return proto.CompactTextString(m) }
-func (*QueryAllBids) ProtoMessage()    {}
-func (*QueryAllBids) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{8}
-}
-func (m *QueryAllBids) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllBids) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllBids.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllBids) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllBids.Merge(m, src)
-}
-func (m *QueryAllBids) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllBids) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllBids.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllBids proto.InternalMessageInfo
-
-func (m *QueryAllBids) GetPagination() *query.PageRequest {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryAllBidsResponse struct {
-	Bids       []Bids              `protobuf:"bytes,1,rep,name=bids,proto3" json:"bids"`
-	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllBidsResponse) Reset()         { *m = QueryAllBidsResponse{} }
-func (m *QueryAllBidsResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllBidsResponse) ProtoMessage()    {}
-func (*QueryAllBidsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{9}
-}
-func (m *QueryAllBidsResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllBidsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllBidsResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllBidsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllBidsResponse.Merge(m, src)
-}
-func (m *QueryAllBidsResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllBidsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllBidsResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllBidsResponse proto.InternalMessageInfo
-
-func (m *QueryAllBidsResponse) GetBids() []Bids {
-	if m != nil {
-		return m.Bids
-	}
-	return nil
-}
-
-func (m *QueryAllBidsResponse) GetPagination() *query.PageResponse {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryForSale struct {
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-}
-
-func (m *QueryForSale) Reset()         { *m = QueryForSale{} }
-func (m *QueryForSale) String() string { return proto.CompactTextString(m) }
-func (*QueryForSale) ProtoMessage()    {}
-func (*QueryForSale) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{10}
-}
-func (m *QueryForSale) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryForSale) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryForSale.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryForSale) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryForSale.Merge(m, src)
-}
-func (m *QueryForSale) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryForSale) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryForSale.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryForSale proto.InternalMessageInfo
-
-func (m *QueryForSale) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-type QueryForSaleResponse struct {
-	ForSale Forsale `protobuf:"bytes,1,opt,name=for_sale,json=forSale,proto3" json:"for_sale"`
-}
-
-func (m *QueryForSaleResponse) Reset()         { *m = QueryForSaleResponse{} }
-func (m *QueryForSaleResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryForSaleResponse) ProtoMessage()    {}
-func (*QueryForSaleResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{11}
-}
-func (m *QueryForSaleResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryForSaleResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryForSaleResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryForSaleResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryForSaleResponse.Merge(m, src)
-}
-func (m *QueryForSaleResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryForSaleResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryForSaleResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryForSaleResponse proto.InternalMessageInfo
-
-func (m *QueryForSaleResponse) GetForSale() Forsale {
-	if m != nil {
-		return m.ForSale
-	}
-	return Forsale{}
-}
-
-type QueryAllForSale struct {
-	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllForSale) Reset()         { *m = QueryAllForSale{} }
-func (m *QueryAllForSale) String() string { return proto.CompactTextString(m) }
-func (*QueryAllForSale) ProtoMessage()    {}
-func (*QueryAllForSale) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{12}
-}
-func (m *QueryAllForSale) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllForSale) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllForSale.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllForSale) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllForSale.Merge(m, src)
-}
-func (m *QueryAllForSale) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllForSale) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllForSale.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllForSale proto.InternalMessageInfo
-
-func (m *QueryAllForSale) GetPagination() *query.PageRequest {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryAllForSaleResponse struct {
-	ForSale    []Forsale           `protobuf:"bytes,1,rep,name=for_sale,json=forSale,proto3" json:"for_sale"`
-	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllForSaleResponse) Reset()         { *m = QueryAllForSaleResponse{} }
-func (m *QueryAllForSaleResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllForSaleResponse) ProtoMessage()    {}
-func (*QueryAllForSaleResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{13}
-}
-func (m *QueryAllForSaleResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllForSaleResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllForSaleResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllForSaleResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllForSaleResponse.Merge(m, src)
-}
-func (m *QueryAllForSaleResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllForSaleResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllForSaleResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllForSaleResponse proto.InternalMessageInfo
-
-func (m *QueryAllForSaleResponse) GetForSale() []Forsale {
-	if m != nil {
-		return m.ForSale
-	}
-	return nil
-}
-
-func (m *QueryAllForSaleResponse) GetPagination() *query.PageResponse {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryInit struct {
-	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-}
-
-func (m *QueryInit) Reset()         { *m = QueryInit{} }
-func (m *QueryInit) String() string { return proto.CompactTextString(m) }
-func (*QueryInit) ProtoMessage()    {}
-func (*QueryInit) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{14}
-}
-func (m *QueryInit) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryInit) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryInit.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryInit) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryInit.Merge(m, src)
-}
-func (m *QueryInit) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryInit) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryInit.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryInit proto.InternalMessageInfo
-
-func (m *QueryInit) GetAddress() string {
-	if m != nil {
-		return m.Address
-	}
-	return ""
-}
-
-type QueryInitResponse struct {
-	Init bool `protobuf:"varint,1,opt,name=init,proto3" json:"init,omitempty"`
-}
-
-func (m *QueryInitResponse) Reset()         { *m = QueryInitResponse{} }
-func (m *QueryInitResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryInitResponse) ProtoMessage()    {}
-func (*QueryInitResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{15}
-}
-func (m *QueryInitResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryInitResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryInitResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryInitResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryInitResponse.Merge(m, src)
-}
-func (m *QueryInitResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryInitResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryInitResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryInitResponse proto.InternalMessageInfo
-
-func (m *QueryInitResponse) GetInit() bool {
-	if m != nil {
-		return m.Init
-	}
-	return false
-}
-
-type QueryAllInits struct {
-	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllInits) Reset()         { *m = QueryAllInits{} }
-func (m *QueryAllInits) String() string { return proto.CompactTextString(m) }
-func (*QueryAllInits) ProtoMessage()    {}
-func (*QueryAllInits) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{16}
-}
-func (m *QueryAllInits) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllInits) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllInits.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllInits) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllInits.Merge(m, src)
-}
-func (m *QueryAllInits) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllInits) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllInits.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllInits proto.InternalMessageInfo
-
-func (m *QueryAllInits) GetPagination() *query.PageRequest {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-type QueryAllInitsResponse struct {
-	Init       []Init              `protobuf:"bytes,1,rep,name=init,proto3" json:"init"`
-	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryAllInitsResponse) Reset()         { *m = QueryAllInitsResponse{} }
-func (m *QueryAllInitsResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllInitsResponse) ProtoMessage()    {}
-func (*QueryAllInitsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{17}
-}
-func (m *QueryAllInitsResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryAllInitsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryAllInitsResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryAllInitsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllInitsResponse.Merge(m, src)
-}
-func (m *QueryAllInitsResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryAllInitsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllInitsResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryAllInitsResponse proto.InternalMessageInfo
-
-func (m *QueryAllInitsResponse) GetInit() []Init {
-	if m != nil {
-		return m.Init
-	}
-	return nil
-}
-
-func (m *QueryAllInitsResponse) GetPagination() *query.PageResponse {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
 type QueryListOwnedNames struct {
 	Address    string             `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -858,7 +207,7 @@ func (m *QueryListOwnedNames) Reset()         { *m = QueryListOwnedNames{} }
 func (m *QueryListOwnedNames) String() string { return proto.CompactTextString(m) }
 func (*QueryListOwnedNames) ProtoMessage()    {}
 func (*QueryListOwnedNames) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{18}
+	return fileDescriptor_8561b6b36d651aba, []int{4}
 }
 func (m *QueryListOwnedNames) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -910,7 +259,7 @@ func (m *QueryListOwnedNamesResponse) Reset()         { *m = QueryListOwnedNames
 func (m *QueryListOwnedNamesResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryListOwnedNamesResponse) ProtoMessage()    {}
 func (*QueryListOwnedNamesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8561b6b36d651aba, []int{19}
+	return fileDescriptor_8561b6b36d651aba, []int{5}
 }
 func (m *QueryListOwnedNamesResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -953,11 +302,661 @@ func (m *QueryListOwnedNamesResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryAllNames struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllNames) Reset()         { *m = QueryAllNames{} }
+func (m *QueryAllNames) String() string { return proto.CompactTextString(m) }
+func (*QueryAllNames) ProtoMessage()    {}
+func (*QueryAllNames) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{6}
+}
+func (m *QueryAllNames) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllNames) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllNames.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllNames) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllNames.Merge(m, src)
+}
+func (m *QueryAllNames) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllNames) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllNames.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllNames proto.InternalMessageInfo
+
+func (m *QueryAllNames) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllNamesResponse struct {
+	Name       []Names             `protobuf:"bytes,1,rep,name=name,proto3" json:"name"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllNamesResponse) Reset()         { *m = QueryAllNamesResponse{} }
+func (m *QueryAllNamesResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllNamesResponse) ProtoMessage()    {}
+func (*QueryAllNamesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{7}
+}
+func (m *QueryAllNamesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllNamesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllNamesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllNamesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllNamesResponse.Merge(m, src)
+}
+func (m *QueryAllNamesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllNamesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllNamesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllNamesResponse proto.InternalMessageInfo
+
+func (m *QueryAllNamesResponse) GetName() []Names {
+	if m != nil {
+		return m.Name
+	}
+	return nil
+}
+
+func (m *QueryAllNamesResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryBid struct {
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (m *QueryBid) Reset()         { *m = QueryBid{} }
+func (m *QueryBid) String() string { return proto.CompactTextString(m) }
+func (*QueryBid) ProtoMessage()    {}
+func (*QueryBid) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{8}
+}
+func (m *QueryBid) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBid) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBid.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBid) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBid.Merge(m, src)
+}
+func (m *QueryBid) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBid) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBid.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBid proto.InternalMessageInfo
+
+func (m *QueryBid) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type QueryBidResponse struct {
+	Bids Bids `protobuf:"bytes,1,opt,name=bids,proto3" json:"bids"`
+}
+
+func (m *QueryBidResponse) Reset()         { *m = QueryBidResponse{} }
+func (m *QueryBidResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBidResponse) ProtoMessage()    {}
+func (*QueryBidResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{9}
+}
+func (m *QueryBidResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBidResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBidResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBidResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBidResponse.Merge(m, src)
+}
+func (m *QueryBidResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBidResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBidResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBidResponse proto.InternalMessageInfo
+
+func (m *QueryBidResponse) GetBids() Bids {
+	if m != nil {
+		return m.Bids
+	}
+	return Bids{}
+}
+
+type QueryAllBids struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllBids) Reset()         { *m = QueryAllBids{} }
+func (m *QueryAllBids) String() string { return proto.CompactTextString(m) }
+func (*QueryAllBids) ProtoMessage()    {}
+func (*QueryAllBids) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{10}
+}
+func (m *QueryAllBids) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllBids) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllBids.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllBids) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllBids.Merge(m, src)
+}
+func (m *QueryAllBids) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllBids) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllBids.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllBids proto.InternalMessageInfo
+
+func (m *QueryAllBids) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllBidsResponse struct {
+	Bids       []Bids              `protobuf:"bytes,1,rep,name=bids,proto3" json:"bids"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllBidsResponse) Reset()         { *m = QueryAllBidsResponse{} }
+func (m *QueryAllBidsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllBidsResponse) ProtoMessage()    {}
+func (*QueryAllBidsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{11}
+}
+func (m *QueryAllBidsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllBidsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllBidsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllBidsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllBidsResponse.Merge(m, src)
+}
+func (m *QueryAllBidsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllBidsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllBidsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllBidsResponse proto.InternalMessageInfo
+
+func (m *QueryAllBidsResponse) GetBids() []Bids {
+	if m != nil {
+		return m.Bids
+	}
+	return nil
+}
+
+func (m *QueryAllBidsResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryForSale struct {
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (m *QueryForSale) Reset()         { *m = QueryForSale{} }
+func (m *QueryForSale) String() string { return proto.CompactTextString(m) }
+func (*QueryForSale) ProtoMessage()    {}
+func (*QueryForSale) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{12}
+}
+func (m *QueryForSale) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryForSale) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryForSale.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryForSale) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryForSale.Merge(m, src)
+}
+func (m *QueryForSale) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryForSale) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryForSale.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryForSale proto.InternalMessageInfo
+
+func (m *QueryForSale) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type QueryForSaleResponse struct {
+	ForSale Forsale `protobuf:"bytes,1,opt,name=for_sale,json=forSale,proto3" json:"for_sale"`
+}
+
+func (m *QueryForSaleResponse) Reset()         { *m = QueryForSaleResponse{} }
+func (m *QueryForSaleResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryForSaleResponse) ProtoMessage()    {}
+func (*QueryForSaleResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{13}
+}
+func (m *QueryForSaleResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryForSaleResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryForSaleResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryForSaleResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryForSaleResponse.Merge(m, src)
+}
+func (m *QueryForSaleResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryForSaleResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryForSaleResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryForSaleResponse proto.InternalMessageInfo
+
+func (m *QueryForSaleResponse) GetForSale() Forsale {
+	if m != nil {
+		return m.ForSale
+	}
+	return Forsale{}
+}
+
+type QueryAllForSale struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllForSale) Reset()         { *m = QueryAllForSale{} }
+func (m *QueryAllForSale) String() string { return proto.CompactTextString(m) }
+func (*QueryAllForSale) ProtoMessage()    {}
+func (*QueryAllForSale) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{14}
+}
+func (m *QueryAllForSale) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllForSale) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllForSale.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllForSale) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllForSale.Merge(m, src)
+}
+func (m *QueryAllForSale) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllForSale) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllForSale.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllForSale proto.InternalMessageInfo
+
+func (m *QueryAllForSale) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllForSaleResponse struct {
+	ForSale    []Forsale           `protobuf:"bytes,1,rep,name=for_sale,json=forSale,proto3" json:"for_sale"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllForSaleResponse) Reset()         { *m = QueryAllForSaleResponse{} }
+func (m *QueryAllForSaleResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllForSaleResponse) ProtoMessage()    {}
+func (*QueryAllForSaleResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{15}
+}
+func (m *QueryAllForSaleResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllForSaleResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllForSaleResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllForSaleResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllForSaleResponse.Merge(m, src)
+}
+func (m *QueryAllForSaleResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllForSaleResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllForSaleResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllForSaleResponse proto.InternalMessageInfo
+
+func (m *QueryAllForSaleResponse) GetForSale() []Forsale {
+	if m != nil {
+		return m.ForSale
+	}
+	return nil
+}
+
+func (m *QueryAllForSaleResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryInit struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryInit) Reset()         { *m = QueryInit{} }
+func (m *QueryInit) String() string { return proto.CompactTextString(m) }
+func (*QueryInit) ProtoMessage()    {}
+func (*QueryInit) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{16}
+}
+func (m *QueryInit) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryInit) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryInit.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryInit) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryInit.Merge(m, src)
+}
+func (m *QueryInit) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryInit) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryInit.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryInit proto.InternalMessageInfo
+
+func (m *QueryInit) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryInitResponse struct {
+	Init bool `protobuf:"varint,1,opt,name=init,proto3" json:"init,omitempty"`
+}
+
+func (m *QueryInitResponse) Reset()         { *m = QueryInitResponse{} }
+func (m *QueryInitResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryInitResponse) ProtoMessage()    {}
+func (*QueryInitResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{17}
+}
+func (m *QueryInitResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryInitResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryInitResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryInitResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryInitResponse.Merge(m, src)
+}
+func (m *QueryInitResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryInitResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryInitResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryInitResponse proto.InternalMessageInfo
+
+func (m *QueryInitResponse) GetInit() bool {
+	if m != nil {
+		return m.Init
+	}
+	return false
+}
+
+type QueryAllInits struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllInits) Reset()         { *m = QueryAllInits{} }
+func (m *QueryAllInits) String() string { return proto.CompactTextString(m) }
+func (*QueryAllInits) ProtoMessage()    {}
+func (*QueryAllInits) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{18}
+}
+func (m *QueryAllInits) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllInits) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllInits.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllInits) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllInits.Merge(m, src)
+}
+func (m *QueryAllInits) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllInits) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllInits.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllInits proto.InternalMessageInfo
+
+func (m *QueryAllInits) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllInitsResponse struct {
+	Init       []Init              `protobuf:"bytes,1,rep,name=init,proto3" json:"init"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllInitsResponse) Reset()         { *m = QueryAllInitsResponse{} }
+func (m *QueryAllInitsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllInitsResponse) ProtoMessage()    {}
+func (*QueryAllInitsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8561b6b36d651aba, []int{19}
+}
+func (m *QueryAllInitsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllInitsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllInitsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllInitsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllInitsResponse.Merge(m, src)
+}
+func (m *QueryAllInitsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllInitsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllInitsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllInitsResponse proto.InternalMessageInfo
+
+func (m *QueryAllInitsResponse) GetInit() []Init {
+	if m != nil {
+		return m.Init
+	}
+	return nil
+}
+
+func (m *QueryAllInitsResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryParams)(nil), "canine_chain.rns.QueryParams")
 	proto.RegisterType((*QueryParamsResponse)(nil), "canine_chain.rns.QueryParamsResponse")
 	proto.RegisterType((*QueryName)(nil), "canine_chain.rns.QueryName")
 	proto.RegisterType((*QueryNameResponse)(nil), "canine_chain.rns.QueryNameResponse")
+	proto.RegisterType((*QueryListOwnedNames)(nil), "canine_chain.rns.QueryListOwnedNames")
+	proto.RegisterType((*QueryListOwnedNamesResponse)(nil), "canine_chain.rns.QueryListOwnedNamesResponse")
 	proto.RegisterType((*QueryAllNames)(nil), "canine_chain.rns.QueryAllNames")
 	proto.RegisterType((*QueryAllNamesResponse)(nil), "canine_chain.rns.QueryAllNamesResponse")
 	proto.RegisterType((*QueryBid)(nil), "canine_chain.rns.QueryBid")
@@ -972,73 +971,71 @@ func init() {
 	proto.RegisterType((*QueryInitResponse)(nil), "canine_chain.rns.QueryInitResponse")
 	proto.RegisterType((*QueryAllInits)(nil), "canine_chain.rns.QueryAllInits")
 	proto.RegisterType((*QueryAllInitsResponse)(nil), "canine_chain.rns.QueryAllInitsResponse")
-	proto.RegisterType((*QueryListOwnedNames)(nil), "canine_chain.rns.QueryListOwnedNames")
-	proto.RegisterType((*QueryListOwnedNamesResponse)(nil), "canine_chain.rns.QueryListOwnedNamesResponse")
 }
 
 func init() { proto.RegisterFile("canine_chain/rns/query.proto", fileDescriptor_8561b6b36d651aba) }
 
 var fileDescriptor_8561b6b36d651aba = []byte{
-	// 938 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0xcf, 0x6f, 0x1b, 0x45,
-	0x14, 0xce, 0x26, 0x6e, 0xec, 0xbe, 0x50, 0x28, 0x43, 0xa1, 0x61, 0xd3, 0xac, 0x9b, 0x2d, 0xb6,
-	0x9b, 0x8a, 0xec, 0x36, 0x89, 0xe0, 0x00, 0x27, 0x2c, 0x64, 0x40, 0x2a, 0x50, 0x8c, 0x04, 0x82,
-	0x8b, 0x35, 0xb6, 0x27, 0xce, 0x80, 0xbd, 0xe3, 0xee, 0x6c, 0x70, 0xa3, 0xd0, 0x0b, 0x88, 0x3b,
-	0xb4, 0x47, 0x24, 0x2e, 0xfc, 0x33, 0x3d, 0x56, 0xe2, 0xc2, 0x09, 0xa1, 0x84, 0x3f, 0x04, 0xcd,
-	0xaf, 0x65, 0xed, 0xf5, 0xd8, 0xa6, 0xf2, 0x29, 0x6b, 0x7d, 0xdf, 0xbc, 0xef, 0x7b, 0x6f, 0xdf,
-	0x7e, 0xa3, 0xc0, 0x8d, 0x0e, 0x8e, 0x68, 0x44, 0x5a, 0x9d, 0x63, 0x4c, 0xa3, 0x30, 0x8e, 0x78,
-	0xf8, 0xe0, 0x84, 0xc4, 0xa7, 0xc1, 0x30, 0x66, 0x09, 0x43, 0x57, 0xb3, 0x68, 0x10, 0x47, 0xdc,
-	0xbd, 0xd6, 0x63, 0x3d, 0x26, 0xc1, 0x50, 0x3c, 0x29, 0x9e, 0x7b, 0xa3, 0xc7, 0x58, 0xaf, 0x4f,
-	0x42, 0x3c, 0xa4, 0x21, 0x8e, 0x22, 0x96, 0xe0, 0x84, 0xb2, 0x88, 0x6b, 0xf4, 0x4e, 0x87, 0xf1,
-	0x01, 0xe3, 0x61, 0x1b, 0x73, 0xa2, 0xca, 0x87, 0xdf, 0xed, 0xb7, 0x49, 0x82, 0xf7, 0xc3, 0x21,
-	0xee, 0xd1, 0x48, 0x92, 0x35, 0x77, 0x3b, 0xe7, 0x67, 0x88, 0x63, 0x3c, 0x30, 0xa5, 0xf2, 0x76,
-	0x47, 0xc7, 0x8c, 0xda, 0xd1, 0x08, 0x0f, 0x88, 0x41, 0xb7, 0x72, 0x68, 0x9b, 0x76, 0x0d, 0xe8,
-	0xe5, 0xc0, 0x23, 0x16, 0x73, 0xdc, 0x27, 0xd6, 0xc3, 0x34, 0xa2, 0x89, 0x02, 0xfd, 0x2b, 0xb0,
-	0xf1, 0x99, 0x68, 0xeb, 0xbe, 0xb4, 0xea, 0x7f, 0x0c, 0xaf, 0x64, 0x7e, 0x36, 0x09, 0x1f, 0xb2,
-	0x88, 0x13, 0xf4, 0x36, 0xac, 0xab, 0x5e, 0x36, 0x9d, 0x9b, 0xce, 0xed, 0x8d, 0x83, 0xcd, 0x60,
-	0x72, 0xba, 0x81, 0x3a, 0x51, 0x2f, 0x3c, 0xfd, 0xab, 0xbc, 0xd2, 0xd4, 0x6c, 0xbf, 0x0c, 0x97,
-	0x65, 0xb9, 0x4f, 0xf0, 0x80, 0x20, 0x04, 0x05, 0xd1, 0x93, 0x2c, 0x71, 0xb9, 0x29, 0x9f, 0xfd,
-	0x06, 0xbc, 0x9c, 0x12, 0x52, 0xb5, 0xfd, 0x0c, 0x71, 0xe3, 0xe0, 0x7a, 0x5e, 0x4b, 0xb0, 0x8d,
-	0x94, 0xaa, 0xf3, 0x25, 0x5c, 0x91, 0x75, 0xde, 0xeb, 0xf7, 0x25, 0x88, 0x1a, 0x00, 0xff, 0xbd,
-	0x20, 0x5d, 0xa9, 0x1a, 0xa8, 0xb7, 0x19, 0x88, 0xb7, 0x19, 0xa8, 0x65, 0xd1, 0x6f, 0x33, 0xb8,
-	0x8f, 0x7b, 0xa4, 0x49, 0x1e, 0x9c, 0x10, 0x9e, 0x34, 0x33, 0x27, 0xfd, 0x27, 0x0e, 0xbc, 0x3a,
-	0x56, 0x79, 0x8a, 0xcb, 0xb5, 0x05, 0x5d, 0xa2, 0x0f, 0xc6, 0x4c, 0xad, 0x4a, 0x53, 0xb5, 0xb9,
-	0xa6, 0x94, 0xde, 0x98, 0x2b, 0x0f, 0x4a, 0xd2, 0x54, 0x9d, 0x76, 0xa7, 0x8e, 0xf5, 0x7d, 0xb8,
-	0x6a, 0xf0, 0xd4, 0xef, 0x5d, 0x28, 0x88, 0xa5, 0xd1, 0xb3, 0x78, 0x2d, 0xef, 0xb7, 0x4e, 0xbb,
-	0xa9, 0x5d, 0xc1, 0xf4, 0xbf, 0x80, 0x17, 0x4c, 0xeb, 0x02, 0x5b, 0xda, 0x4c, 0x7f, 0x71, 0xe0,
-	0x5a, 0xb6, 0xf0, 0x14, 0x8b, 0x6b, 0x8b, 0x59, 0x5c, 0xde, 0x44, 0x7d, 0xdd, 0x6b, 0x83, 0xc5,
-	0x9f, 0xe3, 0xfe, 0xf4, 0x65, 0x6d, 0x6a, 0xdb, 0x9a, 0x93, 0xda, 0x7e, 0x07, 0x4a, 0x47, 0x2c,
-	0x6e, 0x89, 0x4f, 0x4e, 0x4f, 0xe5, 0xf5, 0xbc, 0xf5, 0x86, 0xfa, 0x26, 0xb5, 0xfb, 0xe2, 0x91,
-	0xaa, 0xe1, 0x7f, 0x05, 0x2f, 0x99, 0x51, 0x18, 0xe9, 0x65, 0x8d, 0xf9, 0x37, 0x07, 0xae, 0x4f,
-	0xd4, 0xb6, 0x58, 0x5e, 0xfb, 0x3f, 0x96, 0x97, 0x37, 0xf3, 0x8a, 0x4e, 0x87, 0x8f, 0x22, 0x9a,
-	0xa0, 0x4d, 0x28, 0xe2, 0x6e, 0x37, 0x26, 0x9c, 0xeb, 0x99, 0x9b, 0x9f, 0x7e, 0x4d, 0x67, 0x84,
-	0xa0, 0xa5, 0x0d, 0x20, 0x28, 0x88, 0x14, 0x93, 0xdc, 0x52, 0x53, 0x3e, 0x67, 0x43, 0x40, 0x70,
-	0x97, 0xb7, 0xb0, 0x8f, 0x33, 0x21, 0x20, 0x2b, 0x67, 0x37, 0x56, 0xdb, 0xb0, 0x6c, 0xac, 0xa0,
-	0x9b, 0x8d, 0x15, 0xcc, 0xe5, 0x4d, 0x6f, 0xa4, 0xa3, 0xfa, 0x1e, 0xe5, 0xc9, 0xa7, 0xa3, 0x88,
-	0x74, 0x55, 0xf0, 0x59, 0xe7, 0x38, 0x31, 0x8d, 0xd5, 0xe7, 0x9e, 0xc6, 0xaf, 0x0e, 0x6c, 0x4d,
-	0x51, 0x4e, 0x67, 0x72, 0x08, 0x97, 0xe4, 0xdd, 0xb5, 0x58, 0x32, 0x2a, 0xee, 0xd2, 0xc6, 0x72,
-	0xf0, 0x18, 0xe0, 0x92, 0x74, 0x87, 0x46, 0xb0, 0xae, 0x2e, 0x25, 0xb4, 0x9d, 0xb7, 0x90, 0xb9,
-	0xe5, 0xdc, 0xca, 0x4c, 0xd8, 0xa8, 0xf8, 0xb5, 0x1f, 0xfe, 0xf8, 0xe7, 0xc9, 0xea, 0x0e, 0x2a,
-	0x87, 0xdf, 0xe0, 0xce, 0xb7, 0xb8, 0x1f, 0xaa, 0x53, 0x7b, 0x93, 0xf7, 0x3d, 0x1a, 0x41, 0x41,
-	0x5e, 0x78, 0x5b, 0x96, 0xba, 0x02, 0x74, 0x6f, 0xcd, 0x00, 0x53, 0xc9, 0x3d, 0x29, 0x59, 0x43,
-	0x15, 0xab, 0xa4, 0x9c, 0x5e, 0x78, 0x26, 0xfe, 0x3c, 0x42, 0xdf, 0x43, 0x29, 0xbd, 0x00, 0xcb,
-	0x96, 0xfa, 0x86, 0xe0, 0xd6, 0xe6, 0x10, 0x52, 0x13, 0x55, 0x69, 0xe2, 0x26, 0xf2, 0x66, 0x9b,
-	0x40, 0x1c, 0xd6, 0xc4, 0x7d, 0xe4, 0x5a, 0xea, 0xd6, 0x69, 0xd7, 0xf5, 0xed, 0x58, 0x2a, 0xf7,
-	0xa6, 0x94, 0xab, 0xa2, 0x37, 0xac, 0x72, 0x22, 0xf9, 0x4d, 0xcb, 0x0f, 0xa1, 0x68, 0xae, 0x27,
-	0xcf, 0xde, 0x90, 0xc0, 0xdd, 0xea, 0x6c, 0x3c, 0x35, 0x50, 0x91, 0x06, 0xca, 0x68, 0x7b, 0xa6,
-	0x01, 0xf4, 0xa3, 0x03, 0x45, 0x13, 0xd9, 0x36, 0x69, 0x8d, 0x5b, 0xa5, 0x27, 0x62, 0xd9, 0xbf,
-	0x2b, 0xa5, 0xef, 0xa0, 0xdb, 0x56, 0x69, 0x93, 0xda, 0xa6, 0xff, 0x9f, 0x1c, 0x80, 0xcc, 0xdd,
-	0xb1, 0x63, 0xef, 0xd1, 0x78, 0xd9, 0x9d, 0x4b, 0x49, 0xed, 0xec, 0x4a, 0x3b, 0xb7, 0xd0, 0xce,
-	0x5c, 0x3b, 0xe8, 0x14, 0x0a, 0x32, 0xc6, 0x6d, 0x3b, 0x2f, 0x40, 0xeb, 0xce, 0x67, 0x93, 0xdd,
-	0x0f, 0xa5, 0xe8, 0x2e, 0xaa, 0x59, 0x45, 0x45, 0x8e, 0x86, 0x67, 0x3a, 0xd6, 0x1e, 0xa1, 0x33,
-	0xb9, 0xf5, 0x2a, 0xf1, 0x67, 0x6c, 0xbd, 0x24, 0xcc, 0xda, 0xfa, 0xb1, 0x64, 0x5f, 0x60, 0x0b,
-	0x64, 0x9c, 0xff, 0xee, 0xc0, 0x8b, 0x13, 0x09, 0x6c, 0x8b, 0x93, 0x71, 0x9a, 0xbb, 0xb7, 0x10,
-	0x2d, 0xf5, 0xf3, 0xae, 0xf4, 0xf3, 0x16, 0x3a, 0xb4, 0xfa, 0xe9, 0x53, 0x9e, 0xb4, 0x98, 0x38,
-	0xd9, 0xd2, 0xa9, 0x60, 0x46, 0x54, 0xff, 0xf0, 0xe9, 0xb9, 0xe7, 0x3c, 0x3b, 0xf7, 0x9c, 0xbf,
-	0xcf, 0x3d, 0xe7, 0xe7, 0x0b, 0x6f, 0xe5, 0xd9, 0x85, 0xb7, 0xf2, 0xe7, 0x85, 0xb7, 0xf2, 0x75,
-	0xd0, 0xa3, 0xc9, 0xf1, 0x49, 0x3b, 0xe8, 0xb0, 0x81, 0x2e, 0x7c, 0x0f, 0xb7, 0xf9, 0x78, 0xf1,
-	0x87, 0xb2, 0x7c, 0x72, 0x3a, 0x24, 0xbc, 0xbd, 0x2e, 0xff, 0x6d, 0x38, 0xfc, 0x37, 0x00, 0x00,
-	0xff, 0xff, 0x03, 0x20, 0x2a, 0x1b, 0x7d, 0x0d, 0x00, 0x00,
+	// 940 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x97, 0xcf, 0x6f, 0x1b, 0x45,
+	0x14, 0xc7, 0xb3, 0xb5, 0x9b, 0xa4, 0x2f, 0x14, 0xca, 0x50, 0xa8, 0xd9, 0x34, 0xeb, 0x64, 0x8b,
+	0xed, 0xa6, 0x22, 0xbb, 0x4d, 0x22, 0x38, 0xc0, 0x09, 0x0b, 0x19, 0x90, 0x0a, 0x14, 0x23, 0x81,
+	0xe0, 0x62, 0x8d, 0xed, 0x89, 0x33, 0x60, 0xef, 0xb8, 0x3b, 0x1b, 0xdc, 0xa8, 0xf4, 0x02, 0xe2,
+	0x0e, 0xed, 0x11, 0x89, 0x0b, 0xff, 0x4c, 0x8f, 0x91, 0xb8, 0x70, 0x42, 0x28, 0xe1, 0x0f, 0x41,
+	0xf3, 0x6b, 0x59, 0x7b, 0x3d, 0xb6, 0xa9, 0x7c, 0xca, 0x5a, 0xef, 0xbb, 0xef, 0xfb, 0x79, 0x6f,
+	0xde, 0xbe, 0x51, 0xe0, 0x66, 0x07, 0x47, 0x34, 0x22, 0xad, 0xce, 0x31, 0xa6, 0x51, 0x18, 0x47,
+	0x3c, 0x7c, 0x70, 0x42, 0xe2, 0xd3, 0x60, 0x18, 0xb3, 0x84, 0xa1, 0x6b, 0xd9, 0x68, 0x10, 0x47,
+	0xdc, 0xbd, 0xde, 0x63, 0x3d, 0x26, 0x83, 0xa1, 0x78, 0x52, 0x3a, 0xf7, 0x66, 0x8f, 0xb1, 0x5e,
+	0x9f, 0x84, 0x78, 0x48, 0x43, 0x1c, 0x45, 0x2c, 0xc1, 0x09, 0x65, 0x11, 0xd7, 0xd1, 0x3b, 0x1d,
+	0xc6, 0x07, 0x8c, 0x87, 0x6d, 0xcc, 0x89, 0x4a, 0x1f, 0x7e, 0xb7, 0xdf, 0x26, 0x09, 0xde, 0x0f,
+	0x87, 0xb8, 0x47, 0x23, 0x29, 0xd6, 0xda, 0xad, 0x1c, 0xcf, 0x10, 0xc7, 0x78, 0x60, 0x52, 0xe5,
+	0x71, 0x47, 0xc7, 0x8c, 0xda, 0xa3, 0x11, 0x1e, 0x10, 0x13, 0xdd, 0xcc, 0x45, 0xdb, 0xb4, 0x6b,
+	0x82, 0x5e, 0x2e, 0x78, 0xc4, 0x62, 0x8e, 0xfb, 0xc4, 0xfa, 0x32, 0x8d, 0x68, 0xa2, 0x82, 0xfe,
+	0x55, 0xd8, 0xf8, 0x4c, 0x94, 0x75, 0x5f, 0xa2, 0xfa, 0x1f, 0xc3, 0x2b, 0x99, 0x9f, 0x4d, 0xc2,
+	0x87, 0x2c, 0xe2, 0x04, 0xbd, 0x0d, 0xab, 0xaa, 0x96, 0x92, 0xb3, 0xed, 0xdc, 0xde, 0x38, 0x28,
+	0x05, 0x93, 0xdd, 0x0d, 0xd4, 0x1b, 0xf5, 0xe2, 0xb3, 0xbf, 0xca, 0x2b, 0x4d, 0xad, 0xf6, 0xcb,
+	0x70, 0x45, 0xa6, 0xfb, 0x04, 0x0f, 0x08, 0x42, 0x50, 0x14, 0x35, 0xc9, 0x14, 0x57, 0x9a, 0xf2,
+	0xd9, 0x6f, 0xc0, 0xcb, 0xa9, 0x20, 0x75, 0xdb, 0xcf, 0x08, 0x37, 0x0e, 0x6e, 0xe4, 0xbd, 0x84,
+	0xda, 0x58, 0xa9, 0x3c, 0x23, 0xcd, 0x7d, 0x8f, 0xf2, 0xe4, 0xd3, 0x51, 0x44, 0xba, 0x52, 0x82,
+	0x4a, 0xb0, 0x86, 0xbb, 0xdd, 0x98, 0x70, 0xae, 0x5d, 0xcd, 0x4f, 0xd4, 0x00, 0xf8, 0xef, 0x00,
+	0x4b, 0x97, 0xa4, 0x53, 0x35, 0x50, 0xa7, 0x1d, 0x88, 0xd3, 0x0e, 0xd4, 0x30, 0xe9, 0xd3, 0x0e,
+	0xee, 0xe3, 0x1e, 0x69, 0x92, 0x07, 0x27, 0x84, 0x27, 0xcd, 0xcc, 0x9b, 0xfe, 0xaf, 0x0e, 0x6c,
+	0x4e, 0x71, 0x4e, 0x6b, 0x39, 0x84, 0xcb, 0xf2, 0x20, 0x4b, 0xce, 0x76, 0x61, 0x7e, 0x31, 0x4a,
+	0x8b, 0x3e, 0x98, 0x02, 0x57, 0x9b, 0x0b, 0xa7, 0x1c, 0xc7, 0xe8, 0xbe, 0x84, 0xab, 0x12, 0xee,
+	0xbd, 0x7e, 0x5f, 0x35, 0x64, 0xbc, 0x6c, 0xe7, 0xb9, 0xcb, 0x7e, 0xea, 0xc0, 0xab, 0x63, 0x99,
+	0xa7, 0x1c, 0x5e, 0x61, 0xc1, 0xc3, 0x5b, 0x5e, 0xb9, 0x1e, 0xac, 0x4b, 0xa8, 0x3a, 0xed, 0x4e,
+	0x9d, 0xb6, 0xf7, 0xe1, 0x9a, 0x89, 0xa7, 0xbc, 0x77, 0xa1, 0x28, 0xbe, 0x25, 0xdd, 0x8b, 0xd7,
+	0xf2, 0xbc, 0x75, 0xda, 0x4d, 0x71, 0x85, 0xd2, 0xff, 0x02, 0x5e, 0x30, 0xa5, 0x8b, 0xd8, 0xd2,
+	0x7a, 0xfa, 0x8b, 0x03, 0xd7, 0xb3, 0x89, 0xa7, 0x20, 0x16, 0x16, 0x43, 0x5c, 0x5e, 0x47, 0x7d,
+	0x5d, 0x6b, 0x83, 0xc5, 0x9f, 0xe3, 0xfe, 0xf4, 0x6f, 0xb8, 0xa9, 0xb1, 0xb5, 0x26, 0xc5, 0x7e,
+	0x07, 0xd6, 0x8f, 0x58, 0xdc, 0x12, 0x9b, 0x48, 0x77, 0xe5, 0xf5, 0x3c, 0x7a, 0x43, 0xad, 0x2a,
+	0x4d, 0xbf, 0x76, 0xa4, 0x72, 0xf8, 0x5f, 0xc1, 0x4b, 0xa6, 0x15, 0xc6, 0x7a, 0x59, 0x6d, 0xfe,
+	0xcd, 0x81, 0x1b, 0x13, 0xb9, 0x2d, 0xc8, 0x85, 0xff, 0x83, 0xbc, 0xbc, 0x9e, 0x57, 0xf4, 0xd2,
+	0xfc, 0x28, 0xa2, 0x89, 0x7d, 0x83, 0xf9, 0x35, 0xbd, 0x3a, 0x85, 0x2c, 0x2d, 0x00, 0x41, 0x51,
+	0x2c, 0x77, 0xa9, 0x5d, 0x6f, 0xca, 0xe7, 0xec, 0x12, 0x10, 0xda, 0xe5, 0x0d, 0xec, 0x93, 0xcc,
+	0x12, 0x90, 0x99, 0xb3, 0x13, 0xab, 0x31, 0x2c, 0x13, 0x2b, 0xe4, 0x66, 0x62, 0x85, 0x72, 0x69,
+	0xdd, 0x3b, 0x78, 0x02, 0x70, 0x59, 0x42, 0xa1, 0x11, 0xac, 0xaa, 0x4b, 0x09, 0x6d, 0xe5, 0x01,
+	0x32, 0xb7, 0x9c, 0x5b, 0x99, 0x19, 0x36, 0x2e, 0x7e, 0xed, 0x87, 0x3f, 0xfe, 0x79, 0x7a, 0x69,
+	0x07, 0x95, 0xc3, 0x6f, 0x70, 0xe7, 0x5b, 0xdc, 0x0f, 0xd5, 0x5b, 0x7b, 0x93, 0xf7, 0x3d, 0x1a,
+	0x41, 0x51, 0x5e, 0x78, 0x9b, 0x96, 0xbc, 0x22, 0xe8, 0xde, 0x9a, 0x11, 0x4c, 0x2d, 0xf7, 0xa4,
+	0x65, 0x0d, 0x55, 0xac, 0x96, 0xf2, 0xc2, 0x08, 0x1f, 0x89, 0x3f, 0x8f, 0xd1, 0xef, 0x0e, 0xbc,
+	0x38, 0x71, 0x03, 0xda, 0x6a, 0x1b, 0x97, 0xb9, 0x7b, 0x0b, 0xc9, 0x52, 0xae, 0x77, 0x25, 0xd7,
+	0x5b, 0xe8, 0xd0, 0xca, 0xd5, 0xa7, 0x3c, 0x69, 0x31, 0xf1, 0x66, 0x4b, 0x23, 0xea, 0xb9, 0x7d,
+	0x8c, 0xbe, 0x87, 0xf5, 0xf4, 0x3e, 0x2a, 0x5b, 0x7c, 0x8d, 0xc0, 0xad, 0xcd, 0x11, 0xa4, 0x48,
+	0x55, 0x89, 0xb4, 0x8d, 0xbc, 0xd9, 0xad, 0x42, 0x1c, 0x0a, 0xe2, 0x7a, 0x70, 0x2d, 0x79, 0xeb,
+	0xb4, 0xeb, 0xfa, 0xf6, 0x58, 0x6a, 0xf7, 0xa6, 0xb4, 0xab, 0xa2, 0x37, 0xac, 0x76, 0x62, 0x11,
+	0x9b, 0x83, 0x79, 0x08, 0x6b, 0xe6, 0xb6, 0xf0, 0xec, 0x05, 0x89, 0xb8, 0x5b, 0x9d, 0x1d, 0x4f,
+	0x01, 0x2a, 0x12, 0xa0, 0x8c, 0xb6, 0x66, 0x02, 0xa0, 0x1f, 0x1d, 0x58, 0x33, 0x1b, 0xd4, 0x66,
+	0xad, 0xe3, 0x56, 0xeb, 0x89, 0x2d, 0xe9, 0xdf, 0x95, 0xd6, 0x77, 0xd0, 0x6d, 0xab, 0xb5, 0x59,
+	0xa2, 0xa6, 0xfe, 0x9f, 0x1c, 0x80, 0xcc, 0x2a, 0xdf, 0xb1, 0xd7, 0x68, 0x58, 0x76, 0xe7, 0x4a,
+	0x52, 0x9c, 0x5d, 0x89, 0x73, 0x0b, 0xed, 0xcc, 0xc5, 0x41, 0xa7, 0x50, 0x94, 0x5b, 0xd5, 0xf6,
+	0x65, 0x8a, 0xa0, 0xf5, 0xcb, 0xcc, 0x2e, 0x5a, 0x3f, 0x94, 0xa6, 0xbb, 0xa8, 0x66, 0x35, 0x15,
+	0x6b, 0x2d, 0x33, 0xf5, 0x8f, 0xe4, 0xd4, 0xab, 0x05, 0x3c, 0x63, 0xea, 0xa5, 0x60, 0xd6, 0xd4,
+	0x8f, 0x2d, 0xda, 0x05, 0xa6, 0x40, 0x60, 0xd4, 0x3f, 0x7c, 0x76, 0xee, 0x39, 0x67, 0xe7, 0x9e,
+	0xf3, 0xf7, 0xb9, 0xe7, 0xfc, 0x7c, 0xe1, 0xad, 0x9c, 0x5d, 0x78, 0x2b, 0x7f, 0x5e, 0x78, 0x2b,
+	0x5f, 0x07, 0x3d, 0x9a, 0x1c, 0x9f, 0xb4, 0x83, 0x0e, 0x1b, 0xe8, 0x14, 0xf7, 0x70, 0x9b, 0x8f,
+	0xa7, 0x79, 0x28, 0x13, 0x25, 0xa7, 0x43, 0xc2, 0xdb, 0xab, 0xf2, 0xdf, 0x86, 0xc3, 0x7f, 0x03,
+	0x00, 0x00, 0xff, 0xff, 0xaf, 0x2b, 0x00, 0xd4, 0x7d, 0x0d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1053,26 +1050,25 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// Queries a Name by index.
+	// Queries a Name by name.
 	Name(ctx context.Context, in *QueryName, opts ...grpc.CallOption) (*QueryNameResponse, error)
-	// Queries a list of Names.
+	// Queries a list of Name items by address.
+	ListOwnedNames(ctx context.Context, in *QueryListOwnedNames, opts ...grpc.CallOption) (*QueryListOwnedNamesResponse, error)
+	// Queries a list of Name items.
 	AllNames(ctx context.Context, in *QueryAllNames, opts ...grpc.CallOption) (*QueryAllNamesResponse, error)
-	// Queries a Bid by index.
+	// Queries a Bid by name.
 	Bid(ctx context.Context, in *QueryBid, opts ...grpc.CallOption) (*QueryBidResponse, error)
-	// Queries a list of Bids.
+	// Queries a list of Bid items.
 	AllBids(ctx context.Context, in *QueryAllBids, opts ...grpc.CallOption) (*QueryAllBidsResponse, error)
-	// Queries a Listing by index.
+	// Queries a ForSale by name.
 	ForSale(ctx context.Context, in *QueryForSale, opts ...grpc.CallOption) (*QueryForSaleResponse, error)
-	// Queries all Listings.
+	// Queries a list of ForSale items.
 	AllForSale(ctx context.Context, in *QueryAllForSale, opts ...grpc.CallOption) (*QueryAllForSaleResponse, error)
-	// Queries a Init by index.
+	// Queries an Init by address.
 	Init(ctx context.Context, in *QueryInit, opts ...grpc.CallOption) (*QueryInitResponse, error)
 	// Queries a list of Init items.
 	AllInits(ctx context.Context, in *QueryAllInits, opts ...grpc.CallOption) (*QueryAllInitsResponse, error)
-	// Queries a list of ListOwnedNames items.
-	ListOwnedNames(ctx context.Context, in *QueryListOwnedNames, opts ...grpc.CallOption) (*QueryListOwnedNamesResponse, error)
 }
 
 type queryClient struct {
@@ -1095,6 +1091,15 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParams, opts ...grpc.
 func (c *queryClient) Name(ctx context.Context, in *QueryName, opts ...grpc.CallOption) (*QueryNameResponse, error) {
 	out := new(QueryNameResponse)
 	err := c.cc.Invoke(ctx, "/canine_chain.rns.Query/Name", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ListOwnedNames(ctx context.Context, in *QueryListOwnedNames, opts ...grpc.CallOption) (*QueryListOwnedNamesResponse, error) {
+	out := new(QueryListOwnedNamesResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.rns.Query/ListOwnedNames", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1164,37 +1169,27 @@ func (c *queryClient) AllInits(ctx context.Context, in *QueryAllInits, opts ...g
 	return out, nil
 }
 
-func (c *queryClient) ListOwnedNames(ctx context.Context, in *QueryListOwnedNames, opts ...grpc.CallOption) (*QueryListOwnedNamesResponse, error) {
-	out := new(QueryListOwnedNamesResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.rns.Query/ListOwnedNames", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParams) (*QueryParamsResponse, error)
-	// Queries a Name by index.
+	// Queries a Name by name.
 	Name(context.Context, *QueryName) (*QueryNameResponse, error)
-	// Queries a list of Names.
+	// Queries a list of Name items by address.
+	ListOwnedNames(context.Context, *QueryListOwnedNames) (*QueryListOwnedNamesResponse, error)
+	// Queries a list of Name items.
 	AllNames(context.Context, *QueryAllNames) (*QueryAllNamesResponse, error)
-	// Queries a Bid by index.
+	// Queries a Bid by name.
 	Bid(context.Context, *QueryBid) (*QueryBidResponse, error)
-	// Queries a list of Bids.
+	// Queries a list of Bid items.
 	AllBids(context.Context, *QueryAllBids) (*QueryAllBidsResponse, error)
-	// Queries a Listing by index.
+	// Queries a ForSale by name.
 	ForSale(context.Context, *QueryForSale) (*QueryForSaleResponse, error)
-	// Queries all Listings.
+	// Queries a list of ForSale items.
 	AllForSale(context.Context, *QueryAllForSale) (*QueryAllForSaleResponse, error)
-	// Queries a Init by index.
+	// Queries an Init by address.
 	Init(context.Context, *QueryInit) (*QueryInitResponse, error)
 	// Queries a list of Init items.
 	AllInits(context.Context, *QueryAllInits) (*QueryAllInitsResponse, error)
-	// Queries a list of ListOwnedNames items.
-	ListOwnedNames(context.Context, *QueryListOwnedNames) (*QueryListOwnedNamesResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -1206,6 +1201,9 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParams) (
 }
 func (*UnimplementedQueryServer) Name(ctx context.Context, req *QueryName) (*QueryNameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Name not implemented")
+}
+func (*UnimplementedQueryServer) ListOwnedNames(ctx context.Context, req *QueryListOwnedNames) (*QueryListOwnedNamesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOwnedNames not implemented")
 }
 func (*UnimplementedQueryServer) AllNames(ctx context.Context, req *QueryAllNames) (*QueryAllNamesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllNames not implemented")
@@ -1227,9 +1225,6 @@ func (*UnimplementedQueryServer) Init(ctx context.Context, req *QueryInit) (*Que
 }
 func (*UnimplementedQueryServer) AllInits(ctx context.Context, req *QueryAllInits) (*QueryAllInitsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllInits not implemented")
-}
-func (*UnimplementedQueryServer) ListOwnedNames(ctx context.Context, req *QueryListOwnedNames) (*QueryListOwnedNamesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListOwnedNames not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -1268,6 +1263,24 @@ func _Query_Name_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Name(ctx, req.(*QueryName))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ListOwnedNames_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryListOwnedNames)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ListOwnedNames(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/canine_chain.rns.Query/ListOwnedNames",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ListOwnedNames(ctx, req.(*QueryListOwnedNames))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1398,24 +1411,6 @@ func _Query_AllInits_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ListOwnedNames_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryListOwnedNames)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).ListOwnedNames(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/canine_chain.rns.Query/ListOwnedNames",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ListOwnedNames(ctx, req.(*QueryListOwnedNames))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "canine_chain.rns.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -1427,6 +1422,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Name",
 			Handler:    _Query_Name_Handler,
+		},
+		{
+			MethodName: "ListOwnedNames",
+			Handler:    _Query_ListOwnedNames_Handler,
 		},
 		{
 			MethodName: "AllNames",
@@ -1455,10 +1454,6 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AllInits",
 			Handler:    _Query_AllInits_Handler,
-		},
-		{
-			MethodName: "ListOwnedNames",
-			Handler:    _Query_ListOwnedNames_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1581,6 +1576,97 @@ func (m *QueryNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryListOwnedNames) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryListOwnedNames) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryListOwnedNames) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryListOwnedNamesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryListOwnedNamesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryListOwnedNamesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Names) > 0 {
+		for iNdEx := len(m.Names) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Names[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -2109,97 +2195,6 @@ func (m *QueryAllInitsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryListOwnedNames) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryListOwnedNames) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryListOwnedNames) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryListOwnedNamesResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryListOwnedNamesResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryListOwnedNamesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Names) > 0 {
-		for iNdEx := len(m.Names) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Names[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintQuery(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
-	return len(dAtA) - i, nil
-}
-
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -2252,6 +2247,42 @@ func (m *QueryNameResponse) Size() (n int) {
 	_ = l
 	l = m.Name.Size()
 	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryListOwnedNames) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryListOwnedNamesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Names) > 0 {
+		for _, e := range m.Names {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
 	return n
 }
 
@@ -2445,42 +2476,6 @@ func (m *QueryAllInitsResponse) Size() (n int) {
 	_ = l
 	if len(m.Init) > 0 {
 		for _, e := range m.Init {
-			l = e.Size()
-			n += 1 + l + sovQuery(uint64(l))
-		}
-	}
-	if m.Pagination != nil {
-		l = m.Pagination.Size()
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	return n
-}
-
-func (m *QueryListOwnedNames) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Address)
-	if l > 0 {
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	if m.Pagination != nil {
-		l = m.Pagination.Size()
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	return n
-}
-
-func (m *QueryListOwnedNamesResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.Names) > 0 {
-		for _, e := range m.Names {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2772,6 +2767,244 @@ func (m *QueryNameResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Name.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryListOwnedNames) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryListOwnedNames: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryListOwnedNames: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryListOwnedNamesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryListOwnedNamesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryListOwnedNamesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Names", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Names = append(m.Names, Names{})
+			if err := m.Names[len(m.Names)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -4042,244 +4275,6 @@ func (m *QueryAllInitsResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Init = append(m.Init, Init{})
 			if err := m.Init[len(m.Init)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageResponse{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryListOwnedNames) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryListOwnedNames: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryListOwnedNames: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Address = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageRequest{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryListOwnedNamesResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryListOwnedNamesResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryListOwnedNamesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Names", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Names = append(m.Names, Names{})
-			if err := m.Names[len(m.Names)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

@@ -652,6 +652,7 @@ func NewJackalApp(
 		keys[notificationsmoduletypes.StoreKey],
 		keys[notificationsmoduletypes.MemStoreKey],
 		app.getSubspace(notificationsmoduletypes.ModuleName),
+		app.RnsKeeper,
 	)
 	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
 

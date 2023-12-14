@@ -8,60 +8,63 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
 )
 
-// SetNotifications set a specific notifications in the store from its index
-func (k Keeper) SetNotifications(ctx sdk.Context, notifications types.Notifications, address string) {
-	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, address)
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(keyPrefix))
-	b := k.cdc.MustMarshal(&notifications)
+// SetNotification set a specific notifications in the store from its index
+func (k Keeper) SetNotification(ctx sdk.Context, notification types.Notification) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
+	b := k.cdc.MustMarshal(&notification)
 	store.Set(types.NotificationsKey(
-		notifications.Count,
+		notification.To,
+		notification.From,
+		notification.Time,
 	), b)
 }
 
-// GetNotifications returns a notifications from its index
-func (k Keeper) GetNotifications(
+// GetNotification returns a notification from its index
+func (k Keeper) GetNotification(
 	ctx sdk.Context,
-	count uint64,
-	address string,
-) (val types.Notifications, found bool) {
-	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, address)
-
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(keyPrefix))
+	to string,
+	from string,
+	timeStamp int64,
+) (val types.Notification, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 
 	key := types.NotificationsKey(
-		count,
+		to,
+		from,
+		timeStamp,
 	)
+
 	if !store.Has(key) {
-		return types.Notifications{}, false
+		return types.Notification{}, false
 	}
 
 	k.cdc.MustUnmarshal(store.Get(key), &val)
 	return val, true
 }
 
-// RemoveNotifications removes a notifications from the store
-func (k Keeper) RemoveNotifications(
+// RemoveNotification removes a notification from the store
+func (k Keeper) RemoveNotification(
 	ctx sdk.Context,
-	count uint64,
-	address string,
+	to string,
+	from string,
+	timeStamp int64,
 ) {
-	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, address)
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(keyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 	store.Delete(types.NotificationsKey(
-		count,
+		to,
+		from,
+		timeStamp,
 	))
 }
 
-// GetAllNotificationsForUser returns all notifications for a user
-func (k Keeper) GetAllNotificationsForUser(ctx sdk.Context, address string) (list []types.Notifications) {
-	keyPrefix := fmt.Sprintf("%s%s/", types.NotificationsKeyPrefix, address)
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(keyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{}) // replace []byte{} with keyPrefix?
-
+// GetAllNotifications returns all notifications
+func (k Keeper) GetAllNotifications(ctx sdk.Context) (list []types.Notification) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.Notifications
+		var val types.Notification
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
@@ -69,15 +72,14 @@ func (k Keeper) GetAllNotificationsForUser(ctx sdk.Context, address string) (lis
 	return
 }
 
-// GetAllNotifications returns all notifications
-func (k Keeper) GetAllNotifications(ctx sdk.Context) (list []types.Notifications) {
+// GetAllNotificationsByAddress returns all notifications that belong to a given address
+func (k Keeper) GetAllNotificationsByAddress(ctx sdk.Context, address string) (list []types.Notification) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{}) // replace []byte{} with keyPrefix?
-
+	iterator := sdk.KVStorePrefixIterator(store, []byte(fmt.Sprintf("%s/", address)))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.Notifications
+		var val types.Notification
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}

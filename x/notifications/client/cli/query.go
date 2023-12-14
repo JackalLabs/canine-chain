@@ -27,10 +27,8 @@ func GetQueryCmd(_ string) *cobra.Command {
 	// Commenting out some useless queries for now
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdListNotifications())
-	// cmd.AddCommand(CmdShowNotifications())
+	cmd.AddCommand(CmdShowNotification())
 
-	cmd.AddCommand(CmdListNotiCounter())
-	// cmd.AddCommand(CmdShowNotiCounter())
 	cmd.AddCommand(CmdListNotificationsByAddress())
 
 	return cmd

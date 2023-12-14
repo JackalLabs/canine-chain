@@ -179,7 +179,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		ProofInterval: params.ProofWindow,
 		ProofType:     0,
 		MaxProofs:     3,
-		Note:          "",
+		Note:          "{}",
 	})
 	suite.Require().NoError(err)
 	h := sha256.New()
@@ -194,7 +194,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 		ProofInterval: params.ProofWindow,
 		ProofType:     0,
 		MaxProofs:     3,
-		Note:          "",
+		Note:          "{}",
 	})
 	suite.Require().NoError(err)
 	h2 := sha256.New()

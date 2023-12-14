@@ -9,10 +9,10 @@ const TypeMsgBlockSenders = "block_senders"
 
 var _ sdk.Msg = &MsgBlockSenders{}
 
-func NewMsgBlockSenders(creator string, senderIds string) *MsgBlockSenders {
+func NewMsgBlockSenders(creator string, toBlock ...string) *MsgBlockSenders {
 	return &MsgBlockSenders{
-		Creator:   creator,
-		SenderIds: senderIds,
+		Creator: creator,
+		ToBlock: toBlock,
 	}
 }
 

@@ -23,7 +23,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// GenesisState defines the rns module's genesis state.
 type GenesisState struct {
 	Params   Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 	FeedList []Feed `protobuf:"bytes,2,rep,name=feed_list,json=feedList,proto3" json:"feed_list"`
