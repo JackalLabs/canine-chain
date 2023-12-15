@@ -3,63 +3,64 @@ package canine_chain.storage;
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
-// Msg defines the Msg service.
 service Msg {
-  rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
-  rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
-  rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
+  rpc PostFile(MsgPostFile) returns (MsgPostFileResponse);
+  rpc PostProof(MsgPostProof) returns (MsgPostProofResponse);
+  rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
   rpc SetProviderKeybase(MsgSetProviderKeybase)
       returns (MsgSetProviderKeybaseResponse);
-  rpc SetProviderTotalspace(MsgSetProviderTotalspace)
-      returns (MsgSetProviderTotalspaceResponse);
+  rpc SetProviderTotalSpace(MsgSetProviderTotalSpace)
+      returns (MsgSetProviderTotalSpaceResponse);
   rpc InitProvider(MsgInitProvider) returns (MsgInitProviderResponse);
   rpc ShutdownProvider(MsgShutdownProvider) returns (MsgShutdownProviderResponse);
-  rpc CancelContract(MsgCancelContract) returns (MsgCancelContractResponse);
   rpc BuyStorage(MsgBuyStorage) returns (MsgBuyStorageResponse);
-  rpc ClaimStray(MsgClaimStray) returns (MsgClaimStrayResponse);
-  rpc UpgradeStorage(MsgUpgradeStorage) returns (MsgUpgradeStorageResponse);
   rpc AddProviderClaimer(MsgAddClaimer) returns (MsgAddClaimerResponse);
   rpc RemoveProviderClaimer(MsgRemoveClaimer) returns (MsgRemoveClaimerResponse);
   rpc RequestAttestationForm(MsgRequestAttestationForm) returns (MsgRequestAttestationFormResponse);
   rpc Attest(MsgAttest) returns (MsgAttestResponse);
   rpc RequestReportForm(MsgRequestReportForm) returns (MsgRequestReportFormResponse);
   rpc Report(MsgReport) returns (MsgReportResponse);
-
-
-  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
-message MsgPostContract {
+message MsgPostFile {
   string creator = 1;
-  string merkle = 2;
-  string signee = 3;
-  string filesize = 4;
-  string fid = 5;
+  bytes merkle = 2;
+  int64 file_size = 3;
+  int64 proof_interval = 4; // How many blocks between proofs.
+  int64 proof_type = 5;
+  int64 max_proofs = 6; // How many provers this file can have.
+  int64 expires = 7;
+  string note = 8; // Misc string to store extra details.
 }
 
-message MsgPostContractResponse {}
+message MsgPostFileResponse {
+  repeated string provider_ips = 1; // list of providers that are pre-loaded into the file
+  int64 start_block = 2;
+}
 
-message MsgPostproof {
+message MsgPostProof {
   string creator = 1;
-  string item = 2;
-  string hashlist = 3;
-  string cid = 4;
+  bytes item = 2;
+  bytes hash_list = 3;
+  bytes merkle = 4;
+  string owner = 5;
+  int64 start = 6;
+  int64 to_prove = 7;
 }
 
-message MsgPostproofResponse {
+message MsgPostProofResponse {
   bool success = 1;
-  string errorMessage = 2;
+  string error_message = 2;
 }
 
-message MsgSignContract {
+message MsgDeleteFile {
   string creator = 1;
-  string cid = 2;
-  bool pay_once = 3;
+  bytes merkle = 2;
+  int64 start = 3;
 }
 
-message MsgSignContractResponse {}
-
+message MsgDeleteFileResponse {}
 
 message MsgSetProviderIP {
   string creator = 1;
@@ -75,12 +76,12 @@ message MsgSetProviderKeybase {
 
 message MsgSetProviderKeybaseResponse {}
 
-message MsgSetProviderTotalspace {
+message MsgSetProviderTotalSpace {
   string creator = 1;
-  string space = 2;
+  int64 space = 2;
 }
 
-message MsgSetProviderTotalspaceResponse {}
+message MsgSetProviderTotalSpaceResponse {}
 
 message MsgAddClaimer {
   string creator = 1;
@@ -96,16 +97,14 @@ message MsgRemoveClaimer {
 
 message MsgRemoveClaimerResponse {}
 
-
 message MsgInitProvider {
   string creator = 1;
   string ip = 2;
   string keybase = 3;
-  string totalspace = 4;
+  int64 total_space = 4;
 }
 
 message MsgInitProviderResponse {}
-
 
 message MsgShutdownProvider {
   string creator = 1;
@@ -113,75 +112,59 @@ message MsgShutdownProvider {
 
 message MsgShutdownProviderResponse {}
 
-message MsgCancelContract {
-  string creator = 1;
-  string cid = 2;
-}
-
-message MsgCancelContractResponse {}
-
 message MsgBuyStorage {
   string creator = 1;
   string for_address = 2;
-  string duration = 3;
-  string bytes = 4;
+  int64 duration_days = 3;
+  int64 bytes = 4;
   string payment_denom = 5;
 }
 
 message MsgBuyStorageResponse {}
 
-message MsgClaimStray {
-  string creator = 1;
-  string cid = 2;
-  string for_address = 3;
-}
-
-message MsgClaimStrayResponse {}
-
-message MsgUpgradeStorage {
-  string creator = 1;
-  string for_address = 2;
-  string duration = 3;
-  string bytes = 4;
-  string payment_denom = 5;
-}
-
-message MsgUpgradeStorageResponse {}
-
 message MsgRequestAttestationForm {
   string creator = 1;
-  string cid = 2;
+  bytes merkle = 2;
+  string owner = 3;
+  int64 start = 4;
 }
 
 message MsgRequestAttestationFormResponse {
   repeated string providers = 1;
   bool success = 2;
   string error = 3;
-  string cid = 4;
 }
 
 message MsgAttest {
   string creator = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3;
+  string owner = 4;
+  int64 start = 5;
 }
 
 message MsgAttestResponse {}
 
 message MsgRequestReportForm {
   string creator = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3;
+  string owner = 4;
+  int64 start = 5;
 }
 
 message MsgRequestReportFormResponse {
   repeated string providers = 1;
   bool success = 2;
   string error = 3;
-  string cid = 4;
 }
 
 message MsgReport {
   string creator = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3;
+  string owner = 4;
+  int64 start = 5;
 }
 
 message MsgReportResponse {}

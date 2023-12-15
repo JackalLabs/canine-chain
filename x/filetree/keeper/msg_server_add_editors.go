@@ -12,7 +12,7 @@ import (
 func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (*types.MsgAddEditorsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	file, found := k.GetFiles(ctx, msg.Address, msg.Fileowner)
+	file, found := k.GetFiles(ctx, msg.Address, msg.FileOwner)
 	if !found {
 		return nil, types.ErrFileNotFound
 	}

@@ -16,3 +16,8 @@ type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
 	// Methods imported from bank should be defined here
 }
+
+// RnsKeeper defines the expected interface needed to resolve RNS names.
+type RnsKeeper interface {
+	Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error)
+}

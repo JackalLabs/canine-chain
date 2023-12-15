@@ -10,11 +10,8 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		ContractsList:   []Contracts{},
-		ActiveDealsList: []ActiveDeals{},
+		FileList:        []UnifiedFile{},
 		ProvidersList:   []Providers{},
-		StraysList:      []Strays{},
-		FidCidList:      []FidCid{},
 		PaymentInfoList: []StoragePaymentInfo{},
 
 		// this line is used by starport scaffolding # genesis/types/default
@@ -25,26 +22,15 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-	// Check for duplicated index in contracts
-	contractsIndexMap := make(map[string]struct{})
+	// Check for duplicated index in files
+	filesIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.ContractsList {
-		index := string(ContractsKey(elem.Cid))
-		if _, ok := contractsIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for contracts")
-		}
-		contractsIndexMap[index] = struct{}{}
-	}
-
-	// Check for duplicated index in activeDeals
-	activeDealsIndexMap := make(map[string]struct{})
-
-	for _, elem := range gs.ActiveDealsList {
-		index := string(ActiveDealsKey(elem.Cid))
-		if _, ok := activeDealsIndexMap[index]; ok {
+	for _, elem := range gs.FileList {
+		index := string(FilesPrimaryKey(elem.Merkle, elem.Owner, elem.Start))
+		if _, ok := filesIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for activeDeals")
 		}
-		activeDealsIndexMap[index] = struct{}{}
+		filesIndexMap[index] = struct{}{}
 	}
 	// Check for duplicated index in providers
 	providersIndexMap := make(map[string]struct{})
@@ -55,27 +41,6 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for providers")
 		}
 		providersIndexMap[index] = struct{}{}
-	}
-
-	// Check for duplicated index in strays
-	straysIndexMap := make(map[string]struct{})
-
-	for _, elem := range gs.StraysList {
-		index := string(StraysKey(elem.Cid))
-		if _, ok := straysIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for strays")
-		}
-		straysIndexMap[index] = struct{}{}
-	}
-	// Check for duplicated index in fidCid
-	fidCidIndexMap := make(map[string]struct{})
-
-	for _, elem := range gs.FidCidList {
-		index := string(FidCidKey(elem.Fid))
-		if _, ok := fidCidIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for fidCid")
-		}
-		fidCidIndexMap[index] = struct{}{}
 	}
 
 	// Check for duplicated index in fidCid

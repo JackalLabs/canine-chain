@@ -8,6 +8,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/legacy/paramUpgrade"
 	v2 "github.com/jackalLabs/canine-chain/v3/x/storage/legacy/v2"
 	v4 "github.com/jackalLabs/canine-chain/v3/x/storage/legacy/v4"
+	v5 "github.com/jackalLabs/canine-chain/v3/x/storage/legacy/v5"
 )
 
 // Migrator is a struct for handling in-place store migrations.
@@ -42,4 +43,9 @@ func (m Migrator) Migrate3to4(ctx sdk.Context) error {
 // Migrate4to5 migrates from version 4 to 5.
 func (m Migrator) Migrate4to5(ctx sdk.Context) error {
 	return v4.MigrateStore(ctx, m.legacySubspace, &m.k.paramstore)
+}
+
+// Migrate5to6 migrates from version 5 to 6.
+func (m Migrator) Migrate5to6(ctx sdk.Context) error {
+	return v5.MigrateStore(ctx, m.legacySubspace, &m.k.paramstore)
 }

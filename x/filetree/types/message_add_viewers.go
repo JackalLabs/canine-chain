@@ -15,7 +15,7 @@ func NewMsgAddViewers(creator string, viewerIds string, viewerKeys string, addre
 		ViewerIds:  viewerIds,
 		ViewerKeys: viewerKeys,
 		Address:    address,
-		Fileowner:  owner,
+		FileOwner:  owner,
 	}
 }
 
@@ -59,9 +59,9 @@ func (msg *MsgAddViewers) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid address: %s", msg.Address)
 	}
-	if msg.Fileowner == "" {
+	if msg.FileOwner == "" {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
-			"invalid file owner: %s", msg.Fileowner)
+			"invalid file owner: %s", msg.FileOwner)
 	}
 
 	return nil

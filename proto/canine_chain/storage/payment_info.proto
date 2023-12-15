@@ -1,15 +1,22 @@
 syntax = "proto3";
 package canine_chain.storage;
 
+import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
 message StoragePaymentInfo {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
   google.protobuf.Timestamp start = 1 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
   google.protobuf.Timestamp end = 2 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false];
-  int64 spaceAvailable = 3;
-  int64 spaceUsed = 4;
+  int64 spaceAvailable = 3; // TODO: fix casing
+  int64 spaceUsed = 4; // TODO: fix casing
   string address = 5;
+  repeated cosmos.base.v1beta1.Coin coins = 6
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }

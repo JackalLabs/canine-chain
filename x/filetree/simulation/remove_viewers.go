@@ -49,7 +49,7 @@ func SimulateMsgRemoveViewers(
 			Creator:   simAccount.Address.String(),
 			ViewerIds: viewIds,
 			Address:   merklePath,
-			Fileowner: ownerAddress,
+			FileOwner: ownerAddress,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

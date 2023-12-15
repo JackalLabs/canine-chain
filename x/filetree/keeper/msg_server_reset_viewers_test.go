@@ -60,27 +60,27 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 
 	// Let's query the file after it was set to confirm that alice, bob, and charlie are viewers
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	bobIsViewer, err := keeper.HasViewingAccess(res.Files, bob)
+	bobIsViewer, err := keeper.HasViewingAccess(res.File, bob)
 	suite.Require().NoError(err)
 	suite.Require().Equal(bobIsViewer, true)
 
-	aliceIsViewer, err := keeper.HasViewingAccess(res.Files, alice)
+	aliceIsViewer, err := keeper.HasViewingAccess(res.File, alice)
 	suite.Require().NoError(err)
 	suite.Require().Equal(aliceIsViewer, true)
 
-	charlieIsViewer, err := keeper.HasViewingAccess(res.Files, charlie)
+	charlieIsViewer, err := keeper.HasViewingAccess(res.File, charlie)
 	suite.Require().NoError(err)
 	suite.Require().Equal(charlieIsViewer, true)
 
-	pvacc := res.Files.ViewingAccess
+	pvacc := res.File.ViewingAccess
 	jvacc := make(map[string]string)
 
 	err = json.Unmarshal([]byte(pvacc), &jvacc)
@@ -144,26 +144,26 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 				suite.Require().EqualValues(types.MsgRemoveViewersResponse{}, *res)
 				// Let's confirm that bob and charlie are no longer viewers
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				bobIsViewer, err := keeper.HasViewingAccess(res.Files, bob)
+				bobIsViewer, err := keeper.HasViewingAccess(res.File, bob)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(bobIsViewer, false)
 
-				charlieIsViewer, err := keeper.HasViewingAccess(res.Files, charlie)
+				charlieIsViewer, err := keeper.HasViewingAccess(res.File, charlie)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(charlieIsViewer, false)
 
-				aliceIsViewer, err := keeper.HasViewingAccess(res.Files, alice)
+				aliceIsViewer, err := keeper.HasViewingAccess(res.File, alice)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(aliceIsViewer, true)
 
-				pvacc := res.Files.ViewingAccess
+				pvacc := res.File.ViewingAccess
 				jvacc := make(map[string]string)
 
 				err = json.Unmarshal([]byte(pvacc), &jvacc)

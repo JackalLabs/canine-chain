@@ -30,12 +30,12 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type MsgPostFile struct {
 	Creator        string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Account        string `protobuf:"bytes,2,opt,name=account,proto3" json:"account,omitempty"`
-	HashParent     string `protobuf:"bytes,3,opt,name=hashParent,proto3" json:"hashParent,omitempty"`
-	HashChild      string `protobuf:"bytes,4,opt,name=hashChild,proto3" json:"hashChild,omitempty"`
+	HashParent     string `protobuf:"bytes,3,opt,name=hash_parent,json=hashParent,proto3" json:"hash_parent,omitempty"`
+	HashChild      string `protobuf:"bytes,4,opt,name=hash_child,json=hashChild,proto3" json:"hash_child,omitempty"`
 	Contents       string `protobuf:"bytes,5,opt,name=contents,proto3" json:"contents,omitempty"`
 	Viewers        string `protobuf:"bytes,6,opt,name=viewers,proto3" json:"viewers,omitempty"`
 	Editors        string `protobuf:"bytes,7,opt,name=editors,proto3" json:"editors,omitempty"`
-	TrackingNumber string `protobuf:"bytes,8,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
+	TrackingNumber string `protobuf:"bytes,8,opt,name=tracking_number,json=trackingNumber,proto3" json:"tracking_number,omitempty"`
 }
 
 func (m *MsgPostFile) Reset()         { *m = MsgPostFile{} }
@@ -173,10 +173,10 @@ func (m *MsgPostFileResponse) GetPath() string {
 
 type MsgAddViewers struct {
 	Creator    string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	ViewerIds  string `protobuf:"bytes,2,opt,name=viewerIds,proto3" json:"viewerIds,omitempty"`
-	ViewerKeys string `protobuf:"bytes,3,opt,name=viewerKeys,proto3" json:"viewerKeys,omitempty"`
+	ViewerIds  string `protobuf:"bytes,2,opt,name=viewer_ids,json=viewerIds,proto3" json:"viewer_ids,omitempty"`
+	ViewerKeys string `protobuf:"bytes,3,opt,name=viewer_keys,json=viewerKeys,proto3" json:"viewer_keys,omitempty"`
 	Address    string `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
-	Fileowner  string `protobuf:"bytes,5,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	FileOwner  string `protobuf:"bytes,5,opt,name=file_owner,json=fileOwner,proto3" json:"file_owner,omitempty"`
 }
 
 func (m *MsgAddViewers) Reset()         { *m = MsgAddViewers{} }
@@ -240,9 +240,9 @@ func (m *MsgAddViewers) GetAddress() string {
 	return ""
 }
 
-func (m *MsgAddViewers) GetFileowner() string {
+func (m *MsgAddViewers) GetFileOwner() string {
 	if m != nil {
-		return m.Fileowner
+		return m.FileOwner
 	}
 	return ""
 }
@@ -283,23 +283,23 @@ func (m *MsgAddViewersResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgAddViewersResponse proto.InternalMessageInfo
 
-type MsgPostkey struct {
+type MsgPostKey struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Key     string `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`
 }
 
-func (m *MsgPostkey) Reset()         { *m = MsgPostkey{} }
-func (m *MsgPostkey) String() string { return proto.CompactTextString(m) }
-func (*MsgPostkey) ProtoMessage()    {}
-func (*MsgPostkey) Descriptor() ([]byte, []int) {
+func (m *MsgPostKey) Reset()         { *m = MsgPostKey{} }
+func (m *MsgPostKey) String() string { return proto.CompactTextString(m) }
+func (*MsgPostKey) ProtoMessage()    {}
+func (*MsgPostKey) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e5756d04c34e5a81, []int{4}
 }
-func (m *MsgPostkey) XXX_Unmarshal(b []byte) error {
+func (m *MsgPostKey) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgPostkey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgPostKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgPostkey.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgPostKey.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -309,47 +309,47 @@ func (m *MsgPostkey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *MsgPostkey) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgPostkey.Merge(m, src)
+func (m *MsgPostKey) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgPostKey.Merge(m, src)
 }
-func (m *MsgPostkey) XXX_Size() int {
+func (m *MsgPostKey) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgPostkey) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgPostkey.DiscardUnknown(m)
+func (m *MsgPostKey) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgPostKey.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgPostkey proto.InternalMessageInfo
+var xxx_messageInfo_MsgPostKey proto.InternalMessageInfo
 
-func (m *MsgPostkey) GetCreator() string {
+func (m *MsgPostKey) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgPostkey) GetKey() string {
+func (m *MsgPostKey) GetKey() string {
 	if m != nil {
 		return m.Key
 	}
 	return ""
 }
 
-type MsgPostkeyResponse struct {
+type MsgPostKeyResponse struct {
 }
 
-func (m *MsgPostkeyResponse) Reset()         { *m = MsgPostkeyResponse{} }
-func (m *MsgPostkeyResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgPostkeyResponse) ProtoMessage()    {}
-func (*MsgPostkeyResponse) Descriptor() ([]byte, []int) {
+func (m *MsgPostKeyResponse) Reset()         { *m = MsgPostKeyResponse{} }
+func (m *MsgPostKeyResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgPostKeyResponse) ProtoMessage()    {}
+func (*MsgPostKeyResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e5756d04c34e5a81, []int{5}
 }
-func (m *MsgPostkeyResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgPostKeyResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgPostkeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgPostKeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgPostkeyResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgPostKeyResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -359,21 +359,21 @@ func (m *MsgPostkeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-func (m *MsgPostkeyResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgPostkeyResponse.Merge(m, src)
+func (m *MsgPostKeyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgPostKeyResponse.Merge(m, src)
 }
-func (m *MsgPostkeyResponse) XXX_Size() int {
+func (m *MsgPostKeyResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgPostkeyResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgPostkeyResponse.DiscardUnknown(m)
+func (m *MsgPostKeyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgPostKeyResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgPostkeyResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgPostKeyResponse proto.InternalMessageInfo
 
 type MsgDeleteFile struct {
 	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	HashPath string `protobuf:"bytes,2,opt,name=hashPath,proto3" json:"hashPath,omitempty"`
+	HashPath string `protobuf:"bytes,2,opt,name=hash_path,json=hashPath,proto3" json:"hash_path,omitempty"`
 	Account  string `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
 }
 
@@ -469,9 +469,9 @@ var xxx_messageInfo_MsgDeleteFileResponse proto.InternalMessageInfo
 
 type MsgRemoveViewers struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	ViewerIds string `protobuf:"bytes,2,opt,name=viewerIds,proto3" json:"viewerIds,omitempty"`
+	ViewerIds string `protobuf:"bytes,2,opt,name=viewer_ids,json=viewerIds,proto3" json:"viewer_ids,omitempty"`
 	Address   string `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
-	Fileowner string `protobuf:"bytes,4,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	FileOwner string `protobuf:"bytes,4,opt,name=file_owner,json=fileOwner,proto3" json:"file_owner,omitempty"`
 }
 
 func (m *MsgRemoveViewers) Reset()         { *m = MsgRemoveViewers{} }
@@ -528,9 +528,9 @@ func (m *MsgRemoveViewers) GetAddress() string {
 	return ""
 }
 
-func (m *MsgRemoveViewers) GetFileowner() string {
+func (m *MsgRemoveViewers) GetFileOwner() string {
 	if m != nil {
-		return m.Fileowner
+		return m.FileOwner
 	}
 	return ""
 }
@@ -571,153 +571,25 @@ func (m *MsgRemoveViewersResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgRemoveViewersResponse proto.InternalMessageInfo
 
-type MsgMakeRoot struct {
-	Creator        string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Account        string `protobuf:"bytes,2,opt,name=account,proto3" json:"account,omitempty"`
-	RootHashPath   string `protobuf:"bytes,3,opt,name=rootHashPath,proto3" json:"rootHashPath,omitempty"`
-	Contents       string `protobuf:"bytes,4,opt,name=contents,proto3" json:"contents,omitempty"`
-	Editors        string `protobuf:"bytes,5,opt,name=editors,proto3" json:"editors,omitempty"`
-	Viewers        string `protobuf:"bytes,6,opt,name=viewers,proto3" json:"viewers,omitempty"`
-	TrackingNumber string `protobuf:"bytes,7,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
-}
-
-func (m *MsgMakeRoot) Reset()         { *m = MsgMakeRoot{} }
-func (m *MsgMakeRoot) String() string { return proto.CompactTextString(m) }
-func (*MsgMakeRoot) ProtoMessage()    {}
-func (*MsgMakeRoot) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{10}
-}
-func (m *MsgMakeRoot) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgMakeRoot) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgMakeRoot.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgMakeRoot) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgMakeRoot.Merge(m, src)
-}
-func (m *MsgMakeRoot) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgMakeRoot) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgMakeRoot.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgMakeRoot proto.InternalMessageInfo
-
-func (m *MsgMakeRoot) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
-func (m *MsgMakeRoot) GetAccount() string {
-	if m != nil {
-		return m.Account
-	}
-	return ""
-}
-
-func (m *MsgMakeRoot) GetRootHashPath() string {
-	if m != nil {
-		return m.RootHashPath
-	}
-	return ""
-}
-
-func (m *MsgMakeRoot) GetContents() string {
-	if m != nil {
-		return m.Contents
-	}
-	return ""
-}
-
-func (m *MsgMakeRoot) GetEditors() string {
-	if m != nil {
-		return m.Editors
-	}
-	return ""
-}
-
-func (m *MsgMakeRoot) GetViewers() string {
-	if m != nil {
-		return m.Viewers
-	}
-	return ""
-}
-
-func (m *MsgMakeRoot) GetTrackingNumber() string {
-	if m != nil {
-		return m.TrackingNumber
-	}
-	return ""
-}
-
-type MsgMakeRootResponse struct {
-}
-
-func (m *MsgMakeRootResponse) Reset()         { *m = MsgMakeRootResponse{} }
-func (m *MsgMakeRootResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgMakeRootResponse) ProtoMessage()    {}
-func (*MsgMakeRootResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{11}
-}
-func (m *MsgMakeRootResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgMakeRootResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgMakeRootResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgMakeRootResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgMakeRootResponse.Merge(m, src)
-}
-func (m *MsgMakeRootResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgMakeRootResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgMakeRootResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgMakeRootResponse proto.InternalMessageInfo
-
-type MsgMakeRootV2 struct {
+type MsgProvisionFileTree struct {
 	Creator        string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Editors        string `protobuf:"bytes,2,opt,name=editors,proto3" json:"editors,omitempty"`
 	Viewers        string `protobuf:"bytes,3,opt,name=viewers,proto3" json:"viewers,omitempty"`
-	TrackingNumber string `protobuf:"bytes,4,opt,name=trackingNumber,proto3" json:"trackingNumber,omitempty"`
+	TrackingNumber string `protobuf:"bytes,4,opt,name=tracking_number,json=trackingNumber,proto3" json:"tracking_number,omitempty"`
 }
 
-func (m *MsgMakeRootV2) Reset()         { *m = MsgMakeRootV2{} }
-func (m *MsgMakeRootV2) String() string { return proto.CompactTextString(m) }
-func (*MsgMakeRootV2) ProtoMessage()    {}
-func (*MsgMakeRootV2) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{12}
+func (m *MsgProvisionFileTree) Reset()         { *m = MsgProvisionFileTree{} }
+func (m *MsgProvisionFileTree) String() string { return proto.CompactTextString(m) }
+func (*MsgProvisionFileTree) ProtoMessage()    {}
+func (*MsgProvisionFileTree) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e5756d04c34e5a81, []int{10}
 }
-func (m *MsgMakeRootV2) XXX_Unmarshal(b []byte) error {
+func (m *MsgProvisionFileTree) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgMakeRootV2) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgProvisionFileTree) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgMakeRootV2.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgProvisionFileTree.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -727,59 +599,95 @@ func (m *MsgMakeRootV2) XXX_Marshal(b []byte, deterministic bool) ([]byte, error
 		return b[:n], nil
 	}
 }
-func (m *MsgMakeRootV2) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgMakeRootV2.Merge(m, src)
+func (m *MsgProvisionFileTree) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgProvisionFileTree.Merge(m, src)
 }
-func (m *MsgMakeRootV2) XXX_Size() int {
+func (m *MsgProvisionFileTree) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgMakeRootV2) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgMakeRootV2.DiscardUnknown(m)
+func (m *MsgProvisionFileTree) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgProvisionFileTree.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgMakeRootV2 proto.InternalMessageInfo
+var xxx_messageInfo_MsgProvisionFileTree proto.InternalMessageInfo
 
-func (m *MsgMakeRootV2) GetCreator() string {
+func (m *MsgProvisionFileTree) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgMakeRootV2) GetEditors() string {
+func (m *MsgProvisionFileTree) GetEditors() string {
 	if m != nil {
 		return m.Editors
 	}
 	return ""
 }
 
-func (m *MsgMakeRootV2) GetViewers() string {
+func (m *MsgProvisionFileTree) GetViewers() string {
 	if m != nil {
 		return m.Viewers
 	}
 	return ""
 }
 
-func (m *MsgMakeRootV2) GetTrackingNumber() string {
+func (m *MsgProvisionFileTree) GetTrackingNumber() string {
 	if m != nil {
 		return m.TrackingNumber
 	}
 	return ""
 }
 
+type MsgProvisionFileTreeResponse struct {
+}
+
+func (m *MsgProvisionFileTreeResponse) Reset()         { *m = MsgProvisionFileTreeResponse{} }
+func (m *MsgProvisionFileTreeResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgProvisionFileTreeResponse) ProtoMessage()    {}
+func (*MsgProvisionFileTreeResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e5756d04c34e5a81, []int{11}
+}
+func (m *MsgProvisionFileTreeResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgProvisionFileTreeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgProvisionFileTreeResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgProvisionFileTreeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgProvisionFileTreeResponse.Merge(m, src)
+}
+func (m *MsgProvisionFileTreeResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgProvisionFileTreeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgProvisionFileTreeResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgProvisionFileTreeResponse proto.InternalMessageInfo
+
 type MsgAddEditors struct {
 	Creator    string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	EditorIds  string `protobuf:"bytes,2,opt,name=editorIds,proto3" json:"editorIds,omitempty"`
-	EditorKeys string `protobuf:"bytes,3,opt,name=editorKeys,proto3" json:"editorKeys,omitempty"`
+	EditorIds  string `protobuf:"bytes,2,opt,name=editor_ids,json=editorIds,proto3" json:"editor_ids,omitempty"`
+	EditorKeys string `protobuf:"bytes,3,opt,name=editor_keys,json=editorKeys,proto3" json:"editor_keys,omitempty"`
 	Address    string `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
-	Fileowner  string `protobuf:"bytes,5,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	FileOwner  string `protobuf:"bytes,5,opt,name=file_owner,json=fileOwner,proto3" json:"file_owner,omitempty"`
 }
 
 func (m *MsgAddEditors) Reset()         { *m = MsgAddEditors{} }
 func (m *MsgAddEditors) String() string { return proto.CompactTextString(m) }
 func (*MsgAddEditors) ProtoMessage()    {}
 func (*MsgAddEditors) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{13}
+	return fileDescriptor_e5756d04c34e5a81, []int{12}
 }
 func (m *MsgAddEditors) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -836,9 +744,9 @@ func (m *MsgAddEditors) GetAddress() string {
 	return ""
 }
 
-func (m *MsgAddEditors) GetFileowner() string {
+func (m *MsgAddEditors) GetFileOwner() string {
 	if m != nil {
-		return m.Fileowner
+		return m.FileOwner
 	}
 	return ""
 }
@@ -850,7 +758,7 @@ func (m *MsgAddEditorsResponse) Reset()         { *m = MsgAddEditorsResponse{} }
 func (m *MsgAddEditorsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgAddEditorsResponse) ProtoMessage()    {}
 func (*MsgAddEditorsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{14}
+	return fileDescriptor_e5756d04c34e5a81, []int{13}
 }
 func (m *MsgAddEditorsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -881,16 +789,16 @@ var xxx_messageInfo_MsgAddEditorsResponse proto.InternalMessageInfo
 
 type MsgRemoveEditors struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	EditorIds string `protobuf:"bytes,2,opt,name=editorIds,proto3" json:"editorIds,omitempty"`
+	EditorIds string `protobuf:"bytes,2,opt,name=editor_ids,json=editorIds,proto3" json:"editor_ids,omitempty"`
 	Address   string `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
-	Fileowner string `protobuf:"bytes,4,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	FileOwner string `protobuf:"bytes,4,opt,name=file_owner,json=fileOwner,proto3" json:"file_owner,omitempty"`
 }
 
 func (m *MsgRemoveEditors) Reset()         { *m = MsgRemoveEditors{} }
 func (m *MsgRemoveEditors) String() string { return proto.CompactTextString(m) }
 func (*MsgRemoveEditors) ProtoMessage()    {}
 func (*MsgRemoveEditors) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{15}
+	return fileDescriptor_e5756d04c34e5a81, []int{14}
 }
 func (m *MsgRemoveEditors) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -940,9 +848,9 @@ func (m *MsgRemoveEditors) GetAddress() string {
 	return ""
 }
 
-func (m *MsgRemoveEditors) GetFileowner() string {
+func (m *MsgRemoveEditors) GetFileOwner() string {
 	if m != nil {
-		return m.Fileowner
+		return m.FileOwner
 	}
 	return ""
 }
@@ -954,7 +862,7 @@ func (m *MsgRemoveEditorsResponse) Reset()         { *m = MsgRemoveEditorsRespon
 func (m *MsgRemoveEditorsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgRemoveEditorsResponse) ProtoMessage()    {}
 func (*MsgRemoveEditorsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{16}
+	return fileDescriptor_e5756d04c34e5a81, []int{15}
 }
 func (m *MsgRemoveEditorsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -986,14 +894,14 @@ var xxx_messageInfo_MsgRemoveEditorsResponse proto.InternalMessageInfo
 type MsgResetEditors struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	Fileowner string `protobuf:"bytes,3,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	FileOwner string `protobuf:"bytes,3,opt,name=file_owner,json=fileOwner,proto3" json:"file_owner,omitempty"`
 }
 
 func (m *MsgResetEditors) Reset()         { *m = MsgResetEditors{} }
 func (m *MsgResetEditors) String() string { return proto.CompactTextString(m) }
 func (*MsgResetEditors) ProtoMessage()    {}
 func (*MsgResetEditors) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{17}
+	return fileDescriptor_e5756d04c34e5a81, []int{16}
 }
 func (m *MsgResetEditors) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1036,9 +944,9 @@ func (m *MsgResetEditors) GetAddress() string {
 	return ""
 }
 
-func (m *MsgResetEditors) GetFileowner() string {
+func (m *MsgResetEditors) GetFileOwner() string {
 	if m != nil {
-		return m.Fileowner
+		return m.FileOwner
 	}
 	return ""
 }
@@ -1050,7 +958,7 @@ func (m *MsgResetEditorsResponse) Reset()         { *m = MsgResetEditorsResponse
 func (m *MsgResetEditorsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgResetEditorsResponse) ProtoMessage()    {}
 func (*MsgResetEditorsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{18}
+	return fileDescriptor_e5756d04c34e5a81, []int{17}
 }
 func (m *MsgResetEditorsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1082,14 +990,14 @@ var xxx_messageInfo_MsgResetEditorsResponse proto.InternalMessageInfo
 type MsgResetViewers struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	Fileowner string `protobuf:"bytes,3,opt,name=fileowner,proto3" json:"fileowner,omitempty"`
+	FileOwner string `protobuf:"bytes,3,opt,name=file_owner,json=fileOwner,proto3" json:"file_owner,omitempty"`
 }
 
 func (m *MsgResetViewers) Reset()         { *m = MsgResetViewers{} }
 func (m *MsgResetViewers) String() string { return proto.CompactTextString(m) }
 func (*MsgResetViewers) ProtoMessage()    {}
 func (*MsgResetViewers) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{19}
+	return fileDescriptor_e5756d04c34e5a81, []int{18}
 }
 func (m *MsgResetViewers) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1132,9 +1040,9 @@ func (m *MsgResetViewers) GetAddress() string {
 	return ""
 }
 
-func (m *MsgResetViewers) GetFileowner() string {
+func (m *MsgResetViewers) GetFileOwner() string {
 	if m != nil {
-		return m.Fileowner
+		return m.FileOwner
 	}
 	return ""
 }
@@ -1146,7 +1054,7 @@ func (m *MsgResetViewersResponse) Reset()         { *m = MsgResetViewersResponse
 func (m *MsgResetViewersResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgResetViewersResponse) ProtoMessage()    {}
 func (*MsgResetViewersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{20}
+	return fileDescriptor_e5756d04c34e5a81, []int{19}
 }
 func (m *MsgResetViewersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1178,15 +1086,15 @@ var xxx_messageInfo_MsgResetViewersResponse proto.InternalMessageInfo
 type MsgChangeOwner struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	FileOwner string `protobuf:"bytes,3,opt,name=fileOwner,proto3" json:"fileOwner,omitempty"`
-	NewOwner  string `protobuf:"bytes,4,opt,name=newOwner,proto3" json:"newOwner,omitempty"`
+	FileOwner string `protobuf:"bytes,3,opt,name=file_owner,json=fileOwner,proto3" json:"file_owner,omitempty"`
+	NewOwner  string `protobuf:"bytes,4,opt,name=new_owner,json=newOwner,proto3" json:"new_owner,omitempty"`
 }
 
 func (m *MsgChangeOwner) Reset()         { *m = MsgChangeOwner{} }
 func (m *MsgChangeOwner) String() string { return proto.CompactTextString(m) }
 func (*MsgChangeOwner) ProtoMessage()    {}
 func (*MsgChangeOwner) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{21}
+	return fileDescriptor_e5756d04c34e5a81, []int{20}
 }
 func (m *MsgChangeOwner) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1250,7 +1158,7 @@ func (m *MsgChangeOwnerResponse) Reset()         { *m = MsgChangeOwnerResponse{}
 func (m *MsgChangeOwnerResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgChangeOwnerResponse) ProtoMessage()    {}
 func (*MsgChangeOwnerResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e5756d04c34e5a81, []int{22}
+	return fileDescriptor_e5756d04c34e5a81, []int{21}
 }
 func (m *MsgChangeOwnerResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1284,15 +1192,14 @@ func init() {
 	proto.RegisterType((*MsgPostFileResponse)(nil), "canine_chain.filetree.MsgPostFileResponse")
 	proto.RegisterType((*MsgAddViewers)(nil), "canine_chain.filetree.MsgAddViewers")
 	proto.RegisterType((*MsgAddViewersResponse)(nil), "canine_chain.filetree.MsgAddViewersResponse")
-	proto.RegisterType((*MsgPostkey)(nil), "canine_chain.filetree.MsgPostkey")
-	proto.RegisterType((*MsgPostkeyResponse)(nil), "canine_chain.filetree.MsgPostkeyResponse")
+	proto.RegisterType((*MsgPostKey)(nil), "canine_chain.filetree.MsgPostKey")
+	proto.RegisterType((*MsgPostKeyResponse)(nil), "canine_chain.filetree.MsgPostKeyResponse")
 	proto.RegisterType((*MsgDeleteFile)(nil), "canine_chain.filetree.MsgDeleteFile")
 	proto.RegisterType((*MsgDeleteFileResponse)(nil), "canine_chain.filetree.MsgDeleteFileResponse")
 	proto.RegisterType((*MsgRemoveViewers)(nil), "canine_chain.filetree.MsgRemoveViewers")
 	proto.RegisterType((*MsgRemoveViewersResponse)(nil), "canine_chain.filetree.MsgRemoveViewersResponse")
-	proto.RegisterType((*MsgMakeRoot)(nil), "canine_chain.filetree.MsgMakeRoot")
-	proto.RegisterType((*MsgMakeRootResponse)(nil), "canine_chain.filetree.MsgMakeRootResponse")
-	proto.RegisterType((*MsgMakeRootV2)(nil), "canine_chain.filetree.MsgMakeRootV2")
+	proto.RegisterType((*MsgProvisionFileTree)(nil), "canine_chain.filetree.MsgProvisionFileTree")
+	proto.RegisterType((*MsgProvisionFileTreeResponse)(nil), "canine_chain.filetree.MsgProvisionFileTreeResponse")
 	proto.RegisterType((*MsgAddEditors)(nil), "canine_chain.filetree.MsgAddEditors")
 	proto.RegisterType((*MsgAddEditorsResponse)(nil), "canine_chain.filetree.MsgAddEditorsResponse")
 	proto.RegisterType((*MsgRemoveEditors)(nil), "canine_chain.filetree.MsgRemoveEditors")
@@ -1308,60 +1215,59 @@ func init() {
 func init() { proto.RegisterFile("canine_chain/filetree/tx.proto", fileDescriptor_e5756d04c34e5a81) }
 
 var fileDescriptor_e5756d04c34e5a81 = []byte{
-	// 845 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0xcd, 0x6f, 0xd3, 0x48,
-	0x14, 0xaf, 0x9b, 0xb4, 0x49, 0x5e, 0x3f, 0xb6, 0xf2, 0x6e, 0xb7, 0x5e, 0xab, 0xb2, 0x76, 0xad,
-	0x6e, 0x77, 0x8b, 0x68, 0x22, 0xb5, 0x17, 0xae, 0x50, 0x40, 0x20, 0x08, 0xad, 0x72, 0x28, 0x52,
-	0x0f, 0x14, 0xc7, 0x79, 0xb5, 0x4d, 0x52, 0x3b, 0xf2, 0x4c, 0x3f, 0x72, 0xe1, 0x80, 0xc4, 0x9d,
-	0xff, 0x80, 0x23, 0xff, 0x0a, 0xc7, 0x1e, 0xb9, 0x20, 0xa1, 0xf6, 0x8f, 0xe0, 0x8a, 0xfc, 0x31,
-	0xe3, 0xb1, 0x93, 0xd8, 0x81, 0xf4, 0xe6, 0xf7, 0x31, 0xf3, 0xfb, 0xcd, 0x9b, 0xf7, 0x9b, 0x27,
-	0x83, 0x66, 0x1a, 0xae, 0xe3, 0xe2, 0xb1, 0x69, 0x1b, 0x8e, 0xdb, 0x38, 0x71, 0x7a, 0x48, 0x7d,
-	0xc4, 0x06, 0xbd, 0xac, 0xf7, 0x7d, 0x8f, 0x7a, 0xf2, 0xaa, 0x18, 0xaf, 0xb3, 0xb8, 0xfe, 0x5d,
-	0x82, 0x85, 0x26, 0xb1, 0x0e, 0x3c, 0x42, 0x1f, 0x3b, 0x3d, 0x94, 0x15, 0xa8, 0x98, 0x3e, 0x1a,
-	0xd4, 0xf3, 0x15, 0xe9, 0x6f, 0xe9, 0xff, 0x5a, 0x8b, 0x99, 0x41, 0xc4, 0x30, 0x4d, 0xef, 0xcc,
-	0xa5, 0xca, 0x6c, 0x14, 0x89, 0x4d, 0x59, 0x03, 0xb0, 0x0d, 0x62, 0x1f, 0x18, 0x3e, 0xba, 0x54,
-	0x29, 0x85, 0x41, 0xc1, 0x23, 0xaf, 0x43, 0x2d, 0xb0, 0xf6, 0x6c, 0xa7, 0xd7, 0x51, 0xca, 0x61,
-	0x38, 0x71, 0xc8, 0x2a, 0x54, 0x4d, 0xcf, 0xa5, 0xe8, 0x52, 0xa2, 0xcc, 0x85, 0x41, 0x6e, 0x07,
-	0x98, 0xe7, 0x0e, 0x5e, 0xa0, 0x4f, 0x94, 0xf9, 0x08, 0x33, 0x36, 0x83, 0x08, 0x76, 0x1c, 0xea,
-	0xf9, 0x44, 0xa9, 0x44, 0x91, 0xd8, 0x94, 0x37, 0x61, 0x99, 0xfa, 0x86, 0xd9, 0x75, 0x5c, 0xeb,
-	0xc5, 0xd9, 0x69, 0x1b, 0x7d, 0xa5, 0x1a, 0x26, 0x64, 0xbc, 0xfa, 0x16, 0xfc, 0x2e, 0x1c, 0xbc,
-	0x85, 0xa4, 0xef, 0xb9, 0x04, 0x65, 0x19, 0xca, 0x7d, 0x83, 0xda, 0xf1, 0xe9, 0xc3, 0x6f, 0xfd,
-	0xa3, 0x04, 0x4b, 0x4d, 0x62, 0xdd, 0xef, 0x74, 0x0e, 0x13, 0xf8, 0x31, 0x65, 0x5a, 0x87, 0x5a,
-	0xc4, 0xf1, 0x69, 0x87, 0xc4, 0x85, 0x4a, 0x1c, 0x41, 0xa9, 0x22, 0xe3, 0x19, 0x0e, 0x08, 0x2b,
-	0x55, 0xe2, 0x09, 0x8b, 0xdc, 0xe9, 0xf8, 0x48, 0x48, 0x5c, 0x28, 0x66, 0x06, 0xfb, 0x06, 0x97,
-	0xe6, 0x5d, 0xb8, 0xe8, 0xc7, 0x75, 0x4a, 0x1c, 0xfa, 0x1a, 0xac, 0xa6, 0x08, 0xb2, 0xe3, 0xe8,
-	0xf7, 0x00, 0xe2, 0x53, 0x76, 0x71, 0x90, 0x43, 0x7b, 0x05, 0x4a, 0x5d, 0x1c, 0xc4, 0x84, 0x83,
-	0x4f, 0xfd, 0x0f, 0x90, 0x93, 0x95, 0x7c, 0xbf, 0xe3, 0xb0, 0x12, 0x0f, 0xb1, 0x87, 0x14, 0x0b,
-	0x1a, 0x46, 0x85, 0x6a, 0xd4, 0x04, 0xd4, 0x8e, 0xf7, 0xe5, 0xb6, 0xd8, 0x4c, 0xa5, 0x54, 0x33,
-	0xc5, 0x27, 0x49, 0x00, 0x38, 0xf2, 0x3b, 0x09, 0x56, 0x9a, 0xc4, 0x6a, 0xe1, 0xa9, 0x77, 0x8e,
-	0xd3, 0xde, 0x83, 0x50, 0xe7, 0x52, 0x4e, 0x9d, 0xcb, 0xd9, 0x3a, 0xab, 0xa0, 0x64, 0x39, 0x70,
-	0x82, 0x5f, 0x23, 0x29, 0x35, 0x8d, 0x2e, 0xb6, 0x3c, 0x8f, 0xfe, 0x92, 0x94, 0x74, 0x58, 0xf4,
-	0x3d, 0x8f, 0x3e, 0x61, 0x75, 0x8b, 0xc8, 0xa5, 0x7c, 0x29, 0xc1, 0x94, 0x87, 0x05, 0xc3, 0x64,
-	0x31, 0x97, 0x96, 0xc5, 0x78, 0x29, 0x0d, 0x0b, 0xa6, 0x32, 0x52, 0x30, 0xab, 0xa1, 0x60, 0xd8,
-	0xf1, 0xf8, 0xb1, 0xdf, 0x47, 0xe2, 0x60, 0xfe, 0xc3, 0x9d, 0xfc, 0x83, 0x33, 0x7a, 0xb3, 0x63,
-	0xe9, 0x95, 0x8a, 0xe8, 0x95, 0x47, 0xd2, 0x4b, 0x44, 0xfa, 0x28, 0xd9, 0x73, 0x7c, 0x73, 0x44,
-	0xc0, 0x42, 0x73, 0x70, 0x47, 0x20, 0xd2, 0xc8, 0x10, 0x45, 0x9a, 0x78, 0xa6, 0x17, 0x69, 0x4c,
-	0x70, 0x74, 0x6b, 0x4f, 0xcb, 0xfe, 0x36, 0x5a, 0x3b, 0x4b, 0xd0, 0x84, 0xdf, 0xc2, 0x18, 0x41,
-	0x5a, 0x4c, 0x4f, 0x20, 0x30, 0x9b, 0x43, 0xa0, 0x94, 0x25, 0xf0, 0x17, 0xac, 0x65, 0x40, 0x46,
-	0xe1, 0x17, 0x2b, 0xff, 0x16, 0xf0, 0xb3, 0xd2, 0x7e, 0x0b, 0xcb, 0x4d, 0x62, 0xed, 0xd9, 0x86,
-	0x6b, 0xe1, 0x7e, 0x90, 0x3c, 0x0d, 0xfc, 0x7e, 0x16, 0x3e, 0xda, 0x51, 0x85, 0xaa, 0x8b, 0x17,
-	0xfb, 0xc2, 0xe5, 0x70, 0x5b, 0x57, 0xe0, 0xcf, 0x34, 0x3e, 0x63, 0xb6, 0xf3, 0xa9, 0x06, 0xa5,
-	0x26, 0xb1, 0xe4, 0x23, 0xa8, 0xf2, 0x19, 0xae, 0xd7, 0x47, 0xce, 0xfa, 0xba, 0x30, 0xee, 0xd4,
-	0x3b, 0xc5, 0x39, 0x7c, 0x24, 0xbe, 0x06, 0x10, 0x46, 0xdf, 0xc6, 0xf8, 0x95, 0x49, 0x96, 0x7a,
-	0x77, 0x92, 0x2c, 0x8e, 0xf0, 0x12, 0x2a, 0x6c, 0x44, 0xfd, 0x93, 0x4f, 0xac, 0x8b, 0x03, 0x75,
-	0xab, 0x30, 0x45, 0xa4, 0x2e, 0xcc, 0xaa, 0x1c, 0xea, 0x49, 0x56, 0x1e, 0xf5, 0xe1, 0xb1, 0x24,
-	0x3b, 0xb0, 0x94, 0x1e, 0x49, 0xff, 0x8d, 0x5f, 0x9e, 0x4a, 0x54, 0x1b, 0x13, 0x26, 0x72, 0xa8,
-	0x23, 0xa8, 0xf2, 0xe1, 0x92, 0x73, 0xc7, 0x2c, 0x27, 0xef, 0x8e, 0xb3, 0xaf, 0xb8, 0xfc, 0x0a,
-	0x40, 0x78, 0xc1, 0x37, 0x8a, 0x57, 0x1e, 0xee, 0xfc, 0xd4, 0xfe, 0x51, 0x0f, 0xb1, 0xc7, 0x23,
-	0xbf, 0x87, 0xe2, 0xac, 0x82, 0x1e, 0xca, 0xbc, 0x11, 0xc9, 0x45, 0x30, 0x90, 0xc2, 0x8b, 0x60,
-	0x38, 0x8d, 0x09, 0x13, 0x39, 0xd4, 0x09, 0x2c, 0xa6, 0xde, 0xc2, 0xcd, 0xbc, 0x0d, 0x92, 0x3c,
-	0xb5, 0x3e, 0x59, 0xde, 0x10, 0x0e, 0x6b, 0xad, 0x22, 0x1c, 0xd6, 0x59, 0xf5, 0xc9, 0xf2, 0x38,
-	0x8e, 0x09, 0x0b, 0xe2, 0xdb, 0xf6, 0xef, 0xf8, 0xe5, 0x42, 0x9a, 0xba, 0x3d, 0x51, 0x1a, 0x03,
-	0x79, 0xd0, 0xfc, 0x7c, 0xad, 0x49, 0x57, 0xd7, 0x9a, 0xf4, 0xed, 0x5a, 0x93, 0x3e, 0xdc, 0x68,
-	0x33, 0x57, 0x37, 0xda, 0xcc, 0x97, 0x1b, 0x6d, 0xe6, 0x68, 0xd7, 0x72, 0xa8, 0x7d, 0xd6, 0xae,
-	0x9b, 0xde, 0x69, 0xe3, 0x8d, 0x61, 0x76, 0x8d, 0xde, 0x73, 0xa3, 0x4d, 0x1a, 0xd1, 0xee, 0xdb,
-	0xd1, 0x0f, 0xcd, 0xa5, 0xf0, 0x4b, 0x33, 0xe8, 0x23, 0x69, 0xcf, 0x87, 0xbf, 0x35, 0xbb, 0x3f,
-	0x02, 0x00, 0x00, 0xff, 0xff, 0x17, 0x36, 0x84, 0xa3, 0xf8, 0x0c, 0x00, 0x00,
+	// 823 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0xcf, 0x6f, 0xd3, 0x48,
+	0x14, 0xae, 0x9b, 0x6c, 0x9b, 0xbc, 0x6e, 0x7f, 0xac, 0xb7, 0xdd, 0x7a, 0xbd, 0x5b, 0xef, 0x12,
+	0x01, 0xa5, 0x40, 0x13, 0x89, 0x5e, 0xb8, 0x42, 0x01, 0x09, 0x95, 0x40, 0x55, 0x21, 0x90, 0x7a,
+	0x49, 0x1d, 0xfb, 0xd5, 0x36, 0x49, 0xed, 0xc8, 0x33, 0x69, 0x9a, 0x1b, 0x07, 0xae, 0x48, 0xfc,
+	0x0d, 0xfc, 0x35, 0x1c, 0x7b, 0xe4, 0x88, 0xd2, 0xff, 0x82, 0x13, 0xb2, 0x3d, 0x63, 0x8f, 0xdd,
+	0xc4, 0x0e, 0x6a, 0xb9, 0x79, 0xde, 0xfb, 0x66, 0xde, 0x37, 0xdf, 0x7c, 0xf3, 0xc6, 0xa0, 0x19,
+	0xba, 0xeb, 0xb8, 0xd8, 0x32, 0x6c, 0xdd, 0x71, 0x1b, 0xc7, 0x4e, 0x17, 0xa9, 0x8f, 0xd8, 0xa0,
+	0x67, 0xf5, 0x9e, 0xef, 0x51, 0x4f, 0x5e, 0x13, 0xf3, 0x75, 0x9e, 0xaf, 0x7d, 0x97, 0x60, 0xa1,
+	0x49, 0xac, 0x7d, 0x8f, 0xd0, 0x67, 0x4e, 0x17, 0x65, 0x05, 0xe6, 0x0d, 0x1f, 0x75, 0xea, 0xf9,
+	0x8a, 0xf4, 0xbf, 0x74, 0xa7, 0x7a, 0xc0, 0x87, 0x41, 0x46, 0x37, 0x0c, 0xaf, 0xef, 0x52, 0x65,
+	0x36, 0xca, 0xb0, 0xa1, 0xfc, 0x1f, 0x2c, 0xd8, 0x3a, 0xb1, 0x5b, 0x3d, 0xdd, 0x47, 0x97, 0x2a,
+	0xa5, 0x30, 0x0b, 0x41, 0x68, 0x3f, 0x8c, 0xc8, 0x1b, 0x10, 0x8e, 0x5a, 0x86, 0xed, 0x74, 0x4d,
+	0xa5, 0x1c, 0xe6, 0xab, 0x41, 0x64, 0x37, 0x08, 0xc8, 0x2a, 0x54, 0x0c, 0xcf, 0xa5, 0xe8, 0x52,
+	0xa2, 0xfc, 0x16, 0x26, 0xe3, 0x71, 0x50, 0xf5, 0xd4, 0xc1, 0x01, 0xfa, 0x44, 0x99, 0x8b, 0xaa,
+	0xb2, 0x61, 0x90, 0x41, 0xd3, 0xa1, 0x9e, 0x4f, 0x94, 0xf9, 0x28, 0xc3, 0x86, 0xf2, 0x26, 0x2c,
+	0x53, 0x5f, 0x37, 0x3a, 0x8e, 0x6b, 0xb5, 0xdc, 0xfe, 0x49, 0x1b, 0x7d, 0xa5, 0x12, 0x22, 0x96,
+	0x78, 0xf8, 0x65, 0x18, 0xad, 0x6d, 0xc1, 0x9f, 0xc2, 0xde, 0x0f, 0x90, 0xf4, 0x3c, 0x97, 0xa0,
+	0x2c, 0x43, 0xb9, 0xa7, 0x53, 0x9b, 0x09, 0x10, 0x7e, 0xd7, 0x3e, 0x4b, 0xb0, 0xd8, 0x24, 0xd6,
+	0x23, 0xd3, 0x7c, 0x93, 0xd4, 0x9f, 0xa0, 0xd4, 0x06, 0x40, 0x44, 0xb2, 0xe5, 0x98, 0x84, 0x89,
+	0x55, 0x8d, 0x22, 0xcf, 0x4d, 0x12, 0xc8, 0xc5, 0xd2, 0x1d, 0x1c, 0x12, 0x2e, 0x57, 0x14, 0xda,
+	0xc3, 0x61, 0xb8, 0xb2, 0x6e, 0x9a, 0x3e, 0x12, 0xc2, 0xb4, 0xe2, 0xc3, 0x60, 0xe5, 0xe0, 0xe4,
+	0x5a, 0xde, 0xc0, 0x45, 0x9f, 0x69, 0x55, 0x0d, 0x22, 0xaf, 0x82, 0x40, 0x6d, 0x1d, 0xd6, 0x52,
+	0x1c, 0xf9, 0x8e, 0x6a, 0x0f, 0x01, 0xd8, 0x46, 0xf7, 0x70, 0x98, 0xc3, 0x7c, 0x05, 0x4a, 0x1d,
+	0x1c, 0x32, 0xca, 0xc1, 0x67, 0x6d, 0x15, 0xe4, 0x64, 0x66, 0xbc, 0xde, 0x51, 0x28, 0xc6, 0x13,
+	0xec, 0x22, 0xc5, 0x02, 0xdb, 0xfc, 0x03, 0x55, 0x66, 0x0e, 0x6a, 0xb3, 0x85, 0x2b, 0x91, 0x35,
+	0xa8, 0x2d, 0x7a, 0xaa, 0x94, 0xf2, 0x14, 0xdb, 0x4a, 0x52, 0x21, 0x2e, 0xfd, 0x41, 0x82, 0x95,
+	0x26, 0xb1, 0x0e, 0xf0, 0xc4, 0x3b, 0xc5, 0x2b, 0x9f, 0x85, 0x20, 0x75, 0x29, 0x4f, 0xea, 0x72,
+	0x56, 0x6a, 0x15, 0x94, 0x2c, 0x8b, 0x98, 0xe2, 0x47, 0x09, 0x56, 0x03, 0xd1, 0x7c, 0xef, 0xd4,
+	0x21, 0x8e, 0xe7, 0x06, 0xfc, 0x5f, 0xfb, 0x58, 0x70, 0xb9, 0xb8, 0x99, 0x67, 0xd3, 0x66, 0x16,
+	0x2e, 0x40, 0x29, 0x7d, 0x01, 0xc6, 0xd8, 0xbc, 0x3c, 0xd6, 0xe6, 0x1a, 0xfc, 0x3b, 0x8e, 0x4e,
+	0xcc, 0x37, 0xf1, 0xf6, 0xd3, 0xa4, 0xe8, 0x64, 0x3d, 0x23, 0x66, 0xa2, 0x9e, 0x51, 0x84, 0x79,
+	0x9b, 0xa5, 0x45, 0x6f, 0x47, 0xa1, 0x6b, 0xf2, 0x36, 0xe3, 0x38, 0xde, 0x10, 0x57, 0xde, 0xc0,
+	0xb5, 0x18, 0x22, 0x4b, 0xd1, 0x84, 0xe5, 0x30, 0x47, 0x90, 0x16, 0x13, 0x14, 0x18, 0xcc, 0xe6,
+	0x31, 0x28, 0x65, 0x19, 0xfc, 0x0d, 0xeb, 0x99, 0x2a, 0xe3, 0x08, 0x14, 0x5f, 0x99, 0xeb, 0x20,
+	0x90, 0xbd, 0x12, 0xef, 0x25, 0x58, 0x6a, 0x12, 0x6b, 0xd7, 0xd6, 0x5d, 0x2b, 0x42, 0xff, 0x02,
+	0x02, 0x41, 0xaf, 0x71, 0x71, 0x90, 0x3a, 0xa1, 0x8a, 0x8b, 0x83, 0x88, 0x9d, 0x02, 0x7f, 0xa5,
+	0x19, 0x70, 0x72, 0x0f, 0x46, 0x15, 0x28, 0x35, 0x89, 0x25, 0x1f, 0x42, 0x25, 0x7e, 0x07, 0x6b,
+	0xf5, 0xb1, 0xef, 0x65, 0x5d, 0x78, 0x2f, 0xd4, 0xbb, 0xc5, 0x98, 0xf8, 0x4d, 0x39, 0x02, 0x10,
+	0xde, 0x8e, 0x9b, 0x93, 0x67, 0x26, 0x28, 0xf5, 0xfe, 0x34, 0xa8, 0xb8, 0xc2, 0x5b, 0x98, 0xe7,
+	0x0d, 0xfe, 0x46, 0x3e, 0xb1, 0x3d, 0x1c, 0xaa, 0x5b, 0x85, 0x10, 0x91, 0xba, 0xd0, 0xe9, 0x73,
+	0xa8, 0x27, 0xa8, 0x3c, 0xea, 0x97, 0x7b, 0xba, 0xec, 0xc0, 0x62, 0xba, 0x9f, 0x6f, 0x4e, 0x9e,
+	0x9e, 0x02, 0xaa, 0x8d, 0x29, 0x81, 0x71, 0xa9, 0x3e, 0xfc, 0x71, 0xb9, 0x2f, 0xdf, 0xcb, 0x11,
+	0x23, 0x0b, 0x56, 0x77, 0x7e, 0x02, 0x9c, 0x39, 0x7e, 0x7e, 0xf9, 0xf3, 0x8f, 0x9f, 0xa1, 0x0a,
+	0x8e, 0x3f, 0x73, 0xc5, 0x13, 0x0d, 0x79, 0x91, 0x42, 0x0d, 0x79, 0x9d, 0xc6, 0x94, 0xc0, 0xb8,
+	0xd4, 0x31, 0xfc, 0x9e, 0xea, 0x65, 0xb7, 0xf3, 0x16, 0x48, 0x70, 0x6a, 0x7d, 0x3a, 0xdc, 0xa5,
+	0x3a, 0xdc, 0x15, 0x45, 0x75, 0xb8, 0x29, 0xea, 0xd3, 0xe1, 0xe2, 0x3a, 0x06, 0x2c, 0x88, 0x8d,
+	0xe9, 0xd6, 0xe4, 0xe9, 0x02, 0x4c, 0xdd, 0x9e, 0x0a, 0xc6, 0x8b, 0x3c, 0x6e, 0x7e, 0x19, 0x69,
+	0xd2, 0xf9, 0x48, 0x93, 0xbe, 0x8d, 0x34, 0xe9, 0xd3, 0x85, 0x36, 0x73, 0x7e, 0xa1, 0xcd, 0x7c,
+	0xbd, 0xd0, 0x66, 0x0e, 0x77, 0x2c, 0x87, 0xda, 0xfd, 0x76, 0xdd, 0xf0, 0x4e, 0x1a, 0xef, 0x74,
+	0xa3, 0xa3, 0x77, 0x5f, 0xe8, 0x6d, 0xd2, 0x88, 0x56, 0xdf, 0x8e, 0xfe, 0xe7, 0xcf, 0x84, 0x3f,
+	0xfa, 0x61, 0x0f, 0x49, 0x7b, 0x2e, 0xfc, 0xab, 0xdf, 0xf9, 0x11, 0x00, 0x00, 0xff, 0xff, 0xec,
+	0xe3, 0xc0, 0xa4, 0xf7, 0x0b, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1378,11 +1284,10 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	PostFile(ctx context.Context, in *MsgPostFile, opts ...grpc.CallOption) (*MsgPostFileResponse, error)
 	AddViewers(ctx context.Context, in *MsgAddViewers, opts ...grpc.CallOption) (*MsgAddViewersResponse, error)
-	Postkey(ctx context.Context, in *MsgPostkey, opts ...grpc.CallOption) (*MsgPostkeyResponse, error)
+	PostKey(ctx context.Context, in *MsgPostKey, opts ...grpc.CallOption) (*MsgPostKeyResponse, error)
 	DeleteFile(ctx context.Context, in *MsgDeleteFile, opts ...grpc.CallOption) (*MsgDeleteFileResponse, error)
 	RemoveViewers(ctx context.Context, in *MsgRemoveViewers, opts ...grpc.CallOption) (*MsgRemoveViewersResponse, error)
-	MakeRoot(ctx context.Context, in *MsgMakeRoot, opts ...grpc.CallOption) (*MsgMakeRootResponse, error)
-	MakeRootV2(ctx context.Context, in *MsgMakeRootV2, opts ...grpc.CallOption) (*MsgMakeRootResponse, error)
+	ProvisionFileTree(ctx context.Context, in *MsgProvisionFileTree, opts ...grpc.CallOption) (*MsgProvisionFileTreeResponse, error)
 	AddEditors(ctx context.Context, in *MsgAddEditors, opts ...grpc.CallOption) (*MsgAddEditorsResponse, error)
 	RemoveEditors(ctx context.Context, in *MsgRemoveEditors, opts ...grpc.CallOption) (*MsgRemoveEditorsResponse, error)
 	ResetEditors(ctx context.Context, in *MsgResetEditors, opts ...grpc.CallOption) (*MsgResetEditorsResponse, error)
@@ -1416,9 +1321,9 @@ func (c *msgClient) AddViewers(ctx context.Context, in *MsgAddViewers, opts ...g
 	return out, nil
 }
 
-func (c *msgClient) Postkey(ctx context.Context, in *MsgPostkey, opts ...grpc.CallOption) (*MsgPostkeyResponse, error) {
-	out := new(MsgPostkeyResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Msg/Postkey", in, out, opts...)
+func (c *msgClient) PostKey(ctx context.Context, in *MsgPostKey, opts ...grpc.CallOption) (*MsgPostKeyResponse, error) {
+	out := new(MsgPostKeyResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Msg/PostKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1443,18 +1348,9 @@ func (c *msgClient) RemoveViewers(ctx context.Context, in *MsgRemoveViewers, opt
 	return out, nil
 }
 
-func (c *msgClient) MakeRoot(ctx context.Context, in *MsgMakeRoot, opts ...grpc.CallOption) (*MsgMakeRootResponse, error) {
-	out := new(MsgMakeRootResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Msg/MakeRoot", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgClient) MakeRootV2(ctx context.Context, in *MsgMakeRootV2, opts ...grpc.CallOption) (*MsgMakeRootResponse, error) {
-	out := new(MsgMakeRootResponse)
-	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Msg/MakeRootV2", in, out, opts...)
+func (c *msgClient) ProvisionFileTree(ctx context.Context, in *MsgProvisionFileTree, opts ...grpc.CallOption) (*MsgProvisionFileTreeResponse, error) {
+	out := new(MsgProvisionFileTreeResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.filetree.Msg/ProvisionFileTree", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1510,11 +1406,10 @@ func (c *msgClient) ChangeOwner(ctx context.Context, in *MsgChangeOwner, opts ..
 type MsgServer interface {
 	PostFile(context.Context, *MsgPostFile) (*MsgPostFileResponse, error)
 	AddViewers(context.Context, *MsgAddViewers) (*MsgAddViewersResponse, error)
-	Postkey(context.Context, *MsgPostkey) (*MsgPostkeyResponse, error)
+	PostKey(context.Context, *MsgPostKey) (*MsgPostKeyResponse, error)
 	DeleteFile(context.Context, *MsgDeleteFile) (*MsgDeleteFileResponse, error)
 	RemoveViewers(context.Context, *MsgRemoveViewers) (*MsgRemoveViewersResponse, error)
-	MakeRoot(context.Context, *MsgMakeRoot) (*MsgMakeRootResponse, error)
-	MakeRootV2(context.Context, *MsgMakeRootV2) (*MsgMakeRootResponse, error)
+	ProvisionFileTree(context.Context, *MsgProvisionFileTree) (*MsgProvisionFileTreeResponse, error)
 	AddEditors(context.Context, *MsgAddEditors) (*MsgAddEditorsResponse, error)
 	RemoveEditors(context.Context, *MsgRemoveEditors) (*MsgRemoveEditorsResponse, error)
 	ResetEditors(context.Context, *MsgResetEditors) (*MsgResetEditorsResponse, error)
@@ -1532,8 +1427,8 @@ func (*UnimplementedMsgServer) PostFile(ctx context.Context, req *MsgPostFile) (
 func (*UnimplementedMsgServer) AddViewers(ctx context.Context, req *MsgAddViewers) (*MsgAddViewersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddViewers not implemented")
 }
-func (*UnimplementedMsgServer) Postkey(ctx context.Context, req *MsgPostkey) (*MsgPostkeyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Postkey not implemented")
+func (*UnimplementedMsgServer) PostKey(ctx context.Context, req *MsgPostKey) (*MsgPostKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostKey not implemented")
 }
 func (*UnimplementedMsgServer) DeleteFile(ctx context.Context, req *MsgDeleteFile) (*MsgDeleteFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFile not implemented")
@@ -1541,11 +1436,8 @@ func (*UnimplementedMsgServer) DeleteFile(ctx context.Context, req *MsgDeleteFil
 func (*UnimplementedMsgServer) RemoveViewers(ctx context.Context, req *MsgRemoveViewers) (*MsgRemoveViewersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveViewers not implemented")
 }
-func (*UnimplementedMsgServer) MakeRoot(ctx context.Context, req *MsgMakeRoot) (*MsgMakeRootResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MakeRoot not implemented")
-}
-func (*UnimplementedMsgServer) MakeRootV2(ctx context.Context, req *MsgMakeRootV2) (*MsgMakeRootResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MakeRootV2 not implemented")
+func (*UnimplementedMsgServer) ProvisionFileTree(ctx context.Context, req *MsgProvisionFileTree) (*MsgProvisionFileTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProvisionFileTree not implemented")
 }
 func (*UnimplementedMsgServer) AddEditors(ctx context.Context, req *MsgAddEditors) (*MsgAddEditorsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddEditors not implemented")
@@ -1603,20 +1495,20 @@ func _Msg_AddViewers_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_Postkey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgPostkey)
+func _Msg_PostKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgPostKey)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).Postkey(ctx, in)
+		return srv.(MsgServer).PostKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.filetree.Msg/Postkey",
+		FullMethod: "/canine_chain.filetree.Msg/PostKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).Postkey(ctx, req.(*MsgPostkey))
+		return srv.(MsgServer).PostKey(ctx, req.(*MsgPostKey))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1657,38 +1549,20 @@ func _Msg_RemoveViewers_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_MakeRoot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgMakeRoot)
+func _Msg_ProvisionFileTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgProvisionFileTree)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).MakeRoot(ctx, in)
+		return srv.(MsgServer).ProvisionFileTree(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/canine_chain.filetree.Msg/MakeRoot",
+		FullMethod: "/canine_chain.filetree.Msg/ProvisionFileTree",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).MakeRoot(ctx, req.(*MsgMakeRoot))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Msg_MakeRootV2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgMakeRootV2)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).MakeRootV2(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/canine_chain.filetree.Msg/MakeRootV2",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).MakeRootV2(ctx, req.(*MsgMakeRootV2))
+		return srv.(MsgServer).ProvisionFileTree(ctx, req.(*MsgProvisionFileTree))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1796,8 +1670,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_AddViewers_Handler,
 		},
 		{
-			MethodName: "Postkey",
-			Handler:    _Msg_Postkey_Handler,
+			MethodName: "PostKey",
+			Handler:    _Msg_PostKey_Handler,
 		},
 		{
 			MethodName: "DeleteFile",
@@ -1808,12 +1682,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_RemoveViewers_Handler,
 		},
 		{
-			MethodName: "MakeRoot",
-			Handler:    _Msg_MakeRoot_Handler,
-		},
-		{
-			MethodName: "MakeRootV2",
-			Handler:    _Msg_MakeRootV2_Handler,
+			MethodName: "ProvisionFileTree",
+			Handler:    _Msg_ProvisionFileTree_Handler,
 		},
 		{
 			MethodName: "AddEditors",
@@ -1969,10 +1839,10 @@ func (m *MsgAddViewers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Fileowner) > 0 {
-		i -= len(m.Fileowner)
-		copy(dAtA[i:], m.Fileowner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Fileowner)))
+	if len(m.FileOwner) > 0 {
+		i -= len(m.FileOwner)
+		copy(dAtA[i:], m.FileOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.FileOwner)))
 		i--
 		dAtA[i] = 0x2a
 	}
@@ -2030,7 +1900,7 @@ func (m *MsgAddViewersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgPostkey) Marshal() (dAtA []byte, err error) {
+func (m *MsgPostKey) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2040,12 +1910,12 @@ func (m *MsgPostkey) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgPostkey) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgPostKey) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgPostkey) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgPostKey) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2067,7 +1937,7 @@ func (m *MsgPostkey) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgPostkeyResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgPostKeyResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2077,12 +1947,12 @@ func (m *MsgPostkeyResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgPostkeyResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgPostKeyResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgPostkeyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgPostKeyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2177,10 +2047,10 @@ func (m *MsgRemoveViewers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Fileowner) > 0 {
-		i -= len(m.Fileowner)
-		copy(dAtA[i:], m.Fileowner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Fileowner)))
+	if len(m.FileOwner) > 0 {
+		i -= len(m.FileOwner)
+		copy(dAtA[i:], m.FileOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.FileOwner)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -2231,7 +2101,7 @@ func (m *MsgRemoveViewersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgMakeRoot) Marshal() (dAtA []byte, err error) {
+func (m *MsgProvisionFileTree) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2241,107 +2111,12 @@ func (m *MsgMakeRoot) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgMakeRoot) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgProvisionFileTree) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgMakeRoot) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.TrackingNumber) > 0 {
-		i -= len(m.TrackingNumber)
-		copy(dAtA[i:], m.TrackingNumber)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.TrackingNumber)))
-		i--
-		dAtA[i] = 0x3a
-	}
-	if len(m.Viewers) > 0 {
-		i -= len(m.Viewers)
-		copy(dAtA[i:], m.Viewers)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Viewers)))
-		i--
-		dAtA[i] = 0x32
-	}
-	if len(m.Editors) > 0 {
-		i -= len(m.Editors)
-		copy(dAtA[i:], m.Editors)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Editors)))
-		i--
-		dAtA[i] = 0x2a
-	}
-	if len(m.Contents) > 0 {
-		i -= len(m.Contents)
-		copy(dAtA[i:], m.Contents)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Contents)))
-		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.RootHashPath) > 0 {
-		i -= len(m.RootHashPath)
-		copy(dAtA[i:], m.RootHashPath)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.RootHashPath)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if len(m.Account) > 0 {
-		i -= len(m.Account)
-		copy(dAtA[i:], m.Account)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Account)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgMakeRootResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgMakeRootResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgMakeRootResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgMakeRootV2) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgMakeRootV2) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgMakeRootV2) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgProvisionFileTree) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2374,6 +2149,29 @@ func (m *MsgMakeRootV2) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0xa
 	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgProvisionFileTreeResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgProvisionFileTreeResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgProvisionFileTreeResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
 	return len(dAtA) - i, nil
 }
 
@@ -2397,10 +2195,10 @@ func (m *MsgAddEditors) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Fileowner) > 0 {
-		i -= len(m.Fileowner)
-		copy(dAtA[i:], m.Fileowner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Fileowner)))
+	if len(m.FileOwner) > 0 {
+		i -= len(m.FileOwner)
+		copy(dAtA[i:], m.FileOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.FileOwner)))
 		i--
 		dAtA[i] = 0x2a
 	}
@@ -2478,10 +2276,10 @@ func (m *MsgRemoveEditors) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Fileowner) > 0 {
-		i -= len(m.Fileowner)
-		copy(dAtA[i:], m.Fileowner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Fileowner)))
+	if len(m.FileOwner) > 0 {
+		i -= len(m.FileOwner)
+		copy(dAtA[i:], m.FileOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.FileOwner)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -2552,10 +2350,10 @@ func (m *MsgResetEditors) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Fileowner) > 0 {
-		i -= len(m.Fileowner)
-		copy(dAtA[i:], m.Fileowner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Fileowner)))
+	if len(m.FileOwner) > 0 {
+		i -= len(m.FileOwner)
+		copy(dAtA[i:], m.FileOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.FileOwner)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -2619,10 +2417,10 @@ func (m *MsgResetViewers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Fileowner) > 0 {
-		i -= len(m.Fileowner)
-		copy(dAtA[i:], m.Fileowner)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Fileowner)))
+	if len(m.FileOwner) > 0 {
+		i -= len(m.FileOwner)
+		copy(dAtA[i:], m.FileOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.FileOwner)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -2827,7 +2625,7 @@ func (m *MsgAddViewers) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Fileowner)
+	l = len(m.FileOwner)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -2843,7 +2641,7 @@ func (m *MsgAddViewersResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgPostkey) Size() (n int) {
+func (m *MsgPostKey) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2860,7 +2658,7 @@ func (m *MsgPostkey) Size() (n int) {
 	return n
 }
 
-func (m *MsgPostkeyResponse) Size() (n int) {
+func (m *MsgPostKeyResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2917,7 +2715,7 @@ func (m *MsgRemoveViewers) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Fileowner)
+	l = len(m.FileOwner)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -2933,53 +2731,7 @@ func (m *MsgRemoveViewersResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgMakeRoot) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Account)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.RootHashPath)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Contents)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Editors)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Viewers)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.TrackingNumber)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgMakeRootResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
-func (m *MsgMakeRootV2) Size() (n int) {
+func (m *MsgProvisionFileTree) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -3001,6 +2753,15 @@ func (m *MsgMakeRootV2) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
+	return n
+}
+
+func (m *MsgProvisionFileTreeResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
 	return n
 }
 
@@ -3026,7 +2787,7 @@ func (m *MsgAddEditors) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Fileowner)
+	l = len(m.FileOwner)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -3060,7 +2821,7 @@ func (m *MsgRemoveEditors) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Fileowner)
+	l = len(m.FileOwner)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -3090,7 +2851,7 @@ func (m *MsgResetEditors) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Fileowner)
+	l = len(m.FileOwner)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -3120,7 +2881,7 @@ func (m *MsgResetViewers) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Fileowner)
+	l = len(m.FileOwner)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -3723,7 +3484,7 @@ func (m *MsgAddViewers) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Fileowner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FileOwner", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -3751,7 +3512,7 @@ func (m *MsgAddViewers) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			m.FileOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -3824,7 +3585,7 @@ func (m *MsgAddViewersResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgPostkey) Unmarshal(dAtA []byte) error {
+func (m *MsgPostKey) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3847,10 +3608,10 @@ func (m *MsgPostkey) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgPostkey: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgPostKey: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgPostkey: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgPostKey: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3938,7 +3699,7 @@ func (m *MsgPostkey) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgPostkeyResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgPostKeyResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3961,10 +3722,10 @@ func (m *MsgPostkeyResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgPostkeyResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgPostKeyResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgPostkeyResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgPostKeyResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -4311,7 +4072,7 @@ func (m *MsgRemoveViewers) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Fileowner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FileOwner", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4339,7 +4100,7 @@ func (m *MsgRemoveViewers) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			m.FileOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -4412,7 +4173,7 @@ func (m *MsgRemoveViewersResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgMakeRoot) Unmarshal(dAtA []byte) error {
+func (m *MsgProvisionFileTree) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4435,334 +4196,10 @@ func (m *MsgMakeRoot) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgMakeRoot: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgProvisionFileTree: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgMakeRoot: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Account", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Account = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RootHashPath", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.RootHashPath = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Contents", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Contents = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Editors", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Editors = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Viewers", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Viewers = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 7:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TrackingNumber", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.TrackingNumber = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgMakeRootResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgMakeRootResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgMakeRootResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgMakeRootV2) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgMakeRootV2: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgMakeRootV2: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgProvisionFileTree: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4893,6 +4330,56 @@ func (m *MsgMakeRootV2) Unmarshal(dAtA []byte) error {
 			}
 			m.TrackingNumber = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgProvisionFileTreeResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgProvisionFileTreeResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgProvisionFileTreeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -5073,7 +4560,7 @@ func (m *MsgAddEditors) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Fileowner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FileOwner", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5101,7 +4588,7 @@ func (m *MsgAddEditors) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			m.FileOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -5301,7 +4788,7 @@ func (m *MsgRemoveEditors) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Fileowner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FileOwner", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5329,7 +4816,7 @@ func (m *MsgRemoveEditors) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			m.FileOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -5497,7 +4984,7 @@ func (m *MsgResetEditors) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Fileowner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FileOwner", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5525,7 +5012,7 @@ func (m *MsgResetEditors) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			m.FileOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -5693,7 +5180,7 @@ func (m *MsgResetViewers) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Fileowner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FileOwner", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5721,7 +5208,7 @@ func (m *MsgResetViewers) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Fileowner = string(dAtA[iNdEx:postIndex])
+			m.FileOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

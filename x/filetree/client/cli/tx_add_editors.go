@@ -57,27 +57,27 @@ func CmdAddEditors() *cobra.Command {
 				}
 
 				queryClient := types.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &types.QueryPubkeyRequest{Address: key.String()})
+				res, err := queryClient.PubKey(cmd.Context(), &types.QueryPubKey{Address: key.String()})
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}
 
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+				pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 				if err != nil {
 					return err
 				}
 				// Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
-				params := &types.QueryFileRequest{
+				params := &types.QueryFile{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
+				file, err := fileQueryClient.File(context.Background(), params)
 				if err != nil {
 					return types.ErrFileNotFound
 				}
 
-				editors := file.Files.EditAccess
+				editors := file.File.EditAccess
 				var m map[string]string
 
 				err = json.Unmarshal([]byte(editors), &m)
@@ -85,7 +85,7 @@ func CmdAddEditors() *cobra.Command {
 					return types.ErrCantUnmarshall
 				}
 
-				ownerEditorAddress := keeper.MakeEditorAddress(file.Files.TrackingNumber, argOwner)
+				ownerEditorAddress := keeper.MakeEditorAddress(file.File.TrackingNumber, argOwner)
 				logger.Println("m[ownerEditorAddress] =", m[ownerEditorAddress])
 
 				hexMessage, err := hex.DecodeString(m[ownerEditorAddress])
@@ -113,7 +113,7 @@ func CmdAddEditors() *cobra.Command {
 					return err
 				}
 
-				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v)
+				newEditorID := keeper.MakeEditorAddress(file.File.TrackingNumber, v)
 				editorIds = append(editorIds, newEditorID)
 				editorKeys = append(editorKeys, fmt.Sprintf("%x", encrypted))
 

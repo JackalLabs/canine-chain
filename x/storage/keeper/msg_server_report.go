@@ -8,8 +8,8 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-func (k Keeper) Report(ctx sdk.Context, cid string, creator string) error {
-	form, found := k.GetReportForm(ctx, cid)
+func (k Keeper) DoReport(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {
+	form, found := k.GetReportForm(ctx, prover, merkle, owner, start)
 	if !found {
 		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this report")
 	}
@@ -40,21 +40,22 @@ func (k Keeper) Report(ctx sdk.Context, cid string, creator string) error {
 		return nil
 	}
 
-	deal, found := k.GetActiveDeals(ctx, cid)
+	deal, found := k.GetFile(ctx, merkle, owner, start)
 
 	if !found {
 		return sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal from form")
 	}
 
-	k.RemoveReport(ctx, cid)
+	k.RemoveReport(ctx, prover, merkle, owner, start)
 
-	return k.DropDeal(ctx, deal, true)
+	deal.RemoveProver(ctx, k, prover)
+	return nil
 }
 
 func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.MsgReportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.Keeper.Report(ctx, msg.Cid, msg.Creator)
+	err := k.Keeper.DoReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
@@ -62,19 +63,23 @@ func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.M
 	return &types.MsgReportResponse{}, nil
 }
 
-func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
-	deal, found := k.GetActiveDeals(ctx, cid)
+func (k Keeper) RequestReport(ctx sdk.Context, prover string, merkle []byte, owner string, start int64) ([]string, error) {
+	deal, found := k.GetFile(ctx, merkle, owner, start)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal for report form")
 	}
 
-	_, found = k.GetReportForm(ctx, cid)
+	_, found = k.GetReportForm(ctx, prover, merkle, owner, start)
 	if found {
 		return nil, sdkerrors.Wrapf(types.ErrAttestAlreadyExists, "report form already exists")
 	}
 
-	dealProvider := deal.Provider
-	provider, found := k.GetProviders(ctx, dealProvider)
+	_, err := deal.GetProver(ctx, k, prover)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "not a provider of this file")
+	}
+
+	provider, found := k.GetProviders(ctx, prover)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrProviderNotFound, "cannot find provider matching deal")
 	}
@@ -103,7 +108,10 @@ func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
 
 	form := types.ReportForm{
 		Attestations: attestations,
-		Cid:          cid,
+		Prover:       prover,
+		Merkle:       merkle,
+		Owner:        owner,
+		Start:        start,
 	}
 
 	k.SetReportForm(ctx, form)
@@ -113,9 +121,8 @@ func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
 
 func (k msgServer) RequestReportForm(goCtx context.Context, msg *types.MsgRequestReportForm) (*types.MsgRequestReportFormResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	cid := msg.Cid
 
-	providerAddresses, err := k.RequestReport(ctx, cid)
+	providerAddresses, err := k.RequestReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start)
 
 	success := true
 
@@ -130,6 +137,5 @@ func (k msgServer) RequestReportForm(goCtx context.Context, msg *types.MsgReques
 		Providers: providerAddresses,
 		Success:   success,
 		Error:     errorString,
-		Cid:       cid,
 	}, nil
 }

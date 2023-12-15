@@ -7,31 +7,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgSetProviderTotalspace_ValidateBasic(t *testing.T) {
+func TestMsgSetProviderTotalSpace_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgSetProviderTotalspace
+		msg  MsgSetProviderTotalSpace
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgSetProviderTotalspace{
+			msg: MsgSetProviderTotalSpace{
 				Creator: "invalid_address",
-				Space:   "1000000000",
+				Space:   1000000000,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "invalid ip",
-			msg: MsgSetProviderTotalspace{
-				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Space:   "abd",
-			},
-			err: sdkerrors.ErrInvalidType,
-		}, {
 			name: "valid ip",
-			msg: MsgSetProviderTotalspace{
+			msg: MsgSetProviderTotalSpace{
 				Creator: "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Space:   "1000000000",
+				Space:   1000000000,
 			},
 		},
 	}

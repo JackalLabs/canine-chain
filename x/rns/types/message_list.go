@@ -9,7 +9,7 @@ const TypeMsgList = "list"
 
 var _ sdk.Msg = &MsgList{}
 
-func NewMsgList(creator string, name string, price string) *MsgList {
+func NewMsgList(creator string, name string, price sdk.Coin) *MsgList {
 	return &MsgList{
 		Creator: creator,
 		Name:    name,
@@ -46,10 +46,6 @@ func (msg *MsgList) ValidateBasic() error {
 	_, _, err = GetNameAndTLD(msg.Name)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid name/tld (%s)", err)
-	}
-	_, err = sdk.ParseCoinsNormalized(msg.Price)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid bid/tld (%s)", err)
 	}
 	return nil
 }

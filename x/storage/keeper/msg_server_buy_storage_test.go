@@ -30,6 +30,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     8,
 		CollateralPrice:        2,
+		CheckWindow:            10,
 	})
 
 	cases := []struct {
@@ -41,7 +42,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		expErrMsg string
 	}{
 		{
-			testName: "buy storage while having an active plan",
+			testName: "buy less storage than active while having an active plan",
 			preRun: func() {
 				initialPayInfo := types.StoragePaymentInfo{
 					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
@@ -55,12 +56,12 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "6000000000",
+				DurationDays: 30,
+				Bytes:        6000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
-			expErrMsg: "please use MsgUpgradeStorage if you want to upgrade/downgrade",
+			expErrMsg: "cannot downgrade until current plan expires: invalid request",
 		},
 		{
 			testName: "buy 3gb which is less than current usage of 5gb",
@@ -75,8 +76,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "3000000000",
+				DurationDays: 30,
+				Bytes:        3000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -97,8 +98,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "6000000000",
+				DurationDays: 30,
+				Bytes:        6000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
@@ -110,8 +111,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "2160h",
-				Bytes:        "1000000000000",
+				DurationDays: 90,
+				Bytes:        1000000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
@@ -123,8 +124,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "-1",
+				DurationDays: 30,
+				Bytes:        -1,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -135,8 +136,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "2m",
-				Bytes:        "1000000000",
+				DurationDays: 1,
+				Bytes:        1000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -148,8 +149,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "1000000000",
+				DurationDays: 30,
+				Bytes:        1000000000,
 				PaymentDenom: "uatom",
 			},
 			expErr:    true,
@@ -160,8 +161,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      "invalid_address",
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "1000000000",
+				DurationDays: 30,
+				Bytes:        1000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -172,8 +173,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   "invalid_address",
-				Duration:     "720h",
-				Bytes:        "1000000000",
+				DurationDays: 30,
+				Bytes:        1000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,

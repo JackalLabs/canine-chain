@@ -60,7 +60,7 @@ func SimulateMsgAddViewers(
 			ViewerIds:  viewIds,
 			ViewerKeys: viewKeys,
 			Address:    merklePath,
-			Fileowner:  ownerAddress,
+			FileOwner:  ownerAddress,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

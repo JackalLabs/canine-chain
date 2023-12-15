@@ -11,17 +11,14 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) PriceCheck(c context.Context, req *types.QueryPriceCheckRequest) (*types.QueryPriceCheckResponse, error) {
+func (k Keeper) PriceCheck(c context.Context, req *types.QueryPriceCheck) (*types.QueryPriceCheckResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
 
-	duration, err := time.ParseDuration(req.Duration)
-	if err != nil {
-		return nil, fmt.Errorf("duration can't be parsed: %s", err.Error())
-	}
+	duration := time.Duration(req.Duration) * time.Hour * 24
 
 	timeMonth := time.Hour * 24 * 30
 	if duration.Truncate(timeMonth) <= 0 {

@@ -17,7 +17,7 @@ func CmdProvider() *cobra.Command {
 	}
 
 	cmds := []*cobra.Command{
-		CmdSetProviderTotalspace(),
+		CmdSetProviderTotalSpace(),
 		CmdSetProviderIP(),
 		CmdSetProviderKeybase(),
 		CmdInitProvider(),

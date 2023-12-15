@@ -1,9 +1,11 @@
 syntax = "proto3";
 package canine_chain.rns;
 
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+
 option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
 
-// Msg defines the Msg service.
 service Msg {
   rpc Register(MsgRegister) returns (MsgRegisterResponse);
   rpc Bid(MsgBid) returns (MsgBidResponse);
@@ -17,13 +19,12 @@ service Msg {
   rpc DelRecord(MsgDelRecord) returns (MsgDelRecordResponse);
   rpc Init(MsgInit) returns (MsgInitResponse);
   rpc Update(MsgUpdate) returns (MsgUpdateResponse);
-
 }
 
 message MsgRegister {
   string creator = 1;
   string name = 2;
-  string years = 3;
+  int64 years = 3;
   string data = 4;
 }
 
@@ -40,7 +41,7 @@ message MsgUpdateResponse {}
 message MsgBid {
   string creator = 1;
   string name = 2;
-  string bid = 3;
+  cosmos.base.v1beta1.Coin bid = 3 [ (gogoproto.nullable) = false ];
 }
 
 message MsgBidResponse {}
@@ -63,7 +64,7 @@ message MsgCancelBidResponse {}
 message MsgList {
   string creator = 1;
   string name = 2;
-  string price = 3;
+  cosmos.base.v1beta1.Coin price = 3 [ (gogoproto.nullable) = false ];
 }
 
 message MsgListResponse {}

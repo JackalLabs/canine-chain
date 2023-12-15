@@ -49,7 +49,7 @@ func SimulateMsgRemoveEditors(
 			Creator:   simAccount.Address.String(),
 			EditorIds: editIds,
 			Address:   merklePath,
-			Fileowner: ownerAddress,
+			FileOwner: ownerAddress,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

@@ -43,7 +43,7 @@ func SimulateMsgResetEditors(
 		msg := &types.MsgResetEditors{
 			Creator:   simAccount.Address.String(),
 			Address:   merklePath,
-			Fileowner: ownerAddress,
+			FileOwner: ownerAddress,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

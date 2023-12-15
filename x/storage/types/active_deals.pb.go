@@ -22,7 +22,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type ActiveDeals struct {
+type LegacyActiveDeals struct {
 	Cid           string `protobuf:"bytes,1,opt,name=cid,proto3" json:"cid,omitempty"`
 	Signee        string `protobuf:"bytes,2,opt,name=signee,proto3" json:"signee,omitempty"`
 	Provider      string `protobuf:"bytes,3,opt,name=provider,proto3" json:"provider,omitempty"`
@@ -37,18 +37,18 @@ type ActiveDeals struct {
 	Fid           string `protobuf:"bytes,12,opt,name=fid,proto3" json:"fid,omitempty"`
 }
 
-func (m *ActiveDeals) Reset()         { *m = ActiveDeals{} }
-func (m *ActiveDeals) String() string { return proto.CompactTextString(m) }
-func (*ActiveDeals) ProtoMessage()    {}
-func (*ActiveDeals) Descriptor() ([]byte, []int) {
+func (m *LegacyActiveDeals) Reset()         { *m = LegacyActiveDeals{} }
+func (m *LegacyActiveDeals) String() string { return proto.CompactTextString(m) }
+func (*LegacyActiveDeals) ProtoMessage()    {}
+func (*LegacyActiveDeals) Descriptor() ([]byte, []int) {
 	return fileDescriptor_71fa39f1fdaaaa6d, []int{0}
 }
-func (m *ActiveDeals) XXX_Unmarshal(b []byte) error {
+func (m *LegacyActiveDeals) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ActiveDeals) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *LegacyActiveDeals) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ActiveDeals.Marshal(b, m, deterministic)
+		return xxx_messageInfo_LegacyActiveDeals.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -58,104 +58,306 @@ func (m *ActiveDeals) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 		return b[:n], nil
 	}
 }
-func (m *ActiveDeals) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ActiveDeals.Merge(m, src)
+func (m *LegacyActiveDeals) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LegacyActiveDeals.Merge(m, src)
 }
-func (m *ActiveDeals) XXX_Size() int {
+func (m *LegacyActiveDeals) XXX_Size() int {
 	return m.Size()
 }
-func (m *ActiveDeals) XXX_DiscardUnknown() {
-	xxx_messageInfo_ActiveDeals.DiscardUnknown(m)
+func (m *LegacyActiveDeals) XXX_DiscardUnknown() {
+	xxx_messageInfo_LegacyActiveDeals.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ActiveDeals proto.InternalMessageInfo
+var xxx_messageInfo_LegacyActiveDeals proto.InternalMessageInfo
 
-func (m *ActiveDeals) GetCid() string {
+func (m *LegacyActiveDeals) GetCid() string {
 	if m != nil {
 		return m.Cid
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetSignee() string {
+func (m *LegacyActiveDeals) GetSignee() string {
 	if m != nil {
 		return m.Signee
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetProvider() string {
+func (m *LegacyActiveDeals) GetProvider() string {
 	if m != nil {
 		return m.Provider
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetStartblock() string {
+func (m *LegacyActiveDeals) GetStartblock() string {
 	if m != nil {
 		return m.Startblock
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetEndblock() string {
+func (m *LegacyActiveDeals) GetEndblock() string {
 	if m != nil {
 		return m.Endblock
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetFilesize() string {
+func (m *LegacyActiveDeals) GetFilesize() string {
 	if m != nil {
 		return m.Filesize
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetProofverified() string {
+func (m *LegacyActiveDeals) GetProofverified() string {
 	if m != nil {
 		return m.Proofverified
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetProofsmissed() string {
+func (m *LegacyActiveDeals) GetProofsmissed() string {
 	if m != nil {
 		return m.Proofsmissed
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetBlocktoprove() string {
+func (m *LegacyActiveDeals) GetBlocktoprove() string {
 	if m != nil {
 		return m.Blocktoprove
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetCreator() string {
+func (m *LegacyActiveDeals) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetMerkle() string {
+func (m *LegacyActiveDeals) GetMerkle() string {
 	if m != nil {
 		return m.Merkle
 	}
 	return ""
 }
 
-func (m *ActiveDeals) GetFid() string {
+func (m *LegacyActiveDeals) GetFid() string {
 	if m != nil {
 		return m.Fid
 	}
 	return ""
 }
 
+type UnifiedFile struct {
+	Merkle        []byte   `protobuf:"bytes,1,opt,name=merkle,proto3" json:"merkle,omitempty"`
+	Owner         string   `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	Start         int64    `protobuf:"varint,3,opt,name=start,proto3" json:"start,omitempty"`
+	Expires       int64    `protobuf:"varint,4,opt,name=expires,proto3" json:"expires,omitempty"`
+	FileSize      int64    `protobuf:"varint,5,opt,name=file_size,json=fileSize,proto3" json:"file_size,omitempty"`
+	ProofInterval int64    `protobuf:"varint,6,opt,name=proof_interval,json=proofInterval,proto3" json:"proof_interval,omitempty"`
+	ProofType     int64    `protobuf:"varint,7,opt,name=proof_type,json=proofType,proto3" json:"proof_type,omitempty"`
+	Proofs        []string `protobuf:"bytes,8,rep,name=proofs,proto3" json:"proofs,omitempty"`
+	MaxProofs     int64    `protobuf:"varint,9,opt,name=max_proofs,json=maxProofs,proto3" json:"max_proofs,omitempty"`
+	Note          string   `protobuf:"bytes,10,opt,name=note,proto3" json:"note,omitempty"`
+}
+
+func (m *UnifiedFile) Reset()         { *m = UnifiedFile{} }
+func (m *UnifiedFile) String() string { return proto.CompactTextString(m) }
+func (*UnifiedFile) ProtoMessage()    {}
+func (*UnifiedFile) Descriptor() ([]byte, []int) {
+	return fileDescriptor_71fa39f1fdaaaa6d, []int{1}
+}
+func (m *UnifiedFile) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UnifiedFile) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UnifiedFile.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UnifiedFile) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UnifiedFile.Merge(m, src)
+}
+func (m *UnifiedFile) XXX_Size() int {
+	return m.Size()
+}
+func (m *UnifiedFile) XXX_DiscardUnknown() {
+	xxx_messageInfo_UnifiedFile.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UnifiedFile proto.InternalMessageInfo
+
+func (m *UnifiedFile) GetMerkle() []byte {
+	if m != nil {
+		return m.Merkle
+	}
+	return nil
+}
+
+func (m *UnifiedFile) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *UnifiedFile) GetStart() int64 {
+	if m != nil {
+		return m.Start
+	}
+	return 0
+}
+
+func (m *UnifiedFile) GetExpires() int64 {
+	if m != nil {
+		return m.Expires
+	}
+	return 0
+}
+
+func (m *UnifiedFile) GetFileSize() int64 {
+	if m != nil {
+		return m.FileSize
+	}
+	return 0
+}
+
+func (m *UnifiedFile) GetProofInterval() int64 {
+	if m != nil {
+		return m.ProofInterval
+	}
+	return 0
+}
+
+func (m *UnifiedFile) GetProofType() int64 {
+	if m != nil {
+		return m.ProofType
+	}
+	return 0
+}
+
+func (m *UnifiedFile) GetProofs() []string {
+	if m != nil {
+		return m.Proofs
+	}
+	return nil
+}
+
+func (m *UnifiedFile) GetMaxProofs() int64 {
+	if m != nil {
+		return m.MaxProofs
+	}
+	return 0
+}
+
+func (m *UnifiedFile) GetNote() string {
+	if m != nil {
+		return m.Note
+	}
+	return ""
+}
+
+type FileProof struct {
+	Prover       string `protobuf:"bytes,1,opt,name=prover,proto3" json:"prover,omitempty"`
+	Merkle       []byte `protobuf:"bytes,2,opt,name=merkle,proto3" json:"merkle,omitempty"`
+	Owner        string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+	Start        int64  `protobuf:"varint,4,opt,name=start,proto3" json:"start,omitempty"`
+	LastProven   int64  `protobuf:"varint,5,opt,name=last_proven,json=lastProven,proto3" json:"last_proven,omitempty"`
+	ChunkToProve int64  `protobuf:"varint,6,opt,name=chunk_to_prove,json=chunkToProve,proto3" json:"chunk_to_prove,omitempty"`
+}
+
+func (m *FileProof) Reset()         { *m = FileProof{} }
+func (m *FileProof) String() string { return proto.CompactTextString(m) }
+func (*FileProof) ProtoMessage()    {}
+func (*FileProof) Descriptor() ([]byte, []int) {
+	return fileDescriptor_71fa39f1fdaaaa6d, []int{2}
+}
+func (m *FileProof) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *FileProof) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_FileProof.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *FileProof) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FileProof.Merge(m, src)
+}
+func (m *FileProof) XXX_Size() int {
+	return m.Size()
+}
+func (m *FileProof) XXX_DiscardUnknown() {
+	xxx_messageInfo_FileProof.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FileProof proto.InternalMessageInfo
+
+func (m *FileProof) GetProver() string {
+	if m != nil {
+		return m.Prover
+	}
+	return ""
+}
+
+func (m *FileProof) GetMerkle() []byte {
+	if m != nil {
+		return m.Merkle
+	}
+	return nil
+}
+
+func (m *FileProof) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *FileProof) GetStart() int64 {
+	if m != nil {
+		return m.Start
+	}
+	return 0
+}
+
+func (m *FileProof) GetLastProven() int64 {
+	if m != nil {
+		return m.LastProven
+	}
+	return 0
+}
+
+func (m *FileProof) GetChunkToProve() int64 {
+	if m != nil {
+		return m.ChunkToProve
+	}
+	return 0
+}
+
 func init() {
-	proto.RegisterType((*ActiveDeals)(nil), "canine_chain.storage.ActiveDeals")
+	proto.RegisterType((*LegacyActiveDeals)(nil), "canine_chain.storage.LegacyActiveDeals")
+	proto.RegisterType((*UnifiedFile)(nil), "canine_chain.storage.UnifiedFile")
+	proto.RegisterType((*FileProof)(nil), "canine_chain.storage.FileProof")
 }
 
 func init() {
@@ -163,31 +365,43 @@ func init() {
 }
 
 var fileDescriptor_71fa39f1fdaaaa6d = []byte{
-	// 326 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x54, 0x91, 0xcf, 0x4a, 0x03, 0x31,
-	0x18, 0xc4, 0xbb, 0xad, 0xf6, 0x4f, 0x5a, 0x41, 0x82, 0x48, 0xf0, 0x10, 0xa4, 0x08, 0x7a, 0xb1,
-	0x0b, 0xfa, 0x04, 0x8a, 0xc7, 0x9e, 0x3c, 0x7a, 0x29, 0xd9, 0xe4, 0xdb, 0xf6, 0xb3, 0xdb, 0xcd,
-	0x92, 0xc4, 0xa2, 0x3e, 0x85, 0x8f, 0xe5, 0xb1, 0x47, 0x2f, 0x82, 0xb4, 0x2f, 0x22, 0x49, 0xda,
-	0xb2, 0xbd, 0xed, 0xcc, 0xfc, 0x3e, 0x36, 0xcc, 0x90, 0x6b, 0x29, 0x4a, 0x2c, 0x61, 0x22, 0x67,
-	0x02, 0xcb, 0xd4, 0x3a, 0x6d, 0xc4, 0x14, 0x52, 0x21, 0x1d, 0x2e, 0x61, 0xa2, 0x40, 0x14, 0x76,
-	0x54, 0x19, 0xed, 0x34, 0x3d, 0xab, 0x83, 0xa3, 0x2d, 0x38, 0xfc, 0x6d, 0x92, 0xfe, 0x43, 0x80,
-	0x9f, 0x3c, 0x4b, 0x4f, 0x49, 0x4b, 0xa2, 0x62, 0xc9, 0x65, 0x72, 0xd3, 0x7b, 0xf6, 0x9f, 0xf4,
-	0x9c, 0xb4, 0x2d, 0x4e, 0x4b, 0x00, 0xd6, 0x0c, 0xe6, 0x56, 0xd1, 0x0b, 0xd2, 0xad, 0x8c, 0x5e,
-	0xa2, 0x02, 0xc3, 0x5a, 0x21, 0xd9, 0x6b, 0xca, 0x09, 0xb1, 0x4e, 0x18, 0x97, 0x15, 0x5a, 0xce,
-	0xd9, 0x51, 0x48, 0x6b, 0x8e, 0xbf, 0x85, 0x52, 0xc5, 0xf4, 0x38, 0xde, 0xee, 0xb4, 0xcf, 0x72,
-	0x2c, 0xc0, 0xe2, 0x27, 0xb0, 0x76, 0xcc, 0x76, 0x9a, 0x5e, 0x91, 0x93, 0xca, 0x68, 0x9d, 0x2f,
-	0xc1, 0x60, 0x8e, 0xa0, 0x58, 0x27, 0x00, 0x87, 0x26, 0x1d, 0x92, 0x41, 0x30, 0xec, 0x02, 0xad,
-	0x05, 0xc5, 0xba, 0x01, 0x3a, 0xf0, 0x3c, 0x13, 0x7e, 0xe7, 0xb4, 0x7f, 0x34, 0xb0, 0x5e, 0x64,
-	0xea, 0x1e, 0x65, 0xa4, 0x23, 0x0d, 0x08, 0xa7, 0x0d, 0x23, 0x21, 0xde, 0x49, 0xdf, 0xc9, 0x02,
-	0xcc, 0xbc, 0x00, 0xd6, 0x8f, 0x9d, 0x44, 0xe5, 0xdb, 0xcb, 0x51, 0xb1, 0x41, 0x6c, 0x2f, 0x47,
-	0xf5, 0x38, 0xfe, 0x5e, 0xf3, 0x64, 0xb5, 0xe6, 0xc9, 0xdf, 0x9a, 0x27, 0x5f, 0x1b, 0xde, 0x58,
-	0x6d, 0x78, 0xe3, 0x67, 0xc3, 0x1b, 0x2f, 0x77, 0x53, 0x74, 0xb3, 0xb7, 0x6c, 0x24, 0xf5, 0x22,
-	0x7d, 0x15, 0x72, 0x2e, 0x8a, 0xb1, 0xc8, 0x6c, 0x1a, 0x57, 0xba, 0x8d, 0x73, 0xbe, 0xef, 0x07,
-	0x75, 0x1f, 0x15, 0xd8, 0xac, 0x1d, 0xa6, 0xbc, 0xff, 0x0f, 0x00, 0x00, 0xff, 0xff, 0x9b, 0x74,
-	0x98, 0x75, 0xf5, 0x01, 0x00, 0x00,
+	// 527 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x93, 0xcf, 0x6e, 0xd3, 0x30,
+	0x1c, 0xc7, 0x97, 0x66, 0xeb, 0x9a, 0x5f, 0xcb, 0x04, 0xd6, 0x84, 0x2c, 0x10, 0x61, 0xaa, 0x86,
+	0xe0, 0x42, 0x2b, 0xc1, 0x13, 0x80, 0x10, 0x12, 0x52, 0x0f, 0x53, 0x19, 0x17, 0x2e, 0x91, 0x9b,
+	0xfc, 0xda, 0x9a, 0xa6, 0x71, 0x64, 0x7b, 0xa5, 0xe5, 0x29, 0xb8, 0xf2, 0x12, 0x3c, 0x07, 0xc7,
+	0x1d, 0x39, 0xa2, 0xf6, 0x45, 0x90, 0x7f, 0x76, 0xab, 0x4c, 0xda, 0x2d, 0xdf, 0x7f, 0xa9, 0xf3,
+	0x51, 0x0d, 0x2f, 0x73, 0x51, 0xc9, 0x0a, 0xb3, 0x7c, 0x2e, 0x64, 0x35, 0x34, 0x56, 0x69, 0x31,
+	0xc3, 0xa1, 0xc8, 0xad, 0x5c, 0x61, 0x56, 0xa0, 0x28, 0xcd, 0xa0, 0xd6, 0xca, 0x2a, 0x76, 0xde,
+	0x2c, 0x0e, 0x42, 0xb1, 0xbf, 0x6b, 0xc1, 0xa3, 0x11, 0xce, 0x44, 0xbe, 0x79, 0x47, 0x93, 0x0f,
+	0x6e, 0xc1, 0x1e, 0x42, 0x9c, 0xcb, 0x82, 0x47, 0x17, 0xd1, 0xab, 0x64, 0xec, 0x1e, 0xd9, 0x63,
+	0x68, 0x1b, 0x39, 0xab, 0x10, 0x79, 0x8b, 0xcc, 0xa0, 0xd8, 0x13, 0xe8, 0xd4, 0x5a, 0xad, 0x64,
+	0x81, 0x9a, 0xc7, 0x94, 0x1c, 0x34, 0x4b, 0x01, 0x8c, 0x15, 0xda, 0x4e, 0x4a, 0x95, 0x2f, 0xf8,
+	0x31, 0xa5, 0x0d, 0xc7, 0x6d, 0xb1, 0x2a, 0x7c, 0x7a, 0xe2, 0xb7, 0x7b, 0xed, 0xb2, 0xa9, 0x2c,
+	0xd1, 0xc8, 0x1f, 0xc8, 0xdb, 0x3e, 0xdb, 0x6b, 0x76, 0x09, 0x0f, 0x6a, 0xad, 0xd4, 0x74, 0x85,
+	0x5a, 0x4e, 0x25, 0x16, 0xfc, 0x94, 0x0a, 0x77, 0x4d, 0xd6, 0x87, 0x1e, 0x19, 0x66, 0x29, 0x8d,
+	0xc1, 0x82, 0x77, 0xa8, 0x74, 0xc7, 0x73, 0x1d, 0xfa, 0x39, 0xab, 0xdc, 0xa1, 0x91, 0x27, 0xbe,
+	0xd3, 0xf4, 0x18, 0x87, 0xd3, 0x5c, 0xa3, 0xb0, 0x4a, 0x73, 0xa0, 0x78, 0x2f, 0x1d, 0x93, 0x25,
+	0xea, 0x45, 0x89, 0xbc, 0xeb, 0x99, 0x78, 0xe5, 0xe8, 0x4d, 0x65, 0xc1, 0x7b, 0x9e, 0xde, 0x54,
+	0x16, 0xfd, 0x5f, 0x2d, 0xe8, 0x7e, 0xa9, 0xe8, 0x5c, 0x1f, 0x65, 0x89, 0x8d, 0xa5, 0x43, 0xdc,
+	0x3b, 0x2c, 0xcf, 0xe1, 0x44, 0x7d, 0xaf, 0x50, 0x07, 0xc8, 0x5e, 0x38, 0x97, 0xa8, 0x11, 0xe0,
+	0x78, 0xec, 0x85, 0x3b, 0x17, 0xae, 0x6b, 0xa9, 0xd1, 0x10, 0xda, 0x78, 0xbc, 0x97, 0xec, 0x29,
+	0x24, 0x8e, 0x55, 0x46, 0xf0, 0x4e, 0x28, 0x23, 0x78, 0x9f, 0x1d, 0xbc, 0x17, 0x70, 0x46, 0x08,
+	0x32, 0x59, 0x59, 0xd4, 0x2b, 0x51, 0x12, 0xde, 0x38, 0xd0, 0xfb, 0x14, 0x4c, 0xf6, 0x0c, 0xc0,
+	0xd7, 0xec, 0xa6, 0x46, 0x02, 0x1c, 0x8f, 0x13, 0x72, 0xae, 0x37, 0x35, 0x7d, 0x80, 0x07, 0xc9,
+	0x3b, 0x17, 0xb1, 0xfb, 0x74, 0xaf, 0xdc, 0x6c, 0x29, 0xd6, 0x59, 0xc8, 0x12, 0x3f, 0x5b, 0x8a,
+	0xf5, 0x95, 0x8f, 0x19, 0x1c, 0x57, 0xca, 0x62, 0x00, 0x49, 0xcf, 0xfd, 0xdf, 0x11, 0x24, 0x0e,
+	0x0a, 0x55, 0xc2, 0x8b, 0x57, 0xa8, 0xc3, 0x9f, 0x2f, 0xa8, 0x06, 0xb1, 0xd6, 0xfd, 0xc4, 0xe2,
+	0x7b, 0x89, 0x1d, 0x37, 0x89, 0x3d, 0x87, 0x6e, 0x29, 0x8c, 0xcd, 0xe8, 0x95, 0x55, 0x20, 0x03,
+	0xce, 0xba, 0x22, 0x87, 0x5d, 0xc2, 0x59, 0x3e, 0xbf, 0xa9, 0x16, 0x99, 0x55, 0xbe, 0x14, 0xd8,
+	0xf4, 0xc8, 0xbd, 0x56, 0x54, 0x7b, 0x3f, 0xfa, 0xb3, 0x4d, 0xa3, 0xdb, 0x6d, 0x1a, 0xfd, 0xdb,
+	0xa6, 0xd1, 0xcf, 0x5d, 0x7a, 0x74, 0xbb, 0x4b, 0x8f, 0xfe, 0xee, 0xd2, 0xa3, 0xaf, 0x6f, 0x66,
+	0xd2, 0xce, 0x6f, 0x26, 0x83, 0x5c, 0x2d, 0x87, 0xdf, 0x44, 0xbe, 0x10, 0xe5, 0x48, 0x4c, 0xcc,
+	0xd0, 0x5f, 0xbc, 0xd7, 0xfe, 0x86, 0xae, 0x0f, 0x77, 0xd4, 0x91, 0x35, 0x93, 0x36, 0xdd, 0xce,
+	0xb7, 0xff, 0x03, 0x00, 0x00, 0xff, 0xff, 0x5f, 0xcb, 0xbd, 0xe7, 0xc8, 0x03, 0x00, 0x00,
 }
 
-func (m *ActiveDeals) Marshal() (dAtA []byte, err error) {
+func (m *LegacyActiveDeals) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -197,12 +411,12 @@ func (m *ActiveDeals) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ActiveDeals) MarshalTo(dAtA []byte) (int, error) {
+func (m *LegacyActiveDeals) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *LegacyActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -294,6 +508,148 @@ func (m *ActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *UnifiedFile) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UnifiedFile) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UnifiedFile) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Note) > 0 {
+		i -= len(m.Note)
+		copy(dAtA[i:], m.Note)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Note)))
+		i--
+		dAtA[i] = 0x52
+	}
+	if m.MaxProofs != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.MaxProofs))
+		i--
+		dAtA[i] = 0x48
+	}
+	if len(m.Proofs) > 0 {
+		for iNdEx := len(m.Proofs) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Proofs[iNdEx])
+			copy(dAtA[i:], m.Proofs[iNdEx])
+			i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Proofs[iNdEx])))
+			i--
+			dAtA[i] = 0x42
+		}
+	}
+	if m.ProofType != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.ProofType))
+		i--
+		dAtA[i] = 0x38
+	}
+	if m.ProofInterval != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.ProofInterval))
+		i--
+		dAtA[i] = 0x30
+	}
+	if m.FileSize != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.FileSize))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.Expires != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.Expires))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.Start != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.Start))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Owner)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Merkle) > 0 {
+		i -= len(m.Merkle)
+		copy(dAtA[i:], m.Merkle)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Merkle)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *FileProof) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *FileProof) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *FileProof) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ChunkToProve != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.ChunkToProve))
+		i--
+		dAtA[i] = 0x30
+	}
+	if m.LastProven != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.LastProven))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.Start != 0 {
+		i = encodeVarintActiveDeals(dAtA, i, uint64(m.Start))
+		i--
+		dAtA[i] = 0x20
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Owner)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Merkle) > 0 {
+		i -= len(m.Merkle)
+		copy(dAtA[i:], m.Merkle)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Merkle)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Prover) > 0 {
+		i -= len(m.Prover)
+		copy(dAtA[i:], m.Prover)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Prover)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintActiveDeals(dAtA []byte, offset int, v uint64) int {
 	offset -= sovActiveDeals(v)
 	base := offset
@@ -305,7 +661,7 @@ func encodeVarintActiveDeals(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *ActiveDeals) Size() (n int) {
+func (m *LegacyActiveDeals) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -362,13 +718,88 @@ func (m *ActiveDeals) Size() (n int) {
 	return n
 }
 
+func (m *UnifiedFile) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Merkle)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	if m.Start != 0 {
+		n += 1 + sovActiveDeals(uint64(m.Start))
+	}
+	if m.Expires != 0 {
+		n += 1 + sovActiveDeals(uint64(m.Expires))
+	}
+	if m.FileSize != 0 {
+		n += 1 + sovActiveDeals(uint64(m.FileSize))
+	}
+	if m.ProofInterval != 0 {
+		n += 1 + sovActiveDeals(uint64(m.ProofInterval))
+	}
+	if m.ProofType != 0 {
+		n += 1 + sovActiveDeals(uint64(m.ProofType))
+	}
+	if len(m.Proofs) > 0 {
+		for _, s := range m.Proofs {
+			l = len(s)
+			n += 1 + l + sovActiveDeals(uint64(l))
+		}
+	}
+	if m.MaxProofs != 0 {
+		n += 1 + sovActiveDeals(uint64(m.MaxProofs))
+	}
+	l = len(m.Note)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	return n
+}
+
+func (m *FileProof) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Prover)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Merkle)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	if m.Start != 0 {
+		n += 1 + sovActiveDeals(uint64(m.Start))
+	}
+	if m.LastProven != 0 {
+		n += 1 + sovActiveDeals(uint64(m.LastProven))
+	}
+	if m.ChunkToProve != 0 {
+		n += 1 + sovActiveDeals(uint64(m.ChunkToProve))
+	}
+	return n
+}
+
 func sovActiveDeals(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozActiveDeals(x uint64) (n int) {
 	return sovActiveDeals(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *ActiveDeals) Unmarshal(dAtA []byte) error {
+func (m *LegacyActiveDeals) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -391,10 +822,10 @@ func (m *ActiveDeals) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ActiveDeals: wiretype end group for non-group")
+			return fmt.Errorf("proto: LegacyActiveDeals: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ActiveDeals: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: LegacyActiveDeals: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -781,6 +1212,505 @@ func (m *ActiveDeals) Unmarshal(dAtA []byte) error {
 			}
 			m.Fid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActiveDeals(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UnifiedFile) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActiveDeals
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UnifiedFile: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UnifiedFile: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Merkle", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Merkle = append(m.Merkle[:0], dAtA[iNdEx:postIndex]...)
+			if m.Merkle == nil {
+				m.Merkle = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Start", wireType)
+			}
+			m.Start = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Start |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Expires", wireType)
+			}
+			m.Expires = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Expires |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FileSize", wireType)
+			}
+			m.FileSize = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.FileSize |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProofInterval", wireType)
+			}
+			m.ProofInterval = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ProofInterval |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProofType", wireType)
+			}
+			m.ProofType = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ProofType |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Proofs", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Proofs = append(m.Proofs, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 9:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaxProofs", wireType)
+			}
+			m.MaxProofs = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.MaxProofs |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Note", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Note = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActiveDeals(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *FileProof) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActiveDeals
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: FileProof: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: FileProof: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Prover", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Prover = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Merkle", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Merkle = append(m.Merkle[:0], dAtA[iNdEx:postIndex]...)
+			if m.Merkle == nil {
+				m.Merkle = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Start", wireType)
+			}
+			m.Start = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Start |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastProven", wireType)
+			}
+			m.LastProven = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LastProven |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChunkToProve", wireType)
+			}
+			m.ChunkToProve = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChunkToProve |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipActiveDeals(dAtA[iNdEx:])

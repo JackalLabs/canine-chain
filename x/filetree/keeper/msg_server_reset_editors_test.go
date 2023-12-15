@@ -46,27 +46,27 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 
 	// Let's query the file after it was set to confirm that alice and bob are editors
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	bobIsEditor, err := keeper.HasEditAccess(res.Files, bob)
+	bobIsEditor, err := keeper.HasEditAccess(res.File, bob)
 	suite.Require().NoError(err)
 	suite.Require().Equal(bobIsEditor, true)
 
-	aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice)
+	aliceIsEditor, err := keeper.HasEditAccess(res.File, alice)
 	suite.Require().NoError(err)
 	suite.Require().Equal(aliceIsEditor, true)
 
-	charlieIsEditor, err := keeper.HasEditAccess(res.Files, charlie)
+	charlieIsEditor, err := keeper.HasEditAccess(res.File, charlie)
 	suite.Require().NoError(err)
 	suite.Require().Equal(charlieIsEditor, true)
 
-	peacc := res.Files.EditAccess
+	peacc := res.File.EditAccess
 	jeacc := make(map[string]string)
 
 	err = json.Unmarshal([]byte(peacc), &jeacc)
@@ -130,26 +130,26 @@ func (suite *KeeperTestSuite) TestMsgResetEditors() {
 				suite.Require().EqualValues(types.MsgRemoveEditorsResponse{}, *res)
 				// Let's confirm that bob is no longer an editor
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				bobIsEditor, err := keeper.HasEditAccess(res.Files, bob)
+				bobIsEditor, err := keeper.HasEditAccess(res.File, bob)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(bobIsEditor, false)
 
-				charlieIsEditor, err := keeper.HasEditAccess(res.Files, charlie)
+				charlieIsEditor, err := keeper.HasEditAccess(res.File, charlie)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(charlieIsEditor, false)
 
-				aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice)
+				aliceIsEditor, err := keeper.HasEditAccess(res.File, alice)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(aliceIsEditor, true)
 
-				peacc := res.Files.EditAccess
+				peacc := res.File.EditAccess
 				jeacc := make(map[string]string)
 
 				err = json.Unmarshal([]byte(peacc), &jeacc)

@@ -23,11 +23,11 @@ func CmdListStoragePaymentInfo() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllStoragePaymentInfoRequest{
+			params := &types.QueryAllStoragePaymentInfo{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.StoragePaymentInfoAll(context.Background(), params)
+			res, err := queryClient.AllStoragePaymentInfo(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,7 +54,7 @@ func CmdShowStoragePaymentInfo() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryStoragePaymentInfoRequest{
+			params := &types.QueryStoragePaymentInfo{
 				Address: argAddress,
 			}
 

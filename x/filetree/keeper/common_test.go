@@ -19,15 +19,15 @@ import (
 	types "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
 
-// setupFiletreeKeeper creates a filetreeKeeper as well as all its dependencies.
-func setupFiletreeKeeper(t *testing.T) (
+// SetupFiletreeKeeper creates a filetreeKeeper as well as all its dependencies.
+func SetupFiletreeKeeper(t *testing.T) (
 	*keeper.Keeper,
 	moduletestutil.TestEncodingConfig,
 	sdk.Context,
 ) {
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, sdk.NewTransientStoreKey("transient_test"))
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, sdk.NewTransientStoreKey("transient_test"), key)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()

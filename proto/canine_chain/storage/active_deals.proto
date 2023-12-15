@@ -3,17 +3,39 @@ package canine_chain.storage;
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
-message ActiveDeals {
+message LegacyActiveDeals {
   string cid = 1;
   string signee = 2;
   string provider = 3;
-  string startblock = 4;
-  string endblock = 5;
-  string filesize = 6;
-  string proofverified = 7;
-  string proofsmissed = 8;
-  string blocktoprove = 9;
+  string startblock = 4; // TODO: fix casing
+  string endblock = 5; // TODO: fix casing
+  string filesize = 6; // TODO: fix casing
+  string proofverified = 7; // TODO: fix casing
+  string proofsmissed = 8; // TODO: fix casing
+  string blocktoprove = 9; // TODO: fix casing
   string creator = 10;
   string merkle = 11;
   string fid = 12;
+}
+
+message UnifiedFile {
+  bytes merkle = 1; // The merkle root is unique to every file based on its contents.
+  string owner = 2;
+  int64 start = 3; // Marks the block height the file started on.
+  int64 expires = 4; // If not zero, the end block determines when a file should be deleted.
+  int64 file_size = 5;
+  int64 proof_interval = 6; // How many blocks between proofs.
+  int64 proof_type = 7;
+  repeated string proofs = 8; // A list of every file proof.
+  int64 max_proofs = 9; // How many provers this file can have.
+  string note = 10; // Misc string to store extra details.
+}
+
+message FileProof {
+  string prover = 1;
+  bytes merkle = 2; //  Used to identify which deal this proof belongs to
+  string owner = 3; //  ''
+  int64 start = 4;  //  ''
+  int64 last_proven = 5;
+  int64 chunk_to_prove = 6;
 }

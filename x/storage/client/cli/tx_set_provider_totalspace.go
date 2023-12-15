@@ -11,22 +11,26 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdSetProviderTotalspace() *cobra.Command {
+func CmdSetProviderTotalSpace() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-totalspace [space]",
 		Short: "Broadcast message set-provider-totalspace",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argSpace := args[0]
+			space, err := strconv.ParseInt(argSpace, 10, 64)
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgSetProviderTotalspace(
+			msg := types.NewMsgSetProviderTotalSpace(
 				clientCtx.GetFromAddress().String(),
-				argSpace,
+				space,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

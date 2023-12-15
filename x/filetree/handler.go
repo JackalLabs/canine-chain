@@ -23,8 +23,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgAddViewers:
 			res, err := msgServer.AddViewers(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgPostkey:
-			res, err := msgServer.Postkey(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgPostKey:
+			res, err := msgServer.PostKey(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgDeleteFile:
 			res, err := msgServer.DeleteFile(sdk.WrapSDKContext(ctx), msg)
@@ -32,11 +32,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgRemoveViewers:
 			res, err := msgServer.RemoveViewers(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgMakeRoot:
-			res, err := msgServer.MakeRoot(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgMakeRootV2:
-			res, err := msgServer.MakeRootV2(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgProvisionFileTree:
+			res, err := msgServer.ProvisionFileTree(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgAddEditors:
 			res, err := msgServer.AddEditors(sdk.WrapSDKContext(ctx), msg)
