@@ -366,5 +366,6 @@ message QueryStorageStatsResponse {
     (gogoproto.nullable)   = false
   ];
   uint64 activeUsers = 4;
+  uint64 uniqueUsers = 5;
 }
 // this line is used by starport scaffolding # 3
