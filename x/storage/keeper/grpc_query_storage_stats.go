@@ -21,8 +21,10 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 	var spacePurchased int64
 	var spaceUsed int64
 	var activeUsers uint64
+	var totalUsers uint64
 
 	for _, info := range payment {
+		totalUsers++ // counting in total users
 		if info.End.Before(ctx.BlockTime()) {
 			continue
 		}
@@ -41,5 +43,6 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 		Used:        uint64(spaceUsed),
 		UsedRatio:   ratio,
 		ActiveUsers: activeUsers,
+		UniqueUsers: totalUsers,
 	}, nil
 }
