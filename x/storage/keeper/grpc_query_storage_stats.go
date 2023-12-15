@@ -30,7 +30,7 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*
 		if info.End.Before(ctx.BlockTime()) {
 			continue
 		}
-    usersByPlan[info.SpaceAvailable]++
+		usersByPlan[info.SpaceAvailable]++
 		spacePurchased += info.SpaceAvailable
 		spaceUsed += info.SpaceUsed
 		activeUsers++

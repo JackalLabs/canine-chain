@@ -259,7 +259,6 @@ func (m *QueryAllFilesResponse) Reset()         { *m = QueryAllFilesResponse{} }
 func (m *QueryAllFilesResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllFilesResponse) ProtoMessage()    {}
 func (*QueryAllFilesResponse) Descriptor() ([]byte, []int) {
-
 	return fileDescriptor_f2d116acb9d238bd, []int{5}
 }
 func (m *QueryAllFilesResponse) XXX_Unmarshal(b []byte) error {
@@ -560,7 +559,6 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-
 	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries a File by address and owner_address.
 	File(ctx context.Context, in *QueryFile, opts ...grpc.CallOption) (*QueryFileResponse, error)

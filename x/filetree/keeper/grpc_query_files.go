@@ -39,7 +39,6 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 	return &types.QueryAllFilesResponse{Files: filess, Pagination: pageRes}, nil
 }
 
-
 func (k Keeper) File(c context.Context, req *types.QueryFile) (*types.QueryFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
