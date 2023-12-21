@@ -236,3 +236,30 @@ func (mr *MockOracleKeeperMockRecorder) GetFeed(ctx, index interface{}) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFeed", reflect.TypeOf((*MockOracleKeeper)(nil).GetFeed), ctx, index)
 }
+
+// MockOracleKeeper is a mock of OracleKeeper interface.
+type MockRNSKeeper struct {
+	ctrl     *gomock.Controller
+	recorder *MockRNSKeeperMockRecorder
+}
+
+func (m *MockRNSKeeper) Resolve(ctx types.Context, name string) (types.AccAddress, error) {
+	return types.AccAddressFromBech32("jkl18dtaqkj3cdazn4rpgqdc3acz98cp5yz30erp95")
+}
+
+// MockOracleKeeperMockRecorder is the mock recorder for MockOracleKeeper.
+type MockRNSKeeperMockRecorder struct {
+	mock *MockRNSKeeper
+}
+
+// NewMockOracleKeeper creates a new mock instance.
+func NewMockRNSKeeper(ctrl *gomock.Controller) *MockRNSKeeper {
+	mock := &MockRNSKeeper{ctrl: ctrl}
+	mock.recorder = &MockRNSKeeperMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRNSKeeper) EXPECT() *MockRNSKeeperMockRecorder {
+	return m.recorder
+}

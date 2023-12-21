@@ -30,3 +30,8 @@ type BankKeeper interface {
 type OracleKeeper interface {
 	GetFeed(ctx sdk.Context, index string) (val oracletypes.Feed, found bool)
 }
+
+// RnsKeeper defines the expected interface needed to resolve RNS names.
+type RnsKeeper interface {
+	Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error)
+}

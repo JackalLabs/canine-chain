@@ -50,7 +50,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	if err != nil {
 		return nil, err
 	}
-	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, priceTokenList)
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, priceTokenList)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	k.SetStoragePaymentInfo(ctx, spi)
 
-	err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(priceTokens))
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(priceTokens))
 	if err != nil {
 		return nil, err
 	}

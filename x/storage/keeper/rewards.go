@@ -64,9 +64,9 @@ func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file
 func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
 	networkValue := sdk.NewDec(totalSize)
 
-	storageWallet := k.accountkeeper.GetModuleAddress(types.ModuleName)
+	storageWallet := k.accountKeeper.GetModuleAddress(types.ModuleName)
 
-	tokens := k.bankkeeper.GetBalance(ctx, storageWallet, "ujkl")
+	tokens := k.bankKeeper.GetBalance(ctx, storageWallet, "ujkl")
 	tokenAmountDec := tokens.Amount.ToDec()
 
 	for prover, worth := range *sizeTracker {
@@ -85,7 +85,7 @@ func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *m
 			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
 			continue
 		}
-		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, coins)
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, coins)
 		if err != nil {
 			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %d tokens to %s", tokensValueOwed, prover).Error())
 			continue

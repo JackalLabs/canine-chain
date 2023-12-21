@@ -49,7 +49,7 @@ func (k Keeper) UpgradeStorage(ctx sdk.Context, creator string, bytes int64, pay
 	if err != nil {
 		return err
 	}
-	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, sdk.NewCoins(priceTokens))
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, sdk.NewCoins(priceTokens))
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (k Keeper) UpgradeStorage(ctx sdk.Context, creator string, bytes int64, pay
 		return err
 	}
 
-	err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, depositAccount, sdk.NewCoins(priceTokens))
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, depositAccount, sdk.NewCoins(priceTokens))
 	if err != nil {
 		return err
 	}
