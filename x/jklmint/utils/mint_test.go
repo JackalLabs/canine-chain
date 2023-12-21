@@ -1,9 +1,10 @@
 package utils_test
 
 import (
+	"testing"
+
 	"github.com/jackalLabs/canine-chain/v3/x/jklmint/utils"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestOwedTokens(t *testing.T) {

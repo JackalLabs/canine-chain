@@ -1,9 +1,10 @@
 package types_test
 
 import (
+	"testing"
+
 	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestNames(t *testing.T) {
