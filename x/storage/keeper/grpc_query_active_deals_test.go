@@ -135,6 +135,7 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 		Pagination: &pg,
 		Merkle:     merkle,
 	})
+	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(mres.Files))
 
 	suite.reset()
