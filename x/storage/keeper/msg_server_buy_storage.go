@@ -16,7 +16,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	_, err := sdk.AccAddressFromBech32(msg.ForAddress)
 	if err != nil {
-		return nil, err
+		return nil, sdkerr.Wrap(err, "for address is poorly formatted")
 	}
 
 	duration := time.Duration(msg.DurationDays) * time.Hour * 24
@@ -48,16 +48,16 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return nil, err
+		return nil, sdkerr.Wrap(err, "creator address is poorly formatted")
 	}
 	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, priceTokenList)
 	if err != nil {
-		return nil, err
+		return nil, sdkerr.Wrap(err, "cannot send tokens from account")
 	}
 
 	deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
 	if err != nil {
-		return nil, err
+		return nil, sdkerr.Wrap(err, "global deposit address is poorly formatted (most likely didn't get set properly in the genesis params)")
 	}
 
 	var spi types.StoragePaymentInfo
@@ -73,7 +73,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 			err := k.UpgradeStorage(ctx, msg.Creator, bytes, payInfo, duration, storageCost, denom)
 			if err != nil {
-				return nil, err
+				return nil, sdkerr.Wrap(err, "failed to upgrade storage")
 			}
 			return &types.MsgBuyStorageResponse{}, nil
 		}

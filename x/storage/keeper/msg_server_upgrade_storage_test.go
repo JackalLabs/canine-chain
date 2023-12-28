@@ -163,7 +163,7 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 			}
 			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 			if tc.expErr {
-				suite.Require().EqualError(err, tc.expErrMsg)
+				suite.Require().ErrorContains(err, tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 			}
