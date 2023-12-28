@@ -36,6 +36,20 @@ service Query {
         "/jackal/canine-chain/storage/files";
   }
 
+  // Queries a list of File items matching the merkle.
+  rpc AllFilesByMerkle(QueryAllFilesByMerkle)
+      returns (QueryAllFilesByMerkleResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/files/merkle/{merkle}";
+  }
+
+  // Queries a list of File items matching the owner.
+  rpc AllFilesByOwner(QueryAllFilesByOwner)
+      returns (QueryAllFilesByOwnerResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/files/owner/{owner}";
+  }
+
   // Queries a Proof by provider_address, merkle, owner, and start.
   rpc Proof(QueryProof)
       returns (QueryProofResponse) {
@@ -218,6 +232,26 @@ message QueryAllFiles {
 }
 
 message QueryAllFilesResponse {
+  repeated UnifiedFile files = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllFilesByMerkle {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  bytes merkle = 2;
+}
+
+message QueryAllFilesByMerkleResponse {
+  repeated UnifiedFile files = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllFilesByOwner {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string owner = 2;
+}
+
+message QueryAllFilesByOwnerResponse {
   repeated UnifiedFile files = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

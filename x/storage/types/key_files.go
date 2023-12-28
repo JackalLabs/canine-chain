@@ -25,6 +25,20 @@ func FilesPrimaryKey(
 	return []byte(fmt.Sprintf("%x/%s/%d/", merkle, owner, start))
 }
 
+// FilesMerklePrefix returns the prefix for a merkle
+func FilesMerklePrefix(
+	merkle []byte,
+) []byte {
+	return []byte(fmt.Sprintf("%s%x", FilePrimaryKeyPrefix, merkle))
+}
+
+// FilesOwnerPrefix returns the prefix for a owner
+func FilesOwnerPrefix(
+	owner string,
+) []byte {
+	return []byte(fmt.Sprintf("%s%s", FileSecondaryKeyPrefix, owner))
+}
+
 // FilesSecondaryKey returns the store key to retrieve a File from the index fields ordered by owner
 func FilesSecondaryKey(
 	merkle []byte,

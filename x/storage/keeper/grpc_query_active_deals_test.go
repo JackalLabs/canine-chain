@@ -104,8 +104,10 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 		CheckWindow:            10,
 	})
 
+	merkle := []byte("merkle")
+
 	suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
-		Merkle:        []byte("merkle"),
+		Merkle:        merkle,
 		Owner:         testAccount,
 		Start:         0,
 		Expires:       0,
@@ -117,15 +119,24 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 		Note:          "test",
 	})
 
+	pg := query.PageRequest{
+		Offset:  0,
+		Reverse: false,
+	}
+
 	res, err := suite.queryClient.AllFiles(context.Background(), &types.QueryAllFiles{
-		Pagination: &query.PageRequest{
-			Offset:  0,
-			Reverse: false,
-		},
+		Pagination: &pg,
 	})
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(1, len(res.Files))
+
+	mres, err := suite.queryClient.AllFilesByMerkle(context.Background(), &types.QueryAllFilesByMerkle{
+		Pagination: &pg,
+		Merkle:     merkle,
+	})
+	suite.Require().NoError(err)
+	suite.Require().Equal(1, len(mres.Files))
 
 	suite.reset()
 }
