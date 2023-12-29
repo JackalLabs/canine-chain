@@ -39,7 +39,9 @@ message QueryFeedResponse {
   Feed feed = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllFeeds {}
+message QueryAllFeeds {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
 
 message QueryAllFeedsResponse {
   repeated Feed feed = 1 [ (gogoproto.nullable) = false ];
