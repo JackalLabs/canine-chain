@@ -3,6 +3,9 @@ package keeper
 import (
 	"context"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
 	"google.golang.org/grpc/codes"
@@ -31,7 +34,20 @@ func (k Keeper) AllFeeds(c context.Context, req *types.QueryAllFeeds) (*types.Qu
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	f := k.GetAllFeeds(ctx)
+	feeds := make([]types.Feed, 0)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FeedKeyPrefix))
+	pg, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+		var feed types.Feed
+		if err := k.cdc.Unmarshal(value, &feed); err != nil {
+			return err
+		}
 
-	return &types.QueryAllFeedsResponse{Feed: f, Pagination: nil}, nil
+		feeds = append(feeds, feed)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllFeedsResponse{Feed: feeds, Pagination: pg}, nil
 }

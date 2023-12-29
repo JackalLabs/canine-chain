@@ -188,41 +188,44 @@ format: format-tools
 ###############################################################################
 ###                                Protobuf                                 ###
 ###############################################################################
-PROTO_BUILDER_IMAGE=tendermintdev/sdk-proto-gen:v0.7
-PROTO_BUILDER_CONTAINER=jackal-proto-gen
-PROTO_FORMATTER_IMAGE=tendermintdev/docker-build-proto
+# thanks juno ;)
+protoVer=v0.7
+protoImageName=tendermintdev/sdk-proto-gen:$(protoVer)
+containerProtoGen=jackal-proto-gen-$(protoVer)
+containerProtoGenAny=jackal-proto-gen-any-$(protoVer)
+containerProtoGenSwagger=jackal-proto-gen-swagger-$(protoVer)
+containerProtoFmt=jackal-proto-fmt-$(protoVer)
 
-proto-all: proto-format proto-lint proto-gen format
+proto-all: proto-format proto-lint proto-gen
 
 proto-gen:
 	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${PROTO_BUILDER_CONTAINER}$$"; then docker start -a $(PROTO_BUILDER_CONTAINER); else docker run --name $(PROTO_BUILDER_CONTAINER) -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) \
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
 		sh ./scripts/protocgen.sh; fi
 
-proto-linter:
-	@echo "Linting Protobuf files"
-	# @if docker ps -a --format '{{.Names}}' | grep -Eq "^${PROTO_BUILDER_CONTAINER}$$"; then docker start -a $(PROTO_BUILDER_CONTAINER); else docker run --name $(PROTO_BUILDER_CONTAINER) -v $(CURDIR):/workspace --workdir /workspace $(PROTO_BUILDER_IMAGE) \
-	# 	sh ./scripts/protolint.sh; fi
-
-	sh ./scripts/protolint.sh
-
-proto-format:
-	# @echo "Formatting Protobuf files"
-	# $(DOCKER) run --rm -v $(CURDIR):/workspace \
-	# --workdir /workspace $(PROTO_FORMATTER_IMAGE) \
-	# find ./ -name *.proto -exec clang-format -i {} \;
-
-	sh ./scripts/protoformat.sh
-
+# This generates the SDK's custom wrapper for google.protobuf.Any. It should only be run manually when needed
+proto-gen-any:
+	@echo "Generating Protobuf Any"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGenAny}$$"; then docker start -a $(containerProtoGenAny); else docker run --name $(containerProtoGenAny) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		sh ./scripts/protocgen-any.sh; fi
 
 proto-swagger-gen:
-	@./scripts/protoc-swagger-gen.sh
+	@echo "Generating Protobuf Swagger"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGenSwagger}$$"; then docker start -a $(containerProtoGenSwagger); else docker run --name $(containerProtoGenSwagger) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		sh ./scripts/protoc-swagger-gen.sh; fi
+
+proto-format:
+	@echo "Formatting Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
+		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
 
 proto-lint:
-	@$(DOCKER_BUF) lint proto --error-format=json
+	@$(DOCKER_BUF) lint --error-format=json
 
 proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
+
+.PHONY: proto-all proto-gen proto-gen-any proto-swagger-gen proto-format proto-lint proto-check-breaking proto-update-deps docs
 
 .PHONY: all install install-debug \
 	go-mod-cache draw-deps clean build format \
