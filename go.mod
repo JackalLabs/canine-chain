@@ -169,7 +169,7 @@ replace (
 
 	// use local ibc-go for development purposes
 	// NOTE: MUST REMOVE before merging into master
-	github.com/cosmos/ibc-go/v4 => /Users/biphan/jackal/ibc-go-442-bp
+	github.com/cosmos/ibc-go/v4 => ./ibc-go-442-bp
 
 	//github.com/cosmos/cosmos-sdk => ../cosmos-sdk
 
