@@ -167,6 +167,10 @@ replace (
 	// using jackal labs free post proof ante handler - better way to do this in the future.
 	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230704034202-b88b1fbc9b2f
 
+	// use local ibc-go for development purposes
+	// NOTE: MUST REMOVE before merging into master
+	github.com/cosmos/ibc-go/v4 => /Users/biphan/jackal/ibc-go-442-bp
+
 	//github.com/cosmos/cosmos-sdk => ../cosmos-sdk
 
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
@@ -180,4 +184,5 @@ replace (
 
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
+
 )
