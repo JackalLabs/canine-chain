@@ -61,6 +61,7 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 		}
 
 		for _, proof := range file.Proofs {
+
 			p, found := k.GetProofWithBuiltKey(ctx, []byte(proof))
 			if !found {
 				continue
