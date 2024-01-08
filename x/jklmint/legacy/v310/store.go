@@ -10,7 +10,7 @@ func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 	var params types.Params
 	paramsSubspace.GetParamSet(ctx, &params)
 
-	params.TokensPerBlock = params.TokensPerBlock * 1_000_000
+	params.TokensPerBlock *= 1_000_000
 
 	if err := params.Validate(); err != nil {
 		return err
