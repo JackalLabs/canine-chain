@@ -17,7 +17,7 @@ var (
 	// TODO: Determine the default value
 	DefaultMintDenom      = "ujkl"
 	DefaultProviderRatio  = int64(4)
-	DefaultTokensPerBlock = int64(6)
+	DefaultTokensPerBlock = int64(6_000_000)
 )
 
 // ParamKeyTable the param key table for launch module
