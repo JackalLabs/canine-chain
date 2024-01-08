@@ -12,7 +12,7 @@ import (
 func (k Keeper) BlockMint(ctx sdk.Context) {
 	tokensPerBlock := k.GetParams(ctx).TokensPerBlock
 
-	mintTokens := sdk.NewDec(tokensPerBlock * 1_000_000)
+	mintTokens := sdk.NewDec(tokensPerBlock)
 	denom := k.GetParams(ctx).MintDenom
 
 	pRatio := k.GetParams(ctx).ProviderRatio
