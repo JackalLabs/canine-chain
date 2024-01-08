@@ -3,11 +3,13 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 )
 
 const TypeMsgMakeRootV2 = "make_root_v2"
 
 var _ sdk.Msg = &MsgMakeRootV2{}
+var _ legacytx.LegacyMsg = &MsgMakeRootV2{}
 
 func NewMsgMakeRootV2(creator string, editors string, viewers string, trackingNumber string) *MsgMakeRootV2 {
 	return &MsgMakeRootV2{
