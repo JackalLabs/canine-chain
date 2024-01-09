@@ -24,6 +24,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdPostFile())
+	cmd.AddCommand(CmdPostFilePublic())
 	cmd.AddCommand(CmdAddViewers())
 	cmd.AddCommand(CmdPostkey())
 	cmd.AddCommand(CmdDeleteFile())
