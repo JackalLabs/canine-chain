@@ -56,7 +56,7 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 				ClaimAddress: claimAddress,
 			},
 			expErr: true,
-			errMsg: "Provider not found. Please init your provider.",
+			errMsg: types.ErrProviderNotFound.Error(),
 		},
 	}
 	for _, tcs := range cases {
