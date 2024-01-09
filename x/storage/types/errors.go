@@ -1,14 +1,12 @@
 package types
 
-// DONTCOVER
-
 import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// x/storage module sentinel errors
+// x/storage module error messages
 var (
-	ErrDivideByZero        = sdkerrors.Register(ModuleName, 1110, "divideByZero")
+	ErrDivideByZero        = sdkerrors.Register(ModuleName, 1110, "divide by zero")
 	ErrProviderNotFound    = sdkerrors.Register(ModuleName, 1111, "provider not found please init your provider")
 	ErrNotValidTotalSpace  = sdkerrors.Register(ModuleName, 1112, "not a valid total space please enter total number of bytes to provide")
 	ErrDealNotFound        = sdkerrors.Register(ModuleName, 1114, "cannot find active deal")
