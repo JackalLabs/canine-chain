@@ -1,8 +1,14 @@
+import sys
+
 def main():
-    f = open("v2.0.0.md", "r")
+    args = sys.argv
+    if len(args) == 1 :
+        print("needs file name!")
+        return
+    f = open(args[1], "r")
     mdown = f.read()
 
     print(mdown.replace("\n", '\\n'))
 
-
-main()
+if __name__ == "__main__":
+    main()

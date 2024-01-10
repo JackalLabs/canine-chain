@@ -95,9 +95,9 @@ func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
 		return sdk.NewDec(0), nil
 	}
 
-	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
+	var blocksPerYearEstimate int64 = (365 * 24 * 60 * 60) / 6
 
-	printedPerYear := blocksPerYearEstiamte * 1_000_000 * params.TokensPerBlock
+	printedPerYear := blocksPerYearEstimate * params.TokensPerBlock
 
 	inflate := sdk.NewDec(printedPerYear)
 
