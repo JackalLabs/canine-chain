@@ -8,7 +8,7 @@ WORKDIR /canine-chain
 COPY . /canine-chain
 RUN ls
 RUN go install ./cmd/canined
-CMD ["sh", "./scripts/devnet-ica.sh&"]
+CMD ["sh", "./scripts/devnet-ica.sh"]
 EXPOSE 26657
 EXPOSE 26656
 EXPOSE 26658
