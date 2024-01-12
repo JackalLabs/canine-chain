@@ -63,8 +63,8 @@ from_scratch() {
         # Not sure at this moment if sl suite creates the genesis file before or after this script is run
         # so we loop until the genesis.json file is found
 
-        # NOTE: not sure if this loop will block sl suite from executing canined so we can run devnet-ica.sh in the background 
-        # of our docker container 
+        # NOTE: not sure if this loop will block sl suite from executing canined so we can try running devnet-ica.sh in the background 
+        # of our docker container--even though this violates the 'one process per container philosophy'
         while [ ! -f "$GENESIS_PATH" ]; do
             echo "Waiting for genesis.json to be created..."
             sleep 5 # Waits for 5 seconds before checking again
