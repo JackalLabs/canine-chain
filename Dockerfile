@@ -8,6 +8,7 @@ WORKDIR /canine-chain
 COPY . /canine-chain
 RUN ls
 RUN go install ./cmd/canined
+# If the 'modify genesis' function in outpost contract works, might change this back to 'test-node-dev.sh'?
 CMD ["sh", "./scripts/devnet-ica.sh"]
 EXPOSE 26657
 EXPOSE 26656
