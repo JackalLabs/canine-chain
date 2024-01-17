@@ -143,11 +143,11 @@ sleep 10
 
 curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/1.png http://localhost:3330/upload
 
-#sleep 10
-#
-#canined tx storage sign-contract jklc107a4hj35fg4jlcapl9h3y7rhw4p24pjtunv8hwwg2hp9dcwatgwsw229ql --from charlie -y
-#
-#sleep 30
+sleep 10
+
+canined tx storage sign-contract jklc107a4hj35fg4jlcapl9h3y7rhw4p24pjtunv8hwwg2hp9dcwatgwsw229ql --from charlie -y
+
+sleep 30
 #
 #curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/3.png http://localhost:3331/upload
 #
@@ -189,18 +189,17 @@ curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/
 #
 #sleep 30
 #
-#curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/6.wav http://localhost:3336/upload
-#
-#sleep 10
-#
-#canined tx storage sign-contract jklc1sfwyeu8sz7vuhwhej5qclffjrcw99tc6t527y4jnu4t9cd8yc98sm7ufrc --from charlie -y --pay-upfront
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/6.wav http://localhost:3336/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc1sfwyeu8sz7vuhwhej5qclffjrcw99tc6t527y4jnu4t9cd8yc98sm7ufrc --from charlie -y --pay-upfront
 
 sleep 20
 
 read -rsp $'Press any key to continue...\n' -n1 key
 
-killall screen
-killall canined
+killall screen canined jprovd
 # clean after program termination without SIGINT
 cleanup
 

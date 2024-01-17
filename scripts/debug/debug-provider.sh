@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 seed="$1"
 address="$2"
 index="$3"
@@ -24,7 +25,9 @@ jprovd init "http://127.0.0.1:333$index" "1000000000" "" --home="$HOME/providers
 
 sleep 20
 
+echo "starting debugger for provider..."
 
 cd -- "$(dirname "$(find . -name "main.go")")"
-gdlv debug start --home="$HOME/providers/provider$index" -y --port "333$index" --moniker="provider$index" --threads=1 --interval=5
+gdlv debug start --home="$HOME/providers/provider$index" -y --port "333$index" --moniker="provider$index" --threads=1 --interval=5 &
 
+read -rsp $'Press anything to continue test... \n' -n1 key
