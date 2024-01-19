@@ -13,7 +13,6 @@ func (k Keeper) GetParams(ctx sdk.Context) (p types.Params) {
 
 // SetParams set the params
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
-
 	k.paramSpace.SetParamSet(ctx, &params)
 }
 

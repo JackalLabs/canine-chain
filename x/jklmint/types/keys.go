@@ -25,6 +25,8 @@ const (
 	QueryInflationKey = "inflation"
 
 	LastBlockMinted = "last_block_minted"
+
+	DevGrantsPool = "dev_grant_pool"
 )
 
 func KeyPrefix(p string) []byte {

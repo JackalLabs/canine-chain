@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -19,6 +20,7 @@ var (
 	KeyReferrals      = []byte("Referrals")
 	KeyPOLRatio       = []byte("POLRatio")
 	KeyMintIncrease   = []byte("MintIncrease")
+	KeyStorageStipend = []byte("StorageStipend")
 
 	// TODO: Determine the default value
 	DefaultMintDenom      = "ujkl"
@@ -29,6 +31,7 @@ var (
 	DefaultReferrals      = int64(25)
 	DefaultPOLRatio       = int64(40)
 	DefaultMintDecrease   = int64(6)
+	DefaultStorageStipend = "jkl18dtaqkj3cdazn4rpgqdc3acz98cp5yz30erp95"
 )
 
 // ParamKeyTable the param key table for launch module
@@ -46,16 +49,18 @@ func NewParams(
 	stakerRatio int64,
 	polRatio int64,
 	mintDecrease int64,
+	storageStipendAddress string,
 ) Params {
 	return Params{
-		MintDenom:            mintDenom,
-		DevGrantsRatio:       devGrants,
-		ReferralCommission:   referralComms,
-		StorageProviderRatio: providerRatio,
-		StakerRatio:          stakerRatio,
-		TokensPerBlock:       tokensPerBlock,
-		PolRatio:             polRatio,
-		MintDecrease:         mintDecrease,
+		MintDenom:             mintDenom,
+		DevGrantsRatio:        devGrants,
+		ReferralCommission:    referralComms,
+		StorageProviderRatio:  providerRatio,
+		StakerRatio:           stakerRatio,
+		TokensPerBlock:        tokensPerBlock,
+		PolRatio:              polRatio,
+		MintDecrease:          mintDecrease,
+		StorageStipendAddress: storageStipendAddress,
 	}
 }
 
@@ -70,6 +75,7 @@ func DefaultParams() Params {
 		DefaultStakerRatio,
 		DefaultPOLRatio,
 		DefaultMintDecrease,
+		DefaultStorageStipend,
 	)
 }
 
@@ -84,6 +90,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyPOLRatio, &p.PolRatio, validateInt64),
 		paramtypes.NewParamSetPair(KeyReferrals, &p.ReferralCommission, validateInt64),
 		paramtypes.NewParamSetPair(KeyStakerRatio, &p.StakerRatio, validateInt64),
+		paramtypes.NewParamSetPair(KeyStorageStipend, &p.StorageStipendAddress, validateStipend),
 	}
 }
 
@@ -93,6 +100,12 @@ func (p *Params) Validate() error {
 	if err != nil {
 		return err
 	}
+
+	err = validateStipend(p.StorageStipendAddress)
+	if err != nil {
+		return err
+	}
+
 	err = validateInt64(p.TokensPerBlock)
 	if err != nil {
 		return sdkerrors.Wrapf(err, "tokens per block is %d", p.TokensPerBlock)
@@ -145,6 +158,16 @@ func validateMintDenom(v interface{}) error {
 
 	// TODO implement validation
 	_ = mintDenom
+
+	return nil
+}
+
+// validateMintDenom validates the MintDenom param
+func validateStipend(v interface{}) error {
+	_, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", v)
+	}
 
 	return nil
 }

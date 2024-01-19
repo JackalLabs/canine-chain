@@ -1,7 +1,9 @@
 package keeper
 
 import (
+	"encoding/hex"
 	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -10,7 +12,6 @@ import (
 )
 
 func (k Keeper) send(ctx sdk.Context, denom string, amount int64, receiver string) error {
-
 	adr, err := sdk.AccAddressFromBech32(receiver)
 	if err != nil {
 		return sdkerrors.Wrapf(err, "cannot parse receiver address")
@@ -27,8 +28,54 @@ func (k Keeper) send(ctx sdk.Context, denom string, amount int64, receiver strin
 	return nil
 }
 
-func (k Keeper) BlockMint(ctx sdk.Context) {
+func (k Keeper) mintStaker(ctx sdk.Context, mintTokens int64, denom string, params types.Params) error {
+	stakerRatio := sdk.NewDec(params.StakerRatio).QuoInt64(100)
 
+	stakerCoinValue := stakerRatio.MulInt64(mintTokens).TruncateInt64()
+	stakerCoins := sdk.NewCoins(sdk.NewInt64Coin(denom, stakerCoinValue))
+
+	// send the minted validator coins to the fee collector account
+	err := k.AddCollectedFees(ctx, stakerCoins)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to stakers & community pool")
+	}
+
+	return nil
+}
+
+func (k Keeper) mintDevGrants(ctx sdk.Context, mintTokens int64, denom string, params types.Params) error {
+	devGrantRatio := sdk.NewDec(params.DevGrantsRatio).QuoInt64(100)
+
+	devGrantTokenAmount := devGrantRatio.MulInt64(mintTokens).TruncateInt64()
+
+	h := hex.EncodeToString([]byte(types.DevGrantsPool))
+	address, err := sdk.AccAddressFromHex(h)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot create dev grants address")
+	}
+
+	err = k.send(ctx, denom, devGrantTokenAmount, address.String())
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to dev grants")
+	}
+
+	return nil
+}
+
+func (k Keeper) mintStorageProviderStipend(ctx sdk.Context, mintTokens int64, denom string, params types.Params) error {
+	provRatio := sdk.NewDec(params.StorageProviderRatio).QuoInt64(100)
+
+	provTokens := provRatio.MulInt64(mintTokens).TruncateInt64()
+
+	err := k.send(ctx, denom, provTokens, params.StorageStipendAddress)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to storage provider stipends")
+	}
+
+	return nil
+}
+
+func (k Keeper) BlockMint(ctx sdk.Context) {
 	var mintedNum int64 = 4_200_00
 	minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
 	if found {
@@ -52,15 +99,22 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 		return
 	}
 
-	stakerRatio := sdk.NewDec(params.StakerRatio).QuoInt64(100)
-
-	stakerCoinValue := stakerRatio.MulInt64(mintTokens).TruncateInt64()
-	stakerCoins := sdk.NewCoins(sdk.NewInt64Coin(denom, stakerCoinValue))
-
-	// send the minted validator coins to the fee collector account
-	err = k.AddCollectedFees(ctx, stakerCoins)
+	err = k.mintStaker(ctx, mintTokens, denom, params)
 	if err != nil {
-		panic(err)
+		ctx.Logger().Error(err.Error())
+		return
+	}
+
+	err = k.mintDevGrants(ctx, mintTokens, denom, params)
+	if err != nil {
+		ctx.Logger().Error(err.Error())
+		return
+	}
+
+	err = k.mintStorageProviderStipend(ctx, mintTokens, denom, params)
+	if err != nil {
+		ctx.Logger().Error(err.Error())
+		return
 	}
 
 	// alerting network on mint amount

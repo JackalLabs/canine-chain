@@ -18,5 +18,6 @@ message Params {
   int64 pol_ratio = 7 [ (gogoproto.moretags) = "yaml:\"pol_ratio\"" ]; // default 40
 
   int64 mint_decrease = 8 [ (gogoproto.moretags) = "yaml:\"mint_decrease\"" ]; // default 6
+  string storage_stipend_address = 9 [ (gogoproto.moretags) = "yaml:\"storage_stipend_address\"" ]; // multi-sig
 
 }
