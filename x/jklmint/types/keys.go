@@ -1,5 +1,7 @@
 package types
 
+import "fmt"
+
 var MinterKey = []byte{0x00}
 
 const (
@@ -21,8 +23,14 @@ const (
 	// Query endpoints supported by the minting querier
 	QueryParameters   = "parameters"
 	QueryInflationKey = "inflation"
+
+	LastBlockMinted = "last_block_minted"
 )
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
+}
+
+func MintedBlockKey(height int64) []byte {
+	return []byte(fmt.Sprintf("minted_at_%d", height))
 }

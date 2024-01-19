@@ -2,69 +2,74 @@ package keeper
 
 import (
 	"fmt"
-
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
-	storeTypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v3/x/jklmint/utils"
 )
 
-func (k Keeper) BlockMint(ctx sdk.Context) {
-	tokensPerBlock := k.GetParams(ctx).TokensPerBlock
+func (k Keeper) send(ctx sdk.Context, denom string, amount int64, receiver string) error {
 
-	mintTokens := sdk.NewDec(tokensPerBlock * 1_000_000)
+	adr, err := sdk.AccAddressFromBech32(receiver)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot parse receiver address")
+	}
+
+	c := sdk.NewInt64Coin(denom, amount)
+	cs := sdk.NewCoins(c)
+
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, adr, cs)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send coins from the mint module to %s", receiver)
+	}
+
+	return nil
+}
+
+func (k Keeper) BlockMint(ctx sdk.Context) {
+
+	var mintedNum int64 = 4_200_00
+	minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
+	if found {
+		mintedNum = minted.Minted
+	}
+	var bpy int64 = (365 * 24 * 60 * 60) / 6
+
+	params := k.GetParams(ctx)
+
+	newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
+
+	mintTokens := newMintForBlock
 	denom := k.GetParams(ctx).MintDenom
 
-	pRatio := k.GetParams(ctx).ProviderRatio
-	valRatio := 10 - pRatio
+	totalCoin := sdk.NewInt64Coin(denom, mintTokens)
+	coins := sdk.NewCoins(totalCoin)
 
-	providerRatio := sdk.NewDec(pRatio)
-	providerRatio = providerRatio.QuoInt64(10)
-	validatorRatio := sdk.NewDec(valRatio)
-	validatorRatio = validatorRatio.QuoInt64(10)
-
-	// get correct ratio
-	providerTokens := mintTokens.Mul(providerRatio)
-	validatorTokens := mintTokens.Mul(validatorRatio)
-
-	// mint provider coins, update supply
-	provCount := providerTokens.TruncateInt()
-	providerCoin := sdk.NewCoin(denom, provCount)
-	providerCoins := sdk.NewCoins(providerCoin)
-
-	// mint validator coins, update supply
-	valCount := validatorTokens.TruncateInt()
-	validatorCoin := sdk.NewCoin(denom, valCount)
-	validatorCoins := sdk.NewCoins(validatorCoin)
-
-	totalCount := provCount.Add(valCount)
-	// mint coins, update supply
-	totalIntCoin := sdk.NewCoin(denom, totalCount)
-	mintedCoin := totalIntCoin
-	mintedCoins := sdk.NewCoins(mintedCoin)
-	err := k.MintCoins(ctx, mintedCoins)
+	err := k.MintCoins(ctx, coins)
 	if err != nil {
-		panic(err)
+		ctx.Logger().Error(sdkerrors.Wrapf(err, "could not mint tokens at block %d", ctx.BlockHeight()).Error())
+		return
 	}
 
-	err = k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, storeTypes.ModuleName, providerCoins)
-	if err != nil {
-		panic(err)
-	}
+	stakerRatio := sdk.NewDec(params.StakerRatio).QuoInt64(100)
+
+	stakerCoinValue := stakerRatio.MulInt64(mintTokens).TruncateInt64()
+	stakerCoins := sdk.NewCoins(sdk.NewInt64Coin(denom, stakerCoinValue))
 
 	// send the minted validator coins to the fee collector account
-	err = k.AddCollectedFees(ctx, validatorCoins)
+	err = k.AddCollectedFees(ctx, stakerCoins)
 	if err != nil {
 		panic(err)
 	}
 
 	// alerting network on mint amount
-	defer telemetry.ModuleSetGauge(types.ModuleName, float32(totalCount.Int64()), "minted_tokens")
+	defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintTokens), "minted_tokens")
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeMint,
-			sdk.NewAttribute(sdk.AttributeKeyAmount, fmt.Sprintf("%d", totalCount.Int64())),
+			sdk.NewAttribute(sdk.AttributeKeyAmount, fmt.Sprintf("%d", mintTokens)),
 		),
 	)
 }

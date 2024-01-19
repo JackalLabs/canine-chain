@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
@@ -13,11 +14,21 @@ var (
 	KeyMintDenom      = []byte("MintDenom")
 	KeyProviderRatio  = []byte("ProviderRatio")
 	KeyTokensPerBlock = []byte("TokensPerBlock")
+	KeyDevGrants      = []byte("DevGrants")
+	KeyStakerRatio    = []byte("StakerRatio")
+	KeyReferrals      = []byte("Referrals")
+	KeyPOLRatio       = []byte("POLRatio")
+	KeyMintIncrease   = []byte("MintIncrease")
 
 	// TODO: Determine the default value
 	DefaultMintDenom      = "ujkl"
-	DefaultProviderRatio  = int64(4)
-	DefaultTokensPerBlock = int64(6)
+	DefaultProviderRatio  = int64(12)
+	DefaultTokensPerBlock = int64(4_200_000)
+	DefaultDevGrants      = int64(8)
+	DefaultStakerRatio    = int64(80)
+	DefaultReferrals      = int64(25)
+	DefaultPOLRatio       = int64(40)
+	DefaultMintDecrease   = int64(6)
 )
 
 // ParamKeyTable the param key table for launch module
@@ -28,13 +39,23 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams(
 	mintDenom string,
-	providerRatio int64,
+	devGrants int64,
 	tokensPerBlock int64,
+	referralComms int64,
+	providerRatio int64,
+	stakerRatio int64,
+	polRatio int64,
+	mintDecrease int64,
 ) Params {
 	return Params{
-		MintDenom:      mintDenom,
-		ProviderRatio:  providerRatio,
-		TokensPerBlock: tokensPerBlock,
+		MintDenom:            mintDenom,
+		DevGrantsRatio:       devGrants,
+		ReferralCommission:   referralComms,
+		StorageProviderRatio: providerRatio,
+		StakerRatio:          stakerRatio,
+		TokensPerBlock:       tokensPerBlock,
+		PolRatio:             polRatio,
+		MintDecrease:         mintDecrease,
 	}
 }
 
@@ -42,8 +63,13 @@ func NewParams(
 func DefaultParams() Params {
 	return NewParams(
 		DefaultMintDenom,
-		DefaultProviderRatio,
+		DefaultDevGrants,
 		DefaultTokensPerBlock,
+		DefaultReferrals,
+		DefaultProviderRatio,
+		DefaultStakerRatio,
+		DefaultPOLRatio,
+		DefaultMintDecrease,
 	)
 }
 
@@ -51,8 +77,13 @@ func DefaultParams() Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
-		paramtypes.NewParamSetPair(KeyProviderRatio, &p.ProviderRatio, validateProviderRatio),
-		paramtypes.NewParamSetPair(KeyTokensPerBlock, &p.TokensPerBlock, validateTokensPerBlock),
+		paramtypes.NewParamSetPair(KeyProviderRatio, &p.StorageProviderRatio, validateInt64),
+		paramtypes.NewParamSetPair(KeyTokensPerBlock, &p.TokensPerBlock, validateInt64),
+		paramtypes.NewParamSetPair(KeyDevGrants, &p.DevGrantsRatio, validateInt64),
+		paramtypes.NewParamSetPair(KeyMintIncrease, &p.MintDecrease, validateInt64),
+		paramtypes.NewParamSetPair(KeyPOLRatio, &p.PolRatio, validateInt64),
+		paramtypes.NewParamSetPair(KeyReferrals, &p.ReferralCommission, validateInt64),
+		paramtypes.NewParamSetPair(KeyStakerRatio, &p.StakerRatio, validateInt64),
 	}
 }
 
@@ -62,16 +93,40 @@ func (p *Params) Validate() error {
 	if err != nil {
 		return err
 	}
-	err = validateTokensPerBlock(p.TokensPerBlock)
+	err = validateInt64(p.TokensPerBlock)
 	if err != nil {
-		return err
+		return sdkerrors.Wrapf(err, "tokens per block is %d", p.TokensPerBlock)
 	}
 
-	err = validateProviderRatio(p.ProviderRatio)
+	err = validateInt64(p.StorageProviderRatio)
 	if err != nil {
-		return err
+		return sdkerrors.Wrapf(err, "storage p ratio is %d", p.StorageProviderRatio)
 	}
 
+	err = validateInt64(p.DevGrantsRatio)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "dev grants ratio is %d", p.DevGrantsRatio)
+	}
+
+	err = validateInt64(p.MintDecrease)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "mint decrease is %d", p.MintDecrease)
+	}
+
+	err = validateInt64(p.PolRatio)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "pol ratio is %d", p.PolRatio)
+	}
+
+	err = validateInt64(p.ReferralCommission)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "referral commission is %d", p.ReferralCommission)
+	}
+
+	err = validateInt64(p.StakerRatio)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "staker ratio is %d", p.StakerRatio)
+	}
 	return nil
 }
 
@@ -94,33 +149,15 @@ func validateMintDenom(v interface{}) error {
 	return nil
 }
 
-// validateTokensPerBlock validates the TokensMintedPerBlock param
-func validateTokensPerBlock(v interface{}) error {
-	tokensPerBlock, ok := v.(int64)
+// validateInt validates the param is an int64
+func validateInt64(v interface{}) error {
+	i, ok := v.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", v)
 	}
 
-	if tokensPerBlock < 0 {
-		return fmt.Errorf("must be greater or equal to 0: %T", v)
-	}
-
-	return nil
-}
-
-// validateProviderRatio validates the ProviderRatio param
-func validateProviderRatio(v interface{}) error {
-	ratio, ok := v.(int64)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", v)
-	}
-
-	if ratio < 0 {
-		return fmt.Errorf("must be greater or equal to 0: %T", v)
-	}
-
-	if ratio > 10 {
-		return fmt.Errorf("must be less than or equal to 10: %T", v)
+	if i < 0 {
+		return fmt.Errorf("must be greater or equal to 0 but is %d: %T", i, v)
 	}
 
 	return nil

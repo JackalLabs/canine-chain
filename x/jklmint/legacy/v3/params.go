@@ -1,4 +1,4 @@
-package types
+package v3
 
 import (
 	"fmt"
@@ -96,13 +96,9 @@ func validateMintDenom(v interface{}) error {
 
 // validateTokensPerBlock validates the TokensMintedPerBlock param
 func validateTokensPerBlock(v interface{}) error {
-	tokensPerBlock, ok := v.(int64)
+	_, ok := v.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", v)
-	}
-
-	if tokensPerBlock < 0 {
-		return fmt.Errorf("must be greater or equal to 0: %T", v)
 	}
 
 	return nil
@@ -113,10 +109,6 @@ func validateProviderRatio(v interface{}) error {
 	ratio, ok := v.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", v)
-	}
-
-	if ratio < 0 {
-		return fmt.Errorf("must be greater or equal to 0: %T", v)
 	}
 
 	if ratio > 10 {

@@ -43,12 +43,12 @@ func (suite *MintTestSuite) TestNoProviderBlockMint() {
 	app, ctx, k := suite.app, suite.ctx, suite.app.MintKeeper
 
 	params := k.GetParams(ctx)
-	params.ProviderRatio = 0
+	params.StorageProviderRatio = 0
 	k.SetParams(ctx, params)
 
 	denom := k.GetParams(ctx).MintDenom
 
-	pr := k.GetParams(ctx).ProviderRatio
+	pr := k.GetParams(ctx).StorageProviderRatio
 	suite.Require().Equal(int64(0), pr)
 
 	feeAccount := app.AccountKeeper.GetModuleAccount(ctx, authtypes.FeeCollectorName)
@@ -77,4 +77,19 @@ func (suite *MintTestSuite) TestNoProviderBlockMint() {
 	suite.Require().Equal(1, len(supplyAfter.Supply))
 	suite.Require().Equal(sdk.NewInt(6_000_000), supplyAfter.Supply.AmountOf(denom))
 	// After BlockMint we now have exactly 3.6JKL in the fee collector account
+}
+
+func (suite *MintTestSuite) TestDecRatios() {
+	suite.SetupTest()
+
+	stakerRatio := sdk.NewDec(80).QuoInt64(100)
+
+	s, err := sdk.NewDecFromStr("0.8")
+	suite.Require().NoError(err)
+
+	suite.Require().Equal(s, stakerRatio)
+
+	i := stakerRatio.MulInt64(4_200_000)
+
+	suite.Require().Equal(int64(3360000), i.TruncateInt64())
 }
