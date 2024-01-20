@@ -117,6 +117,12 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 		return
 	}
 
+	k.SetMintedBlock(ctx, types.MintedBlock{
+		Height: ctx.BlockHeight(),
+		Minted: newMintForBlock,
+		Denom:  "ujkl",
+	})
+
 	// alerting network on mint amount
 	defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintTokens), "minted_tokens")
 

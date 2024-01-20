@@ -182,8 +182,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		},
 	}
 
-	dep := k.GetParams(suite.ctx).DepositAccount
-	add, err := sdk.AccAddressFromBech32(dep)
+	add, err := types.GetTokenHolderAccount()
 	suite.Require().NoError(err)
 	amt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl").Amount.Int64()
 
