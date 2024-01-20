@@ -44,6 +44,7 @@ func (k Keeper) UpgradeStorage(ctx sdk.Context, creator string, bytes int64, pay
 	}
 
 	priceTokens := sdk.NewCoin(denom, price)
+	priceTokenList := sdk.NewCoins(priceTokens)
 
 	add, err := sdk.AccAddressFromBech32(creator)
 	if err != nil {
@@ -54,12 +55,12 @@ func (k Keeper) UpgradeStorage(ctx sdk.Context, creator string, bytes int64, pay
 		return err
 	}
 
-	depositAccount, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
+	acc, err := types.GetTokenHolderAccount()
 	if err != nil {
 		return err
 	}
 
-	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, depositAccount, sdk.NewCoins(priceTokens))
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, acc, priceTokenList)
 	if err != nil {
 		return err
 	}
@@ -73,6 +74,8 @@ func (k Keeper) UpgradeStorage(ctx sdk.Context, creator string, bytes int64, pay
 	}
 
 	k.SetStoragePaymentInfo(ctx, spi)
+
+	k.NewGauge(ctx, priceTokenList, spi.End) // creating new payment gauge
 
 	return nil
 }

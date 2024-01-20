@@ -60,14 +60,57 @@ func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file
 	}
 }
 
-// TODO: Completely change the way this is done in Econ v2
 func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
 	networkValue := sdk.NewDec(totalSize)
 
-	storageWallet := k.accountKeeper.GetModuleAddress(types.ModuleName)
+	storageWallet, err := types.GetTokenHolderAccount()
+	if err != nil {
+		ctx.Logger().Error(err.Error())
+		return
+	}
 
-	tokens := k.bankKeeper.GetBalance(ctx, storageWallet, "ujkl")
-	tokenAmountDec := tokens.Amount.ToDec()
+	currentTime := ctx.BlockTime()
+
+	totalCoins := make(sdk.Coins, 0)
+
+	k.IterateGauges(ctx, func(pg types.PaymentGauge) {
+
+		if pg.End.Before(currentTime) {
+			k.RemoveGauge(ctx, pg.Id)
+			return
+		}
+
+		if pg.End.Before(pg.Start) {
+			k.RemoveGauge(ctx, pg.Id)
+			return
+		}
+
+		if pg.End.Equal(pg.Start) {
+			k.RemoveGauge(ctx, pg.Id)
+			return
+		}
+
+		totalTime := pg.End.Sub(pg.Start)
+		ttM := totalTime.Microseconds()
+
+		used := currentTime.Sub(pg.Start)
+		uM := used.Microseconds()
+
+		totalDec := sdk.NewDec(ttM)
+		usedDec := sdk.NewDec(uM)
+
+		usedRatio := usedDec.Quo(totalDec)
+		uss := usedRatio.String()
+		_ = uss
+		coinsToAdd := pg.Coins
+		for _, coin := range coinsToAdd {
+			newAmt := coin.Amount.ToDec().Mul(usedRatio).TruncateInt()
+			c := sdk.NewCoin(coin.Denom, newAmt)
+
+			totalCoins = totalCoins.Add(c)
+		}
+
+	})
 
 	for prover, worth := range *sizeTracker {
 
@@ -75,19 +118,27 @@ func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *m
 
 		networkPercentage := providerValue.Quo(networkValue)
 
-		tokensValueOwed := networkPercentage.Mul(tokenAmountDec).TruncateInt64()
+		coins := make(sdk.Coins, 0)
 
-		coin := sdk.NewInt64Coin("ujkl", tokensValueOwed)
-		coins := sdk.NewCoins(coin)
+		for _, coin := range totalCoins {
+			tokensValueOwed := networkPercentage.Mul(coin.Amount.ToDec()).TruncateInt()
+			c := sdk.NewCoin(coin.Denom, tokensValueOwed)
+			coins = coins.Add(c)
+		}
 
 		pAddress, err := sdk.AccAddressFromBech32(prover)
 		if err != nil {
 			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
 			continue
 		}
+		err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, storageWallet, types.ModuleName, coins)
+		if err != nil {
+			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), types.ModuleName).Error())
+			continue
+		}
 		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, coins)
 		if err != nil {
-			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %d tokens to %s", tokensValueOwed, prover).Error())
+			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), prover).Error())
 			continue
 		}
 	}

@@ -55,12 +55,9 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, err
 	}
 
-	deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
-	if err != nil {
-		return nil, err
-	}
-
 	var spi types.StoragePaymentInfo
+
+	var spaceUsed int64
 
 	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.ForAddress)
 	if found {
@@ -78,30 +75,28 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 			return &types.MsgBuyStorageResponse{}, nil
 		}
 
-		c := payInfo.Coins.Add(priceTokens)
+		spaceUsed = payInfo.SpaceUsed
 
-		spi = types.StoragePaymentInfo{
-			Start:          ctx.BlockTime(),
-			End:            ctx.BlockTime().Add(duration),
-			SpaceAvailable: bytes,
-			SpaceUsed:      payInfo.SpaceUsed,
-			Address:        msg.ForAddress,
-			Coins:          c,
-		}
-	} else {
-		spi = types.StoragePaymentInfo{
-			Start:          ctx.BlockTime(),
-			End:            ctx.BlockTime().Add(duration),
-			SpaceAvailable: bytes,
-			SpaceUsed:      0,
-			Address:        msg.ForAddress,
-			Coins:          priceTokenList,
-		}
 	}
+
+	spi = types.StoragePaymentInfo{
+		Start:          ctx.BlockTime(),
+		End:            ctx.BlockTime().Add(duration),
+		SpaceAvailable: bytes,
+		SpaceUsed:      spaceUsed,
+		Address:        msg.ForAddress,
+	}
+
+	k.NewGauge(ctx, priceTokenList, spi.End) // creating new payment gauge
 
 	k.SetStoragePaymentInfo(ctx, spi)
 
-	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, deposit, sdk.NewCoins(priceTokens))
+	acc, err := types.GetTokenHolderAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, acc, priceTokenList)
 	if err != nil {
 		return nil, err
 	}
