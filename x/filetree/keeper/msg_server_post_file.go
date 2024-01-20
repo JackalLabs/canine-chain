@@ -3,6 +3,8 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
@@ -14,17 +16,17 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	parentFile, found := k.GetFiles(ctx, msg.HashParent, parentOwnerString)
 	if !found {
-		return nil, types.ErrParentFileNotFound
+		return nil, sdkerrors.Wrapf(types.ErrParentFileNotFound, "cannot find %s", msg.HashParent)
 	}
 
 	hasEdit, err := HasEditAccess(parentFile, msg.Creator)
 	if err != nil {
 		// Error raised when json unmarshalling has failed
-		return nil, err
+		return nil, sdkerrors.Wrapf(err, "cannot check for edit access")
 	}
 
 	if !hasEdit {
-		return nil, types.ErrCannotWrite
+		return nil, sdkerrors.Wrapf(types.ErrCannotWrite, "does not have edit access")
 	}
 
 	// Make the full path

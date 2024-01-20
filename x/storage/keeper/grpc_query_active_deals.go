@@ -37,6 +37,58 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
 }
 
+func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMerkle) (*types.QueryAllFilesByMerkleResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var files []types.UnifiedFile
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))
+
+	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(value, &file); err != nil {
+			return err
+		}
+
+		files = append(files, file)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllFilesByMerkleResponse{Files: files, Pagination: pageRes}, nil
+}
+
+func (k Keeper) AllFilesByOwner(c context.Context, req *types.QueryAllFilesByOwner) (*types.QueryAllFilesByOwnerResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var files []types.UnifiedFile
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesOwnerPrefix(req.Owner))
+
+	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(value, &file); err != nil {
+			return err
+		}
+
+		files = append(files, file)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllFilesByOwnerResponse{Files: files, Pagination: pageRes}, nil
+}
+
 // OpenFiles returns a paginated list of files with space that providers have yet to fill
 //
 // TODO: Create unit-test cases for this
