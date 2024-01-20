@@ -115,10 +115,12 @@ trap "cleanup" SIGINT
 
 rm "*.log"
 
-# Start the node
-screen -d -m -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
+# Start the node with debugger
+#screen -d -m -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
+./scripts/debug/debug-chain.sh
 
-sleep 30
+echo "waiting for node to warm up..."
+sleep 20
 
 echo "starting providers..."
 
@@ -148,47 +150,47 @@ sleep 10
 canined tx storage sign-contract jklc107a4hj35fg4jlcapl9h3y7rhw4p24pjtunv8hwwg2hp9dcwatgwsw229ql --from charlie -y
 
 sleep 30
-#
-#curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/3.png http://localhost:3331/upload
-#
-#sleep 10
-#
-#canined tx storage sign-contract jklc1mnjchx4g27929y5wfm6luvx86lhca688vqh3vtts6hjllfupgvdqgmr04k --from charlie -y
-#
-#sleep 30
-#
-#curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/4.png http://localhost:3332/upload
-#
-#sleep 10
-#
-#canined tx storage sign-contract jklc14y6hk074svd8dyjg5g6c2xzkcfv4ge0w2ey96plr98k4pyepk5xq46wjkn --from charlie -y
-#
-#sleep 30
-#
-#curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/test.txt http://localhost:3333/upload
-#
-#sleep 10
-#
-#canined tx storage sign-contract jklc102jpqmfj5w9pz555zfjd6e9v5nfcnjsy4vh08qhlmrnedrg5jvwqluwrl8 --from charlie -y
-#
-#sleep 30
-#
-#curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/2.png http://localhost:3334/upload
-#
-#sleep 10
-#
-#canined tx storage sign-contract jklc16xdn85h9fel3ruawc3dxjdu7xtkdfp23j66fkkl7dc4277t03rds2rf7g7 --from charlie -y
-#
-#sleep 30
-#
-#curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/5.svg http://localhost:3335/upload
-#
-#sleep 10
-#
-#canined tx storage sign-contract jklc1g80djchxzjxztkff98wrelh86ha0alhwu0j9ce84sqvljy8vpddsg637q5 --from charlie -y
-#
-#sleep 30
-#
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/3.png http://localhost:3331/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc1mnjchx4g27929y5wfm6luvx86lhca688vqh3vtts6hjllfupgvdqgmr04k --from charlie -y
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/4.png http://localhost:3336/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc14y6hk074svd8dyjg5g6c2xzkcfv4ge0w2ey96plr98k4pyepk5xq46wjkn --from charlie -y
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/test.txt http://localhost:3336/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc102jpqmfj5w9pz555zfjd6e9v5nfcnjsy4vh08qhlmrnedrg5jvwqluwrl8 --from charlie -y
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/2.png http://localhost:3336/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc16xdn85h9fel3ruawc3dxjdu7xtkdfp23j66fkkl7dc4277t03rds2rf7g7 --from charlie -y
+
+sleep 30
+
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/5.svg http://localhost:3336/upload
+
+sleep 10
+
+canined tx storage sign-contract jklc1g80djchxzjxztkff98wrelh86ha0alhwu0j9ce84sqvljy8vpddsg637q5 --from charlie -y
+
+sleep 30
+
 curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/6.wav http://localhost:3336/upload
 
 sleep 10
