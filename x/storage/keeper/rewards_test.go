@@ -45,6 +45,7 @@ func (suite *KeeperTestSuite) TestReward() {
 	})
 
 	acc, err := types.GetTokenHolderAccount()
+	suite.Require().NoError(err)
 
 	bal := suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
 	suite.Require().Equal(int64(0), bal.Amount.Int64())

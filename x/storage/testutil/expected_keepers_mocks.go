@@ -244,7 +244,7 @@ type MockRNSKeeper struct {
 }
 
 func (m *MockRNSKeeper) Resolve(ctx types.Context, name string) (types.AccAddress, error) {
-	return types.AccAddressFromBech32("jkl18dtaqkj3cdazn4rpgqdc3acz98cp5yz30erp95")
+	return types.AccAddressFromBech32(name)
 }
 
 // MockOracleKeeperMockRecorder is the mock recorder for MockOracleKeeper.

@@ -82,5 +82,4 @@ func (suite *KeeperTestSuite) TestIterateGauges() {
 			k.RemoveGauge(ctx, l)
 		}
 	}
-
 }

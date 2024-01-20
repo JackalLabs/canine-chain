@@ -74,7 +74,6 @@ func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *m
 	totalCoins := make(sdk.Coins, 0)
 
 	k.IterateGauges(ctx, func(pg types.PaymentGauge) {
-
 		if pg.End.Before(currentTime) {
 			k.RemoveGauge(ctx, pg.Id)
 			return
@@ -109,7 +108,6 @@ func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *m
 
 			totalCoins = totalCoins.Add(c)
 		}
-
 	})
 
 	for prover, worth := range *sizeTracker {

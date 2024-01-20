@@ -3,6 +3,7 @@ package types
 import (
 	"crypto/sha256"
 	"encoding/hex"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )

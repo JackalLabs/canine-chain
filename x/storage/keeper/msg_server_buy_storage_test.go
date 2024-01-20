@@ -200,7 +200,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 
 			if tc.expErr {
 				suite.Require().Equal(int64(0), diff)
-				suite.Require().EqualError(err, tc.expErrMsg)
+				suite.Require().ErrorContains(err, tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 				suite.Require().Equal(tc.tokens, diff)

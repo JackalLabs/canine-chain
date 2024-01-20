@@ -57,7 +57,6 @@ func (suite *KeeperTestSuite) reset() {
 	suite.cdc = encCfg.Codec
 	suite.queryClient = queryClient
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.storageKeeper)
-
 }
 
 func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, gocontext.Context) {
