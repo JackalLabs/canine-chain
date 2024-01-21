@@ -26,7 +26,7 @@ func SimulateMsgInitProvider(
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitProvider, "provider already exists"), nil, nil
 		}
 
-		coins := sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10_000_000_000_000))
+		coins := sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10_000_000_000_000_000))
 		err := bk.MintCoins(ctx, types.ModuleName, coins)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitProvider, "failed to mint collateral"), nil, err
