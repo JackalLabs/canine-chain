@@ -20,6 +20,8 @@ type (
 		accountKeeper types.AccountKeeper
 		oracleKeeper  types.OracleKeeper
 		rnsKeeper     types.RnsKeeper
+
+		feeCollectorName string
 	}
 )
 
@@ -31,6 +33,7 @@ func NewKeeper(
 	accountKeeper types.AccountKeeper,
 	oracleKeeper types.OracleKeeper,
 	rnsKeeper types.RnsKeeper,
+	feeCollectorName string,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -38,16 +41,21 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:           cdc,
-		storeKey:      storeKey,
-		paramStore:    ps,
-		bankKeeper:    bankKeeper,
-		accountKeeper: accountKeeper,
-		oracleKeeper:  oracleKeeper,
-		rnsKeeper:     rnsKeeper,
+		cdc:              cdc,
+		storeKey:         storeKey,
+		paramStore:       ps,
+		bankKeeper:       bankKeeper,
+		accountKeeper:    accountKeeper,
+		oracleKeeper:     oracleKeeper,
+		rnsKeeper:        rnsKeeper,
+		feeCollectorName: feeCollectorName,
 	}
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+func (k Keeper) AddCollectedFees(ctx sdk.Context, fees sdk.Coins) error {
+	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, fees)
 }

@@ -112,7 +112,7 @@ func SetupStorageKeeper(t *testing.T) (
 	)
 
 	// storage keeper initializations
-	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper)
+	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName)
 	storageKeeper.SetParams(ctx, storagemoduletypes.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.
@@ -180,7 +180,7 @@ func SetUpKeepers(t *testing.T) (
 	)
 
 	// storage keeper initializations
-	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, skey, storParamsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper)
+	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, skey, storParamsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName)
 	storageKeeper.SetParams(ctx, storagemoduletypes.DefaultParams())
 
 	filetreeKeeper := keeper.NewKeeper(encCfg.Codec, fkey, memStoreKey, filParamsSubspace)

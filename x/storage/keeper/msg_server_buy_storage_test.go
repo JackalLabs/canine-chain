@@ -28,7 +28,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		PriceFeed:              "jklprice",
 		MissesToBurn:           3,
 		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     8,
+		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
 		CheckWindow:            10,
 	})
@@ -103,7 +103,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    66666,
+			tokens:    43749,
 			expErrMsg: "",
 		},
 		{
@@ -116,7 +116,21 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    33333333,
+			tokens:    21874999,
+			expErrMsg: "",
+		},
+		{
+			testName: "successfully buy 1tb for 3 month with referral",
+			msg: types.MsgBuyStorage{
+				Creator:      testAccount,
+				ForAddress:   testAccount,
+				DurationDays: 90,
+				Bytes:        1000000000000,
+				PaymentDenom: "ujkl",
+				Referral:     depoAccount,
+			},
+			expErr:    false,
+			tokens:    19687499,
 			expErrMsg: "",
 		},
 		{

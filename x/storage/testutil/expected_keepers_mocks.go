@@ -5,6 +5,7 @@
 package testutil
 
 import (
+	"fmt"
 	reflect "reflect"
 
 	types "github.com/cosmos/cosmos-sdk/types"
@@ -244,6 +245,9 @@ type MockRNSKeeper struct {
 }
 
 func (m *MockRNSKeeper) Resolve(ctx types.Context, name string) (types.AccAddress, error) {
+	if len(name) == 0 {
+		return nil, fmt.Errorf("failed to get name")
+	}
 	return types.AccAddressFromBech32(name)
 }
 

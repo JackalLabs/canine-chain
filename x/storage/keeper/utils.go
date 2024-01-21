@@ -85,8 +85,32 @@ func (k Keeper) GetStorageCostKbsWithPrice(ctx sdk.Context, kbs int64, hours int
 // GetStorageCost calculates storage cost in ujkl
 // Uses gigabytes and months to calculate how much user has to pay
 func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int {
-	pricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
-	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
+	basePricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
+	basePricePerTBPerMonthYearly := basePricePerTBPerMonth.Mul(sdk.MustNewDecFromStr("12.5").QuoInt64(15)) // we only really care about the ratio in case the price changes
+
+	var finalPricePerTbPerMonth sdk.Dec
+
+	if hours < 365*24 { // calculating monthly
+		switch {
+		case gbs > 5_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.NewDec(14).QuoInt64(15)) // we only really care about the ratio in case the price changes
+		case gbs > 20_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.MustNewDecFromStr("12.5").QuoInt64(15)) // we only really care about the ratio in case the price changes
+		default:
+			finalPricePerTbPerMonth = basePricePerTBPerMonth
+		}
+	} else { // calculating yearly
+		switch {
+		case gbs > 5_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly.Mul(sdk.MustNewDecFromStr("11.67").Quo(sdk.MustNewDecFromStr("12.5"))) // we only really care about the ratio in case the price changes
+		case gbs > 20_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly.Mul(sdk.MustNewDecFromStr("10.42").Quo(sdk.MustNewDecFromStr("12.5"))) // we only really care about the ratio in case the price changes
+		default:
+			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly
+		}
+	}
+
+	quantifiedPricePerTBPerMonth := finalPricePerTbPerMonth.QuoInt64(3)
 	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
 	pricePerGbPerHour := pricePerGbPerMonth.QuoInt64(720)
 

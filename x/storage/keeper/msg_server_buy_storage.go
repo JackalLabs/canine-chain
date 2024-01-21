@@ -53,6 +53,9 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
+
+	// We can calculate all the unit adjustments here. We will only consider the price adjustment when actually
+	// buying storage, if you are upgrading, you get a discount based on the price you're upgrading not the entire storage
 	storageCost := k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64())
 	toPay := sdk.NewCoin(msg.PaymentDenom, storageCost)
 
@@ -73,6 +76,29 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		}
 	}
 
+	referred := false
+	refAcc, err := k.rnsKeeper.Resolve(ctx, msg.Referral)
+	if err == nil {
+		referred = true
+	}
+
+	pol := sdk.MustNewDecFromStr("0.4")
+
+	if referred {
+		p := toPay.Amount.ToDec()
+
+		var hour int64 = 1000 * 60 * 60
+		if duration.Milliseconds() > 365*24*hour {
+			p = p.Mul(sdk.MustNewDecFromStr("0.95"))
+			pol = pol.Sub(sdk.MustNewDecFromStr("0.05"))
+		} else {
+			p = p.Mul(sdk.MustNewDecFromStr("0.90"))
+			pol = pol.Sub(sdk.MustNewDecFromStr("0.1"))
+		}
+
+		toPay = sdk.NewCoin(toPay.Denom, p.TruncateInt())
+	}
+
 	spi = types.StoragePaymentInfo{
 		Start:          ctx.BlockTime(),
 		End:            ctx.BlockTime().Add(duration),
@@ -81,18 +107,14 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		Address:        forAddress.String(),
 	}
 
-	priceTokenList := sdk.NewCoins(toPay)
-
 	add, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot parse creator address %s", msg.Creator)
 	}
-	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, priceTokenList) // taking money from user
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, sdk.NewCoins(toPay)) // taking money from user
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot send tokens from %s", msg.Creator)
 	}
-
-	k.NewGauge(ctx, priceTokenList, spi.End) // creating new payment gauge
 
 	k.SetStoragePaymentInfo(ctx, spi)
 
@@ -101,9 +123,43 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, sdkerrors.Wrapf(err, "cannot get token holder account")
 	}
 
-	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, acc, priceTokenList)
+	storageProviderCut := toPay.Amount.ToDec().Mul(sdk.MustNewDecFromStr("0.35")) // always 35% to sps
+	spcToken := sdk.NewCoin(toPay.Denom, storageProviderCut.TruncateInt())
+	spcTokens := sdk.NewCoins(spcToken)
+
+	k.NewGauge(ctx, spcTokens, spi.End) // creating new payment gauge
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, acc, spcTokens)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "cannot send tokens to module from holder account")
+		return nil, sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+	}
+
+	polAcc, err := types.GetPOLAccount()
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot get pol account")
+	}
+	polCut := toPay.Amount.ToDec().Mul(pol) // 40,35,30% to pol
+	polToken := sdk.NewCoin(toPay.Denom, polCut.TruncateInt())
+	polTokens := sdk.NewCoins(polToken)
+
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, polAcc, polTokens)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot send tokens to pol account")
+	}
+
+	refCut := toPay.Amount.ToDec().Mul(sdk.MustNewDecFromStr("0.25")) // 25% to referrals
+	refToken := sdk.NewCoin(toPay.Denom, refCut.TruncateInt())
+	refTokens := sdk.NewCoins(refToken)
+
+	if referred {
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, refAcc, polTokens)
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot send tokens to referral account")
+		}
+	} else { // if we have no referral then we send the tokens to stakers
+		err := k.AddCollectedFees(ctx, refTokens)
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot send tokens to stakers")
+		}
 	}
 
 	return &types.MsgBuyStorageResponse{}, nil

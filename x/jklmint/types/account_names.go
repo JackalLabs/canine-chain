@@ -7,16 +7,10 @@ import (
 )
 
 const (
-	DevelopmentAndGrants   = "dev_and_grants"
-	ProtocolOwnedLiquidity = "protocol_owned_liq"
+	DevelopmentAndGrants = "dev_and_grants"
 )
 
 func GetDevAndGrantAccount() (sdk.AccAddress, error) {
 	adr := hex.EncodeToString([]byte(DevelopmentAndGrants))
-	return sdk.AccAddressFromHex(adr)
-}
-
-func GetPOLAccount() (sdk.AccAddress, error) {
-	adr := hex.EncodeToString([]byte(ProtocolOwnedLiquidity))
 	return sdk.AccAddressFromHex(adr)
 }
