@@ -225,3 +225,121 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	}
 	suite.reset()
 }
+
+func (suite *KeeperTestSuite) TestBuyStorageValues() {
+	suite.SetupSuite()
+	msgSrvr, k, ctx := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
+	suite.Require().NoError(err)
+
+	testAccount := testAddresses[0]
+	depoAccount := testAddresses[1]
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+	suite.Require().NoError(err)
+
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount:         depoAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     15,
+		CollateralPrice:        2,
+		CheckWindow:            10,
+	})
+
+	var bytes int64 = 3_000_000_000_000
+	var days int64 = 30
+
+	_, err = msgSrvr.BuyStorage(ctx, &types.MsgBuyStorage{
+		Creator:      testAccount,
+		ForAddress:   testAccount,
+		DurationDays: days,
+		Bytes:        bytes,
+		PaymentDenom: "ujkl",
+		Referral:     "",
+	})
+	suite.Require().NoError(err)
+
+	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64())
+
+	providerAccount, err := types.GetTokenHolderAccount()
+	suite.Require().NoError(err)
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, providerAccount, "ujkl")
+	suite.Require().Equal(int64(cost*0.35), bal.Amount.Int64())
+
+	polAccount, err := types.GetPOLAccount()
+	suite.Require().NoError(err)
+
+	bal = suite.bankKeeper.GetBalance(suite.ctx, polAccount, "ujkl")
+	suite.Require().Equal(int64(cost*0.40), bal.Amount.Int64())
+
+	_ = k
+
+	suite.reset()
+}
+
+func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
+	suite.SetupSuite()
+	msgSrvr, k, ctx := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
+	suite.Require().NoError(err)
+
+	testAccount := testAddresses[0]
+	depoAccount := testAddresses[1]
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+	suite.Require().NoError(err)
+
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount:         depoAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     15,
+		CollateralPrice:        2,
+		CheckWindow:            10,
+	})
+
+	var bytes int64 = 3_000_000_000_000
+	var days int64 = 30
+
+	_, err = msgSrvr.BuyStorage(ctx, &types.MsgBuyStorage{
+		Creator:      testAccount,
+		ForAddress:   testAccount,
+		DurationDays: days,
+		Bytes:        bytes,
+		PaymentDenom: "ujkl",
+		Referral:     depoAccount,
+	})
+	suite.Require().NoError(err)
+
+	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64()) * 0.90
+
+	providerAccount, err := types.GetTokenHolderAccount()
+	suite.Require().NoError(err)
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, providerAccount, "ujkl")
+	suite.Require().Equal(int64(cost*0.35), bal.Amount.Int64())
+
+	polAccount, err := types.GetPOLAccount()
+	suite.Require().NoError(err)
+
+	bal = suite.bankKeeper.GetBalance(suite.ctx, polAccount, "ujkl")
+	suite.Require().Equal(int64(cost*0.30), bal.Amount.Int64())
+
+	_ = k
+
+	suite.reset()
+}
