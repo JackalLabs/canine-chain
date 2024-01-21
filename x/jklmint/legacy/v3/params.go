@@ -14,7 +14,6 @@ var (
 	KeyProviderRatio  = []byte("ProviderRatio")
 	KeyTokensPerBlock = []byte("TokensPerBlock")
 
-	// TODO: Determine the default value
 	DefaultMintDenom      = "ujkl"
 	DefaultProviderRatio  = int64(4)
 	DefaultTokensPerBlock = int64(6)
@@ -88,7 +87,6 @@ func validateMintDenom(v interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", v)
 	}
 
-	// TODO implement validation
 	_ = mintDenom
 
 	return nil
