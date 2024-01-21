@@ -89,6 +89,9 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 
 	mintTokens := newMintForBlock
 	denom := k.GetParams(ctx).MintDenom
+	if denom == "" { // error handling mostly built for tests
+		denom = "ujkl"
+	}
 
 	totalCoin := sdk.NewInt64Coin(denom, mintTokens)
 	coins := sdk.NewCoins(totalCoin)
