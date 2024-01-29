@@ -25,35 +25,15 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostFile{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgAddViewers{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostKey{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgDeleteFile{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgRemoveViewers{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgProvisionFileTree{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgAddEditors{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgRemoveEditors{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgResetEditors{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgResetViewers{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgChangeOwner{},
 	)
 	// this line is used by starport scaffolding # 3
