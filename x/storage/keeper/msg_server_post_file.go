@@ -23,6 +23,16 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	//}
 
 	providers := k.GetActiveProviders(ctx, "")
+	if len(providers) == 0 {
+		allProviders := k.GetRandomizedProviders(ctx)
+
+		l := make([]types.ActiveProviders, len(allProviders))
+		for i, provider := range allProviders {
+			l[i] = types.ActiveProviders{Address: provider.Address}
+		}
+
+		providers = l
+	}
 
 	file := types.UnifiedFile{
 		Merkle:        msg.Merkle,

@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 	"google.golang.org/grpc/codes"
@@ -41,7 +43,40 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	ls := k.ListFileLocations(ctx, req.Merkle)
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
 
-	return &types.QueryFindFileResponse{ProviderIps: ls}, nil
+	var ips []string
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))
+
+	iterator := sdk.KVStoreReversePrefixIterator(store, []byte{})
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(iterator.Value(), &file); err != nil {
+			continue
+		}
+
+		for _, proof := range file.Proofs {
+
+			p, found := k.GetProofWithBuiltKey(ctx, []byte(proof))
+			if !found {
+				continue
+			}
+
+			prover := p.Prover
+
+			provider, found := k.GetProviders(ctx, prover)
+			if !found {
+				continue
+			}
+
+			ips = append(ips, provider.Ip)
+		}
+	}
+
+	return &types.QueryFindFileResponse{ProviderIps: ips}, nil
 }
