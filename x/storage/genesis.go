@@ -43,6 +43,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetActiveProviders(ctx, elem)
 	}
 
+	// Set all the active providers
+	for _, elem := range genState.PaymentGauges {
+		k.SetPaymentGauge(ctx, elem)
+	}
+
 	k.SetParams(ctx, genState.Params)
 }
 
@@ -58,6 +63,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.ActiveProvidersList = k.GetAllActiveProviders(ctx)
 	genesis.ReportForms = k.GetAllReport(ctx)
 	genesis.AttestForms = k.GetAllAttestation(ctx)
+	genesis.PaymentGauges = k.GetAllPaymentGauges(ctx)
 
 	return genesis
 }

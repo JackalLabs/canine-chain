@@ -110,3 +110,28 @@ func (k Keeper) GetAllStoragePaymentInfo(ctx sdk.Context) (list []types.StorageP
 
 	return
 }
+
+// SetPaymentGauge set a specific payment gauge in the store from its index
+func (k Keeper) SetPaymentGauge(ctx sdk.Context, gauge types.PaymentGauge) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PaymentGaugeKeyPrefix))
+	b := k.cdc.MustMarshal(&gauge)
+	store.Set(types.PaymentGaugeKey(
+		gauge.Id,
+	), b)
+}
+
+// GetAllPaymentGauges returns all payment gauges
+func (k Keeper) GetAllPaymentGauges(ctx sdk.Context) (list []types.PaymentGauge) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PaymentGaugeKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.PaymentGauge
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
