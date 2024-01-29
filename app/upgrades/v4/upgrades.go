@@ -61,6 +61,7 @@ func UpdateFileTree(ctx sdk.Context, fk *filetreemodulekeeper.Keeper, merkleMap 
 	allFiles := fk.GetAllFiles(ctx)
 
 	for _, file := range allFiles {
+
 		contents := file.Contents
 
 		var fidContents FidContents
