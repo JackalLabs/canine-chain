@@ -4,8 +4,9 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"github.com/cosmos/btcutil/bech32"
 	"math/rand"
+
+	"github.com/cosmos/btcutil/bech32"
 
 	types2 "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
