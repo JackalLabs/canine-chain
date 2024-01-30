@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
@@ -20,8 +21,8 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 
 	var spacePurchased int64
 	var spaceUsed int64
-	var activeUsers uint64
-	var totalUsers uint64
+	var activeUsers int64
+	var totalUsers int64
 
 	for _, info := range payment {
 		totalUsers++ // counting in total users
@@ -38,11 +39,30 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStatsRequ
 
 	ratio := decUsed.Quo(decSpent).MulInt64(100)
 
+	var permSize int64
+	k.IterateActiveDeals(ctx, func(deal types.ActiveDeals) bool {
+		if deal.Endblock == "0" {
+			return false
+		}
+
+		s := deal.Filesize
+		i, err := strconv.ParseInt(s, 10, 64)
+		if err != nil {
+			ctx.Logger().Debug("cannot parse active deal")
+			return false
+		}
+
+		permSize += i
+
+		return false
+	})
+
 	return &types.QueryStorageStatsResponse{
-		Purchased:   uint64(spacePurchased),
-		Used:        uint64(spaceUsed),
+		Purchased:   spacePurchased,
+		Used:        spaceUsed,
 		UsedRatio:   ratio,
 		ActiveUsers: activeUsers,
 		UniqueUsers: totalUsers,
+		PermUsed:    permSize,
 	}, nil
 }
