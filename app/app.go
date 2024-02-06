@@ -563,17 +563,17 @@ func NewJackalApp(
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper, scopedICAControllerKeeper, app.MsgServiceRouter(),
 	)
 
-	router := app.MsgServiceRouter()
-	InitLogger()
-	LogInfo("The routes that we gave to the ica host keeper are:\n", router.PrintRoutes())
-
-	router.PrintRoutes()
 	app.ICAHostKeeper = icahostkeeper.NewKeeper(
 		appCodec, keys[icahosttypes.StoreKey], app.getSubspace(icahosttypes.SubModuleName),
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper,
 		app.AccountKeeper, scopedICAHostKeeper, app.MsgServiceRouter(),
 		// does app.MsgServiceRouter have filetree's routes given it's declared before filetree?
 	)
+	router := app.MsgServiceRouter()
+	InitLogger()
+	LogInfo("The routes that we gave to the ica host keeper are:\n", router.PrintRoutes())
+
+	router.PrintRoutes()
 
 	app.InterchainTxsKeeper = *interchaintxskeeper.NewKeeper(
 		appCodec,
