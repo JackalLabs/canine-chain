@@ -573,8 +573,6 @@ func NewJackalApp(
 	InitLogger()
 	LogInfo("The routes that we gave to the ica host keeper are:\n", router.PrintRoutes())
 
-	router.PrintRoutes()
-
 	app.InterchainTxsKeeper = *interchaintxskeeper.NewKeeper(
 		appCodec,
 		keys[interchaintxstypes.StoreKey],
@@ -973,6 +971,11 @@ func NewJackalApp(
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
 	// the routes are only registered RIGHT HERE--AFTER the router was given to the ica host
 	// this means that the ica host is given a router that hasn't been registered.
+
+	// registeredRouter := app.MsgServiceRouter()
+	registeredRouterFromBaseApp := app.BaseApp.MsgServiceRouter()
+	InitLogger()
+	LogInfo("The module manager's router, after being registed, are:\n", registeredRouterFromBaseApp.PrintRoutes())
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
