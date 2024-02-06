@@ -246,6 +246,7 @@ var (
 		oraclemodule.AppModuleBasic{},
 		notificationsmodule.AppModuleBasic{},
 		ica.AppModuleBasic{},
+		// Should there be ica_host.AppModuleBasic{}? is that a thing?
 		interchaintxs.AppModuleBasic{},
 		/*
 			dsigmodule.AppModuleBasic{},
@@ -269,6 +270,7 @@ var (
 		notificationsmoduletypes.ModuleName:        nil,
 		icatypes.ModuleName:                        nil,
 		storagemoduletypes.CollateralCollectorName: nil,
+		// why is filetree not here?
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		*/
@@ -393,6 +395,7 @@ func NewJackalApp(
 		rnsmoduletypes.MemStoreKey,
 		notificationsmoduletypes.MemStoreKey,
 		// filetreemoduletypes.MemStoreKey, minttypes.MemStoreKey
+		// why is this commented out in our main branch?
 	)
 
 	app := &JackalApp{
@@ -449,6 +452,8 @@ func NewJackalApp(
 		keys[authzkeeper.StoreKey],
 		appCodec,
 		app.BaseApp.MsgServiceRouter(),
+		// this is different than every other time .MsgServiceRouter() is called
+		// For example, we gave the ica host 'app.MsgServiceRouter()', i.e., we didn't call 'app.BaseApp', we just called 'app.'
 	)
 	app.feeGrantKeeper = feegrantkeeper.NewKeeper(
 		appCodec,
@@ -557,10 +562,17 @@ func NewJackalApp(
 		app.ibcKeeper.ChannelKeeper, // may be replaced with middleware such as ics29 fee
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper, scopedICAControllerKeeper, app.MsgServiceRouter(),
 	)
+
+	router := app.MsgServiceRouter()
+	InitLogger()
+	LogInfo("The routes that we gave to the ica host keeper are:\n", router.PrintRoutes())
+
+	router.PrintRoutes()
 	app.ICAHostKeeper = icahostkeeper.NewKeeper(
 		appCodec, keys[icahosttypes.StoreKey], app.getSubspace(icahosttypes.SubModuleName),
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper,
 		app.AccountKeeper, scopedICAHostKeeper, app.MsgServiceRouter(),
+		// does app.MsgServiceRouter have filetree's routes given it's declared before filetree?
 	)
 
 	app.InterchainTxsKeeper = *interchaintxskeeper.NewKeeper(
@@ -704,7 +716,7 @@ func NewJackalApp(
 	// NOTE: even though the chain builds successfully, this routing may still be problematic.
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule). // ibc router can route to the ica host, but the ica host needs to know filetree's routes
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
 		AddRoute(interchaintxstypes.ModuleName, icaControllerStack)
 
@@ -959,6 +971,8 @@ func NewJackalApp(
 
 	app.mm.RegisterInvariants(&app.crisisKeeper)
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
+	// the routes are only registered RIGHT HERE--AFTER the router was given to the ica host
+	// this means that the ica host is given a router that hasn't been registered.
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)

@@ -165,7 +165,7 @@ replace (
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
 	// using jackal labs free post proof ante handler - better way to do this in the future.
-	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230704034202-b88b1fbc9b2f
+	github.com/cosmos/cosmos-sdk => ./cosmos-sdk-new
 
 	// use local ibc-go for development purposes
 	// NOTE: MUST REMOVE before merging into master
