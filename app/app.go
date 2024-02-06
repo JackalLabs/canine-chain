@@ -975,10 +975,20 @@ func NewJackalApp(
 	// registeredRouter := app.MsgServiceRouter()
 	registeredRouterFromBaseApp := app.BaseApp.MsgServiceRouter()
 	InitLogger()
-	LogInfo("The module manager's router, after being registed, are:\n", registeredRouterFromBaseApp.PrintRoutes())
+	LogInfo("The module manager's BaseApp router, after routes are registed, are:\n", registeredRouterFromBaseApp.PrintRoutes())
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
+
+	registeredRouterAndServices := app.BaseApp.MsgServiceRouter()
+
+	InitLogger()
+	// These appear to just be core SDK routes, not our custom routes
+	LogInfo("The module manager's router, after SERVICES were registered, are:\n", registeredRouterAndServices.PrintRoutes())
+
+	// Let's see if the routes for our custom module appear here
+	registeredCustomServices := app.MsgServiceRouter()
+	LogInfo("The mm custom routes are:\n", registeredCustomServices.PrintRoutes())
 
 	app.registerTestnetUpgradeHandlers()
 	app.registerMainnetUpgradeHandlers()
