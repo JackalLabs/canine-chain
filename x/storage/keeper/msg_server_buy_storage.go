@@ -79,12 +79,15 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	referred := false
 	refAcc, err := k.rnsKeeper.Resolve(ctx, msg.Referral)
 	if err == nil {
-		referred = true
+		if !(refAcc.String() == msg.Creator) {
+			referred = true
+		}
 	}
 
 	pol := sdk.MustNewDecFromStr("0.4")
 
 	if referred {
+
 		p := toPay.Amount.ToDec()
 
 		var hour int64 = 1000 * 60 * 60
