@@ -1,8 +1,12 @@
 package v4_test
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"math/rand"
+
+	"github.com/cosmos/btcutil/bech32"
 
 	types2 "github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
@@ -17,24 +21,44 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 	fidMerkleMap := make(map[string][]byte)
 
 	for i := 0; i < 10; i++ {
-		fid := fmt.Sprintf("jklf1oooooooo%d", i)
+		n := rand.Int63()
+		s := sha256.New()
+		s.Write([]byte(fmt.Sprintf("%d", n)))
+		d := s.Sum(nil)
+		conv, err := bech32.ConvertBits(d, 8, 5, true)
+		suite.Require().NoError(err)
+		fid, err := bech32.Encode("jklf", conv)
+		suite.Require().NoError(err)
 
 		fidContents := v4.FidContents{Fid: []string{fid}}
 		data, err := json.Marshal(fidContents)
+		suite.Require().NoError(err)
+
+		s = sha256.New()
+		s.Write([]byte("cosmosjoe"))
+		conv, err = bech32.ConvertBits(s.Sum(nil), 8, 5, true)
+		suite.Require().NoError(err)
+		owner, err := bech32.Encode("jkl", conv)
 		suite.Require().NoError(err)
 
 		address := fmt.Sprintf("this is file %d", i)
 		f := types.Files{
 			Address:        address,
 			Contents:       string(data),
-			Owner:          "cosmosjoe",
+			Owner:          owner,
 			ViewingAccess:  "{}",
 			EditAccess:     "{}",
 			TrackingNumber: fmt.Sprintf("%d", i),
 		}
-		fidMerkleMap[fid] = []byte(address)
+		s = sha256.New()
+		s.Write([]byte(address))
+		fidMerkleMap[fid] = s.Sum(nil)
 
 		suite.filetreeKeeper.SetFiles(suite.ctx, f)
+
+		fj, err := json.MarshalIndent(f, "", "  ")
+		suite.Require().NoError(err)
+		fmt.Println(string(fj))
 	}
 
 	v4.UpdateFileTree(suite.ctx, suite.filetreeKeeper, fidMerkleMap)
@@ -47,7 +71,14 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 		err := json.Unmarshal(b, &mct)
 		suite.Require().NoError(err)
 
-		suite.Require().Equal([]byte(file.Address), mct.Merkles[0])
+		s := sha256.New()
+		s.Write([]byte(file.Address))
+
+		suite.Require().Equal(s.Sum(nil), mct.Merkles[0])
+
+		fj, err := json.MarshalIndent(file, "", "  ")
+		suite.Require().NoError(err)
+		fmt.Println(string(fj))
 	}
 }
 

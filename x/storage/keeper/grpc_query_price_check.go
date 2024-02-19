@@ -27,15 +27,15 @@ func (k Keeper) PriceCheck(c context.Context, req *types.QueryPriceCheck) (*type
 
 	bytes := req.Bytes
 
-	const gb int64 = 1000000000
-
-	gbs := bytes / gb
-	if gbs <= 0 {
-		return nil, fmt.Errorf("cannot buy less than a gb")
+	size := sdk.NewInt(bytes)
+	s := size.Quo(sdk.NewInt(1_000_000)).Int64() // round to mbs
+	if s <= 0 {
+		s = 1
 	}
 
 	hours := sdk.NewDec(duration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
-	p := k.GetStorageCost(ctx, gbs, hours.TruncateInt().Int64())
 
-	return &types.QueryPriceCheckResponse{Price: p.Int64()}, nil
+	cost := k.GetStorageCostKbs(ctx, s*1000, hours.TruncateInt64()) // pay for 200 years in mbs
+
+	return &types.QueryPriceCheckResponse{Price: cost.Int64()}, nil
 }
