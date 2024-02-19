@@ -156,7 +156,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 	s := make(map[string]int64)
 	sizeTracker := &s
 
-	k.IterateFilesByMerkle(ctx, false, func(key []byte, val []byte) bool {
+	k.IterateFilesByMerkle(ctx, false, func(_ []byte, val []byte) bool {
 		var file types.UnifiedFile
 		k.cdc.MustUnmarshal(val, &file)
 

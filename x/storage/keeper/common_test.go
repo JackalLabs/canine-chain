@@ -90,7 +90,7 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 
 	// We don't track module account balances.
 	bankKeeper.EXPECT().MintCoins(gomock.Any(), minttypes.ModuleName, gomock.Any()).AnyTimes()
-	bankKeeper.EXPECT().BurnCoins(gomock.Any(), types.ModuleName, gomock.Any()).DoAndReturn(func(_ sdk.Context, moduleName string, coins sdk.Coins) error {
+	bankKeeper.EXPECT().BurnCoins(gomock.Any(), types.ModuleName, gomock.Any()).DoAndReturn(func(_ sdk.Context, _ string, coins sdk.Coins) error {
 		newBalance, negative := balances[modAccount.String()].SafeSub(coins)
 		if negative {
 			return fmt.Errorf("not enough balance")
@@ -109,7 +109,7 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 		balances[sender.String()] = newBalance
 		return nil
 	}).AnyTimes()
-	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, module string, rcpt sdk.AccAddress, coins sdk.Coins) error {
+	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, _ string, rcpt sdk.AccAddress, coins sdk.Coins) error {
 		balances[rcpt.String()] = balances[rcpt.String()].Add(coins...)
 		return nil
 	}).AnyTimes()

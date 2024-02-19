@@ -105,18 +105,18 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 	}
 }
 
-func CreateBadFile(creator string, editorIds []string, viewerIds []string, readablePath string) (*types.Files, error) {
+func CreateBadFile(creator string, editorIDs []string, viewerIDs []string, readablePath string) (*types.Files, error) {
 	merklePath := types.MerklePath(readablePath)
 	trackingNumber := uuid.NewString()
 
-	jsonEditors, err := types.MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
+	jsonEditors, err := types.MakeEditorAccessMap(trackingNumber, editorIDs, "place holder key")
 	if err != nil {
 		return nil, err
 	}
 
 	viewers := make([]string, 10)
 
-	for i := range viewerIds {
+	for i := range viewerIDs {
 		viewers[i] = fmt.Sprintf("%x", "aesKey")
 	}
 

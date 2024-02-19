@@ -44,7 +44,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 	jklmintParams := types.DefaultParams()
 	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMintDenom), func(r *rand.Rand) string {
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMintDenom), func(_ *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(jklmintParams.MintDenom))
 		}),
 	}

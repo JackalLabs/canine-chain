@@ -88,6 +88,9 @@ func (suite *KeeperTestSuite) TestReward() {
 		ChunkToProve: 0,
 	})
 
+	_, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+	suite.Require().True(found)
+
 	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20}).WithBlockTime(s.AddDate(0, 3, 0))
 
 	suite.Require().Equal(blocks, ctx.BlockHeight())
@@ -98,5 +101,5 @@ func (suite *KeeperTestSuite) TestReward() {
 	pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
 	suite.NoError(err)
 	bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
-	suite.Require().Equal(int64(1491803), bal.Amount.Int64())
+	suite.Require().Equal(int64(1475409), bal.Amount.Int64())
 }

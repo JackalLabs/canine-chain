@@ -13,7 +13,7 @@ func CmdGetStorageStats() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-storage-stats",
 		Short: "lists stats about storage on the network",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)

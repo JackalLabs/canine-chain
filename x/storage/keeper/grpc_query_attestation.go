@@ -22,7 +22,7 @@ func (k Keeper) AllAttestations(c context.Context, req *types.QueryAllAttestatio
 	store := ctx.KVStore(k.storeKey)
 	attestationStore := prefix.NewStore(store, types.KeyPrefix(types.AttestationKeyPrefix))
 
-	pageRes, err := query.Paginate(attestationStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(attestationStore, req.Pagination, func(_ []byte, value []byte) error {
 		var providers types.AttestationForm
 		if err := k.cdc.Unmarshal(value, &providers); err != nil {
 			return err

@@ -72,7 +72,7 @@ func (suite *KeeperTestSuite) TestIterateGauges() {
 		}
 
 		is := 0
-		k.IterateGauges(ctx, func(pg types.PaymentGauge) {
+		k.IterateGauges(ctx, func(_ types.PaymentGauge) {
 			is++
 		})
 

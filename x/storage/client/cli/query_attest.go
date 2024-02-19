@@ -15,7 +15,7 @@ func CmdListAttestForms() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-attest-forms",
 		Short: "list attest forms",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -93,7 +93,7 @@ func CmdListReportForms() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-report-forms",
 		Short: "list report forms",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
