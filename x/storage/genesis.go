@@ -43,6 +43,16 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetActiveProviders(ctx, elem)
 	}
 
+	// Set all the oracle requests
+	for _, elem := range genState.OracleRequests {
+		k.SetOracleRequest(ctx, elem)
+	}
+
+	// Set all the oracle entries
+	for _, elem := range genState.OracleEntries {
+		k.SetOracleEntry(ctx, elem)
+	}
+
 	k.SetParams(ctx, genState.Params)
 }
 
@@ -58,6 +68,8 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.ActiveProvidersList = k.GetAllActiveProviders(ctx)
 	genesis.ReportForms = k.GetAllReport(ctx)
 	genesis.AttestForms = k.GetAllAttestation(ctx)
+	genesis.OracleRequests = k.GetAllOracleRequests(ctx)
+	genesis.OracleEntries = k.GetAllOracleEntries(ctx)
 
 	return genesis
 }

@@ -6,6 +6,7 @@ import "canine_chain/storage/params.proto";
 import "canine_chain/storage/active_deals.proto";
 import "canine_chain/storage/providers.proto";
 import "canine_chain/storage/payment_info.proto";
+import "canine_chain/storage/oracle.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
@@ -18,4 +19,6 @@ message GenesisState {
   repeated ActiveProviders active_providers_list = 6 [ (gogoproto.nullable) = false ];
   repeated ReportForm report_forms = 7 [ (gogoproto.nullable) = false ];
   repeated AttestationForm attest_forms = 8 [ (gogoproto.nullable) = false ];
+  repeated OracleRequest oracle_requests = 9 [ (gogoproto.nullable) = false ];
+  repeated OracleEntry oracle_entries = 10 [ (gogoproto.nullable) = false ];
 }

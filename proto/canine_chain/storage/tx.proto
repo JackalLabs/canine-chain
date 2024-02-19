@@ -1,6 +1,9 @@
 syntax = "proto3";
 package canine_chain.storage;
 
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
 service Msg {
@@ -21,6 +24,10 @@ service Msg {
   rpc Attest(MsgAttest) returns (MsgAttestResponse);
   rpc RequestReportForm(MsgRequestReportForm) returns (MsgRequestReportFormResponse);
   rpc Report(MsgReport) returns (MsgReportResponse);
+
+  // oracle stuff
+  rpc RequestChunk(MsgRequestChunk) returns (MsgRequestChunkResponse);
+  rpc FulfillRequest(MsgFulfillRequest) returns (MsgFulfillRequestResponse);
 }
 
 message MsgPostFile {
@@ -168,3 +175,23 @@ message MsgReport {
 }
 
 message MsgReportResponse {}
+
+message MsgRequestChunk {
+  string creator = 1;
+  bytes merkle = 2;
+  int64 chunk = 3;
+  cosmos.base.v1beta1.Coin bid = 4 [ (gogoproto.nullable) = false ];
+}
+
+message MsgRequestChunkResponse {}
+
+message MsgFulfillRequest {
+  string creator = 1;
+  string requester = 2;
+  bytes merkle = 3;
+  int64 chunk = 4;
+  bytes data = 5;
+  bytes hash_list = 6;
+}
+
+message MsgFulfillRequestResponse {}

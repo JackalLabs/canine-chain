@@ -44,7 +44,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgBuyStorage:
 			res, err := msgServer.BuyStorage(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-
 		case *types.MsgAddClaimer:
 			res, err := msgServer.AddProviderClaimer(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
@@ -62,6 +61,12 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgReport:
 			res, err := msgServer.Report(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgRequestChunk:
+			res, err := msgServer.RequestChunk(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgFulfillRequest:
+			res, err := msgServer.FulfillRequest(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
