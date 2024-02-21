@@ -52,7 +52,7 @@ func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 		return sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal from form")
 	}
 
-	deal.Proofverified = True // flip deal to verified if the minimum attestation threshold is met
+	deal.LastProof = ctx.BlockHeight()
 	k.SetActiveDeals(ctx, deal)
 	k.RemoveAttestation(ctx, cid)
 

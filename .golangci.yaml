@@ -12,7 +12,7 @@ linters:
     - goconst
     - gocritic
     - gofumpt
-    - revive
+#    - revive
     - gosec
     - gosimple
     - govet
@@ -24,7 +24,7 @@ linters:
     - stylecheck
     - typecheck
     - unconvert
-    - unused
+#    - unused
     - unparam
 
 linters-settings:

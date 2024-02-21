@@ -53,11 +53,8 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 
 	deal.Blocktoprove = fmt.Sprintf("%d", iprove)
 
-	verified, errb := strconv.ParseBool(deal.Proofverified)
-
-	if errb != nil {
-		return errb
-	}
+	p := k.GetParams(ctx)
+	verified := deal.IsVerified(ctx.BlockHeight(), p.ProofWindow)
 
 	if !verified {
 		ctx.Logger().Debug("%s\n", "Not verified!")
@@ -134,7 +131,6 @@ func (k Keeper) manageDealReward(ctx sdk.Context, deal types.ActiveDeals, networ
 	}
 
 	deal.Proofsmissed = updatedMisses.String()
-	deal.Proofverified = "false"
 	k.SetActiveDeals(ctx, deal)
 
 	ap := types.ActiveProviders{

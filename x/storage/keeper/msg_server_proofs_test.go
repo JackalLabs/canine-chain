@@ -263,7 +263,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 			postRun: func() {
 				// Set Proofverified back to false
 				contract, _ := keeper.GetActiveDeals(suite.ctx, CID)
-				contract.Proofverified = "false"
+				contract.LastProof = 0
 				keeper.SetActiveDeals(suite.ctx, contract)
 			},
 		},
@@ -311,7 +311,11 @@ func (suite *KeeperTestSuite) TestPostProof() {
 					suite.Require().Equal(false, res.Success)
 				} else {
 					contract, _ := keeper.GetActiveDeals(suite.ctx, cid1)
-					suite.Require().Equal("true", contract.Proofverified)
+
+					p := suite.storageKeeper.GetParams(suite.ctx)
+					verified := contract.IsVerified(suite.ctx.BlockHeight(), p.ProofWindow)
+
+					suite.Require().True(verified)
 					suite.Require().NoError(err)
 				}
 				if tc.postRun != nil {

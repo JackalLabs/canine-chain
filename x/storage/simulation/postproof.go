@@ -28,7 +28,7 @@ func SimulateMsgPostproof(
 
 		deal := deals[r.Intn(len(deals))]
 
-		if deal.Proofverified == "true" {
+		if deal.LastProof == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "proof already verified, skipping"), nil, nil
 		}
 

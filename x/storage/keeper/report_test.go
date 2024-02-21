@@ -114,18 +114,18 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	}
 
 	deal := types.ActiveDeals{
-		Cid:           cid,
-		Signee:        "",
-		Provider:      addresses[10],
-		Startblock:    "",
-		Endblock:      "0",
-		Filesize:      "",
-		Proofverified: "false",
-		Proofsmissed:  "",
-		Blocktoprove:  "",
-		Creator:       "",
-		Merkle:        "",
-		Fid:           "",
+		Cid:          cid,
+		Signee:       "",
+		Provider:     addresses[10],
+		Startblock:   "",
+		Endblock:     "0",
+		Filesize:     "",
+		LastProof:    0,
+		Proofsmissed: "",
+		Blocktoprove: "",
+		Creator:      "",
+		Merkle:       "",
+		Fid:          "",
 	}
 
 	suite.storageKeeper.SetActiveDeals(suite.ctx, deal) // creating storage deal
@@ -146,7 +146,9 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 
 	d, found := suite.storageKeeper.GetActiveDeals(suite.ctx, cid)
 	suite.Equal(true, found)
-	suite.Equal("false", d.Proofverified)
+	p := suite.storageKeeper.GetParams(suite.ctx)
+	verified := d.IsVerified(suite.ctx.BlockHeight(), p.ProofWindow)
+	suite.Equal(false, verified)
 
 	for i, attestation := range form.Attestations {
 		err := suite.storageKeeper.Report(suite.ctx, cid, attestation.Provider)

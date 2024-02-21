@@ -156,18 +156,18 @@ func (suite *KeeperTestSuite) TestSetActiveDeals() {
 	provider := testAddresses[1]
 
 	deal := types.ActiveDeals{
-		Cid:           "549",
-		Signee:        user,
-		Provider:      provider,
-		Startblock:    "100",
-		Endblock:      "1000",
-		Filesize:      "5000",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "150",
-		Creator:       user,
-		Merkle:        "",
-		Fid:           "5789",
+		Cid:          "549",
+		Signee:       user,
+		Provider:     provider,
+		Startblock:   "100",
+		Endblock:     "1000",
+		Filesize:     "5000",
+		LastProof:    suite.ctx.BlockHeight(),
+		Proofsmissed: "0",
+		Blocktoprove: "150",
+		Creator:      user,
+		Merkle:       "",
+		Fid:          "5789",
 	}
 
 	suite.storageKeeper.SetActiveDeals(suite.ctx, deal)
@@ -193,18 +193,18 @@ func (suite *KeeperTestSuite) TestGetActiveDeals() {
 	provider := testAddresses[1]
 
 	deal := types.ActiveDeals{
-		Cid:           "549",
-		Signee:        user,
-		Provider:      provider,
-		Startblock:    "100",
-		Endblock:      "1000",
-		Filesize:      "5000",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "150",
-		Creator:       user,
-		Merkle:        "",
-		Fid:           "5789",
+		Cid:          "549",
+		Signee:       user,
+		Provider:     provider,
+		Startblock:   "100",
+		Endblock:     "1000",
+		Filesize:     "5000",
+		LastProof:    suite.ctx.BlockHeight(),
+		Proofsmissed: "0",
+		Blocktoprove: "150",
+		Creator:      user,
+		Merkle:       "",
+		Fid:          "5789",
 	}
 
 	suite.storageKeeper.SetActiveDeals(suite.ctx, deal)
@@ -229,36 +229,36 @@ func (suite *KeeperTestSuite) TestGetAllActiveDeals() {
 	charlie := testAddresses[2]
 
 	deal := types.ActiveDeals{
-		Cid:           "549",
-		Signee:        alice,
-		Provider:      provider,
-		Startblock:    "100",
-		Endblock:      "1000",
-		Filesize:      "5000",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "150",
-		Creator:       alice,
-		Merkle:        "",
-		Fid:           "5789",
+		Cid:          "549",
+		Signee:       alice,
+		Provider:     provider,
+		Startblock:   "100",
+		Endblock:     "1000",
+		Filesize:     "5000",
+		LastProof:    suite.ctx.BlockHeight(),
+		Proofsmissed: "0",
+		Blocktoprove: "150",
+		Creator:      alice,
+		Merkle:       "",
+		Fid:          "5789",
 	}
 
 	suite.storageKeeper.SetActiveDeals(suite.ctx, deal)
 	suite.Require().NoError(err)
 
 	deal1 := types.ActiveDeals{
-		Cid:           "1458",
-		Signee:        charlie,
-		Provider:      provider,
-		Startblock:    "200",
-		Endblock:      "2000",
-		Filesize:      "10000",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "200",
-		Creator:       charlie,
-		Merkle:        "",
-		Fid:           "4589",
+		Cid:          "1458",
+		Signee:       charlie,
+		Provider:     provider,
+		Startblock:   "200",
+		Endblock:     "2000",
+		Filesize:     "10000",
+		LastProof:    suite.ctx.BlockHeight(),
+		Proofsmissed: "0",
+		Blocktoprove: "200",
+		Creator:      charlie,
+		Merkle:       "",
+		Fid:          "4589",
 	}
 
 	suite.storageKeeper.SetActiveDeals(suite.ctx, deal1)
@@ -283,18 +283,18 @@ func (suite *KeeperTestSuite) TestRemoveActiveDeals() {
 	provider := testAddresses[1]
 
 	deal := types.ActiveDeals{
-		Cid:           "549",
-		Signee:        user,
-		Provider:      provider,
-		Startblock:    "100",
-		Endblock:      "1000",
-		Filesize:      "5000",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "150",
-		Creator:       user,
-		Merkle:        "",
-		Fid:           "5789",
+		Cid:          "549",
+		Signee:       user,
+		Provider:     provider,
+		Startblock:   "100",
+		Endblock:     "1000",
+		Filesize:     "5000",
+		LastProof:    suite.ctx.BlockHeight(),
+		Proofsmissed: "0",
+		Blocktoprove: "150",
+		Creator:      user,
+		Merkle:       "",
+		Fid:          "5789",
 	}
 
 	suite.storageKeeper.SetActiveDeals(suite.ctx, deal)

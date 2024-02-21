@@ -54,18 +54,18 @@ func (k msgServer) ClaimStray(goCtx context.Context, msg *types.MsgClaimStray) (
 	}
 
 	deal := types.ActiveDeals{
-		Cid:           stray.Cid,
-		Signee:        stray.Signee,
-		Provider:      msg.ForAddress,
-		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      fmt.Sprintf("%d", stray.End),
-		Filesize:      stray.Filesize,
-		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
-		Creator:       msg.Creator,
-		Proofsmissed:  "0",
-		Merkle:        stray.Merkle,
-		Fid:           stray.Fid,
+		Cid:          stray.Cid,
+		Signee:       stray.Signee,
+		Provider:     msg.ForAddress,
+		Startblock:   fmt.Sprintf("%d", ctx.BlockHeight()),
+		Endblock:     fmt.Sprintf("%d", stray.End),
+		Filesize:     stray.Filesize,
+		LastProof:    ctx.BlockHeight(),
+		Blocktoprove: fmt.Sprintf("%d", pieceToStart),
+		Creator:      msg.Creator,
+		Proofsmissed: "0",
+		Merkle:       stray.Merkle,
+		Fid:          stray.Fid,
 	}
 
 	k.SetActiveDeals(ctx, deal)
