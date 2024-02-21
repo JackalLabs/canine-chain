@@ -395,6 +395,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 					Signee:   user,
 					Creator:  user,
 					Filesize: "10",
+					Endblock: "0",
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
 
@@ -412,6 +413,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 						Signee:   user,
 						Creator:  user,
 						Filesize: "10",
+						Endblock: "0",
 					}
 					sKeeper.SetActiveDeals(suite.ctx, k)
 				}
@@ -447,6 +449,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 					Signee:   user,
 					Fid:      "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
 					Filesize: "10",
+					Endblock: "0",
 				}
 				sKeeper.SetActiveDeals(suite.ctx, d)
 
@@ -468,11 +471,54 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 			},
 			expErr: false,
 		},
+		{
+			name: "failed_cancel_200",
+			preRun: func() *types.MsgCancelContract {
+				dcid := tst
+				h := sha256.New()
+				_, err := io.WriteString(h, dcid)
+				suite.Require().NoError(err)
+				hashName := h.Sum(nil)
+
+				dcid, err = keeper.MakeCid(hashName)
+				suite.Require().NoError(err)
+
+				cids := []string{dcid}
+
+				d := types.ActiveDeals{
+					Cid:      dcid,
+					Creator:  user,
+					Signee:   user,
+					Fid:      "jklf1j3p63s42w7ywaczlji626st55mzu5z39w2rx9x",
+					Filesize: "10",
+					Endblock: "2000",
+				}
+				sKeeper.SetActiveDeals(suite.ctx, d)
+
+				b, err := json.Marshal(cids)
+				suite.Require().NoError(err)
+
+				ftc := types.FidCid{
+					Fid:  "jklf1j3p63s42w7ywaczlji626st55mzu5z39w2rx9x",
+					Cids: string(b),
+				}
+				sKeeper.SetFidCid(suite.ctx, ftc)
+
+				suite.Require().NoError(err)
+
+				return &types.MsgCancelContract{
+					Creator: user,
+					Cid:     d.Cid,
+				}
+			},
+			expErr:    true,
+			expErrMsg: types.ErrCancelContract.Error(),
+		},
 
 		{
 			name: "successfully_cancelled_contract_with_strays",
 			preRun: func() *types.MsgCancelContract {
-				dcid := tst
+				dcid := "test_stray_cid"
 				h := sha256.New()
 				_, err := io.WriteString(h, dcid)
 				suite.Require().NoError(err)
@@ -488,6 +534,7 @@ func (suite *KeeperTestSuite) TestCancelContract() {
 					Fid:      "jklf1j3p63s42w7ywaczlju626st55mzu5z39w2rx9x",
 					Signee:   user,
 					Filesize: "10",
+					End:      0,
 				}
 				sKeeper.SetStrays(suite.ctx, d)
 

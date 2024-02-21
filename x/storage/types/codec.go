@@ -22,47 +22,33 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgSetProviderKeybase{}, "storage/SetProviderKeybase", nil)
 	cdc.RegisterConcrete(&MsgAddClaimer{}, "storage/AddClaimer", nil)
 	cdc.RegisterConcrete(&MsgRemoveClaimer{}, "storage/RemoveClaimer", nil)
+	cdc.RegisterConcrete(&MsgAttest{}, "storage/Attest", nil)
+	cdc.RegisterConcrete(&MsgReport{}, "storage/Report", nil)
+	cdc.RegisterConcrete(&MsgRequestAttestationForm{}, "storage/RequestAttestationForm", nil)
+	cdc.RegisterConcrete(&MsgRequestReportForm{}, "storage/RequestReportForm", nil)
+	cdc.RegisterConcrete(&MsgShutdownProvider{}, "storage/ShutdownProvider", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostContract{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgPostproof{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSignContract{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSetProviderIP{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSetProviderTotalspace{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgInitProvider{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCancelContract{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgBuyStorage{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgClaimStray{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpgradeStorage{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSetProviderKeybase{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgAddClaimer{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgRemoveClaimer{},
+		&MsgAttest{},
+		&MsgReport{},
+		&MsgRequestAttestationForm{},
+		&MsgRequestReportForm{},
+		&MsgShutdownProvider{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

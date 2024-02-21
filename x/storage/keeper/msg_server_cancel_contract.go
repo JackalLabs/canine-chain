@@ -26,7 +26,14 @@ func (k Keeper) CanContract(ctx sdk.Context, root string, creator string) error 
 		fid = d.Fid
 		fileSize, err = strconv.ParseInt(d.Filesize, 10, 64)
 		if err != nil {
-			return err
+			return sdkerrors.Wrapf(err, "cannot parse file size from deal")
+		}
+		endBlock, err := strconv.ParseInt(d.Endblock, 10, 64)
+		if err != nil {
+			return sdkerrors.Wrapf(err, "cannot parse end block from deal")
+		}
+		if endBlock > ctx.BlockHeight() {
+			return sdkerrors.Wrapf(types.ErrCancelContract, "this is a persistent file that can't be cancelled until it expires")
 		}
 	} else if strayFound {
 		signee = s.Signee
@@ -34,6 +41,9 @@ func (k Keeper) CanContract(ctx sdk.Context, root string, creator string) error 
 		fileSize, err = strconv.ParseInt(s.Filesize, 10, 64)
 		if err != nil {
 			return err
+		}
+		if s.End > ctx.BlockHeight() {
+			return sdkerrors.Wrapf(types.ErrCancelContract, "this is a persistent file that can't be cancelled until it expires")
 		}
 	} else {
 		return types.ErrNoCid
