@@ -359,13 +359,14 @@ message QueryActiveProvidersResponse {
 message QueryStorageStatsRequest {}
 
 message QueryStorageStatsResponse {
-  uint64 purchased = 1;
-  uint64 used = 2;
+  int64 purchased = 1;
+  int64 used = 2;
   bytes usedRatio = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
   ];
-  uint64 activeUsers = 4;
-  uint64 uniqueUsers = 5;
+  int64 activeUsers = 4;
+  int64 uniqueUsers = 5;
+  int64 permUsed = 6;
 }
 // this line is used by starport scaffolding # 3
