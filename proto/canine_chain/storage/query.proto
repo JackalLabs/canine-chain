@@ -202,7 +202,7 @@ message QueryAllContractsResponse {
 message QueryActiveDealRequest { string cid = 1; }
 
 message QueryActiveDealResponse {
-  ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
+  LegacyActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryAllActiveDealsRequest {
@@ -210,7 +210,7 @@ message QueryAllActiveDealsRequest {
 }
 
 message QueryAllActiveDealsResponse {
-  repeated ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
+  repeated LegacyActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

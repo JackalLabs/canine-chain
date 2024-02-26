@@ -154,8 +154,141 @@ func (m *ActiveDeals) GetFid() string {
 	return ""
 }
 
+type LegacyActiveDeals struct {
+	Cid           string `protobuf:"bytes,1,opt,name=cid,proto3" json:"cid,omitempty"`
+	Signee        string `protobuf:"bytes,2,opt,name=signee,proto3" json:"signee,omitempty"`
+	Provider      string `protobuf:"bytes,3,opt,name=provider,proto3" json:"provider,omitempty"`
+	Startblock    string `protobuf:"bytes,4,opt,name=startblock,proto3" json:"startblock,omitempty"`
+	Endblock      string `protobuf:"bytes,5,opt,name=endblock,proto3" json:"endblock,omitempty"`
+	Filesize      string `protobuf:"bytes,6,opt,name=filesize,proto3" json:"filesize,omitempty"`
+	Proofverified string `protobuf:"bytes,7,opt,name=proofverified,proto3" json:"proofverified,omitempty"`
+	Proofsmissed  string `protobuf:"bytes,8,opt,name=proofsmissed,proto3" json:"proofsmissed,omitempty"`
+	Blocktoprove  string `protobuf:"bytes,9,opt,name=blocktoprove,proto3" json:"blocktoprove,omitempty"`
+	Creator       string `protobuf:"bytes,10,opt,name=creator,proto3" json:"creator,omitempty"`
+	Merkle        string `protobuf:"bytes,11,opt,name=merkle,proto3" json:"merkle,omitempty"`
+	Fid           string `protobuf:"bytes,12,opt,name=fid,proto3" json:"fid,omitempty"`
+}
+
+func (m *LegacyActiveDeals) Reset()         { *m = LegacyActiveDeals{} }
+func (m *LegacyActiveDeals) String() string { return proto.CompactTextString(m) }
+func (*LegacyActiveDeals) ProtoMessage()    {}
+func (*LegacyActiveDeals) Descriptor() ([]byte, []int) {
+	return fileDescriptor_71fa39f1fdaaaa6d, []int{1}
+}
+func (m *LegacyActiveDeals) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LegacyActiveDeals) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LegacyActiveDeals.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *LegacyActiveDeals) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LegacyActiveDeals.Merge(m, src)
+}
+func (m *LegacyActiveDeals) XXX_Size() int {
+	return m.Size()
+}
+func (m *LegacyActiveDeals) XXX_DiscardUnknown() {
+	xxx_messageInfo_LegacyActiveDeals.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LegacyActiveDeals proto.InternalMessageInfo
+
+func (m *LegacyActiveDeals) GetCid() string {
+	if m != nil {
+		return m.Cid
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetSignee() string {
+	if m != nil {
+		return m.Signee
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetProvider() string {
+	if m != nil {
+		return m.Provider
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetStartblock() string {
+	if m != nil {
+		return m.Startblock
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetEndblock() string {
+	if m != nil {
+		return m.Endblock
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetFilesize() string {
+	if m != nil {
+		return m.Filesize
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetProofverified() string {
+	if m != nil {
+		return m.Proofverified
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetProofsmissed() string {
+	if m != nil {
+		return m.Proofsmissed
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetBlocktoprove() string {
+	if m != nil {
+		return m.Blocktoprove
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetMerkle() string {
+	if m != nil {
+		return m.Merkle
+	}
+	return ""
+}
+
+func (m *LegacyActiveDeals) GetFid() string {
+	if m != nil {
+		return m.Fid
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*ActiveDeals)(nil), "canine_chain.storage.ActiveDeals")
+	proto.RegisterType((*LegacyActiveDeals)(nil), "canine_chain.storage.LegacyActiveDeals")
 }
 
 func init() {
@@ -163,28 +296,30 @@ func init() {
 }
 
 var fileDescriptor_71fa39f1fdaaaa6d = []byte{
-	// 330 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x54, 0x91, 0xcf, 0x4e, 0x02, 0x31,
-	0x18, 0xc4, 0x59, 0x50, 0xfe, 0x14, 0x0e, 0xa6, 0x31, 0xa6, 0x31, 0xb1, 0x21, 0x5c, 0xe4, 0x22,
-	0x9b, 0xe8, 0x13, 0x68, 0x3c, 0x72, 0x30, 0x1c, 0xbd, 0x90, 0x6e, 0xfb, 0x2d, 0x7c, 0xb2, 0x6c,
-	0x37, 0x6d, 0x25, 0xea, 0x53, 0xf8, 0x58, 0x1e, 0x39, 0x19, 0x8f, 0x06, 0x5e, 0xc4, 0xb4, 0x05,
-	0x82, 0xb7, 0x9d, 0xf9, 0xcd, 0x97, 0x6d, 0x66, 0xc8, 0xb5, 0x14, 0x25, 0x96, 0x30, 0x95, 0x73,
-	0x81, 0x65, 0x6a, 0x9d, 0x36, 0x62, 0x06, 0xa9, 0x90, 0x0e, 0x57, 0x30, 0x55, 0x20, 0x0a, 0x3b,
-	0xaa, 0x8c, 0x76, 0x9a, 0x9e, 0x1f, 0x07, 0x47, 0xbb, 0xe0, 0xe0, 0xbb, 0x4e, 0xba, 0xf7, 0x21,
-	0xfc, 0xe8, 0xb3, 0xf4, 0x8c, 0x34, 0x24, 0x2a, 0x96, 0xf4, 0x93, 0x61, 0x67, 0xe2, 0x3f, 0xe9,
-	0x05, 0x69, 0x5a, 0x9c, 0x95, 0x00, 0xac, 0x1e, 0xcc, 0x9d, 0xa2, 0x97, 0xa4, 0x5d, 0x19, 0xbd,
-	0x42, 0x05, 0x86, 0x35, 0x02, 0x39, 0x68, 0xca, 0x09, 0xb1, 0x4e, 0x18, 0x97, 0x15, 0x5a, 0x2e,
-	0xd8, 0x49, 0xa0, 0x47, 0x8e, 0xbf, 0x85, 0x52, 0x45, 0x7a, 0x1a, 0x6f, 0xf7, 0xda, 0xb3, 0x1c,
-	0x0b, 0xb0, 0xf8, 0x01, 0xac, 0x19, 0xd9, 0x5e, 0xd3, 0x2b, 0x42, 0x0a, 0x61, 0xdd, 0xb4, 0x32,
-	0x5a, 0xe7, 0xac, 0xd5, 0x4f, 0x86, 0x8d, 0x49, 0xc7, 0x3b, 0x4f, 0xde, 0xa0, 0x03, 0xd2, 0x0b,
-	0xc4, 0x2e, 0xd1, 0x5a, 0x50, 0xac, 0x1d, 0xce, 0xff, 0x79, 0x3e, 0x13, 0xfe, 0xe3, 0xb4, 0x7f,
-	0x2d, 0xb0, 0x4e, 0xcc, 0x1c, 0x7b, 0x94, 0x91, 0x96, 0x34, 0x20, 0x9c, 0x36, 0x8c, 0x04, 0xbc,
-	0x97, 0xbe, 0x8c, 0x25, 0x98, 0x45, 0x01, 0xac, 0x1b, 0xcb, 0x88, 0xca, 0xd7, 0x96, 0xa3, 0x62,
-	0xbd, 0x58, 0x5b, 0x8e, 0xea, 0x61, 0xfc, 0xb5, 0xe1, 0xc9, 0x7a, 0xc3, 0x93, 0xdf, 0x0d, 0x4f,
-	0x3e, 0xb7, 0xbc, 0xb6, 0xde, 0xf2, 0xda, 0xcf, 0x96, 0xd7, 0x9e, 0x6f, 0x67, 0xe8, 0xe6, 0xaf,
-	0xd9, 0x48, 0xea, 0x65, 0xfa, 0x22, 0xe4, 0x42, 0x14, 0x63, 0x91, 0xd9, 0x34, 0xce, 0x73, 0x13,
-	0x77, 0x7c, 0x3b, 0x2c, 0xe9, 0xde, 0x2b, 0xb0, 0x59, 0x33, 0x6c, 0x78, 0xf7, 0x17, 0x00, 0x00,
-	0xff, 0xff, 0xd1, 0x1a, 0xe2, 0x3b, 0xee, 0x01, 0x00, 0x00,
+	// 365 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x93, 0x4f, 0x4a, 0x33, 0x31,
+	0x18, 0xc6, 0x3b, 0xed, 0xf7, 0xb5, 0x9d, 0xb4, 0x82, 0x06, 0x91, 0x20, 0x38, 0x94, 0x22, 0xd8,
+	0x8d, 0x1d, 0xd0, 0x13, 0x28, 0x2e, 0xbb, 0x90, 0x2e, 0xdd, 0x94, 0x4c, 0xf2, 0xce, 0x34, 0x76,
+	0x3a, 0x19, 0x92, 0x58, 0xac, 0xa7, 0xf0, 0x58, 0x2e, 0xbb, 0x12, 0x97, 0xd2, 0xb9, 0x88, 0x24,
+	0x69, 0x4b, 0x7b, 0x03, 0xdd, 0xcd, 0xf3, 0xe7, 0x65, 0xc2, 0x0f, 0x1e, 0x74, 0xc5, 0x68, 0x21,
+	0x0a, 0x98, 0xb0, 0x29, 0x15, 0x45, 0xac, 0x8d, 0x54, 0x34, 0x83, 0x98, 0x32, 0x23, 0x16, 0x30,
+	0xe1, 0x40, 0x73, 0x3d, 0x2c, 0x95, 0x34, 0x12, 0x9f, 0xee, 0x17, 0x87, 0x9b, 0x62, 0xff, 0xb3,
+	0x8e, 0x3a, 0x77, 0xae, 0xfc, 0x60, 0xbb, 0xf8, 0x18, 0x35, 0x98, 0xe0, 0x24, 0xe8, 0x05, 0x83,
+	0x70, 0x6c, 0x3f, 0xf1, 0x19, 0x6a, 0x6a, 0x91, 0x15, 0x00, 0xa4, 0xee, 0xcc, 0x8d, 0xc2, 0xe7,
+	0xa8, 0x5d, 0x2a, 0xb9, 0x10, 0x1c, 0x14, 0x69, 0xb8, 0x64, 0xa7, 0x71, 0x84, 0x90, 0x36, 0x54,
+	0x99, 0x24, 0x97, 0x6c, 0x46, 0xfe, 0xb9, 0x74, 0xcf, 0xb1, 0xb7, 0x50, 0x70, 0x9f, 0xfe, 0xf7,
+	0xb7, 0x5b, 0x6d, 0xb3, 0x54, 0xe4, 0xa0, 0xc5, 0x1b, 0x90, 0xa6, 0xcf, 0xb6, 0x1a, 0x5f, 0x20,
+	0x94, 0x53, 0x6d, 0x26, 0xa5, 0x92, 0x32, 0x25, 0xad, 0x5e, 0x30, 0x68, 0x8c, 0x43, 0xeb, 0x3c,
+	0x5a, 0x03, 0xf7, 0x51, 0xd7, 0x25, 0x7a, 0x2e, 0xb4, 0x06, 0x4e, 0xda, 0xee, 0xfc, 0xc0, 0xb3,
+	0x1d, 0xf7, 0x1f, 0x23, 0xed, 0x6b, 0x81, 0x84, 0xbe, 0xb3, 0xef, 0x61, 0x82, 0x5a, 0x4c, 0x01,
+	0x35, 0x52, 0x11, 0xe4, 0xe2, 0xad, 0xb4, 0x30, 0xe6, 0xa0, 0x66, 0x39, 0x90, 0x8e, 0x87, 0xe1,
+	0x95, 0xc5, 0x96, 0x0a, 0x4e, 0xba, 0x1e, 0x5b, 0x2a, 0x78, 0xbf, 0xaa, 0xa3, 0x93, 0x11, 0x64,
+	0x94, 0x2d, 0xff, 0x0e, 0xde, 0x4b, 0x74, 0xe4, 0x58, 0x2d, 0x40, 0x89, 0x54, 0x00, 0x77, 0x84,
+	0xc3, 0xf1, 0xa1, 0xf9, 0x9b, 0x28, 0xdf, 0x8f, 0x3e, 0xd6, 0x51, 0xb0, 0x5a, 0x47, 0xc1, 0xf7,
+	0x3a, 0x0a, 0xde, 0xab, 0xa8, 0xb6, 0xaa, 0xa2, 0xda, 0x57, 0x15, 0xd5, 0x9e, 0x6e, 0x32, 0x61,
+	0xa6, 0x2f, 0xc9, 0x90, 0xc9, 0x79, 0xfc, 0x4c, 0xd9, 0x8c, 0xe6, 0x23, 0x9a, 0xe8, 0xd8, 0x8f,
+	0xe0, 0xda, 0xaf, 0xe5, 0x75, 0xb7, 0x17, 0xb3, 0x2c, 0x41, 0x27, 0x4d, 0xb7, 0x94, 0xdb, 0x9f,
+	0x00, 0x00, 0x00, 0xff, 0xff, 0x54, 0x1b, 0x3c, 0xe0, 0x54, 0x03, 0x00, 0x00,
 }
 
 func (m *ActiveDeals) Marshal() (dAtA []byte, err error) {
@@ -292,6 +427,113 @@ func (m *ActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *LegacyActiveDeals) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *LegacyActiveDeals) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *LegacyActiveDeals) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Fid) > 0 {
+		i -= len(m.Fid)
+		copy(dAtA[i:], m.Fid)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Fid)))
+		i--
+		dAtA[i] = 0x62
+	}
+	if len(m.Merkle) > 0 {
+		i -= len(m.Merkle)
+		copy(dAtA[i:], m.Merkle)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Merkle)))
+		i--
+		dAtA[i] = 0x5a
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0x52
+	}
+	if len(m.Blocktoprove) > 0 {
+		i -= len(m.Blocktoprove)
+		copy(dAtA[i:], m.Blocktoprove)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Blocktoprove)))
+		i--
+		dAtA[i] = 0x4a
+	}
+	if len(m.Proofsmissed) > 0 {
+		i -= len(m.Proofsmissed)
+		copy(dAtA[i:], m.Proofsmissed)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Proofsmissed)))
+		i--
+		dAtA[i] = 0x42
+	}
+	if len(m.Proofverified) > 0 {
+		i -= len(m.Proofverified)
+		copy(dAtA[i:], m.Proofverified)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Proofverified)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if len(m.Filesize) > 0 {
+		i -= len(m.Filesize)
+		copy(dAtA[i:], m.Filesize)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Filesize)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.Endblock) > 0 {
+		i -= len(m.Endblock)
+		copy(dAtA[i:], m.Endblock)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Endblock)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.Startblock) > 0 {
+		i -= len(m.Startblock)
+		copy(dAtA[i:], m.Startblock)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Startblock)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Provider) > 0 {
+		i -= len(m.Provider)
+		copy(dAtA[i:], m.Provider)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Provider)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Signee) > 0 {
+		i -= len(m.Signee)
+		copy(dAtA[i:], m.Signee)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Signee)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Cid) > 0 {
+		i -= len(m.Cid)
+		copy(dAtA[i:], m.Cid)
+		i = encodeVarintActiveDeals(dAtA, i, uint64(len(m.Cid)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintActiveDeals(dAtA []byte, offset int, v uint64) int {
 	offset -= sovActiveDeals(v)
 	base := offset
@@ -335,6 +577,63 @@ func (m *ActiveDeals) Size() (n int) {
 	}
 	if m.LastProof != 0 {
 		n += 1 + sovActiveDeals(uint64(m.LastProof))
+	}
+	l = len(m.Proofsmissed)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Blocktoprove)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Merkle)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Fid)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	return n
+}
+
+func (m *LegacyActiveDeals) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Cid)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Signee)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Provider)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Startblock)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Endblock)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Filesize)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
+	}
+	l = len(m.Proofverified)
+	if l > 0 {
+		n += 1 + l + sovActiveDeals(uint64(l))
 	}
 	l = len(m.Proofsmissed)
 	if l > 0 {
@@ -605,6 +904,440 @@ func (m *ActiveDeals) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Proofsmissed", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Proofsmissed = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Blocktoprove", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Blocktoprove = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 11:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Merkle", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Merkle = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 12:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Fid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Fid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActiveDeals(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *LegacyActiveDeals) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActiveDeals
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: LegacyActiveDeals: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: LegacyActiveDeals: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Cid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signee", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signee = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Provider", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Provider = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Startblock", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Startblock = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Endblock", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Endblock = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Filesize", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Filesize = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Proofverified", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActiveDeals
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthActiveDeals
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Proofverified = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Proofsmissed", wireType)

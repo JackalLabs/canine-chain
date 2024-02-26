@@ -16,19 +16,42 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var activeDealss []types.ActiveDeals
+	var activeDealss []types.LegacyActiveDeals
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
 	activeDealsStore := prefix.NewStore(store, types.KeyPrefix(types.ActiveDealsKeyPrefix))
 
+	p := k.GetParams(ctx)
+
 	pageRes, err := query.Paginate(activeDealsStore, req.Pagination, func(key []byte, value []byte) error {
-		var activeDeals types.ActiveDeals
-		if err := k.cdc.Unmarshal(value, &activeDeals); err != nil {
+		var activeDeal types.ActiveDeals
+		if err := k.cdc.Unmarshal(value, &activeDeal); err != nil {
 			return err
 		}
 
-		activeDealss = append(activeDealss, activeDeals)
+		ver := "false"
+		v := activeDeal.IsVerified(ctx.BlockHeight(), p.ProofWindow)
+		if v {
+			ver = "true"
+		}
+
+		lad := types.LegacyActiveDeals{
+			Cid:           activeDeal.Cid,
+			Signee:        activeDeal.Signee,
+			Provider:      activeDeal.Provider,
+			Startblock:    activeDeal.Startblock,
+			Endblock:      activeDeal.Endblock,
+			Filesize:      activeDeal.Filesize,
+			Proofverified: ver,
+			Proofsmissed:  activeDeal.Proofsmissed,
+			Blocktoprove:  activeDeal.Blocktoprove,
+			Creator:       activeDeal.Creator,
+			Merkle:        activeDeal.Merkle,
+			Fid:           activeDeal.Fid,
+		}
+
+		activeDealss = append(activeDealss, lad)
 		return nil
 	})
 	if err != nil {
@@ -44,7 +67,7 @@ func (k Keeper) ActiveDeals(c context.Context, req *types.QueryActiveDealRequest
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetActiveDeals(
+	activeDeal, found := k.GetActiveDeals(
 		ctx,
 		req.Cid,
 	)
@@ -52,5 +75,28 @@ func (k Keeper) ActiveDeals(c context.Context, req *types.QueryActiveDealRequest
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryActiveDealResponse{ActiveDeals: val}, nil
+	p := k.GetParams(ctx)
+
+	ver := "false"
+	v := activeDeal.IsVerified(ctx.BlockHeight(), p.ProofWindow)
+	if v {
+		ver = "true"
+	}
+
+	lad := types.LegacyActiveDeals{
+		Cid:           activeDeal.Cid,
+		Signee:        activeDeal.Signee,
+		Provider:      activeDeal.Provider,
+		Startblock:    activeDeal.Startblock,
+		Endblock:      activeDeal.Endblock,
+		Filesize:      activeDeal.Filesize,
+		Proofverified: ver,
+		Proofsmissed:  activeDeal.Proofsmissed,
+		Blocktoprove:  activeDeal.Blocktoprove,
+		Creator:       activeDeal.Creator,
+		Merkle:        activeDeal.Merkle,
+		Fid:           activeDeal.Fid,
+	}
+
+	return &types.QueryActiveDealResponse{ActiveDeals: lad}, nil
 }
