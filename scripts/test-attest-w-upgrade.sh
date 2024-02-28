@@ -172,6 +172,7 @@ screen -d -m -L -S "provider5" bash -c "./scripts/start-provider.sh 0e019088a0fa
 
 echo "done!"
 
+sleep 120
 
 echo "starting file uploads"
 
