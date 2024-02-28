@@ -2,6 +2,7 @@ package v320
 
 import (
 	"fmt"
+
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -41,7 +42,6 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		ctx.Logger().Info("Upgrading the Jackal Network to:\n██╗   ██╗██████╗    ██████╗     ██████╗ \n██║   ██║╚════██╗   ╚════██╗   ██╔═████╗\n██║   ██║ █████╔╝    █████╔╝   ██║██╔██║\n╚██╗ ██╔╝ ╚═══██╗   ██╔═══╝    ████╔╝██║\n ╚████╔╝ ██████╔╝██╗███████╗██╗╚██████╔╝\n  ╚═══╝  ╚═════╝ ╚═╝╚══════╝╚═╝ ╚═════╝ ")
 
 		u.keeper.IterateLegacyActiveDeals(ctx, func(deal storagemoduletypes.LegacyActiveDeals) bool {
-
 			ctx.Logger().Info(fmt.Sprintf("%s being migrated", deal.Cid))
 
 			u.keeper.SetActiveDeals(ctx, storagemoduletypes.ActiveDeals{

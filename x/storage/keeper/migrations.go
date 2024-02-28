@@ -47,5 +47,5 @@ func (m Migrator) Migrate4to5(ctx sdk.Context) error {
 
 // Migrate5to6 migrates from version 5 to 6.
 func (m Migrator) Migrate5to6(ctx sdk.Context) error {
-	return v320.MigrateStore(ctx, m.k, m.k.storeKey, m.k.cdc, &m.k.paramstore)
+	return v320.MigrateStore(ctx, &m.k.paramstore)
 }
