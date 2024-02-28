@@ -189,7 +189,7 @@ while true; do
 done
 
 echo "killing old provider and starting new one"
-screen -d -m -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
+screen -d -m -L -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
 
 sleep 60
 
@@ -247,6 +247,7 @@ read -rsp $'Press any key to continue...\n' -n1 key
 
 killall screen
 killall canined
+killall jprovd
 # clean after program termination without SIGINT
 cleanup
 
