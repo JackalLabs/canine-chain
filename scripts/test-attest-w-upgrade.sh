@@ -156,6 +156,8 @@ sleep 6
 sleep 7
 
 ./../_build/old/canined tx gov vote 1 yes --from $KEY -y
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/5.svg http://localhost:3335/upload
+
 
 sleep 30
 
