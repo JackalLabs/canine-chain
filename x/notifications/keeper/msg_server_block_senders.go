@@ -30,7 +30,6 @@ func (k msgServer) BlockSenders(goCtx context.Context, msg *types.MsgBlockSender
 
 	temporaryMap := make([]string, 0, 1000)
 	err = json.Unmarshal([]byte(msg.SenderIds), &temporaryMap)
-
 	if err != nil {
 		return nil, types.ErrCantUnmarshall
 	}

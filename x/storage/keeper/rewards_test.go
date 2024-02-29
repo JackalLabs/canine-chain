@@ -45,18 +45,18 @@ func (suite *KeeperTestSuite) TestReward() {
 	providerOne := testAddresses[1]
 
 	dealOne := types.ActiveDeals{
-		Cid:           "cid1test",
-		Signee:        signer,
-		Provider:      providerOne,
-		Startblock:    "0",
-		Endblock:      "0",
-		Filesize:      "100",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "1",
-		Creator:       providerOne,
-		Merkle:        "nil",
-		Fid:           "fid1test",
+		Cid:          "cid1test",
+		Signee:       signer,
+		Provider:     providerOne,
+		Startblock:   "0",
+		Endblock:     "0",
+		Filesize:     "100",
+		LastProof:    suite.ctx.BlockHeight(),
+		Proofsmissed: "0",
+		Blocktoprove: "1",
+		Creator:      providerOne,
+		Merkle:       "nil",
+		Fid:          "fid1test",
 	}
 
 	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
@@ -125,18 +125,18 @@ func (suite *KeeperTestSuite) TestMultiReward() {
 	for i := 0; i < l*2; i++ {
 		p := providers[i%l]
 		deal := types.ActiveDeals{
-			Cid:           fmt.Sprintf("cid1test%d", i),
-			Signee:        signer,
-			Provider:      p.String(),
-			Startblock:    "0",
-			Endblock:      "0",
-			Filesize:      fmt.Sprintf("%d", i),
-			Proofverified: "true",
-			Proofsmissed:  "0",
-			Blocktoprove:  "1",
-			Creator:       p.String(),
-			Merkle:        "nil",
-			Fid:           fmt.Sprintf("fid1test%d", i),
+			Cid:          fmt.Sprintf("cid1test%d", i),
+			Signee:       signer,
+			Provider:     p.String(),
+			Startblock:   "0",
+			Endblock:     "0",
+			Filesize:     fmt.Sprintf("%d", i),
+			LastProof:    suite.ctx.BlockHeight(),
+			Proofsmissed: "0",
+			Blocktoprove: "1",
+			Creator:      p.String(),
+			Merkle:       "nil",
+			Fid:          fmt.Sprintf("fid1test%d", i),
 		}
 
 		total += i

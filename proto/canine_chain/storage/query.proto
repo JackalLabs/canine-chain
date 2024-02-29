@@ -47,6 +47,14 @@ service Query {
         "/jackal-dao/canine-chain/storage/active_deals";
   }
 
+  // Queries a list of ActiveDeals items.
+  rpc InternalActiveDealsAll(QueryAllInternalActiveDealsRequest)
+      returns (QueryAllInternalActiveDealsResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/internal_active_deals";
+  }
+
+
   // Queries a Providers by index.
   rpc Providers(QueryProviderRequest) returns (QueryProviderResponse) {
     option (google.api.http).get =
@@ -202,7 +210,7 @@ message QueryAllContractsResponse {
 message QueryActiveDealRequest { string cid = 1; }
 
 message QueryActiveDealResponse {
-  ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
+  LegacyActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryAllActiveDealsRequest {
@@ -210,6 +218,15 @@ message QueryAllActiveDealsRequest {
 }
 
 message QueryAllActiveDealsResponse {
+  repeated LegacyActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllInternalActiveDealsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllInternalActiveDealsResponse {
   repeated ActiveDeals active_deals = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

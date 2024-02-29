@@ -79,18 +79,18 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 	}
 
 	deal := types.ActiveDeals{
-		Cid:           contract.Cid,
-		Signee:        contract.Signee,
-		Provider:      contract.Creator,
-		Startblock:    fmt.Sprintf("%d", ctx.BlockHeight()),
-		Endblock:      fmt.Sprintf("%d", end),
-		Filesize:      contract.Filesize,
-		Proofverified: "false",
-		Blocktoprove:  fmt.Sprintf("%d", pieceToStart),
-		Creator:       msg.Creator,
-		Proofsmissed:  "0",
-		Merkle:        contract.Merkle,
-		Fid:           contract.Fid,
+		Cid:          contract.Cid,
+		Signee:       contract.Signee,
+		Provider:     contract.Creator,
+		Startblock:   fmt.Sprintf("%d", ctx.BlockHeight()),
+		Endblock:     fmt.Sprintf("%d", end),
+		Filesize:     contract.Filesize,
+		LastProof:    ctx.BlockHeight(),
+		Blocktoprove: fmt.Sprintf("%d", pieceToStart),
+		Creator:      msg.Creator,
+		Proofsmissed: "0",
+		Merkle:       contract.Merkle,
+		Fid:          contract.Fid,
 	}
 
 	if end == 0 {

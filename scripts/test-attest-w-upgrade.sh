@@ -23,7 +23,7 @@ command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https
 OLD_VERSION=$1
 NEW_VERSION=$2
 SOFTWARE_UPGRADE_NAME=$3
-UPGRADE_HEIGHT=30
+UPGRADE_HEIGHT=120
 ROOT=$(pwd)
 
 # underscore so that go tool will not take gocache into account
@@ -156,6 +156,8 @@ sleep 6
 sleep 7
 
 ./../_build/old/canined tx gov vote 1 yes --from $KEY -y
+curl -v -F sender=jkl10k05lmc88q5ft3lm00q30qkd9x6654h3lejnct -F file=@./scripts/dummy_data/5.svg http://localhost:3335/upload
+
 
 sleep 30
 
@@ -170,28 +172,7 @@ screen -d -m -L -S "provider5" bash -c "./scripts/start-provider.sh 0e019088a0fa
 
 echo "done!"
 
-# determine block_height to halt
-while true; do
-    BLOCK_HEIGHT=$(./../_build/old/canined status | jq '.SyncInfo.latest_block_height' -r)
-    if [ $BLOCK_HEIGHT = "$UPGRADE_HEIGHT" ]; then
-        # assuming running only 1 canined
-        echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING OLD ONE"
-        pkill canined
-        break
-    else
-        ./../_build/old/canined q storage list-active-deals --chain-id test --home $HOME
-        ./../_build/old/canined q storage list-strays --chain-id test --home $HOME
-        ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
-        ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
-        echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
-        sleep 2
-    fi
-done
-
-echo "killing old provider and starting new one"
-screen -d -m -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
-
-sleep 60
+sleep 120
 
 echo "starting file uploads"
 
@@ -243,10 +224,35 @@ canined tx storage sign-contract jklc1g80djchxzjxztkff98wrelh86ha0alhwu0j9ce84sq
 
 sleep 20
 
+
+# determine block_height to halt
+while true; do
+    BLOCK_HEIGHT=$(./../_build/old/canined status | jq '.SyncInfo.latest_block_height' -r)
+    if [ $BLOCK_HEIGHT = "$UPGRADE_HEIGHT" ]; then
+        # assuming running only 1 canined
+        echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING OLD ONE"
+        pkill canined
+        break
+    else
+        ./../_build/old/canined q storage list-active-deals --chain-id test --home $HOME
+        ./../_build/old/canined q storage list-strays --chain-id test --home $HOME
+        ./../_build/old/canined q storage list-contracts --chain-id test --home $HOME
+        ./../_build/old/canined q gov proposal 1 --output=json | jq ".status"
+        echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
+        sleep 2
+    fi
+done
+
+echo "killing old provider and starting new one"
+screen -d -m -L -S "canined" bash -c "canined start --pruning=nothing --minimum-gas-prices=0ujkl"
+
+sleep 60
+
 read -rsp $'Press any key to continue...\n' -n1 key
 
 killall screen
 killall canined
+killall jprovd
 # clean after program termination without SIGINT
 cleanup
 

@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	v320 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v320"
+
 	v310 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v310"
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
@@ -1150,6 +1152,7 @@ func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(recovery.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 	app.registerUpgrade(v310.NewUpgrade(app.mm, app.configurator))
+	app.registerUpgrade(v320.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app

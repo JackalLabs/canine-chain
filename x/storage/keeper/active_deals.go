@@ -77,3 +77,20 @@ func (k Keeper) IterateActiveDeals(ctx sdk.Context, fn func(deal types.ActiveDea
 
 	}
 }
+
+// IterateLegacyActiveDeals runs `fn` for each legacy active deal in the store
+func (k Keeper) IterateLegacyActiveDeals(ctx sdk.Context, fn func(deal types.LegacyActiveDeals) bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveDealsKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.LegacyActiveDeals
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+
+		if fn(val) {
+			return
+		}
+	}
+}
