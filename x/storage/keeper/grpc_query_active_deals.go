@@ -11,6 +11,33 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+func (k Keeper) InternalActiveDealsAll(c context.Context, req *types.QueryAllInternalActiveDealsRequest) (*types.QueryAllInternalActiveDealsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var activeDealss []types.ActiveDeals
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(k.storeKey)
+	activeDealsStore := prefix.NewStore(store, types.KeyPrefix(types.ActiveDealsKeyPrefix))
+
+	pageRes, err := query.Paginate(activeDealsStore, req.Pagination, func(key []byte, value []byte) error {
+		var activeDeal types.ActiveDeals
+		if err := k.cdc.Unmarshal(value, &activeDeal); err != nil {
+			return err
+		}
+
+		activeDealss = append(activeDealss, activeDeal)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllInternalActiveDealsResponse{ActiveDeals: activeDealss, Pagination: pageRes}, nil
+}
+
 func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDealsRequest) (*types.QueryAllActiveDealsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
