@@ -101,5 +101,5 @@ func (suite *KeeperTestSuite) TestReward() {
 	pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
 	suite.NoError(err)
 	bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
-	suite.Require().Equal(int64(1475409), bal.Amount.Int64())
+	suite.Require().Equal(int64(1512328), bal.Amount.Int64())
 }

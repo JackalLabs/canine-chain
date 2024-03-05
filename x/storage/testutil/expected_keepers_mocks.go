@@ -21,18 +21,15 @@ type MockAccountKeeper struct {
 }
 
 func (m *MockAccountKeeper) HasAccount(ctx types.Context, addr types.AccAddress) bool {
-	//TODO implement me
-	panic("implement me")
+	return false
 }
 
 func (m *MockAccountKeeper) SetAccount(ctx types.Context, acc types0.AccountI) {
-	//TODO implement me
-	panic("implement me")
+
 }
 
 func (m *MockAccountKeeper) NewAccountWithAddress(ctx types.Context, addr types.AccAddress) types0.AccountI {
-	//TODO implement me
-	panic("implement me")
+	return types0.NewBaseAccountWithAddress(addr)
 }
 
 // MockAccountKeeperMockRecorder is the mock recorder for MockAccountKeeper.
