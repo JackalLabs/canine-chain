@@ -10,7 +10,7 @@ message LegacyActiveDeals {
   string startblock = 4; // TODO: fix casing
   string endblock = 5; // TODO: fix casing
   string filesize = 6; // TODO: fix casing
-  string proofverified = 7; // TODO: fix casing
+  int64 last_proof = 7;
   string proofsmissed = 8; // TODO: fix casing
   string blocktoprove = 9; // TODO: fix casing
   string creator = 10;
