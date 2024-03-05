@@ -23,13 +23,13 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
-	editorIds := strings.Split(alice, ",")
-	editorIds = append(editorIds, bob)
+	editorIDs := strings.Split(alice, ",")
+	editorIDs = append(editorIDs, bob)
 	aliceViewerID := strings.Split(alice, ",")
 	aliceEditorID := aliceViewerID // if alice is the only viewer and only editor, this suffices
 
 	// set home folder for alice and add bob as an editor
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice, editorIds, aliceViewerID, "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice, editorIDs, aliceViewerID, "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 

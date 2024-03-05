@@ -20,7 +20,7 @@ func SimulateMsgAddEditors(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		merklePath := types.MerklePath("s/home/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
@@ -46,7 +46,7 @@ func SimulateMsgAddEditors(
 
 		// bob as an editor for home folder
 		// get editor id and editor key for bob
-		editIds := keeper.MakeEditorAddress(homeFolder.TrackingNumber, bob)
+		editIDs := keeper.MakeEditorAddress(homeFolder.TrackingNumber, bob)
 
 		mockKeyAndIV := "{ key: mock key, IV: mock initialisation vector } "
 		pkeyHex := fmt.Sprintf("%x", simBob.PubKey.Bytes())
@@ -56,7 +56,7 @@ func SimulateMsgAddEditors(
 
 		msg := &types.MsgAddEditors{
 			Creator:    simAccount.Address.String(),
-			EditorIds:  editIds,
+			EditorIds:  editIDs,
 			EditorKeys: editKeys,
 			Address:    merklePath,
 			FileOwner:  ownerAddress,

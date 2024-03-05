@@ -16,13 +16,13 @@ func TestMsgRemoveEditors_ValidateBasic(t *testing.T) {
 	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	tests := map[string]struct {
-		Creator, EditorIds, Address, Fileowner string
+		Creator, EditorIDs, Address, Fileowner string
 		expErr                                 bool
 	}{
 		"invalid address": {
 			Creator:   "",
 			Address:   uuid.NewString(),
-			EditorIds: uuid.NewString(),
+			EditorIDs: uuid.NewString(),
 			Fileowner: uuid.NewString(),
 			expErr:    true,
 		},
@@ -30,7 +30,7 @@ func TestMsgRemoveEditors_ValidateBasic(t *testing.T) {
 		"valid address": {
 			Creator:   aliceAddr.String(),
 			Address:   uuid.NewString(),
-			EditorIds: uuid.NewString(),
+			EditorIDs: uuid.NewString(),
 			Fileowner: uuid.NewString(),
 			expErr:    false,
 		},
@@ -39,7 +39,7 @@ func TestMsgRemoveEditors_ValidateBasic(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			msg := NewMsgRemoveEditors(
-				tt.Creator, tt.Address, tt.EditorIds, tt.Fileowner,
+				tt.Creator, tt.Address, tt.EditorIDs, tt.Fileowner,
 			)
 
 			err := msg.ValidateBasic()

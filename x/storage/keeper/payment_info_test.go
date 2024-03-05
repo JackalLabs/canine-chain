@@ -1,7 +1,9 @@
 package keeper_test
 
 import (
+	"math/rand"
 	"strconv"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
@@ -56,4 +58,28 @@ func (suite *KeeperTestSuite) TestGetAllStoragePaymentInfo() {
 
 	items := createStoragePaymentInfo(k, ctx, 10)
 	suite.Require().Equal(items, k.GetAllStoragePaymentInfo(ctx))
+}
+
+func (suite *KeeperTestSuite) TestIterateGauges() {
+	suite.SetupSuite()
+	k := suite.storageKeeper
+	ctx := suite.ctx
+
+	for i := 0; i < 50; i++ {
+		ls := make([][]byte, i)
+		for m := 0; m < i; m++ {
+			ls[m] = k.NewGauge(ctx, sdk.NewCoins(sdk.NewInt64Coin("ujkl", rand.Int63())), time.Now().Add(time.Hour*20))
+		}
+
+		is := 0
+		k.IterateGauges(ctx, func(_ types.PaymentGauge) {
+			is++
+		})
+
+		suite.Require().Equal(i, is)
+
+		for _, l := range ls {
+			k.RemoveGauge(ctx, l)
+		}
+	}
 }

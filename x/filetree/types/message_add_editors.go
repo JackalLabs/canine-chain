@@ -9,10 +9,10 @@ const TypeMsgAddEditors = "add_editors"
 
 var _ sdk.Msg = &MsgAddEditors{}
 
-func NewMsgAddEditors(creator string, editorIds string, editorKeys string, address string, fileowner string) *MsgAddEditors {
+func NewMsgAddEditors(creator string, editorIDs string, editorKeys string, address string, fileowner string) *MsgAddEditors {
 	return &MsgAddEditors{
 		Creator:    creator,
-		EditorIds:  editorIds,
+		EditorIds:  editorIDs,
 		EditorKeys: editorKeys,
 		Address:    address,
 		FileOwner:  fileowner,

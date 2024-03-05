@@ -8,8 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TODO: rewrite tests without ignite
-
 func TestMsgInit_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string

@@ -26,7 +26,7 @@ func CmdAddViewers() *cobra.Command {
 		Short: "add an address to the files viewing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argViewerIds := args[0]
+			argViewerIDs := args[0]
 			argHashpath := args[1]
 			argOwner := args[2]
 
@@ -41,9 +41,9 @@ func CmdAddViewers() *cobra.Command {
 
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
-			viewerAddresses := strings.Split(argViewerIds, ",")
+			viewerAddresses := strings.Split(argViewerIDs, ",")
 
-			var viewerIds []string
+			var viewerIDs []string
 			var viewerKeys []string
 
 			for _, v := range viewerAddresses {
@@ -110,14 +110,14 @@ func CmdAddViewers() *cobra.Command {
 				}
 
 				newViewerID := keeper.MakeViewerAddress(file.File.TrackingNumber, v)
-				viewerIds = append(viewerIds, newViewerID)
+				viewerIDs = append(viewerIDs, newViewerID)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 
 			}
 
 			msg := types.NewMsgAddViewers(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(viewerIds, ","),
+				strings.Join(viewerIDs, ","),
 				strings.Join(viewerKeys, ","),
 				merklePath,
 				ownerChainAddress,

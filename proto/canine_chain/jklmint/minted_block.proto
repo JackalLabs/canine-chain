@@ -1,0 +1,10 @@
+syntax = "proto3";
+package canine_chain.jklmint;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/jklmint/types";
+
+message MintedBlock {
+  int64 height = 1;
+  int64 minted = 2;
+  string denom = 3;
+}

@@ -61,7 +61,7 @@ func (k Keeper) AllNotifications(c context.Context, req *types.QueryAllNotificat
 
 	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
 
-	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(_ []byte, value []byte) error {
 		var notification types.Notification
 		if err := k.cdc.Unmarshal(value, &notification); err != nil {
 			return err
