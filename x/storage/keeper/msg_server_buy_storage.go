@@ -63,17 +63,14 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	forAddr, err := sdk.AccAddressFromBech32(msg.ForAddress)
 	if err != nil {
-		return nil, sdkerr.Wrap(err, "for address is not a proper bech32")
+		return nil, sdkerrors.Wrap(err, "for address is not a proper bech32")
 	}
 
-	accExists := k.accountkeeper.HasAccount(ctx, forAddr)
+	accExists := k.accountKeeper.HasAccount(ctx, forAddr)
 	if !accExists {
 		defer telemetry.IncrCounter(1, "new", "account")
-		k.accountkeeper.SetAccount(ctx, k.accountkeeper.NewAccountWithAddress(ctx, forAddr))
+		k.accountKeeper.SetAccount(ctx, k.accountKeeper.NewAccountWithAddress(ctx, forAddr))
 	}
-
-	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.ForAddress)
-	if found {
 
 	var spi types.StoragePaymentInfo
 	var spaceUsed int64 // default 0
