@@ -27,7 +27,7 @@ func CmdAddEditors() *cobra.Command {
 		Short: "add an address to the files editing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argEditorIds := args[0]
+			argEditorIDs := args[0]
 			argHashpath := args[1]
 			argOwner := args[2]
 
@@ -42,9 +42,9 @@ func CmdAddEditors() *cobra.Command {
 
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
-			editorAddresses := strings.Split(argEditorIds, ",")
+			editorAddresses := strings.Split(argEditorIDs, ",")
 
-			var editorIds []string
+			var editorIDs []string
 			var editorKeys []string
 			logger, logFile := testUtil.CreateLogger()
 			for _, v := range editorAddresses {
@@ -114,14 +114,14 @@ func CmdAddEditors() *cobra.Command {
 				}
 
 				newEditorID := keeper.MakeEditorAddress(file.File.TrackingNumber, v)
-				editorIds = append(editorIds, newEditorID)
+				editorIDs = append(editorIDs, newEditorID)
 				editorKeys = append(editorKeys, fmt.Sprintf("%x", encrypted))
 
 			}
 
 			msg := types.NewMsgAddEditors(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(editorIds, ","),
+				strings.Join(editorIDs, ","),
 				strings.Join(editorKeys, ","),
 				merklePath,
 				ownerChainAddress,

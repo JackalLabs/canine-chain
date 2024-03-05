@@ -13,7 +13,7 @@ func CmdListStoragePaymentInfo() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-storage-payment-info",
 		Short: "list all storage_payment_info",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

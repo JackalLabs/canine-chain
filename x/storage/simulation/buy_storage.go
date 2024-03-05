@@ -17,7 +17,7 @@ func SimulateMsgBuyStorage(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgBuyStorage{
@@ -48,7 +48,7 @@ func SimulateMsgBuyStorage(
 		// due to private and pubkeys are generated independent of addresses
 		// resulting pubkey does not match signer address error.
 		if jBalance.Amount.LTE(cost) {
-			c := sdk.NewCoin("ujkl", cost)
+			c := sdk.NewCoin("ujkl", cost.MulRaw(2))
 
 			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
 			if err != nil {

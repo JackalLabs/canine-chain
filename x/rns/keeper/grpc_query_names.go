@@ -22,7 +22,7 @@ func (k Keeper) AllNames(c context.Context, req *types.QueryAllNames) (*types.Qu
 	store := ctx.KVStore(k.storeKey)
 	namesStore := prefix.NewStore(store, types.KeyPrefix(types.NamesKeyPrefix))
 
-	pageRes, err := query.Paginate(namesStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(namesStore, req.Pagination, func(_ []byte, value []byte) error {
 		var names types.Names
 		if err := k.cdc.Unmarshal(value, &names); err != nil {
 			return err

@@ -1,11 +1,9 @@
 package keeper_test
 
 import (
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
+	jklminttypes "github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
@@ -34,13 +32,34 @@ func (suite *KeeperTestSuite) TestReward() {
 	suite.Require().NoError(err)
 
 	signer := testAddresses[0]
+
+	s := suite.ctx.BlockTime()
+
+	t := s.AddDate(1, 0, 0)
 	suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
-		Start:          time.Now(),
-		End:            time.Now().AddDate(1, 0, 0),
+		Start:          s,
+		End:            t,
 		SpaceAvailable: 1000000000,
 		SpaceUsed:      0,
 		Address:        signer,
 	})
+
+	acc, err := types.GetTokenHolderAccount()
+	suite.Require().NoError(err)
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
+	suite.Require().Equal(int64(0), bal.Amount.Int64())
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
+
+	suite.storageKeeper.NewGauge(suite.ctx, coins, t)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, jklminttypes.ModuleName, acc, coins)
+	suite.NoError(err)
+
+	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
+	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
+
 	providerOne := testAddresses[1]
 
 	dealOne := types.UnifiedFile{
@@ -69,20 +88,10 @@ func (suite *KeeperTestSuite) TestReward() {
 		ChunkToProve: 0,
 	})
 
-	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
+	_, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+	suite.Require().True(found)
 
-	bal := suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
-	suite.Require().Equal(int64(0), bal.Amount.Int64())
-
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
-
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
-	suite.NoError(err)
-
-	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
-	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
-
-	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20})
+	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20}).WithBlockTime(s.AddDate(0, 3, 0))
 
 	suite.Require().Equal(blocks, ctx.BlockHeight())
 	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
@@ -92,5 +101,5 @@ func (suite *KeeperTestSuite) TestReward() {
 	pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
 	suite.NoError(err)
 	bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
-	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
+	suite.Require().Equal(int64(1512328), bal.Amount.Int64())
 }

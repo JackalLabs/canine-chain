@@ -3,7 +3,7 @@ package v210
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	v3 "github.com/jackalLabs/canine-chain/v3/x/jklmint/legacy/v3"
 )
 
 // MigrateStore performs in-place store migrations from v1 to v2
@@ -13,7 +13,7 @@ import (
 func MigrateStore(ctx sdk.Context, paramsSubspace *paramstypes.Subspace) error {
 	ctx.Logger().Error("MIGRATING MINT STORE!")
 	// Set the module params
-	params := types.DefaultParams()
+	params := v3.DefaultParams()
 
 	params.ProviderRatio = 0
 

@@ -46,11 +46,11 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 
 	// add bob and charlie as viewers for pepe
 
-	viewerIds := strings.Split(alice, ",")
-	viewerIds = append(viewerIds, bob, charlie)
+	viewerIDs := strings.Split(alice, ",")
+	viewerIDs = append(viewerIDs, bob, charlie)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), viewerIds, "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), viewerIDs, "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
