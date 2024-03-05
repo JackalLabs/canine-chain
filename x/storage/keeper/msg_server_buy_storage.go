@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cosmos/cosmos-sdk/telemetry"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerr "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -61,6 +63,17 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	var spi types.StoragePaymentInfo
+
+	forAddr, err := sdk.AccAddressFromBech32(msg.ForAddress)
+	if err != nil {
+		return nil, sdkerr.Wrap(err, "for address is not a proper bech32")
+	}
+
+	accExists := k.accountkeeper.HasAccount(ctx, forAddr)
+	if !accExists {
+		defer telemetry.IncrCounter(1, "new", "account")
+		k.accountkeeper.SetAccount(ctx, k.accountkeeper.NewAccountWithAddress(ctx, forAddr))
+	}
 
 	payInfo, found := k.GetStoragePaymentInfo(ctx, msg.ForAddress)
 	if found {
