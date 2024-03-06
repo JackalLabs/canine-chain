@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 
@@ -43,13 +44,28 @@ func (k Keeper) mintStaker(ctx sdk.Context, mintTokens int64, denom string, para
 	return nil
 }
 
+func GetDevGrantsAccount() (sdk.AccAddress, error) {
+	return GetAccount(types.DevGrantsPool)
+}
+
+func GetAccount(name string) (sdk.AccAddress, error) {
+	s := sha256.New()
+	s.Write([]byte(name))
+	m := s.Sum(nil)
+	mh := hex.EncodeToString(m)
+	adr, err := sdk.AccAddressFromHex(mh)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot get account account")
+	}
+	return adr, nil
+}
+
 func (k Keeper) mintDevGrants(ctx sdk.Context, mintTokens int64, denom string, params types.Params) error {
 	devGrantRatio := sdk.NewDec(params.DevGrantsRatio).QuoInt64(100)
 
 	devGrantTokenAmount := devGrantRatio.MulInt64(mintTokens).TruncateInt64()
 
-	h := hex.EncodeToString([]byte(types.DevGrantsPool))
-	address, err := sdk.AccAddressFromHex(h)
+	address, err := GetDevGrantsAccount()
 	if err != nil {
 		return sdkerrors.Wrapf(err, "cannot create dev grants address")
 	}
