@@ -20,11 +20,11 @@ func (k Keeper) AllNotificationsByAddress(c context.Context, req *types.QueryAll
 
 	ctx := sdk.UnwrapSDKContext(c)
 
-	page, limit, err := query.ParsePagination(req.Pagination)
+	_, limit, err := query.ParsePagination(req.Pagination)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot parse pagination")
 	}
-	offset := page * limit
+	offset := int(req.Pagination.Offset)
 
 	notifications := k.GetAllNotificationsByAddress(ctx, req.To)
 
