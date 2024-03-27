@@ -18,7 +18,7 @@ func SimulateMsgRemoveViewers(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		merklePath := types.MerklePath("s/home/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
@@ -43,11 +43,11 @@ func SimulateMsgRemoveViewers(
 		k.SetFiles(ctx, *homeFolder)
 
 		// get editor id for bob
-		viewIds := keeper.MakeViewerAddress(homeFolder.TrackingNumber, bob)
+		viewIDs := keeper.MakeViewerAddress(homeFolder.TrackingNumber, bob)
 
 		msg := &types.MsgRemoveViewers{
 			Creator:   simAccount.Address.String(),
-			ViewerIds: viewIds,
+			ViewerIds: viewIDs,
 			Address:   merklePath,
 			FileOwner: ownerAddress,
 		}

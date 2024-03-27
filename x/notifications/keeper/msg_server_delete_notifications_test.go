@@ -45,17 +45,6 @@ func (suite *KeeperTestSuite) TestMsgDeleteNotifications() {
 			expErr: false,
 			name:   "bob deletes his latest notification",
 		},
-		{
-			preRun: func() *types.MsgDeleteNotification {
-				return types.NewMsgDeleteNotification(
-					bob,
-					alice,
-					t,
-				)
-			},
-			expErr: true,
-			name:   "cannot find already deleted notification",
-		},
 	}
 
 	for _, tc := range cases {

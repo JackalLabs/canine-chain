@@ -23,7 +23,7 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 	store := ctx.KVStore(k.storeKey)
 	filesStore := prefix.NewStore(store, types.KeyPrefix(types.FilesKeyPrefix))
 
-	pageRes, err := query.Paginate(filesStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(filesStore, req.Pagination, func(_ []byte, value []byte) error {
 		var files types.Files
 		if err := k.cdc.Unmarshal(value, &files); err != nil {
 			return err

@@ -27,7 +27,7 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 		return nil, err
 	}
 
-	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, account, types.CollateralCollectorName, coins)
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, account, types.CollateralCollectorName, coins)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "%s does not have %s", account, coin.String())
 	}
@@ -71,7 +71,7 @@ func (k msgServer) ShutdownProvider(goCtx context.Context, msg *types.MsgShutdow
 			return nil, err
 		}
 
-		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.CollateralCollectorName, account, coins)
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.CollateralCollectorName, account, coins)
 		if err != nil {
 			return nil, err
 		}

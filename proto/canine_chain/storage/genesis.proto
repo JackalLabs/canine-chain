@@ -18,4 +18,5 @@ message GenesisState {
   repeated ActiveProviders active_providers_list = 6 [ (gogoproto.nullable) = false ];
   repeated ReportForm report_forms = 7 [ (gogoproto.nullable) = false ];
   repeated AttestationForm attest_forms = 8 [ (gogoproto.nullable) = false ];
+  repeated PaymentGauge payment_gauges = 9 [ (gogoproto.nullable) = false ];
 }

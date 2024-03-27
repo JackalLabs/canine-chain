@@ -87,7 +87,7 @@ func trackMockBalances(bankKeeper *oracletestutil.MockBankKeeper) {
 		balances[sender.String()] = newBalance
 		return nil
 	}).AnyTimes()
-	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, module string, rcpt sdk.AccAddress, coins sdk.Coins) error {
+	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, _ string, rcpt sdk.AccAddress, coins sdk.Coins) error {
 		balances[rcpt.String()] = balances[rcpt.String()].Add(coins...)
 		return nil
 	}).AnyTimes()

@@ -10,6 +10,11 @@ import (
 type AccountKeeper interface {
 	GetAccount(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
 	GetModuleAddress(moduleName string) sdk.AccAddress
+
+	HasAccount(ctx sdk.Context, addr sdk.AccAddress) bool
+	SetAccount(ctx sdk.Context, acc types.AccountI)
+	NewAccountWithAddress(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
+
 	// Methods imported from account should be defined here
 }
 
@@ -29,4 +34,9 @@ type BankKeeper interface {
 
 type OracleKeeper interface {
 	GetFeed(ctx sdk.Context, index string) (val oracletypes.Feed, found bool)
+}
+
+// RnsKeeper defines the expected interface needed to resolve RNS names.
+type RnsKeeper interface {
+	Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error)
 }

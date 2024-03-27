@@ -21,7 +21,7 @@ func SimulateMsgAddViewers(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		merklePath := types.MerklePath("s/home/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
@@ -47,7 +47,7 @@ func SimulateMsgAddViewers(
 
 		// bob as a viewer for home folder
 		// get viewer id and viewer key for bob
-		viewIds := keeper.MakeViewerAddress(homeFolder.TrackingNumber, bob)
+		viewIDs := keeper.MakeViewerAddress(homeFolder.TrackingNumber, bob)
 
 		mockKeyAndIV := "{ key: mock key, IV: mock initialisation vector } "
 		pkeyHex := fmt.Sprintf("%x", simBob.PubKey.Bytes())
@@ -57,7 +57,7 @@ func SimulateMsgAddViewers(
 
 		msg := &types.MsgAddViewers{
 			Creator:    simAccount.Address.String(),
-			ViewerIds:  viewIds,
+			ViewerIds:  viewIDs,
 			ViewerKeys: viewKeys,
 			Address:    merklePath,
 			FileOwner:  ownerAddress,

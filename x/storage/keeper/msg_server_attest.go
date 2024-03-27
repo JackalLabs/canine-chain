@@ -10,10 +10,6 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-const ( // TODO: Figure out optimal values for these and replace them with chain params
-	True = "true"
-)
-
 func (k Keeper) Attest(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {
 	form, found := k.GetAttestationForm(ctx, prover, merkle, owner, start)
 	if !found {

@@ -3,7 +3,11 @@ package canine_chain.jklmint;
 
 import "gogoproto/gogo.proto";
 import "canine_chain/jklmint/params.proto";
+import "canine_chain/jklmint/minted_block.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/jklmint/types";
 
-message GenesisState { Params params = 1 [ (gogoproto.nullable) = false ]; }
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  MintedBlock minted_blocks = 2 [ (gogoproto.nullable) = false ];
+}
