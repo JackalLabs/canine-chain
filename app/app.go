@@ -569,9 +569,6 @@ func NewJackalApp(
 		app.AccountKeeper, scopedICAHostKeeper, app.MsgServiceRouter(),
 		// does app.MsgServiceRouter have filetree's routes given it's declared before filetree?
 	)
-	router := app.MsgServiceRouter()
-	InitLogger()
-	LogInfo("The routes that we gave to the ica host keeper are:\n", router.PrintRoutes())
 
 	app.InterchainTxsKeeper = *interchaintxskeeper.NewKeeper(
 		appCodec,
@@ -971,26 +968,9 @@ func NewJackalApp(
 
 	app.mm.RegisterInvariants(&app.crisisKeeper)
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
-	// the routes are only registered RIGHT HERE--AFTER the router was given to the ica host
-	// this means that the ica host is given a router that hasn't been registered.
-
-	// registeredRouter := app.MsgServiceRouter()
-	registeredRouterFromBaseApp := app.BaseApp.MsgServiceRouter()
-	InitLogger()
-	LogInfo("The module manager's BaseApp router, after routes are registed, are:\n", registeredRouterFromBaseApp.PrintRoutes())
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
-
-	registeredRouterAndServices := app.BaseApp.MsgServiceRouter()
-
-	InitLogger()
-	// These appear to just be core SDK routes, not our custom routes
-	LogInfo("The module manager's router, after SERVICES were registered, are:\n", registeredRouterAndServices.PrintRoutes())
-
-	// Let's see if the routes for our custom module appear here
-	registeredCustomServices := app.MsgServiceRouter()
-	LogInfo("The mm custom routes are:\n", registeredCustomServices.PrintRoutes())
 
 	app.registerTestnetUpgradeHandlers()
 	app.registerMainnetUpgradeHandlers()
