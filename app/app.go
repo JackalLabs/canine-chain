@@ -110,7 +110,6 @@ import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackalLabs/canine-chain/v3/app/params"
 
-	interchaintxs "github.com/jackalLabs/canine-chain/v3/x/interchaintxs"
 	mint "github.com/jackalLabs/canine-chain/v3/x/jklmint"
 	mintkeeper "github.com/jackalLabs/canine-chain/v3/x/jklmint/keeper"
 	minttypes "github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
@@ -134,9 +133,6 @@ import (
 	notificationsmodule "github.com/jackalLabs/canine-chain/v3/x/notifications"
 	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v3/x/notifications/keeper"
 	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
-
-	interchaintxskeeper "github.com/jackalLabs/canine-chain/v3/x/interchaintxs/keeper"
-	interchaintxstypes "github.com/jackalLabs/canine-chain/v3/x/interchaintxs/types"
 
 	/*
 
@@ -246,8 +242,6 @@ var (
 		oraclemodule.AppModuleBasic{},
 		notificationsmodule.AppModuleBasic{},
 		ica.AppModuleBasic{},
-		// Should there be ica_host.AppModuleBasic{}? is that a thing?
-		interchaintxs.AppModuleBasic{},
 		/*
 			dsigmodule.AppModuleBasic{},
 		*/
@@ -270,7 +264,6 @@ var (
 		notificationsmoduletypes.ModuleName:        nil,
 		icatypes.ModuleName:                        nil,
 		storagemoduletypes.CollateralCollectorName: nil,
-		// why is filetree not here?
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		*/
@@ -331,8 +324,6 @@ type JackalApp struct {
 	StorageKeeper       storagemodulekeeper.Keeper
 	FileTreeKeeper      filetreemodulekeeper.Keeper
 	NotificationsKeeper notificationsmodulekeeper.Keeper
-
-	InterchainTxsKeeper interchaintxskeeper.Keeper
 
 	/*
 
@@ -395,7 +386,6 @@ func NewJackalApp(
 		rnsmoduletypes.MemStoreKey,
 		notificationsmoduletypes.MemStoreKey,
 		// filetreemoduletypes.MemStoreKey, minttypes.MemStoreKey
-		// why is this commented out in our main branch?
 	)
 
 	app := &JackalApp{
@@ -430,7 +420,6 @@ func NewJackalApp(
 	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	scopedICAHostKeeper := app.capabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	scopedWasmKeeper := app.capabilityKeeper.ScopeToModule(wasm.ModuleName)
-	scopedInterTxKeeper := app.capabilityKeeper.ScopeToModule(interchaintxstypes.ModuleName)
 	app.capabilityKeeper.Seal()
 
 	// add keepers
@@ -452,8 +441,6 @@ func NewJackalApp(
 		keys[authzkeeper.StoreKey],
 		appCodec,
 		app.BaseApp.MsgServiceRouter(),
-		// this is different than every other time .MsgServiceRouter() is called
-		// For example, we gave the ica host 'app.MsgServiceRouter()', i.e., we didn't call 'app.BaseApp', we just called 'app.'
 	)
 	app.feeGrantKeeper = feegrantkeeper.NewKeeper(
 		appCodec,
@@ -567,17 +554,6 @@ func NewJackalApp(
 		appCodec, keys[icahosttypes.StoreKey], app.getSubspace(icahosttypes.SubModuleName),
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper,
 		app.AccountKeeper, scopedICAHostKeeper, app.MsgServiceRouter(),
-		// does app.MsgServiceRouter have filetree's routes given it's declared before filetree?
-	)
-
-	app.InterchainTxsKeeper = *interchaintxskeeper.NewKeeper(
-		appCodec,
-		keys[interchaintxstypes.StoreKey],
-		memKeys[interchaintxstypes.MemStoreKey],
-		app.getSubspace(interchaintxstypes.ModuleName),
-		app.ibcKeeper.ChannelKeeper,
-		app.ICAControllerKeeper,
-		scopedInterTxKeeper,
 	)
 
 	// create evidence keeper with router
@@ -703,19 +679,15 @@ func NewJackalApp(
 	icaModule := ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper)
 
 	var icaControllerStack ibcporttypes.IBCModule
-	icaControllerStack = interchaintxs.NewIBCModule(app.InterchainTxsKeeper)
 	icaControllerStack = icacontroller.NewIBCMiddleware(icaControllerStack, app.ICAControllerKeeper)
 
 	// icaControllerIBCModule := icacontroller.NewIBCModule(app.ICAControllerKeeper, intergammIBCModule)
 	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
-	interchainTxsModule := interchaintxs.NewAppModule(appCodec, app.InterchainTxsKeeper, app.AccountKeeper, app.BankKeeper)
 
-	// NOTE: even though the chain builds successfully, this routing may still be problematic.
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule). // ibc router can route to the ica host, but the ica host needs to know filetree's routes
-		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
-		AddRoute(interchaintxstypes.ModuleName, icaControllerStack)
+		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack)
 
 	app.ibcKeeper.SetRouter(ibcRouter)
 
@@ -767,7 +739,6 @@ func NewJackalApp(
 		oracleModule,
 		notificationsModule,
 		icaModule,
-		interchainTxsModule,
 
 		/*
 			dsigModule,
@@ -808,7 +779,6 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
-		interchaintxstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -846,7 +816,6 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
-		interchaintxstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -891,7 +860,6 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
-		interchaintxstypes.ModuleName,
 
 		/*
 			dsigmoduletypes.ModuleName,
@@ -927,7 +895,6 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
-		interchaintxstypes.ModuleName,
 	)
 
 	// NOTE: The auth module must occur before everyone else. All other modules can be sorted
@@ -960,7 +927,6 @@ func NewJackalApp(
 		icatypes.ModuleName,
 
 		crisistypes.ModuleName,
-		interchaintxstypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -1000,7 +966,6 @@ func NewJackalApp(
 		oracleModule,
 		filetreeModule,
 		notificationsModule,
-		// TODO: add interchainTxsModule
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -1208,7 +1173,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
-	paramsKeeper.Subspace(interchaintxstypes.ModuleName)
 
 	return paramsKeeper
 }
