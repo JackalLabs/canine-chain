@@ -115,5 +115,22 @@ func (k Keeper) UpgradeStorage(goCtx context.Context, msg *types.MsgUpgradeStora
 
 	k.SetStoragePaymentInfo(ctx, spi)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeUpgradeStorage,
+			sdk.NewAttribute(types.AttributeKeyBuyer, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyReceiver, msg.ForAddress),
+			sdk.NewAttribute(types.AttributeKeyBytesBought, msg.Bytes),
+			sdk.NewAttribute(types.AttributeKeyTimeBought, hours.String()),
+		),
+	)
+
 	return &types.MsgUpgradeStorageResponse{}, nil
 }

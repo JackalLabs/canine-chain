@@ -45,5 +45,20 @@ func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditor
 
 	k.SetFiles(ctx, file)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeResetEditors,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyFileAddress, msg.Address),
+		),
+	)
+
 	return &types.MsgResetEditorsResponse{}, nil
 }

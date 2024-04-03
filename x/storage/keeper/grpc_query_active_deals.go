@@ -57,10 +57,10 @@ func (k Keeper) ActiveDealsAll(c context.Context, req *types.QueryAllActiveDeals
 			return err
 		}
 
-		ver := "false"
+		ver := False
 		v := activeDeal.IsVerified(ctx.BlockHeight(), p.ProofWindow)
 		if v {
-			ver = "true"
+			ver = True
 		}
 
 		lad := types.LegacyActiveDeals{
@@ -104,10 +104,10 @@ func (k Keeper) ActiveDeals(c context.Context, req *types.QueryActiveDealRequest
 
 	p := k.GetParams(ctx)
 
-	ver := "false"
+	ver := False
 	v := activeDeal.IsVerified(ctx.BlockHeight(), p.ProofWindow)
 	if v {
-		ver = "true"
+		ver = True
 	}
 
 	lad := types.LegacyActiveDeals{

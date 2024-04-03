@@ -65,5 +65,12 @@ func (k msgServer) PostContract(goCtx context.Context, msg *types.MsgPostContrac
 
 	k.SetContracts(ctx, newContract)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgPostContractResponse{}, nil
 }

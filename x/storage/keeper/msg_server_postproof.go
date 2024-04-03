@@ -85,5 +85,12 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 
 	meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgPostproofResponse{Success: true, ErrorMessage: ""}, nil
 }

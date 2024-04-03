@@ -80,5 +80,12 @@ func (k msgServer) ShutdownProvider(goCtx context.Context, msg *types.MsgShutdow
 
 	k.RemoveProviders(ctx, msg.Creator)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgShutdownProviderResponse{}, nil
 }

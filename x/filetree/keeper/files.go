@@ -16,6 +16,14 @@ func (k Keeper) SetFiles(ctx sdk.Context, files types.Files) {
 		files.Address,
 		files.Owner,
 	), b)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeUpdateFile,
+			sdk.NewAttribute(types.AttributeKeyFileAddress, files.Address),
+			sdk.NewAttribute(types.AttributeKeyOwner, files.Owner),
+		),
+	)
 }
 
 // GetFiles returns a files from its index
@@ -49,6 +57,14 @@ func (k Keeper) RemoveFiles(
 		address,
 		ownerAddress,
 	))
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeRemoveFile,
+			sdk.NewAttribute(types.AttributeKeyFileAddress, address),
+			sdk.NewAttribute(types.AttributeKeyOwner, ownerAddress),
+		),
+	)
 }
 
 // GetAllFiles returns all files

@@ -46,5 +46,20 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 
 	k.SetFiles(ctx, file)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeAddEditors,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyFileAddress, msg.Address),
+		),
+	)
+
 	return &types.MsgAddEditorsResponse{}, nil
 }

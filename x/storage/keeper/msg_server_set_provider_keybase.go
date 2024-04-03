@@ -20,5 +20,12 @@ func (k msgServer) SetProviderKeybase(goCtx context.Context, msg *types.MsgSetPr
 
 	k.SetProviders(ctx, provider)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgSetProviderKeybaseResponse{}, nil
 }

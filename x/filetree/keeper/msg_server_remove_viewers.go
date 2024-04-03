@@ -46,5 +46,20 @@ func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveView
 
 	k.SetFiles(ctx, file)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeRemoveViewers,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyFileAddress, msg.Address),
+		),
+	)
+
 	return &types.MsgRemoveViewersResponse{}, nil
 }

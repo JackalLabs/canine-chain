@@ -46,5 +46,20 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 
 	k.SetFiles(ctx, file)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeAddViewers,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyFileAddress, msg.Address),
+		),
+	)
+
 	return &types.MsgAddViewersResponse{}, nil
 }

@@ -43,5 +43,21 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	k.SetFiles(ctx, file)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypePostFile,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyFileAddress, fullMerklePath),
+			sdk.NewAttribute(types.AttributeKeyOwner, owner),
+		),
+	)
+
 	return &types.MsgPostFileResponse{Path: fullMerklePath}, nil
 }

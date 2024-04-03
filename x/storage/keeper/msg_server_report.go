@@ -48,6 +48,13 @@ func (k Keeper) Report(ctx sdk.Context, cid string, creator string) error {
 
 	k.RemoveReport(ctx, cid)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return k.DropDeal(ctx, deal, true)
 }
 
@@ -58,6 +65,13 @@ func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.M
 	if err != nil {
 		return nil, err
 	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
 	return &types.MsgReportResponse{}, nil
 }
@@ -108,6 +122,13 @@ func (k Keeper) RequestReport(ctx sdk.Context, cid string) ([]string, error) {
 
 	k.SetReportForm(ctx, form)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return providerAddresses, nil
 }
 
@@ -125,6 +146,13 @@ func (k msgServer) RequestReportForm(goCtx context.Context, msg *types.MsgReques
 		success = false
 		errorString = err.Error()
 	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
 	return &types.MsgRequestReportFormResponse{
 		Providers: providerAddresses,

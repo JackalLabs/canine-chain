@@ -174,5 +174,26 @@ func (k msgServer) SignContract(goCtx context.Context, msg *types.MsgSignContrac
 
 	k.SetFidCid(ctx, nftc)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	b := "false"
+	if msg.PayOnce {
+		b = "true"
+	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeSignContract,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyContract, msg.Cid),
+			sdk.NewAttribute(types.AttributeKeyPayOnce, b),
+		),
+	)
+
 	return &types.MsgSignContractResponse{}, nil
 }

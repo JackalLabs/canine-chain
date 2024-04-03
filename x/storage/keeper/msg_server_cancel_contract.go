@@ -102,5 +102,20 @@ func (k msgServer) CancelContract(goCtx context.Context, msg *types.MsgCancelCon
 
 	err := k.Keeper.CanContract(ctx, root, msg.Creator)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeCancelContract,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyContract, msg.Cid),
+		),
+	)
+
 	return &types.MsgCancelContractResponse{}, err
 }

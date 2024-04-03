@@ -10,10 +10,6 @@ import (
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 )
 
-const ( // TODO: Figure out optimal values for these and replace them with chain params
-	True = "true"
-)
-
 func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 	form, found := k.GetAttestationForm(ctx, cid)
 	if !found {
@@ -56,6 +52,13 @@ func (k Keeper) Attest(ctx sdk.Context, cid string, creator string) error {
 	k.SetActiveDeals(ctx, deal)
 	k.RemoveAttestation(ctx, cid)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return nil
 }
 
@@ -66,6 +69,13 @@ func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.M
 	if err != nil {
 		ctx.Logger().Debug(err.Error())
 	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
 	return &types.MsgAttestResponse{}, nil
 }
@@ -122,6 +132,13 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, cid string, creator string) 
 
 	k.SetAttestationForm(ctx, form)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return providerAddresses, nil
 }
 
@@ -140,6 +157,13 @@ func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgR
 		success = false
 		errorString = err.Error()
 	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
 	return &types.MsgRequestAttestationFormResponse{
 		Providers: providerAddresses,
