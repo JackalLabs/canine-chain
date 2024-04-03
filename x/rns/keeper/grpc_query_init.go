@@ -22,7 +22,7 @@ func (k Keeper) AllInits(c context.Context, req *types.QueryAllInits) (*types.Qu
 	store := ctx.KVStore(k.storeKey)
 	initStore := prefix.NewStore(store, types.KeyPrefix(types.InitKeyPrefix))
 
-	pageRes, err := query.Paginate(initStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(initStore, req.Pagination, func(_ []byte, value []byte) error {
 		var init types.Init
 		if err := k.cdc.Unmarshal(value, &init); err != nil {
 			return err

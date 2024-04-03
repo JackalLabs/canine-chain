@@ -36,7 +36,7 @@ func (k Keeper) AllFeeds(c context.Context, req *types.QueryAllFeeds) (*types.Qu
 
 	feeds := make([]types.Feed, 0)
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FeedKeyPrefix))
-	pg, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+	pg, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
 		var feed types.Feed
 		if err := k.cdc.Unmarshal(value, &feed); err != nil {
 			return err

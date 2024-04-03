@@ -24,7 +24,7 @@ func (k Keeper) AllNotificationsByAddress(c context.Context, req *types.QueryAll
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot parse pagination")
 	}
-	offset := page * limit
+	offset := (page - 1) * limit
 
 	notifications := k.GetAllNotificationsByAddress(ctx, req.To)
 
@@ -61,7 +61,7 @@ func (k Keeper) AllNotifications(c context.Context, req *types.QueryAllNotificat
 
 	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
 
-	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(_ []byte, value []byte) error {
 		var notification types.Notification
 		if err := k.cdc.Unmarshal(value, &notification); err != nil {
 			return err

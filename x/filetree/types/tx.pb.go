@@ -3388,7 +3388,7 @@ func (m *MsgAddViewers) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ViewerIds", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ViewerIDs", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4008,7 +4008,7 @@ func (m *MsgRemoveViewers) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ViewerIds", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ViewerIDs", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4464,7 +4464,7 @@ func (m *MsgAddEditors) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EditorIds", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field EditorIDs", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4724,7 +4724,7 @@ func (m *MsgRemoveEditors) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EditorIds", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field EditorIDs", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {

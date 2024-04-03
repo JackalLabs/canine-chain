@@ -20,3 +20,11 @@ message StoragePaymentInfo {
   repeated cosmos.base.v1beta1.Coin coins = 6
   [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
+
+message PaymentGauge {
+  bytes id = 1;
+  google.protobuf.Timestamp start = 2 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  google.protobuf.Timestamp end = 3 [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  repeated cosmos.base.v1beta1.Coin coins = 4
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}

@@ -14,7 +14,7 @@ func CmdQueryAllFeeds() *cobra.Command {
 		Use:   "list-feeds",
 		Short: "lists feeds",
 		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)

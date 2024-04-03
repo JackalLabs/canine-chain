@@ -14,7 +14,7 @@ func CmdListNotifications() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-notifications",
 		Short: "list all notifications",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

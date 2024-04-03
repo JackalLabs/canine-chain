@@ -22,7 +22,7 @@ func (k Keeper) AllStoragePaymentInfo(c context.Context, req *types.QueryAllStor
 	store := ctx.KVStore(k.storeKey)
 	storagePaymentStore := prefix.NewStore(store, types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
 
-	pageRes, err := query.Paginate(storagePaymentStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(storagePaymentStore, req.Pagination, func(_ []byte, value []byte) error {
 		var storagePaymentInfo types.StoragePaymentInfo
 		if err := k.cdc.Unmarshal(value, &storagePaymentInfo); err != nil {
 			return err

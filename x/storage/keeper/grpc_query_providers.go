@@ -22,7 +22,7 @@ func (k Keeper) AllProviders(c context.Context, req *types.QueryAllProviders) (*
 	store := ctx.KVStore(k.storeKey)
 	providersStore := prefix.NewStore(store, types.KeyPrefix(types.ProvidersKeyPrefix))
 
-	pageRes, err := query.Paginate(providersStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(providersStore, req.Pagination, func(_ []byte, value []byte) error {
 		var providers types.Providers
 		if err := k.cdc.Unmarshal(value, &providers); err != nil {
 			return err
