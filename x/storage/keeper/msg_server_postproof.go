@@ -64,5 +64,12 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 
 	k.SetProof(ctx, *proof)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgPostProofResponse{Success: true, ErrorMessage: ""}, nil
 }

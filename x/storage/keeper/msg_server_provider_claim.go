@@ -31,6 +31,13 @@ func (k msgServer) AddProviderClaimer(goCtx context.Context, msg *types.MsgAddCl
 
 	k.SetProviders(ctx, provider)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgAddClaimerResponse{}, nil
 }
 
@@ -62,6 +69,13 @@ func (k msgServer) RemoveProviderClaimer(goCtx context.Context, msg *types.MsgRe
 	}
 
 	k.SetProviders(ctx, provider)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
 	return &types.MsgRemoveClaimerResponse{}, nil
 }

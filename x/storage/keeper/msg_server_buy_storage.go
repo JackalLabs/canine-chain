@@ -178,6 +178,23 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		}
 	}
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeBuyStorage,
+			sdk.NewAttribute(types.AttributeKeyBuyer, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyReceiver, msg.ForAddress),
+			sdk.NewAttribute(types.AttributeKeyBytesBought, fmt.Sprintf("%d", msg.Bytes)),
+			sdk.NewAttribute(types.AttributeKeyTimeBought, hours.String()),
+		),
+	)
+
 	return &types.MsgBuyStorageResponse{}, nil
 }
 
