@@ -314,7 +314,7 @@ type JackalApp struct {
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
 	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
-	scopedInterTxKeeper       capabilitykeeper.ScopedKeeper
+	// scopedInterTxKeeper       capabilitykeeper.ScopedKeeper
 
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
