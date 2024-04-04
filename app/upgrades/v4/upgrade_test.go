@@ -87,18 +87,18 @@ func (suite *UpgradeTestKeeper) TestStorageUpgrade() {
 	setupMsgServer(suite)
 
 	ad := types2.LegacyActiveDeals{
-		Cid:           "cid",
-		Signee:        "signee",
-		Provider:      "provider",
-		Startblock:    "0",
-		Endblock:      "0",
-		Filesize:      "1024",
-		Proofverified: "false",
-		Proofsmissed:  "0",
-		Blocktoprove:  "0",
-		Creator:       "creator",
-		Merkle:        "941cb8791cb5441674b06de1a931cd101da54457c41e87e9a8ce56e1d39c96bc",
-		Fid:           "fid",
+		Cid:          "cid",
+		Signee:       "signee",
+		Provider:     "provider",
+		Startblock:   "0",
+		Endblock:     "0",
+		Filesize:     "1024",
+		LastProof:    suite.ctx.BlockHeight(),
+		Proofsmissed: "0",
+		Blocktoprove: "0",
+		Creator:      "creator",
+		Merkle:       "941cb8791cb5441674b06de1a931cd101da54457c41e87e9a8ce56e1d39c96bc",
+		Fid:          "fid",
 	}
 	suite.storageKeeper.SetLegacyActiveDeals(suite.ctx, ad)
 
