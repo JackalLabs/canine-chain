@@ -86,7 +86,7 @@ func (suite *KeeperTestSuite) TestPostFile() {
 			} else {
 				suite.Require().NoError(err)
 
-				suite.Require().Equal(1, len(res.ProviderIps))
+				suite.Require().Equal(0, len(res.ProviderIps)) // we do not pre-populate the provider IPs in v4 since the econ change. Change this to > 1 if ever the econ changes and required pre-population
 			}
 		})
 	}
