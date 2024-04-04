@@ -19,21 +19,6 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	}
 
 	window := k.GetParams(ctx).ProofWindow
-	// if msg.ProofInterval != window {
-	//	return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot create a file with a window different than %d", window)
-	//}
-
-	providers := k.GetActiveProviders(ctx, "")
-	if len(providers) == 0 {
-		allProviders := k.GetRandomizedProviders(ctx)
-
-		l := make([]types.ActiveProviders, len(allProviders))
-		for i, provider := range allProviders {
-			l[i] = types.ActiveProviders{Address: provider.Address}
-		}
-
-		providers = l
-	}
 
 	file := types.UnifiedFile{
 		Merkle:        msg.Merkle,
@@ -50,20 +35,6 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	k.SetFile(ctx, file)
 
 	ips := make([]string, 0)
-
-	for i, provider := range providers { // adding all provers
-		if i >= int(msg.MaxProofs) {
-			break
-		}
-		file.AddProver(ctx, k, provider.Address)
-
-		prv, found := k.GetProviders(ctx, provider.Address)
-		if !found {
-			continue
-		}
-
-		ips = append(ips, prv.Ip)
-	}
 
 	res := &types.MsgPostFileResponse{ProviderIps: ips, StartBlock: ctx.BlockHeight()}
 

@@ -51,6 +51,7 @@ message QueryFile {
 
 message QueryFileResponse { Files file = 1 [ (gogoproto.nullable) = false ]; }
 
+
 message QueryAllFiles {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }

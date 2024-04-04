@@ -180,5 +180,4 @@ replace (
 
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
-
 )
