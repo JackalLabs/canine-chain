@@ -402,6 +402,7 @@ message QueryStorageStatsResponse {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
   ];
-  uint64 active_users = 4;
-  map<int64, int64> users_by_plan= 5;
+  uint64 activeUsers = 4;
+  uint64 uniqueUsers = 5;
+  map<int64, int64> users_by_plan= 6;
 }
