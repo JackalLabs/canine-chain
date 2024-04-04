@@ -17,7 +17,7 @@ func SimulateMsgAddRecord(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// 1. Find a registered domain name
 		// 2. Add a randomly generated subdomain -- subdomains are free

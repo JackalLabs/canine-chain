@@ -17,7 +17,7 @@ func SimulateMsgAddProviderClaimer(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		claimer, _ := simtypes.RandomAcc(r, accs)
@@ -65,7 +65,7 @@ func SimulateMsgRemoveProviderClaimer(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgRemoveClaimer{

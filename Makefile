@@ -177,7 +177,7 @@ format-tools:
 	gofumpt -l -w .
 
 lint: format-tools
-	golangci-lint run
+	golangci-lint run --fix
 
 format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gofumpt -w -s

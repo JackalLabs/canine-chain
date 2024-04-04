@@ -14,8 +14,6 @@ import (
 	rnssimulation "github.com/jackalLabs/canine-chain/v3/x/rns/simulation"
 )
 
-// TODO: rewrite tests but don't use ignite
-
 // avoid unused import issue
 var (
 	//	_ = sample.AccAddress

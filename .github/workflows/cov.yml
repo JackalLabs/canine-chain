@@ -18,7 +18,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v4.1.2
     - uses: actions/setup-go@v5
       with:
         go-version: 1.20.2 # The Go version to download (if necessary) and use.
@@ -30,7 +30,7 @@ jobs:
         go tool cover -func coverage3.out
         rm coverage2.out
         rm coverage.out
-    - uses: codecov/codecov-action@v4.0.1
+    - uses: codecov/codecov-action@v4.1.1
       with:
         token: ${{ secrets.CODECOV }}
 

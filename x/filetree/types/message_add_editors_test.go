@@ -16,12 +16,12 @@ func TestMsgAddEditors_ValidateBasic(t *testing.T) {
 	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	tests := map[string]struct {
-		Creator, EditorIds, EditorKeys, Address, Fileowner string
+		Creator, EditorIDs, EditorKeys, Address, Fileowner string
 		expErr                                             bool
 	}{
 		"invalid address": {
 			Creator:    "",
-			EditorIds:  uuid.NewString(),
+			EditorIDs:  uuid.NewString(),
 			EditorKeys: uuid.NewString(),
 			Address:    uuid.NewString(),
 			Fileowner:  uuid.NewString(),
@@ -30,7 +30,7 @@ func TestMsgAddEditors_ValidateBasic(t *testing.T) {
 
 		"valid address": {
 			Creator:    aliceAddr.String(),
-			EditorIds:  uuid.NewString(),
+			EditorIDs:  uuid.NewString(),
 			EditorKeys: uuid.NewString(),
 			Address:    uuid.NewString(),
 			Fileowner:  aliceAddr.String(),
@@ -41,7 +41,7 @@ func TestMsgAddEditors_ValidateBasic(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			msg := NewMsgAddEditors(
-				tt.Creator, tt.EditorIds, tt.EditorKeys, tt.Address, tt.Fileowner,
+				tt.Creator, tt.EditorIDs, tt.EditorKeys, tt.Address, tt.Fileowner,
 			)
 
 			err := msg.ValidateBasic()

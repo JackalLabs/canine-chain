@@ -17,6 +17,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/jackalLabs/canine-chain/v3/x/jklmint/client/cli"
+	"github.com/jackalLabs/canine-chain/v3/x/jklmint/exported"
 	"github.com/jackalLabs/canine-chain/v3/x/jklmint/keeper"
 	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
 )
@@ -106,6 +107,8 @@ type AppModule struct {
 	keeper        keeper.Keeper
 	accountKeeper types.AccountKeeper
 	bankKeeper    types.BankKeeper
+
+	legacySubspace exported.Subspace
 }
 
 func NewAppModule(
@@ -113,12 +116,14 @@ func NewAppModule(
 	keeper keeper.Keeper,
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
+	legacySubspace exported.Subspace,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
 		keeper:         keeper,
 		accountKeeper:  accountKeeper,
 		bankKeeper:     bankKeeper,
+		legacySubspace: legacySubspace,
 	}
 }
 
@@ -144,10 +149,16 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
-	m := keeper.NewMigrator(am.keeper)
+	m := keeper.NewMigrator(am.keeper, am.legacySubspace)
 
 	err := cfg.RegisterMigration(types.ModuleName, 2, m.Migrate2to3)
+	if err != nil {
+		panic(err)
+	}
+
+	err = cfg.RegisterMigration(types.ModuleName, 3, m.Migrate3to4)
 	if err != nil {
 		panic(err)
 	}
@@ -175,7 +186,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 }
 
 // ConsensusVersion implements ConsensusVersion.
-func (AppModule) ConsensusVersion() uint64 { return 3 }
+func (AppModule) ConsensusVersion() uint64 { return 4 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {

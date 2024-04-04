@@ -17,7 +17,7 @@ func SimulateMsgInitProvider(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
@@ -26,7 +26,7 @@ func SimulateMsgInitProvider(
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitProvider, "provider already exists"), nil, nil
 		}
 
-		coins := sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10_000_000_000_000))
+		coins := sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10_000_000_000_000_000))
 		err := bk.MintCoins(ctx, types.ModuleName, coins)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitProvider, "failed to mint collateral"), nil, err

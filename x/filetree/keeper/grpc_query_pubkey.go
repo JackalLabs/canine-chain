@@ -22,7 +22,7 @@ func (k Keeper) AllPubKeys(c context.Context, req *types.QueryAllPubKeys) (*type
 	store := ctx.KVStore(k.storeKey)
 	pubkeyStore := prefix.NewStore(store, types.KeyPrefix(types.PubkeyKeyPrefix))
 
-	pageRes, err := query.Paginate(pubkeyStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(pubkeyStore, req.Pagination, func(_ []byte, value []byte) error {
 		var pubkey types.Pubkey
 		if err := k.cdc.Unmarshal(value, &pubkey); err != nil {
 			return err

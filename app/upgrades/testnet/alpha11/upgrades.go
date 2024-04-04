@@ -36,7 +36,7 @@ func (u *Upgrade) Name() string {
 
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+	return func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		if types.IsTestnet(ctx.ChainID()) {
 			fromVM[oraclemoduletypes.ModuleName] = 1
 

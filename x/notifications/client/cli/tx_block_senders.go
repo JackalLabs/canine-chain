@@ -20,25 +20,25 @@ func CmdBlockSenders() *cobra.Command {
 		Short: "Broadcast message BlockSenders",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argSenderIds := args[0]
+			argSenderIDs := args[0]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			senderAddresses := strings.Split(argSenderIds, ",")
+			senderAddresses := strings.Split(argSenderIDs, ",")
 
-			var senderIds []string
+			var senderIDs []string
 
 			for _, v := range senderAddresses {
 				if len(v) < 1 {
 					continue
 				}
-				senderIds = append(senderIds, v)
+				senderIDs = append(senderIDs, v)
 			}
 
-			jsonSenders, err := json.Marshal(senderIds)
+			jsonSenders, err := json.Marshal(senderIDs)
 			if err != nil {
 				return err
 			}

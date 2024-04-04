@@ -22,7 +22,7 @@ func (k Keeper) AllForSale(c context.Context, req *types.QueryAllForSale) (*type
 	store := ctx.KVStore(k.storeKey)
 	forsaleStore := prefix.NewStore(store, types.KeyPrefix(types.ForsaleKeyPrefix))
 
-	pageRes, err := query.Paginate(forsaleStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(forsaleStore, req.Pagination, func(_ []byte, value []byte) error {
 		var forsale types.Forsale
 		if err := k.cdc.Unmarshal(value, &forsale); err != nil {
 			return err

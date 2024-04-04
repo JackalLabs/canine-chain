@@ -43,8 +43,8 @@ func MakePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 func CreateMsgMakeRoot(creator string) (*MsgProvisionFileTree, error) {
 	trackingNumber := uuid.NewString()
 
-	editorIds := strings.Split(creator, ",")
-	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
+	editorIDs := strings.Split(creator, ",")
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIDs, "place holder key")
 	if err != nil {
 		return nil, err
 	}
@@ -63,9 +63,9 @@ func CreateRootFolder(creator string) (*Files, error) {
 	merklePath := MerklePath("s/")
 	trackingNumber := uuid.NewString()
 
-	editorIds := strings.Split(creator, ",")
+	editorIDs := strings.Split(creator, ",")
 
-	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIDs, "place holder key")
 	if err != nil {
 		return nil, err
 	}
@@ -85,16 +85,16 @@ func CreateRootFolder(creator string) (*Files, error) {
 	return &rootFolder, nil
 }
 
-func CreateFolderOrFile(creator string, editorIds []string, viewerIds []string, readablePath string) (*Files, error) {
+func CreateFolderOrFile(creator string, editorIDs []string, viewerIDs []string, readablePath string) (*Files, error) {
 	merklePath := MerklePath(readablePath)
 	trackingNumber := uuid.NewString()
 
-	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIds, "place holder key")
+	jsonEditors, err := MakeEditorAccessMap(trackingNumber, editorIDs, "place holder key")
 	if err != nil {
 		return nil, err
 	}
 
-	jsonViewers, err := MakeViewerAccessMap(trackingNumber, viewerIds, "place holder key")
+	jsonViewers, err := MakeViewerAccessMap(trackingNumber, viewerIDs, "place holder key")
 	if err != nil {
 		return nil, err
 	}
@@ -150,10 +150,10 @@ func HashThenHex(any string) string {
 	return fmt.Sprintf("%x", hash)
 }
 
-func MakeEditorAccessMap(trackingNumber string, editorIds []string, aesKey string) ([]byte, error) {
+func MakeEditorAccessMap(trackingNumber string, editorIDs []string, aesKey string) ([]byte, error) {
 	editors := make(map[string]string)
 
-	for _, v := range editorIds {
+	for _, v := range editorIDs {
 		h := sha256.New()
 		h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
 		hash := h.Sum(nil)
@@ -171,10 +171,10 @@ func MakeEditorAccessMap(trackingNumber string, editorIds []string, aesKey strin
 	return jsonEditors, nil
 }
 
-func MakeViewerAccessMap(trackingNumber string, viewerIds []string, aesKey string) ([]byte, error) {
+func MakeViewerAccessMap(trackingNumber string, viewerIDs []string, aesKey string) ([]byte, error) {
 	viewers := make(map[string]string)
 
-	for _, v := range viewerIds {
+	for _, v := range viewerIDs {
 		h := sha256.New()
 		h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
 		hash := h.Sum(nil)

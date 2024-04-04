@@ -21,7 +21,7 @@ func CmdRemoveEditors() *cobra.Command {
 		Short: "remove an address from the files editing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argEditorIds := args[0]
+			argEditorIDs := args[0]
 			argHashpath := args[1]
 			argOwner := args[2]
 
@@ -35,8 +35,8 @@ func CmdRemoveEditors() *cobra.Command {
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
-			editorAddresses := strings.Split(argEditorIds, ",")
-			var editorIds []string
+			editorAddresses := strings.Split(argEditorIDs, ",")
+			var editorIDs []string
 
 			for _, v := range editorAddresses {
 				if len(v) < 1 {
@@ -54,13 +54,13 @@ func CmdRemoveEditors() *cobra.Command {
 				}
 
 				newEditorID := keeper.MakeEditorAddress(file.File.TrackingNumber, v) // This used to just be argAddress
-				editorIds = append(editorIds, newEditorID)
+				editorIDs = append(editorIDs, newEditorID)
 
 			}
 
 			msg := types.NewMsgRemoveEditors(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(editorIds, ","),
+				strings.Join(editorIDs, ","),
 				merklePath,
 				ownerChainAddress,
 			)

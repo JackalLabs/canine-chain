@@ -21,7 +21,7 @@ func CmdMakeRootV2() *cobra.Command {
 		Use:   "provision",
 		Short: "Provision your file tree",
 		Args:  cobra.ExactArgs(0),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
+		RunE: func(cmd *cobra.Command, _ []string) (err error) {
 			if err != nil {
 				return err
 			}

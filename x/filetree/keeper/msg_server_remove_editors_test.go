@@ -32,11 +32,11 @@ func (suite *KeeperTestSuite) TestMsgRemoveEditors() {
 
 	// add bob as a editor for pepe
 
-	EditorIds := strings.Split(alice, ",")
-	EditorIds = append(EditorIds, bob)
+	EditorIDs := strings.Split(alice, ",")
+	EditorIDs = append(EditorIDs, bob)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice, EditorIds, strings.Split(alice, ","), "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice, EditorIDs, strings.Split(alice, ","), "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 

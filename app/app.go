@@ -77,6 +77,7 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ica "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts"
+	icacontroller "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller"
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/keeper"
 	icacontrollertypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/types"
 	icahost "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host"
@@ -90,7 +91,7 @@ import (
 	ibcclient "github.com/cosmos/ibc-go/v4/modules/core/02-client"
 	ibcclientclient "github.com/cosmos/ibc-go/v4/modules/core/02-client/client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
-	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
+	ibcporttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
 
@@ -313,6 +314,7 @@ type JackalApp struct {
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
 	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
+	// scopedInterTxKeeper       capabilitykeeper.ScopedKeeper
 
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
@@ -464,7 +466,7 @@ func NewJackalApp(
 		authtypes.FeeCollectorName,
 		storagemoduletypes.ModuleName,
 	)
-	mintModule := mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper)
+	mintModule := mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(minttypes.ModuleName))
 
 	app.distrKeeper = distrkeeper.NewKeeper(
 		appCodec,
@@ -547,15 +549,12 @@ func NewJackalApp(
 		app.ibcKeeper.ChannelKeeper, // may be replaced with middleware such as ics29 fee
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper, scopedICAControllerKeeper, app.MsgServiceRouter(),
 	)
+
 	app.ICAHostKeeper = icahostkeeper.NewKeeper(
 		appCodec, keys[icahosttypes.StoreKey], app.getSubspace(icahosttypes.SubModuleName),
 		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper,
 		app.AccountKeeper, scopedICAHostKeeper, app.MsgServiceRouter(),
 	)
-	icaModule := ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper)
-
-	// icaControllerIBCModule := icacontroller.NewIBCModule(app.ICAControllerKeeper, intergammIBCModule)
-	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
 
 	// create evidence keeper with router
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -621,6 +620,8 @@ func NewJackalApp(
 		app.BankKeeper,
 		app.AccountKeeper,
 		app.OracleKeeper,
+		app.RnsKeeper,
+		authtypes.FeeCollectorName,
 	)
 	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(storagemoduletypes.ModuleName))
 
@@ -656,25 +657,37 @@ func NewJackalApp(
 	)
 	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
 
+	// NOTE: renamed porttypes to ibcporttypes will
+	// create merge conflicts with ibc-hooks branch. Need to resolve
+
 	// Create static IBC router, add app routes, then set and seal it
-	ibcRouter := porttypes.NewRouter()
+	ibcRouter := ibcporttypes.NewRouter()
 
 	// The gov proposal types can be individually enabled
 	if len(enabledProposals) != 0 {
 		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(app.wasmKeeper, enabledProposals))
 	}
 
-	var transferStack porttypes.IBCModule
+	var transferStack ibcporttypes.IBCModule
 	transferStack = transfer.NewIBCModule(app.transferKeeper)
 	transferStack = ibcfee.NewIBCMiddleware(transferStack, app.ibcFeeKeeper)
 
-	var wasmStack porttypes.IBCModule
+	var wasmStack ibcporttypes.IBCModule
 	wasmStack = wasm.NewIBCHandler(app.wasmKeeper, app.ibcKeeper.ChannelKeeper, app.ibcFeeKeeper)
 	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, app.ibcFeeKeeper)
 
+	icaModule := ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper)
+
+	var icaControllerStack ibcporttypes.IBCModule
+	icaControllerStack = icacontroller.NewIBCMiddleware(icaControllerStack, app.ICAControllerKeeper)
+
+	// icaControllerIBCModule := icacontroller.NewIBCModule(app.ICAControllerKeeper, intergammIBCModule)
+	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
+
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule). // ibc router can route to the ica host, but the ica host needs to know filetree's routes
+		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack)
 
 	app.ibcKeeper.SetRouter(ibcRouter)
 
@@ -939,7 +952,7 @@ func NewJackalApp(
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.feeGrantKeeper, app.InterfaceRegistry),
 		authzmodule.NewAppModule(appCodec, app.authzKeeper, app.AccountKeeper, app.BankKeeper, app.InterfaceRegistry),
 		gov.NewAppModule(appCodec, app.govKeeper, app.AccountKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper),
+		mintModule,
 		staking.NewAppModule(appCodec, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
 		distr.NewAppModule(appCodec, app.distrKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
 		slashing.NewAppModule(appCodec, app.slashingKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
