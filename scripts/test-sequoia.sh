@@ -37,6 +37,7 @@ canined gentx $ALIAS 200000000ujkl \
 canined collect-gentxs --home=$JKL_HOME
 
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
+sed -i.bak -e "s/ujklr/staker/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8/jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"400\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"check_window\": \"100\"/\"check_window\": \"100\"/" $JKL_HOME/config/genesis.json
@@ -46,7 +47,7 @@ sed -i.bak -e 's/enable = false/enable=true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/enabled-unsafe-cors = false/enabled-unsafe-cors = true/' $JKL_HOME/config/app.toml
 sed -i.bak -e 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["*"\]/' $JKL_HOME/config/config.toml
 sed -i.bak -e 's/chain-id = ""/chain-id = "canine-1"/' $JKL_HOME/config/client.toml
-screen -d -m canined start --home=$JKL_HOME --log_level info
+screen -d -m -L -Logfile "chain.log" canined start --home=$JKL_HOME --log_level info
 sleep 20
 canined tx storage buy-storage $(canined keys show charlie -a --home=$JKL_HOME) 30 1000000000000 ujkl --from charlie --gas-prices=0.02ujkl --home=$JKL_HOME -y
 
