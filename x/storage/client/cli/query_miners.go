@@ -13,7 +13,7 @@ func CmdListProviders() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-providers",
 		Short: "list all providers",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -46,7 +46,7 @@ func CmdListActiveProviders() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-active-providers",
 		Short: "list all active providers",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
 )
 
@@ -15,7 +17,7 @@ func HasViewingAccess(file types.Files, user string) (bool, error) {
 	jvacc := make(map[string]string)
 	err := json.Unmarshal([]byte(pvacc), &jvacc)
 	if err != nil {
-		return false, types.ErrCantUnmarshall
+		return false, sdkerrors.Wrapf(err, "cannot unmarshal viewers: %s", pvacc)
 	}
 
 	h := sha256.New()
@@ -37,7 +39,7 @@ func HasEditAccess(file types.Files, user string) (bool, error) {
 
 	err := json.Unmarshal([]byte(peacc), &jeacc)
 	if err != nil {
-		return false, types.ErrCantUnmarshall
+		return false, sdkerrors.Wrapf(err, "cannot unmarshal editors: %s", peacc)
 	}
 
 	h := sha256.New()
@@ -86,7 +88,7 @@ func MakeEditorAddress(trackingNumber string, user string) string {
 	return addressString
 }
 
-// Owner address is whoever owns this file/folder
+// MakeOwnerAddress Owner address is whoever owns this file/folder
 func MakeOwnerAddress(merklePath string, user string) string {
 	// make sure that user was already hex(hashed) before it was passed into
 	// this function

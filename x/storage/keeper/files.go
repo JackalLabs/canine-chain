@@ -140,8 +140,8 @@ func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key 
 
 // GetAllFilesWithMerkle returns all Files that start with a specific merkle
 func (k Keeper) GetAllFilesWithMerkle(ctx sdk.Context, merkle []byte) (list []types.UnifiedFile) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, merkle)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(merkle))
+	iterator := sdk.KVStorePrefixIterator(store, nil)
 
 	defer iterator.Close()
 

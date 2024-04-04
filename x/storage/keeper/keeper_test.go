@@ -3,6 +3,7 @@ package keeper_test
 import (
 	gocontext "context"
 	"testing"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -49,7 +50,7 @@ func (suite *KeeperTestSuite) reset() {
 	err = bankKeeper.SendCoinsFromModuleToModule(ctx, minttypes.ModuleName, types.ModuleName, coins)
 	suite.NoError(err)
 
-	suite.ctx = ctx
+	suite.ctx = ctx.WithBlockTime(time.Now())
 	suite.storageKeeper = storageKeeper
 	suite.bankKeeper = bankKeeper
 	suite.accountKeeper = accountKeeper

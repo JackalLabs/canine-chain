@@ -118,6 +118,7 @@ message MsgBuyStorage {
   int64 duration_days = 3;
   int64 bytes = 4;
   string payment_denom = 5;
+  string referral = 6;
 }
 
 message MsgBuyStorageResponse {}

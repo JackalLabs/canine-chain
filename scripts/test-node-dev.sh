@@ -63,7 +63,8 @@ from_scratch () {
     update_test_genesis '.app_state["oracle"]["params"]["deposit"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
     update_test_genesis '.app_state["rns"]["params"]["deposit_account"]="'"$(canined keys show -a $DEPOACCKEY)"'"'
 
-
+    # grant the ica host execute permissions to all modules' messages
+    update_test_genesis '.app_state["interchainaccounts"]["host_genesis_state"]["params"]["allow_messages"]=["*"]'
 
     # Allocate genesis accounts
     canined add-genesis-account $KEY 1000000000000ujkl --keyring-backend $KEYRING
@@ -93,8 +94,13 @@ startup
 from_scratch
 
 # Opens the RPC endpoint to outside connections
-sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/.canine/config/config.toml
-sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.canine/config/config.toml
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  sed -i '' '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/.canine/config/config.toml
+  sed -i '' 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.canine/config/config.toml
+else
+  sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/.canine/config/config.toml
+  sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.canine/config/config.toml
+fi
 
 trap "cleanup" SIGINT
 

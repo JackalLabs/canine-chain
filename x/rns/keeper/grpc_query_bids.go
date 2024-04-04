@@ -22,7 +22,7 @@ func (k Keeper) AllBids(c context.Context, req *types.QueryAllBids) (*types.Quer
 	store := ctx.KVStore(k.storeKey)
 	bidsStore := prefix.NewStore(store, types.KeyPrefix(types.BidsKeyPrefix))
 
-	pageRes, err := query.Paginate(bidsStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(bidsStore, req.Pagination, func(_ []byte, value []byte) error {
 		var bids types.Bids
 		if err := k.cdc.Unmarshal(value, &bids); err != nil {
 			return err

@@ -84,6 +84,30 @@ func (k Keeper) GetActiveProviders(ctx sdk.Context, filterAddress string) []type
 	return providers
 }
 
+// GetRandomizedProviders returns a list of providers in a random order
+func (k Keeper) GetRandomizedProviders(ctx sdk.Context) []types.Providers {
+	providers := k.GetAllProviders(ctx)
+
+	size := len(providers)
+
+	rounds := Rounds * size
+
+	i64Size := int64(size)
+
+	r := rand.NewRand() // creating a new random generator to ensure no interference
+
+	r.Seed(ctx.BlockHeight())
+
+	for i := 0; i < rounds; i++ {
+		x := r.Int63n(i64Size)
+		y := r.Int63n(i64Size)
+
+		providers[x], providers[y] = providers[y], providers[x]
+	}
+
+	return providers
+}
+
 // SetProviders set a specific providers in the store from its index
 func (k Keeper) SetProviders(ctx sdk.Context, providers types.Providers) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))

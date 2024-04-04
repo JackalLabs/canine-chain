@@ -55,4 +55,7 @@ func (suite *KeeperTestSuite) TestFiles() {
 
 	suite.Require().True(found)
 	suite.Require().Equal(file, f)
+
+	files := suite.storageKeeper.GetAllFilesWithMerkle(suite.ctx, merkle)
+	suite.Require().Equal(1, len(files))
 }

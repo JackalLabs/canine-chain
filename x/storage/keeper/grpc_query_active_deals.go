@@ -21,7 +21,7 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
 
-	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(value, &file); err != nil {
 			return err
@@ -37,6 +37,58 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
 }
 
+func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMerkle) (*types.QueryAllFilesByMerkleResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var files []types.UnifiedFile
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))
+
+	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(value, &file); err != nil {
+			return err
+		}
+
+		files = append(files, file)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllFilesByMerkleResponse{Files: files, Pagination: pageRes}, nil
+}
+
+func (k Keeper) AllFilesByOwner(c context.Context, req *types.QueryAllFilesByOwner) (*types.QueryAllFilesByOwnerResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var files []types.UnifiedFile
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesOwnerPrefix(req.Owner))
+
+	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(value, &file); err != nil {
+			return err
+		}
+
+		files = append(files, file)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllFilesByOwnerResponse{Files: files, Pagination: pageRes}, nil
+}
+
 // OpenFiles returns a paginated list of files with space that providers have yet to fill
 //
 // TODO: Create unit-test cases for this
@@ -49,7 +101,7 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 	ctx := sdk.UnwrapSDKContext(c)
 
 	var i uint64
-	k.IterateFilesByMerkle(ctx, req.Pagination.Reverse, func(key []byte, val []byte) bool {
+	k.IterateFilesByMerkle(ctx, req.Pagination.Reverse, func(_ []byte, val []byte) bool {
 		if i >= req.Pagination.Limit {
 			return true
 		}
@@ -126,7 +178,7 @@ func (k Keeper) AllProofs(c context.Context, req *types.QueryAllProofs) (*types.
 	store := ctx.KVStore(k.storeKey)
 	proofStore := prefix.NewStore(store, types.KeyPrefix(types.ProofKeyPrefix))
 
-	pageRes, err := query.Paginate(proofStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(proofStore, req.Pagination, func(_ []byte, value []byte) error {
 		var proof types.FileProof
 		if err := k.cdc.Unmarshal(value, &proof); err != nil {
 			return err
@@ -153,7 +205,7 @@ func (k Keeper) ProofsByAddress(c context.Context, req *types.QueryProofsByAddre
 	store := ctx.KVStore(k.storeKey)
 	proofStore := prefix.NewStore(store, types.ProofPrefix(req.ProviderAddress))
 
-	pageRes, err := query.Paginate(proofStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(proofStore, req.Pagination, func(_ []byte, value []byte) error {
 		var proof types.FileProof
 		if err := k.cdc.Unmarshal(value, &proof); err != nil {
 			return err

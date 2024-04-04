@@ -30,7 +30,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	jklmintGenesis := types.GenesisState{
-		Params: types.NewParams(sdk.DefaultBondDenom, 4, 6),
+		// Params: types.NewParams(sdk.DefaultBondDenom, 4, 6),
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&jklmintGenesis)
 }
@@ -44,7 +44,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 	jklmintParams := types.DefaultParams()
 	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMintDenom), func(r *rand.Rand) string {
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMintDenom), func(_ *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(jklmintParams.MintDenom))
 		}),
 	}

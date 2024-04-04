@@ -17,7 +17,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macos-latest]
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
       - uses: actions/setup-go@v5
         with:
           go-version: 1.20.2 # The Go version to download (if necessary) and use.
@@ -26,7 +26,7 @@ jobs:
         run: |
           make build
           cp "build/canined" "canined-$RUNNER_OS"
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: canined-${{runner.os}}
           path: canined-${{runner.os}}
@@ -34,7 +34,7 @@ jobs:
   # MacOS-ARM64-CLI:
   #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v4.1.1
+  #     - uses: actions/checkout@v4.1.2
   #     - uses: actions/setup-go@v5
   #       with:
   #         go-version: 1.19 # The Go version to download (if necessary) and use.
@@ -47,7 +47,7 @@ jobs:
   #       run: |
   #         make build_macos_arm64_cli
   #         cp "canined-macos-arm64" "canined-MacOS-arm64"
-  #     - uses: actions/upload-artifact@v3
+  #     - uses: actions/upload-artifact@v4
   #       with:
   #         name: canined-MacOS-arm64
   #         path: canined-MacOS-arm64
@@ -57,7 +57,7 @@ jobs:
       [native-build-cli]
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
@@ -66,14 +66,14 @@ jobs:
         shell: bash
         run: |
           echo "::set-output name=IS_PRE_RELEASE::$(echo "${{ steps.get_version.outputs.VERSION }}" | awk 'BEGIN{prerelease="false"} /beta|alpha/{prerelease="true"} END{print prerelease}')"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: canined-Linux
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: canined-macOS
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           prerelease: ${{ steps.is_pre_release.outputs.IS_PRE_RELEASE }}
           files: |

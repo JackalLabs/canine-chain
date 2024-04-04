@@ -13,7 +13,7 @@ func CmdListNames() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-names",
 		Short: "list all names",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

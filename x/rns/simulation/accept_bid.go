@@ -32,7 +32,7 @@ func SimulateMsgAcceptBid(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// 1. find a random name
 		// 2. check if it has domains forsale
