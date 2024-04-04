@@ -37,6 +37,20 @@ func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner)
 	k.SetFiles(ctx, file)
 	// Delete old file
 	k.RemoveFiles(ctx, msg.Address, currentOwner)
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeChangeOwner,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyNewOwner, msg.NewOwner),
+			sdk.NewAttribute(types.AttributeKeyFileAddress, msg.Address),
+		),
+	)
 	return &types.MsgChangeOwnerResponse{}, nil
 }

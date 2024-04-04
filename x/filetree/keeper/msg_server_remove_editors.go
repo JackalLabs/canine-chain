@@ -45,6 +45,19 @@ func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEdit
 	file.EditAccess = newEditors
 
 	k.SetFiles(ctx, file)
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeRemoveEditors,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyFileAddress, msg.Address),
+		),
+	)
 	return &types.MsgRemoveEditorsResponse{}, nil
 }

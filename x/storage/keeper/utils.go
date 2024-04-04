@@ -12,6 +12,11 @@ import (
 //	return bech32.ConvertAndEncode(types.FidPrefix, data)
 // }
 
+const (
+	False = "false"
+	True  = "true"
+)
+
 func MakeCid(data []byte) (string, error) {
 	return bech32.ConvertAndEncode(types.CidPrefix, data)
 }

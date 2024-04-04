@@ -15,6 +15,12 @@ func (k msgServer) PostKey(goCtx context.Context, msg *types.MsgPostKey) (*types
 		Key:     msg.Key,
 	}
 	k.SetPubkey(ctx, pubKey)
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
 	return &types.MsgPostKeyResponse{}, nil
 }

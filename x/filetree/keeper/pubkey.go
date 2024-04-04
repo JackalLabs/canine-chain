@@ -13,6 +13,14 @@ func (k Keeper) SetPubkey(ctx sdk.Context, pubkey types.Pubkey) {
 	store.Set(types.PubkeyKey(
 		pubkey.Address,
 	), b)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypePostKey,
+			sdk.NewAttribute(types.AttributeKeySigner, pubkey.Address),
+			sdk.NewAttribute(types.AttributeKeyKey, pubkey.Key),
+		),
+	)
 }
 
 // GetPubkey returns a pubkey from its index
