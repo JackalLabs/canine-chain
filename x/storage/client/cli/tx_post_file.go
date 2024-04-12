@@ -210,6 +210,8 @@ func postFile(fileData []byte, cmd *cobra.Command) {
 
 	time.Sleep(time.Second * 1)
 
+	fmt.Printf("Uploading %s...\n", cid)
+
 	msg := types.NewMsgSignContract(
 		address,
 		cid,
