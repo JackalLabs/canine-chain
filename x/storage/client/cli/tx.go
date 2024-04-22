@@ -30,6 +30,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdBuyStorage())
 	cmd.AddCommand(CmdClaimStray())
 	cmd.AddCommand(CmdUpgradeStorage())
+	cmd.AddCommand(CmdPostRandomFile())
 
 	return cmd
 }
