@@ -180,4 +180,7 @@ replace (
 
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
+
+	github.com/CosmWasm/wasmd => github.com/BiPhan4/wasmd-fork 1d26ddc85ac4f854dc4f520e1dffdec037f16818
+
 )
