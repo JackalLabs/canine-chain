@@ -161,6 +161,8 @@ replace (
 	// use cosmos keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
+	github.com/CosmWasm/wasmd => github.com/BiPhan4/wasmd-fork v0.32.1-0.20240430204911-1d26ddc85ac4
+
 	// dragonberry ics23 patch
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
@@ -180,7 +182,5 @@ replace (
 
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
-
-	github.com/CosmWasm/wasmd => github.com/BiPhan4/wasmd-fork 1d26ddc85ac4f854dc4f520e1dffdec037f16818
 
 )
