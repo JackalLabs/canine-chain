@@ -221,7 +221,6 @@ func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, a
 }
 
 func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
-	allDeals := k.GetAllActiveDeals(ctx)
 
 	DayBlocks := k.GetParams(ctx).ProofWindow
 
@@ -229,6 +228,7 @@ func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
 		ctx.Logger().Debug("skipping reward handling for this block")
 		return nil
 	}
+	allDeals := k.GetAllActiveDeals(ctx)
 
 	address := k.accountkeeper.GetModuleAddress(types.ModuleName)
 
