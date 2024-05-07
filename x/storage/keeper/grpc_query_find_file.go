@@ -11,18 +11,42 @@ import (
 )
 
 func (k Keeper) ListFiles(ctx sdk.Context, fid string) []string {
-	allDeals := k.GetAllActiveDeals(ctx)
-
 	providers := []string{}
 
-	for i := 0; i < len(allDeals); i++ {
-		if allDeals[i].Fid == fid {
-			provider, ok := k.GetProviders(ctx, allDeals[i].Provider)
-			if !ok {
-				continue
-			}
+	success := true
 
-			providers = append(providers, provider.Ip)
+	res, found := k.GetFidCid(ctx, fid)
+	if found {
+		var cids []string
+
+		err := json.Unmarshal([]byte(res.Cids), &cids)
+		if err != nil {
+			success = false
+		} else {
+			for _, cid := range cids {
+				deal, found := k.GetActiveDeals(ctx, cid)
+				if !found {
+					continue
+				}
+
+				providers = append(providers, deal.Provider)
+			}
+		}
+
+	}
+
+	if !found || !success {
+		allDeals := k.GetAllActiveDeals(ctx)
+
+		for i := 0; i < len(allDeals); i++ {
+			if allDeals[i].Fid == fid {
+				provider, ok := k.GetProviders(ctx, allDeals[i].Provider)
+				if !ok {
+					continue
+				}
+
+				providers = append(providers, provider.Ip)
+			}
 		}
 	}
 

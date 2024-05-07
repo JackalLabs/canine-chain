@@ -221,7 +221,6 @@ func (k Keeper) InternalRewards(ctx sdk.Context, allDeals []types.ActiveDeals, a
 }
 
 func (k Keeper) HandleRewardBlock(ctx sdk.Context) error {
-
 	DayBlocks := k.GetParams(ctx).ProofWindow
 
 	if ctx.BlockHeight()%DayBlocks > 0 {
