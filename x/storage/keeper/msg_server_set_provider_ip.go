@@ -25,5 +25,12 @@ func (k msgServer) SetProviderIP(goCtx context.Context, msg *types.MsgSetProvide
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
 		),
 	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 	return &types.MsgSetProviderIPResponse{}, nil
 }

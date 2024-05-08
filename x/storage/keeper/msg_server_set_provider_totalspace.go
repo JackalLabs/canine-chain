@@ -28,5 +28,12 @@ func (k msgServer) SetProviderTotalSpace(goCtx context.Context, msg *types.MsgSe
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgSetProviderTotalSpaceResponse{}, nil
 }

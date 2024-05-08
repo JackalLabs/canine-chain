@@ -24,4 +24,6 @@ const (
 	AttributeKeySigner   = "signer"
 	AttributeKeyNewOwner = "new_owner"
 	AttributeKeyKey      = "key"
+
+	EventTypeJackalMessage = "jackal_message"
 )
