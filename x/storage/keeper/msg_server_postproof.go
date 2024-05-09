@@ -115,7 +115,7 @@ func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*t
 	return &types.MsgPostproofResponse{Success: true, ErrorMessage: ""}, nil
 }
 
-func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProofV4) (*types.MsgPostproofResponse, error) {
+func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*types.MsgPostproofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	meter := ctx.GasMeter()
 	usedGas := meter.GasConsumed()

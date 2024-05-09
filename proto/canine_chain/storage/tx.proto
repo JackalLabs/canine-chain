@@ -7,7 +7,7 @@ option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 service Msg {
   rpc PostContract(MsgPostContract) returns (MsgPostContractResponse);
   rpc Postproof(MsgPostproof) returns (MsgPostproofResponse);
-  rpc PostProof(MsgPostProofV4) returns (MsgPostproofResponse);
+  rpc PostProof(MsgPostProof) returns (MsgPostproofResponse);
 
   rpc SignContract(MsgSignContract) returns (MsgSignContractResponse);
   rpc SetProviderIP(MsgSetProviderIP) returns (MsgSetProviderIPResponse);
@@ -49,7 +49,7 @@ message MsgPostproof {
   string cid = 4;
 }
 
-message MsgPostProofV4 {
+message MsgPostProof {
   string creator = 1;
   bytes item = 2;
   bytes hash_list = 3;
@@ -60,6 +60,11 @@ message MsgPostProofV4 {
 }
 
 message MsgPostproofResponse {
+  bool success = 1;
+  string errorMessage = 2;
+}
+
+message MsgPostProofResponse {
   bool success = 1;
   string errorMessage = 2;
 }

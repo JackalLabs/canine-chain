@@ -2,6 +2,10 @@ package keeper
 
 import (
 	"context"
+	"encoding/hex"
+	"strconv"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -126,4 +130,85 @@ func (k Keeper) ActiveDeals(c context.Context, req *types.QueryActiveDealRequest
 	}
 
 	return &types.QueryActiveDealResponse{ActiveDeals: lad}, nil
+}
+
+func (k Keeper) File(c context.Context, req *types.QueryFile) (*types.QueryFileResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	activeDeal, err := k.FindDealFromUF(ctx, req.Merkle, req.Owner, req.Start)
+	if err != nil {
+		return nil, err
+	}
+
+	p := k.GetParams(ctx)
+
+	expire, err := strconv.ParseInt(activeDeal.Endblock, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	size, err := strconv.ParseInt(activeDeal.Filesize, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	merkle, err := hex.DecodeString(activeDeal.Merkle)
+	if err != nil {
+		return nil, err
+	}
+
+	proof := types.ProofKey(activeDeal.Provider, merkle, activeDeal.Signee, req.Start)
+
+	proofs := make([]string, 1)
+	proofs[0] = string(proof)
+
+	lad := types.UnifiedFile{
+		Owner:         activeDeal.Signee,
+		Start:         req.Start,
+		Expires:       expire,
+		FileSize:      size,
+		ProofInterval: p.ProofWindow,
+		ProofType:     0,
+		Proofs:        proofs,
+		MaxProofs:     3,
+		Note:          "",
+	}
+
+	return &types.QueryFileResponse{File: lad}, nil
+}
+
+func (k Keeper) Proof(c context.Context, req *types.QueryProof) (*types.QueryProofResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	activeDeal, err := k.FindDealFromUF(ctx, req.Merkle, req.Owner, req.Start)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot find deal")
+	}
+
+	blockToProve, err := strconv.ParseInt(activeDeal.Blocktoprove, 10, 64)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot parse block to prove")
+	}
+
+	merkle, err := hex.DecodeString(activeDeal.Merkle)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot parse merkle")
+	}
+
+	proof := types.FileProof{
+		Prover:       activeDeal.Provider,
+		Merkle:       merkle,
+		Owner:        activeDeal.Signee,
+		Start:        req.Start,
+		LastProven:   activeDeal.LastProof,
+		ChunkToProve: blockToProve,
+	}
+
+	return &types.QueryProofResponse{Proof: proof}, nil
 }

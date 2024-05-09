@@ -35,6 +35,18 @@ service Query {
   }
 
   // Queries a ActiveDeals by index.
+  rpc File(QueryFile) returns (QueryFileResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/file/{merkle}/{owner}/{start}";
+  }
+
+  // Queries a ActiveDeals by index.
+  rpc Proof(QueryProof) returns (QueryProofResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/proof/{provider_address}/{merkle}/{owner}/{start}";
+  }
+
+  // Queries a ActiveDeals by index.
   rpc ActiveDeals(QueryActiveDealRequest) returns (QueryActiveDealResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/active_deals/{cid}";
@@ -52,6 +64,12 @@ service Query {
       returns (QueryAllInternalActiveDealsResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/internal_active_deals";
+  }
+
+  // Queries a Providers by index.
+  rpc Provider(QueryProvider) returns (QueryProviderResponseV4) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/provider/{address}";
   }
 
 
@@ -107,6 +125,12 @@ service Query {
   rpc FindFile(QueryFindFileRequest) returns (QueryFindFileResponse) {
     option (google.api.http).get =
         "/jackal-dao/canine-chain/storage/find_file/{fid}";
+  }
+
+  // Queries a list of FindFile items.
+  rpc FindSomeFile(QueryFindFile) returns (QueryFindSomeFileResponse) {
+    option (google.api.http).get =
+        "/jackal-dao/canine-chain/storage/find_some_file/{merkle}";
   }
 
   // Queries a Strays by index.
@@ -207,6 +231,27 @@ message QueryAllContractsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+message QueryFile {
+  bytes merkle = 1;
+  string owner = 2;
+  int64 start = 3;
+}
+
+message QueryFileResponse {
+  UnifiedFile file = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryProof {
+  string provider_address = 1;
+  bytes merkle = 2;
+  string owner = 3;
+  int64 start = 4;
+}
+
+message QueryProofResponse {
+  FileProof proof = 1 [ (gogoproto.nullable) = false ];
+}
+
 message QueryActiveDealRequest { string cid = 1; }
 
 message QueryActiveDealResponse {
@@ -232,10 +277,16 @@ message QueryAllInternalActiveDealsResponse {
 }
 
 message QueryProviderRequest { string address = 1; }
+message QueryProvider { string address = 1; }
 
 message QueryProviderResponse {
   Providers providers = 1 [ (gogoproto.nullable) = false ];
 }
+
+message QueryProviderResponseV4 {
+  Providers provider = 1 [ (gogoproto.nullable) = false ];
+}
+
 
 message QueryAllProvidersRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
@@ -288,8 +339,10 @@ message QueryStoreCountResponse { string count = 1; }
 
 
 message QueryFindFileRequest { string fid = 1; }
+message QueryFindFile { bytes merkle = 1; }
 
 message QueryFindFileResponse { string provider_ips = 1; }
+message QueryFindSomeFileResponse { repeated string provider_ips = 1; }
 
 
 message QueryStrayRequest { string cid = 1; }

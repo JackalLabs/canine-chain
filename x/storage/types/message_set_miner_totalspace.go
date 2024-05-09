@@ -20,6 +20,13 @@ func NewMsgSetProviderTotalspace(creator string, space string) *MsgSetProviderTo
 	}
 }
 
+func NewMsgSetProviderTotalSpace(creator string, space int64) *MsgSetProviderTotalspace {
+	return &MsgSetProviderTotalspace{
+		Creator: creator,
+		Space:   strconv.FormatInt(space, 10),
+	}
+}
+
 func (msg *MsgSetProviderTotalspace) Route() string {
 	return RouterKey
 }

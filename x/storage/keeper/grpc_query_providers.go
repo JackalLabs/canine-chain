@@ -38,6 +38,23 @@ func (k Keeper) ProvidersAll(c context.Context, req *types.QueryAllProvidersRequ
 	return &types.QueryAllProvidersResponse{Providers: providerss, Pagination: pageRes}, nil
 }
 
+func (k Keeper) Provider(c context.Context, req *types.QueryProvider) (*types.QueryProviderResponseV4, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	val, found := k.GetProviders(
+		ctx,
+		req.Address,
+	)
+	if !found {
+		return nil, status.Error(codes.NotFound, "not found")
+	}
+
+	return &types.QueryProviderResponseV4{Provider: val}, nil
+}
+
 func (k Keeper) Providers(c context.Context, req *types.QueryProviderRequest) (*types.QueryProviderResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -53,6 +54,20 @@ func (k Keeper) ListFiles(ctx sdk.Context, fid string) []string {
 	return providers
 }
 
+func (k Keeper) ListFilesByMerkle(ctx sdk.Context, merkle []byte) []string {
+	providers := make([]string, 0)
+	m := hex.EncodeToString(merkle)
+
+	k.IterateActiveDeals(ctx, func(deal types.ActiveDeals) bool {
+		if deal.Merkle == m {
+			providers = append(providers, deal.Provider)
+		}
+		return false
+	})
+
+	return providers
+}
+
 func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest) (*types.QueryFindFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
@@ -68,4 +83,16 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFileRequest)
 	}
 
 	return &types.QueryFindFileResponse{ProviderIps: string(ProviderIps)}, nil
+}
+
+func (k Keeper) FindSomeFile(goCtx context.Context, req *types.QueryFindFile) (*types.QueryFindSomeFileResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	ls := k.ListFilesByMerkle(ctx, req.Merkle)
+
+	return &types.QueryFindSomeFileResponse{ProviderIps: ls}, nil
 }

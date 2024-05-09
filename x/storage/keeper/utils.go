@@ -1,7 +1,11 @@
 package keeper
 
 import (
+	"encoding/hex"
 	"encoding/json"
+	"strconv"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
@@ -143,4 +147,36 @@ func (k Keeper) GetJklPrice(ctx sdk.Context) (price sdk.Dec) {
 	}
 
 	return price
+}
+
+func (k Keeper) FindDealFromUF(ctx sdk.Context, merkle []byte, owner string, start int64) (types.ActiveDeals, error) {
+	var contract types.ActiveDeals
+	k.IterateActiveDeals(ctx, func(deal types.ActiveDeals) bool {
+		if deal.Merkle != hex.EncodeToString(merkle) {
+			return false
+		}
+
+		if deal.Signee != owner {
+			return false
+		}
+
+		s, err := strconv.ParseInt(deal.Startblock, 10, 64)
+		if err != nil {
+			return false
+		}
+
+		if s != start {
+			return false
+		}
+
+		contract = deal
+
+		return true
+	})
+
+	if contract.Merkle == "" {
+		return contract, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "cannot find deal using merkle, owner, start")
+	}
+
+	return contract, nil
 }
