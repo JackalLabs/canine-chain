@@ -12,8 +12,8 @@ import (
 	"strings"
 
 	sdksim "github.com/cosmos/cosmos-sdk/types/simulation"
-	merkle "github.com/wealdtech/go-merkletree"
-	"github.com/wealdtech/go-merkletree/sha3"
+	merkle "github.com/wealdtech/go-merkletree/v2"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 const (

@@ -7,13 +7,14 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/wealdtech/go-merkletree/v2"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v3/testutil"
 	k "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
 
-	"github.com/wealdtech/go-merkletree"
-	"github.com/wealdtech/go-merkletree/sha3"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 type TestFile struct {
@@ -37,8 +38,7 @@ var randomFile = TestFile{
 }
 
 const (
-	CID  = "jklc1dmcul9svpv0z2uzfv30lz0kcjrpdfmmfccskt06wpy8vfqrhp4nsgvgz32"
-	CID2 = "jklc15ftkghzrx2ywyrpr6n7ge6prcej43efe3jvtzsxhenann69rcu8q7jl5uh"
+	CID = "jklc1dmcul9svpv0z2uzfv30lz0kcjrpdfmmfccskt06wpy8vfqrhp4nsgvgz32"
 )
 
 func CreateMerkleForProof(file TestFile) (string, string, error) {
