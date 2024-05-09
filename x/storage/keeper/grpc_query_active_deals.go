@@ -212,3 +212,47 @@ func (k Keeper) Proof(c context.Context, req *types.QueryProof) (*types.QueryPro
 
 	return &types.QueryProofResponse{Proof: proof}, nil
 }
+
+func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.QueryAllFilesResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var files []types.UnifiedFile
+	ctx := sdk.UnwrapSDKContext(c)
+
+	strays := k.GetAllStrays(ctx)
+	for _, stray := range strays {
+
+		m, err := hex.DecodeString(stray.Merkle)
+		if err != nil {
+			continue
+		}
+
+		fileSize, err := strconv.ParseInt(stray.Filesize, 10, 64)
+		if err != nil {
+			continue
+		}
+
+		uf := types.UnifiedFile{
+			Merkle:        m,
+			Owner:         stray.Signee,
+			Start:         ctx.BlockHeight(),
+			Expires:       stray.End,
+			FileSize:      fileSize,
+			ProofInterval: 3600,
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          "",
+		}
+		files = append(files, uf)
+	}
+
+	qpr := query.PageResponse{
+		NextKey: nil,
+		Total:   uint64(len(files)),
+	}
+
+	return &types.QueryAllFilesResponse{Files: files, Pagination: &qpr}, nil
+}

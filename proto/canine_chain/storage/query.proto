@@ -59,6 +59,12 @@ service Query {
         "/jackal-dao/canine-chain/storage/active_deals";
   }
 
+  rpc OpenFiles(QueryOpenFiles)
+      returns (QueryAllFilesResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/open_files/{provider_address}";
+  }
+
   // Queries a list of ActiveDeals items.
   rpc InternalActiveDealsAll(QueryAllInternalActiveDealsRequest)
       returns (QueryAllInternalActiveDealsResponse) {
@@ -439,4 +445,17 @@ message QueryStorageStatsResponse {
   int64 uniqueUsers = 5;
   int64 permUsed = 6;
 }
+
+message QueryOpenFiles {
+  string provider_address= 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllFilesResponse {
+  repeated UnifiedFile files = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+
 // this line is used by starport scaffolding # 3
