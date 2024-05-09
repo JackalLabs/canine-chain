@@ -101,7 +101,7 @@ message MsgInitProvider {
   string creator = 1;
   string ip = 2;
   string keybase = 3;
-  int64 total_space = 4;
+  string total_space = 4;
 }
 
 message MsgInitProviderResponse {}

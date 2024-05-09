@@ -84,7 +84,7 @@ func (suite *KeeperTestSuite) TestFindFile() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(mres.Files))
 
-	ffres, err := suite.queryClient.FindFile(context.Background(), &types.QueryFindFile{Merkle: merkle})
+	ffres, err := suite.queryClient.FindSomeFile(context.Background(), &types.QueryFindFile{Merkle: merkle})
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(1, len(ffres.ProviderIps))

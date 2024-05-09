@@ -12,7 +12,7 @@ import "canine_chain/storage/payment_info.proto";
 option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 
 service Query {
-  rpc Params(QueryParams) returns (QueryParamsResponse) {
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/jackal/canine-chain/storage/params";
   }
 
@@ -120,7 +120,7 @@ service Query {
   }
 
   // Queries where a file is located by merkle.
-  rpc FindFile(QueryFindFile) returns (QueryFindFileResponse) {
+  rpc FindSomeFile(QueryFindFile) returns (QueryFindSomeFileResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/find_file/{merkle}";
   }
@@ -176,7 +176,7 @@ service Query {
   }
 }
 
-message QueryParams {}
+message QueryParamsRequest {}
 
 message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
@@ -331,7 +331,7 @@ message QueryFindFile {
   bytes merkle = 1;
 }
 
-message QueryFindFileResponse {
+message QueryFindSomeFileResponse {
   repeated string provider_ips = 1;
 }
 

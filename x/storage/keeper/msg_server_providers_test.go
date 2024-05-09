@@ -34,7 +34,7 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 				return types.NewMsgInitProvider(
 					user,
 					"127.0.0.1",
-					1000000000,
+					"1000000000",
 					"test-key",
 				)
 			},

@@ -36,7 +36,7 @@ func (k Keeper) ListFileLocations(ctx sdk.Context, merkle []byte) []string {
 	return providers
 }
 
-func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*types.QueryFindFileResponse, error) {
+func (k Keeper) FindSomeFile(goCtx context.Context, req *types.QueryFindFile) (*types.QueryFindSomeFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -78,5 +78,5 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 		}
 	}
 
-	return &types.QueryFindFileResponse{ProviderIps: ips}, nil
+	return &types.QueryFindSomeFileResponse{ProviderIps: ips}, nil
 }

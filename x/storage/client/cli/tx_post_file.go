@@ -200,7 +200,7 @@ func postFile(fileData []byte, cmd *cobra.Command) {
 	}
 	cl := types.NewQueryClient(clientCtx)
 
-	params, err := cl.Params(context.Background(), &types.QueryParams{})
+	params, err := cl.Params(context.Background(), &types.QueryParamsRequest{})
 	if err != nil {
 		panic(err)
 	}

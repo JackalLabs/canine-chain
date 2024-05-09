@@ -13,7 +13,7 @@ const TypeMsgInitProvider = "init_provider"
 
 var _ sdk.Msg = &MsgInitProvider{}
 
-func NewMsgInitProvider(creator string, ip string, totalspace int64, keybase string) *MsgInitProvider {
+func NewMsgInitProvider(creator string, ip string, totalspace string, keybase string) *MsgInitProvider {
 	return &MsgInitProvider{
 		Creator:    creator,
 		Ip:         ip,

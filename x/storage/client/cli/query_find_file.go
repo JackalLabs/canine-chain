@@ -36,7 +36,7 @@ func CmdFindFile() *cobra.Command {
 				Merkle: merkle,
 			}
 
-			res, err := queryClient.FindFile(cmd.Context(), params)
+			res, err := queryClient.FindSomeFile(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
