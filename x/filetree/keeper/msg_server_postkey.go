@@ -22,5 +22,12 @@ func (k msgServer) PostKey(goCtx context.Context, msg *types.MsgPostKey) (*types
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypePostKey,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgPostKeyResponse{}, nil
 }
