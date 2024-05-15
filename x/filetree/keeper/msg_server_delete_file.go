@@ -36,5 +36,12 @@ func (k msgServer) DeleteFile(goCtx context.Context, msg *types.MsgDeleteFile) (
 			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
 		),
 	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 	return &types.MsgDeleteFileResponse{}, nil
 }

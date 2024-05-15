@@ -60,5 +60,12 @@ func (k msgServer) ResetViewers(goCtx context.Context, msg *types.MsgResetViewer
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgResetViewersResponse{}, nil
 }

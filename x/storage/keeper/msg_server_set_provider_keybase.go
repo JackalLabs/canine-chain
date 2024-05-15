@@ -27,5 +27,12 @@ func (k msgServer) SetProviderKeybase(goCtx context.Context, msg *types.MsgSetPr
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgSetProviderKeybaseResponse{}, nil
 }

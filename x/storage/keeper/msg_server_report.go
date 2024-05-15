@@ -3,6 +3,8 @@ package keeper
 import (
 	"context"
 
+	types2 "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
@@ -64,6 +66,13 @@ func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.M
 		sdk.NewEvent(
 			sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types2.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
 		),
 	)
 
@@ -144,6 +153,13 @@ func (k msgServer) RequestReportForm(goCtx context.Context, msg *types.MsgReques
 		sdk.NewEvent(
 			sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
 		),
 	)
 
