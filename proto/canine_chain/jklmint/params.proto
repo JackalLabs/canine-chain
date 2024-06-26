@@ -11,13 +11,11 @@ message Params {
   string mint_denom = 1 [ (gogoproto.moretags) = "yaml:\"mint_denom\"" ];
 
   int64 dev_grants_ratio = 2 [ (gogoproto.moretags) = "yaml:\"dev_grants_ratio\"" ]; // default 8
-  int64 referral_commission = 3 [ (gogoproto.moretags) = "yaml:\"referral_commission\"" ]; // default 25
-  int64 storage_provider_ratio = 4 [ (gogoproto.moretags) = "yaml:\"storage_provider_ratio\"" ]; // default 12
-  int64 staker_ratio = 5 [ (gogoproto.moretags) = "yaml:\"staker_ratio\"" ]; // default 80 - this includes the community pool allocation
-  int64 tokens_per_block = 6 [ (gogoproto.moretags) = "yaml:\"tokens_per_block\"" ]; // default 4200000
-  int64 pol_ratio = 7 [ (gogoproto.moretags) = "yaml:\"pol_ratio\"" ]; // default 40
+  int64 staker_ratio = 3 [ (gogoproto.moretags) = "yaml:\"staker_ratio\"" ]; // default 80 - this includes the community pool allocation
+  int64 tokens_per_block = 4 [ (gogoproto.moretags) = "yaml:\"tokens_per_block\"" ]; // default 4200000
 
-  int64 mint_decrease = 8 [ (gogoproto.moretags) = "yaml:\"mint_decrease\"" ]; // default 6
-  string storage_stipend_address = 9 [ (gogoproto.moretags) = "yaml:\"storage_stipend_address\"" ]; // multi-sig
+  int64 mint_decrease = 5 [ (gogoproto.moretags) = "yaml:\"mint_decrease\"" ]; // default 6
+  string storage_stipend_address = 6 [ (gogoproto.moretags) = "yaml:\"storage_stipend_address\"" ]; // multi-sig
+  int64 storage_provider_ratio = 7 [ (gogoproto.moretags) = "yaml:\"storage_provider_ratio\"" ]; // default 12
 
 }

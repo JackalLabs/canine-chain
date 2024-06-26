@@ -29,7 +29,7 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 		return nil, err
 	}
 
-	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, account, types.CollateralCollectorName, coins)
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, account, types.CollateralCollectorName, coins) // TODO: change naming convention
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "%s does not have %s", account, coin.String())
 	}

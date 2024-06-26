@@ -43,6 +43,7 @@ func validateBuy(days int64, bytesIn int64, denomIn string) (duration time.Durat
 
 func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (*types.MsgBuyStorageResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	params := k.GetParams(ctx)
 
 	forAddress, err := k.rnsKeeper.Resolve(ctx, msg.ForAddress) // converting for address into an actual bech32 using RNS
 	if err != nil {
@@ -97,8 +98,8 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		}
 	}
 
-	pol := sdk.MustNewDecFromStr("0.4")
-
+	pol := sdk.NewDec(params.PolRatio).QuoInt64(100)
+	fmt.Printf("POL: %d / %f\n", params.PolRatio, pol.MustFloat64())
 	if referred {
 
 		p := toPay.Amount.ToDec()
@@ -139,7 +140,13 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, sdkerrors.Wrapf(err, "cannot get token holder account")
 	}
 
-	storageProviderCut := toPay.Amount.ToDec().Mul(sdk.MustNewDecFromStr("0.35")) // always 35% to sps
+	refDec := sdk.NewDec(params.ReferralCommission).QuoInt64(100)
+	fmt.Printf("refcom: %d", params.ReferralCommission)
+	spr := sdk.NewDec(1).Sub(refDec).Sub(pol) // whatever is left from pol and referrals
+
+	fmt.Printf("storageprovider ratio: %d\n", spr.TruncateInt().Int64())
+
+	storageProviderCut := toPay.Amount.ToDec().Mul(spr)
 	spcToken := sdk.NewCoin(toPay.Denom, storageProviderCut.TruncateInt())
 	spcTokens := sdk.NewCoins(spcToken)
 
@@ -162,7 +169,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, sdkerrors.Wrapf(err, "cannot send tokens to pol account")
 	}
 
-	refCut := toPay.Amount.ToDec().Mul(sdk.MustNewDecFromStr("0.25")) // 25% to referrals
+	refCut := toPay.Amount.ToDec().Mul(refDec) // 25% to referrals //TODO: change to param
 	refToken := sdk.NewCoin(toPay.Denom, refCut.TruncateInt())
 	refTokens := sdk.NewCoins(refToken)
 

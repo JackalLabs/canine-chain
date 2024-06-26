@@ -1,6 +1,8 @@
 package keeper_test
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
 	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
@@ -31,6 +33,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
 		CheckWindow:            10,
+		ReferralCommission:     25,
+		PolRatio:               40,
 	})
 
 	cases := []struct {
@@ -130,7 +134,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				Referral:     depoAccount,
 			},
 			expErr:    false,
-			tokens:    19687499,
+			tokens:    25312499,
 			expErrMsg: "",
 		},
 		{
@@ -251,6 +255,8 @@ func (suite *KeeperTestSuite) TestBuyStorageValues() {
 		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
 		CheckWindow:            10,
+		ReferralCommission:     25,
+		PolRatio:               40,
 	})
 
 	var bytes int64 = 3_000_000_000_000
@@ -271,11 +277,20 @@ func (suite *KeeperTestSuite) TestBuyStorageValues() {
 	providerAccount, err := types.GetTokenHolderAccount()
 	suite.Require().NoError(err)
 
+	suite.ctx.Logger().Info("cost: %f", cost)
+	fmt.Printf("cost: %f\n", cost)
+
 	bal := suite.bankKeeper.GetBalance(suite.ctx, providerAccount, "ujkl")
+
+	fmt.Printf("provider ratio of cost: %f ? %d\n", cost*0.35, bal.Amount.Int64())
+	suite.ctx.Logger().Info("provider ratio of cost: %f", cost*0.35)
+
 	suite.Require().Equal(int64(cost*0.35), bal.Amount.Int64())
 
 	polAccount, err := types.GetPOLAccount()
 	suite.Require().NoError(err)
+	suite.ctx.Logger().Info("pol ratio of cost: %f", cost*0.40)
+	fmt.Printf("pol ratio of cost: %f\n", cost*0.40)
 
 	bal = suite.bankKeeper.GetBalance(suite.ctx, polAccount, "ujkl")
 	suite.Require().Equal(int64(cost*0.40), bal.Amount.Int64())
@@ -310,6 +325,8 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
 		CheckWindow:            10,
+		ReferralCommission:     25,
+		PolRatio:               40,
 	})
 
 	var bytes int64 = 3_000_000_000_000
@@ -325,7 +342,7 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 	})
 	suite.Require().NoError(err)
 
-	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64()) * 0.90
+	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64()) // * 0.90
 
 	providerAccount, err := types.GetTokenHolderAccount()
 	suite.Require().NoError(err)

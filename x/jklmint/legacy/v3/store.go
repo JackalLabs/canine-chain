@@ -24,8 +24,6 @@ func MigrateStore(ctx sdk.Context, legacy exported.Subspace, paramsSubspace *par
 		StakerRatio:           80,
 		TokensPerBlock:        currParams.TokensPerBlock, // TODO: Double check this
 		MintDecrease:          6,                         // TODO: Double check this
-		ReferralCommission:    25,
-		PolRatio:              40,
 		StorageStipendAddress: types.DefaultStorageStipend,
 	}
 
