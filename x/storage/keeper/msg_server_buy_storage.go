@@ -169,7 +169,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, sdkerrors.Wrapf(err, "cannot send tokens to pol account")
 	}
 
-	refCut := toPay.Amount.ToDec().Mul(refDec) // 25% to referrals //TODO: change to param
+	refCut := toPay.Amount.ToDec().Mul(refDec) // 25% to referrals
 	refToken := sdk.NewCoin(toPay.Denom, refCut.TruncateInt())
 	refTokens := sdk.NewCoins(refToken)
 
