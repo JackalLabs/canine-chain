@@ -5,8 +5,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {

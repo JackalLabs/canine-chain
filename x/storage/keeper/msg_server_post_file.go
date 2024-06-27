@@ -4,15 +4,17 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	params := k.GetParams(ctx)
 
 	if !json.Valid([]byte(msg.Note)) {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrJSONUnmarshal, "note is not valid json `%s`", msg.Note)
@@ -46,20 +48,49 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 			kbs = kbMin
 		}
 
-		var minBlocks int64 = 600
 		blockDuration := msg.Expires - ctx.BlockHeight()
-		if blockDuration < minBlocks {
-			return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot post a file for less than %d blocks", minBlocks)
-		}
-
 		seconds := blockDuration * 6
 		minutes := seconds / 60
 		hours := minutes / 60
+		days := hours / 24
+		if days <= 0 {
+			return nil, fmt.Errorf("cannot pay for less than a day")
+		}
 
 		cost := k.GetStorageCostKbs(ctx, kbs, hours)
 
-		// TODO: charge user for cost using USDC
-		_ = cost
+		toPay := sdk.NewCoin("ujkl", cost)
+
+		refDec := sdk.NewDec(params.ReferralCommission).QuoInt64(100)
+		pol := sdk.NewDec(params.PolRatio).QuoInt64(100)
+
+		spr := sdk.NewDec(1).Sub(refDec).Sub(pol) // whatever is left from pol and referrals
+
+		storageProviderCut := toPay.Amount.ToDec().Mul(spr)
+		spcToken := sdk.NewCoin(toPay.Denom, storageProviderCut.TruncateInt())
+		spcTokens := sdk.NewCoins(spcToken)
+
+		end := ctx.BlockTime().AddDate(0, 0, int(days))
+		k.NewGauge(ctx, spcTokens, end) // creating new payment gauge
+		addr, err := sdk.AccAddressFromBech32(msg.Creator)
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot get address from message creator")
+		}
+
+		acc, err := types.GetTokenHolderAccount()
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot get token holder account")
+		}
+
+		err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(toPay)) // taking money from user
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot send tokens from %s", msg.Creator)
+		}
+
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, acc, spcTokens)
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+		}
 
 		return res, nil
 	}

@@ -19,4 +19,8 @@ message Params {
   int64 attestMinToPass = 9; // TODO: fix casing
   int64 collateralPrice = 10; // TODO: fix casing
   int64 check_window = 11;
+
+  int64 pol_ratio = 12 [ (gogoproto.moretags) = "yaml:\"pol_ratio\"" ]; // default 40
+  int64 referral_commission = 13 [ (gogoproto.moretags) = "yaml:\"referral_commission\"" ]; // default 25
+
 }

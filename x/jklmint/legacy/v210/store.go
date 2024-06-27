@@ -3,7 +3,7 @@ package v210
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	v3 "github.com/jackalLabs/canine-chain/v3/x/jklmint/legacy/v3"
+	v3 "github.com/jackalLabs/canine-chain/v4/x/jklmint/legacy/v3"
 )
 
 // MigrateStore performs in-place store migrations from v1 to v2

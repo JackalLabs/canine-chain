@@ -2,8 +2,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // testing msg server files for: init_provider, set_provider_ip, set_provider_totalspace

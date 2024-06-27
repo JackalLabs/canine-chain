@@ -3,8 +3,8 @@ package v5
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/exported"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/exported"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func MigrateStore(ctx sdk.Context, legacySubspace exported.Subspace, paramsSubspace *paramstypes.Subspace) error {
@@ -20,11 +20,13 @@ func MigrateStore(ctx sdk.Context, legacySubspace exported.Subspace, paramsSubsp
 		MissesToBurn:           currParams.MissesToBurn,
 		PriceFeed:              currParams.PriceFeed,
 		MaxContractAgeInBlocks: currParams.MaxContractAgeInBlocks,
-		PricePerTbPerMonth:     currParams.PricePerTbPerMonth,
+		PricePerTbPerMonth:     15,
 		AttestFormSize:         5,
 		AttestMinToPass:        3,
 		CollateralPrice:        10_000_000_000,
 		CheckWindow:            100,
+		ReferralCommission:     25,
+		PolRatio:               40,
 	}
 
 	if err := params.Validate(); err != nil {

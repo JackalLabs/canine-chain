@@ -8,8 +8,8 @@ import (
 	"io"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 
 	"github.com/wealdtech/go-merkletree/v2"
 	"github.com/wealdtech/go-merkletree/v2/sha3"

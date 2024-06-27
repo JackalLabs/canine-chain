@@ -13,25 +13,21 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 
 var (
 	KeyMintDenom      = []byte("MintDenom")
-	KeyProviderRatio  = []byte("ProviderRatio")
 	KeyTokensPerBlock = []byte("TokensPerBlock")
 	KeyDevGrants      = []byte("DevGrants")
 	KeyStakerRatio    = []byte("StakerRatio")
-	KeyReferrals      = []byte("Referrals")
-	KeyPOLRatio       = []byte("POLRatio")
 	KeyMintIncrease   = []byte("MintIncrease")
 	KeyStorageStipend = []byte("StorageStipend")
+	KeyProviderRatio  = []byte("ProviderRatio")
 
 	// TODO: Determine the default value
 	DefaultMintDenom      = "ujkl"
-	DefaultProviderRatio  = int64(12)
 	DefaultTokensPerBlock = int64(4_200_000)
 	DefaultDevGrants      = int64(8)
 	DefaultStakerRatio    = int64(80)
-	DefaultReferrals      = int64(25)
-	DefaultPOLRatio       = int64(40)
 	DefaultMintDecrease   = int64(6)
 	DefaultStorageStipend = "jkl18dtaqkj3cdazn4rpgqdc3acz98cp5yz30erp95"
+	DefaultProviderRatio  = int64(12)
 )
 
 // ParamKeyTable the param key table for launch module
@@ -44,23 +40,19 @@ func NewParams(
 	mintDenom string,
 	devGrants int64,
 	tokensPerBlock int64,
-	referralComms int64,
-	providerRatio int64,
 	stakerRatio int64,
-	polRatio int64,
 	mintDecrease int64,
 	storageStipendAddress string,
+	storageProviderRatio int64,
 ) Params {
 	return Params{
 		MintDenom:             mintDenom,
 		DevGrantsRatio:        devGrants,
-		ReferralCommission:    referralComms,
-		StorageProviderRatio:  providerRatio,
 		StakerRatio:           stakerRatio,
 		TokensPerBlock:        tokensPerBlock,
-		PolRatio:              polRatio,
 		MintDecrease:          mintDecrease,
 		StorageStipendAddress: storageStipendAddress,
+		StorageProviderRatio:  storageProviderRatio,
 	}
 }
 
@@ -70,12 +62,10 @@ func DefaultParams() Params {
 		DefaultMintDenom,
 		DefaultDevGrants,
 		DefaultTokensPerBlock,
-		DefaultReferrals,
-		DefaultProviderRatio,
 		DefaultStakerRatio,
-		DefaultPOLRatio,
 		DefaultMintDecrease,
 		DefaultStorageStipend,
+		DefaultProviderRatio,
 	)
 }
 
@@ -83,20 +73,23 @@ func DefaultParams() Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
-		paramtypes.NewParamSetPair(KeyProviderRatio, &p.StorageProviderRatio, validateInt64),
 		paramtypes.NewParamSetPair(KeyTokensPerBlock, &p.TokensPerBlock, validateInt64),
 		paramtypes.NewParamSetPair(KeyDevGrants, &p.DevGrantsRatio, validateInt64),
 		paramtypes.NewParamSetPair(KeyMintIncrease, &p.MintDecrease, validateInt64),
-		paramtypes.NewParamSetPair(KeyPOLRatio, &p.PolRatio, validateInt64),
-		paramtypes.NewParamSetPair(KeyReferrals, &p.ReferralCommission, validateInt64),
 		paramtypes.NewParamSetPair(KeyStakerRatio, &p.StakerRatio, validateInt64),
 		paramtypes.NewParamSetPair(KeyStorageStipend, &p.StorageStipendAddress, validateStipend),
+		paramtypes.NewParamSetPair(KeyProviderRatio, &p.StorageProviderRatio, validateInt64),
 	}
 }
 
 // Validate validates the set of params
 func (p *Params) Validate() error {
-	err := validateMintDenom(p.MintDenom)
+	err := validateInt64(p.StorageProviderRatio)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "storage p ratio is %d", p.StorageProviderRatio)
+	}
+
+	err = validateMintDenom(p.MintDenom)
 	if err != nil {
 		return err
 	}
@@ -111,11 +104,6 @@ func (p *Params) Validate() error {
 		return sdkerrors.Wrapf(err, "tokens per block is %d", p.TokensPerBlock)
 	}
 
-	err = validateInt64(p.StorageProviderRatio)
-	if err != nil {
-		return sdkerrors.Wrapf(err, "storage p ratio is %d", p.StorageProviderRatio)
-	}
-
 	err = validateInt64(p.DevGrantsRatio)
 	if err != nil {
 		return sdkerrors.Wrapf(err, "dev grants ratio is %d", p.DevGrantsRatio)
@@ -124,16 +112,6 @@ func (p *Params) Validate() error {
 	err = validateInt64(p.MintDecrease)
 	if err != nil {
 		return sdkerrors.Wrapf(err, "mint decrease is %d", p.MintDecrease)
-	}
-
-	err = validateInt64(p.PolRatio)
-	if err != nil {
-		return sdkerrors.Wrapf(err, "pol ratio is %d", p.PolRatio)
-	}
-
-	err = validateInt64(p.ReferralCommission)
-	if err != nil {
-		return sdkerrors.Wrapf(err, "referral commission is %d", p.ReferralCommission)
 	}
 
 	err = validateInt64(p.StakerRatio)

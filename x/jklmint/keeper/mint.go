@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/utils"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/utils"
 )
 
 func (k Keeper) send(ctx sdk.Context, denom string, amount int64, receiver string) error {
@@ -92,14 +92,14 @@ func (k Keeper) mintStorageProviderStipend(ctx sdk.Context, mintTokens int64, de
 }
 
 func (k Keeper) BlockMint(ctx sdk.Context) {
-	var mintedNum int64 = 4_200_00
+	params := k.GetParams(ctx)
+
+	mintedNum := params.TokensPerBlock
 	minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
 	if found {
 		mintedNum = minted.Minted
 	}
 	var bpy int64 = (365 * 24 * 60 * 60) / 6
-
-	params := k.GetParams(ctx)
 
 	newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
 

@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	storagesimulation "github.com/jackalLabs/canine-chain/v3/x/storage/simulation"
+	storagesimulation "github.com/jackalLabs/canine-chain/v4/x/storage/simulation"
 )
 
 // avoid unused import issue

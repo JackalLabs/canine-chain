@@ -18,12 +18,12 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/input"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/utils"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/utils"
 	"github.com/spf13/pflag"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/spf13/cobra"
 )
 

@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
-	oracletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	oracletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 )
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)

@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func (k Keeper) MakeRootFolder(ctx sdk.Context, creator string, viewers string, editors string, trackingNumber string) {

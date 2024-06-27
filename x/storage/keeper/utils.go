@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // func MakeFid(data []byte) (string, error) {
@@ -97,19 +97,19 @@ func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int 
 
 	if hours < 365*24 { // calculating monthly
 		switch {
-		case gbs > 5_000:
-			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.NewDec(14).QuoInt64(15)) // we only really care about the ratio in case the price changes
-		case gbs > 20_000:
+		case gbs >= 20_000:
 			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.MustNewDecFromStr("12.5").QuoInt64(15)) // we only really care about the ratio in case the price changes
+		case gbs >= 5_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.NewDec(14).QuoInt64(15)) // we only really care about the ratio in case the price changes
 		default:
 			finalPricePerTbPerMonth = basePricePerTBPerMonth
 		}
 	} else { // calculating yearly
 		switch {
-		case gbs > 5_000:
-			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly.Mul(sdk.MustNewDecFromStr("11.67").Quo(sdk.MustNewDecFromStr("12.5"))) // we only really care about the ratio in case the price changes
-		case gbs > 20_000:
+		case gbs >= 20_000:
 			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly.Mul(sdk.MustNewDecFromStr("10.42").Quo(sdk.MustNewDecFromStr("12.5"))) // we only really care about the ratio in case the price changes
+		case gbs >= 5_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly.Mul(sdk.MustNewDecFromStr("11.67").Quo(sdk.MustNewDecFromStr("12.5"))) // we only really care about the ratio in case the price changes
 		default:
 			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly
 		}

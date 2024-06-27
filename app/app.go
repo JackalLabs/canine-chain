@@ -108,31 +108,31 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmappparams "github.com/jackalLabs/canine-chain/v3/app/params"
+	wasmappparams "github.com/jackalLabs/canine-chain/v4/app/params"
 
-	mint "github.com/jackalLabs/canine-chain/v3/x/jklmint"
-	mintkeeper "github.com/jackalLabs/canine-chain/v3/x/jklmint/keeper"
-	minttypes "github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	mint "github.com/jackalLabs/canine-chain/v4/x/jklmint"
+	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
+	minttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 
-	rnsmodule "github.com/jackalLabs/canine-chain/v3/x/rns"
-	rnsmodulekeeper "github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	rnsmodule "github.com/jackalLabs/canine-chain/v4/x/rns"
+	rnsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
 
-	oraclemodule "github.com/jackalLabs/canine-chain/v3/x/oracle"
-	oraclemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	oraclemodule "github.com/jackalLabs/canine-chain/v4/x/oracle"
+	oraclemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 
-	storagemodule "github.com/jackalLabs/canine-chain/v3/x/storage"
-	storagemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	storagemodule "github.com/jackalLabs/canine-chain/v4/x/storage"
+	storagemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 
-	filetreemodule "github.com/jackalLabs/canine-chain/v3/x/filetree"
-	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	filetreemodule "github.com/jackalLabs/canine-chain/v4/x/filetree"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 
-	notificationsmodule "github.com/jackalLabs/canine-chain/v3/x/notifications"
-	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v3/x/notifications/keeper"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+	notificationsmodule "github.com/jackalLabs/canine-chain/v4/x/notifications"
+	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 
 	/*
 
@@ -145,7 +145,7 @@ import (
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 
-	"github.com/jackalLabs/canine-chain/v3/docs"
+	"github.com/jackalLabs/canine-chain/v4/docs"
 )
 
 const appName = "JackalApp"

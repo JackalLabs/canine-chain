@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"strconv"
 
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
-	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
