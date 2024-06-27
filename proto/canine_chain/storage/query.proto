@@ -22,6 +22,12 @@ service Query {
         "/jackal/canine-chain/storage/files/{merkle}/{owner}/{start}";
   }
 
+  // Queries a File by merkle, owner, and start.
+  rpc FilesFromNote(QueryFilesFromNote) returns (QueryFilesFromNoteResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/files/note/{key}/{value}";
+  }
+
   // Queries a list of open files by provider_address.
   rpc OpenFiles(QueryOpenFiles)
       returns (QueryAllFilesResponse) {
@@ -220,6 +226,17 @@ message QueryFile {
 
 message QueryFileResponse {
   UnifiedFile file = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryFilesFromNote {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string key = 2;
+  string value = 3;
+}
+
+message QueryFilesFromNoteResponse {
+  repeated UnifiedFile files = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryOpenFiles {

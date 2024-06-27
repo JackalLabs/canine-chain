@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -35,6 +36,47 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 	}
 
 	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
+}
+
+func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) (*types.QueryFilesFromNoteResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var files []types.UnifiedFile
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+
+	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(value, &file); err != nil {
+			return err
+		}
+
+		var kv map[string]string
+		err := json.Unmarshal([]byte(file.Note), &kv)
+		if err != nil {
+			return nil
+		}
+
+		r, exists := kv[req.Key]
+		if !exists {
+			return nil
+		}
+
+		if r != req.Value {
+			return nil
+		}
+
+		files = append(files, file)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryFilesFromNoteResponse{Files: files, Pagination: pageRes}, nil
 }
 
 func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMerkle) (*types.QueryAllFilesByMerkleResponse, error) {
