@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func (k msgServer) SetProviderTotalSpace(goCtx context.Context, msg *types.MsgSetProviderTotalSpace) (*types.MsgSetProviderTotalSpaceResponse, error) {

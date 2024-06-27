@@ -2,9 +2,9 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	jklminttypes "github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	jklminttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestDecimals() {

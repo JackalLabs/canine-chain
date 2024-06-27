@@ -8,10 +8,10 @@ import (
 
 	"github.com/cosmos/btcutil/bech32"
 
-	types2 "github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	types2 "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 
-	v4 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v4"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	v4 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v4"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func (suite *UpgradeTestKeeper) TestUpgrade() {

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func (k Keeper) AddBid(ctx sdk.Context, sender string, name string, bid string) error {

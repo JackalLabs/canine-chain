@@ -2,17 +2,17 @@ package app
 
 import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/bouncybulldog"
-	v121 "github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/121"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/alpha11"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/alpha13"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/beta6"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/testnet/beta7"
-	v3 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v3"
-	v4 "github.com/jackalLabs/canine-chain/v3/app/upgrades/v4"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/v4alpha1"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades/v4alpha3"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/bouncybulldog"
+	v121 "github.com/jackalLabs/canine-chain/v4/app/upgrades/testnet/121"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/testnet/alpha11"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/testnet/alpha13"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/testnet/beta6"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/testnet/beta7"
+	v3 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v3"
+	v4 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v4"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v4alpha1"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v4alpha3"
 )
 
 func (app *JackalApp) registerTestnetUpgradeHandlers() {

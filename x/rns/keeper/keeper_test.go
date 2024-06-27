@@ -11,11 +11,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	rns "github.com/jackalLabs/canine-chain/v3/x/rns"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
-	rnstestutil "github.com/jackalLabs/canine-chain/v3/x/rns/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	rns "github.com/jackalLabs/canine-chain/v4/x/rns"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	rnstestutil "github.com/jackalLabs/canine-chain/v4/x/rns/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/stretchr/testify/suite"
 )
 

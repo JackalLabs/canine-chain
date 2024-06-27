@@ -10,8 +10,8 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	jklmintsimulation "github.com/jackalLabs/canine-chain/v3/x/jklmint/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	jklmintsimulation "github.com/jackalLabs/canine-chain/v4/x/jklmint/simulation"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 )
 
 // avoid unused import issue

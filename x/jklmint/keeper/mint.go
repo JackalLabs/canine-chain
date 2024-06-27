@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/utils"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/utils"
 )
 
 func (k Keeper) send(ctx sdk.Context, denom string, amount int64, receiver string) error {

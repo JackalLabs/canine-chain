@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 )
 
 type msgServer struct {

@@ -7,7 +7,7 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func HasViewingAccess(file types.Files, user string) (bool, error) {

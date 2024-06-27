@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"

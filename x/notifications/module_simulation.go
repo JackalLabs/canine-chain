@@ -9,8 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	notificationssimulation "github.com/jackalLabs/canine-chain/v3/x/notifications/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+	notificationssimulation "github.com/jackalLabs/canine-chain/v4/x/notifications/simulation"
+	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 )
 
 // avoid unused import issue
