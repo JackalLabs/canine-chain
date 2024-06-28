@@ -22,9 +22,9 @@ func MigrateStore(ctx sdk.Context, legacy exported.Subspace, paramsSubspace *par
 		DevGrantsRatio:        8,
 		StorageProviderRatio:  12,
 		StakerRatio:           80,
-		TokensPerBlock:        currParams.TokensPerBlock, // TODO: Double check this
-		MintDecrease:          6,                         // TODO: Double check this
-		StorageStipendAddress: types.DefaultStorageStipend,
+		TokensPerBlock:        3442500,
+		MintDecrease:          6,
+		StorageStipendAddress: "jkl1scpjepy0vgdpku7dwev20yxmvcezakv24k9arn",
 	}
 
 	paramsSubspace.SetParamSet(ctx, &t)

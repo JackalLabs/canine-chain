@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 
+	jklminttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+
 	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -193,6 +195,7 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		ctx.Logger().Info("\nNow updating the Jackal Protocol to:\n\n █████╗  ██████╗ █████╗  ██████╗██╗ █████╗ \n██╔══██╗██╔════╝██╔══██╗██╔════╝██║██╔══██╗\n███████║██║     ███████║██║     ██║███████║\n██╔══██║██║     ██╔══██║██║     ██║██╔══██║\n██║  ██║╚██████╗██║  ██║╚██████╗██║██║  ██║\n╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝╚═╝╚═╝  ╚═╝\n                                           \n")
 
 		fromVM[storagemoduletypes.ModuleName] = 7
+		fromVM[jklminttypes.ModuleName] = 6
 
 		fidMerkleMap := UpdateFiles(ctx, u.sk)
 
