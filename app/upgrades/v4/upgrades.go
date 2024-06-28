@@ -56,7 +56,7 @@ type FidContents struct {
 }
 
 type MerkleContents struct {
-	Merkles [][]byte `json:"merkles"`
+	Merkles [][]byte `json:"legacyMerkles"`
 }
 
 func UpdateFileTree(ctx sdk.Context, fk *filetreemodulekeeper.Keeper, merkleMap map[string][]byte) {
@@ -86,6 +86,16 @@ func UpdateFileTree(ctx sdk.Context, fk *filetreemodulekeeper.Keeper, merkleMap 
 			merkles = append(merkles, m)
 
 		}
+
+		/**
+		{
+			"fids": ["fid1", "fid2", "fid3"]
+		}
+
+		{
+			"legacyMerkles": ["merkle1", "merkle2", "merkle3"]
+		}
+		*/
 
 		merkleContents := MerkleContents{Merkles: merkles}
 
