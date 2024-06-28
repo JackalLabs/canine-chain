@@ -60,6 +60,8 @@ type MerkleContents struct {
 }
 
 func UpdateFileTree(ctx sdk.Context, fk *filetreemodulekeeper.Keeper, merkleMap map[string][]byte) {
+	ctx.Logger().Info("Migrating filetree formatting...")
+
 	allFiles := fk.GetAllFiles(ctx)
 
 	for _, file := range allFiles {
@@ -99,6 +101,8 @@ func UpdateFileTree(ctx sdk.Context, fk *filetreemodulekeeper.Keeper, merkleMap 
 }
 
 func UpdatePaymentInfo(ctx sdk.Context, sk *storagekeeper.Keeper) {
+	ctx.Logger().Info("Updating all user payment information...")
+
 	paymentInfo := sk.GetAllStoragePaymentInfo(ctx)
 	for _, info := range paymentInfo {
 
@@ -119,6 +123,7 @@ func UpdatePaymentInfo(ctx sdk.Context, sk *storagekeeper.Keeper) {
 }
 
 func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
+	ctx.Logger().Info("Updating all files to Universal Files...")
 	fidMerkle := make(map[string][]byte)
 
 	allDeals := sk.GetAllLegacyActiveDeals(ctx)
@@ -197,16 +202,16 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		fromVM[storagemoduletypes.ModuleName] = 7
 		fromVM[jklminttypes.ModuleName] = 6
 
+		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
+		if err != nil {
+			return newVM, err
+		}
+
 		fidMerkleMap := UpdateFiles(ctx, u.sk)
 
 		UpdateFileTree(ctx, u.fk, fidMerkleMap)
 
 		UpdatePaymentInfo(ctx, u.sk) // updating payment info with values at time of upgrade
-
-		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
-		if err != nil {
-			return newVM, err
-		}
 
 		return newVM, err
 	}
