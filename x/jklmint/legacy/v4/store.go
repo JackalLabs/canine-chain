@@ -1,4 +1,4 @@
-package v3
+package v4
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,7 +12,7 @@ import (
 // 1. setting up the next reason id and report id keys for existing subspaces
 // 2. setting up the module params
 func MigrateStore(ctx sdk.Context, legacy exported.Subspace, paramsSubspace *paramstypes.Subspace) error {
-	ctx.Logger().Error("MIGRATING MINT STORE!")
+	ctx.Logger().Info("MIGRATING MINT STORE!")
 	// Set the module params
 	var currParams Params
 	legacy.GetParamSet(ctx, &currParams)

@@ -158,7 +158,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		panic(err)
 	}
 
-	err = cfg.RegisterMigration(types.ModuleName, 3, m.Migrate3to4)
+	err = cfg.RegisterMigration(types.ModuleName, 4, m.Migrate4to5)
 	if err != nil {
 		panic(err)
 	}
