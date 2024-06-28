@@ -12,10 +12,10 @@ import (
 func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
-	err := k.HandleRewardBlock(ctx)
-	if err != nil {
-		ctx.Logger().Error(err.Error())
-	}
+	//err := k.HandleRewardBlock(ctx)
+	//if err != nil {
+	//	ctx.Logger().Error(err.Error())
+	//}
 
 	k.KillOldContracts(ctx)
 
