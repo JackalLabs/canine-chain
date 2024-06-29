@@ -23,7 +23,7 @@ func MigrateStore(ctx sdk.Context, legacySubspace exported.Subspace, paramsSubsp
 		PricePerTbPerMonth:     15,
 		AttestFormSize:         5,
 		AttestMinToPass:        3,
-		CollateralPrice:        10_000_000_000,
+		CollateralPrice:        currParams.CollateralPrice,
 		CheckWindow:            100,
 		ReferralCommission:     25,
 		PolRatio:               40,

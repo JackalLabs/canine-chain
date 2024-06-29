@@ -153,12 +153,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 	m := keeper.NewMigrator(am.keeper, am.legacySubspace)
 
-	err := cfg.RegisterMigration(types.ModuleName, 2, m.Migrate2to3)
-	if err != nil {
-		panic(err)
-	}
-
-	err = cfg.RegisterMigration(types.ModuleName, 3, m.Migrate3to4)
+	err := cfg.RegisterMigration(types.ModuleName, 4, m.Migrate4to5)
 	if err != nil {
 		panic(err)
 	}
@@ -186,7 +181,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 }
 
 // ConsensusVersion implements ConsensusVersion.
-func (AppModule) ConsensusVersion() uint64 { return 4 }
+func (AppModule) ConsensusVersion() uint64 { return 5 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {

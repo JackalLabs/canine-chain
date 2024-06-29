@@ -44,7 +44,7 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 // testing providers.go file
 func (suite *KeeperTestSuite) TestInitProviders() {
 	suite.SetupSuite()
-	msgSrvr, _, ctx := setupMsgServer(suite)
+	msgSrvr, k, ctx := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -83,7 +83,7 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 
 	coin := suite.bankKeeper.GetBalance(suite.ctx, userAcc, "ujkl")
 
-	suite.Require().Equal(sdk.NewInt(0), coin.Amount)
+	suite.Require().Equal(deposit.Amount.SubRaw(k.GetParams(suite.ctx).CollateralPrice).Int64(), coin.Amount.Int64())
 
 	shutdownMsg := types.MsgShutdownProvider{
 		Creator: user,

@@ -99,6 +99,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	pol := sdk.NewDec(params.PolRatio).QuoInt64(100)
+	discount := sdk.NewDec(0)
 	fmt.Printf("POL: %d / %f\n", params.PolRatio, pol.MustFloat64())
 	if referred {
 
@@ -107,9 +108,11 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		var hour int64 = 1000 * 60 * 60
 		if duration.Milliseconds() > 365*24*hour {
 			p = p.Mul(sdk.MustNewDecFromStr("0.95"))
+			discount = sdk.NewDec(5).QuoInt64(100) // 5% discount
 			pol = pol.Sub(sdk.MustNewDecFromStr("0.05"))
 		} else {
 			p = p.Mul(sdk.MustNewDecFromStr("0.90"))
+			discount = sdk.NewDec(10).QuoInt64(100) // 10% discount
 			pol = pol.Sub(sdk.MustNewDecFromStr("0.1"))
 		}
 
@@ -141,10 +144,13 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	}
 
 	refDec := sdk.NewDec(params.ReferralCommission).QuoInt64(100)
-	fmt.Printf("refcom: %d", params.ReferralCommission)
-	spr := sdk.NewDec(1).Sub(refDec).Sub(pol) // whatever is left from pol and referrals
+	fmt.Printf("RATIOS!\nref: %d\npol: %d\ndiscount: %d\n", refDec.MulInt64(100).TruncateInt64(), pol.MulInt64(100).TruncateInt64(), discount.MulInt64(100).TruncateInt64())
+	spr := sdk.NewDec(1).Sub(refDec).Sub(pol).Sub(discount) // whatever is left from pol and referrals
 
-	fmt.Printf("storageprovider ratio: %d\n", spr.TruncateInt().Int64())
+	// 1 - 0.25 = 0.75
+	//
+
+	fmt.Printf("storageprovider ratio: %d\n", spr.MulInt64(100).TruncateInt().Int64())
 
 	storageProviderCut := toPay.Amount.ToDec().Mul(spr)
 	spcToken := sdk.NewCoin(toPay.Denom, storageProviderCut.TruncateInt())
