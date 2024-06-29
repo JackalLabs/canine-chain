@@ -32,7 +32,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
-		CheckWindow:            10,
+		CheckWindow:            11,
 		ReferralCommission:     25,
 		PolRatio:               40,
 	})
@@ -134,7 +134,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				Referral:     depoAccount,
 			},
 			expErr:    false,
-			tokens:    25312499,
+			tokens:    19687499,
 			expErrMsg: "",
 		},
 		{
@@ -254,7 +254,7 @@ func (suite *KeeperTestSuite) TestBuyStorageValues() {
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
-		CheckWindow:            10,
+		CheckWindow:            11,
 		ReferralCommission:     25,
 		PolRatio:               40,
 	})
@@ -315,7 +315,13 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
 
-	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+	providerAccount, err := types.GetTokenHolderAccount()
+	suite.Require().NoError(err)
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, providerAccount, "ujkl")
+	suite.Require().Equal(int64(0), bal.Amount.Int64())
+
+	k.SetParams(suite.ctx, types.Params{
 		DepositAccount:         depoAccount,
 		ProofWindow:            50,
 		ChunkSize:              1024,
@@ -324,7 +330,7 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
-		CheckWindow:            10,
+		CheckWindow:            11,
 		ReferralCommission:     25,
 		PolRatio:               40,
 	})
@@ -342,12 +348,9 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 	})
 	suite.Require().NoError(err)
 
-	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64()) // * 0.90
+	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64()) * 0.9
 
-	providerAccount, err := types.GetTokenHolderAccount()
-	suite.Require().NoError(err)
-
-	bal := suite.bankKeeper.GetBalance(suite.ctx, providerAccount, "ujkl")
+	bal = suite.bankKeeper.GetBalance(suite.ctx, providerAccount, "ujkl")
 	suite.Require().Equal(int64(cost*0.35), bal.Amount.Int64())
 
 	polAccount, err := types.GetPOLAccount()
