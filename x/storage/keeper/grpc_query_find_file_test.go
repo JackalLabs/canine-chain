@@ -28,12 +28,16 @@ func (suite *KeeperTestSuite) TestFindFile() {
 		DepositAccount:         depoAccount,
 		ProofWindow:            50,
 		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
 		MissesToBurn:           3,
+		PriceFeed:              "jklprice",
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     8,
+		AttestFormSize:         0,
+		AttestMinToPass:        0,
 		CollateralPrice:        2,
-		CheckWindow:            10,
+		CheckWindow:            11,
+		PolRatio:               40,
+		ReferralCommission:     25,
 	})
 
 	merkle := []byte("merkle")

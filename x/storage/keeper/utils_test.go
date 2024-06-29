@@ -114,13 +114,13 @@ func (suite *KeeperTestSuite) TestGetStorageCost() {
 			name:     "10GB for 5months",
 			gbs:      10,
 			months:   5,
-			expected: sdk.NewInt(555555),
+			expected: sdk.NewInt(1041666),
 		},
 		{
 			name:     "5GB for 24months",
 			gbs:      5,
 			months:   24,
-			expected: sdk.NewInt(1111111),
+			expected: sdk.NewInt(2083333),
 		},
 	}
 

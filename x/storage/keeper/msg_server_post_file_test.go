@@ -31,7 +31,9 @@ func (suite *KeeperTestSuite) TestPostFile() {
 		MaxContractAgeInBlocks: 100,
 		PricePerTbPerMonth:     8,
 		CollateralPrice:        2,
-		CheckWindow:            10,
+		CheckWindow:            11,
+		ReferralCommission:     25,
+		PolRatio:               40,
 	})
 
 	suite.storageKeeper.SetProviders(suite.ctx, types.Providers{
