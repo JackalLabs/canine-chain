@@ -136,6 +136,8 @@ func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 	ctx.Logger().Info("Updating all files to Universal Files...")
 	fidMerkle := make(map[string][]byte)
 
+	p := sk.GetParams(ctx)
+
 	allDeals := sk.GetAllLegacyActiveDeals(ctx)
 
 	ctx.Logger().Info(fmt.Sprintf("There are %d active deals being migrated", len(allDeals)))
@@ -185,7 +187,7 @@ func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 			Start:         start,
 			Expires:       end,
 			FileSize:      size,
-			ProofInterval: 1800, // TODO: Decide on default window
+			ProofInterval: p.ProofWindow, // TODO: Decide on default window
 			ProofType:     0,
 			Proofs:        make([]string, 0),
 			MaxProofs:     3,
