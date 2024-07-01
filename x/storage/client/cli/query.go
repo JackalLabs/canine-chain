@@ -42,7 +42,7 @@ func GetQueryCmd(_ string) *cobra.Command {
 	cmd.AddCommand(CmdListStoragePaymentInfo())
 	cmd.AddCommand(CmdShowStoragePaymentInfo())
 
-	cmd.AddCommand(CmdCheckPrice())
+	cmd.AddCommand(CmdCheckPrice(), CmdQueryAddress())
 
 	cmd.AddCommand(CmdListAttestForms())
 	cmd.AddCommand(CmdShowAttestForms())
