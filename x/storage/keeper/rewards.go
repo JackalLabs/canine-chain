@@ -99,8 +99,7 @@ func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *m
 		usedDec := sdk.NewDec(uM)
 
 		usedRatio := usedDec.Quo(totalDec)
-		uss := usedRatio.String()
-		_ = uss
+
 		coinsToAdd := pg.Coins
 		for _, coin := range coinsToAdd {
 			newAmt := coin.Amount.ToDec().Mul(usedRatio).TruncateInt()
