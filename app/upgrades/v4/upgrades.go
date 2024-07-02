@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	jklminttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 
 	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
@@ -29,6 +31,7 @@ type Upgrade struct {
 	configurator module.Configurator
 	sk           *storagekeeper.Keeper
 	fk           *filetreemodulekeeper.Keeper
+	bk           storagemoduletypes.BankKeeper
 }
 
 // NewUpgrade returns a new Upgrade instance
@@ -136,6 +139,8 @@ func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 	ctx.Logger().Info("Updating all files to Universal Files...")
 	fidMerkle := make(map[string][]byte)
 
+	p := sk.GetParams(ctx)
+
 	allDeals := sk.GetAllLegacyActiveDeals(ctx)
 
 	ctx.Logger().Info(fmt.Sprintf("There are %d active deals being migrated", len(allDeals)))
@@ -185,7 +190,7 @@ func UpdateFiles(ctx sdk.Context, sk *storagekeeper.Keeper) map[string][]byte {
 			Start:         start,
 			Expires:       end,
 			FileSize:      size,
-			ProofInterval: 1800, // TODO: Decide on default window
+			ProofInterval: p.ProofWindow, // TODO: Decide on default window
 			ProofType:     0,
 			Proofs:        make([]string, 0),
 			MaxProofs:     3,
@@ -223,8 +228,53 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 
 		UpdatePaymentInfo(ctx, u.sk) // updating payment info with values at time of upgrade
 
+		err = u.ProvisionGauges(ctx)
+		if err != nil {
+			return newVM, sdkerrors.Wrapf(err, "could not provision gauges")
+		}
+
 		return newVM, err
 	}
+}
+
+// ProvisionGauges creates new gauges from the already existing tokens.
+// All tokens in the deposit wallet will be drip fed out to the storage providers for storage they are already providing.
+func (u *Upgrade) ProvisionGauges(ctx sdk.Context) error {
+	params := u.sk.GetParams(ctx)
+	depAcc := params.DepositAccount
+	dep, err := sdk.AccAddressFromBech32(depAcc)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot parse deposit account from params")
+	}
+
+	tok, err := storagemoduletypes.GetTokenHolderAccount()
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot get token holder account")
+	}
+
+	c := u.bk.GetBalance(ctx, dep, "ujkl")
+	toMove := sdk.NewCoins(c)
+
+	err = u.bk.SendCoinsFromAccountToModule(ctx, dep, storagemoduletypes.ModuleName, toMove) // send tokens to token account
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens from deposit account")
+	}
+	err = u.bk.SendCoinsFromModuleToAccount(ctx, storagemoduletypes.ModuleName, tok, toMove)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+	}
+
+	total := sdk.NewDecFromInt(c.Amount)
+	year := total.Mul(sdk.NewDec(15).QuoInt64(100)) // 15%
+	yearSend := sdk.NewCoins(sdk.NewCoin("ujkl", year.TruncateInt()))
+
+	rest := total.Mul(sdk.NewDec(100 - 15).QuoInt64(100)) // 85%
+	restSend := sdk.NewCoins(sdk.NewCoin("ujkl", rest.TruncateInt()))
+
+	u.sk.NewGauge(ctx, yearSend, ctx.BlockTime().AddDate(1, 0, 0))   // 15% dripped over the first year
+	u.sk.NewGauge(ctx, restSend, ctx.BlockTime().AddDate(200, 0, 0)) // rest dripped over the next 200 years
+
+	return nil
 }
 
 // StoreUpgrades implements upgrades.Upgrade
