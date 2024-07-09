@@ -35,12 +35,13 @@ type Upgrade struct {
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk *storagekeeper.Keeper, fk *filetreemodulekeeper.Keeper) *Upgrade {
+func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk *storagekeeper.Keeper, fk *filetreemodulekeeper.Keeper, bk storagemoduletypes.BankKeeper) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,
 		sk:           sk,
 		fk:           fk,
+		bk:           bk,
 	}
 }
 
