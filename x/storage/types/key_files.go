@@ -58,11 +58,11 @@ func ProofKey(
 	return []byte(fmt.Sprintf("%s/%s/%x/%d/", prover, owner, merkle, start))
 }
 
-// ProofKey returns the store key to retrieve a proof from the index fields ordered by owner
+// ProofPrefix returns the store key to retrieve a proof from the index fields ordered by owner
 func ProofPrefix(
 	prover string,
 ) []byte {
-	return []byte(fmt.Sprintf("%s/%s", ProofKeyPrefix, prover))
+	return []byte(fmt.Sprintf("%s%s", ProofKeyPrefix, prover))
 }
 
 // LegacyActiveDealsKey returns the store key to retrieve a ActiveDeals from the index fields

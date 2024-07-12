@@ -34,13 +34,13 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) int64 {
 }
 
 func (k Keeper) GetProviderDeals(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllProofsForProver(ctx, provider)
+	allDeals, _ := k.GetAllProofsForProver(ctx, provider)
 
 	return int64(len(allDeals))
 }
 
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllProofsForProver(ctx, provider)
+	allDeals, _ := k.GetAllProofsForProver(ctx, provider)
 
 	var space int64
 	for _, proof := range allDeals {
