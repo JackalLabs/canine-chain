@@ -97,17 +97,21 @@ func (k Keeper) GetAllProofs(ctx sdk.Context) (list []types.FileProof) {
 }
 
 // GetAllProofsForProver returns all Proofs for the given prover
-func (k Keeper) GetAllProofsForProver(ctx sdk.Context, prover string) (list []types.FileProof) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte(prover))
+func (k Keeper) GetAllProofsForProver(ctx sdk.Context, prover string) ([]types.FileProof, error) {
+	store := ctx.KVStore(k.storeKey)
+	proofStore := prefix.NewStore(store, types.ProofPrefix(prover))
+	iterator := sdk.KVStorePrefixIterator(proofStore, nil)
+	var proofs []types.FileProof
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.FileProof
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
+		var proof types.FileProof
+		if err := k.cdc.Unmarshal(iterator.Value(), &proof); err != nil {
+			return nil, err
+		}
+		proofs = append(proofs, proof)
 	}
 
-	return
+	return proofs, nil
 }

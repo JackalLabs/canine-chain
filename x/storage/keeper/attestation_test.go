@@ -112,18 +112,6 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 	addresses, err := testutil.CreateTestAddresses("jkl", 50)
 	suite.NoError(err)
 
-	for i, address := range addresses {
-		realProvider := types.Providers{
-			Address: address,
-			Ip:      fmt.Sprintf("https://test%d.com", i),
-		}
-
-		suite.storageKeeper.SetProviders(suite.ctx, realProvider)
-		suite.storageKeeper.SetActiveProviders(suite.ctx, types.ActiveProviders{
-			Address: address,
-		})
-	}
-
 	file := types.UnifiedFile{
 		Merkle:        []byte("merkle"),
 		Owner:         "owner",
@@ -133,10 +121,21 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 		ProofInterval: 100,
 		ProofType:     0,
 		Proofs:        make([]string, 0),
-		MaxProofs:     3,
+		MaxProofs:     int64(len(addresses)),
 		Note:          "test",
 	}
 	suite.storageKeeper.SetFile(suite.ctx, file) // creating storage deal
+
+	for i, address := range addresses {
+		realProvider := types.Providers{
+			Address: address,
+			Ip:      fmt.Sprintf("https://test%d.com", i),
+		}
+
+		suite.storageKeeper.SetProviders(suite.ctx, realProvider)
+		file.AddProver(suite.ctx, suite.storageKeeper, address)
+
+	}
 
 	file.AddProver(suite.ctx, suite.storageKeeper, addresses[10])
 

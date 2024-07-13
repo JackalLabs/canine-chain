@@ -191,15 +191,19 @@ func (k Keeper) RemoveAllActiveProviders(
 
 // GetAllActiveProviders returns all providers
 func (k Keeper) GetAllActiveProviders(ctx sdk.Context) (list []types.ActiveProviders) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveProvidersKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ActiveProviders
+		var val types.Providers
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
+
+		l, _ := k.GetAllProofsForProver(ctx, val.Address)
+		if len(l) >= 1 {
+			list = append(list, types.ActiveProviders{Address: val.Address})
+		}
 	}
 
 	return list
