@@ -197,36 +197,3 @@ func (suite *KeeperTestSuite) TestRemoveProviders() {
 
 	suite.Require().Equal(foundProvider, ghostProvider)
 }
-
-func (suite *KeeperTestSuite) TestActiveProviders() {
-	suite.SetupSuite()
-
-	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
-	suite.Require().NoError(err)
-
-	user := testAddresses[0]
-
-	realProvider := types.Providers{
-		Address: user,
-		Ip:      "https://test.com",
-	}
-
-	suite.storageKeeper.SetProviders(suite.ctx, realProvider)
-
-	provider := types.ActiveProviders{
-		Address: user,
-	}
-
-	suite.storageKeeper.SetActiveProviders(suite.ctx, provider)
-
-	foundProvider := suite.storageKeeper.GetActiveProviders(suite.ctx, "")
-	suite.Require().Equal(1, len(foundProvider))
-
-	foundProvider = suite.storageKeeper.GetActiveProviders(suite.ctx, "https://test.com")
-	suite.Require().Equal(0, len(foundProvider))
-
-	suite.storageKeeper.RemoveAllActiveProviders(suite.ctx)
-
-	foundProvider = suite.storageKeeper.GetActiveProviders(suite.ctx, "")
-	suite.Require().Equal(0, len(foundProvider))
-}

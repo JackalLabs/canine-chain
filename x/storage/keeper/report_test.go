@@ -109,21 +109,7 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	addresses, err := testutil.CreateTestAddresses("jkl", 50)
 	suite.NoError(err)
 
-	for i, address := range addresses {
-		realProvider := types.Providers{
-			Address:         address,
-			Ip:              fmt.Sprintf("https://test%d.com", i),
-			BurnedContracts: "0",
-		}
-
-		suite.storageKeeper.SetProviders(suite.ctx, realProvider)
-
-		suite.storageKeeper.SetActiveProviders(suite.ctx, types.ActiveProviders{
-			Address: address,
-		})
-	}
-
-	uf := types.UnifiedFile{
+	file := types.UnifiedFile{
 		Merkle:        []byte("merkle"),
 		Owner:         "owner",
 		Start:         0,
@@ -132,17 +118,29 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 		ProofInterval: 100,
 		ProofType:     0,
 		Proofs:        make([]string, 0),
-		MaxProofs:     3,
+		MaxProofs:     int64(len(addresses)),
 		Note:          "test",
 	}
-	suite.storageKeeper.SetFile(suite.ctx, uf)
-	uf.AddProver(suite.ctx, suite.storageKeeper, addresses[10])
-	suite.storageKeeper.SetFile(suite.ctx, uf)
+	suite.storageKeeper.SetFile(suite.ctx, file)
 
-	_, err = suite.storageKeeper.RequestReport(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
+	for i, address := range addresses {
+		realProvider := types.Providers{
+			Address: address,
+			Ip:      fmt.Sprintf("https://test%d.com", i),
+		}
+
+		suite.storageKeeper.SetProviders(suite.ctx, realProvider)
+		file.AddProver(suite.ctx, suite.storageKeeper, address)
+
+	}
+
+	proofs := suite.storageKeeper.GetAllProofs(suite.ctx)
+	suite.Require().Equal(len(addresses), len(proofs))
+
+	_, err = suite.storageKeeper.RequestReport(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
 	suite.NoError(err)
 
-	form, found := suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
+	form, found := suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
 	suite.Equal(true, found)
 
 	for _, attestation := range form.Attestations {
@@ -152,11 +150,11 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	allReportForm := suite.storageKeeper.GetAllReport(suite.ctx)
 	suite.Require().Equal(1, len(allReportForm))
 
-	_, found = suite.storageKeeper.GetProof(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
+	_, found = suite.storageKeeper.GetProof(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
 	suite.Equal(true, found)
 
 	for i, attestation := range form.Attestations {
-		err := suite.storageKeeper.DoReport(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start, attestation.Provider)
+		err := suite.storageKeeper.DoReport(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start, attestation.Provider)
 		if i >= int(params.AttestMinToPass) {
 			suite.Require().Error(err)
 		} else {
@@ -164,6 +162,6 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 		}
 	}
 
-	_, found = suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], uf.Merkle, uf.Owner, uf.Start)
+	_, found = suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
 	suite.Equal(false, found)
 }
