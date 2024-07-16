@@ -68,7 +68,7 @@ func (suite *KeeperTestSuite) TestIterateGauges() {
 	for i := 0; i < 50; i++ {
 		ls := make([][]byte, i)
 		for m := 0; m < i; m++ {
-			ls[m] = k.NewGauge(ctx, sdk.NewCoins(sdk.NewInt64Coin("ujkl", rand.Int63())), time.Now().Add(time.Hour*20))
+			ls[m] = k.NewGauge(ctx, sdk.NewCoins(sdk.NewInt64Coin("ujkl", rand.Int63())), time.Now().Add(time.Hour*20)).Id
 		}
 
 		is := 0

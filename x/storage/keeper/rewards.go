@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -60,84 +61,101 @@ func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file
 	}
 }
 
-func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
-	networkValue := sdk.NewDec(totalSize)
-
-	storageWallet, err := types.GetTokenHolderAccount()
-	if err != nil {
-		ctx.Logger().Error(err.Error())
-		return
-	}
-
+func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 	currentTime := ctx.BlockTime()
 
-	totalCoins := make(sdk.Coins, 0)
+	coinsToDistribute := make(sdk.Coins, 0)
 
-	k.IterateGauges(ctx, func(pg types.PaymentGauge) {
-		if pg.End.Before(currentTime) {
+	k.IterateGauges(ctx, func(pg types.PaymentGauge) { // check every gauge
+		if pg.End.Before(currentTime) { // if the end date is before the current block time, we remove the gauge
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
 
-		if pg.End.Before(pg.Start) {
+		if pg.End.Before(pg.Start) || pg.End.Equal(pg.Start) { // if somehow the gauge ends before or at the same time as it starts, we remove it as well
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
 
-		if pg.End.Equal(pg.Start) {
-			k.RemoveGauge(ctx, pg.Id)
+		gaugeWallet, err := types.GetGaugeAccount(pg)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
 			return
 		}
+
+		allGaugeCoins := k.bankKeeper.GetAllBalances(ctx, gaugeWallet)
 
 		totalTime := pg.End.Sub(pg.Start)
-		ttM := totalTime.Microseconds()
+		timeLeft := pg.End.Sub(currentTime)
 
-		used := currentTime.Sub(pg.Start)
-		uM := used.Microseconds()
+		totalTimeDec := sdk.NewDec(totalTime.Microseconds())
+		timeLeftDec := sdk.NewDec(timeLeft.Microseconds())
 
-		totalDec := sdk.NewDec(ttM)
-		usedDec := sdk.NewDec(uM)
+		timeRatio := sdk.NewDec(1).Sub(timeLeftDec.Quo(totalTimeDec))
+		s := timeRatio.String()
+		_ = s
+		for _, coin := range allGaugeCoins {
+			coinAmountDec := sdk.NewDecFromInt(coin.Amount)
+			coinsToUseAmount := timeRatio.Mul(coinAmountDec)
 
-		usedRatio := usedDec.Quo(totalDec)
+			amt64 := coinsToUseAmount.TruncateInt64()
+			if amt64 == 0 {
+				continue
+			}
 
-		coinsToAdd := pg.Coins
-		for _, coin := range coinsToAdd {
-			newAmt := coin.Amount.ToDec().Mul(usedRatio).TruncateInt()
-			c := sdk.NewCoin(coin.Denom, newAmt)
-
-			totalCoins = totalCoins.Add(c)
+			c := sdk.NewInt64Coin(coin.Denom, amt64)
+			coinsToDistribute = coinsToDistribute.Add(c)
+			err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, gaugeWallet, types.ModuleName, sdk.NewCoins(c))
+			if err != nil {
+				ctx.Logger().Error(sdkerrors.Wrapf(err, "cannot send tokens from gauge to storage account").Error())
+				continue
+			}
 		}
 	})
 
-	for prover, worth := range *sizeTracker {
+	return coinsToDistribute
+}
 
+func providerList(sizeTracker map[string]int64) []string {
+	provers := make([]string, len(sizeTracker))
+
+	i := 0
+	for k := range sizeTracker {
+		provers[i] = k
+		i++
+	}
+	slices.Sort(provers)
+	return provers
+}
+
+func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker map[string]int64) {
+	coins := k.pullTokensFromGauges(ctx)
+	networkValue := sdk.NewDec(totalSize)
+	provers := providerList(sizeTracker)
+	for _, prover := range provers { // loop through a sorted list of providers
+		worth := sizeTracker[prover]
 		providerValue := sdk.NewDec(worth)
 
 		networkPercentage := providerValue.Quo(networkValue)
-
-		coins := make(sdk.Coins, 0)
-
-		for _, coin := range totalCoins {
-			tokensValueOwed := networkPercentage.Mul(coin.Amount.ToDec()).TruncateInt()
-			c := sdk.NewCoin(coin.Denom, tokensValueOwed)
-			coins = coins.Add(c)
-		}
-
+		s := networkPercentage.String()
+		_ = s
 		pAddress, err := sdk.AccAddressFromBech32(prover)
 		if err != nil {
 			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
 			continue
 		}
-		err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, storageWallet, types.ModuleName, coins)
-		if err != nil {
-			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), types.ModuleName).Error())
-			continue
+
+		for _, coin := range coins {
+			tokensValueOwed := networkPercentage.Mul(coin.Amount.ToDec()).TruncateInt()
+			c := sdk.NewCoin(coin.Denom, tokensValueOwed)
+
+			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, sdk.NewCoins(c))
+			if err != nil {
+				ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), prover).Error())
+				continue
+			}
 		}
-		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, coins)
-		if err != nil {
-			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), prover).Error())
-			continue
-		}
+
 	}
 }
 
@@ -171,7 +189,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		return false
 	})
 
-	k.rewardProviders(ctx, totalSize, sizeTracker)
+	k.rewardAllProviders(ctx, totalSize, s)
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {

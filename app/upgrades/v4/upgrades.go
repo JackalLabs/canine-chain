@@ -248,21 +248,12 @@ func (u *Upgrade) ProvisionGauges(ctx sdk.Context) error {
 		return sdkerrors.Wrapf(err, "cannot parse deposit account from params")
 	}
 
-	tok, err := storagemoduletypes.GetTokenHolderAccount()
-	if err != nil {
-		return sdkerrors.Wrapf(err, "cannot get token holder account")
-	}
-
 	c := u.bk.GetBalance(ctx, dep, "ujkl")
 	toMove := sdk.NewCoins(c)
 
 	err = u.bk.SendCoinsFromAccountToModule(ctx, dep, storagemoduletypes.ModuleName, toMove) // send tokens to token account
 	if err != nil {
 		return sdkerrors.Wrapf(err, "cannot send tokens from deposit account")
-	}
-	err = u.bk.SendCoinsFromModuleToAccount(ctx, storagemoduletypes.ModuleName, tok, toMove)
-	if err != nil {
-		return sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
 	}
 
 	total := sdk.NewDecFromInt(c.Amount)
@@ -272,8 +263,25 @@ func (u *Upgrade) ProvisionGauges(ctx sdk.Context) error {
 	rest := total.Mul(sdk.NewDec(100 - 15).QuoInt64(100)) // 85%
 	restSend := sdk.NewCoins(sdk.NewCoin("ujkl", rest.TruncateInt()))
 
-	u.sk.NewGauge(ctx, yearSend, ctx.BlockTime().AddDate(1, 0, 0))   // 15% dripped over the first year
-	u.sk.NewGauge(ctx, restSend, ctx.BlockTime().AddDate(200, 0, 0)) // rest dripped over the next 200 years
+	gaugeOne := u.sk.NewGauge(ctx, yearSend, ctx.BlockTime().AddDate(1, 0, 0)) // 15% dripped over the first year
+	gaugeOneAccount, err := storagemoduletypes.GetGaugeAccount(gaugeOne)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+	}
+	err = u.bk.SendCoinsFromModuleToAccount(ctx, storagemoduletypes.ModuleName, gaugeOneAccount, yearSend)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+	}
+
+	gaugeTwo := u.sk.NewGauge(ctx, restSend, ctx.BlockTime().AddDate(200, 0, 0)) // rest dripped over the next 200 years
+	gaugeTwoAccount, err := storagemoduletypes.GetGaugeAccount(gaugeTwo)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+	}
+	err = u.bk.SendCoinsFromModuleToAccount(ctx, storagemoduletypes.ModuleName, gaugeTwoAccount, restSend)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+	}
 
 	return nil
 }

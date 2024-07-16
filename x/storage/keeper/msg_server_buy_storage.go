@@ -138,17 +138,9 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	k.SetStoragePaymentInfo(ctx, spi)
 
-	acc, err := types.GetTokenHolderAccount()
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "cannot get token holder account")
-	}
-
 	refDec := sdk.NewDec(params.ReferralCommission).QuoInt64(100)
 	fmt.Printf("RATIOS!\nref: %d\npol: %d\ndiscount: %d\n", refDec.MulInt64(100).TruncateInt64(), pol.MulInt64(100).TruncateInt64(), discount.MulInt64(100).TruncateInt64())
 	spr := sdk.NewDec(1).Sub(refDec).Sub(pol).Sub(discount) // whatever is left from pol and referrals
-
-	// 1 - 0.25 = 0.75
-	//
 
 	fmt.Printf("storageprovider ratio: %d\n", spr.MulInt64(100).TruncateInt().Int64())
 
@@ -156,7 +148,12 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	spcToken := sdk.NewCoin(toPay.Denom, storageProviderCut.TruncateInt())
 	spcTokens := sdk.NewCoins(spcToken)
 
-	k.NewGauge(ctx, spcTokens, spi.End) // creating new payment gauge
+	gauge := k.NewGauge(ctx, spcTokens, spi.End) // creating new payment gauge
+	acc, err := types.GetGaugeAccount(gauge)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot get gauge holder account")
+	}
+
 	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, acc, spcTokens)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
