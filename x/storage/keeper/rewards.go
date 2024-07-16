@@ -83,8 +83,11 @@ func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 			return
 		}
 
-		allGaugeCoins := k.bankKeeper.GetAllBalances(ctx, gaugeWallet)
-
+		allGaugeCoins := k.bankKeeper.GetAllBalances(ctx, gaugeWallet) // delete empty gauges
+		if allGaugeCoins.Empty() {
+			k.RemoveGauge(ctx, pg.Id)
+			return
+		}
 		totalTime := pg.End.Sub(pg.Start)
 		timeLeft := pg.End.Sub(currentTime)
 
