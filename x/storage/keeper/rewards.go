@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -30,114 +31,139 @@ func (k Keeper) burnContract(ctx sdk.Context, providerAddress string) {
 // manageProof checks the status of a given proof, if the file is too young, we skip it. If it's old enough and the
 // prover has either failed to prove it or the proof simply never existed we remove it.
 func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
-	st := *sizeTracker
-
 	pks := strings.Split(proofKey, "/")
 	providerAddress := pks[0]
 
 	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
-	// If we check the file and there is a proof delegated but the provider hasn't proven it yet we remove it.
-	// However, we need to check if the file is new and is being caught by accident
-	if !file.IsYoung(ctx.BlockHeight()) { // give first window grace before removal
+	currentHeight := ctx.BlockHeight()
+
+	if !file.IsYoung(currentHeight) { // if the file is old, and we can't find the proof, remove the prover
 		if !found {
 			ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
 			file.RemoveProverWithKey(ctx, k, proofKey)
 			return
 		}
-
-		currentHeight := ctx.BlockHeight()
-
-		proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
-
-		if !proven { // if file has not been proven yet
-			ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
-			file.RemoveProverWithKey(ctx, k, proofKey)
-			k.burnContract(ctx, providerAddress)
-			return
-		}
-
-		st[proof.Prover] += file.FileSize // only give rewards to providers who have held onto the file for a full window
 	}
-}
 
-func (k Keeper) rewardProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
-	networkValue := sdk.NewDec(totalSize)
+	proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
 
-	storageWallet, err := types.GetTokenHolderAccount()
-	if err != nil {
-		ctx.Logger().Error(err.Error())
+	if !proven && !file.IsYoung(currentHeight) { // if file wasn't proven, and is old, we burn it.
+		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
+		file.RemoveProverWithKey(ctx, k, proofKey)
+		k.burnContract(ctx, providerAddress)
 		return
 	}
 
+	(*sizeTracker)[proof.Prover] += file.FileSize // only give rewards to providers who have held onto the file for a full window
+}
+
+func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 	currentTime := ctx.BlockTime()
 
-	totalCoins := make(sdk.Coins, 0)
+	coinsToDistribute := make(sdk.Coins, 0)
 
-	k.IterateGauges(ctx, func(pg types.PaymentGauge) {
-		if pg.End.Before(currentTime) {
+	k.IterateGauges(ctx, func(pg types.PaymentGauge) { // check every gauge
+		if pg.End.Before(currentTime) { // if the end date is before the current block time, we remove the gauge
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
 
-		if pg.End.Before(pg.Start) {
+		if pg.End.Before(pg.Start) || pg.End.Equal(pg.Start) { // if somehow the gauge ends before or at the same time as it starts, we remove it as well
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
 
-		if pg.End.Equal(pg.Start) {
+		gaugeWallet, err := types.GetGaugeAccount(pg)
+		if err != nil {
+			ctx.Logger().Error(err.Error())
+			return
+		}
+
+		gaugeBalance := k.bankKeeper.GetAllBalances(ctx, gaugeWallet) // delete empty gauges
+		if gaugeBalance.Empty() {
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
+
+		allGaugeCoins := pg.Coins
 
 		totalTime := pg.End.Sub(pg.Start)
-		ttM := totalTime.Microseconds()
+		timeLeft := pg.End.Sub(currentTime)
 
-		used := currentTime.Sub(pg.Start)
-		uM := used.Microseconds()
+		totalTimeDec := sdk.NewDec(totalTime.Microseconds())
+		timeLeftDec := sdk.NewDec(timeLeft.Microseconds())
 
-		totalDec := sdk.NewDec(ttM)
-		usedDec := sdk.NewDec(uM)
+		timeRatio := sdk.NewDec(1).Sub(timeLeftDec.Quo(totalTimeDec))
+		s := timeRatio.String()
+		_ = s
 
-		usedRatio := usedDec.Quo(totalDec)
+		for _, coin := range allGaugeCoins {
+			coinAmountDec := sdk.NewDecFromInt(coin.Amount)
+			bal := gaugeBalance.AmountOf(coin.Denom)
 
-		coinsToAdd := pg.Coins
-		for _, coin := range coinsToAdd {
-			newAmt := coin.Amount.ToDec().Mul(usedRatio).TruncateInt()
-			c := sdk.NewCoin(coin.Denom, newAmt)
+			b := sdk.NewDecFromInt(coin.Amount.Sub(bal))
+			wouldBeBalance := timeRatio.Mul(coinAmountDec)
+			newBalance := wouldBeBalance.Sub(b)
 
-			totalCoins = totalCoins.Add(c)
+			amt64 := newBalance.TruncateInt64()
+			if amt64 == 0 {
+				continue
+			}
+
+			c := sdk.NewInt64Coin(coin.Denom, amt64)
+			coinsToDistribute = coinsToDistribute.Add(c)
+			err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, gaugeWallet, types.ModuleName, sdk.NewCoins(c))
+			if err != nil {
+				ctx.Logger().Error(sdkerrors.Wrapf(err, "cannot send tokens from gauge to storage account").Error())
+				continue
+			}
 		}
 	})
 
-	for prover, worth := range *sizeTracker {
+	return coinsToDistribute
+}
 
+func providerList(sizeTracker *map[string]int64) []string {
+	provers := make([]string, len(*sizeTracker))
+
+	i := 0
+	for k := range *sizeTracker {
+		provers[i] = k
+		i++
+	}
+	slices.Sort(provers)
+	return provers
+}
+
+func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
+	coins := k.pullTokensFromGauges(ctx)
+	networkValue := sdk.NewDec(totalSize)
+
+	provers := providerList(sizeTracker)
+	for _, prover := range provers { // loop through a sorted list of providers
+		worth := (*sizeTracker)[prover]
 		providerValue := sdk.NewDec(worth)
 
 		networkPercentage := providerValue.Quo(networkValue)
-
-		coins := make(sdk.Coins, 0)
-
-		for _, coin := range totalCoins {
-			tokensValueOwed := networkPercentage.Mul(coin.Amount.ToDec()).TruncateInt()
-			c := sdk.NewCoin(coin.Denom, tokensValueOwed)
-			coins = coins.Add(c)
-		}
-
+		s := networkPercentage.String()
+		_ = s
 		pAddress, err := sdk.AccAddressFromBech32(prover)
 		if err != nil {
 			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
 			continue
 		}
-		err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, storageWallet, types.ModuleName, coins)
-		if err != nil {
-			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), types.ModuleName).Error())
-			continue
+
+		for _, coin := range coins {
+			tokensValueOwed := networkPercentage.Mul(coin.Amount.ToDec()).TruncateInt()
+			c := sdk.NewCoin(coin.Denom, tokensValueOwed)
+
+			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, sdk.NewCoins(c))
+			if err != nil {
+				ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), prover).Error())
+				continue
+			}
 		}
-		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, coins)
-		if err != nil {
-			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), prover).Error())
-			continue
-		}
+
 	}
 }
 
@@ -171,7 +197,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		return false
 	})
 
-	k.rewardProviders(ctx, totalSize, sizeTracker)
+	k.rewardAllProviders(ctx, totalSize, sizeTracker)
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {

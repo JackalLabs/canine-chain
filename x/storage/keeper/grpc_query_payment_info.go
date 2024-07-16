@@ -54,3 +54,30 @@ func (k Keeper) StoragePaymentInfo(c context.Context, req *types.QueryStoragePay
 
 	return &types.QueryStoragePaymentInfoResponse{StoragePaymentInfo: val}, nil
 }
+
+func (k Keeper) Gauges(c context.Context, req *types.QueryAllGauges) (*types.QueryAllGaugesResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var gauges []types.PaymentGauge
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(k.storeKey)
+	storagePaymentStore := prefix.NewStore(store, types.KeyPrefix(types.PaymentGaugeKeyPrefix))
+
+	pageRes, err := query.Paginate(storagePaymentStore, req.Pagination, func(_ []byte, value []byte) error {
+		var gauge types.PaymentGauge
+		if err := k.cdc.Unmarshal(value, &gauge); err != nil {
+			return err
+		}
+
+		gauges = append(gauges, gauge)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllGaugesResponse{Gauges: gauges, Pagination: pageRes}, nil
+}

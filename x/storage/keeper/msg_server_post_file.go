@@ -71,15 +71,15 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		spcTokens := sdk.NewCoins(spcToken)
 
 		end := ctx.BlockTime().AddDate(0, 0, int(days))
-		k.NewGauge(ctx, spcTokens, end) // creating new payment gauge
+		gauge := k.NewGauge(ctx, spcTokens, end) // creating new payment gauge
 		addr, err := sdk.AccAddressFromBech32(msg.Creator)
 		if err != nil {
 			return nil, sdkerrors.Wrapf(err, "cannot get address from message creator")
 		}
 
-		acc, err := types.GetTokenHolderAccount()
+		acc, err := types.GetGaugeAccount(gauge)
 		if err != nil {
-			return nil, sdkerrors.Wrapf(err, "cannot get token holder account")
+			return nil, sdkerrors.Wrapf(err, "cannot get gauge account")
 		}
 
 		err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(toPay)) // taking money from user

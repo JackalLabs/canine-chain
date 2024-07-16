@@ -3,6 +3,7 @@ package types
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -26,15 +27,17 @@ const (
 
 	AddressPrefix = "jkl"
 	CidPrefix     = "jklc"
-	FidPrefix     = "jklf"
 
 	CollateralCollectorName    = "storage_collateral_name"
-	TokenHolderName            = "token_holder_name"
 	ProtocolOwnedLiquidityName = "protocol_owned_liq"
 )
 
-func GetTokenHolderAccount() (sdk.AccAddress, error) {
-	return GetAccount(TokenHolderName)
+func gaugeName(gauge PaymentGauge) string {
+	return fmt.Sprintf("gauge:%x", gauge.Id)
+}
+
+func GetGaugeAccount(gauge PaymentGauge) (sdk.AccAddress, error) {
+	return GetAccount(gaugeName(gauge))
 }
 
 func GetPOLAccount() (sdk.AccAddress, error) {
