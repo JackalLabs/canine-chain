@@ -142,9 +142,16 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 	var files []types.UnifiedFile
 	ctx := sdk.UnwrapSDKContext(c)
 
+	reverse := false
+	var limit uint64 = 100
+	if req.Pagination != nil { // HERE IS THE FIX
+		reverse = req.Pagination.Reverse
+		limit = req.Pagination.Limit
+	}
+
 	var i uint64
-	k.IterateFilesByMerkle(ctx, req.Pagination.Reverse, func(_ []byte, val []byte) bool {
-		if i >= req.Pagination.Limit {
+	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, val []byte) bool {
+		if i >= limit {
 			return true
 		}
 
@@ -155,6 +162,8 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 
 		if len(file.Proofs) < int(file.MaxProofs) {
 			files = append(files, file)
+		} else {
+			return false
 		}
 
 		i++
