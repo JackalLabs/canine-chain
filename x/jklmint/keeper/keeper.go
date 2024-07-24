@@ -97,7 +97,13 @@ func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
 
 	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
 
-	printedPerYear := blocksPerYearEstiamte * 1_000_000 * params.TokensPerBlock
+	mintedNum := params.TokensPerBlock
+	minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
+	if found {
+		mintedNum = minted.Minted
+	}
+
+	printedPerYear := blocksPerYearEstiamte * mintedNum
 
 	inflate := sdk.NewDec(printedPerYear)
 
