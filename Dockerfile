@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.21
+FROM golang:1.22.2
 
 # Update package list and install jq
 RUN apt-get update && apt-get install -y jq
