@@ -163,12 +163,13 @@ func SetUpKeepers(t *testing.T) (
 type UpgradeTestKeeper struct {
 	suite.Suite
 
-	cdc            codec.Codec
-	ctx            sdk.Context
-	filetreeKeeper *keeper.Keeper
-	storageKeeper  *storagekeeper.Keeper
-	queryClient    types.QueryClient
-	msgSrvr        types.MsgServer
+	cdc                codec.Codec
+	ctx                sdk.Context
+	filetreeKeeper     *keeper.Keeper
+	storageKeeper      *storagekeeper.Keeper
+	queryClient        types.QueryClient
+	storageQueryClient storagemoduletypes.QueryClient
+	msgSrvr            types.MsgServer
 }
 
 func (suite *UpgradeTestKeeper) SetupSuite() {
@@ -181,12 +182,14 @@ func (suite *UpgradeTestKeeper) reset() {
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, encCfg.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, filetreeKeeper)
 	queryClient := types.NewQueryClient(queryHelper)
+	storageQueryClient := storagemoduletypes.NewQueryClient(queryHelper)
 
 	suite.ctx = ctx
 	suite.filetreeKeeper = filetreeKeeper
 	suite.storageKeeper = storageKeeper
 	suite.cdc = encCfg.Codec
 	suite.queryClient = queryClient
+	suite.storageQueryClient = storageQueryClient
 	suite.msgSrvr = keeper.NewMsgServerImpl(*suite.filetreeKeeper)
 }
 

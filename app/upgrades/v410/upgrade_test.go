@@ -19,7 +19,7 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 		err := f.Unmarshal(val)
 		suite.Require().NoError(err)
 
-		suite.T().Logf("%x, %s (%d -> %d) | %d", f.Merkle, f.Owner, f.Start, f.Expires, f.FileSize)
+		suite.T().Logf("%x, %s (%d -> %d) | %d || %s", f.Merkle, f.Owner, f.Start, f.Expires, f.FileSize, f.Note)
 
 		return false
 	})
