@@ -2,14 +2,14 @@ package bouncybulldog
 
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
-	"github.com/jackalLabs/canine-chain/v3/types"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
-	oraclekeeper "github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/v3/x/rns/types"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v4/types"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	oraclekeeper "github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -41,7 +41,7 @@ func (u *Upgrade) Name() string {
 
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+	return func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		if types.IsTestnet(ctx.ChainID()) {
 			ctx.Logger().Error("Upgrade shouldn't run on testnet!")
 			return fromVM, nil

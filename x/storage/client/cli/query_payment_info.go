@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ func CmdListStoragePaymentInfo() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-storage-payment-info",
 		Short: "list all storage_payment_info",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -23,11 +23,11 @@ func CmdListStoragePaymentInfo() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllStoragePaymentInfoRequest{
+			params := &types.QueryAllStoragePaymentInfo{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.StoragePaymentInfoAll(context.Background(), params)
+			res, err := queryClient.AllStoragePaymentInfo(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,7 +54,7 @@ func CmdShowStoragePaymentInfo() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryStoragePaymentInfoRequest{
+			params := &types.QueryStoragePaymentInfo{
 				Address: argAddress,
 			}
 

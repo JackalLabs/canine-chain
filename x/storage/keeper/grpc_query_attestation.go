@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AttestationsAll(c context.Context, req *types.QueryAllAttestationsRequest) (*types.QueryAllAttestationsResponse, error) {
+func (k Keeper) AllAttestations(c context.Context, req *types.QueryAllAttestations) (*types.QueryAllAttestationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,7 +22,7 @@ func (k Keeper) AttestationsAll(c context.Context, req *types.QueryAllAttestatio
 	store := ctx.KVStore(k.storeKey)
 	attestationStore := prefix.NewStore(store, types.KeyPrefix(types.AttestationKeyPrefix))
 
-	pageRes, err := query.Paginate(attestationStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(attestationStore, req.Pagination, func(_ []byte, value []byte) error {
 		var providers types.AttestationForm
 		if err := k.cdc.Unmarshal(value, &providers); err != nil {
 			return err
@@ -38,7 +38,7 @@ func (k Keeper) AttestationsAll(c context.Context, req *types.QueryAllAttestatio
 	return &types.QueryAllAttestationsResponse{Attestations: attestations, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Attestation(c context.Context, req *types.QueryAttestationRequest) (*types.QueryAttestationResponse, error) {
+func (k Keeper) Attestation(c context.Context, req *types.QueryAttestation) (*types.QueryAttestationResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -46,7 +46,10 @@ func (k Keeper) Attestation(c context.Context, req *types.QueryAttestationReques
 
 	val, found := k.GetAttestationForm(
 		ctx,
-		req.Cid,
+		req.Prover,
+		req.Merkle,
+		req.Owner,
+		req.Start,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")

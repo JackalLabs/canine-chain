@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	eciesgo "github.com/ecies/go/v2"
-	filetypes "github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	filetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -66,12 +66,12 @@ func encryptFileAESKey(cmd *cobra.Command, key string, argKeys string) ([]byte, 
 
 	queryClient := filetypes.NewQueryClient(clientCtx)
 
-	res, err := queryClient.Pubkey(cmd.Context(), &filetypes.QueryPubkeyRequest{Address: key})
+	res, err := queryClient.PubKey(cmd.Context(), &filetypes.QueryPubKey{Address: key})
 	if err != nil {
 		return nil, filetypes.ErrPubKeyNotFound
 	}
 
-	pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+	pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 	if err != nil {
 		return nil, err
 	}

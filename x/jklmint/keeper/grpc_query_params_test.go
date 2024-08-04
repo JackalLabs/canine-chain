@@ -6,8 +6,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/app"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/app"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
@@ -37,11 +37,11 @@ func (suite *MintTestSuite) SetupTest() {
 func (suite *MintTestSuite) TestGRPCParams() {
 	app, ctx, queryClient := suite.app, suite.ctx, suite.queryClient
 
-	params, err := queryClient.Params(gocontext.Background(), &types.QueryParamsRequest{})
+	params, err := queryClient.Params(gocontext.Background(), &types.QueryParams{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(params.Params, app.MintKeeper.GetParams(ctx))
 
-	inflation, err := queryClient.Inflation(gocontext.Background(), &types.QueryInflationRequest{})
+	inflation, err := queryClient.Inflation(gocontext.Background(), &types.QueryInflation{})
 	suite.Require().NoError(err)
 
 	appInflation, err := app.MintKeeper.GetInflation(ctx)

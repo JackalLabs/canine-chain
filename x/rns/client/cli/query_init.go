@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ func CmdListInit() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-init",
 		Short: "list all init",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -23,11 +23,11 @@ func CmdListInit() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllInitsRequest{
+			params := &types.QueryAllInits{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.InitAll(context.Background(), params)
+			res, err := queryClient.AllInits(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,7 +54,7 @@ func CmdShowInit() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryInitRequest{
+			params := &types.QueryInit{
 				Address: argAddress,
 			}
 

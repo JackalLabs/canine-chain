@@ -16,9 +16,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/client/cli"
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/client/cli"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 )
 
 var (
@@ -141,6 +141,7 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 	m := keeper.NewMigrator(am.keeper)
 	err := cfg.RegisterMigration(types.ModuleName, 1, m.Migrate1to2)

@@ -1,8 +1,8 @@
 package keeper_test
 
 import (
-	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestAddProviderClaimer() {
@@ -56,7 +56,7 @@ func (suite *KeeperTestSuite) TestAddProviderClaimer() {
 				ClaimAddress: claimAddress,
 			},
 			expErr: true,
-			errMsg: "Provider not found. Please init your provider.",
+			errMsg: "provider not found please init your provider",
 		},
 	}
 	for _, tcs := range cases {
@@ -139,7 +139,7 @@ func (suite *KeeperTestSuite) TestRemoveProviderClaimer() {
 				ClaimAddress: "claimer_address",
 			},
 			expErr: true,
-			errMsg: "Provider has no claimer addresses: conflict",
+			errMsg: "provider has no claimer addresses: conflict",
 		},
 	}
 	for _, tcs := range cases {

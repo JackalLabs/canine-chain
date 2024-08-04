@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"fmt"
 
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgPostKey() {
@@ -23,14 +23,14 @@ func (suite *KeeperTestSuite) TestMsgPostKey() {
 	pubKey := privateKey.PublicKey.Bytes(false)
 
 	cases := []struct {
-		preRun    func() *types.MsgPostkey
+		preRun    func() *types.MsgPostKey
 		expErr    bool
 		expErrMsg string
 		name      string
 	}{
 		{
-			preRun: func() *types.MsgPostkey {
-				return types.NewMsgPostkey(
+			preRun: func() *types.MsgPostKey {
+				return types.NewMsgPostKey(
 					alice,
 					fmt.Sprintf("%x", pubKey),
 				)
@@ -44,13 +44,13 @@ func (suite *KeeperTestSuite) TestMsgPostKey() {
 		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
-			res, err := msgSrvr.Postkey(context, msg)
+			res, err := msgSrvr.PostKey(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
-				suite.Require().EqualValues(types.MsgPostkeyResponse{}, *res)
+				suite.Require().EqualValues(types.MsgPostKeyResponse{}, *res)
 
 			}
 		})

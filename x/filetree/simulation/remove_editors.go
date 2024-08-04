@@ -9,8 +9,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func SimulateMsgRemoveEditors(
@@ -18,7 +18,7 @@ func SimulateMsgRemoveEditors(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		merklePath := types.MerklePath("s/home/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
@@ -43,13 +43,13 @@ func SimulateMsgRemoveEditors(
 		k.SetFiles(ctx, *homeFolder)
 
 		// get editor id for bob
-		editIds := keeper.MakeEditorAddress(homeFolder.TrackingNumber, bob)
+		editIDs := keeper.MakeEditorAddress(homeFolder.TrackingNumber, bob)
 
 		msg := &types.MsgRemoveEditors{
 			Creator:   simAccount.Address.String(),
-			EditorIds: editIds,
+			EditorIds: editIDs,
 			Address:   merklePath,
-			Fileowner: ownerAddress,
+			FileOwner: ownerAddress,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

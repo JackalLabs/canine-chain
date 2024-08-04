@@ -6,7 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +27,7 @@ func CmdFileUploadCheck() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryFileUploadCheckRequest{
+			params := &types.QueryFileUploadCheck{
 				Address: argAddr,
 				Bytes:   reqByte,
 			}

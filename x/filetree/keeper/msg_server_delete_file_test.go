@@ -3,9 +3,9 @@ package keeper_test
 import (
 	"strings"
 
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgDeleteFile() {
@@ -23,13 +23,13 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
-	editorIds := strings.Split(alice, ",")
-	editorIds = append(editorIds, bob)
+	editorIDs := strings.Split(alice, ",")
+	editorIDs = append(editorIDs, bob)
 	aliceViewerID := strings.Split(alice, ",")
 	aliceEditorID := aliceViewerID // if alice is the only viewer and only editor, this suffices
 
 	// set home folder for alice and add bob as an editor
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice, editorIds, aliceViewerID, "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(alice, editorIDs, aliceViewerID, "s/home/")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
@@ -49,16 +49,16 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 
 	// Let's confirm that bob has edit access before moving on
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      types.MerklePath("s/home/"),
 		OwnerAddress: types.MakeOwnerAddress(types.MerklePath("s/home/"), aliceAccountHash),
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Files, *aliceHomeFolder)
+	suite.Require().Equal(res.File, *aliceHomeFolder)
 
-	validEditor, err := keeper.HasEditAccess(res.Files, bob)
+	validEditor, err := keeper.HasEditAccess(res.File, bob)
 	suite.Require().NoError(err)
 	suite.Require().Equal(validEditor, true)
 

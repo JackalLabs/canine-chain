@@ -3,10 +3,12 @@ package cli
 import (
 	"strconv"
 
+	types2 "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -26,10 +28,14 @@ func CmdList() *cobra.Command {
 				return err
 			}
 
+			coin, err := types2.ParseCoinNormalized(argPrice)
+			if err != nil {
+				return err
+			}
 			msg := types.NewMsgList(
 				clientCtx.GetFromAddress().String(),
 				argName,
-				argPrice,
+				coin,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

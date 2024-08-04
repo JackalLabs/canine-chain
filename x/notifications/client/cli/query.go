@@ -10,7 +10,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -27,10 +27,8 @@ func GetQueryCmd(_ string) *cobra.Command {
 	// Commenting out some useless queries for now
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdListNotifications())
-	// cmd.AddCommand(CmdShowNotifications())
+	cmd.AddCommand(CmdShowNotification())
 
-	cmd.AddCommand(CmdListNotiCounter())
-	// cmd.AddCommand(CmdShowNotiCounter())
 	cmd.AddCommand(CmdListNotificationsByAddress())
 
 	return cmd

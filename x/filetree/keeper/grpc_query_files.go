@@ -6,13 +6,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 // To remove
-func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -23,7 +23,7 @@ func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*t
 	store := ctx.KVStore(k.storeKey)
 	filesStore := prefix.NewStore(store, types.KeyPrefix(types.FilesKeyPrefix))
 
-	pageRes, err := query.Paginate(filesStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(filesStore, req.Pagination, func(_ []byte, value []byte) error {
 		var files types.Files
 		if err := k.cdc.Unmarshal(value, &files); err != nil {
 			return err
@@ -39,7 +39,7 @@ func (k Keeper) FilesAll(c context.Context, req *types.QueryAllFilesRequest) (*t
 	return &types.QueryAllFilesResponse{Files: filess, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Files(c context.Context, req *types.QueryFileRequest) (*types.QueryFileResponse, error) {
+func (k Keeper) File(c context.Context, req *types.QueryFile) (*types.QueryFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,5 +53,5 @@ func (k Keeper) Files(c context.Context, req *types.QueryFileRequest) (*types.Qu
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryFileResponse{Files: val}, nil
+	return &types.QueryFileResponse{File: val}, nil
 }

@@ -3,9 +3,11 @@ package keeper
 import (
 	"strings"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 // SetNames set a specific names in the store from its index
@@ -91,4 +93,34 @@ func (k Keeper) CheckExistence(ctx sdk.Context) bool {
 		exist = true
 	}
 	return exist
+}
+
+func (k Keeper) Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error) {
+	if len(name) == 0 {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name cannot be empty")
+	}
+
+	adr, err := sdk.AccAddressFromBech32(name) // the name passed was actually already bech32
+	if err == nil {
+		return adr, nil
+	}
+
+	n, tld, err := GetNameAndTLD(name)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot parse the name and tld from given rns")
+	}
+
+	rnsName, found := k.GetNames(ctx, n, tld)
+	if !found {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "cannot find name in key store")
+	}
+
+	val := rnsName.Value
+
+	address, err := sdk.AccAddressFromBech32(val)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "cannot parse an address from rns entry")
+	}
+
+	return address, nil
 }

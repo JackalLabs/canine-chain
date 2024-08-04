@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -9,8 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func SimulateMsgBid(
@@ -18,7 +17,7 @@ func SimulateMsgBid(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgBid{
@@ -85,7 +84,7 @@ func SimulateMsgBid(
 		}
 
 		// building the message
-		msg.Bid = fmt.Sprint(sdkPrice) + "ujkl"
+		msg.Bid = sdk.NewCoin("ujkl", sdkPrice)
 		msg.Name = bidDomain.Name
 
 		txCtx := simulation.OperationInput{

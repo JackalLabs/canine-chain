@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ForsaleAll(c context.Context, req *types.QueryAllForsalesRequest) (*types.QueryAllForsalesResponse, error) {
+func (k Keeper) AllForSale(c context.Context, req *types.QueryAllForSale) (*types.QueryAllForSaleResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,7 +22,7 @@ func (k Keeper) ForsaleAll(c context.Context, req *types.QueryAllForsalesRequest
 	store := ctx.KVStore(k.storeKey)
 	forsaleStore := prefix.NewStore(store, types.KeyPrefix(types.ForsaleKeyPrefix))
 
-	pageRes, err := query.Paginate(forsaleStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(forsaleStore, req.Pagination, func(_ []byte, value []byte) error {
 		var forsale types.Forsale
 		if err := k.cdc.Unmarshal(value, &forsale); err != nil {
 			return err
@@ -35,10 +35,10 @@ func (k Keeper) ForsaleAll(c context.Context, req *types.QueryAllForsalesRequest
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllForsalesResponse{Forsale: forsales, Pagination: pageRes}, nil
+	return &types.QueryAllForSaleResponse{ForSale: forsales, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Forsale(c context.Context, req *types.QueryForsaleRequest) (*types.QueryForsaleResponse, error) {
+func (k Keeper) ForSale(c context.Context, req *types.QueryForSale) (*types.QueryForSaleResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) Forsale(c context.Context, req *types.QueryForsaleRequest) (*typ
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryForsaleResponse{Forsale: val}, nil
+	return &types.QueryForSaleResponse{ForSale: val}, nil
 }

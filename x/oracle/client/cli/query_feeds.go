@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 	"github.com/spf13/cobra"
 )
 
@@ -14,12 +14,12 @@ func CmdQueryAllFeeds() *cobra.Command {
 		Use:   "list-feeds",
 		Short: "lists feeds",
 		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.AllFeeds(context.Background(), &types.QueryAllFeedsRequest{})
+			res, err := queryClient.AllFeeds(context.Background(), &types.QueryAllFeeds{})
 			if err != nil {
 				return err
 			}
@@ -43,7 +43,7 @@ func CmdQueryFeed() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.Feed(context.Background(), &types.QueryFeedRequest{Name: args[0]})
+			res, err := queryClient.Feed(context.Background(), &types.QueryFeed{Name: args[0]})
 			if err != nil {
 				return err
 			}

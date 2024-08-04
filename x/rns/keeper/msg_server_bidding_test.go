@@ -4,8 +4,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 const nuggieName = "Nuggie.jkl"
@@ -30,10 +30,10 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	suite.Require().NoError(err)
 
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), nuggieName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), nuggieName, "{}", 2)
 	suite.Require().NoError(err)
 
-	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: nuggieName, Price: "200ujkl"})
+	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: nuggieName, Price: sdk.NewInt64Coin("ujkl", 200)})
 
 	coin = sdk.NewCoin("ujkl", sdk.NewInt(10000))
 	coins = sdk.NewCoins(coin)
@@ -52,7 +52,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 				return types.NewMsgBid(
 					bidder.String(),
 					nuggieName,
-					"1000ujkl",
+					sdk.NewInt64Coin("ujkl", 1000),
 				)
 			},
 			expErr: false,
@@ -63,7 +63,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 				return types.NewMsgBid(
 					bidder.String(),
 					nuggieName,
-					"100000000ujkl",
+					sdk.NewInt64Coin("ujkl", 100000000),
 				)
 			},
 			expErr:    true,
@@ -111,7 +111,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", 2)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
@@ -150,7 +150,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 			preRun: func() *types.MsgAcceptBid {
 				freeName := "freeBi.jkl"
 				blockHeight := suite.ctx.BlockHeight()
-				err := suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), freeName, "{}", "2")
+				err := suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), freeName, "{}", 2)
 				suite.Require().NoError(err)
 				name, _ := suite.rnsKeeper.GetNames(suite.ctx, "freeBi", "jkl")
 				name.Locked = blockHeight + 1
@@ -210,7 +210,7 @@ func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", 2)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")

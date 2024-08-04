@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -29,7 +29,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
-				PubkeyList: []types.Pubkey{
+				PubKeyList: []types.Pubkey{
 					{
 						Address: "0",
 					},
@@ -58,7 +58,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated pubkey",
 			genState: &types.GenesisState{
-				PubkeyList: []types.Pubkey{
+				PubKeyList: []types.Pubkey{
 					{
 						Address: "0",
 					},

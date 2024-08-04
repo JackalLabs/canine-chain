@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 )
 
 // NewQuerier returns a minting Querier handler.
@@ -16,7 +16,7 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 		case types.QueryParameters:
 			return queryParams(ctx, k, legacyQuerierCdc)
 
-		case types.QueryInflation:
+		case types.QueryInflationKey:
 			return queryInflation(ctx, k, legacyQuerierCdc)
 
 		default:

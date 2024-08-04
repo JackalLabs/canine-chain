@@ -3,13 +3,18 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
-	oracletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	oracletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 )
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
 type AccountKeeper interface {
 	GetAccount(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
 	GetModuleAddress(moduleName string) sdk.AccAddress
+
+	HasAccount(ctx sdk.Context, addr sdk.AccAddress) bool
+	SetAccount(ctx sdk.Context, acc types.AccountI)
+	NewAccountWithAddress(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
+
 	// Methods imported from account should be defined here
 }
 
@@ -29,4 +34,9 @@ type BankKeeper interface {
 
 type OracleKeeper interface {
 	GetFeed(ctx sdk.Context, index string) (val oracletypes.Feed, found bool)
+}
+
+// RnsKeeper defines the expected interface needed to resolve RNS names.
+type RnsKeeper interface {
+	Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error)
 }

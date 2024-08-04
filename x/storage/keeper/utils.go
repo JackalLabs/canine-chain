@@ -5,12 +5,17 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // func MakeFid(data []byte) (string, error) {
 //	return bech32.ConvertAndEncode(types.FidPrefix, data)
 // }
+
+const (
+	False = "false"
+	True  = "true"
+)
 
 func MakeCid(data []byte) (string, error) {
 	return bech32.ConvertAndEncode(types.CidPrefix, data)
@@ -29,37 +34,22 @@ func (k Keeper) GetPaidAmount(ctx sdk.Context, address string) int64 {
 }
 
 func (k Keeper) GetProviderDeals(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllActiveDeals(ctx)
+	allDeals, _ := k.GetAllProofsForProver(ctx, provider)
 
-	var count int64
-	for i := 0; i < len(allDeals); i++ {
-		deal := allDeals[i]
-		if deal.Provider != provider {
-			continue
-		}
-
-		count++
-
-	}
-
-	return count
+	return int64(len(allDeals))
 }
 
 func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
-	allDeals := k.GetAllActiveDeals(ctx)
+	allDeals, _ := k.GetAllProofsForProver(ctx, provider)
 
 	var space int64
-	for i := 0; i < len(allDeals); i++ {
-		deal := allDeals[i]
-		if deal.Provider != provider {
-			continue
-		}
-		size, ok := sdk.NewIntFromString(deal.Filesize)
-		if !ok {
+	for _, proof := range allDeals {
+		deal, found := k.GetFile(ctx, proof.Merkle, proof.Owner, proof.Start)
+		if !found {
 			continue
 		}
 
-		space += size.Int64()
+		space += deal.FileSize
 
 	}
 
@@ -69,7 +59,13 @@ func (k Keeper) GetProviderUsing(ctx sdk.Context, provider string) int64 {
 // GetStorageCostKbs calculates storage cost in ujkl
 // Uses kilobytes and months to calculate how much user has to pay
 func (k Keeper) GetStorageCostKbs(ctx sdk.Context, kbs int64, hours int64) sdk.Int {
-	pricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
+	return k.GetStorageCostKbsWithPrice(ctx, kbs, hours, k.GetParams(ctx).PricePerTbPerMonth)
+}
+
+// GetStorageCostKbs calculates storage cost in ujkl
+// Uses kilobytes and months to calculate how much user has to pay
+func (k Keeper) GetStorageCostKbsWithPrice(ctx sdk.Context, kbs int64, hours int64, pricePerTBMonth int64) sdk.Int {
+	pricePerTBPerMonth := sdk.NewDec(pricePerTBMonth)
 	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
 	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
 	pricePerMbPerMonth := pricePerGbPerMonth.QuoInt64(1000)
@@ -94,8 +90,32 @@ func (k Keeper) GetStorageCostKbs(ctx sdk.Context, kbs int64, hours int64) sdk.I
 // GetStorageCost calculates storage cost in ujkl
 // Uses gigabytes and months to calculate how much user has to pay
 func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int {
-	pricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
-	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
+	basePricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
+	basePricePerTBPerMonthYearly := basePricePerTBPerMonth.Mul(sdk.MustNewDecFromStr("12.5").QuoInt64(15)) // we only really care about the ratio in case the price changes
+
+	var finalPricePerTbPerMonth sdk.Dec
+
+	if hours < 365*24 { // calculating monthly
+		switch {
+		case gbs >= 20_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.MustNewDecFromStr("12.5").QuoInt64(15)) // we only really care about the ratio in case the price changes
+		case gbs >= 5_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.NewDec(14).QuoInt64(15)) // we only really care about the ratio in case the price changes
+		default:
+			finalPricePerTbPerMonth = basePricePerTBPerMonth
+		}
+	} else { // calculating yearly
+		switch {
+		case gbs >= 20_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly.Mul(sdk.MustNewDecFromStr("10.42").Quo(sdk.MustNewDecFromStr("12.5"))) // we only really care about the ratio in case the price changes
+		case gbs >= 5_000:
+			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly.Mul(sdk.MustNewDecFromStr("11.67").Quo(sdk.MustNewDecFromStr("12.5"))) // we only really care about the ratio in case the price changes
+		default:
+			finalPricePerTbPerMonth = basePricePerTBPerMonthYearly
+		}
+	}
+
+	quantifiedPricePerTBPerMonth := finalPricePerTbPerMonth.QuoInt64(3)
 	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
 	pricePerGbPerHour := pricePerGbPerMonth.QuoInt64(720)
 
@@ -121,7 +141,7 @@ func (k Keeper) GetJklPrice(ctx sdk.Context) (price sdk.Dec) {
 	price = sdk.MustNewDecFromStr("0.20")
 
 	priceFeed := k.GetParams(ctx).PriceFeed
-	feed, found := k.oraclekeeper.GetFeed(ctx, priceFeed)
+	feed, found := k.oracleKeeper.GetFeed(ctx, priceFeed)
 	if found {
 		type data struct {
 			Price  string `json:"price"`

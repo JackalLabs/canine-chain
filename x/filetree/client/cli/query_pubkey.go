@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ func CmdListPubkey() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-pubkeys",
 		Short: "list all pubkeys",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -23,11 +23,11 @@ func CmdListPubkey() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllPubkeysRequest{
+			params := &types.QueryAllPubKeys{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.PubkeyAll(context.Background(), params)
+			res, err := queryClient.AllPubKeys(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,11 +54,11 @@ func CmdShowPubkey() *cobra.Command {
 
 			argAddress := args[0]
 
-			params := &types.QueryPubkeyRequest{
+			params := &types.QueryPubKey{
 				Address: argAddress,
 			}
 
-			res, err := queryClient.Pubkey(context.Background(), params)
+			res, err := queryClient.PubKey(context.Background(), params)
 			if err != nil {
 				return err
 			}

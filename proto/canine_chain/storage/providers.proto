@@ -6,7 +6,7 @@ option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
 message Providers {
   string address = 1;
   string ip = 2;
-  string totalspace = 3;
+  string totalspace = 3; // TODO: fix casing
   string burned_contracts = 4;
   string creator = 5;
   string keybase_identity = 6;
@@ -24,12 +24,18 @@ message Attestation {
 
 message AttestationForm {
   repeated Attestation attestations = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3; // The merkle root is unique to every file based on its contents.
+  string owner = 4;
+  int64 start = 5; // Marks the block height the file started on.
 }
 
 message ReportForm {
   repeated Attestation attestations = 1;
-  string cid = 2;
+  string prover = 2;
+  bytes merkle = 3; // The merkle root is unique to every file based on its contents.
+  string owner = 4;
+  int64 start = 5; // Marks the block height the file started on.
 }
 
 message Collateral {

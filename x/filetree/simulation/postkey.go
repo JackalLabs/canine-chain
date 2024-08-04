@@ -9,8 +9,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func SimulateMsgPostkey(
@@ -18,18 +18,18 @@ func SimulateMsgPostkey(
 	bk types.BankKeeper,
 	_ keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		address, _ := sdk.Bech32ifyAddressBytes("jkl", simAccount.Address)
 
 		privateKey, err := types.MakePrivateKey(address)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostkey, "unable to create privateKey"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostKey, "unable to create privateKey"), nil, err
 		}
 		pubKey := privateKey.PublicKey.Bytes(false)
 
-		msg := &types.MsgPostkey{
+		msg := &types.MsgPostKey{
 			Creator: simAccount.Address.String(),
 			Key:     fmt.Sprintf("%x", pubKey),
 		}
@@ -37,7 +37,7 @@ func SimulateMsgPostkey(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostkey, "failed to generate fee"), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgPostKey, "failed to generate fee"), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

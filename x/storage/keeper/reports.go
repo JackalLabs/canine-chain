@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // SetReportForm sets a specific report in the store from its index
@@ -11,19 +11,28 @@ func (k Keeper) SetReportForm(ctx sdk.Context, report types.ReportForm) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ReportKeyPrefix))
 	b := k.cdc.MustMarshal(&report)
 	store.Set(types.ReportKey(
-		report.Cid,
+		report.Prover,
+		report.Merkle,
+		report.Owner,
+		report.Start,
 	), b)
 }
 
 // GetReportForm returns a report from its index
 func (k Keeper) GetReportForm(
 	ctx sdk.Context,
-	cid string,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
 ) (val types.ReportForm, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ReportKeyPrefix))
 
 	b := store.Get(types.ReportKey(
-		cid,
+		prover,
+		merkle,
+		owner,
+		start,
 	))
 	if b == nil {
 		return val, false
@@ -36,11 +45,17 @@ func (k Keeper) GetReportForm(
 // RemoveReport removes an attestation from the store
 func (k Keeper) RemoveReport(
 	ctx sdk.Context,
-	cid string,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ReportKeyPrefix))
 	store.Delete(types.ReportKey(
-		cid,
+		prover,
+		merkle,
+		owner,
+		start,
 	))
 }
 

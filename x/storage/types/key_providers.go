@@ -1,6 +1,9 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"fmt"
+)
 
 var _ binary.ByteOrder
 
@@ -42,28 +45,22 @@ func ProvidersKey(
 
 // AttestationKey returns the store key to retrieve a Providers from the index fields
 func AttestationKey(
-	cid string,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
 ) []byte {
-	var key []byte
-
-	cidBytes := []byte(cid)
-	key = append(key, cidBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+	return []byte(fmt.Sprintf("%s/%x/%s/%d", prover, merkle, owner, start))
 }
 
 // ReportKey returns the store key to retrieve a Report from the index fields
 func ReportKey(
-	cid string,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
 ) []byte {
-	var key []byte
-
-	cidBytes := []byte(cid)
-	key = append(key, cidBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+	return []byte(fmt.Sprintf("%s/%x/%s/%d", prover, merkle, owner, start))
 }
 
 // CollateralKey returns the store key to retrieve a Collateral Index from the index fields

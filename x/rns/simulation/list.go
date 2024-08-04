@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -9,8 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func SimulateMsgList(
@@ -18,7 +17,7 @@ func SimulateMsgList(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// choosing a random account WITH registered domains
 		var simAccount simtypes.Account
@@ -32,7 +31,7 @@ func SimulateMsgList(
 		for {
 			// finding all registered domain names
 			wctx := sdk.WrapSDKContext(ctx)
-			nReq := &types.QueryListOwnedNamesRequest{
+			nReq := &types.QueryListOwnedNames{
 				Address: simAccount.Address.String(),
 			}
 			// requesting the domain names
@@ -91,7 +90,7 @@ func SimulateMsgList(
 		}
 
 		msg.Name = tName.Name + "." + tName.Tld
-		msg.Price = fmt.Sprint(simtypes.RandIntBetween(r, 0, 10000000)) + "ujkl"
+		msg.Price = sdk.NewInt64Coin("ujkl", int64(simtypes.RandIntBetween(r, 0, 10000000)))
 
 		txCtx := simulation.OperationInput{
 			R:             r,

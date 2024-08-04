@@ -8,8 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func SimulateMsgAddRecord(
@@ -17,7 +17,7 @@ func SimulateMsgAddRecord(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// 1. Find a registered domain name
 		// 2. Add a randomly generated subdomain -- subdomains are free
@@ -33,7 +33,7 @@ func SimulateMsgAddRecord(
 		for {
 			// finding all registered domain names
 			wctx := sdk.WrapSDKContext(ctx)
-			nReq := &types.QueryListOwnedNamesRequest{
+			nReq := &types.QueryListOwnedNames{
 				Address: simAccount.Address.String(),
 			}
 			// requesting the domain names

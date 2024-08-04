@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) StoragePaymentInfoAll(c context.Context, req *types.QueryAllStoragePaymentInfoRequest) (*types.QueryAllStoragePaymentInfoResponse, error) {
+func (k Keeper) AllStoragePaymentInfo(c context.Context, req *types.QueryAllStoragePaymentInfo) (*types.QueryAllStoragePaymentInfoResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,7 +22,7 @@ func (k Keeper) StoragePaymentInfoAll(c context.Context, req *types.QueryAllStor
 	store := ctx.KVStore(k.storeKey)
 	storagePaymentStore := prefix.NewStore(store, types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
 
-	pageRes, err := query.Paginate(storagePaymentStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(storagePaymentStore, req.Pagination, func(_ []byte, value []byte) error {
 		var storagePaymentInfo types.StoragePaymentInfo
 		if err := k.cdc.Unmarshal(value, &storagePaymentInfo); err != nil {
 			return err
@@ -38,7 +38,7 @@ func (k Keeper) StoragePaymentInfoAll(c context.Context, req *types.QueryAllStor
 	return &types.QueryAllStoragePaymentInfoResponse{StoragePaymentInfo: storagePaymentInfos, Pagination: pageRes}, nil
 }
 
-func (k Keeper) StoragePaymentInfo(c context.Context, req *types.QueryStoragePaymentInfoRequest) (*types.QueryStoragePaymentInfoResponse, error) {
+func (k Keeper) StoragePaymentInfo(c context.Context, req *types.QueryStoragePaymentInfo) (*types.QueryStoragePaymentInfoResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -53,4 +53,31 @@ func (k Keeper) StoragePaymentInfo(c context.Context, req *types.QueryStoragePay
 	}
 
 	return &types.QueryStoragePaymentInfoResponse{StoragePaymentInfo: val}, nil
+}
+
+func (k Keeper) Gauges(c context.Context, req *types.QueryAllGauges) (*types.QueryAllGaugesResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var gauges []types.PaymentGauge
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(k.storeKey)
+	storagePaymentStore := prefix.NewStore(store, types.KeyPrefix(types.PaymentGaugeKeyPrefix))
+
+	pageRes, err := query.Paginate(storagePaymentStore, req.Pagination, func(_ []byte, value []byte) error {
+		var gauge types.PaymentGauge
+		if err := k.cdc.Unmarshal(value, &gauge); err != nil {
+			return err
+		}
+
+		gauges = append(gauges, gauge)
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryAllGaugesResponse{Gauges: gauges, Pagination: pageRes}, nil
 }

@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ func CmdListFiles() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-files",
 		Short: "list all files",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -26,11 +26,11 @@ func CmdListFiles() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllFilesRequest{
+			params := &types.QueryAllFiles{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.FilesAll(context.Background(), params)
+			res, err := queryClient.AllFiles(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -59,12 +59,12 @@ func CmdShowFiles() *cobra.Command {
 			argAddress := args[0]
 			argOwnerAddress := args[1]
 
-			params := &types.QueryFileRequest{
+			params := &types.QueryFile{
 				Address:      argAddress,
 				OwnerAddress: argOwnerAddress,
 			}
 
-			res, err := queryClient.Files(context.Background(), params)
+			res, err := queryClient.File(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -107,12 +107,12 @@ func CmdShowFileFromPath() *cobra.Command {
 			Hash := H.Sum(nil)
 			ownerAddress := fmt.Sprintf("%x", Hash)
 
-			params := &types.QueryFileRequest{
+			params := &types.QueryFile{
 				Address:      merklePath,
 				OwnerAddress: ownerAddress,
 			}
 
-			res, err := queryClient.Files(context.Background(), params)
+			res, err := queryClient.File(context.Background(), params)
 			if err != nil {
 				return err
 			}

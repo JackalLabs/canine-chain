@@ -11,11 +11,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	//	"github.com/jackalLabs/canine-chain/testutil/sample"
-	oraclesimulation "github.com/jackalLabs/canine-chain/v3/x/oracle/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	oraclesimulation "github.com/jackalLabs/canine-chain/v4/x/oracle/simulation"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 )
-
-// TODO: rewrite tests but don't use ignite
 
 // avoid unused import issue
 var (

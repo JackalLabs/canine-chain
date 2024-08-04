@@ -2,10 +2,13 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+
+	types2 "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvider) (*types.MsgInitProviderResponse, error) {
@@ -26,7 +29,7 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 		return nil, err
 	}
 
-	err = k.bankkeeper.SendCoinsFromAccountToModule(ctx, account, types.CollateralCollectorName, coins)
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, account, types.CollateralCollectorName, coins) // TODO: change naming convention
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "%s does not have %s", account, coin.String())
 	}
@@ -40,7 +43,7 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 	provider := types.Providers{
 		Address:         msg.Creator,
 		Ip:              msg.Ip,
-		Totalspace:      msg.Totalspace,
+		Totalspace:      fmt.Sprintf("%d", msg.TotalSpace),
 		Creator:         msg.Creator,
 		BurnedContracts: "0",
 		KeybaseIdentity: msg.Keybase,
@@ -48,6 +51,13 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 	}
 
 	k.SetProviders(ctx, provider)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types2.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 
 	return &types.MsgInitProviderResponse{}, nil
 }
@@ -70,7 +80,7 @@ func (k msgServer) ShutdownProvider(goCtx context.Context, msg *types.MsgShutdow
 			return nil, err
 		}
 
-		err = k.bankkeeper.SendCoinsFromModuleToAccount(ctx, types.CollateralCollectorName, account, coins)
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.CollateralCollectorName, account, coins)
 		if err != nil {
 			return nil, err
 		}
@@ -79,6 +89,20 @@ func (k msgServer) ShutdownProvider(goCtx context.Context, msg *types.MsgShutdow
 	}
 
 	k.RemoveProviders(ctx, msg.Creator)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 
 	return &types.MsgShutdownProviderResponse{}, nil
 }

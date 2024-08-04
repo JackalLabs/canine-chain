@@ -13,15 +13,15 @@ import (
 
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	moduletestutil "github.com/jackalLabs/canine-chain/v3/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
+	moduletestutil "github.com/jackalLabs/canine-chain/v4/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/golang/mock/gomock"
-	canineglobaltestutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
-	rnstestutil "github.com/jackalLabs/canine-chain/v3/x/rns/testutil"
-	types "github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	canineglobaltestutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	rnstestutil "github.com/jackalLabs/canine-chain/v4/x/rns/testutil"
+	types "github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 // setupRNSKeeper creates a rnsKeeper as well as all its dependencies.
@@ -34,7 +34,7 @@ func setupRNSKeeper(t *testing.T) (
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	// memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 	tkey := sdk.NewTransientStoreKey("transient_test")
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, tkey)
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, tkey, key)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()
@@ -87,7 +87,7 @@ func trackMockBalances(bankKeeper *rnstestutil.MockBankKeeper) {
 		balances[sender.String()] = newBalance
 		return nil
 	}).AnyTimes()
-	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, module string, rcpt sdk.AccAddress, coins sdk.Coins) error {
+	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, _ string, rcpt sdk.AccAddress, coins sdk.Coins) error {
 		balances[rcpt.String()] = balances[rcpt.String()].Add(coins...)
 		return nil
 	}).AnyTimes()

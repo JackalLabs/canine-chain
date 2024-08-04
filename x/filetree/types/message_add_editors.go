@@ -9,13 +9,13 @@ const TypeMsgAddEditors = "add_editors"
 
 var _ sdk.Msg = &MsgAddEditors{}
 
-func NewMsgAddEditors(creator string, editorIds string, editorKeys string, address string, fileowner string) *MsgAddEditors {
+func NewMsgAddEditors(creator string, editorIDs string, editorKeys string, address string, fileowner string) *MsgAddEditors {
 	return &MsgAddEditors{
 		Creator:    creator,
-		EditorIds:  editorIds,
+		EditorIds:  editorIDs,
 		EditorKeys: editorKeys,
 		Address:    address,
-		Fileowner:  fileowner,
+		FileOwner:  fileowner,
 	}
 }
 
@@ -59,9 +59,9 @@ func (msg *MsgAddEditors) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
 			"invalid address: %s", msg.Address)
 	}
-	if msg.Fileowner == "" {
+	if msg.FileOwner == "" {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest,
-			"invalid file owner: %s", msg.Fileowner)
+			"invalid file owner: %s", msg.FileOwner)
 	}
 
 	return nil

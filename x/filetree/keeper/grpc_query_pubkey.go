@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) PubkeyAll(c context.Context, req *types.QueryAllPubkeysRequest) (*types.QueryAllPubkeysResponse, error) {
+func (k Keeper) AllPubKeys(c context.Context, req *types.QueryAllPubKeys) (*types.QueryAllPubKeysResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,7 +22,7 @@ func (k Keeper) PubkeyAll(c context.Context, req *types.QueryAllPubkeysRequest) 
 	store := ctx.KVStore(k.storeKey)
 	pubkeyStore := prefix.NewStore(store, types.KeyPrefix(types.PubkeyKeyPrefix))
 
-	pageRes, err := query.Paginate(pubkeyStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(pubkeyStore, req.Pagination, func(_ []byte, value []byte) error {
 		var pubkey types.Pubkey
 		if err := k.cdc.Unmarshal(value, &pubkey); err != nil {
 			return err
@@ -35,10 +35,10 @@ func (k Keeper) PubkeyAll(c context.Context, req *types.QueryAllPubkeysRequest) 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllPubkeysResponse{Pubkey: pubkeys, Pagination: pageRes}, nil
+	return &types.QueryAllPubKeysResponse{PubKey: pubkeys, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Pubkey(c context.Context, req *types.QueryPubkeyRequest) (*types.QueryPubkeyResponse, error) {
+func (k Keeper) PubKey(c context.Context, req *types.QueryPubKey) (*types.QueryPubKeyResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -52,5 +52,5 @@ func (k Keeper) Pubkey(c context.Context, req *types.QueryPubkeyRequest) (*types
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryPubkeyResponse{Pubkey: val}, nil
+	return &types.QueryPubKeyResponse{PubKey: val}, nil
 }

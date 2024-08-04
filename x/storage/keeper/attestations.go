@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // SetAttestationForm sets a specific attestation in the store from its index
@@ -11,19 +11,28 @@ func (k Keeper) SetAttestationForm(ctx sdk.Context, attestation types.Attestatio
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AttestationKeyPrefix))
 	b := k.cdc.MustMarshal(&attestation)
 	store.Set(types.AttestationKey(
-		attestation.Cid,
+		attestation.Prover,
+		attestation.Merkle,
+		attestation.Owner,
+		attestation.Start,
 	), b)
 }
 
 // GetAttestationForm returns an attestation from its index
 func (k Keeper) GetAttestationForm(
 	ctx sdk.Context,
-	cid string,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
 ) (val types.AttestationForm, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AttestationKeyPrefix))
 
 	b := store.Get(types.AttestationKey(
-		cid,
+		prover,
+		merkle,
+		owner,
+		start,
 	))
 	if b == nil {
 		return val, false
@@ -36,11 +45,18 @@ func (k Keeper) GetAttestationForm(
 // RemoveAttestation removes an attestation from the store
 func (k Keeper) RemoveAttestation(
 	ctx sdk.Context,
-	cid string,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AttestationKeyPrefix))
 	store.Delete(types.AttestationKey(
-		cid,
+
+		prover,
+		merkle,
+		owner,
+		start,
 	))
 }
 
@@ -71,7 +87,10 @@ func (k Keeper) RemoveAllAttestation(ctx sdk.Context) {
 		var val types.AttestationForm
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		store.Delete(types.AttestationKey(
-			val.Cid,
+			val.Prover,
+			val.Merkle,
+			val.Owner,
+			val.Start,
 		))
 	}
 }

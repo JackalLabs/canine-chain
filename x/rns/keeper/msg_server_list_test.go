@@ -1,9 +1,10 @@
 package keeper_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	types "github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	types "github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestListMsg() {
@@ -15,37 +16,37 @@ func (suite *KeeperTestSuite) TestListMsg() {
 	tc := map[string]struct {
 		Creator string
 		Name    string
-		Price   string
+		Price   sdk.Coin
 		expErr  bool
 	}{
 		"list": {
 			Creator: accs[1],
 			Name:    names[1],
-			Price:   "10000ujkl",
+			Price:   sdk.NewInt64Coin("ujkl", 10000),
 			expErr:  false,
 		},
 		"name already listed": {
 			Creator: accs[0],
 			Name:    names[0],
-			Price:   "10000ujkl",
+			Price:   sdk.NewInt64Coin("ujkl", 10000),
 			expErr:  true,
 		},
 		"name not found": {
 			Creator: accs[0],
 			Name:    "null",
-			Price:   "10000ujkl",
+			Price:   sdk.NewInt64Coin("ujkl", 10000),
 			expErr:  true,
 		},
 		"invalid owner": {
 			Creator: accs[0],
 			Name:    names[1],
-			Price:   "10000ujkl",
+			Price:   sdk.NewInt64Coin("ujkl", 10000),
 			expErr:  true,
 		},
 		"expired": {
 			Creator: accs[1],
 			Name:    names[3],
-			Price:   "10000ujkl",
+			Price:   sdk.NewInt64Coin("ujkl", 10000),
 			expErr:  true,
 		},
 	}
@@ -81,7 +82,7 @@ func (suite *KeeperTestSuite) TestListMsg() {
 			msg := &types.MsgList{
 				Creator: accs[0],
 				Name:    names[0] + "." + tld,
-				Price:   "10000ujkl",
+				Price:   sdk.NewInt64Coin("ujkl", 10000),
 			}
 			_, err = msgSrvr.List(ctx, msg)
 			suite.Require().NoError(err)

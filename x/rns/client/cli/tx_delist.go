@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +25,7 @@ func CmdDelist() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgDelist(
+			msg := types.NewMsgDeList(
 				clientCtx.GetFromAddress().String(),
 				argName,
 			)

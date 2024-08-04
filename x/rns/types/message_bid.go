@@ -9,7 +9,7 @@ const TypeMsgBid = "bid"
 
 var _ sdk.Msg = &MsgBid{}
 
-func NewMsgBid(creator string, name string, bid string) *MsgBid {
+func NewMsgBid(creator string, name string, bid sdk.Coin) *MsgBid {
 	return &MsgBid{
 		Creator: creator,
 		Name:    name,
@@ -46,10 +46,6 @@ func (msg *MsgBid) ValidateBasic() error {
 	_, _, err = GetNameAndTLD(msg.Name)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid name/tld (%s)", err)
-	}
-	_, err = sdk.ParseCoinsNormalized(msg.Bid)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid bid/tld (%s)", err)
 	}
 	return nil
 }

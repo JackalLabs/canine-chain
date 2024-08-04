@@ -7,9 +7,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	filetree "github.com/jackalLabs/canine-chain/v3/x/filetree"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	filetree "github.com/jackalLabs/canine-chain/v4/x/filetree"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -28,7 +28,7 @@ func (suite *KeeperTestSuite) SetupSuite() {
 }
 
 func (suite *KeeperTestSuite) reset() {
-	filetreeKeeper, encCfg, ctx := setupFiletreeKeeper(suite.T())
+	filetreeKeeper, encCfg, ctx := SetupFiletreeKeeper(suite.T())
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, encCfg.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, filetreeKeeper)

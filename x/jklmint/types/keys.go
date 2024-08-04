@@ -1,5 +1,7 @@
 package types
 
+import "fmt"
+
 var MinterKey = []byte{0x00}
 
 const (
@@ -19,10 +21,18 @@ const (
 	MemStoreKey = "mem_jklmint"
 
 	// Query endpoints supported by the minting querier
-	QueryParameters = "parameters"
-	QueryInflation  = "inflation"
+	QueryParameters   = "parameters"
+	QueryInflationKey = "inflation"
+
+	LastBlockMinted = "last_block_minted"
+
+	DevGrantsPool = "dev_grant_pool"
 )
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
+}
+
+func MintedBlockKey(height int64) []byte {
+	return []byte(fmt.Sprintf("minted_at_%d", height))
 }

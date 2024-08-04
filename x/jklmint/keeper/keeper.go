@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 )
 
 type (
@@ -85,7 +85,8 @@ func FloatToBigInt(val float64) *big.Int {
 }
 
 func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
-	denom := k.GetParams(ctx).MintDenom
+	params := k.GetParams(ctx)
+	denom := params.MintDenom
 	coins := k.bankKeeper.GetSupply(ctx, denom)
 
 	amt := coins.Amount.ToDec()
@@ -96,7 +97,13 @@ func (k Keeper) GetInflation(ctx sdk.Context) (sdk.Dec, error) {
 
 	var blocksPerYearEstiamte int64 = (365 * 24 * 60 * 60) / 6
 
-	printedPerYear := blocksPerYearEstiamte * 10_000_000
+	mintedNum := params.TokensPerBlock
+	minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
+	if found {
+		mintedNum = minted.Minted
+	}
+
+	printedPerYear := blocksPerYearEstiamte * mintedNum
 
 	inflate := sdk.NewDec(printedPerYear)
 

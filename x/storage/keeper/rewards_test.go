@@ -1,13 +1,13 @@
 package keeper_test
 
 import (
-	"fmt"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	jklminttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/tendermint/tendermint/libs/rand"
 )
 
 func (suite *KeeperTestSuite) TestDecimals() {
@@ -35,155 +35,278 @@ func (suite *KeeperTestSuite) TestReward() {
 	suite.Require().NoError(err)
 
 	signer := testAddresses[0]
+
+	s := suite.ctx.BlockTime()
+
+	t := s.AddDate(1, 0, 0) // simulate buying a whole year
 	suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
-		Start:          time.Now(),
-		End:            time.Now().AddDate(1, 0, 0),
+		Start:          s,
+		End:            t,
 		SpaceAvailable: 1000000000,
 		SpaceUsed:      0,
 		Address:        signer,
 	})
-	providerOne := testAddresses[1]
-
-	dealOne := types.ActiveDeals{
-		Cid:           "cid1test",
-		Signee:        signer,
-		Provider:      providerOne,
-		Startblock:    "0",
-		Endblock:      "0",
-		Filesize:      "100",
-		Proofverified: "true",
-		Proofsmissed:  "0",
-		Blocktoprove:  "1",
-		Creator:       providerOne,
-		Merkle:        "nil",
-		Fid:           "fid1test",
-	}
-
-	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
-
-	bal := suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
-	suite.Require().Equal(int64(0), bal.Amount.Int64())
 
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
+	gauge := suite.storageKeeper.NewGauge(suite.ctx, coins, t)
+	gaugeAccount, err := types.GetGaugeAccount(gauge)
 	suite.NoError(err)
 
-	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, jklminttypes.ModuleName, gaugeAccount, coins)
+	suite.NoError(err)
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, gaugeAccount, "ujkl")
 	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
 
-	suite.storageKeeper.SetActiveDeals(suite.ctx, dealOne)
-
-	var blocks int64 = 10 * 5
-
-	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20})
-
-	suite.Require().Equal(blocks, ctx.BlockHeight())
-	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
-
-	err = suite.storageKeeper.HandleRewardBlock(ctx)
-	suite.NoError(err)
-
+	providerOne := testAddresses[1]
 	pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
 	suite.NoError(err)
+
 	bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
-	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
-
-	bal = suite.bankKeeper.GetBalance(ctx, acc, "ujkl")
 	suite.Require().Equal(int64(0), bal.Amount.Int64())
-}
 
-func (suite *KeeperTestSuite) TestMultiReward() {
-	suite.SetupSuite()
+	dealOne := types.UnifiedFile{
+		Merkle:        []byte("merkle"),
+		Owner:         signer,
+		Start:         0,
+		Expires:       0,
+		FileSize:      1000,
+		ProofInterval: 100,
+		ProofType:     0,
+		Proofs:        make([]string, 0),
+		MaxProofs:     3,
+		Note:          "test",
+	}
 
-	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
-	suite.Require().NoError(err)
+	blocks := dealOne.ProofInterval * 3
 
-	signer := testAddresses[0]
-	suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
-		Start:          time.Now(),
-		End:            time.Now().AddDate(1, 0, 0),
-		SpaceAvailable: 1000000000,
-		SpaceUsed:      0,
-		Address:        signer,
+	suite.storageKeeper.SetFile(suite.ctx, dealOne)
+	dealOne.AddProver(suite.ctx, suite.storageKeeper, providerOne)
+	suite.storageKeeper.SetProof(suite.ctx, types.FileProof{
+		Prover:       providerOne,
+		Merkle:       dealOne.Merkle,
+		Owner:        dealOne.Owner,
+		Start:        dealOne.Start,
+		LastProven:   blocks - 1,
+		ChunkToProve: 0,
 	})
 
-	const l = 50
+	_, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+	suite.Require().True(found)
 
-	providers := make([]sdk.AccAddress, l)
-
-	for i := 0; i < l; i++ {
-		acc, err := sdk.AccAddressFromHex(fmt.Sprintf("%08x", i))
-		suite.Require().NoError(err)
-		providers[i] = acc
-	}
-
-	deals := make([]types.ActiveDeals, l*2)
-
-	total := 0
-
-	for i := 0; i < l*2; i++ {
-		p := providers[i%l]
-		deal := types.ActiveDeals{
-			Cid:           fmt.Sprintf("cid1test%d", i),
-			Signee:        signer,
-			Provider:      p.String(),
-			Startblock:    "0",
-			Endblock:      "0",
-			Filesize:      fmt.Sprintf("%d", i),
-			Proofverified: "true",
-			Proofsmissed:  "0",
-			Blocktoprove:  "1",
-			Creator:       p.String(),
-			Merkle:        "nil",
-			Fid:           fmt.Sprintf("fid1test%d", i),
-		}
-
-		total += i
-
-		deals[i] = deal
-		suite.storageKeeper.SetActiveDeals(suite.ctx, deal)
-	}
-
-	acc := suite.accountKeeper.GetModuleAddress(types.ModuleName)
-
-	bal := suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
-	suite.Require().Equal(int64(0), bal.Amount.Int64())
-
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
-
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, minttypes.ModuleName, acc, coins)
-	suite.NoError(err)
-
-	bal = suite.bankKeeper.GetBalance(suite.ctx, acc, "ujkl")
-	suite.Require().Equal(int64(6000000), bal.Amount.Int64())
-
-	var blocks int64 = 10 * 5
-
-	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20})
+	newTime := s.AddDate(0, 3, 0)
+	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20}).WithBlockTime(newTime)
 
 	suite.Require().Equal(blocks, ctx.BlockHeight())
 	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
 
-	err = suite.storageKeeper.HandleRewardBlock(ctx)
-	suite.NoError(err)
+	testDiff := gauge.End.Sub(s)
+	realDiff := newTime.Sub(s)
 
-	nom := sdk.NewDec(20)
-	den := sdk.NewDec(int64(total))
+	ratio := float64(realDiff.Microseconds()) / float64(testDiff.Microseconds())
+	r := ratio * float64(6000000)
 
-	r := nom.Quo(den).Mul(sdk.NewDec(6000000))
-	m := r.TruncateInt64()
+	suite.storageKeeper.ManageRewards(ctx)
 
-	nom = sdk.NewDec(70)
-	den = sdk.NewDec(int64(total))
+	bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
+	suite.Require().Equal(int64(r), bal.Amount.Int64())
+}
 
-	r = nom.Quo(den).Mul(sdk.NewDec(6000000))
+func (suite *KeeperTestSuite) TestLongTermReward() {
+	for i := 1; i < 10; i++ {
+		suite.SetupSuite()
 
-	m += r.TruncateInt64()
+		testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+		suite.Require().NoError(err)
 
-	bal = suite.bankKeeper.GetBalance(suite.ctx, providers[20], "ujkl")
-	suite.Require().Equal(m, bal.Amount.Int64())
+		signer := testAddresses[0]
 
-	bal = suite.bankKeeper.GetBalance(ctx, acc, "ujkl")
-	suite.Require().Equal(int64(0), bal.Amount.Int64())
+		s := suite.ctx.BlockTime()
+
+		totalBlocks := int64(1600)
+
+		timePerBlock := int64(i)
+
+		totalBlockTime := totalBlocks * timePerBlock
+		t := s.Add(time.Second * time.Duration(totalBlockTime) / 2) // simulate buying only half the simulation time
+		suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
+			Start:          s,
+			End:            t,
+			SpaceAvailable: 1000000000,
+			SpaceUsed:      0,
+			Address:        signer,
+		})
+
+		coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
+
+		gauge := suite.storageKeeper.NewGauge(suite.ctx, coins, t)
+		gaugeAccount, err := types.GetGaugeAccount(gauge)
+		suite.NoError(err)
+
+		err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, jklminttypes.ModuleName, gaugeAccount, coins)
+		suite.NoError(err)
+
+		totalSpend := int64(6000000)
+
+		bal := suite.bankKeeper.GetBalance(suite.ctx, gaugeAccount, "ujkl")
+		suite.Require().Equal(totalSpend, bal.Amount.Int64())
+
+		providerOne := testAddresses[1]
+		pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
+		suite.NoError(err)
+
+		bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
+		suite.Require().Equal(int64(0), bal.Amount.Int64())
+
+		dealOne := types.UnifiedFile{
+			Merkle:        []byte("merkle"),
+			Owner:         signer,
+			Start:         0,
+			Expires:       0,
+			FileSize:      1000,
+			ProofInterval: 100,
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          "test",
+		}
+
+		suite.storageKeeper.SetFile(suite.ctx, dealOne)
+		dealOne.AddProver(suite.ctx, suite.storageKeeper, providerOne)
+
+		var b int64
+		blockTime := suite.ctx.BlockTime()
+		for i := int64(1); i < totalBlocks; i++ {
+			suite.T().Logf("Block: %d", i)
+			p, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+			suite.Require().True(found)
+			p.LastProven = i
+			suite.storageKeeper.SetProof(suite.ctx, p)
+
+			blockTime = blockTime.Add(time.Second * time.Duration(timePerBlock)) // step forward 6 seconds
+			suite.ctx = suite.ctx.WithBlockHeight(i).WithHeaderHash(rand.Bytes(20)).WithBlockTime(blockTime)
+
+			testDiff := gauge.End.Sub(s)
+			realDiff := time.Second * time.Duration(timePerBlock) // step forward 6 seconds
+
+			ratio := float64(realDiff.Microseconds()) / float64(testDiff.Microseconds())
+			r := ratio * float64(totalSpend)
+			suite.T().Logf("Ratio: %f -> %f", ratio, r)
+			suite.storageKeeper.ManageRewards(suite.ctx)
+
+			bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
+			ibal := bal.Amount.Int64()
+			suite.T().Logf("Account has %d tokens", ibal)
+			dif := ibal - b
+			if i > totalBlocks/2 {
+				suite.Require().Equal(int64(0), dif)
+			} else {
+				suite.Require().Equal(int64(r), dif)
+			}
+			b = ibal
+
+		}
+	}
+}
+
+func (suite *KeeperTestSuite) TestLongTermRewardWithWindows() {
+	for j := int64(1); j < 10; j++ {
+		suite.SetupSuite()
+
+		testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+		suite.Require().NoError(err)
+
+		signer := testAddresses[0]
+
+		s := suite.ctx.BlockTime()
+
+		totalBlocks := int64(1600)
+
+		timePerBlock := int64(6)
+
+		totalBlockTime := totalBlocks * timePerBlock
+		t := s.Add(time.Second * time.Duration(totalBlockTime) / 2) // simulate buying only half the simulation time
+		suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
+			Start:          s,
+			End:            t,
+			SpaceAvailable: 1000000000,
+			SpaceUsed:      0,
+			Address:        signer,
+		})
+
+		coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(6000000)))
+
+		gauge := suite.storageKeeper.NewGauge(suite.ctx, coins, t)
+		gaugeAccount, err := types.GetGaugeAccount(gauge)
+		suite.NoError(err)
+
+		err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, jklminttypes.ModuleName, gaugeAccount, coins)
+		suite.NoError(err)
+
+		totalSpend := int64(6000000)
+
+		bal := suite.bankKeeper.GetBalance(suite.ctx, gaugeAccount, "ujkl")
+		suite.Require().Equal(totalSpend, bal.Amount.Int64())
+
+		providerOne := testAddresses[1]
+		pOneAcc, err := sdk.AccAddressFromBech32(providerOne)
+		suite.NoError(err)
+
+		bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
+		suite.Require().Equal(int64(0), bal.Amount.Int64())
+
+		dealOne := types.UnifiedFile{
+			Merkle:        []byte("merkle"),
+			Owner:         signer,
+			Start:         0,
+			Expires:       0,
+			FileSize:      1000,
+			ProofInterval: 100,
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          "test",
+		}
+
+		suite.storageKeeper.SetFile(suite.ctx, dealOne)
+		dealOne.AddProver(suite.ctx, suite.storageKeeper, providerOne)
+
+		var b int64
+		blockTime := suite.ctx.BlockTime()
+		for i := int64(1); i < totalBlocks; i++ {
+			suite.T().Logf("Block: %d", i)
+			p, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+			suite.Require().True(found)
+			p.LastProven = i
+			suite.storageKeeper.SetProof(suite.ctx, p)
+
+			blockTime = blockTime.Add(time.Second * time.Duration(timePerBlock)) // step forward 6 seconds
+			suite.ctx = suite.ctx.WithBlockHeight(i).WithHeaderHash(rand.Bytes(20)).WithBlockTime(blockTime)
+
+			if suite.ctx.BlockHeight()%j > 0 {
+				continue
+			}
+
+			testDiff := gauge.End.Sub(s)
+			realDiff := time.Second * time.Duration(timePerBlock*j) // step forward 6 seconds
+
+			ratio := float64(realDiff.Microseconds()) / float64(testDiff.Microseconds())
+			r := ratio * float64(totalSpend)
+			suite.T().Logf("Ratio: %f -> %f", ratio, r)
+			suite.storageKeeper.ManageRewards(suite.ctx)
+
+			bal = suite.bankKeeper.GetBalance(suite.ctx, pOneAcc, "ujkl")
+			ibal := bal.Amount.Int64()
+			suite.T().Logf("Account has %d tokens", ibal)
+			dif := ibal - b
+			if i > totalBlocks/2 {
+				suite.Require().Equal(int64(0), dif)
+			} else {
+				suite.Require().Equal(int64(r), dif)
+			}
+			b = ibal
+
+		}
+	}
 }

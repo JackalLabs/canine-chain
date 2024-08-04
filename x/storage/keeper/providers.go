@@ -6,7 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/tendermint/tendermint/libs/rand"
 )
 
@@ -63,6 +63,30 @@ func (k Keeper) GetActiveProviders(ctx sdk.Context, filterAddress string) []type
 
 	}
 	providers = allowedProviders
+
+	size := len(providers)
+
+	rounds := Rounds * size
+
+	i64Size := int64(size)
+
+	r := rand.NewRand() // creating a new random generator to ensure no interference
+
+	r.Seed(ctx.BlockHeight())
+
+	for i := 0; i < rounds; i++ {
+		x := r.Int63n(i64Size)
+		y := r.Int63n(i64Size)
+
+		providers[x], providers[y] = providers[y], providers[x]
+	}
+
+	return providers
+}
+
+// GetRandomizedProviders returns a list of providers in a random order
+func (k Keeper) GetRandomizedProviders(ctx sdk.Context) []types.Providers {
+	providers := k.GetAllProviders(ctx)
 
 	size := len(providers)
 
@@ -167,15 +191,19 @@ func (k Keeper) RemoveAllActiveProviders(
 
 // GetAllActiveProviders returns all providers
 func (k Keeper) GetAllActiveProviders(ctx sdk.Context) (list []types.ActiveProviders) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveProvidersKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ActiveProviders
+		var val types.Providers
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
+
+		l, _ := k.GetAllProofsForProver(ctx, val.Address)
+		if len(l) >= 1 {
+			list = append(list, types.ActiveProviders{Address: val.Address})
+		}
 	}
 
 	return list

@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +26,7 @@ func CmdListOwnedNames() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryListOwnedNamesRequest{
+			params := &types.QueryListOwnedNames{
 				Address: reqAddress,
 			}
 

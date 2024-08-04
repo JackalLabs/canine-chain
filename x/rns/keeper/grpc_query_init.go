@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitsRequest) (*types.QueryAllInitsResponse, error) {
+func (k Keeper) AllInits(c context.Context, req *types.QueryAllInits) (*types.QueryAllInitsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,7 +22,7 @@ func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitsRequest) (*ty
 	store := ctx.KVStore(k.storeKey)
 	initStore := prefix.NewStore(store, types.KeyPrefix(types.InitKeyPrefix))
 
-	pageRes, err := query.Paginate(initStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(initStore, req.Pagination, func(_ []byte, value []byte) error {
 		var init types.Init
 		if err := k.cdc.Unmarshal(value, &init); err != nil {
 			return err
@@ -38,7 +38,7 @@ func (k Keeper) InitAll(c context.Context, req *types.QueryAllInitsRequest) (*ty
 	return &types.QueryAllInitsResponse{Init: inits, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Init(c context.Context, req *types.QueryInitRequest) (*types.QueryInitResponse, error) {
+func (k Keeper) Init(c context.Context, req *types.QueryInit) (*types.QueryInitResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

@@ -11,13 +11,20 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
 
-	moduletestutil "github.com/jackalLabs/canine-chain/v3/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
+	moduletestutil "github.com/jackalLabs/canine-chain/v4/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	canineglobaltestutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/notifications/keeper"
-	types "github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+	canineglobaltestutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
+	types "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 )
+
+type DummyRns struct{}
+
+func (d DummyRns) Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error) {
+	_ = ctx
+	return sdk.AccAddressFromBech32(name)
+}
 
 // setupNotificationsKeeper creates a NotificationsKeeper as well as all its dependencies.
 func setupNotificationsKeeper(t *testing.T) (
@@ -27,7 +34,7 @@ func setupNotificationsKeeper(t *testing.T) (
 ) {
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, sdk.NewTransientStoreKey("transient_test"))
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, sdk.NewTransientStoreKey("transient_test"), key)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()
@@ -44,7 +51,7 @@ func setupNotificationsKeeper(t *testing.T) (
 	)
 
 	// Notifications keeper initializations
-	notificationsKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace)
+	notificationsKeeper := keeper.NewKeeper(encCfg.Codec, key, memStoreKey, paramsSubspace, DummyRns{})
 	notificationsKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.

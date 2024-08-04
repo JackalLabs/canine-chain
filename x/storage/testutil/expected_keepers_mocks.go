@@ -5,18 +5,31 @@
 package testutil
 
 import (
+	"fmt"
 	reflect "reflect"
 
 	types "github.com/cosmos/cosmos-sdk/types"
 	types0 "github.com/cosmos/cosmos-sdk/x/auth/types"
 	gomock "github.com/golang/mock/gomock"
-	types1 "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	types1 "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 )
 
 // MockAccountKeeper is a mock of AccountKeeper interface.
 type MockAccountKeeper struct {
 	ctrl     *gomock.Controller
 	recorder *MockAccountKeeperMockRecorder
+}
+
+func (m *MockAccountKeeper) HasAccount(ctx types.Context, addr types.AccAddress) bool {
+	return false
+}
+
+func (m *MockAccountKeeper) SetAccount(ctx types.Context, acc types0.AccountI) {
+
+}
+
+func (m *MockAccountKeeper) NewAccountWithAddress(ctx types.Context, addr types.AccAddress) types0.AccountI {
+	return types0.NewBaseAccountWithAddress(addr)
 }
 
 // MockAccountKeeperMockRecorder is the mock recorder for MockAccountKeeper.
@@ -235,4 +248,34 @@ func (m *MockOracleKeeper) GetFeed(ctx types.Context, index string) (types1.Feed
 func (mr *MockOracleKeeperMockRecorder) GetFeed(ctx, index interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFeed", reflect.TypeOf((*MockOracleKeeper)(nil).GetFeed), ctx, index)
+}
+
+// MockOracleKeeper is a mock of OracleKeeper interface.
+type MockRNSKeeper struct {
+	ctrl     *gomock.Controller
+	recorder *MockRNSKeeperMockRecorder
+}
+
+func (m *MockRNSKeeper) Resolve(ctx types.Context, name string) (types.AccAddress, error) {
+	if len(name) == 0 {
+		return nil, fmt.Errorf("failed to get name")
+	}
+	return types.AccAddressFromBech32(name)
+}
+
+// MockOracleKeeperMockRecorder is the mock recorder for MockOracleKeeper.
+type MockRNSKeeperMockRecorder struct {
+	mock *MockRNSKeeper
+}
+
+// NewMockOracleKeeper creates a new mock instance.
+func NewMockRNSKeeper(ctrl *gomock.Controller) *MockRNSKeeper {
+	mock := &MockRNSKeeper{ctrl: ctrl}
+	mock.recorder = &MockRNSKeeperMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRNSKeeper) EXPECT() *MockRNSKeeperMockRecorder {
+	return m.recorder
 }

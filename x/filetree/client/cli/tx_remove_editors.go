@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func CmdRemoveEditors() *cobra.Command {
 		Short: "remove an address from the files editing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argEditorIds := args[0]
+			argEditorIDs := args[0]
 			argHashpath := args[1]
 			argOwner := args[2]
 
@@ -35,32 +35,32 @@ func CmdRemoveEditors() *cobra.Command {
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
-			editorAddresses := strings.Split(argEditorIds, ",")
-			var editorIds []string
+			editorAddresses := strings.Split(argEditorIDs, ",")
+			var editorIDs []string
 
 			for _, v := range editorAddresses {
 				if len(v) < 1 {
 					continue
 				}
 
-				params := &types.QueryFileRequest{
+				params := &types.QueryFile{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
+				file, err := fileQueryClient.File(context.Background(), params)
 				if err != nil {
 					return types.ErrFileNotFound
 				}
 
-				newEditorID := keeper.MakeEditorAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
-				editorIds = append(editorIds, newEditorID)
+				newEditorID := keeper.MakeEditorAddress(file.File.TrackingNumber, v) // This used to just be argAddress
+				editorIDs = append(editorIDs, newEditorID)
 
 			}
 
 			msg := types.NewMsgRemoveEditors(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(editorIds, ","),
+				strings.Join(editorIDs, ","),
 				merklePath,
 				ownerChainAddress,
 			)

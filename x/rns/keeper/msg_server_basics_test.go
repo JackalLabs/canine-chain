@@ -2,8 +2,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 // testing msg server files for: init, register, and transfer
@@ -91,7 +91,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 				return types.NewMsgRegister(
 					user.String(),
 					"BiPhan.jkl",
-					"2",
+					2,
 					"{}",
 				)
 			},
@@ -103,7 +103,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 				return types.NewMsgRegister(
 					"invalid address",
 					"BiPhan.jkl",
-					"2",
+					2,
 					"{}",
 				)
 			},
@@ -116,26 +116,13 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 				return types.NewMsgRegister(
 					user.String(),
 					"BiPhan.LUNC",
-					"2",
+					2,
 					"{}",
 				)
 			},
 			expErr:    true,
 			expErrMsg: "could not extract the tld from the name provided",
 			name:      "invalid name",
-		},
-		{
-			preRun: func() *types.MsgRegister {
-				return types.NewMsgRegister(
-					user.String(),
-					"BiPhan.jkl",
-					"s",
-					"{}",
-				)
-			},
-			expErr:    true,
-			expErrMsg: "cannot parse years: invalid height",
-			name:      "invalid years",
 		},
 	}
 
@@ -183,7 +170,7 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", 2)
 	suite.Require().NoError(err)
 
 	cases := []struct {
@@ -231,7 +218,7 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 			preRun: func() *types.MsgTransfer {
 				freeName := "freeBi.jkl"
 				blockHeight := suite.ctx.BlockHeight()
-				err := suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), freeName, "{}", "2")
+				err := suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), freeName, "{}", 2)
 				suite.Require().NoError(err)
 				name, _ := suite.rnsKeeper.GetNames(suite.ctx, "freeBi", "jkl")
 				name.Locked = blockHeight + 1
@@ -289,7 +276,7 @@ func (suite *KeeperTestSuite) TestMsgUpdate() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", 2)
 	suite.Require().NoError(err)
 
 	const testdata = "{\"test\":\"test\"}"

@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func CmdRemoveViewers() *cobra.Command {
 		Short: "remove an address from the files viewing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argViewerIds := args[0]
+			argViewerIDs := args[0]
 			argHashpath := args[1]
 			argOwner := args[2]
 
@@ -35,33 +35,33 @@ func CmdRemoveViewers() *cobra.Command {
 			merklePath := types.MerklePath(trimPath)
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
-			viewerAddresses := strings.Split(argViewerIds, ",")
-			var viewerIds []string
+			viewerAddresses := strings.Split(argViewerIDs, ",")
+			var viewerIDs []string
 
 			for _, v := range viewerAddresses {
 				if len(v) < 1 {
 					continue
 				}
 
-				params := &types.QueryFileRequest{
+				params := &types.QueryFile{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
+				file, err := fileQueryClient.File(context.Background(), params)
 				if err != nil {
 					return types.ErrFileNotFound
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v) // This used to just be argAddress
-				viewerIds = append(viewerIds, newViewerID)
+				newViewerID := keeper.MakeViewerAddress(file.File.TrackingNumber, v) // This used to just be argAddress
+				viewerIDs = append(viewerIDs, newViewerID)
 
 			}
 
-			// viewerIds supposed to be JSON marshalled aswell?
+			// viewerIDs supposed to be JSON marshalled aswell?
 			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(viewerIds, ","),
+				strings.Join(viewerIDs, ","),
 				merklePath,
 				ownerChainAddress,
 			)

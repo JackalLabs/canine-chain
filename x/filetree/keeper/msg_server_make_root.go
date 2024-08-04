@@ -6,10 +6,10 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) MakeRootFolder(ctx sdk.Context, creator string, viewers string, editors string, trackingNumber string) {
+func (k Keeper) MakeRootFolder(ctx sdk.Context, creator string, viewers string, editors string, trackingNumber string) {
 	merklePath := types.MerklePath("s")
 
 	h1 := sha256.New() // making full address
@@ -32,24 +32,29 @@ func (k msgServer) MakeRootFolder(ctx sdk.Context, creator string, viewers strin
 	k.SetFiles(ctx, file)
 }
 
-/*
-Deprecated: MakeRoot is being replaced by MakeRootV2
-*/
-func (k msgServer) MakeRoot(goCtx context.Context, msg *types.MsgMakeRoot) (*types.MsgMakeRootResponse, error) {
-	newMsg := types.MsgMakeRootV2{
-		Creator:        msg.Creator,
-		Editors:        msg.Editors,
-		Viewers:        msg.Editors,
-		TrackingNumber: msg.TrackingNumber,
-	}
-
-	return k.MakeRootV2(goCtx, &newMsg)
-}
-
-func (k msgServer) MakeRootV2(goCtx context.Context, msg *types.MsgMakeRootV2) (*types.MsgMakeRootResponse, error) {
+func (k msgServer) ProvisionFileTree(goCtx context.Context, msg *types.MsgProvisionFileTree) (*types.MsgProvisionFileTreeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	k.MakeRootFolder(ctx, msg.Creator, msg.Viewers, msg.Editors, msg.TrackingNumber)
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
-	return &types.MsgMakeRootResponse{}, nil
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeMakeRoot,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+	return &types.MsgProvisionFileTreeResponse{}, nil
 }

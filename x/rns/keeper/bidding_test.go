@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 const TestName = "test.jkl"
@@ -35,7 +35,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameAddress, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameAddress.String(), TestName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameAddress.String(), TestName, "{}", 2)
 	suite.Require().NoError(err)
 
 	bidderBalBefore := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -64,13 +64,13 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	suite.Require().Equal(ramt.Int64(), bidder) // cost them the amount they bid
 	suite.Require().Equal(eamt.Int64(), biddee) // cost them the amount they bid
 
-	nameReq := types.QueryNameRequest{
-		Index: TestName,
+	nameReq := types.QueryName{
+		Name: TestName,
 	}
 
-	res, err := suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	res, err := suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Names.Value, address.String())
+	suite.Require().Equal(res.Name.Value, address.String())
 }
 
 func (suite *KeeperTestSuite) TestMsgMakeBid() {
@@ -96,8 +96,8 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), TestName, "1000ujkl")
 	suite.Require().NoError(err)
 
-	bidReq := types.QueryBidRequest{
-		Index: fmt.Sprintf("%s%s", address.String(), TestName),
+	bidReq := types.QueryBid{
+		Name: fmt.Sprintf("%s%s", address.String(), TestName),
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -107,7 +107,7 @@ func (suite *KeeperTestSuite) TestMsgMakeBid() {
 	var leftover int64 = 1000
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
 }
 
@@ -134,8 +134,8 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	err = suite.rnsKeeper.AddBid(suite.ctx, address.String(), TestName, "1000ujkl")
 	suite.Require().NoError(err)
 
-	bidReq := types.QueryBidRequest{
-		Index: fmt.Sprintf("%s%s", address.String(), TestName),
+	bidReq := types.QueryBid{
+		Name: fmt.Sprintf("%s%s", address.String(), TestName),
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -145,7 +145,7 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	var leftover int64 = 1000                       // they spent 1000ujkl so they should have 1000ujkl less
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.CancelOneBid(suite.ctx, address.String(), TestName)
@@ -158,6 +158,6 @@ func (suite *KeeperTestSuite) TestMsgCancelBid() {
 	leftover = 0                                    // they cancelled the bid and thus should receive their money back
 	suite.Require().Equal(newamt.Int64(), leftover) // cost them the amount they bid
 
-	_, err = suite.queryClient.Bids(suite.ctx.Context(), &bidReq)
+	_, err = suite.queryClient.Bid(suite.ctx.Context(), &bidReq)
 	suite.Require().Error(err)
 }

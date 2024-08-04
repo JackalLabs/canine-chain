@@ -2,85 +2,81 @@ package keeper
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"io"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	merkletree "github.com/wealdtech/go-merkletree"
-	"github.com/wealdtech/go-merkletree/sha3"
-
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func VerifyDeal(merkle string, hashList string, num int64, item string) bool {
-	h := sha256.New()
-	_, err := io.WriteString(h, fmt.Sprintf("%d%s", num, item))
-	if err != nil {
-		return false
-	}
-	hashName := h.Sum(nil)
-
-	var proof merkletree.Proof // unmarshal proof
-	err = json.Unmarshal([]byte(hashList), &proof)
-	if err != nil {
-		return false
-	}
-
-	m, err := hex.DecodeString(merkle)
-	if err != nil {
-		return false
-	}
-	verified, err := merkletree.VerifyProofUsing(hashName, false, &proof, [][]byte{m}, sha3.New512())
-	if err != nil {
-		return false
-	}
-
-	return verified
-}
-
-func (k msgServer) Postproof(goCtx context.Context, msg *types.MsgPostproof) (*types.MsgPostproofResponse, error) {
+func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*types.MsgPostProofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	meter := ctx.GasMeter()
-	usedGas := meter.GasConsumed()
 
-	hashes := strings.Split(msg.Hashlist, ",")
-
-	contract, found := k.GetActiveDeals(ctx, msg.Cid)
+	f, found := k.GetFile(ctx, msg.Merkle, msg.Owner, msg.Start)
 	if !found {
-		ctx.Logger().Debug("%s, %s\n", "Contract not found", msg.Cid)
-		return &types.MsgPostproofResponse{Success: false, ErrorMessage: fmt.Sprintf("contract not found: %s", msg.Cid)}, nil
+		s := fmt.Sprintf("contract not found: %x/%s/%d", msg.Merkle, msg.Owner, msg.Start)
+		ctx.Logger().Debug(s)
+		return &types.MsgPostProofResponse{Success: false, ErrorMessage: s}, nil
 	}
 
-	ctx.Logger().Debug("Contract that was found: \n%v\n", contract)
+	file := &f
 
-	nn, ok := sdk.NewIntFromString(contract.Blocktoprove)
-	if !ok {
-		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "cannot parse block to prove"}, nil
+	prover := msg.Creator
+
+	var proof *types.FileProof
+
+	if len(file.Proofs) == int(file.MaxProofs) {
+		var err error
+		proof, err = file.GetProver(ctx, k, prover)
+		if err != nil {
+			return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
+		}
+	} else {
+		if file.ContainsProver(prover) {
+			var err error
+			proof, err = file.GetProver(ctx, k, prover)
+			if err != nil {
+				return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
+			}
+		} else {
+			proof = file.AddProver(ctx, k, prover)
+		}
 	}
-	num := nn.Int64()
 
-	ctx.Logger().Debug("%v\n", hashes)
-
-	verified := VerifyDeal(contract.Merkle, msg.Hashlist, num, msg.Item)
-
-	if !verified {
-		ctx.Logger().Debug("%s\n", "Cannot verify")
-		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "cannot verify proof"}, nil
+	if msg.ToProve != proof.ChunkToProve {
+		e := fmt.Errorf("wrong chunk to prove for %x. Was %d should be %d", file.Merkle, msg.ToProve, proof.ChunkToProve)
+		ctx.Logger().Info(e.Error())
+		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
 	}
 
-	if contract.Proofverified == "true" {
-		meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")
-		return &types.MsgPostproofResponse{Success: false, ErrorMessage: "proof already verified"}, nil
+	chunkSize := k.GetParams(ctx).ChunkSize
+
+	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
+		ctx.Logger().Info("file was already proven")
 	}
 
-	contract.Proofverified = "true"
-	k.SetActiveDeals(ctx, contract)
+	err := file.Prove(ctx, proof, msg.HashList, msg.Item, chunkSize)
+	if err != nil {
+		e := sdkerrors.Wrapf(err, "cannot verify %x against %x", msg.Item, file.Merkle)
+		ctx.Logger().Info(e.Error())
+		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
+	}
 
-	meter.RefundGas(meter.GasConsumed()-usedGas, "successful proof refund")
+	k.SetProof(ctx, *proof)
 
-	return &types.MsgPostproofResponse{Success: true, ErrorMessage: ""}, nil
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	return &types.MsgPostProofResponse{Success: true, ErrorMessage: ""}, nil
 }

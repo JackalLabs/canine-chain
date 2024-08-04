@@ -10,10 +10,10 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	jklapp "github.com/jackalLabs/canine-chain/v3/app"
+	jklapp "github.com/jackalLabs/canine-chain/v4/app"
 )
 
 // returns context and an app with updated mint keeper

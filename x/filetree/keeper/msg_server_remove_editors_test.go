@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgRemoveEditors() {
@@ -32,11 +32,11 @@ func (suite *KeeperTestSuite) TestMsgRemoveEditors() {
 
 	// add bob as a editor for pepe
 
-	EditorIds := strings.Split(alice, ",")
-	EditorIds = append(EditorIds, bob)
+	EditorIDs := strings.Split(alice, ",")
+	EditorIDs = append(EditorIDs, bob)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice, EditorIds, strings.Split(alice, ","), "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(alice, EditorIDs, strings.Split(alice, ","), "s/home/pepe.jpg")
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
@@ -46,23 +46,23 @@ func (suite *KeeperTestSuite) TestMsgRemoveEditors() {
 
 	// Let's query the file after it was set to confirm that alice and bob are editors
 
-	fileReq := types.QueryFileRequest{
+	fileReq := types.QueryFile{
 		Address:      pepeMerklePath,
 		OwnerAddress: aliceOwnerAddress,
 	}
 
-	res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+	res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 	suite.Require().NoError(err)
 
-	bobIsEditor, err := keeper.HasEditAccess(res.Files, bob)
+	bobIsEditor, err := keeper.HasEditAccess(res.File, bob)
 	suite.Require().NoError(err)
 	suite.Require().Equal(bobIsEditor, true)
 
-	aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice)
+	aliceIsEditor, err := keeper.HasEditAccess(res.File, alice)
 	suite.Require().NoError(err)
 	suite.Require().Equal(aliceIsEditor, true)
 
-	bobEditorAddress := keeper.MakeEditorAddress(res.Files.TrackingNumber, bob)
+	bobEditorAddress := keeper.MakeEditorAddress(res.File.TrackingNumber, bob)
 
 	cases := []struct {
 		preRun    func() *types.MsgRemoveEditors
@@ -124,22 +124,22 @@ func (suite *KeeperTestSuite) TestMsgRemoveEditors() {
 				suite.Require().EqualValues(types.MsgRemoveEditorsResponse{}, *res)
 				// Let's confirm that bob is no longer an editor
 
-				fileReq := types.QueryFileRequest{
+				fileReq := types.QueryFile{
 					Address:      pepeMerklePath,
 					OwnerAddress: aliceOwnerAddress,
 				}
-				res, err := suite.queryClient.Files(suite.ctx.Context(), &fileReq)
+				res, err := suite.queryClient.File(suite.ctx.Context(), &fileReq)
 				suite.Require().NoError(err)
 
-				bobIsEditor, err := keeper.HasEditAccess(res.Files, bob)
+				bobIsEditor, err := keeper.HasEditAccess(res.File, bob)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(bobIsEditor, false)
 
-				aliceIsEditor, err := keeper.HasEditAccess(res.Files, alice)
+				aliceIsEditor, err := keeper.HasEditAccess(res.File, alice)
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(aliceIsEditor, true)
 
-				peacc := res.Files.EditAccess
+				peacc := res.File.EditAccess
 				jeacc := make(map[string]string)
 
 				err = json.Unmarshal([]byte(peacc), &jeacc)

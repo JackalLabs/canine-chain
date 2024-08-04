@@ -9,44 +9,41 @@ import "canine_chain/oracle/feed.proto";
 
 option go_package = "github.com/jackalLabs/canine-chain/x/oracle/types";
 
-// Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/params";
+  rpc Params(QueryParams) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/oracle/params";
   }
 
-  rpc Feed(QueryFeedRequest) returns (QueryFeedResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds/{name}";
+  // Queries a Feed by name.
+  rpc Feed(QueryFeed) returns (QueryFeedResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/oracle/feeds/{name}";
   }
 
-  rpc AllFeeds(QueryAllFeedsRequest) returns (QueryAllFeedsResponse) {
-    option (google.api.http).get = "/jackal-dao/canine-chain/oracle/feeds";
+  // Queries a list of Feed items.
+  rpc AllFeeds(QueryAllFeeds) returns (QueryAllFeedsResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/oracle/feeds";
   }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
+message QueryParams {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
-  // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryFeedRequest {
+message QueryFeed {
   string name = 1;
 }
 
 message QueryFeedResponse {
-  // params holds all the parameters of this module.
   Feed feed = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryAllFeedsRequest {}
+message QueryAllFeeds {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
 
 message QueryAllFeedsResponse {
-  // params holds all the parameters of this module.
   repeated Feed feed = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

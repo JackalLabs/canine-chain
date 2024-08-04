@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
@@ -23,13 +23,9 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdPostContract())
-	cmd.AddCommand(CmdPostproof())
-	cmd.AddCommand(CmdSignContract())
 	cmd.AddCommand(CmdCancelContract())
 	cmd.AddCommand(CmdBuyStorage())
-	cmd.AddCommand(CmdClaimStray())
-	cmd.AddCommand(CmdUpgradeStorage())
+	cmd.AddCommand(CmdPostFile(), CmdPostRandomFile())
 
 	return cmd
 }

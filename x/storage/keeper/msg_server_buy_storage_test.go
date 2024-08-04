@@ -2,8 +2,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestBuyStorage() {
@@ -28,8 +28,11 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		PriceFeed:              "jklprice",
 		MissesToBurn:           3,
 		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     8,
+		PricePerTbPerMonth:     15,
 		CollateralPrice:        2,
+		CheckWindow:            11,
+		ReferralCommission:     25,
+		PolRatio:               40,
 	})
 
 	cases := []struct {
@@ -41,7 +44,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		expErrMsg string
 	}{
 		{
-			testName: "buy storage while having an active plan",
+			testName: "buy less storage than active while having an active plan",
 			preRun: func() {
 				initialPayInfo := types.StoragePaymentInfo{
 					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
@@ -55,12 +58,12 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "6000000000",
+				DurationDays: 30,
+				Bytes:        6000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
-			expErrMsg: "please use MsgUpgradeStorage if you want to upgrade/downgrade",
+			expErrMsg: "cannot downgrade until current plan expires: invalid request",
 		},
 		{
 			testName: "buy 3gb which is less than current usage of 5gb",
@@ -75,8 +78,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "3000000000",
+				DurationDays: 30,
+				Bytes:        3000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -97,12 +100,12 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "6000000000",
+				DurationDays: 30,
+				Bytes:        6000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    66666,
+			tokens:    124999,
 			expErrMsg: "",
 		},
 		{
@@ -110,12 +113,26 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "2160h",
-				Bytes:        "1000000000000",
+				DurationDays: 90,
+				Bytes:        1000000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    false,
-			tokens:    33333333,
+			tokens:    62499999,
+			expErrMsg: "",
+		},
+		{
+			testName: "successfully buy 1tb for 3 month with referral",
+			msg: types.MsgBuyStorage{
+				Creator:      testAccount,
+				ForAddress:   testAccount,
+				DurationDays: 90,
+				Bytes:        1000000000000,
+				PaymentDenom: "ujkl",
+				Referral:     depoAccount,
+			},
+			expErr:    false,
+			tokens:    56249999,
 			expErrMsg: "",
 		},
 		{
@@ -123,8 +140,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "-1",
+				DurationDays: 30,
+				Bytes:        -1,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -135,8 +152,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "2m",
-				Bytes:        "1000000000",
+				DurationDays: 1,
+				Bytes:        1000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -148,8 +165,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "1000000000",
+				DurationDays: 30,
+				Bytes:        1000000000,
 				PaymentDenom: "uatom",
 			},
 			expErr:    true,
@@ -160,8 +177,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      "invalid_address",
 				ForAddress:   testAccount,
-				Duration:     "720h",
-				Bytes:        "1000000000",
+				DurationDays: 30,
+				Bytes:        1000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -172,8 +189,8 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
 				ForAddress:   "invalid_address",
-				Duration:     "720h",
-				Bytes:        "1000000000",
+				DurationDays: 30,
+				Bytes:        1000000000,
 				PaymentDenom: "ujkl",
 			},
 			expErr:    true,
@@ -181,26 +198,31 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 		},
 	}
 
-	dep := k.GetParams(suite.ctx).DepositAccount
-	add, err := sdk.AccAddressFromBech32(dep)
-	suite.Require().NoError(err)
-	amt := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl").Amount.Int64()
-
 	for _, tcs := range cases {
 		tc := tcs
+
 		suite.Run(tc.testName, func() {
 			if tc.preRun != nil {
 				tc.preRun()
 			}
-			_, err := msgSrvr.BuyStorage(ctx, &tc.msg)
 
-			bal := suite.bankKeeper.GetBalance(suite.ctx, add, "ujkl")
-			diff := bal.Amount.Int64() - amt
-			amt = bal.Amount.Int64()
+			forAdr, err := sdk.AccAddressFromBech32(tc.msg.ForAddress)
+			if !tc.expErr {
+				suite.Require().NoError(err)
+			}
+
+			bal := suite.bankKeeper.GetBalance(suite.ctx, forAdr, "ujkl")
+
+			_, err = msgSrvr.BuyStorage(ctx, &tc.msg)
+			if !tc.expErr {
+				suite.Require().NoError(err)
+			}
+
+			afterBal := suite.bankKeeper.GetBalance(suite.ctx, forAdr, "ujkl")
+			diff := bal.Amount.Int64() - afterBal.Amount.Int64()
 
 			if tc.expErr {
-				suite.Require().Equal(int64(0), diff)
-				suite.Require().EqualError(err, tc.expErrMsg)
+				suite.Require().ErrorContains(err, tc.expErrMsg)
 			} else {
 				suite.Require().NoError(err)
 				suite.Require().Equal(tc.tokens, diff)
@@ -209,5 +231,69 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			k.RemoveStoragePaymentInfo(suite.ctx, testAccount)
 		})
 	}
+	suite.reset()
+}
+
+func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
+	suite.SetupSuite()
+	msgSrvr, k, ctx := setupMsgServer(suite)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
+	suite.Require().NoError(err)
+
+	testAccount := testAddresses[0]
+	depoAccount := testAddresses[1]
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+	suite.Require().NoError(err)
+
+	k.SetParams(suite.ctx, types.Params{
+		DepositAccount:         depoAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     15,
+		CollateralPrice:        2,
+		CheckWindow:            11,
+		ReferralCommission:     25,
+		PolRatio:               40,
+	})
+
+	var bytes int64 = 3_000_000_000_000
+	var days int64 = 30
+
+	_, err = msgSrvr.BuyStorage(ctx, &types.MsgBuyStorage{
+		Creator:      testAccount,
+		ForAddress:   testAccount,
+		DurationDays: days,
+		Bytes:        bytes,
+		PaymentDenom: "ujkl",
+		Referral:     depoAccount,
+	})
+	suite.Require().NoError(err)
+
+	allGauges := suite.storageKeeper.GetAllPaymentGauges(suite.ctx)
+	suite.Require().Equal(1, len(allGauges))
+	gauge := allGauges[0]
+	gaugeAccount, err := types.GetGaugeAccount(gauge)
+	suite.Require().NoError(err)
+
+	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64()) * 0.9
+
+	bal := suite.bankKeeper.GetBalance(suite.ctx, gaugeAccount, "ujkl")
+	suite.Require().Equal(int64(cost*0.35), bal.Amount.Int64())
+
+	polAccount, err := types.GetPOLAccount()
+	suite.Require().NoError(err)
+
+	bal = suite.bankKeeper.GetBalance(suite.ctx, polAccount, "ujkl")
+	suite.Require().Equal(int64(cost*0.30), bal.Amount.Int64())
+
+	_ = k
+
 	suite.reset()
 }

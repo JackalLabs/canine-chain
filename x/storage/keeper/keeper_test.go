@@ -3,16 +3,19 @@ package keeper_test
 import (
 	gocontext "context"
 	"testing"
+	"time"
+
+	"github.com/jackalLabs/canine-chain/v4/testutil"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	storage "github.com/jackalLabs/canine-chain/v3/x/storage"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
-	storagetestutil "github.com/jackalLabs/canine-chain/v3/x/storage/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	storage "github.com/jackalLabs/canine-chain/v4/x/storage"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	storagetestutil "github.com/jackalLabs/canine-chain/v4/x/storage/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -49,7 +52,7 @@ func (suite *KeeperTestSuite) reset() {
 	err = bankKeeper.SendCoinsFromModuleToModule(ctx, minttypes.ModuleName, types.ModuleName, coins)
 	suite.NoError(err)
 
-	suite.ctx = ctx
+	suite.ctx = ctx.WithBlockTime(time.Now())
 	suite.storageKeeper = storageKeeper
 	suite.bankKeeper = bankKeeper
 	suite.accountKeeper = accountKeeper
@@ -62,6 +65,26 @@ func setupMsgServer(suite *KeeperTestSuite) (types.MsgServer, keeper.Keeper, goc
 	k := suite.storageKeeper
 	storage.InitGenesis(suite.ctx, *k, *types.DefaultGenesis())
 	ctx := sdk.WrapSDKContext(suite.ctx)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
+	suite.Require().NoError(err)
+
+	depoAccount := testAddresses[0]
+
+	k.SetParams(suite.ctx, types.Params{
+		DepositAccount:         depoAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     15,
+		CollateralPrice:        2,
+		CheckWindow:            11,
+		ReferralCommission:     25,
+		PolRatio:               40,
+	})
+
 	return keeper.NewMsgServerImpl(*k), *k, ctx
 }
 

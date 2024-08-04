@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ func CmdListForsale() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-forsale",
 		Short: "list all listings",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -23,11 +23,11 @@ func CmdListForsale() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllForsalesRequest{
+			params := &types.QueryAllForSale{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ForsaleAll(context.Background(), params)
+			res, err := queryClient.AllForSale(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,11 +54,11 @@ func CmdShowForsale() *cobra.Command {
 
 			argName := args[0]
 
-			params := &types.QueryForsaleRequest{
+			params := &types.QueryForSale{
 				Name: argName,
 			}
 
-			res, err := queryClient.Forsale(context.Background(), params)
+			res, err := queryClient.ForSale(context.Background(), params)
 			if err != nil {
 				return err
 			}

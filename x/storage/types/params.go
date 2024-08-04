@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -22,6 +24,12 @@ var (
 	KeyAttestFormSize         = []byte("AttestFormSize")
 	KeyAttestMinToPass        = []byte("AttestMinToPass")
 	KeyCollateralPrice        = []byte("CollateralPrice")
+	KeyCheckWindow            = []byte("CheckWindow")
+	KeyReferrals              = []byte("Referrals")
+	KeyPOLRatio               = []byte("POLRatio")
+
+	DefaultReferrals = int64(25)
+	DefaultPOLRatio  = int64(40)
 )
 
 // ParamKeyTable the param key table for launch module
@@ -42,6 +50,9 @@ func NewParams() Params {
 		AttestMinToPass:        3,
 		AttestFormSize:         5,
 		CollateralPrice:        10_000_000_000,
+		CheckWindow:            100,
+		ReferralCommission:     DefaultReferrals,
+		PolRatio:               DefaultPOLRatio,
 	}
 }
 
@@ -78,7 +89,27 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			KeyCollateralPrice,
 			&p.CollateralPrice,
 			validateCollateralPrice),
+		paramtypes.NewParamSetPair(
+			KeyCheckWindow,
+			&p.CheckWindow,
+			validateCheckWindow),
+
+		paramtypes.NewParamSetPair(KeyPOLRatio, &p.PolRatio, validateInt64),
+		paramtypes.NewParamSetPair(KeyReferrals, &p.ReferralCommission, validateInt64),
 	}
+}
+
+func validateCheckWindow(i interface{}) error {
+	v, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v <= 1 {
+		return errors.New("check window must be greater than than 1")
+	}
+
+	return nil
 }
 
 func validateCollateralPrice(i interface{}) error {
@@ -213,6 +244,30 @@ func validateAttestFormSize(i interface{}) error {
 
 // Validate validates the set of params
 func (p *Params) Validate() error {
+	err := validateInt64(p.PolRatio)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "pol ratio is %d", p.PolRatio)
+	}
+
+	err = validateInt64(p.ReferralCommission)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "referral commission is %d", p.ReferralCommission)
+	}
+
+	return nil
+}
+
+// validateInt validates the param is an int64
+func validateInt64(v interface{}) error {
+	i, ok := v.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", v)
+	}
+
+	if i < 0 {
+		return fmt.Errorf("must be greater or equal to 0 but is %d: %T", i, v)
+	}
+
 	return nil
 }
 

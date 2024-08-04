@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func (k Keeper) AddBid(ctx sdk.Context, sender string, name string, bid string) error {
@@ -41,7 +41,7 @@ func (k Keeper) AddBid(ctx sdk.Context, sender string, name string, bid string) 
 func (k msgServer) Bid(goCtx context.Context, msg *types.MsgBid) (*types.MsgBidResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.AddBid(ctx, msg.Creator, msg.Name, msg.Bid)
+	err := k.AddBid(ctx, msg.Creator, msg.Name, msg.Bid.String())
 
 	return &types.MsgBidResponse{}, err
 }

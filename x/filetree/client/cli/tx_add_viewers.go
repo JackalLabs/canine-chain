@@ -13,8 +13,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +26,7 @@ func CmdAddViewers() *cobra.Command {
 		Short: "add an address to the files viewing permissions",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argViewerIds := args[0]
+			argViewerIDs := args[0]
 			argHashpath := args[1]
 			argOwner := args[2]
 
@@ -41,9 +41,9 @@ func CmdAddViewers() *cobra.Command {
 
 			ownerChainAddress := MakeOwnerAddress(merklePath, argOwner)
 
-			viewerAddresses := strings.Split(argViewerIds, ",")
+			viewerAddresses := strings.Split(argViewerIDs, ",")
 
-			var viewerIds []string
+			var viewerIDs []string
 			var viewerKeys []string
 
 			for _, v := range viewerAddresses {
@@ -56,27 +56,27 @@ func CmdAddViewers() *cobra.Command {
 				}
 
 				queryClient := types.NewQueryClient(clientCtx)
-				res, err := queryClient.Pubkey(cmd.Context(), &types.QueryPubkeyRequest{Address: key.String()})
+				res, err := queryClient.PubKey(cmd.Context(), &types.QueryPubKey{Address: key.String()})
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}
 
-				pkey, err := eciesgo.NewPublicKeyFromHex(res.Pubkey.Key)
+				pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 				if err != nil {
 					return err
 				}
 				// Perhaps below file query should be replaced with fully fledged 'query file' function that checks permissions first
-				params := &types.QueryFileRequest{
+				params := &types.QueryFile{
 					Address:      merklePath,
 					OwnerAddress: ownerChainAddress,
 				}
 
-				file, err := fileQueryClient.Files(context.Background(), params)
+				file, err := fileQueryClient.File(context.Background(), params)
 				if err != nil {
 					return types.ErrFileNotFound
 				}
 
-				viewers := file.Files.ViewingAccess
+				viewers := file.File.ViewingAccess
 				var m map[string]string
 
 				err = json.Unmarshal([]byte(viewers), &m)
@@ -84,7 +84,7 @@ func CmdAddViewers() *cobra.Command {
 					return types.ErrCantUnmarshall
 				}
 
-				ownerViewingAddress := keeper.MakeViewerAddress(file.Files.TrackingNumber, argOwner)
+				ownerViewingAddress := keeper.MakeViewerAddress(file.File.TrackingNumber, argOwner)
 
 				hexMessage, err := hex.DecodeString(m[ownerViewingAddress])
 				if err != nil {
@@ -109,15 +109,15 @@ func CmdAddViewers() *cobra.Command {
 					return err
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.Files.TrackingNumber, v)
-				viewerIds = append(viewerIds, newViewerID)
+				newViewerID := keeper.MakeViewerAddress(file.File.TrackingNumber, v)
+				viewerIDs = append(viewerIDs, newViewerID)
 				viewerKeys = append(viewerKeys, fmt.Sprintf("%x", encrypted))
 
 			}
 
 			msg := types.NewMsgAddViewers(
 				clientCtx.GetFromAddress().String(),
-				strings.Join(viewerIds, ","),
+				strings.Join(viewerIDs, ","),
 				strings.Join(viewerKeys, ","),
 				merklePath,
 				ownerChainAddress,

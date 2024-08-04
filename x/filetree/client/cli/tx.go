@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
@@ -28,7 +28,6 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdPostkey())
 	cmd.AddCommand(CmdDeleteFile())
 	cmd.AddCommand(CmdRemoveViewers())
-	cmd.AddCommand(CmdMakeRoot())
 	cmd.AddCommand(CmdMakeRootV2())
 	cmd.AddCommand(CmdAddEditors())
 	cmd.AddCommand(CmdRemoveEditors())

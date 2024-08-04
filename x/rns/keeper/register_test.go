@@ -2,9 +2,9 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgRegisterName() {
@@ -35,11 +35,11 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	beforebal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
 	amt := beforebal.AmountOf("ujkl")
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", 2)
 	suite.Require().NoError(err)
 
-	nameReq := types.QueryNameRequest{
-		Index: name,
+	nameReq := types.QueryName{
+		Name: name,
 	}
 
 	afterbal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -49,10 +49,10 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	leftover := 2 * cost
 	suite.Require().Equal(leftover, newamt.Int64()) // cost them the price of the registration
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), capname, "{}", "2") // adding time to registration
+	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), capname, "{}", 2) // adding time to registration
 	suite.Require().NoError(err)
 
 	afterbal = suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -61,6 +61,6 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	newamt = amt.Sub(newamt)
 	suite.Require().Equal(leftover, newamt.Int64()) // cost them the price of the registration
 
-	_, err = suite.queryClient.Names(suite.ctx.Context(), &nameReq)
+	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 }

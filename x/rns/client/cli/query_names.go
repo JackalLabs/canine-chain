@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ func CmdListNames() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-names",
 		Short: "list all names",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -23,11 +23,11 @@ func CmdListNames() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllNamesRequest{
+			params := &types.QueryAllNames{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.NamesAll(context.Background(), params)
+			res, err := queryClient.AllNames(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -54,11 +54,11 @@ func CmdShowNames() *cobra.Command {
 
 			argIndex := args[0]
 
-			params := &types.QueryNameRequest{
-				Index: argIndex,
+			params := &types.QueryName{
+				Name: argIndex,
 			}
 
-			res, err := queryClient.Names(context.Background(), params)
+			res, err := queryClient.Name(context.Background(), params)
 			if err != nil {
 				return err
 			}

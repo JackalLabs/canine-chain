@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	types "github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	types "github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestDelistMsg() {
@@ -27,7 +27,7 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 	// Init rns account and register rns
 	rnsName := "Nuggie.jkl"
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), rnsName, "{}", 2)
 	suite.Require().NoError(err)
 
 	keeper := suite.rnsKeeper

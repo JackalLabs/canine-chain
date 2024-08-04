@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,20 +21,16 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-				ContractsList: []types.Contracts{
+				FileList: []types.UnifiedFile{
 					{
-						Cid: "0",
+						Merkle: []byte("0"),
+						Owner:  "0",
+						Start:  0,
 					},
 					{
-						Cid: "1",
-					},
-				},
-				ActiveDealsList: []types.ActiveDeals{
-					{
-						Cid: "0",
-					},
-					{
-						Cid: "1",
+						Merkle: []byte("1"),
+						Owner:  "1",
+						Start:  0,
 					},
 				},
 				ProvidersList: []types.Providers{
@@ -46,49 +42,24 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 
-				StraysList: []types.Strays{
-					{
-						Cid: "0",
-					},
-					{
-						Cid: "1",
-					},
-				},
-				FidCidList: []types.FidCid{
-					{
-						Fid: "0",
-					},
-					{
-						Fid: "1",
-					},
-				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
 		},
-		{
-			desc: "duplicated contracts",
-			genState: &types.GenesisState{
-				ContractsList: []types.Contracts{
-					{
-						Cid: "0",
-					},
-					{
-						Cid: "0",
-					},
-				},
-			},
-			valid: false,
-		},
+
 		{
 			desc: "duplicated activeDeals",
 			genState: &types.GenesisState{
-				ActiveDealsList: []types.ActiveDeals{
+				FileList: []types.UnifiedFile{
 					{
-						Cid: "0",
+						Merkle: []byte("0"),
+						Owner:  "0",
+						Start:  0,
 					},
 					{
-						Cid: "0",
+						Merkle: []byte("0"),
+						Owner:  "0",
+						Start:  0,
 					},
 				},
 			},
@@ -109,34 +80,6 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 
-		{
-			desc: "duplicated strays",
-			genState: &types.GenesisState{
-				StraysList: []types.Strays{
-					{
-						Cid: "0",
-					},
-					{
-						Cid: "0",
-					},
-				},
-			},
-			valid: false,
-		},
-		{
-			desc: "duplicated fidCid",
-			genState: &types.GenesisState{
-				FidCidList: []types.FidCid{
-					{
-						Fid: "0",
-					},
-					{
-						Fid: "0",
-					},
-				},
-			},
-			valid: false,
-		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

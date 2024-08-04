@@ -23,19 +23,16 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// GenesisState defines the storage module's genesis state.
 type GenesisState struct {
 	Params              Params               `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	ContractsList       []Contracts          `protobuf:"bytes,2,rep,name=contracts_list,json=contractsList,proto3" json:"contracts_list"`
-	ActiveDealsList     []ActiveDeals        `protobuf:"bytes,3,rep,name=active_deals_list,json=activeDealsList,proto3" json:"active_deals_list"`
-	ProvidersList       []Providers          `protobuf:"bytes,4,rep,name=providers_list,json=providersList,proto3" json:"providers_list"`
-	StraysList          []Strays             `protobuf:"bytes,6,rep,name=strays_list,json=straysList,proto3" json:"strays_list"`
-	FidCidList          []FidCid             `protobuf:"bytes,5,rep,name=fid_cid_list,json=fidCidList,proto3" json:"fid_cid_list"`
-	PaymentInfoList     []StoragePaymentInfo `protobuf:"bytes,7,rep,name=payment_info_list,json=paymentInfoList,proto3" json:"payment_info_list"`
-	CollateralList      []Collateral         `protobuf:"bytes,8,rep,name=collateral_list,json=collateralList,proto3" json:"collateral_list"`
-	ActiveProvidersList []ActiveProviders    `protobuf:"bytes,9,rep,name=active_providers_list,json=activeProvidersList,proto3" json:"active_providers_list"`
-	ReportForms         []ReportForm         `protobuf:"bytes,10,rep,name=report_forms,json=reportForms,proto3" json:"report_forms"`
-	AttestForms         []AttestationForm    `protobuf:"bytes,11,rep,name=attest_forms,json=attestForms,proto3" json:"attest_forms"`
+	FileList            []UnifiedFile        `protobuf:"bytes,2,rep,name=file_list,json=fileList,proto3" json:"file_list"`
+	ProvidersList       []Providers          `protobuf:"bytes,3,rep,name=providers_list,json=providersList,proto3" json:"providers_list"`
+	PaymentInfoList     []StoragePaymentInfo `protobuf:"bytes,4,rep,name=payment_info_list,json=paymentInfoList,proto3" json:"payment_info_list"`
+	CollateralList      []Collateral         `protobuf:"bytes,5,rep,name=collateral_list,json=collateralList,proto3" json:"collateral_list"`
+	ActiveProvidersList []ActiveProviders    `protobuf:"bytes,6,rep,name=active_providers_list,json=activeProvidersList,proto3" json:"active_providers_list"`
+	ReportForms         []ReportForm         `protobuf:"bytes,7,rep,name=report_forms,json=reportForms,proto3" json:"report_forms"`
+	AttestForms         []AttestationForm    `protobuf:"bytes,8,rep,name=attest_forms,json=attestForms,proto3" json:"attest_forms"`
+	PaymentGauges       []PaymentGauge       `protobuf:"bytes,9,rep,name=payment_gauges,json=paymentGauges,proto3" json:"payment_gauges"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -78,16 +75,9 @@ func (m *GenesisState) GetParams() Params {
 	return Params{}
 }
 
-func (m *GenesisState) GetContractsList() []Contracts {
+func (m *GenesisState) GetFileList() []UnifiedFile {
 	if m != nil {
-		return m.ContractsList
-	}
-	return nil
-}
-
-func (m *GenesisState) GetActiveDealsList() []ActiveDeals {
-	if m != nil {
-		return m.ActiveDealsList
+		return m.FileList
 	}
 	return nil
 }
@@ -95,20 +85,6 @@ func (m *GenesisState) GetActiveDealsList() []ActiveDeals {
 func (m *GenesisState) GetProvidersList() []Providers {
 	if m != nil {
 		return m.ProvidersList
-	}
-	return nil
-}
-
-func (m *GenesisState) GetStraysList() []Strays {
-	if m != nil {
-		return m.StraysList
-	}
-	return nil
-}
-
-func (m *GenesisState) GetFidCidList() []FidCid {
-	if m != nil {
-		return m.FidCidList
 	}
 	return nil
 }
@@ -148,6 +124,13 @@ func (m *GenesisState) GetAttestForms() []AttestationForm {
 	return nil
 }
 
+func (m *GenesisState) GetPaymentGauges() []PaymentGauge {
+	if m != nil {
+		return m.PaymentGauges
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*GenesisState)(nil), "canine_chain.storage.GenesisState")
 }
@@ -157,40 +140,37 @@ func init() {
 }
 
 var fileDescriptor_a52da9fdb04c8b35 = []byte{
-	// 515 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x93, 0xc1, 0x6e, 0xd3, 0x30,
-	0x18, 0xc7, 0x1b, 0x36, 0x0a, 0x38, 0x65, 0xd3, 0xc2, 0x90, 0xaa, 0x0a, 0x65, 0xdd, 0x04, 0xa2,
-	0x17, 0x12, 0xa9, 0xdc, 0xb8, 0xb1, 0x4e, 0x43, 0x93, 0x22, 0xa8, 0xd6, 0xdb, 0x2e, 0xd1, 0xd7,
-	0xc4, 0xc9, 0x0c, 0x49, 0x1c, 0xd9, 0x66, 0xa2, 0x6f, 0xc1, 0x63, 0xed, 0xb8, 0x23, 0x27, 0x84,
-	0xda, 0x07, 0xe0, 0x15, 0xd0, 0x3e, 0x3b, 0x69, 0x99, 0xd2, 0x9c, 0xda, 0x58, 0xbf, 0xef, 0xe7,
-	0x4f, 0xff, 0xbf, 0x4c, 0x4e, 0x22, 0x28, 0x58, 0x41, 0xc3, 0xe8, 0x1a, 0x58, 0xe1, 0x4b, 0xc5,
-	0x05, 0xa4, 0xd4, 0x4f, 0x69, 0x41, 0x25, 0x93, 0x5e, 0x29, 0xb8, 0xe2, 0xce, 0xe1, 0x26, 0xe3,
-	0x19, 0x66, 0x70, 0x98, 0xf2, 0x94, 0x23, 0xe0, 0xdf, 0xff, 0xd3, 0xec, 0xe0, 0xb8, 0xd1, 0x57,
-	0x82, 0x80, 0xdc, 0xe8, 0x06, 0xaf, 0x1b, 0x91, 0x88, 0x17, 0x4a, 0x40, 0xa4, 0x2a, 0xea, 0x6d,
-	0x23, 0x05, 0x91, 0x62, 0x37, 0x34, 0x8c, 0x29, 0x64, 0xed, 0xba, 0x52, 0xf0, 0x1b, 0x16, 0x53,
-	0x21, 0x5b, 0xf7, 0x92, 0x4a, 0xc0, 0xa2, 0x42, 0x9a, 0xa3, 0x48, 0x58, 0x1c, 0x46, 0x2c, 0x6e,
-	0xdd, 0xaa, 0x84, 0x45, 0x4e, 0x0b, 0x15, 0xb2, 0x22, 0x31, 0x39, 0x9c, 0xfc, 0xed, 0x92, 0xde,
-	0x27, 0x9d, 0xe2, 0x4c, 0x81, 0xa2, 0xce, 0x07, 0xd2, 0xd5, 0x29, 0xf4, 0xad, 0xa1, 0x35, 0xb2,
-	0xc7, 0xaf, 0xbc, 0xa6, 0x54, 0xbd, 0x29, 0x32, 0xa7, 0xbb, 0xb7, 0xbf, 0x8f, 0x3a, 0x97, 0x66,
-	0xc2, 0x09, 0xc8, 0x5e, 0x1d, 0x4f, 0x98, 0x31, 0xa9, 0xfa, 0x8f, 0x86, 0x3b, 0x23, 0x7b, 0x7c,
-	0xd4, 0xec, 0x98, 0x54, 0xac, 0xd1, 0x3c, 0xaf, 0x87, 0x03, 0x26, 0x95, 0x33, 0x23, 0x07, 0x9b,
-	0x31, 0x6a, 0xe1, 0x0e, 0x0a, 0x8f, 0x9b, 0x85, 0x1f, 0x11, 0x3f, 0xbb, 0xa7, 0x8d, 0x72, 0x1f,
-	0xd6, 0x47, 0x28, 0x0d, 0xc8, 0x5e, 0x1d, 0xb9, 0x36, 0xee, 0xb6, 0xad, 0x38, 0xad, 0xd8, 0x6a,
-	0xc5, 0x7a, 0x18, 0x6d, 0x13, 0x62, 0xeb, 0x6a, 0xb4, 0xaa, 0x8b, 0xaa, 0x2d, 0x89, 0xcd, 0x10,
-	0x34, 0x1e, 0xa2, 0xc7, 0x50, 0x72, 0x46, 0x7a, 0xa6, 0x3c, 0x6d, 0x79, 0xdc, 0x66, 0x39, 0x67,
-	0xf1, 0x84, 0xc5, 0x95, 0x25, 0xc1, 0x2f, 0xb4, 0x5c, 0x91, 0x83, 0xcd, 0x7a, 0xb5, 0xea, 0x09,
-	0xaa, 0x46, 0xdb, 0x16, 0xc2, 0xdf, 0xa9, 0x9e, 0xba, 0x28, 0x12, 0x5e, 0x85, 0x56, 0xae, 0x8f,
-	0xd0, 0xfd, 0x85, 0xec, 0x47, 0x3c, 0xcb, 0x40, 0x51, 0x01, 0x99, 0x36, 0x3f, 0x45, 0xf3, 0x70,
-	0x5b, 0xb1, 0x15, 0x6c, 0x8c, 0x7b, 0xeb, 0x71, 0x14, 0x86, 0xe4, 0xa5, 0xa9, 0xf6, 0x41, 0x19,
-	0xcf, 0x50, 0xfb, 0xa6, 0xad, 0xde, 0x87, 0x95, 0xbc, 0x80, 0xff, 0x8f, 0xf1, 0x82, 0x0b, 0xd2,
-	0x13, 0xb4, 0xe4, 0x42, 0x85, 0x09, 0x17, 0xb9, 0xec, 0x93, 0xb6, 0x75, 0x2f, 0x91, 0x3c, 0xe7,
-	0x22, 0x37, 0x4a, 0x5b, 0xd4, 0x27, 0xd2, 0xf9, 0x4c, 0x7a, 0xa0, 0x14, 0x95, 0x95, 0xca, 0x6e,
-	0x5d, 0x11, 0x49, 0x50, 0x8c, 0x17, 0x9b, 0x3e, 0x2d, 0x40, 0xdf, 0x69, 0x70, 0xbb, 0x74, 0xad,
-	0xbb, 0xa5, 0x6b, 0xfd, 0x59, 0xba, 0xd6, 0xcf, 0x95, 0xdb, 0xb9, 0x5b, 0xb9, 0x9d, 0x5f, 0x2b,
-	0xb7, 0x73, 0x35, 0x4e, 0x99, 0xba, 0xfe, 0x3e, 0xf7, 0x22, 0x9e, 0xfb, 0x5f, 0x21, 0xfa, 0x06,
-	0x59, 0x00, 0x73, 0xe9, 0xeb, 0x8b, 0xde, 0xe9, 0xa7, 0xfc, 0xa3, 0x7e, 0xcc, 0x6a, 0x51, 0x52,
-	0x39, 0xef, 0xe2, 0x33, 0x7e, 0xff, 0x2f, 0x00, 0x00, 0xff, 0xff, 0x1e, 0x1d, 0x7c, 0x14, 0x20,
-	0x05, 0x00, 0x00,
+	// 469 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0xd3, 0x41, 0x4f, 0xdb, 0x30,
+	0x14, 0x07, 0xf0, 0x66, 0x40, 0x07, 0x6e, 0x57, 0xb4, 0x8c, 0x49, 0x55, 0x35, 0x85, 0x52, 0x6d,
+	0x5a, 0x2f, 0x4b, 0xa4, 0xee, 0xb6, 0xdb, 0xd8, 0x04, 0x42, 0xaa, 0x06, 0x02, 0xed, 0xc2, 0x25,
+	0x7a, 0x4d, 0x5f, 0x82, 0xb7, 0xc4, 0x8e, 0x6c, 0x83, 0xc6, 0xb7, 0xd8, 0xc7, 0xe2, 0xc8, 0x91,
+	0xd3, 0x34, 0xb5, 0x5f, 0x64, 0xaa, 0xed, 0x86, 0x0c, 0xb9, 0x3d, 0xb5, 0x7a, 0xfa, 0xbf, 0x5f,
+	0xde, 0x8b, 0x63, 0x32, 0x48, 0x80, 0x51, 0x86, 0x71, 0x72, 0x05, 0x94, 0x45, 0x52, 0x71, 0x01,
+	0x19, 0x46, 0x19, 0x32, 0x94, 0x54, 0x86, 0xa5, 0xe0, 0x8a, 0xfb, 0x7b, 0xf5, 0x4c, 0x68, 0x33,
+	0xbd, 0xbd, 0x8c, 0x67, 0x5c, 0x07, 0xa2, 0xc5, 0x3f, 0x93, 0xed, 0x1d, 0x38, 0xbd, 0x12, 0x04,
+	0x14, 0x96, 0xeb, 0xbd, 0x77, 0x46, 0x20, 0x51, 0xf4, 0x06, 0xe3, 0x29, 0x42, 0xbe, 0x0c, 0xbe,
+	0x75, 0x5b, 0x82, 0xdf, 0xd0, 0x29, 0x8a, 0xf5, 0x5c, 0x09, 0xb7, 0x05, 0x32, 0x15, 0x53, 0x96,
+	0xda, 0xd1, 0x06, 0x0f, 0x5b, 0xa4, 0x7d, 0x6c, 0x16, 0xbb, 0x50, 0xa0, 0xd0, 0xff, 0x44, 0x9a,
+	0x66, 0xb0, 0xae, 0xd7, 0xf7, 0x86, 0xad, 0xd1, 0x9b, 0xd0, 0xb5, 0x68, 0x78, 0xa6, 0x33, 0x87,
+	0x9b, 0x77, 0x7f, 0xf6, 0x1b, 0xe7, 0xb6, 0xc3, 0xff, 0x4a, 0x76, 0x52, 0x9a, 0x63, 0x9c, 0x53,
+	0xa9, 0xba, 0xcf, 0xfa, 0x1b, 0xc3, 0xd6, 0xe8, 0xc0, 0xdd, 0xfe, 0x9d, 0xd1, 0x94, 0xe2, 0xf4,
+	0x88, 0xe6, 0x68, 0x8d, 0xed, 0x45, 0xe7, 0x98, 0x4a, 0xe5, 0x8f, 0x49, 0xa7, 0x5a, 0xc7, 0x50,
+	0x1b, 0x9a, 0xda, 0x5f, 0x31, 0xc9, 0x32, 0x6b, 0xa1, 0x17, 0x55, 0xb3, 0xd6, 0x2e, 0xc9, 0xcb,
+	0xfa, 0xda, 0x06, 0xdc, 0xd4, 0xe0, 0xd0, 0x0d, 0x5e, 0x98, 0xdf, 0x33, 0xd3, 0x75, 0xc2, 0x52,
+	0x6e, 0xe5, 0xdd, 0xf2, 0xb1, 0xa4, 0xed, 0x53, 0xb2, 0x9b, 0xf0, 0x3c, 0x07, 0x85, 0x02, 0x72,
+	0x23, 0x6f, 0x69, 0xb9, 0xef, 0x96, 0xbf, 0x54, 0x61, 0x2b, 0x76, 0x1e, 0xdb, 0x35, 0x18, 0x93,
+	0xd7, 0xf6, 0xc8, 0x9f, 0xbc, 0x81, 0xa6, 0x66, 0xdf, 0xb9, 0xd9, 0xcf, 0xba, 0xe5, 0xe9, 0x7b,
+	0x78, 0x05, 0xff, 0x97, 0xf5, 0x03, 0x4e, 0x48, 0x5b, 0x60, 0xc9, 0x85, 0x8a, 0x53, 0x2e, 0x0a,
+	0xd9, 0x7d, 0xbe, 0x6e, 0xdc, 0x73, 0x9d, 0x3c, 0xe2, 0xa2, 0xb0, 0x64, 0x4b, 0x54, 0x15, 0xe9,
+	0x7f, 0x23, 0x6d, 0x50, 0x0a, 0xe5, 0x92, 0xda, 0x5e, 0x3b, 0xa2, 0x4e, 0x82, 0xa2, 0x9c, 0xd5,
+	0x3d, 0x03, 0x18, 0xef, 0x94, 0x74, 0x96, 0x07, 0x95, 0xc1, 0x75, 0x86, 0xb2, 0xbb, 0xa3, 0xc5,
+	0xc1, 0xaa, 0x0f, 0x50, 0x67, 0x8f, 0x17, 0xd1, 0xea, 0xe4, 0x6b, 0x35, 0x79, 0x38, 0xbe, 0x9b,
+	0x05, 0xde, 0xfd, 0x2c, 0xf0, 0xfe, 0xce, 0x02, 0xef, 0xf7, 0x3c, 0x68, 0xdc, 0xcf, 0x83, 0xc6,
+	0xc3, 0x3c, 0x68, 0x5c, 0x8e, 0x32, 0xaa, 0xae, 0xae, 0x27, 0x61, 0xc2, 0x8b, 0xe8, 0x07, 0x24,
+	0x3f, 0x21, 0x1f, 0xc3, 0x44, 0x46, 0xe6, 0x39, 0x1f, 0xcc, 0x9d, 0xf9, 0x55, 0xdd, 0x1a, 0x75,
+	0x5b, 0xa2, 0x9c, 0x34, 0xf5, 0x7d, 0xf9, 0xf8, 0x2f, 0x00, 0x00, 0xff, 0xff, 0xcd, 0x50, 0x98,
+	0x2c, 0x1c, 0x04, 0x00, 0x00,
 }
 
 func (m *GenesisState) Marshal() (dAtA []byte, err error) {
@@ -213,6 +193,20 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.PaymentGauges) > 0 {
+		for iNdEx := len(m.PaymentGauges) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.PaymentGauges[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x4a
+		}
+	}
 	if len(m.AttestForms) > 0 {
 		for iNdEx := len(m.AttestForms) - 1; iNdEx >= 0; iNdEx-- {
 			{
@@ -224,7 +218,7 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintGenesis(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x5a
+			dAtA[i] = 0x42
 		}
 	}
 	if len(m.ReportForms) > 0 {
@@ -238,7 +232,7 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintGenesis(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x52
+			dAtA[i] = 0x3a
 		}
 	}
 	if len(m.ActiveProvidersList) > 0 {
@@ -252,7 +246,7 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintGenesis(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x4a
+			dAtA[i] = 0x32
 		}
 	}
 	if len(m.CollateralList) > 0 {
@@ -266,7 +260,7 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintGenesis(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x42
+			dAtA[i] = 0x2a
 		}
 	}
 	if len(m.PaymentInfoList) > 0 {
@@ -280,35 +274,7 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintGenesis(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x3a
-		}
-	}
-	if len(m.StraysList) > 0 {
-		for iNdEx := len(m.StraysList) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.StraysList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintGenesis(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x32
-		}
-	}
-	if len(m.FidCidList) > 0 {
-		for iNdEx := len(m.FidCidList) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.FidCidList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintGenesis(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x2a
+			dAtA[i] = 0x22
 		}
 	}
 	if len(m.ProvidersList) > 0 {
@@ -322,27 +288,13 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintGenesis(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x22
-		}
-	}
-	if len(m.ActiveDealsList) > 0 {
-		for iNdEx := len(m.ActiveDealsList) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.ActiveDealsList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintGenesis(dAtA, i, uint64(size))
-			}
-			i--
 			dAtA[i] = 0x1a
 		}
 	}
-	if len(m.ContractsList) > 0 {
-		for iNdEx := len(m.ContractsList) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.FileList) > 0 {
+		for iNdEx := len(m.FileList) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ContractsList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.FileList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -385,32 +337,14 @@ func (m *GenesisState) Size() (n int) {
 	_ = l
 	l = m.Params.Size()
 	n += 1 + l + sovGenesis(uint64(l))
-	if len(m.ContractsList) > 0 {
-		for _, e := range m.ContractsList {
-			l = e.Size()
-			n += 1 + l + sovGenesis(uint64(l))
-		}
-	}
-	if len(m.ActiveDealsList) > 0 {
-		for _, e := range m.ActiveDealsList {
+	if len(m.FileList) > 0 {
+		for _, e := range m.FileList {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
 	if len(m.ProvidersList) > 0 {
 		for _, e := range m.ProvidersList {
-			l = e.Size()
-			n += 1 + l + sovGenesis(uint64(l))
-		}
-	}
-	if len(m.FidCidList) > 0 {
-		for _, e := range m.FidCidList {
-			l = e.Size()
-			n += 1 + l + sovGenesis(uint64(l))
-		}
-	}
-	if len(m.StraysList) > 0 {
-		for _, e := range m.StraysList {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
@@ -441,6 +375,12 @@ func (m *GenesisState) Size() (n int) {
 	}
 	if len(m.AttestForms) > 0 {
 		for _, e := range m.AttestForms {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if len(m.PaymentGauges) > 0 {
+		for _, e := range m.PaymentGauges {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
@@ -518,7 +458,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ContractsList", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FileList", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -545,46 +485,12 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ContractsList = append(m.ContractsList, Contracts{})
-			if err := m.ContractsList[len(m.ContractsList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.FileList = append(m.FileList, UnifiedFile{})
+			if err := m.FileList[len(m.FileList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ActiveDealsList", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenesis
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ActiveDealsList = append(m.ActiveDealsList, ActiveDeals{})
-			if err := m.ActiveDealsList[len(m.ActiveDealsList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ProvidersList", wireType)
 			}
@@ -618,75 +524,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FidCidList", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenesis
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.FidCidList = append(m.FidCidList, FidCid{})
-			if err := m.FidCidList[len(m.FidCidList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field StraysList", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenesis
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.StraysList = append(m.StraysList, Strays{})
-			if err := m.StraysList[len(m.StraysList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 7:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PaymentInfoList", wireType)
 			}
@@ -720,7 +558,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 8:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CollateralList", wireType)
 			}
@@ -754,7 +592,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 9:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ActiveProvidersList", wireType)
 			}
@@ -788,7 +626,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ReportForms", wireType)
 			}
@@ -822,7 +660,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AttestForms", wireType)
 			}
@@ -853,6 +691,40 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			}
 			m.AttestForms = append(m.AttestForms, AttestationForm{})
 			if err := m.AttestForms[len(m.AttestForms)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PaymentGauges", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PaymentGauges = append(m.PaymentGauges, PaymentGauge{})
+			if err := m.PaymentGauges[len(m.PaymentGauges)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

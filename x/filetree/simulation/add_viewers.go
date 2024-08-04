@@ -12,8 +12,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
 func SimulateMsgAddViewers(
@@ -21,7 +21,7 @@ func SimulateMsgAddViewers(
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, _ string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		merklePath := types.MerklePath("s/home/")
 		simAccount, _ := simtypes.RandomAcc(r, accs)
@@ -47,7 +47,7 @@ func SimulateMsgAddViewers(
 
 		// bob as a viewer for home folder
 		// get viewer id and viewer key for bob
-		viewIds := keeper.MakeViewerAddress(homeFolder.TrackingNumber, bob)
+		viewIDs := keeper.MakeViewerAddress(homeFolder.TrackingNumber, bob)
 
 		mockKeyAndIV := "{ key: mock key, IV: mock initialisation vector } "
 		pkeyHex := fmt.Sprintf("%x", simBob.PubKey.Bytes())
@@ -57,10 +57,10 @@ func SimulateMsgAddViewers(
 
 		msg := &types.MsgAddViewers{
 			Creator:    simAccount.Address.String(),
-			ViewerIds:  viewIds,
+			ViewerIds:  viewIDs,
 			ViewerKeys: viewKeys,
 			Address:    merklePath,
-			Fileowner:  ownerAddress,
+			FileOwner:  ownerAddress,
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)

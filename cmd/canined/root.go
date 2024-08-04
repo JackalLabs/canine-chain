@@ -24,7 +24,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
-	storage "github.com/jackalLabs/canine-chain/v3/x/storage/client/cli"
+	storage "github.com/jackalLabs/canine-chain/v4/x/storage/client/cli"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
@@ -35,8 +35,8 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/jackalLabs/canine-chain/v3/app"
-	"github.com/jackalLabs/canine-chain/v3/app/params"
+	"github.com/jackalLabs/canine-chain/v4/app"
+	"github.com/jackalLabs/canine-chain/v4/app/params"
 )
 
 // NewRootCmd creates a new root command for wasmd. It is called once in the

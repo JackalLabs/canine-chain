@@ -2,33 +2,20 @@ package storage
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-	// Set all the contracts
-	for _, elem := range genState.ContractsList {
-		k.SetContracts(ctx, elem)
-	}
 	// Set all the activeDeals
-	for _, elem := range genState.ActiveDealsList {
-		k.SetActiveDeals(ctx, elem)
+	for _, elem := range genState.FileList {
+		k.SetFile(ctx, elem)
 	}
 	// Set all the Providers
 	for _, elem := range genState.ProvidersList {
 		k.SetProviders(ctx, elem)
-	}
-
-	// Set all the strays
-	for _, elem := range genState.StraysList {
-		k.SetStrays(ctx, elem)
-	}
-	// Set all the fidCid
-	for _, elem := range genState.FidCidList {
-		k.SetFidCid(ctx, elem)
 	}
 
 	// Set all the paymentinfo
@@ -56,7 +43,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetActiveProviders(ctx, elem)
 	}
 
-	// this line is used by starport scaffolding # genesis/module/init
+	// Set all the active providers
+	for _, elem := range genState.PaymentGauges {
+		k.SetPaymentGauge(ctx, elem)
+	}
+
 	k.SetParams(ctx, genState.Params)
 }
 
@@ -65,18 +56,14 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
 
-	genesis.ContractsList = k.GetAllContracts(ctx)
-	genesis.ActiveDealsList = k.GetAllActiveDeals(ctx)
+	genesis.FileList = k.GetAllFileByMerkle(ctx)
 	genesis.ProvidersList = k.GetAllProviders(ctx)
-	genesis.StraysList = k.GetAllStrays(ctx)
-	genesis.FidCidList = k.GetAllFidCid(ctx)
 	genesis.PaymentInfoList = k.GetAllStoragePaymentInfo(ctx)
 	genesis.CollateralList = k.GetAllCollateral(ctx)
 	genesis.ActiveProvidersList = k.GetAllActiveProviders(ctx)
 	genesis.ReportForms = k.GetAllReport(ctx)
 	genesis.AttestForms = k.GetAllAttestation(ctx)
-
-	// this line is used by starport scaffolding # genesis/module/export
+	genesis.PaymentGauges = k.GetAllPaymentGauges(ctx)
 
 	return genesis
 }

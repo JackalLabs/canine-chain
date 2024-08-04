@@ -1,9 +1,11 @@
 package keeper_test
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // testing providers.go file
@@ -26,23 +28,23 @@ func (suite *KeeperTestSuite) TestSetProviders() {
 	suite.storageKeeper.SetProviders(suite.ctx, provider)
 	suite.Require().NoError(err)
 
-	providerRequest := types.QueryProviderRequest{
+	providerRequest := types.QueryProvider{
 		Address: user,
 	}
 
-	res, err := suite.queryClient.Providers(suite.ctx.Context(), &providerRequest)
+	res, err := suite.queryClient.Provider(suite.ctx.Context(), &providerRequest)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Providers.Address, provider.Address)
-	suite.Require().Equal(res.Providers.Ip, provider.Ip)
-	suite.Require().Equal(res.Providers.Totalspace, provider.Totalspace)
-	suite.Require().Equal(res.Providers.BurnedContracts, provider.BurnedContracts)
-	suite.Require().Equal(res.Providers.Creator, provider.Creator)
+	suite.Require().Equal(res.Provider.Address, provider.Address)
+	suite.Require().Equal(res.Provider.Ip, provider.Ip)
+	suite.Require().Equal(res.Provider.Totalspace, provider.Totalspace)
+	suite.Require().Equal(res.Provider.BurnedContracts, provider.BurnedContracts)
+	suite.Require().Equal(res.Provider.Creator, provider.Creator)
 }
 
 // testing providers.go file
 func (suite *KeeperTestSuite) TestInitProviders() {
 	suite.SetupSuite()
-	msgSrvr, _, ctx := setupMsgServer(suite)
+	msgSrvr, k, ctx := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -61,27 +63,27 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 		Creator:    user,
 		Ip:         "192.158.1.38",
 		Keybase:    "",
-		Totalspace: "9000",
+		TotalSpace: 9000,
 	}
 
 	_, err = msgSrvr.InitProvider(ctx, &initMsg)
 	suite.Require().NoError(err)
 
-	providerRequest := types.QueryProviderRequest{
+	providerRequest := types.QueryProvider{
 		Address: user,
 	}
 
-	res, err := suite.queryClient.Providers(suite.ctx.Context(), &providerRequest)
+	res, err := suite.queryClient.Provider(suite.ctx.Context(), &providerRequest)
 	suite.Require().NoError(err)
-	suite.Require().Equal(res.Providers.Address, user)
-	suite.Require().Equal(res.Providers.Ip, initMsg.Ip)
-	suite.Require().Equal(res.Providers.Totalspace, initMsg.Totalspace)
-	suite.Require().Equal(res.Providers.BurnedContracts, "0")
-	suite.Require().Equal(res.Providers.Creator, initMsg.Creator)
+	suite.Require().Equal(res.Provider.Address, user)
+	suite.Require().Equal(res.Provider.Ip, initMsg.Ip)
+	suite.Require().Equal(res.Provider.Totalspace, fmt.Sprintf("%d", initMsg.TotalSpace))
+	suite.Require().Equal(res.Provider.BurnedContracts, "0")
+	suite.Require().Equal(res.Provider.Creator, initMsg.Creator)
 
 	coin := suite.bankKeeper.GetBalance(suite.ctx, userAcc, "ujkl")
 
-	suite.Require().Equal(sdk.NewInt(0), coin.Amount)
+	suite.Require().Equal(deposit.Amount.SubRaw(k.GetParams(suite.ctx).CollateralPrice).Int64(), coin.Amount.Int64())
 
 	shutdownMsg := types.MsgShutdownProvider{
 		Creator: user,
@@ -194,37 +196,4 @@ func (suite *KeeperTestSuite) TestRemoveProviders() {
 	}
 
 	suite.Require().Equal(foundProvider, ghostProvider)
-}
-
-func (suite *KeeperTestSuite) TestActiveProviders() {
-	suite.SetupSuite()
-
-	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
-	suite.Require().NoError(err)
-
-	user := testAddresses[0]
-
-	realProvider := types.Providers{
-		Address: user,
-		Ip:      "https://test.com",
-	}
-
-	suite.storageKeeper.SetProviders(suite.ctx, realProvider)
-
-	provider := types.ActiveProviders{
-		Address: user,
-	}
-
-	suite.storageKeeper.SetActiveProviders(suite.ctx, provider)
-
-	foundProvider := suite.storageKeeper.GetActiveProviders(suite.ctx, "")
-	suite.Require().Equal(1, len(foundProvider))
-
-	foundProvider = suite.storageKeeper.GetActiveProviders(suite.ctx, "https://test.com")
-	suite.Require().Equal(0, len(foundProvider))
-
-	suite.storageKeeper.RemoveAllActiveProviders(suite.ctx)
-
-	foundProvider = suite.storageKeeper.GetActiveProviders(suite.ctx, "")
-	suite.Require().Equal(0, len(foundProvider))
 }

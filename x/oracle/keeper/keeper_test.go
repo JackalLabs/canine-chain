@@ -10,10 +10,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	oracle "github.com/jackalLabs/canine-chain/v3/x/oracle"
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/keeper"
-	oracletestutil "github.com/jackalLabs/canine-chain/v3/x/oracle/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	oracle "github.com/jackalLabs/canine-chain/v4/x/oracle"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
+	oracletestutil "github.com/jackalLabs/canine-chain/v4/x/oracle/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -75,7 +75,7 @@ func CreateRandomAccounts(numAccs int) []sdk.AccAddress {
 
 func (suite *KeeperTestSuite) TestGRPCParams() {
 	suite.SetupSuite()
-	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParamsRequest{})
+	params, err := suite.queryClient.Params(gocontext.Background(), &types.QueryParams{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(params.Params, suite.oracleKeeper.GetParams(suite.ctx))
 }

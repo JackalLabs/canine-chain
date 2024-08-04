@@ -16,12 +16,12 @@ func TestMsgAddViewers_ValidateBasic(t *testing.T) {
 	aliceAddr := sdk.AccAddress(alicePublicK.Address())
 
 	tests := map[string]struct {
-		Creator, ViewerIds, ViewerKeys, Address, Fileowner string
+		Creator, ViewerIDs, ViewerKeys, Address, Fileowner string
 		expErr                                             bool
 	}{
 		"invalid address": {
 			Creator:    "",
-			ViewerIds:  uuid.NewString(),
+			ViewerIDs:  uuid.NewString(),
 			ViewerKeys: uuid.NewString(),
 			Address:    uuid.NewString(),
 			Fileowner:  uuid.NewString(),
@@ -30,7 +30,7 @@ func TestMsgAddViewers_ValidateBasic(t *testing.T) {
 
 		"valid address": {
 			Creator:    aliceAddr.String(),
-			ViewerIds:  uuid.NewString(),
+			ViewerIDs:  uuid.NewString(),
 			ViewerKeys: uuid.NewString(),
 			Address:    uuid.NewString(),
 			Fileowner:  aliceAddr.String(),
@@ -41,7 +41,7 @@ func TestMsgAddViewers_ValidateBasic(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			msg := NewMsgAddViewers(
-				tt.Creator, tt.ViewerIds, tt.ViewerKeys, tt.Address, tt.Fileowner,
+				tt.Creator, tt.ViewerIDs, tt.ViewerKeys, tt.Address, tt.Fileowner,
 			)
 
 			err := msg.ValidateBasic()

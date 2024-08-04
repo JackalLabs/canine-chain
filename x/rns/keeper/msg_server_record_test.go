@@ -2,8 +2,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 // testing msg server files for: addRecord, deleteRecord
@@ -24,7 +24,7 @@ func (suite *KeeperTestSuite) TestMsgAddRecord() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), "BiPhan.jkl", "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), "BiPhan.jkl", "{}", 2)
 	suite.Require().NoError(err)
 
 	cases := []struct {
@@ -96,7 +96,7 @@ func (suite *KeeperTestSuite) TestMsgDelRecord() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), "BiPhan.jkl", "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), "BiPhan.jkl", "{}", 2)
 	suite.Require().NoError(err)
 
 	_, _ = msgSrvr.AddRecord(context, types.NewMsgAddRecord(owner.String(), "BiPhan.jkl", "app", owner.String(), "{}"))

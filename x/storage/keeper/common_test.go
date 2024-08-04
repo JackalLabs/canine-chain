@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	oracletypes "github.com/jackalLabs/canine-chain/v3/x/oracle/types"
+	oracletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
 
@@ -15,15 +15,15 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	moduletestutil "github.com/jackalLabs/canine-chain/v3/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
+	moduletestutil "github.com/jackalLabs/canine-chain/v4/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/golang/mock/gomock"
-	canineglobaltestutil "github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
-	storagetestutil "github.com/jackalLabs/canine-chain/v3/x/storage/testutil"
-	types "github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	canineglobaltestutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	storagetestutil "github.com/jackalLabs/canine-chain/v4/x/storage/testutil"
+	types "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // setupStorageKeeper creates a storageKeeper as well as all its dependencies.
@@ -37,7 +37,7 @@ func setupStorageKeeper(t *testing.T) (
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	// memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 	tkey := sdk.NewTransientStoreKey("transient_test")
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, key, tkey)
+	testCtx := canineglobaltestutil.DefaultContextWithDB(t, tkey, key)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()
@@ -53,6 +53,8 @@ func setupStorageKeeper(t *testing.T) (
 	bankKeeper := storagetestutil.NewMockBankKeeper(ctrl)
 	accountKeeper := storagetestutil.NewMockAccountKeeper(ctrl)
 	oracleKeeper := storagetestutil.NewMockOracleKeeper(ctrl)
+	rnsKeeper := storagetestutil.NewMockRNSKeeper(ctrl)
+
 	trackMockBalances(bankKeeper)
 	accountKeeper.EXPECT().GetModuleAddress(types.ModuleName).Return(modAccount).AnyTimes()
 
@@ -70,7 +72,7 @@ func setupStorageKeeper(t *testing.T) (
 	)
 
 	// storage keeper initializations
-	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper)
+	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName)
 	storageKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.
@@ -88,7 +90,7 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 
 	// We don't track module account balances.
 	bankKeeper.EXPECT().MintCoins(gomock.Any(), minttypes.ModuleName, gomock.Any()).AnyTimes()
-	bankKeeper.EXPECT().BurnCoins(gomock.Any(), types.ModuleName, gomock.Any()).DoAndReturn(func(_ sdk.Context, moduleName string, coins sdk.Coins) error {
+	bankKeeper.EXPECT().BurnCoins(gomock.Any(), types.ModuleName, gomock.Any()).DoAndReturn(func(_ sdk.Context, _ string, coins sdk.Coins) error {
 		newBalance, negative := balances[modAccount.String()].SafeSub(coins)
 		if negative {
 			return fmt.Errorf("not enough balance")
@@ -96,7 +98,7 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 		balances[modAccount.String()] = newBalance
 		return nil
 	}).AnyTimes()
-	bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), minttypes.ModuleName, types.ModuleName, gomock.Any()).AnyTimes()
+	bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 	// But we do track normal account balances.
 	bankKeeper.EXPECT().SendCoinsFromAccountToModule(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, sender sdk.AccAddress, _ string, coins sdk.Coins) error {
@@ -107,7 +109,7 @@ func trackMockBalances(bankKeeper *storagetestutil.MockBankKeeper) {
 		balances[sender.String()] = newBalance
 		return nil
 	}).AnyTimes()
-	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, module string, rcpt sdk.AccAddress, coins sdk.Coins) error {
+	bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(func(_ sdk.Context, _ string, rcpt sdk.AccAddress, coins sdk.Coins) error {
 		balances[rcpt.String()] = balances[rcpt.String()].Add(coins...)
 		return nil
 	}).AnyTimes()

@@ -2,8 +2,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	types "github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	types "github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestBuyMsg() {
@@ -36,13 +36,13 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 	fullName := rnsName + "." + rnsTLD // "Nuggie.jkl"
 
 	keeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), fullName, "{}", "2")
+	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), fullName, "{}", 2)
 	suite.Require().NoError(err)
 	originalNames, found := keeper.GetNames(suite.ctx, rnsName, rnsTLD)
 	suite.Require().True(found)
 
 	// Put it up for sale
-	salePrice := "1000000ujkl"
+	salePrice := sdk.NewInt64Coin("ujkl", 1000000)
 	msgList := types.MsgList{
 		Creator: nameOwner.String(),
 		Name:    fullName,

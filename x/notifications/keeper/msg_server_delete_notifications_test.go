@@ -1,10 +1,10 @@
 package keeper_test
 
 import (
-	"encoding/json"
+	"time"
 
-	"github.com/jackalLabs/canine-chain/v3/testutil"
-	"github.com/jackalLabs/canine-chain/v3/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v4/testutil"
+	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgDeleteNotifications() {
@@ -17,70 +17,33 @@ func (suite *KeeperTestSuite) TestMsgDeleteNotifications() {
 	alice := testAddresses[0]
 	bob := testAddresses[1]
 
-	// set noti counter for bob
+	t := time.Now().UnixMicro()
 
-	placeholderMap := make([]string, 0, 1000)
-	marshalledBlockedSenders, err := json.Marshal(placeholderMap)
-	suite.Require().NoError(err)
-	BlockedSenders := string(marshalledBlockedSenders)
-
-	notiCounter := types.NotiCounter{
-		Address:        bob,
-		Counter:        0,
-		BlockedSenders: BlockedSenders,
+	notification := types.Notification{
+		To:       bob,
+		From:     alice,
+		Time:     t,
+		Contents: "{}",
 	}
-	suite.Require().NoError(err)
-	suite.notificationsKeeper.SetNotiCounter(suite.ctx, notiCounter)
 
-	notification := types.Notifications{
-		Count:        notiCounter.Counter,
-		Notification: "hey bob it's alice",
-		Address:      bob,
-		Sender:       alice,
-	}
-	suite.Require().NoError(err)
-	suite.notificationsKeeper.SetNotifications(suite.ctx, notification, bob)
-
-	// Increase the notiCounter just as it happens in the keeper code
-
-	notiCounter.Counter++
-	suite.Require().NoError(err)
-	suite.notificationsKeeper.SetNotiCounter(suite.ctx, notiCounter)
+	suite.notificationsKeeper.SetNotification(suite.ctx, notification)
 
 	cases := []struct {
-		preRun    func() *types.MsgDeleteNotifications
+		preRun    func() *types.MsgDeleteNotification
 		expErr    bool
 		expErrMsg string
 		name      string
 	}{
-		{ // bob deletes his latest notification
-			preRun: func() *types.MsgDeleteNotifications {
-				return types.NewMsgDeleteNotifications(
+		{
+			preRun: func() *types.MsgDeleteNotification {
+				return types.NewMsgDeleteNotification(
 					bob,
+					alice,
+					t,
 				)
 			},
 			expErr: false,
 			name:   "bob deletes his latest notification",
-		},
-		{ // alice has nothing to delete
-			preRun: func() *types.MsgDeleteNotifications {
-				return types.NewMsgDeleteNotifications(
-					alice,
-				)
-			},
-			expErr:    true,
-			name:      "alice has nothing to delete",
-			expErrMsg: "User's notiCounter not set",
-		},
-		{ // no more notifications for bob to delete
-			preRun: func() *types.MsgDeleteNotifications {
-				return types.NewMsgDeleteNotifications(
-					bob,
-				)
-			},
-			expErr:    true,
-			name:      "no more notifications for bob to delete",
-			expErrMsg: "Notification does not exist",
 		},
 	}
 
@@ -88,14 +51,14 @@ func (suite *KeeperTestSuite) TestMsgDeleteNotifications() {
 		suite.Run(tc.name, func() {
 			msg := tc.preRun()
 			suite.Require().NoError(err)
-			res, err := msgSrvr.DeleteNotifications(context, msg)
+			res, err := msgSrvr.DeleteNotification(context, msg)
 			if tc.expErr {
 				suite.Require().Error(err)
 				suite.Require().Contains(err.Error(), tc.expErrMsg)
 			} else {
 
 				suite.Require().NoError(err)
-				suite.Require().EqualValues(types.MsgDeleteNotificationsResponse{}, *res)
+				suite.Require().EqualValues(types.MsgDeleteNotificationResponse{}, *res)
 
 			}
 		})

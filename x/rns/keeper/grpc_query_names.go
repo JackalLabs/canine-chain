@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/jackalLabs/canine-chain/v3/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*types.QueryAllNamesResponse, error) {
+func (k Keeper) AllNames(c context.Context, req *types.QueryAllNames) (*types.QueryAllNamesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,7 +22,7 @@ func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*t
 	store := ctx.KVStore(k.storeKey)
 	namesStore := prefix.NewStore(store, types.KeyPrefix(types.NamesKeyPrefix))
 
-	pageRes, err := query.Paginate(namesStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(namesStore, req.Pagination, func(_ []byte, value []byte) error {
 		var names types.Names
 		if err := k.cdc.Unmarshal(value, &names); err != nil {
 			return err
@@ -35,16 +35,16 @@ func (k Keeper) NamesAll(c context.Context, req *types.QueryAllNamesRequest) (*t
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllNamesResponse{Names: namess, Pagination: pageRes}, nil
+	return &types.QueryAllNamesResponse{Name: namess, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Names(c context.Context, req *types.QueryNameRequest) (*types.QueryNameResponse, error) {
+func (k Keeper) Name(c context.Context, req *types.QueryName) (*types.QueryNameResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	n, tld, err := GetNameAndTLD(req.Index)
+	n, tld, err := GetNameAndTLD(req.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -63,10 +63,10 @@ func (k Keeper) Names(c context.Context, req *types.QueryNameRequest) (*types.Qu
 	if hasSub {
 		for _, domain := range val.Subdomains {
 			if domain.Name == sub {
-				return &types.QueryNameResponse{Names: *domain}, nil
+				return &types.QueryNameResponse{Name: *domain}, nil
 			}
 		}
 	}
 
-	return &types.QueryNameResponse{Names: val}, nil
+	return &types.QueryNameResponse{Name: val}, nil
 }

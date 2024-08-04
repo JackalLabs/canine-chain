@@ -7,37 +7,32 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgPostproof_ValidateBasic(t *testing.T) {
+func TestMsgPostProof_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgPostproof
+		msg  MsgPostProof
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgPostproof{
+			msg: MsgPostProof{
 				Creator:  "invalid_address",
-				Item:     "hex",
-				Hashlist: "hex",
-				Cid:      "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
+				Item:     []byte("hex"),
+				HashList: []byte{},
+				Merkle:   []byte{},
+				Owner:    "owner",
+				Start:    0,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "invalid cid",
-			msg: MsgPostproof{
-				Creator:  "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Item:     "hex",
-				Hashlist: "hex",
-				Cid:      "invalid_cid",
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		}, {
 			name: "valid address",
-			msg: MsgPostproof{
+			msg: MsgPostProof{
 				Creator:  "jkl1j3p63s42w7ywaczlju626st55mzu5z399f5n6n",
-				Item:     "hex",
-				Hashlist: "hex",
-				Cid:      "jklc1j3p63s42w7ywaczlju626st55mzu5z39qh6g4g",
+				Item:     []byte("hex"),
+				HashList: []byte{},
+				Merkle:   []byte{},
+				Owner:    "owner",
+				Start:    0,
 			},
 		},
 	}

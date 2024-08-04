@@ -7,10 +7,10 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibcfeetypes "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/types"
 	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
-	"github.com/jackalLabs/canine-chain/v3/app/upgrades"
-	storagekeeper "github.com/jackalLabs/canine-chain/v3/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
+	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v3/x/storage/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -38,7 +38,7 @@ func (u *Upgrade) Name() string {
 
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+	return func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		fromVM[storagemoduletypes.ModuleName] = 4
 
 		newVM, err := u.mm.RunMigrations(ctx, u.configurator, fromVM)
