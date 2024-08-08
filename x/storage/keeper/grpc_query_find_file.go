@@ -51,10 +51,11 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))
 
-	iterator := sdk.KVStoreReversePrefixIterator(store, []byte{})
+	iterator := store.Iterator(nil, nil)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
+
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(iterator.Value(), &file); err != nil {
 			continue

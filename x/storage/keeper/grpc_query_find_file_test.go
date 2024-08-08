@@ -55,7 +55,21 @@ func (suite *KeeperTestSuite) TestFindFile() {
 		Note:          "test",
 	}
 
+	badF := types.UnifiedFile{
+		Merkle:        []byte("bad_merkle"),
+		Owner:         testAccount,
+		Start:         0,
+		Expires:       0,
+		FileSize:      1024,
+		ProofInterval: 400,
+		ProofType:     0,
+		Proofs:        make([]string, 0),
+		MaxProofs:     3,
+		Note:          "test",
+	}
+
 	suite.storageKeeper.SetFile(suite.ctx, f)
+	suite.storageKeeper.SetFile(suite.ctx, badF)
 
 	suite.storageKeeper.SetProviders(suite.ctx, types.Providers{
 		Address:         providerAccount,
@@ -68,6 +82,7 @@ func (suite *KeeperTestSuite) TestFindFile() {
 	})
 
 	f.AddProver(suite.ctx, suite.storageKeeper, providerAccount)
+	badF.AddProver(suite.ctx, suite.storageKeeper, providerAccount)
 
 	pg := query.PageRequest{
 		Offset:  0,
@@ -79,7 +94,7 @@ func (suite *KeeperTestSuite) TestFindFile() {
 	})
 	suite.Require().NoError(err)
 
-	suite.Require().Equal(1, len(res.Files))
+	suite.Require().Equal(2, len(res.Files))
 
 	mres, err := suite.queryClient.AllFilesByMerkle(context.Background(), &types.QueryAllFilesByMerkle{
 		Pagination: &pg,
