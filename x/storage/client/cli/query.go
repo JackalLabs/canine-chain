@@ -24,34 +24,30 @@ func GetQueryCmd(_ string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdQueryParams())
-	cmd.AddCommand(CmdListActiveDeals())
-	cmd.AddCommand(CmdShowActiveDeals())
-	cmd.AddCommand(CmdListProviders())
-	cmd.AddCommand(CmdShowProviders())
-	cmd.AddCommand(CmdFreespace())
-	cmd.AddCommand(CmdShowProof())
-	cmd.AddCommand(CmdFindFile())
-
-	cmd.AddCommand(CmdGetClientFreeSpace())
-
-	cmd.AddCommand(CmdGetPayData())
-
-	cmd.AddCommand(CmdFileUploadCheck())
-
-	cmd.AddCommand(CmdListStoragePaymentInfo())
-	cmd.AddCommand(CmdShowStoragePaymentInfo())
-
-	cmd.AddCommand(CmdCheckPrice(), CmdQueryAddress())
-
-	cmd.AddCommand(CmdListAttestForms())
-	cmd.AddCommand(CmdShowAttestForms())
-
-	cmd.AddCommand(CmdListReportForms())
-	cmd.AddCommand(CmdShowReportForms())
-
-	cmd.AddCommand(CmdListActiveProviders())
-	cmd.AddCommand(CmdGetStorageStats())
+	cmd.AddCommand(
+		CmdGetStorageStats(),
+		CmdListActiveProviders(),
+		CmdShowReportForms(),
+		CmdListReportForms(),
+		CmdShowAttestForms(),
+		CmdListAttestForms(),
+		CmdCheckPrice(),
+		CmdQueryAddress(),
+		CmdShowStoragePaymentInfo(),
+		CmdListStoragePaymentInfo(),
+		CmdFileUploadCheck(),
+		CmdGetPayData(),
+		CmdGetClientFreeSpace(),
+		CmdFreespace(),
+		CmdShowProviders(),
+		CmdListProviders(),
+		CmdShowActiveDeals(),
+		CmdListActiveDeals(),
+		CmdQueryParams(),
+		CmdShowProof(),
+		CmdFindFile(),
+		CmdOpenFiles(),
+	)
 
 	return cmd
 }

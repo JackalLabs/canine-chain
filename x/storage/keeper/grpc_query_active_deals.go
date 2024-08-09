@@ -160,6 +160,10 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 			return false
 		}
 
+		if file.ContainsProver(req.ProviderAddress) {
+			return false
+		}
+
 		if len(file.Proofs) < int(file.MaxProofs) {
 			files = append(files, file)
 		} else {

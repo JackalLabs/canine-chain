@@ -11,6 +11,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func CmdOpenFiles() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "open-files",
+		Short: "list all open files",
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryOpenFiles{
+				ProviderAddress: "jkl10kvlcwwntw2nyccz4hlgl7ltp2gyvvfrtae5x6",
+				Pagination:      pageReq,
+			}
+
+			res, err := queryClient.OpenFiles(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 func CmdListActiveDeals() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "files",
