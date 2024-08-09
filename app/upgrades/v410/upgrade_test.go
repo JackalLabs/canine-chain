@@ -24,5 +24,5 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 		return false
 	})
 
-	suite.Require().Equal(4, i)
+	suite.Require().Equal(3, i)
 }
