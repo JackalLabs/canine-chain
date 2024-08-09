@@ -49,7 +49,7 @@ func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, planHeight int6
 		return err
 	}
 
-	for _, line := range strings.Split(strings.TrimSuffix(MerkleSize, "\n"), "\n") {
+	for i, line := range strings.Split(strings.TrimSuffix(MerkleSize, "\n"), "\n") {
 		ctx.Logger().Info(line)
 		data := strings.Split(line, ",")
 		if len(data) < 3 {
@@ -72,7 +72,7 @@ func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, planHeight int6
 		f := types.UnifiedFile{
 			Merkle:        merkleBytes,
 			Owner:         account.String(),
-			Start:         planHeight,
+			Start:         planHeight - int64(i/10), // 10 files per block
 			Expires:       planHeight + ((200 * 365 * 24 * 60 * 60) / 6),
 			FileSize:      size,
 			ProofInterval: 3600,
@@ -83,6 +83,7 @@ func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, planHeight int6
 		}
 
 		keeper.SetFile(ctx, f)
+
 	}
 	return nil
 }
