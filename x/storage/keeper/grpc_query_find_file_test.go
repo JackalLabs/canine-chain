@@ -12,12 +12,13 @@ import (
 func (suite *KeeperTestSuite) TestFindFile() {
 	suite.SetupSuite()
 
-	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 4)
 	suite.Require().NoError(err)
 
 	testAccount := testAddresses[0]
 	depoAccount := testAddresses[1]
 	providerAccount := testAddresses[2]
+	dummyProvider := testAddresses[3]
 
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
@@ -81,8 +82,19 @@ func (suite *KeeperTestSuite) TestFindFile() {
 		AuthClaimers:    nil,
 	})
 
+	suite.storageKeeper.SetProviders(suite.ctx, types.Providers{
+		Address:         dummyProvider,
+		Ip:              "http://badhost:3333",
+		Totalspace:      "10000000000",
+		BurnedContracts: "0",
+		Creator:         dummyProvider,
+		KeybaseIdentity: "",
+		AuthClaimers:    nil,
+	})
+
 	f.AddProver(suite.ctx, suite.storageKeeper, providerAccount)
 	badF.AddProver(suite.ctx, suite.storageKeeper, providerAccount)
+	badF.AddProver(suite.ctx, suite.storageKeeper, dummyProvider)
 
 	pg := query.PageRequest{
 		Offset:  0,
