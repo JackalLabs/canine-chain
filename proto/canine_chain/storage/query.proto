@@ -182,6 +182,12 @@ service Query {
   }
 
   // Queries protocol storage space used and purchased.
+  rpc NetworkSize(QueryNetworkSize) returns (QueryNetworkSizeResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/network_size";
+  }
+
+  // Queries protocol storage space used and purchased.
   rpc Gauges(QueryAllGauges) returns (QueryAllGaugesResponse) {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/gauges";
@@ -439,4 +445,10 @@ message QueryStorageStatsResponse {
   uint64 activeUsers = 4;
   uint64 uniqueUsers = 5;
   map<int64, int64> users_by_plan= 6;
+}
+
+message QueryNetworkSize {}
+
+message QueryNetworkSizeResponse {
+  uint64 size = 1;
 }

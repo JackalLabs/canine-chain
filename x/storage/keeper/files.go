@@ -138,6 +138,33 @@ func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key 
 	}
 }
 
+// IterateAndParseFilesByMerkle iterates through every file and parses them for you
+func (k Keeper) IterateAndParseFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key []byte, val types.UnifiedFile) bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+
+	var iterator storetypes.Iterator
+	if reverse {
+		iterator = sdk.KVStoreReversePrefixIterator(store, []byte{})
+	} else {
+		iterator = sdk.KVStorePrefixIterator(store, []byte{})
+	}
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		val := iterator.Value()
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(val, &file); err != nil {
+			return
+		}
+
+		b := fn(iterator.Key(), file)
+		if b {
+			return
+		}
+	}
+}
+
 // GetAllFilesWithMerkle returns all Files that start with a specific merkle
 func (k Keeper) GetAllFilesWithMerkle(ctx sdk.Context, merkle []byte) (list []types.UnifiedFile) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(merkle))
