@@ -44,7 +44,15 @@ var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 
 // NOTE: I think the CosmWasm bindings contract can call this multiple times in a single contract.execute()
 // This would be great because we wouldn't need to change the chain code too much
-func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg /*sender string*/) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
+
+	// If the factory contract calls one of its 'child' bindings contracts, the 'sender' field will automatically be filled in with the factory contract's address
+	// NOTE: retrieve public key/signature of braodcaster and compare it to the 'sender' field
+
+	// Idea: Use the contractAddr for the creator of the postKey
+	// If factory contract calls its child bindings contract
+	// Yes, the sender of the cross-contract call will be the factory address
+	// But the child bindings contractAddr will still get propagated to this DispatchMsg function
 	if msg.Custom != nil {
 		// only handle the happy path where this is really posting files
 		// leave everything else for the wrapped version
@@ -66,21 +74,24 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 }
 
 // postKey posts a user's public key on chain for the encryption scheme
-func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey, sender string) ([]sdk.Event, [][]byte, error) {
-	err := PerformPostKey(m.filetree, ctx, contractAddr, postKey, sender)
+func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey) ([]sdk.Event, [][]byte, error) {
+	err := PerformPostKey(m.filetree, ctx, contractAddr, postKey)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform post key")
 	}
 	return nil, nil, nil
 }
 
-func PerformPostKey(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey, sender string) error {
+func PerformPostKey(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey) error {
+	// Use The contractAddr as  the sender?
+	// Can't make CosmWasm permissioned, otherwise devs can't use it
+	//
 	if postKey == nil {
 		return wasmvmtypes.InvalidRequest{Err: "post key null error"}
 	}
 
 	sdkMsg := filetreetypes.NewMsgPostKey(
-		sender,
+		"sender",
 		postKey.Key,
 	)
 
