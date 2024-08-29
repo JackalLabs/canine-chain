@@ -65,7 +65,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		}
 
 		if contractMsg.PostKey != nil {
-			return m.postKey(ctx, contractAddr, contractMsg.PostKey, contractMsg.PostKey.Sender)
+			return m.postKey(ctx, contractAddr, contractMsg.PostKey)
 
 		}
 	}
@@ -91,7 +91,7 @@ func PerformPostKey(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 	}
 
 	sdkMsg := filetreetypes.NewMsgPostKey(
-		"sender",
+		contractAddr.String(),
 		postKey.Key,
 	)
 
