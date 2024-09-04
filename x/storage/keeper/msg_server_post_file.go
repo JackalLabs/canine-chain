@@ -58,6 +58,7 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
 			sdk.NewAttribute(types.AttributeKeyContract, hex.EncodeToString(msg.Merkle)),
 			sdk.NewAttribute(types.AttributeKeyPayOnce, b),
+			sdk.NewAttribute(types.AttributeKeyStart, fmt.Sprintf("%d", ctx.BlockHeight())),
 		),
 	)
 
