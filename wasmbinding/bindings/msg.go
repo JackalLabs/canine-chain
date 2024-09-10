@@ -5,6 +5,8 @@ type JackalMsg struct {
 	PostKey *PostKey `json:"post_key,omitempty"`
 	/// Contracts can make Files
 	PostFile *PostFile `json:"post_file,omitempty"`
+	/// Contracts can buy storage
+	BuyStorage *BuyStorage `json:"buy_storage,omitempty"`
 }
 
 // NOTE: Creator field is automatically the contract address
@@ -21,4 +23,12 @@ type PostFile struct {
 	MaxProofs     int64  `json:"max_proofs"`
 	Expires       int64  `json:"expires"`
 	Note          string `json:"note"`
+}
+
+// NOTE: Creator field is automatically the contract address
+type BuyStorage struct {
+	ForAddress   string `json:"for_address"`
+	DurationDays int64  `json:"duration_days"`
+	Bytes        int64  `json:"bytes"`
+	PaymentDenom string `json:"payment_denom"`
 }

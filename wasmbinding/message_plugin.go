@@ -64,9 +64,12 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.PostFile != nil {
 			return m.postFile(ctx, contractAddr, contractMsg.PostFile)
 		}
+
+		if contractMsg.BuyStorage != nil {
+			return m.buyStorage(ctx, contractAddr, contractMsg.BuyStorage)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
-
 }
 
 // postKey posts a user's public key on chain for the encryption scheme
@@ -137,6 +140,42 @@ func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 
 	msgServer := storagekeeper.NewMsgServerImpl(*s)
 	_, err := msgServer.PostFile(sdk.WrapSDKContext(ctx), sdkMsg)
+	if err != nil {
+		return sdkerrors.Wrap(err, "post file error from message")
+	}
+
+	return nil
+}
+
+// buyStorage buys storage
+func (m *CustomMessenger) buyStorage(ctx sdk.Context, contractAddr sdk.AccAddress, buyStorage *bindings.BuyStorage) ([]sdk.Event, [][]byte, error) {
+	err := PerformBuyStorage(m.storage, ctx, contractAddr, buyStorage)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform buy storage")
+	}
+	return nil, nil, nil
+}
+
+func PerformBuyStorage(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, buyStorage *bindings.BuyStorage) error {
+
+	if buyStorage == nil {
+		return wasmvmtypes.InvalidRequest{Err: "buy storage null error"}
+	}
+
+	sdkMsg := storagetypes.NewMsgBuyStorage(
+		contractAddr.String(),
+		buyStorage.ForAddress,
+		buyStorage.DurationDays,
+		buyStorage.Bytes,
+		buyStorage.PaymentDenom,
+	)
+
+	if err := sdkMsg.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := storagekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.BuyStorage(sdk.WrapSDKContext(ctx), sdkMsg)
 	if err != nil {
 		return sdkerrors.Wrap(err, "post file error from message")
 	}
