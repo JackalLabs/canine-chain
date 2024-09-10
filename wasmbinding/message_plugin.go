@@ -13,6 +13,7 @@ import (
 	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 
 	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
@@ -39,20 +40,12 @@ var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 // NOTE: did we ever use the 'contractIBCPortID' before?
 // If we can give each bindings contract--owned by a user--an IBC port ID, perhaps we can use that for authenticating the sender?
 
-// NOTE: The last arg--'sender' string--was something we could use when running our fork of wasmd because we added it to wasmd's Messenger
-// interface
-
 // NOTE: I think the CosmWasm bindings contract can call this multiple times in a single contract.execute()
 // This would be great because we wouldn't need to change the chain code too much
 func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
 
 	// If the factory contract calls one of its 'child' bindings contracts, the 'sender' field will automatically be filled in with the factory contract's address
-	// NOTE: retrieve public key/signature of braodcaster and compare it to the 'sender' field
 
-	// Idea: Use the contractAddr for the creator of the postKey
-	// If factory contract calls its child bindings contract
-	// Yes, the sender of the cross-contract call will be the factory address
-	// But the child bindings contractAddr will still get propagated to this DispatchMsg function
 	if msg.Custom != nil {
 		// only handle the happy path where this is really posting files
 		// leave everything else for the wrapped version
@@ -66,7 +59,10 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 
 		if contractMsg.PostKey != nil {
 			return m.postKey(ctx, contractAddr, contractMsg.PostKey)
+		}
 
+		if contractMsg.PostFile != nil {
+			return m.postFile(ctx, contractAddr, contractMsg.PostFile)
 		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
@@ -103,6 +99,44 @@ func PerformPostKey(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 	_, err := msgServer.PostKey(sdk.WrapSDKContext(ctx), sdkMsg)
 	if err != nil {
 		return sdkerrors.Wrap(err, "post key error from message")
+	}
+
+	return nil
+}
+
+// postFile posts a File to the storage module
+func (m *CustomMessenger) postFile(ctx sdk.Context, contractAddr sdk.AccAddress, postFile *bindings.PostFile) ([]sdk.Event, [][]byte, error) {
+	err := PerformPostFile(m.storage, ctx, contractAddr, postFile)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform post file")
+	}
+	return nil, nil, nil
+}
+
+func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, PostFile *bindings.PostFile) error {
+
+	if PostFile == nil {
+		return wasmvmtypes.InvalidRequest{Err: "post file null error"}
+	}
+
+	sdkMsg := storagetypes.NewMsgPostFile(
+		contractAddr.String(),
+		PostFile.Merkle,
+		PostFile.FileSize,
+		PostFile.ProofInterval,
+		PostFile.ProofType,
+		PostFile.MaxProofs,
+		PostFile.Note,
+	)
+
+	if err := sdkMsg.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := storagekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.PostFile(sdk.WrapSDKContext(ctx), sdkMsg)
+	if err != nil {
+		return sdkerrors.Wrap(err, "post file error from message")
 	}
 
 	return nil

@@ -15,7 +15,7 @@ func RegisterCustomPlugins(
 	filetree *filetreekeeper.Keeper,
 	storage *storagekeeper.Keeper,
 ) []wasmkeeper.Option {
-	// NOTE: can we add this in later so we have less code to manage?
+	// NOTE: can add the query in later if needed, but I don't think it's needed.
 
 	// wasmQueryPlugin := NewQueryPlugin(filetree)
 

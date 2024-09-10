@@ -1,16 +1,24 @@
 package bindings
 
 type JackalMsg struct {
-	/// Contracts can create files
-	/// will they be namespaced under the contract's address?
-	/// A contract may create any number of independent files.
+	/// Contracts can have a PubKey
 	PostKey *PostKey `json:"post_key,omitempty"`
+	/// Contracts can make Files
+	PostFile *PostFile `json:"post_file,omitempty"`
 }
 
-// WARNING DANGER
-// NOTE: Sender can currently be spoofed
-// We have notes everywhere to flesh out different authentication methods
+// NOTE: Creator field is automatically the contract address
 type PostKey struct {
-	Sender string `json:"sender"`
-	Key    string `json:"key"`
+	Key string `json:"key"`
+}
+
+// NOTE: Creator field is automatically the contract address
+type PostFile struct {
+	Merkle        []byte `json:"merkle"`
+	FileSize      int64  `json:"file_size"`
+	ProofInterval int64  `json:"proof_interval"`
+	ProofType     int64  `json:"proof_type"`
+	MaxProofs     int64  `json:"max_proofs"`
+	Expires       int64  `json:"expires"`
+	Note          string `json:"note"`
 }
