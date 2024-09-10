@@ -47,14 +47,19 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
+	if req.Merkle == nil {
+		return nil, status.Error(codes.InvalidArgument, "no merkle hash provider")
+	}
+
 	var ips []string
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))
 
-	iterator := sdk.KVStoreReversePrefixIterator(store, []byte{})
+	iterator := store.Iterator(nil, nil)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
+
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(iterator.Value(), &file); err != nil {
 			continue

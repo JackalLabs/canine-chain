@@ -16,6 +16,7 @@ const (
 	AttributeKeySigner   = "signer" // sign storage deal
 	AttributeKeyContract = "file"
 	AttributeKeyPayOnce  = "pay_once"
+	AttributeKeyStart    = "start"
 
 	EventTypeJackalMessage = "jackal_message"
 )
