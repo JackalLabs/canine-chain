@@ -134,6 +134,8 @@ func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 		PostFile.Note,
 	)
 
+	sdkMsg.Expires = PostFile.Expires
+
 	if err := sdkMsg.ValidateBasic(); err != nil {
 		return err
 	}
