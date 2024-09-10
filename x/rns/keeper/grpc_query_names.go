@@ -70,3 +70,17 @@ func (k Keeper) Name(c context.Context, req *types.QueryName) (*types.QueryNameR
 
 	return &types.QueryNameResponse{Name: val}, nil
 }
+
+func (k Keeper) PrimaryName(c context.Context, req *types.QueryPrimaryName) (*types.QueryPrimaryNameResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	n, found := k.GetPrimaryName(ctx, req.Owner)
+	if !found {
+		return nil, status.Error(codes.NotFound, "user does not have a primary name set")
+	}
+
+	return &types.QueryPrimaryNameResponse{Name: n}, nil
+}

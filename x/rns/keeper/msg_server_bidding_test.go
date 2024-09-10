@@ -30,7 +30,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	suite.Require().NoError(err)
 
 	suite.rnsKeeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), nuggieName, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, nameOwner.String(), nuggieName, "{}", 2, true)
 	suite.Require().NoError(err)
 
 	_, _ = msgSrvr.List(sdk.WrapSDKContext(suite.ctx), &types.MsgList{Creator: nameOwner.String(), Name: nuggieName, Price: sdk.NewInt64Coin("ujkl", 200)})
@@ -111,7 +111,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, nameOwner.String(), TestName, "{}", 2, true)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
@@ -150,7 +150,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 			preRun: func() *types.MsgAcceptBid {
 				freeName := "freeBi.jkl"
 				blockHeight := suite.ctx.BlockHeight()
-				err := suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), freeName, "{}", 2)
+				err := suite.rnsKeeper.RegisterRNSName(suite.ctx, nameOwner.String(), freeName, "{}", 2, true)
 				suite.Require().NoError(err)
 				name, _ := suite.rnsKeeper.GetNames(suite.ctx, "freeBi", "jkl")
 				name.Locked = blockHeight + 1
@@ -210,7 +210,7 @@ func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, bidder, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), TestName, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, nameOwner.String(), TestName, "{}", 2, true)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.AddBid(suite.ctx, bidder.String(), TestName, "1000ujkl")
