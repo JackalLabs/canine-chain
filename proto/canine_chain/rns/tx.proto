@@ -23,6 +23,7 @@ service Msg {
   rpc MakePrimary(MsgMakePrimary) returns (MsgMakePrimaryResponse);
 }
 
+// Deprecated! Use MsgRegisterName instead
 message MsgRegister {
   string creator = 1;
   string name = 2;

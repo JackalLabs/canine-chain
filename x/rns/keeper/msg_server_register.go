@@ -104,6 +104,7 @@ func (k msgServer) MakePrimary(goCtx context.Context, msg *types.MsgMakePrimary)
 	return &types.MsgMakePrimaryResponse{}, err
 }
 
+// Register is Deprecated! Use RegisterName instead.
 func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*types.MsgRegisterResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Try getting a name from the store
