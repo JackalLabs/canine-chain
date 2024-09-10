@@ -119,9 +119,11 @@ func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 		return wasmvmtypes.InvalidRequest{Err: "post file null error"}
 	}
 
+	placeholderByteArray := []byte{0x01, 0x02, 0xAB, 0xFF, 0x10}
+
 	sdkMsg := storagetypes.NewMsgPostFile(
 		contractAddr.String(),
-		PostFile.Merkle,
+		placeholderByteArray,
 		PostFile.FileSize,
 		PostFile.ProofInterval,
 		PostFile.ProofType,
