@@ -8,6 +8,7 @@ option go_package = "github.com/jackalLabs/canine-chain/x/rns/types";
 
 service Msg {
   rpc Register(MsgRegister) returns (MsgRegisterResponse);
+  rpc RegisterName(MsgRegisterName) returns (MsgRegisterNameResponse);
   rpc Bid(MsgBid) returns (MsgBidResponse);
   rpc AcceptBid(MsgAcceptBid) returns (MsgAcceptBidResponse);
   rpc CancelBid(MsgCancelBid) returns (MsgCancelBidResponse);
@@ -19,8 +20,10 @@ service Msg {
   rpc DelRecord(MsgDelRecord) returns (MsgDelRecordResponse);
   rpc Init(MsgInit) returns (MsgInitResponse);
   rpc Update(MsgUpdate) returns (MsgUpdateResponse);
+  rpc MakePrimary(MsgMakePrimary) returns (MsgMakePrimaryResponse);
 }
 
+// Deprecated! Use MsgRegisterName instead
 message MsgRegister {
   string creator = 1;
   string name = 2;
@@ -30,6 +33,16 @@ message MsgRegister {
 
 message MsgRegisterResponse {}
 
+message MsgRegisterName {
+  string creator = 1;
+  string name = 2;
+  int64 years = 3;
+  string data = 4;
+  bool setPrimary = 5;
+}
+
+message MsgRegisterNameResponse {}
+
 message MsgUpdate {
   string creator = 1;
   string name = 2;
@@ -37,6 +50,13 @@ message MsgUpdate {
 }
 
 message MsgUpdateResponse {}
+
+message MsgMakePrimary {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgMakePrimaryResponse {}
 
 message MsgBid {
   string creator = 1;

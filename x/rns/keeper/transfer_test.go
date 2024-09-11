@@ -30,7 +30,7 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 	beforebal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
 	amt := beforebal.AmountOf("ujkl")
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, address.String(), name, "{}", 2, true)
 	suite.Require().NoError(err)
 
 	nameReq := types.QueryName{
