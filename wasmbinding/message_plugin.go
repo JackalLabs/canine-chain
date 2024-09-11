@@ -10,14 +10,12 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 
 	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
-
 func CustomMessageDecorator(filetree *filetreekeeper.Keeper, storage *storagekeeper.Keeper) func(wasmkeeper.Messenger) wasmkeeper.Messenger {
 	return func(old wasmkeeper.Messenger) wasmkeeper.Messenger {
 		return &CustomMessenger{
@@ -50,61 +48,17 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		// only handle the happy path where this is really posting files
 		// leave everything else for the wrapped version
 
-		// TODO: retrieve the tx signer from the ctx and authenticate it against the 'sender' param of the CosmosMsg above
 		var contractMsg bindings.JackalMsg
 
 		if err := json.Unmarshal(msg.Custom, &contractMsg); err != nil {
 			return nil, nil, sdkerrors.Wrap(err, "Failed to unmarshal CosmosMsg enum variant 'Custom' into jackal msg")
 		}
 
-		if contractMsg.PostKey != nil {
-			return m.postKey(ctx, contractAddr, contractMsg.PostKey)
-		}
-
 		if contractMsg.PostFile != nil {
 			return m.postFile(ctx, contractAddr, contractMsg.PostFile)
 		}
-
-		if contractMsg.BuyStorage != nil {
-			return m.buyStorage(ctx, contractAddr, contractMsg.BuyStorage)
-		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
-}
-
-// postKey posts a user's public key on chain for the encryption scheme
-func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey) ([]sdk.Event, [][]byte, error) {
-	err := PerformPostKey(m.filetree, ctx, contractAddr, postKey)
-	if err != nil {
-		return nil, nil, sdkerrors.Wrap(err, "perform post key")
-	}
-	return nil, nil, nil
-}
-
-func PerformPostKey(f *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postKey *bindings.PostKey) error {
-	// Use The contractAddr as  the sender?
-	// Can't make CosmWasm permissioned, otherwise devs can't use it
-	//
-	if postKey == nil {
-		return wasmvmtypes.InvalidRequest{Err: "post key null error"}
-	}
-
-	sdkMsg := filetreetypes.NewMsgPostKey(
-		contractAddr.String(),
-		postKey.Key,
-	)
-
-	if err := sdkMsg.ValidateBasic(); err != nil {
-		return err
-	}
-
-	msgServer := filetreekeeper.NewMsgServerImpl(*f)
-	_, err := msgServer.PostKey(sdk.WrapSDKContext(ctx), sdkMsg)
-	if err != nil {
-		return sdkerrors.Wrap(err, "post key error from message")
-	}
-
-	return nil
 }
 
 // postFile posts a File to the storage module
@@ -122,11 +76,9 @@ func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 		return wasmvmtypes.InvalidRequest{Err: "post file null error"}
 	}
 
-	placeholderByteArray := []byte{0x01, 0x02, 0xAB, 0xFF, 0x10}
-
 	sdkMsg := storagetypes.NewMsgPostFile(
 		contractAddr.String(),
-		placeholderByteArray,
+		PostFile.Merkle,
 		PostFile.FileSize,
 		PostFile.ProofInterval,
 		PostFile.ProofType,
@@ -142,42 +94,6 @@ func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 
 	msgServer := storagekeeper.NewMsgServerImpl(*s)
 	_, err := msgServer.PostFile(sdk.WrapSDKContext(ctx), sdkMsg)
-	if err != nil {
-		return sdkerrors.Wrap(err, "post file error from message")
-	}
-
-	return nil
-}
-
-// buyStorage buys storage
-func (m *CustomMessenger) buyStorage(ctx sdk.Context, contractAddr sdk.AccAddress, buyStorage *bindings.BuyStorage) ([]sdk.Event, [][]byte, error) {
-	err := PerformBuyStorage(m.storage, ctx, contractAddr, buyStorage)
-	if err != nil {
-		return nil, nil, sdkerrors.Wrap(err, "perform buy storage")
-	}
-	return nil, nil, nil
-}
-
-func PerformBuyStorage(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, buyStorage *bindings.BuyStorage) error {
-
-	if buyStorage == nil {
-		return wasmvmtypes.InvalidRequest{Err: "buy storage null error"}
-	}
-
-	sdkMsg := storagetypes.NewMsgBuyStorage(
-		contractAddr.String(),
-		buyStorage.ForAddress,
-		buyStorage.DurationDays,
-		buyStorage.Bytes,
-		buyStorage.PaymentDenom,
-	)
-
-	if err := sdkMsg.ValidateBasic(); err != nil {
-		return err
-	}
-
-	msgServer := storagekeeper.NewMsgServerImpl(*s)
-	_, err := msgServer.BuyStorage(sdk.WrapSDKContext(ctx), sdkMsg)
 	if err != nil {
 		return sdkerrors.Wrap(err, "post file error from message")
 	}
