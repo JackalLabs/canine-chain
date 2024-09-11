@@ -21,6 +21,10 @@ func getAdj(index int) (adjective string, ok bool) {
 	return adj[index], true
 }
 
+func (n *Names) GetDisplay() string {
+	return fmt.Sprintf("%s.%s", n.Name, n.Tld)
+}
+
 func getNoun(index int) (noun string, ok bool) {
 	if index > len(nouns) {
 		return "", false

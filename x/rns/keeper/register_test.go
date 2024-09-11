@@ -35,8 +35,12 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	beforebal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
 	amt := beforebal.AmountOf("ujkl")
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), name, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, address.String(), name, "{}", 2, true)
 	suite.Require().NoError(err)
+
+	primName, f := suite.rnsKeeper.GetPrimaryName(suite.ctx, address.String())
+	suite.Require().Equal(true, f)
+	suite.Require().Equal(name, primName.GetDisplay())
 
 	nameReq := types.QueryName{
 		Name: name,
@@ -52,7 +56,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, address.String(), capname, "{}", 2) // adding time to registration
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, address.String(), capname, "{}", 2, true) // adding time to registration
 	suite.Require().NoError(err)
 
 	afterbal = suite.bankKeeper.GetAllBalances(suite.ctx, address)

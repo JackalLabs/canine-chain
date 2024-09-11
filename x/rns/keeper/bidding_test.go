@@ -35,7 +35,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameAddress, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameAddress.String(), TestName, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, nameAddress.String(), TestName, "{}", 2, true)
 	suite.Require().NoError(err)
 
 	bidderBalBefore := suite.bankKeeper.GetAllBalances(suite.ctx, address)

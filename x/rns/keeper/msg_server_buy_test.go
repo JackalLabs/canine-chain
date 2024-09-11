@@ -36,7 +36,7 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 	fullName := rnsName + "." + rnsTLD // "Nuggie.jkl"
 
 	keeper.SetInit(suite.ctx, types.Init{Address: nameOwner.String(), Complete: true})
-	err = suite.rnsKeeper.RegisterName(suite.ctx, nameOwner.String(), fullName, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, nameOwner.String(), fullName, "{}", 2, true)
 	suite.Require().NoError(err)
 	originalNames, found := keeper.GetNames(suite.ctx, rnsName, rnsTLD)
 	suite.Require().True(found)

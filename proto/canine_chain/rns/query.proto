@@ -66,6 +66,11 @@ service Query {
   rpc AllInits(QueryAllInits) returns (QueryAllInitsResponse) {
     option (google.api.http).get = "/jackal/canine-chain/rns/init";
   }
+
+  // Queries a list of Init items.
+  rpc PrimaryName(QueryPrimaryName) returns (QueryPrimaryNameResponse) {
+    option (google.api.http).get = "/jackal/canine-chain/rns/primary/{owner}";
+  }
 }
 
 message QueryParams {}
@@ -77,6 +82,11 @@ message QueryParamsResponse {
 message QueryName { string name = 1; }
 
 message QueryNameResponse { Names name = 1 [ (gogoproto.nullable) = false ]; } // TODO: Check if this breaks everything to change it to Name
+
+message QueryPrimaryName { string owner = 1; }
+
+message QueryPrimaryNameResponse { Names name = 1 [ (gogoproto.nullable) = false ]; }
+
 
 message QueryListOwnedNames {
   string address = 1;

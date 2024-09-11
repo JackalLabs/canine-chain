@@ -10,7 +10,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
-func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data string, years int64) error {
+func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data string, years int64, primary bool) error {
 	nm = strings.ToLower(nm)
 	name, tld, err := GetNameAndTLD(nm)
 	if err != nil {
@@ -81,14 +81,43 @@ func (k Keeper) RegisterName(ctx sdk.Context, sender string, nm string, data str
 	// Write whois information to the store
 	k.SetNames(ctx, newWhois)
 
+	_, hasPrimary := k.GetPrimaryName(ctx, newWhois.Value)
+
+	if primary || !hasPrimary {
+		k.SetPrimaryName(ctx, newWhois.Value, newWhois.Name, newWhois.Tld)
+	}
+
 	return nil
 }
 
+func (k msgServer) MakePrimary(goCtx context.Context, msg *types.MsgMakePrimary) (*types.MsgMakePrimaryResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	nm := strings.ToLower(msg.Name)
+	name, tld, err := GetNameAndTLD(nm)
+	if err != nil {
+		return nil, err
+	}
+
+	k.SetPrimaryName(ctx, msg.Creator, name, tld)
+
+	return &types.MsgMakePrimaryResponse{}, err
+}
+
+// Register is Deprecated! Use RegisterName instead.
 func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*types.MsgRegisterResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Try getting a name from the store
 
-	err := k.RegisterName(ctx, msg.Creator, msg.Name, msg.Data, msg.Years)
+	err := k.RegisterRNSName(ctx, msg.Creator, msg.Name, msg.Data, msg.Years, false)
 
 	return &types.MsgRegisterResponse{}, err
+}
+
+func (k msgServer) RegisterName(goCtx context.Context, msg *types.MsgRegisterName) (*types.MsgRegisterNameResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.RegisterRNSName(ctx, msg.Creator, msg.Name, msg.Data, msg.Years, msg.SetPrimary)
+
+	return &types.MsgRegisterNameResponse{}, err
 }
