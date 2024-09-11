@@ -15,13 +15,6 @@ func RegisterCustomPlugins(
 	filetree *filetreekeeper.Keeper,
 	storage *storagekeeper.Keeper,
 ) []wasmkeeper.Option {
-	// NOTE: can add the query in later if needed, but I don't think it's needed.
-
-	// wasmQueryPlugin := NewQueryPlugin(filetree)
-
-	// queryPluginOpt := wasmkeeper.WithQueryPlugins(&wasmkeeper.QueryPlugins{
-	// 	Custom: CustomQuerier(wasmQueryPlugin),
-	// })
 
 	messengerDecoratorOpt := wasmkeeper.WithMessageHandlerDecorator(
 		CustomMessageDecorator(filetree, storage),
