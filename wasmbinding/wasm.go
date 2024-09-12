@@ -15,7 +15,6 @@ func RegisterCustomPlugins(
 	filetree *filetreekeeper.Keeper,
 	storage *storagekeeper.Keeper,
 ) []wasmkeeper.Option {
-
 	messengerDecoratorOpt := wasmkeeper.WithMessageHandlerDecorator(
 		CustomMessageDecorator(filetree, storage),
 	)
@@ -23,5 +22,4 @@ func RegisterCustomPlugins(
 	return []wasm.Option{
 		messengerDecoratorOpt,
 	}
-
 }

@@ -41,7 +41,6 @@ var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 // NOTE: I think the CosmWasm bindings contract can call this multiple times in a single contract.execute()
 // This would be great because we wouldn't need to change the chain code too much
 func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
-
 	// If the factory contract calls one of its 'child' bindings contracts, the 'sender' field will automatically be filled in with the factory contract's address
 
 	if msg.Custom != nil {
@@ -70,23 +69,22 @@ func (m *CustomMessenger) postFile(ctx sdk.Context, contractAddr sdk.AccAddress,
 	return nil, nil, nil
 }
 
-func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, PostFile *bindings.PostFile) error {
-
-	if PostFile == nil {
+func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postFile *bindings.PostFile) error {
+	if postFile == nil {
 		return wasmvmtypes.InvalidRequest{Err: "post file null error"}
 	}
 
 	sdkMsg := storagetypes.NewMsgPostFile(
 		contractAddr.String(),
-		PostFile.Merkle,
-		PostFile.FileSize,
-		PostFile.ProofInterval,
-		PostFile.ProofType,
-		PostFile.MaxProofs,
-		PostFile.Note,
+		postFile.Merkle,
+		postFile.FileSize,
+		postFile.ProofInterval,
+		postFile.ProofType,
+		postFile.MaxProofs,
+		postFile.Note,
 	)
 
-	sdkMsg.Expires = PostFile.Expires
+	sdkMsg.Expires = postFile.Expires
 
 	if err := sdkMsg.ValidateBasic(); err != nil {
 		return err
