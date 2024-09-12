@@ -61,7 +61,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 }
 
 // postFile posts a File to the storage module
-func (m *CustomMessenger) postFile(ctx sdk.Context, contractAddr sdk.AccAddress, postFile *bindings.PostFile) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) postFile(ctx sdk.Context, contractAddr sdk.AccAddress, postFile *storagetypes.MsgPostFile) ([]sdk.Event, [][]byte, error) {
 	err := PerformPostFile(m.storage, ctx, contractAddr, postFile)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform post file")
@@ -69,29 +69,21 @@ func (m *CustomMessenger) postFile(ctx sdk.Context, contractAddr sdk.AccAddress,
 	return nil, nil, nil
 }
 
-func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postFile *bindings.PostFile) error {
+func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postFile *storagetypes.MsgPostFile) error {
 	if postFile == nil {
 		return wasmvmtypes.InvalidRequest{Err: "post file null error"}
 	}
 
-	sdkMsg := storagetypes.NewMsgPostFile(
-		contractAddr.String(),
-		postFile.Merkle,
-		postFile.FileSize,
-		postFile.ProofInterval,
-		postFile.ProofType,
-		postFile.MaxProofs,
-		postFile.Note,
-	)
+	if postFile.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
 
-	sdkMsg.Expires = postFile.Expires
-
-	if err := sdkMsg.ValidateBasic(); err != nil {
+	if err := postFile.ValidateBasic(); err != nil {
 		return err
 	}
 
 	msgServer := storagekeeper.NewMsgServerImpl(*s)
-	_, err := msgServer.PostFile(sdk.WrapSDKContext(ctx), sdkMsg)
+	_, err := msgServer.PostFile(sdk.WrapSDKContext(ctx), postFile)
 	if err != nil {
 		return sdkerrors.Wrap(err, "post file error from message")
 	}
