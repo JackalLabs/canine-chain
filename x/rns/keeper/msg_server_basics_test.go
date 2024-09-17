@@ -170,7 +170,7 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, owner.String(), successfulName, "{}", 2, true)
 	suite.Require().NoError(err)
 
 	cases := []struct {
@@ -218,7 +218,7 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 			preRun: func() *types.MsgTransfer {
 				freeName := "freeBi.jkl"
 				blockHeight := suite.ctx.BlockHeight()
-				err := suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), freeName, "{}", 2)
+				err := suite.rnsKeeper.RegisterRNSName(suite.ctx, owner.String(), freeName, "{}", 2, true)
 				suite.Require().NoError(err)
 				name, _ := suite.rnsKeeper.GetNames(suite.ctx, "freeBi", "jkl")
 				name.Locked = blockHeight + 1
@@ -276,7 +276,7 @@ func (suite *KeeperTestSuite) TestMsgUpdate() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterName(suite.ctx, owner.String(), successfulName, "{}", 2)
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, owner.String(), successfulName, "{}", 2, true)
 	suite.Require().NoError(err)
 
 	const testdata = "{\"test\":\"test\"}"

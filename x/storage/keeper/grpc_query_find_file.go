@@ -47,6 +47,10 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
+	if req.Merkle == nil {
+		return nil, status.Error(codes.InvalidArgument, "no merkle hash provider")
+	}
+
 	var ips []string
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))

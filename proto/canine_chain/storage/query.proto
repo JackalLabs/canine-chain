@@ -181,6 +181,18 @@ service Query {
         "/jackal/canine-chain/storage/storage_stats";
   }
 
+  // Queries how much storage space is being used on the network at this time.
+  rpc NetworkSize(QueryNetworkSize) returns (QueryNetworkSizeResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/network_size";
+  }
+
+  // Queries the amount of offered storage by active providers
+  rpc AvailableSpace(QueryAvailableSpace) returns (QueryAvailableSpaceResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/available_space";
+  }
+
   // Queries protocol storage space used and purchased.
   rpc Gauges(QueryAllGauges) returns (QueryAllGaugesResponse) {
     option (google.api.http).get =
@@ -439,4 +451,16 @@ message QueryStorageStatsResponse {
   uint64 activeUsers = 4;
   uint64 uniqueUsers = 5;
   map<int64, int64> users_by_plan= 6;
+}
+
+message QueryNetworkSize {}
+
+message QueryNetworkSizeResponse {
+  uint64 size = 1;
+}
+
+message QueryAvailableSpace {}
+
+message QueryAvailableSpaceResponse {
+  uint64 size = 1;
 }

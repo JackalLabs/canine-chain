@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	"strings"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -9,6 +10,33 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
+
+func (k Keeper) SetPrimaryName(ctx sdk.Context, owner, name, tld string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PrimaryNameKeyPrefix))
+	store.Set(types.PrimaryNameKey(
+		owner,
+	), []byte(fmt.Sprintf("%s.%s", name, tld)))
+}
+
+func (k Keeper) GetPrimaryName(
+	ctx sdk.Context,
+	owner string,
+) (val types.Names, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PrimaryNameKeyPrefix))
+
+	b := store.Get(types.PrimaryNameKey(
+		owner,
+	))
+	if b == nil {
+		return val, false
+	}
+
+	n := string(b)
+
+	nameString := strings.Split(n, ".")
+
+	return k.GetNames(ctx, nameString[0], nameString[1])
+}
 
 // SetNames set a specific names in the store from its index
 func (k Keeper) SetNames(ctx sdk.Context, names types.Names) {

@@ -40,6 +40,35 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	res := &types.MsgPostFileResponse{ProviderIps: ips, StartBlock: ctx.BlockHeight()}
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	b := False // pay once event
+	if msg.Expires > 0 {
+		b = True
+	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeSignContract,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeyContract, hex.EncodeToString(msg.Merkle)),
+			sdk.NewAttribute(types.AttributeKeyPayOnce, b),
+			sdk.NewAttribute(types.AttributeKeyStart, fmt.Sprintf("%d", ctx.BlockHeight())),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	totalSize := msg.FileSize * msg.MaxProofs
 	if msg.Expires > 0 { // if the file is posted as a one-time payment
 		kbs := totalSize / 1000
@@ -111,34 +140,6 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 	}
 
 	k.SetStoragePaymentInfo(ctx, paymentInfo)
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-		),
-	)
-
-	b := False // pay once event
-	if msg.Expires > 0 {
-		b = True
-	}
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			types.EventTypeSignContract,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
-			sdk.NewAttribute(types.AttributeKeyContract, hex.EncodeToString(msg.Merkle)),
-			sdk.NewAttribute(types.AttributeKeyPayOnce, b),
-		),
-	)
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			types.EventTypeJackalMessage,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
-		),
-	)
 
 	return res, nil
 }
