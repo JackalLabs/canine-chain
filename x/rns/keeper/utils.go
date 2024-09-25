@@ -56,15 +56,23 @@ func GetCostOfName(name string, tld string) (int64, error) {
 	case 0:
 		return 0, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Must be 1 or more characters.")
 	case 1:
-		cost = baseCost * 32
+		cost = baseCost * 32 * 4
 	case 2:
-		cost = baseCost * 16
+		cost = baseCost * 16 * 4
 	case 3:
-		cost = baseCost * 8
+		cost = baseCost * 8 * 4
 	case 4:
-		cost = baseCost * 4
+		cost = baseCost * 4 * 4
 	case 5:
-		cost = baseCost * 2
+		cost = baseCost * 2 * 4
+	case 6:
+		cost = baseCost * 4
+	case 7:
+		cost = baseCost * 4
+	case 8:
+		cost = baseCost * 4
+	case 9:
+		cost = baseCost * 4
 	default:
 		cost = baseCost
 	}

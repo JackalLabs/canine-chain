@@ -23,7 +23,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
@@ -102,7 +102,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
@@ -201,7 +201,7 @@ func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
 	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)

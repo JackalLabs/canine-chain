@@ -19,7 +19,7 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 	nameOwner, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000)) // Send some coins to their account
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000)) // Send some coins to their account
 	coins := sdk.NewCoins(coin)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
 	suite.Require().NoError(err)
