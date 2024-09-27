@@ -1,6 +1,7 @@
 package v410_test
 
 import (
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
 	v410 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v410"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
@@ -9,7 +10,7 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 	suite.SetupSuite()
 	setupMsgServer(suite)
 
-	err := v410.RecoverFiles(suite.ctx, suite.storageKeeper, 420)
+	err := upgrades.RecoverFiles(suite.ctx, suite.storageKeeper, v410.UpgradeData, 20000, "v4.1.0-test")
 	suite.Require().NoError(err)
 
 	i := 0
@@ -24,5 +25,5 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 		return false
 	})
 
-	suite.Require().Equal(259, i)
+	suite.Require().Equal(25000, i)
 }
