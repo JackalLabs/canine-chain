@@ -8,7 +8,7 @@ import (
 
 func (suite *KeeperTestSuite) TestBuyMsg() {
 	suite.SetupSuite()
-	msgSrvr, _, ctx := setupMsgServer(suite)
+	msgSrvr, ctx := setupMsgServer(suite)
 	keeper := suite.rnsKeeper
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)

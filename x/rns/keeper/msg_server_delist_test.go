@@ -10,7 +10,7 @@ import (
 
 func (suite *KeeperTestSuite) TestDelistMsg() {
 	suite.SetupSuite()
-	msgSrvr, _, ctx := setupMsgServer(suite)
+	msgSrvr, ctx := setupMsgServer(suite)
 	// ctx = suite.ctx.WithBlockHeight(100)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)

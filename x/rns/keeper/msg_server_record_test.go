@@ -10,7 +10,7 @@ import (
 func (suite *KeeperTestSuite) TestMsgAddRecord() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -82,7 +82,7 @@ func (suite *KeeperTestSuite) TestMsgAddRecord() {
 func (suite *KeeperTestSuite) TestMsgDelRecord() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)

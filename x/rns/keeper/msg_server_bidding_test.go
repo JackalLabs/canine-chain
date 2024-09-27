@@ -12,7 +12,7 @@ const nuggieName = "Nuggie.jkl"
 
 func (suite *KeeperTestSuite) TestMsgAddBid() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -91,7 +91,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 
 func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -190,7 +190,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 
 func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)

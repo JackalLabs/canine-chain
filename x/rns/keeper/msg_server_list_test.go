@@ -55,7 +55,7 @@ func (suite *KeeperTestSuite) TestListMsg() {
 		suite.Run(name, func() {
 			suite.SetupSuite()
 			suite.ctx = suite.ctx.WithBlockHeight(0)
-			msgSrvr, _, ctx := setupMsgServer(suite)
+			msgSrvr, ctx := setupMsgServer(suite)
 
 			rns := types.Names{
 				Name:       names[0],

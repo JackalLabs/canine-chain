@@ -11,7 +11,7 @@ import (
 func (suite *KeeperTestSuite) TestMsgInit() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -66,7 +66,7 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 func (suite *KeeperTestSuite) TestMsgRegister() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -154,7 +154,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -259,7 +259,7 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 func (suite *KeeperTestSuite) TestMsgUpdate() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
