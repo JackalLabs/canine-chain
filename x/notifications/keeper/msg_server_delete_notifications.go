@@ -13,5 +13,12 @@ func (k msgServer) DeleteNotification(goCtx context.Context, msg *types.MsgDelet
 
 	k.RemoveNotification(ctx, msg.Creator, msg.From, msg.Time)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveNotification,
+			sdk.NewAttribute(types.AttributeSigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgDeleteNotificationResponse{}, nil
 }

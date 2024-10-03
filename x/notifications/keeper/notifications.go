@@ -17,6 +17,15 @@ func (k Keeper) SetNotification(ctx sdk.Context, notification types.Notification
 		notification.From,
 		notification.Time,
 	), b)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventSetNotification,
+			sdk.NewAttribute(types.AttributeTo, notification.To),
+			sdk.NewAttribute(types.AttributeFrom, notification.From),
+			sdk.NewAttribute(types.AttributeWhen, fmt.Sprintf("%d", notification.Time)),
+		),
+	)
 }
 
 // GetNotification returns a notification from its index
@@ -55,6 +64,15 @@ func (k Keeper) RemoveNotification(
 		from,
 		timeStamp,
 	))
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveNotification,
+			sdk.NewAttribute(types.AttributeTo, to),
+			sdk.NewAttribute(types.AttributeFrom, from),
+			sdk.NewAttribute(types.AttributeWhen, fmt.Sprintf("%d", timeStamp)),
+		),
+	)
 }
 
 // GetAllNotifications returns all notifications

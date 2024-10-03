@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -41,6 +42,14 @@ func (k Keeper) UpdateName(ctx sdk.Context, sender string, nm string, data strin
 	// Write whois information to the store
 	k.SetNames(ctx, whois)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventUpdate,
+			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", whois.Name, whois.Tld)),
+			sdk.NewAttribute(types.AttributeOwner, sender),
+		),
+	)
+
 	return nil
 }
 
@@ -49,6 +58,27 @@ func (k msgServer) Update(goCtx context.Context, msg *types.MsgUpdate) (*types.M
 	// Try getting a name from the store
 
 	err := k.UpdateName(ctx, msg.Creator, msg.Name, msg.Data)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventUpdate,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 
 	return &types.MsgUpdateResponse{}, err
 }

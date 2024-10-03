@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -87,6 +88,14 @@ func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data 
 		k.SetPrimaryName(ctx, newWhois.Value, newWhois.Name, newWhois.Tld)
 	}
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRegister,
+			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", newWhois.Name, newWhois.Tld)),
+			sdk.NewAttribute(types.AttributeOwner, sender),
+		),
+	)
+
 	return nil
 }
 
@@ -118,6 +127,27 @@ func (k msgServer) RegisterName(goCtx context.Context, msg *types.MsgRegisterNam
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.RegisterRNSName(ctx, msg.Creator, msg.Name, msg.Data, msg.Years, msg.SetPrimary)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRegister,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 
 	return &types.MsgRegisterNameResponse{}, err
 }

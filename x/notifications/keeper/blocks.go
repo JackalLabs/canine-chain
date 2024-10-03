@@ -14,6 +14,14 @@ func (k Keeper) SetBlock(ctx sdk.Context, block types.Block) {
 		block.Address,
 		block.BlockedAddress,
 	), b)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventBlock,
+			sdk.NewAttribute(types.AttributeBlocker, block.Address),
+			sdk.NewAttribute(types.AttributeBlockee, block.BlockedAddress),
+		),
+	)
 }
 
 // IsBlocked returns if a user is blocked

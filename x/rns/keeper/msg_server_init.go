@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -61,6 +62,35 @@ func (k msgServer) Init(goCtx context.Context, msg *types.MsgInit) (*types.MsgIn
 	}
 	// Write whois information to the store
 	k.SetNames(ctx, newWhois)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventInit,
+			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", newWhois.Name, newWhois.Tld)),
+			sdk.NewAttribute(types.AttributeOwner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventInit,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 
 	return &types.MsgInitResponse{}, nil
 }

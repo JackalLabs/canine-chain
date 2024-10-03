@@ -55,5 +55,34 @@ func (k msgServer) DelRecord(goCtx context.Context, msg *types.MsgDelRecord) (*t
 	val.Subdomains = dms
 	k.SetNames(ctx, val)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveRecord,
+			sdk.NewAttribute(types.AttributeName, msg.Name),
+			sdk.NewAttribute(types.AttributeOwner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveRecord,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgDelRecordResponse{}, nil
 }
