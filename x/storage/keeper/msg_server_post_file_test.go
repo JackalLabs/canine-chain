@@ -82,7 +82,6 @@ func (suite *KeeperTestSuite) TestPostFile() {
 		tc := tcs
 		suite.Run(tc.testName, func() {
 			res, err := msgSrvr.PostFile(ctx, &tc.msg)
-
 			if tc.expErr {
 				suite.Require().ErrorContains(err, tc.expErrMsg)
 			} else {

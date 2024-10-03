@@ -36,6 +36,14 @@ func (k Keeper) CancelOneBid(ctx sdk.Context, sender string, name string) error 
 
 	k.RemoveBids(ctx, fmt.Sprintf("%s%s", sender, name))
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveBid,
+			sdk.NewAttribute(types.AttributeName, name),
+			sdk.NewAttribute(types.AttributeOwner, sender),
+		),
+	)
+
 	return nil
 }
 
@@ -43,6 +51,27 @@ func (k msgServer) CancelBid(goCtx context.Context, msg *types.MsgCancelBid) (*t
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.CancelOneBid(ctx, msg.Creator, msg.Name)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveBid,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
 
 	return &types.MsgCancelBidResponse{}, err
 }

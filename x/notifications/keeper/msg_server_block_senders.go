@@ -27,5 +27,12 @@ func (k msgServer) BlockSenders(goCtx context.Context, msg *types.MsgBlockSender
 
 	}
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventBlockSenders,
+			sdk.NewAttribute(types.AttributeSigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgBlockSendersResponse{}, nil
 }

@@ -16,6 +16,13 @@ func (k Keeper) SetPrimaryName(ctx sdk.Context, owner, name, tld string) {
 	store.Set(types.PrimaryNameKey(
 		owner,
 	), []byte(fmt.Sprintf("%s.%s", name, tld)))
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventSetPrimaryName,
+			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", name, tld)),
+			sdk.NewAttribute(types.AttributeValue, owner),
+		),
+	)
 }
 
 func (k Keeper) GetPrimaryName(
@@ -46,6 +53,15 @@ func (k Keeper) SetNames(ctx sdk.Context, names types.Names) {
 		names.Name,
 		names.Tld,
 	), b)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventSetName,
+			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", names.Name, names.Tld)),
+			sdk.NewAttribute(types.AttributeValue, names.Value),
+			sdk.NewAttribute(types.AttributeExpires, fmt.Sprintf("%d", names.Expires)),
+		),
+	)
 }
 
 // GetNames returns a names from its index
@@ -82,6 +98,13 @@ func (k Keeper) RemoveNames(
 		name,
 		tld,
 	))
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveName,
+			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", name, tld)),
+		),
+	)
 }
 
 // GetAllNames returns all names
@@ -100,9 +123,9 @@ func (k Keeper) GetAllNames(ctx sdk.Context) (list []types.Names) {
 	return
 }
 
-// quickly checks if there are any domains registered
+// CheckExistence quickly checks if there are any domains registered
 func (k Keeper) CheckExistence(ctx sdk.Context) bool {
-	// intializing the iterator
+	// initializing the iterator
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
