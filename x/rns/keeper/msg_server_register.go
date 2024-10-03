@@ -142,5 +142,12 @@ func (k msgServer) RegisterName(goCtx context.Context, msg *types.MsgRegisterNam
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRegister,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgRegisterNameResponse{}, err
 }

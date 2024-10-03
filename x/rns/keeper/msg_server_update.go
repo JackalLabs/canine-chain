@@ -73,5 +73,12 @@ func (k msgServer) Update(goCtx context.Context, msg *types.MsgUpdate) (*types.M
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventUpdate,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgUpdateResponse{}, err
 }

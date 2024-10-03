@@ -66,5 +66,12 @@ func (k msgServer) CancelBid(goCtx context.Context, msg *types.MsgCancelBid) (*t
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveBid,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgCancelBidResponse{}, err
 }

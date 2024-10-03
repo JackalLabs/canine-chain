@@ -68,6 +68,7 @@ func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*t
 			types.EventAddRecord,
 			sdk.NewAttribute(types.AttributeName, msg.Name),
 			sdk.NewAttribute(types.AttributeOwner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
 		),
 	)
 

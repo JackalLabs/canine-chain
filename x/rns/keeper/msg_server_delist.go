@@ -55,5 +55,12 @@ func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.M
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventRemoveSale,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgDelistResponse{}, nil
 }

@@ -39,5 +39,12 @@ func (k msgServer) CreateNotification(goCtx context.Context, msg *types.MsgCreat
 
 	k.SetNotification(ctx, noti)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventCreateNotification,
+			sdk.NewAttribute(types.AttributeSigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgCreateNotificationResponse{}, nil
 }

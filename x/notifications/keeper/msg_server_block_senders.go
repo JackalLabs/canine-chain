@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
@@ -26,6 +25,13 @@ func (k msgServer) BlockSenders(goCtx context.Context, msg *types.MsgBlockSender
 		k.SetBlock(ctx, b)
 
 	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventBlockSenders,
+			sdk.NewAttribute(types.AttributeSigner, msg.Creator),
+		),
+	)
 
 	return &types.MsgBlockSendersResponse{}, nil
 }

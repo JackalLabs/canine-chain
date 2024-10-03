@@ -27,7 +27,7 @@ const (
 
 	AttributeValueCategory = ModuleName
 
-	AttributeKeySigner = "signer" // sign storage deal
+	AttributeKeySigner = "signer"
 
 	EventTypeJackalMessage = "jackal_message"
 )

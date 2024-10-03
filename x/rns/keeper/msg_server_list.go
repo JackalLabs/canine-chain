@@ -67,5 +67,12 @@ func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgLi
 		),
 	)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventSetSale,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
 	return &types.MsgListResponse{}, nil
 }
