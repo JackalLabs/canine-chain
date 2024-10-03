@@ -2,19 +2,19 @@ package keeper_test
 
 import (
 	"context"
+	"math/rand"
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/testutil"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
-	"math/rand"
-	"time"
 )
 
 func (suite *KeeperTestSuite) TestStorageStats() {
-
 	for i := 0; i < 100; i++ {
 
-		var mm = rand.Int63n(50_000_000_000)
-		var fs = rand.Int63n(1_000_000_000_000)
+		mm := rand.Int63n(50_000_000_000)
+		fs := rand.Int63n(1_000_000_000_000)
 
 		suite.SetupSuite()
 
@@ -102,5 +102,4 @@ func (suite *KeeperTestSuite) TestStorageStats() {
 
 		suite.reset()
 	}
-
 }
