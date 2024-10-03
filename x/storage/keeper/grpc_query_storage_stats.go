@@ -66,21 +66,37 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*
 
 	var spacePurchased int64
 	var spaceUsed int64
-	var activeUsers uint64
-	var totalUsers uint64
+
+	activeUsers := make(map[string]bool)
+	allUsers := make(map[string]bool)
 
 	usersByPlan := make(map[int64]int64)
 
 	for _, info := range payment {
-		totalUsers++ // counting in total users
+		allUsers[info.Address] = true
+
 		if info.End.Before(ctx.BlockTime()) {
 			continue
 		}
 		usersByPlan[info.SpaceAvailable]++
+		activeUsers[info.Address] = true
 		spacePurchased += info.SpaceAvailable
-		spaceUsed += info.SpaceUsed
-		activeUsers++
 	}
+
+	k.IterateAndParseFilesByMerkle(ctx, false, func(_ []byte, val types.UnifiedFile) bool {
+		allUsers[val.Owner] = true
+		activeUsers[val.Owner] = true
+
+		m := val.FileSize * val.MaxProofs
+
+		if val.Expires > 0 {
+			spacePurchased += m
+		}
+
+		spaceUsed += m
+
+		return false
+	})
 
 	decSpent := sdk.NewDec(spacePurchased)
 	decUsed := sdk.NewDec(spaceUsed)
@@ -91,8 +107,8 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*
 		Purchased:   uint64(spacePurchased),
 		Used:        uint64(spaceUsed),
 		UsedRatio:   ratio,
-		ActiveUsers: activeUsers,
-		UniqueUsers: totalUsers,
+		ActiveUsers: uint64(len(activeUsers)),
+		UniqueUsers: uint64(len(allUsers)),
 		UsersByPlan: usersByPlan,
 	}, nil
 }
