@@ -21,7 +21,7 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 
 	name := "test.jkl"
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(1000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, address, coins)

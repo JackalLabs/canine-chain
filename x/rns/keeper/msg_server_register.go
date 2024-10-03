@@ -13,6 +13,7 @@ import (
 
 func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data string, years int64, primary bool) error {
 	nm = strings.ToLower(nm)
+	nm = strings.ReplaceAll(nm, " ", "")
 	name, tld, err := GetNameAndTLD(nm)
 	if err != nil {
 		return err

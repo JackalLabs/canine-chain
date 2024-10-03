@@ -26,7 +26,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	cost, err := keeper.GetCostOfName(n, t)
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(1000000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, address, coins)

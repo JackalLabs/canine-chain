@@ -26,7 +26,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	nameAddress, err := sdk.AccAddressFromBech32(nameAddr)
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, address, coins)

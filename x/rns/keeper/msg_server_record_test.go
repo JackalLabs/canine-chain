@@ -10,7 +10,7 @@ import (
 func (suite *KeeperTestSuite) TestMsgAddRecord() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -18,7 +18,7 @@ func (suite *KeeperTestSuite) TestMsgAddRecord() {
 	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
@@ -82,7 +82,7 @@ func (suite *KeeperTestSuite) TestMsgAddRecord() {
 func (suite *KeeperTestSuite) TestMsgDelRecord() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -90,7 +90,7 @@ func (suite *KeeperTestSuite) TestMsgDelRecord() {
 	owner, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)

@@ -11,7 +11,7 @@ import (
 func (suite *KeeperTestSuite) TestMsgInit() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -66,7 +66,7 @@ func (suite *KeeperTestSuite) TestMsgInit() {
 func (suite *KeeperTestSuite) TestMsgRegister() {
 	suite.SetupSuite()
 
-	msgSrvr, k, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
 	suite.Require().NoError(err)
@@ -74,7 +74,11 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 	user, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	deposit := suite.rnsKeeper.GetParams(suite.ctx).DepositAccount
+	addr, err := sdk.AccAddressFromBech32(deposit)
+	suite.Require().NoError(err)
+
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, user, coins)
@@ -139,10 +143,8 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 				suite.Require().NoError(err)
 				suite.Require().EqualValues(types.MsgRegisterResponse{}, *res)
 
-				deposit := k.GetParams(suite.ctx).DepositAccount
-				addr, _ := sdk.AccAddressFromBech32(deposit)
 				amount := suite.bankKeeper.GetBalance(suite.ctx, addr, "ujkl")
-				suite.Require().Equal("15000000ujkl", amount.String())
+				suite.Require().Equal("200000000ujkl", amount.String())
 
 			}
 		})
@@ -152,7 +154,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -164,7 +166,7 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 
 	successfulName := "BiPhan.jkl"
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)
@@ -257,7 +259,7 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 func (suite *KeeperTestSuite) TestMsgUpdate() {
 	suite.SetupSuite()
 
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -270,7 +272,7 @@ func (suite *KeeperTestSuite) TestMsgUpdate() {
 
 	successfulName := "BiPhan.jkl"
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, owner, coins)

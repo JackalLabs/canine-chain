@@ -12,7 +12,7 @@ const nuggieName = "Nuggie.jkl"
 
 func (suite *KeeperTestSuite) TestMsgAddBid() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -23,7 +23,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
@@ -91,7 +91,7 @@ func (suite *KeeperTestSuite) TestMsgAddBid() {
 
 func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -102,7 +102,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
@@ -190,7 +190,7 @@ func (suite *KeeperTestSuite) TestMsgAcceptOneBid() {
 
 func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
 	suite.SetupSuite()
-	msgSrvr, _, context := setupMsgServer(suite)
+	msgSrvr, context := setupMsgServer(suite)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
@@ -201,7 +201,7 @@ func (suite *KeeperTestSuite) TestMsgCancelOneBid() {
 	bidder, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(100000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
