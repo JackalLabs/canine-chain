@@ -67,6 +67,15 @@ func (k Keeper) AcceptOneBid(ctx sdk.Context, sender string, name string, bidder
 	// Write whois information to the store
 	k.SetNames(ctx, whois)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventAcceptBid,
+			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", whois.Name, whois.Tld)),
+			sdk.NewAttribute(types.AttributeBidder, bid.Bidder),
+			sdk.NewAttribute(types.AttributeOwner, whois.Value),
+		),
+	)
+
 	return nil
 }
 
@@ -74,6 +83,20 @@ func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*t
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.AcceptOneBid(ctx, msg.Creator, msg.Name, msg.From)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
 
 	return &types.MsgAcceptBidResponse{}, err
 }

@@ -13,6 +13,14 @@ func (k Keeper) SetBids(ctx sdk.Context, bids types.Bids) {
 	store.Set(types.BidsKey(
 		bids.Index,
 	), b)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventSetBid,
+			sdk.NewAttribute(types.AttributeName, bids.Name),
+			sdk.NewAttribute(types.AttributeBidder, bids.Bidder),
+		),
+	)
 }
 
 // GetBids returns a bids from its index

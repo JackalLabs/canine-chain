@@ -41,5 +41,19 @@ func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.M
 
 	k.RemoveForsale(ctx, mname)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgDelistResponse{}, nil
 }

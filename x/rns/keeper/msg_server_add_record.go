@@ -63,5 +63,27 @@ func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*t
 
 	k.SetNames(ctx, whois)
 
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventAddRecord,
+			sdk.NewAttribute(types.AttributeName, msg.Name),
+			sdk.NewAttribute(types.AttributeOwner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeJackalMessage,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+		),
+	)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	)
+
 	return &types.MsgAddRecordResponse{}, nil
 }
