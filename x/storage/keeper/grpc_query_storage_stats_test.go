@@ -98,7 +98,7 @@ func (suite *KeeperTestSuite) TestStorageStats() {
 		suite.Require().Equal(uint64(2), res.ActiveUsers)
 		suite.Require().Equal(uint64(3), res.UniqueUsers)
 		suite.Require().Equal(uint64(fs*6), res.Used)
-		suite.Require().Equal(uint64(fs*3+mm), res.Purchased)
+		suite.Require().Equal(fs*3+mm, int64(res.Purchased))
 
 		suite.reset()
 	}
