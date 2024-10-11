@@ -48,7 +48,7 @@ func (suite *KeeperTestSuite) TestStorageStats() {
 
 		suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
 			Start:          time.Date(2023, 10, 10, 0, 0, 0, 0, time.UTC),
-			End:            time.Date(2024, 10, 10, 0, 0, 0, 0, time.UTC),
+			End:            time.Date(time.Now().Year()+1, 10, 10, 0, 0, 0, 0, time.UTC),
 			SpaceAvailable: mm,
 			SpaceUsed:      0,
 			Address:        testAccount,
@@ -98,6 +98,7 @@ func (suite *KeeperTestSuite) TestStorageStats() {
 		suite.Require().Equal(uint64(2), res.ActiveUsers)
 		suite.Require().Equal(uint64(3), res.UniqueUsers)
 		suite.Require().Equal(uint64(fs*6), res.Used)
+
 		suite.Require().Equal(fs*3+mm, int64(res.Purchased))
 
 		suite.reset()
