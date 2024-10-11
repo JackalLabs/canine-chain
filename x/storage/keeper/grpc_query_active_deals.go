@@ -152,7 +152,6 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 	var i uint64
 	var total uint64
 	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, val []byte) bool {
-
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(val, &file); err != nil {
 			return false
