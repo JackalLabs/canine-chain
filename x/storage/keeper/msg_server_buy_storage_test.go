@@ -72,6 +72,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 				initialPayInfo := types.StoragePaymentInfo{
 					SpaceUsed: 5000000000,
 					Address:   testAccount,
+					End:       suite.ctx.BlockTime().AddDate(1, 0, 0),
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
 			},
