@@ -77,12 +77,13 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	var spaceUsed int64 // default 0
 	payInfo, found := k.GetStoragePaymentInfo(ctx, forAddress.String())
 	if found {
-		if payInfo.SpaceUsed > bytes {
-			return nil, fmt.Errorf("cannot buy less than your current gb usage")
-		}
-		spaceUsed = payInfo.SpaceUsed
-
 		if payInfo.End.After(ctx.BlockTime()) { // should we upgrade storage instead of buy fresh?
+			if payInfo.SpaceUsed > bytes {
+				return nil, fmt.Errorf("cannot buy less than your current gb usage")
+			}
+
+			spaceUsed = payInfo.SpaceUsed
+
 			toPay, err = k.UpgradeStorage(ctx, bytes, payInfo, duration, storageCost, denom)
 			if err != nil {
 				return nil, sdkerrors.Wrapf(err, "cannot upgrade storage")
