@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/CosmWasm/wasmd v0.32.0
-	github.com/CosmWasm/wasmvm v1.2.6 
+	github.com/CosmWasm/wasmvm v1.2.6
 	github.com/cosmos/cosmos-sdk v0.45.17
 	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/ecies/go/v2 v2.0.6
@@ -21,7 +21,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7 // indirect
 	github.com/tendermint/tendermint v0.34.27
-	github.com/tendermint/tm-db v0.6.7
+	github.com/tendermint/tm-db v0.6.8-0.20220506192307-f628bb5dc95b
 	github.com/zondax/hid v0.9.2 // indirect
 	google.golang.org/genproto v0.0.0-20230320184635-7606e756e683
 	google.golang.org/grpc v1.55.0
@@ -48,6 +48,8 @@ require (
 	github.com/cosmos/interchain-accounts v0.2.6
 	github.com/golang/mock v1.6.0
 )
+
+require github.com/CosmWasm/token-factory v0.0.0-20230301150822-47dc2d5ae369 // indirect
 
 require (
 	cosmossdk.io/api v0.2.6 // indirect
@@ -109,7 +111,7 @@ require (
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hdevalence/ed25519consensus v0.0.0-20220222234857-c00d1f31bab3 // indirect
-	github.com/improbable-eng/grpc-web v0.14.1 // indirect
+	github.com/improbable-eng/grpc-web v0.15.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/klauspost/compress v1.16.3 // indirect

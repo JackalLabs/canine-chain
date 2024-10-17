@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/CosmWasm/token-factory/x/tokenfactory/bindings"
 	"io"
 	"net/http"
 	"os"
@@ -110,6 +111,10 @@ import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmappparams "github.com/jackalLabs/canine-chain/v4/app/params"
 	owasm "github.com/jackalLabs/canine-chain/v4/wasmbinding"
+
+	"github.com/CosmWasm/token-factory/x/tokenfactory"
+	tokenfactorykeeper "github.com/CosmWasm/token-factory/x/tokenfactory/keeper"
+	tokenfactorytypes "github.com/CosmWasm/token-factory/x/tokenfactory/types"
 
 	mint "github.com/jackalLabs/canine-chain/v4/x/jklmint"
 	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
@@ -236,6 +241,7 @@ var (
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		tokenfactory.NewAppModuleBasic(),
 		wasm.AppModuleBasic{},
 		rnsmodule.AppModuleBasic{},
 		storagemodule.AppModuleBasic{},
@@ -265,6 +271,7 @@ var (
 		notificationsmoduletypes.ModuleName:        nil,
 		icatypes.ModuleName:                        nil,
 		storagemoduletypes.CollateralCollectorName: nil,
+		tokenfactorytypes.ModuleName:               {authtypes.Minter, authtypes.Burner},
 		/*
 			dsigmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		*/
@@ -291,24 +298,25 @@ type JackalApp struct {
 	memKeys map[string]*sdk.MemoryStoreKey
 
 	// keepers
-	AccountKeeper    authkeeper.AccountKeeper
-	BankKeeper       bankkeeper.Keeper
-	capabilityKeeper *capabilitykeeper.Keeper
-	stakingKeeper    stakingkeeper.Keeper
-	slashingKeeper   slashingkeeper.Keeper
-	MintKeeper       mintkeeper.Keeper
-	distrKeeper      distrkeeper.Keeper
-	govKeeper        govkeeper.Keeper
-	crisisKeeper     crisiskeeper.Keeper
-	upgradeKeeper    upgradekeeper.Keeper
-	paramsKeeper     paramskeeper.Keeper
-	evidenceKeeper   evidencekeeper.Keeper
-	ibcKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	ibcFeeKeeper     ibcfeekeeper.Keeper
-	transferKeeper   ibctransferkeeper.Keeper
-	feeGrantKeeper   feegrantkeeper.Keeper
-	authzKeeper      authzkeeper.Keeper
-	wasmKeeper       wasm.Keeper
+	AccountKeeper      authkeeper.AccountKeeper
+	BankKeeper         bankkeeper.Keeper
+	capabilityKeeper   *capabilitykeeper.Keeper
+	stakingKeeper      stakingkeeper.Keeper
+	slashingKeeper     slashingkeeper.Keeper
+	MintKeeper         mintkeeper.Keeper
+	distrKeeper        distrkeeper.Keeper
+	govKeeper          govkeeper.Keeper
+	crisisKeeper       crisiskeeper.Keeper
+	upgradeKeeper      upgradekeeper.Keeper
+	paramsKeeper       paramskeeper.Keeper
+	evidenceKeeper     evidencekeeper.Keeper
+	ibcKeeper          *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
+	ibcFeeKeeper       ibcfeekeeper.Keeper
+	transferKeeper     ibctransferkeeper.Keeper
+	feeGrantKeeper     feegrantkeeper.Keeper
+	authzKeeper        authzkeeper.Keeper
+	wasmKeeper         wasm.Keeper
+	TokenFactoryKeeper tokenfactorykeeper.Keeper
 
 	scopedIBCKeeper           capabilitykeeper.ScopedKeeper
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
@@ -369,7 +377,7 @@ func NewJackalApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, rnsmoduletypes.StoreKey,
+		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, tokenfactorytypes.StoreKey, rnsmoduletypes.StoreKey,
 		storagemoduletypes.StoreKey, filetreemoduletypes.StoreKey, oraclemoduletypes.StoreKey,
 		notificationsmoduletypes.StoreKey, ibcfeetypes.StoreKey, icacontrollertypes.StoreKey,
 		icahosttypes.StoreKey,
@@ -523,6 +531,15 @@ func NewJackalApp(
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.upgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.ibcKeeper.ClientKeeper))
 
+	tokenFactoryKeeper := tokenfactorykeeper.NewKeeper(
+		keys[tokenfactorytypes.StoreKey],
+		app.getSubspace(tokenfactorytypes.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.distrKeeper,
+	)
+	app.TokenFactoryKeeper = tokenFactoryKeeper
+
 	// IBC Fee Module keeper
 	app.ibcFeeKeeper = ibcfeekeeper.NewKeeper(
 		appCodec, keys[ibcfeetypes.StoreKey], app.getSubspace(ibcfeetypes.ModuleName),
@@ -574,9 +591,11 @@ func NewJackalApp(
 
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
-	supportedFeatures := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2"
+	supportedFeatures := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2,token_factory"
 
 	wasmOpts = append(owasm.RegisterCustomPlugins(&app.FileTreeKeeper, &app.StorageKeeper), wasmOpts...)
+	wasmOpts = append(bindings.RegisterCustomPlugins(&app.BankKeeper, &app.TokenFactoryKeeper), wasmOpts...)
+
 	app.wasmKeeper = wasm.NewKeeper(
 		appCodec,
 		keys[wasm.StoreKey],
@@ -728,6 +747,7 @@ func NewJackalApp(
 		distr.NewAppModule(appCodec, app.distrKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
 		staking.NewAppModule(appCodec, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
 		upgrade.NewAppModule(app.upgradeKeeper),
+		tokenfactory.NewAppModule(app.TokenFactoryKeeper, app.AccountKeeper, app.BankKeeper),
 		wasm.NewAppModule(appCodec, &app.wasmKeeper, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
 		evidence.NewAppModule(app.evidenceKeeper),
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.feeGrantKeeper, app.InterfaceRegistry),
@@ -782,7 +802,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
-
+		tokenfactorytypes.ModuleName,
 		/*
 			dsigmoduletypes.ModuleName,
 
@@ -819,7 +839,7 @@ func NewJackalApp(
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
 		wasm.ModuleName,
-
+		tokenfactorytypes.ModuleName,
 		/*
 			dsigmoduletypes.ModuleName,
 
@@ -862,6 +882,7 @@ func NewJackalApp(
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 		wasm.ModuleName,
 
 		/*
@@ -897,6 +918,8 @@ func NewJackalApp(
 		filetreemoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
 		notificationsmoduletypes.ModuleName,
+		tokenfactorytypes.ModuleName,
+
 		wasm.ModuleName,
 	)
 
@@ -921,6 +944,7 @@ func NewJackalApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 		wasm.ModuleName,
 		rnsmoduletypes.ModuleName,
 		oraclemoduletypes.ModuleName,
@@ -1175,6 +1199,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(storagemoduletypes.ModuleName)
 	paramsKeeper.Subspace(filetreemoduletypes.ModuleName)
 	paramsKeeper.Subspace(notificationsmoduletypes.ModuleName)
+	paramsKeeper.Subspace(tokenfactorytypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 
 	return paramsKeeper
