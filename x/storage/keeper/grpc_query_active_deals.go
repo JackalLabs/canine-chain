@@ -150,11 +150,8 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 	}
 
 	var i uint64
+	var total uint64
 	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, val []byte) bool {
-		if i >= limit {
-			return true
-		}
-
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(val, &file); err != nil {
 			return false
@@ -165,6 +162,10 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 		}
 
 		if len(file.Proofs) < int(file.MaxProofs) {
+			total++
+			if i >= limit {
+				return false
+			}
 			files = append(files, file)
 		} else {
 			return false
@@ -177,7 +178,7 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 
 	qpr := query.PageResponse{
 		NextKey: nil,
-		Total:   i,
+		Total:   total,
 	}
 
 	return &types.QueryAllFilesResponse{Files: files, Pagination: &qpr}, nil

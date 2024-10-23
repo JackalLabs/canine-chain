@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -139,6 +140,70 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(mres.Files))
+
+	suite.reset()
+}
+
+func (suite *KeeperTestSuite) TestOpenFiles() {
+	suite.SetupSuite()
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
+	suite.Require().NoError(err)
+
+	testAccount := testAddresses[0]
+	depoAccount := testAddresses[1]
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+	suite.Require().NoError(err)
+
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount:         depoAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     8,
+		CollateralPrice:        2,
+		CheckWindow:            11,
+		ReferralCommission:     25,
+		PolRatio:               40,
+	})
+
+	const count = 1000
+
+	for i := 0; i < count; i++ {
+		merkle := []byte(fmt.Sprintf("%dmerkle%d", i, i))
+
+		suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+			Merkle:        merkle,
+			Owner:         testAccount,
+			Start:         0,
+			Expires:       0,
+			FileSize:      1024,
+			ProofInterval: 400,
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          "{}",
+		})
+	}
+
+	pg := query.PageRequest{
+		Offset:  0,
+		Reverse: false,
+		Limit:   200,
+	}
+
+	res, err := suite.queryClient.OpenFiles(context.Background(), &types.QueryOpenFiles{
+		Pagination: &pg,
+	})
+	suite.Require().NoError(err)
+
+	suite.Require().Equal(200, len(res.Files))
+	suite.Require().Equal(count, int(res.Pagination.Total))
 
 	suite.reset()
 }

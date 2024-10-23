@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/CosmWasm/wasmd v0.32.0
-	github.com/CosmWasm/wasmvm v1.2.6 
+	github.com/CosmWasm/wasmvm v1.2.6
 	github.com/cosmos/cosmos-sdk v0.45.17
 	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/ecies/go/v2 v2.0.6
@@ -165,7 +165,7 @@ replace (
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
 	// using jackal labs free post proof ante handler - better way to do this in the future.
-	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20230704034202-b88b1fbc9b2f
+	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20241017203511-c9e1d384026b
 
 	//github.com/cosmos/cosmos-sdk => ../cosmos-sdk
 
