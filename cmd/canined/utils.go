@@ -1,24 +1,28 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-const (
-	UptimeLeftKey = "UPTL-"
-	FileKey       = "FILE-"
-	DowntimeKey   = "DWNT-"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/spf13/cobra"
 )
 
-//nolint:unused
-func makeUptimeKey(cid string) []byte {
-	return []byte(fmt.Sprintf("%s%s", UptimeLeftKey, cid))
-}
+func AddressGenerationCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "get-address [value]",
+		Short: "Generate an address from text, the same system used to generate protocol owned accounts.",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(_ *cobra.Command, args []string) error {
+			acc, err := types.GetAccount(args[0])
+			if err != nil {
+				return err
+			}
 
-//nolint:unused
-func makeFileKey(cid string) []byte {
-	return []byte(fmt.Sprintf("%s%s", FileKey, cid))
-}
+			fmt.Printf("'%s' becomes: '%s'", args[0], acc.String())
 
-//nolint:unused
-func makeDowntimeKey(cid string) []byte {
-	return []byte(fmt.Sprintf("%s%s", DowntimeKey, cid))
+			return nil
+		},
+	}
+
+	return cmd
 }
