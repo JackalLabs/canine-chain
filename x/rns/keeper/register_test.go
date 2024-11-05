@@ -1,6 +1,8 @@
 package keeper_test
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/testutil"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
@@ -26,7 +28,7 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	cost, err := keeper.GetCostOfName(n, t)
 	suite.Require().NoError(err)
 
-	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
+	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000000000))
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, address, coins)
@@ -67,4 +69,18 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 
 	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
+
+	for i := 0; i < 100; i++ {
+		err = suite.rnsKeeper.RegisterRNSName(suite.ctx, address.String(), fmt.Sprintf("mrpumpkinman%d.jkl", i), "{}", 1, false) // adding time to registration
+		suite.Require().NoError(err)
+	}
+
+	r := types.QueryListOwnedNames{
+		Address: address.String(),
+	}
+
+	res, err := suite.queryClient.ListOwnedNames(suite.ctx.Context(), &r)
+	suite.Require().NoError(err)
+
+	suite.Require().Equal(101, len(res.Names))
 }
