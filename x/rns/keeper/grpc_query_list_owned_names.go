@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -22,21 +23,45 @@ func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedN
 	store := ctx.KVStore(k.storeKey)
 	namesStore := prefix.NewStore(store, types.KeyPrefix(types.NamesKeyPrefix))
 
-	pageRes, err := query.Paginate(namesStore, req.Pagination, func(_ []byte, value []byte) error {
+	reverse := false
+	var limit uint64 = 100
+	if req.Pagination != nil { // HERE IS THE FIX
+		reverse = req.Pagination.Reverse
+		limit = req.Pagination.Limit
+	}
+
+	var iterator storetypes.Iterator
+	if reverse {
+		iterator = sdk.KVStoreReversePrefixIterator(namesStore, []byte{})
+	} else {
+		iterator = sdk.KVStorePrefixIterator(namesStore, []byte{})
+	}
+
+	defer iterator.Close()
+	var i uint64
+
+	for ; iterator.Valid(); iterator.Next() {
+
+		if i > limit {
+			break
+		}
+
 		var names types.Names
-		if err := k.cdc.Unmarshal(value, &names); err != nil {
-			return err
+		if err := k.cdc.Unmarshal(iterator.Value(), &names); err != nil {
+			continue
 		}
 
 		if names.Value == req.Address {
 			namess = append(namess, names)
+			i++
 		}
 
-		return nil
-	})
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryListOwnedNamesResponse{Names: namess, Pagination: pageRes}, nil
+	qpr := query.PageResponse{
+		NextKey: nil,
+		Total:   uint64(len(namess)),
+	}
+
+	return &types.QueryListOwnedNamesResponse{Names: namess, Pagination: &qpr}, nil
 }
