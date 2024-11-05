@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/testutil"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
@@ -82,5 +83,4 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(101, len(res.Names))
-
 }
