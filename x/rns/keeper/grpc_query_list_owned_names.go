@@ -26,9 +26,11 @@ func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedN
 
 	reverse := false
 	var limit uint64 = 100
+	var countTotal = false
 	if req.Pagination != nil { // HERE IS THE FIX
 		reverse = req.Pagination.Reverse
 		limit = req.Pagination.Limit
+		countTotal = req.Pagination.CountTotal
 	}
 
 	var iterator storetypes.Iterator
@@ -43,7 +45,7 @@ func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedN
 
 	for ; iterator.Valid(); iterator.Next() {
 
-		if i > limit {
+		if i >= limit {
 			break
 		}
 
@@ -61,7 +63,10 @@ func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedN
 
 	qpr := query.PageResponse{
 		NextKey: nil,
-		Total:   uint64(len(namess)),
+	}
+
+	if countTotal {
+		qpr.Total = uint64(len(namess))
 	}
 
 	return &types.QueryListOwnedNamesResponse{Names: namess, Pagination: &qpr}, nil

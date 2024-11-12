@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/types/query"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/testutil"
@@ -13,10 +14,13 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.SetupSuite()
 	suite.setupNames()
 
-	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
 	suite.Require().NoError(err)
 
 	address, err := sdk.AccAddressFromBech32(testAddresses[0])
+	suite.Require().NoError(err)
+
+	dummy, err := sdk.AccAddressFromBech32(testAddresses[1])
 	suite.Require().NoError(err)
 
 	name := "test.jkl"
@@ -32,6 +36,9 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	coins := sdk.NewCoins(coin)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, address, coins)
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, dummy, coins)
 	suite.Require().NoError(err)
 
 	beforebal := suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -70,10 +77,13 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 1000; i++ {
 		err = suite.rnsKeeper.RegisterRNSName(suite.ctx, address.String(), fmt.Sprintf("mrpumpkinman%d.jkl", i), "{}", 1, false) // adding time to registration
 		suite.Require().NoError(err)
 	}
+
+	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, dummy.String(), "zdummyman.jkl", "{}", 1, false) // adding time to registration
+	suite.Require().NoError(err)
 
 	r := types.QueryListOwnedNames{
 		Address: address.String(),
@@ -82,5 +92,38 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	res, err := suite.queryClient.ListOwnedNames(suite.ctx.Context(), &r)
 	suite.Require().NoError(err)
 
-	suite.Require().Equal(101, len(res.Names))
+	suite.Require().Equal(100, len(res.Names))
+
+	r = types.QueryListOwnedNames{
+		Address: dummy.String(),
+		Pagination: &query.PageRequest{
+			Key:        nil,
+			Offset:     0,
+			Limit:      100,
+			CountTotal: false,
+			Reverse:    false,
+		},
+	}
+
+	res, err = suite.queryClient.ListOwnedNames(suite.ctx.Context(), &r)
+	suite.Require().NoError(err)
+
+	r = types.QueryListOwnedNames{
+		Address: dummy.String(),
+		Pagination: &query.PageRequest{
+			Key:        nil,
+			Offset:     0,
+			Limit:      10,
+			CountTotal: true,
+			Reverse:    true,
+		},
+	}
+
+	res, err = suite.queryClient.ListOwnedNames(suite.ctx.Context(), &r)
+	suite.Require().NoError(err)
+
+	suite.Require().Equal([]byte(nil), res.Pagination.NextKey)
+	suite.Require().Equal(uint64(1), res.Pagination.Total)
+
+	suite.Require().Equal(1, len(res.Names))
 }
