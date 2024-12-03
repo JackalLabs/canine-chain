@@ -3,9 +3,10 @@ package upgrades
 import (
 	"encoding/hex"
 	"fmt"
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	"strconv"
 	"strings"
+
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	storageKeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"

@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 	"fmt"
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	"time"
+
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 

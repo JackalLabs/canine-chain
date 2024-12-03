@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 	"fmt"
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	"strings"
+
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"

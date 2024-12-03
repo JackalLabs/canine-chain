@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+
 	"github.com/jackalLabs/canine-chain/v4/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
