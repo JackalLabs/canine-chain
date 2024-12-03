@@ -3,6 +3,7 @@ package keeper_test
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
@@ -287,7 +288,7 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 	bal := suite.bankKeeper.GetBalance(suite.ctx, gaugeAccount, "ujkl")
 	suite.Require().Equal(int64(cost*0.35), bal.Amount.Int64())
 
-	polAccount, err := types.GetPOLAccount()
+	polAccount, err := allTypes.GetPOLAccount()
 	suite.Require().NoError(err)
 
 	bal = suite.bankKeeper.GetBalance(suite.ctx, polAccount, "ujkl")

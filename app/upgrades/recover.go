@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	storageKeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
@@ -14,7 +16,7 @@ import (
 const AccountName = "STORAGE_ESCROW"
 
 func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, merkles string, planHeight int64, name string) error {
-	account, err := types.GetAccount(AccountName) // creating account to hold the files
+	account, err := allTypes.GetAccount(AccountName) // creating account to hold the files
 	if err != nil {
 		return err
 	}
