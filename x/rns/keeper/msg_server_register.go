@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -35,7 +36,7 @@ func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data 
 
 	blockHeight := ctx.BlockHeight()
 
-	time := years * 5733818
+	time := years * 5484530
 
 	owner, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {
@@ -58,7 +59,7 @@ func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data 
 		return err
 	}
 
-	deposit, err := sdk.AccAddressFromBech32(k.GetParams(ctx).DepositAccount)
+	deposit, err := allTypes.GetPOLAccount()
 	if err != nil {
 		return err
 	}

@@ -2,8 +2,8 @@ package cli
 
 import (
 	"fmt"
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ func CmdQueryAddress() *cobra.Command {
 		Short: "get an accounts address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
-			acc, err := types.GetAccount(args[0])
+			acc, err := allTypes.GetAccount(args[0])
 			if err != nil {
 				return err
 			}
