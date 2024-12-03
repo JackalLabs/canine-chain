@@ -3,6 +3,7 @@ package keeper_test
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/testutil"
+	types2 "github.com/jackalLabs/canine-chain/v4/types"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
@@ -74,8 +75,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 	user, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
-	deposit := suite.rnsKeeper.GetParams(suite.ctx).DepositAccount
-	addr, err := sdk.AccAddressFromBech32(deposit)
+	addr, err := types2.GetPOLAccount()
 	suite.Require().NoError(err)
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000))
@@ -144,7 +144,7 @@ func (suite *KeeperTestSuite) TestMsgRegister() {
 				suite.Require().EqualValues(types.MsgRegisterResponse{}, *res)
 
 				amount := suite.bankKeeper.GetBalance(suite.ctx, addr, "ujkl")
-				suite.Require().Equal("200000000ujkl", amount.String())
+				suite.Require().Equal("20000000ujkl", amount.String())
 
 			}
 		})
