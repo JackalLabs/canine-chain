@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
+
 	"github.com/cosmos/cosmos-sdk/telemetry"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -159,7 +161,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		return nil, sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
 	}
 
-	polAcc, err := types.GetPOLAccount()
+	polAcc, err := allTypes.GetPOLAccount()
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot get pol account")
 	}

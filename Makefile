@@ -53,15 +53,6 @@ empty = $(whitespace) $(whitespace)
 comma := ,
 build_tags_comma_sep := $(subst $(empty),$(comma),$(build_tags))
 
-
-# Add check to make sure we are using the proper Go version before proceeding with anything
-check-go-version:
-	@if ! go version | grep -q "go1.22"; then \
-		echo "\033[0;31mERROR:\033[0m Go version 1.21 is required for compiling canined. It looks like you are using" "$(shell go version) \nThere are potential consensus-breaking changes that can occur when running binaries compiled with different versions of Go. Please download Go version 1.22 and retry. Thank you!"; \
-		exit 1; \
-	fi
-
-
 # process linker flags
 
 ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=canine \
@@ -89,7 +80,7 @@ all: install lint test
 	
 
 
-build: check-go-version go.sum
+build: go.sum
 ifeq ($(OS),Windows_NT)
 	exit 1
 else
@@ -108,7 +99,7 @@ else
 	go build -mod=readonly $(BUILD_FLAGS) -o build/contract_tests ./cmd/contract_tests
 endif
 
-install: check-go-version go.sum
+install: go.sum
 	go install -mod=readonly $(BUILD_FLAGS) ./cmd/canined
 
 ########################################
@@ -139,9 +130,10 @@ distclean: clean
 local: install
 	./scripts/test-node.sh $(address)
 
-test: check-go-version test-unit
-test-all: check-go-version test-race test-cover
-test-sim: check-go-version test-sim-import-export test-sim-full-app
+
+test: test-unit
+test-all: test-race test-cover
+test-sim: test-sim-import-export test-sim-full-app
 
 test-unit:
 	@VERSION=$(VERSION) go test -short -mod=readonly -tags='ledger test_ledger_mock' ./...
