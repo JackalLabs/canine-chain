@@ -130,6 +130,7 @@ distclean: clean
 local: install
 	./scripts/test-node.sh $(address)
 
+
 test: test-unit
 test-all: test-race test-cover
 test-sim: test-sim-import-export test-sim-full-app

@@ -183,41 +183,137 @@ func (m *QueryInflationResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryInflationResponse proto.InternalMessageInfo
 
+type QueryMintedTokens struct {
+	Block int64 `protobuf:"varint,1,opt,name=block,proto3" json:"block,omitempty"`
+}
+
+func (m *QueryMintedTokens) Reset()         { *m = QueryMintedTokens{} }
+func (m *QueryMintedTokens) String() string { return proto.CompactTextString(m) }
+func (*QueryMintedTokens) ProtoMessage()    {}
+func (*QueryMintedTokens) Descriptor() ([]byte, []int) {
+	return fileDescriptor_18b2f9a9be818a21, []int{4}
+}
+func (m *QueryMintedTokens) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMintedTokens) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMintedTokens.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMintedTokens) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMintedTokens.Merge(m, src)
+}
+func (m *QueryMintedTokens) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMintedTokens) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMintedTokens.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMintedTokens proto.InternalMessageInfo
+
+func (m *QueryMintedTokens) GetBlock() int64 {
+	if m != nil {
+		return m.Block
+	}
+	return 0
+}
+
+type QueryMintedTokensResponse struct {
+	Tokens int64 `protobuf:"varint,1,opt,name=tokens,proto3" json:"tokens,omitempty"`
+}
+
+func (m *QueryMintedTokensResponse) Reset()         { *m = QueryMintedTokensResponse{} }
+func (m *QueryMintedTokensResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryMintedTokensResponse) ProtoMessage()    {}
+func (*QueryMintedTokensResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_18b2f9a9be818a21, []int{5}
+}
+func (m *QueryMintedTokensResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMintedTokensResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMintedTokensResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMintedTokensResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMintedTokensResponse.Merge(m, src)
+}
+func (m *QueryMintedTokensResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMintedTokensResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMintedTokensResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMintedTokensResponse proto.InternalMessageInfo
+
+func (m *QueryMintedTokensResponse) GetTokens() int64 {
+	if m != nil {
+		return m.Tokens
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*QueryParams)(nil), "canine_chain.jklmint.QueryParams")
 	proto.RegisterType((*QueryParamsResponse)(nil), "canine_chain.jklmint.QueryParamsResponse")
 	proto.RegisterType((*QueryInflation)(nil), "canine_chain.jklmint.QueryInflation")
 	proto.RegisterType((*QueryInflationResponse)(nil), "canine_chain.jklmint.QueryInflationResponse")
+	proto.RegisterType((*QueryMintedTokens)(nil), "canine_chain.jklmint.QueryMintedTokens")
+	proto.RegisterType((*QueryMintedTokensResponse)(nil), "canine_chain.jklmint.QueryMintedTokensResponse")
 }
 
 func init() { proto.RegisterFile("canine_chain/jklmint/query.proto", fileDescriptor_18b2f9a9be818a21) }
 
 var fileDescriptor_18b2f9a9be818a21 = []byte{
-	// 384 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x48, 0x4e, 0xcc, 0xcb,
-	0xcc, 0x4b, 0x8d, 0x4f, 0xce, 0x48, 0xcc, 0xcc, 0xd3, 0xcf, 0xca, 0xce, 0xc9, 0xcd, 0xcc, 0x2b,
-	0xd1, 0x2f, 0x2c, 0x4d, 0x2d, 0xaa, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x41, 0x56,
-	0xa1, 0x07, 0x55, 0x21, 0x25, 0x92, 0x9e, 0x9f, 0x9e, 0x0f, 0x56, 0xa0, 0x0f, 0x62, 0x41, 0xd4,
-	0x4a, 0xc9, 0xa4, 0xe7, 0xe7, 0xa7, 0xe7, 0xa4, 0xea, 0x27, 0x16, 0x64, 0xea, 0x27, 0xe6, 0xe5,
-	0xe5, 0x97, 0x24, 0x96, 0x64, 0xe6, 0xe7, 0x15, 0x43, 0x65, 0x15, 0xb1, 0xda, 0x55, 0x90, 0x58,
-	0x94, 0x98, 0x0b, 0x55, 0xa2, 0xc4, 0xcb, 0xc5, 0x1d, 0x08, 0xb2, 0x3b, 0x00, 0x2c, 0xa8, 0x14,
-	0xc8, 0x25, 0x8c, 0xc4, 0x0d, 0x4a, 0x2d, 0x2e, 0xc8, 0xcf, 0x2b, 0x4e, 0x15, 0xb2, 0xe2, 0x62,
-	0x83, 0xe8, 0x92, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x36, 0x92, 0xd1, 0xc3, 0xe6, 0x46, 0x3d, 0x88,
-	0x2e, 0x27, 0x96, 0x13, 0xf7, 0xe4, 0x19, 0x82, 0xa0, 0x3a, 0x94, 0x04, 0xb8, 0xf8, 0xc0, 0x46,
-	0x7a, 0xe6, 0xa5, 0xe5, 0x80, 0x5d, 0xa7, 0x94, 0xc6, 0x25, 0x86, 0x2a, 0x02, 0xb7, 0xc7, 0x87,
-	0x8b, 0x33, 0x13, 0x26, 0x08, 0xb6, 0x8a, 0xc7, 0x49, 0x0f, 0x64, 0xd8, 0xad, 0x7b, 0xf2, 0x6a,
-	0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0xc9, 0xf9, 0xc5, 0xb9, 0xf9,
-	0xc5, 0x50, 0x4a, 0xb7, 0x38, 0x25, 0x5b, 0xbf, 0xa4, 0xb2, 0x20, 0xb5, 0x58, 0xcf, 0x25, 0x35,
-	0x39, 0x08, 0x61, 0x80, 0x51, 0x1f, 0x13, 0x17, 0x2b, 0xd8, 0x22, 0xa1, 0x6a, 0x2e, 0x36, 0x88,
-	0xdb, 0x84, 0x14, 0xb1, 0xbb, 0x1c, 0xc9, 0xd3, 0x52, 0x9a, 0x04, 0x95, 0xc0, 0xdc, 0xab, 0xa4,
-	0xdc, 0x74, 0xf9, 0xc9, 0x64, 0x26, 0x59, 0x21, 0x69, 0x98, 0x93, 0xc0, 0x01, 0x5c, 0x66, 0x98,
-	0x94, 0x5a, 0x92, 0x68, 0x08, 0x0d, 0x68, 0xa1, 0x76, 0x46, 0x2e, 0x4e, 0xb8, 0x57, 0x85, 0x54,
-	0xf0, 0x98, 0x0e, 0x57, 0x25, 0xa5, 0x43, 0x8c, 0x2a, 0xb8, 0x33, 0xd4, 0xc0, 0xce, 0x50, 0x10,
-	0x92, 0xc3, 0xea, 0x0c, 0x78, 0x80, 0x38, 0xf9, 0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c,
-	0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1,
-	0x1c, 0x43, 0x94, 0x11, 0x52, 0xe8, 0x66, 0x25, 0x26, 0x67, 0x27, 0xe6, 0xf8, 0x24, 0x26, 0x15,
-	0xeb, 0x43, 0x1c, 0xa1, 0x0b, 0x49, 0x3f, 0x15, 0xf0, 0x14, 0x04, 0x0e, 0xed, 0x24, 0x36, 0x70,
-	0x0a, 0x32, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xef, 0x1b, 0x55, 0xca, 0xd2, 0x02, 0x00, 0x00,
+	// 470 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x53, 0x4f, 0x6f, 0xd3, 0x30,
+	0x14, 0x6f, 0x18, 0xab, 0x34, 0x6f, 0x20, 0x30, 0xd5, 0x04, 0x61, 0x64, 0x5d, 0x40, 0x63, 0x43,
+	0x2c, 0x66, 0xdd, 0x8d, 0x63, 0xc5, 0x05, 0xa9, 0x48, 0x2c, 0xe2, 0xc4, 0x05, 0x39, 0x99, 0x97,
+	0x79, 0x49, 0xec, 0x50, 0x7b, 0x88, 0x69, 0xe2, 0xc2, 0x85, 0x2b, 0x12, 0x37, 0xbe, 0x02, 0x5f,
+	0x64, 0xc7, 0x49, 0x5c, 0x10, 0x87, 0x09, 0xb5, 0x7c, 0x10, 0xd4, 0x67, 0xd7, 0xa4, 0x22, 0x1a,
+	0x3b, 0xb5, 0x7e, 0xf9, 0xfd, 0xf3, 0x7b, 0xcf, 0xa8, 0x9b, 0x52, 0xc1, 0x05, 0x7b, 0x93, 0x1e,
+	0x50, 0x2e, 0xc8, 0x61, 0x5e, 0x94, 0x5c, 0x68, 0xf2, 0xf6, 0x88, 0x0d, 0x8f, 0xa3, 0x6a, 0x28,
+	0xb5, 0xc4, 0x9d, 0x3a, 0x22, 0xb2, 0x08, 0xbf, 0x93, 0xc9, 0x4c, 0x02, 0x80, 0x4c, 0xfe, 0x19,
+	0xac, 0xbf, 0x92, 0x49, 0x99, 0x15, 0x8c, 0xd0, 0x8a, 0x13, 0x2a, 0x84, 0xd4, 0x54, 0x73, 0x29,
+	0x94, 0xfd, 0xba, 0xd6, 0xe8, 0x55, 0xd1, 0x21, 0x2d, 0x2d, 0x24, 0xbc, 0x86, 0x16, 0x77, 0x27,
+	0xde, 0x2f, 0xa1, 0x18, 0xee, 0xa2, 0x5b, 0xb5, 0x63, 0xcc, 0x54, 0x25, 0x85, 0x62, 0xf8, 0x29,
+	0x6a, 0x1b, 0xd6, 0x6d, 0xaf, 0xeb, 0x6d, 0x2c, 0xf6, 0x56, 0xa2, 0xa6, 0x8c, 0x91, 0x61, 0xf5,
+	0xaf, 0x9e, 0x9e, 0xaf, 0xb6, 0x62, 0xcb, 0x08, 0x6f, 0xa0, 0xeb, 0x20, 0xf9, 0x5c, 0xec, 0x17,
+	0x90, 0x2e, 0xdc, 0x47, 0xcb, 0xb3, 0x15, 0xe7, 0x33, 0x40, 0x0b, 0x7c, 0x5a, 0x04, 0xab, 0xa5,
+	0x7e, 0x34, 0x11, 0xfb, 0x79, 0xbe, 0xba, 0x9e, 0x71, 0x7d, 0x70, 0x94, 0x44, 0xa9, 0x2c, 0x49,
+	0x2a, 0x55, 0x29, 0x95, 0xfd, 0xd9, 0x52, 0x7b, 0x39, 0xd1, 0xc7, 0x15, 0x53, 0xd1, 0x33, 0x96,
+	0xc6, 0x7f, 0x05, 0xc2, 0x4d, 0x74, 0x13, 0x7c, 0x5e, 0x70, 0xa1, 0xd9, 0xde, 0x2b, 0x99, 0x33,
+	0xa1, 0x70, 0x07, 0xcd, 0x27, 0x85, 0x4c, 0x73, 0x90, 0x9f, 0x8b, 0xcd, 0x21, 0xdc, 0x41, 0x77,
+	0xfe, 0x81, 0xba, 0x54, 0xcb, 0xa8, 0xad, 0xa1, 0x62, 0x39, 0xf6, 0xd4, 0xfb, 0x36, 0x87, 0xe6,
+	0x81, 0x85, 0x4f, 0x50, 0xdb, 0xdc, 0x1d, 0xaf, 0x35, 0x77, 0xa6, 0xd6, 0x54, 0x7f, 0xf3, 0xbf,
+	0x90, 0xa9, 0x73, 0x78, 0xff, 0xe3, 0xf7, 0xdf, 0x5f, 0xae, 0xdc, 0xc3, 0x77, 0xa7, 0x57, 0x86,
+	0x01, 0xbe, 0xdb, 0x4e, 0x98, 0xa6, 0xdb, 0x76, 0x90, 0xf8, 0x93, 0x87, 0x16, 0x5c, 0x2b, 0xf1,
+	0x83, 0x0b, 0xd4, 0x1d, 0xca, 0x7f, 0x7c, 0x19, 0x94, 0x8b, 0xb1, 0x0e, 0x31, 0xba, 0x38, 0x68,
+	0x8c, 0xe1, 0x1a, 0x8e, 0xbf, 0x7a, 0x68, 0x69, 0xa6, 0xd9, 0x0f, 0x2f, 0xb0, 0xa9, 0x03, 0x7d,
+	0x72, 0x49, 0xa0, 0x8b, 0xf4, 0x04, 0x22, 0x3d, 0xc2, 0x1b, 0xe4, 0x90, 0xa6, 0x39, 0x2d, 0x88,
+	0xe1, 0x6f, 0x99, 0x55, 0x87, 0x7c, 0x25, 0xf0, 0xc8, 0x09, 0x4c, 0xf8, 0x43, 0x7f, 0x70, 0x3a,
+	0x0a, 0xbc, 0xb3, 0x51, 0xe0, 0xfd, 0x1a, 0x05, 0xde, 0xe7, 0x71, 0xd0, 0x3a, 0x1b, 0x07, 0xad,
+	0x1f, 0xe3, 0xa0, 0xf5, 0xba, 0x57, 0x5b, 0x2d, 0xa3, 0x36, 0xa0, 0x89, 0x9a, 0x55, 0x7c, 0xef,
+	0x9e, 0x0f, 0xac, 0x5a, 0xd2, 0x86, 0xe7, 0xb3, 0xf3, 0x27, 0x00, 0x00, 0xff, 0xff, 0x60, 0xbf,
+	0xa2, 0xaa, 0xcf, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -235,6 +331,7 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParams, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Inflation returns the current minting inflation value.
 	Inflation(ctx context.Context, in *QueryInflation, opts ...grpc.CallOption) (*QueryInflationResponse, error)
+	MintedTokens(ctx context.Context, in *QueryMintedTokens, opts ...grpc.CallOption) (*QueryMintedTokensResponse, error)
 }
 
 type queryClient struct {
@@ -263,11 +360,21 @@ func (c *queryClient) Inflation(ctx context.Context, in *QueryInflation, opts ..
 	return out, nil
 }
 
+func (c *queryClient) MintedTokens(ctx context.Context, in *QueryMintedTokens, opts ...grpc.CallOption) (*QueryMintedTokensResponse, error) {
+	out := new(QueryMintedTokensResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.jklmint.Query/MintedTokens", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	Params(context.Context, *QueryParams) (*QueryParamsResponse, error)
 	// Inflation returns the current minting inflation value.
 	Inflation(context.Context, *QueryInflation) (*QueryInflationResponse, error)
+	MintedTokens(context.Context, *QueryMintedTokens) (*QueryMintedTokensResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -279,6 +386,9 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParams) (
 }
 func (*UnimplementedQueryServer) Inflation(ctx context.Context, req *QueryInflation) (*QueryInflationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Inflation not implemented")
+}
+func (*UnimplementedQueryServer) MintedTokens(ctx context.Context, req *QueryMintedTokens) (*QueryMintedTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MintedTokens not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -321,6 +431,24 @@ func _Query_Inflation_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_MintedTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMintedTokens)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).MintedTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/canine_chain.jklmint.Query/MintedTokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).MintedTokens(ctx, req.(*QueryMintedTokens))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "canine_chain.jklmint.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -332,6 +460,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Inflation",
 			Handler:    _Query_Inflation_Handler,
+		},
+		{
+			MethodName: "MintedTokens",
+			Handler:    _Query_MintedTokens_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -450,6 +582,62 @@ func (m *QueryInflationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryMintedTokens) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMintedTokens) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMintedTokens) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Block != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Block))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryMintedTokensResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMintedTokensResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMintedTokensResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Tokens != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Tokens))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -498,6 +686,30 @@ func (m *QueryInflationResponse) Size() (n int) {
 	_ = l
 	l = m.Inflation.Size()
 	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryMintedTokens) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Block != 0 {
+		n += 1 + sovQuery(uint64(m.Block))
+	}
+	return n
+}
+
+func (m *QueryMintedTokensResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Tokens != 0 {
+		n += 1 + sovQuery(uint64(m.Tokens))
+	}
 	return n
 }
 
@@ -752,6 +964,144 @@ func (m *QueryInflationResponse) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMintedTokens) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMintedTokens: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMintedTokens: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Block", wireType)
+			}
+			m.Block = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Block |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMintedTokensResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMintedTokensResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMintedTokensResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tokens", wireType)
+			}
+			m.Tokens = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Tokens |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
