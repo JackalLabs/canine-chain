@@ -41,6 +41,19 @@ func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, merkles string,
 			ctx.Logger().Error("cannot decode %s, skipping...", merkle)
 			return err
 		}
+
+		list := keeper.GetAllFilesWithMerkle(ctx, merkleBytes)
+		found := false
+		for _, file := range list {
+			if file.Owner == account.String() {
+				found = true
+				break
+			}
+		}
+		if found {
+			continue
+		}
+
 		start := planHeight - int64(i/32) // 32 files per block
 		if start < 0 {
 			start = 0
@@ -49,9 +62,9 @@ func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, merkles string,
 			Merkle:        merkleBytes,
 			Owner:         account.String(),
 			Start:         start,
-			Expires:       planHeight + ((200 * 365 * 24 * 60 * 60) / 6),
+			Expires:       planHeight + ((150 * 365 * 24 * 60 * 60) / 6),
 			FileSize:      size,
-			ProofInterval: 3600,
+			ProofInterval: 7200,
 			ProofType:     0,
 			Proofs:        make([]string, 0),
 			MaxProofs:     3,
