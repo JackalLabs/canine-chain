@@ -16,7 +16,7 @@ export GOMODCACHE=${ROOT}/../_build/gocache
 
 mkdir -p ../_build/old
 git checkout $OLD_VERSION
-make build
+go build -mod=readonly -o build/canined ./cmd/canined
 mv build/canined ./../_build/old/canined
 git checkout $NEW_VERSION
 make install
