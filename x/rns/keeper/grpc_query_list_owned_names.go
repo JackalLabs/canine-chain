@@ -53,8 +53,10 @@ func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedN
 		}
 
 		if names.Value == req.Address {
-			namess = append(namess, names)
-			i++
+			if names.Expires > ctx.BlockHeight() {
+				namess = append(namess, names)
+				i++
+			}
 		}
 
 	}

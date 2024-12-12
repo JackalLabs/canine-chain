@@ -75,6 +75,11 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 		suite.Require().NoError(err)
 	}
 
+	rrr, err := suite.queryClient.AllNames(suite.ctx.Context(), &types.QueryAllNames{})
+	suite.Require().NoError(err)
+
+	suite.Require().Equal(100, len(rrr.Name))
+
 	r := types.QueryListOwnedNames{
 		Address: address.String(),
 	}
