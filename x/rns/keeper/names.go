@@ -21,6 +21,7 @@ func (k Keeper) SetPrimaryName(ctx sdk.Context, owner, name, tld string) {
 			types.EventSetPrimaryName,
 			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", name, tld)),
 			sdk.NewAttribute(types.AttributeValue, owner),
+			sdk.NewAttribute(types.AttributeKeySigner, owner),
 		),
 	)
 }
