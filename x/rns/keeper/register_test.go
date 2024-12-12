@@ -9,6 +9,8 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
+const name = "test.jkl"
+
 func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.SetupSuite()
 	suite.setupNames()
@@ -19,7 +21,6 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	address, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
-	name := "test.jkl"
 	capname := "Test.jkl"
 
 	n, t, err := keeper.GetNameAndTLD(name)
@@ -104,8 +105,6 @@ func (suite *KeeperTestSuite) TestMsgRegisterExpiredName() {
 
 	address2, err := sdk.AccAddressFromBech32(testAddresses[2])
 	suite.Require().NoError(err)
-
-	name := "test.jkl"
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, address, sdk.Coins{sdk.Coin{
 		Denom:  "ujkl",
