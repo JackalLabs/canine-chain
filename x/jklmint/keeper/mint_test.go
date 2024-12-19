@@ -30,11 +30,11 @@ func (suite *MintTestSuite) TestBlockMint() {
 	})
 
 	suite.Require().NoError(err)
-	suite.Require().Equal(sdk.NewInt(3359999), feeBalanceAfter.Balance.Amount)
+	suite.Require().Equal(sdk.NewInt(3360000), feeBalanceAfter.Balance.Amount)
 	supplyAfter, err := app.BankKeeper.TotalSupply(sdk.WrapSDKContext(ctx), &types.QueryTotalSupplyRequest{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(supplyAfter.Supply))
-	suite.Require().Equal(sdk.NewInt(4199999), supplyAfter.Supply.AmountOf(denom))
+	suite.Require().Equal(sdk.NewInt(4_200_000), supplyAfter.Supply.AmountOf(denom))
 	// After BlockMint we now have exactly 3.6JKL in the fee collector account
 }
 
@@ -70,12 +70,13 @@ func (suite *MintTestSuite) TestNoProviderBlockMint() {
 		Denom:   denom,
 	})
 
+	suite.T().Log(params.TokensPerBlock)
 	suite.Require().NoError(err)
-	suite.Require().Equal(sdk.NewInt(3359999), feeBalanceAfter.Balance.Amount)
+	suite.Require().Equal(sdk.NewInt(3360000), feeBalanceAfter.Balance.Amount)
 	supplyAfter, err := app.BankKeeper.TotalSupply(sdk.WrapSDKContext(ctx), &types.QueryTotalSupplyRequest{})
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(supplyAfter.Supply))
-	suite.Require().Equal(sdk.NewInt(4199999), supplyAfter.Supply.AmountOf(denom))
+	suite.Require().Equal(sdk.NewInt(4_200_000), supplyAfter.Supply.AmountOf(denom))
 	// After BlockMint we now have exactly 3.6JKL in the fee collector account
 }
 

@@ -9,7 +9,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/utils"
 )
 
 func (k Keeper) send(ctx sdk.Context, denom string, amount int64, receiver string) error {
@@ -95,21 +94,21 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 	params := k.GetParams(ctx)
 
 	mintedNum := params.TokensPerBlock
-	minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
-	if found {
-		mintedNum = minted.Minted
-	}
-	var bpy int64 = (365 * 24 * 60 * 60) / 6
-
-	newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
-
-	mintTokens := newMintForBlock
+	// minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
+	//if found {
+	//	mintedNum = minted.Minted
+	//}
+	//var bpy int64 = (365 * 24 * 60 * 60) / 6
+	//
+	//newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
+	//
+	//mintTokens := newMintForBlock
 	denom := k.GetParams(ctx).MintDenom
 	if denom == "" { // error handling mostly built for tests
 		denom = "ujkl"
 	}
 
-	totalCoin := sdk.NewInt64Coin(denom, mintTokens)
+	totalCoin := sdk.NewInt64Coin(denom, mintedNum)
 	coins := sdk.NewCoins(totalCoin)
 
 	err := k.MintCoins(ctx, coins)
@@ -118,19 +117,19 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 		return
 	}
 
-	err = k.mintStaker(ctx, mintTokens, denom, params)
+	err = k.mintStaker(ctx, mintedNum, denom, params)
 	if err != nil {
 		ctx.Logger().Error(err.Error())
 		return
 	}
 
-	err = k.mintDevGrants(ctx, mintTokens, denom, params)
+	err = k.mintDevGrants(ctx, mintedNum, denom, params)
 	if err != nil {
 		ctx.Logger().Error(err.Error())
 		return
 	}
 
-	err = k.mintStorageProviderStipend(ctx, mintTokens, denom, params)
+	err = k.mintStorageProviderStipend(ctx, mintedNum, denom, params)
 	if err != nil {
 		ctx.Logger().Error(err.Error())
 		return
@@ -138,17 +137,17 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 
 	k.SetMintedBlock(ctx, types.MintedBlock{
 		Height: ctx.BlockHeight(),
-		Minted: newMintForBlock,
+		Minted: mintedNum,
 		Denom:  "ujkl",
 	})
 
 	// alerting network on mint amount
-	defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintTokens), "minted_tokens")
+	defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedNum), "minted_tokens")
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeMint,
-			sdk.NewAttribute(sdk.AttributeKeyAmount, fmt.Sprintf("%d", mintTokens)),
+			sdk.NewAttribute(sdk.AttributeKeyAmount, fmt.Sprintf("%d", mintedNum)),
 		),
 	)
 }

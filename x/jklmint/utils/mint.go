@@ -9,7 +9,7 @@ func int64ToDec(i int64) sdk.Dec {
 func GetMintForBlock(mintedLastBlock int64, blocksPerYear int64, mintDecrease int64) int64 {
 	lastBlockTokens := int64ToDec(mintedLastBlock)
 	blockPerYearDec := int64ToDec(blocksPerYear)
-	decrease := int64ToDec(mintDecrease)
+	decrease := int64ToDec(mintDecrease).QuoInt64(100)
 	return lastBlockTokens.Sub(decrease.Quo(blockPerYearDec)).TruncateInt64()
 }
 

@@ -157,6 +157,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	if err != nil {
 		panic(err)
 	}
+
 }
 
 // RegisterInvariants registers the capability module's invariants.
