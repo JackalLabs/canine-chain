@@ -37,21 +37,24 @@ func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data 
 
 	blockHeight := ctx.BlockHeight()
 
-	time := years * 5484530
+	time := years * ((365 * 24 * 60 * 60) / 6)
 
 	owner, err := sdk.AccAddressFromBech32(sender)
 	if err != nil {
 		return sdkerrors.Wrap(err, "cannot parse sender")
 	}
 
-	// If a name is found in store
-	if isFound {
-		if whois.Value == owner.String() {
-			time = whois.Expires + time
-		} else if blockHeight < whois.Expires {
-			return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "name already registered")
+	if isFound { // name exists
+		if blockHeight > whois.Expires { // but is expired
+			time += blockHeight
+		} else { // not expired but already owned
+			if whois.Value == owner.String() { // already owned by me
+				time = whois.Expires + time
+			} else { // not owned by me
+				return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "name already registered")
+			}
 		}
-	} else {
+	} else { // name doesn't exist
 		time += blockHeight
 	}
 

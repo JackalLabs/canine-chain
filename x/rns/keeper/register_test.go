@@ -9,6 +9,8 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
+const name = "test.jkl"
+
 func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.SetupSuite()
 	suite.setupNames()
@@ -19,7 +21,6 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	address, err := sdk.AccAddressFromBech32(testAddresses[0])
 	suite.Require().NoError(err)
 
-	name := "test.jkl"
 	capname := "Test.jkl"
 
 	n, t, err := keeper.GetNameAndTLD(name)
@@ -88,4 +89,72 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(101, len(res.Names))
+}
+
+func (suite *KeeperTestSuite) TestMsgRegisterExpiredName() {
+	suite.SetupSuite()
+	suite.setupNames()
+
+	ctx := suite.ctx.WithBlockHeight(20)
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
+	suite.Require().NoError(err)
+
+	address, err := sdk.AccAddressFromBech32(testAddresses[1])
+	suite.Require().NoError(err)
+
+	address2, err := sdk.AccAddressFromBech32(testAddresses[2])
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, address, sdk.Coins{sdk.Coin{
+		Denom:  "ujkl",
+		Amount: sdk.NewInt(9_999_999_999),
+	}})
+	suite.Require().NoError(err)
+
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, address2, sdk.Coins{sdk.Coin{
+		Denom:  "ujkl",
+		Amount: sdk.NewInt(9_999_999_999),
+	}})
+	suite.Require().NoError(err)
+
+	err = suite.rnsKeeper.RegisterRNSName(ctx, address.String(), name, "{}", 1, true)
+	suite.Require().NoError(err)
+
+	n, found := suite.rnsKeeper.GetNames(ctx, "test", "jkl")
+	suite.Require().Equal(true, found)
+	suite.Require().Equal(address.String(), n.Value)
+	suite.Require().Equal(int64(20+((365*24*60*60)/6)), n.Expires)
+
+	primName, f := suite.rnsKeeper.GetPrimaryName(ctx, address.String())
+	suite.Require().Equal(true, f)
+	suite.Require().Equal(name, primName.GetDisplay())
+
+	ctx = suite.ctx.WithBlockHeight(30 + ((2 * 365 * 24 * 60 * 60) / 6))
+
+	err = suite.rnsKeeper.RegisterRNSName(ctx, address2.String(), name, "{}", 1, true)
+	suite.Require().NoError(err)
+
+	primName, f = suite.rnsKeeper.GetPrimaryName(ctx, address2.String())
+	suite.Require().Equal(true, f)
+	suite.Require().Equal(name, primName.GetDisplay())
+
+	n, found = suite.rnsKeeper.GetNames(ctx, "test", "jkl")
+	suite.Require().Equal(true, found)
+	suite.Require().Equal(address2.String(), n.Value)
+	suite.Require().Equal(int64(30+((2*365*24*60*60)/6)+((365*24*60*60)/6)), n.Expires)
+
+	ctx = suite.ctx.WithBlockHeight(30 + ((5 * 365 * 24 * 60 * 60) / 6))
+
+	err = suite.rnsKeeper.RegisterRNSName(ctx, address2.String(), name, "{}", 1, true)
+	suite.Require().NoError(err)
+
+	primName, f = suite.rnsKeeper.GetPrimaryName(ctx, address2.String())
+	suite.Require().Equal(true, f)
+	suite.Require().Equal(name, primName.GetDisplay())
+
+	n, found = suite.rnsKeeper.GetNames(ctx, "test", "jkl")
+	suite.Require().Equal(true, found)
+	suite.Require().Equal(address2.String(), n.Value)
+	suite.Require().Equal(int64(30+((5*365*24*60*60)/6)+((365*24*60*60)/6)), n.Expires)
 }
