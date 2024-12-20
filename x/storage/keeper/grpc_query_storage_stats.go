@@ -89,10 +89,6 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*
 
 		m := val.FileSize * val.MaxProofs
 
-		if val.Expires > 0 {
-			spacePurchased += m
-		}
-
 		spaceUsed += m
 
 		return false
