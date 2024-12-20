@@ -155,7 +155,7 @@ func (k Keeper) IterateAndParseFilesByMerkle(ctx sdk.Context, reverse bool, fn f
 		val := iterator.Value()
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(val, &file); err != nil {
-			return
+			continue
 		}
 
 		b := fn(iterator.Key(), file)

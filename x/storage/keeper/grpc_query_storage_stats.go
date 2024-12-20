@@ -83,6 +83,7 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*
 		spacePurchased += info.SpaceAvailable
 	}
 
+	mmm := 0
 	k.IterateAndParseFilesByMerkle(ctx, false, func(_ []byte, val types.UnifiedFile) bool {
 		allUsers[val.Owner] = true
 		activeUsers[val.Owner] = true
@@ -90,9 +91,10 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*
 		m := val.FileSize * val.MaxProofs
 
 		spaceUsed += m
-
+		mmm += 1
 		return false
 	})
+	ctx.Logger().Info("Found %d files in stats!", mmm)
 
 	decSpent := sdk.NewDec(spacePurchased)
 	decUsed := sdk.NewDec(spaceUsed)
