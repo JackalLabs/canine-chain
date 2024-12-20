@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -94,7 +95,7 @@ func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*
 		mmm += 1
 		return false
 	})
-	ctx.Logger().Info("Found %d files in stats!", mmm)
+	ctx.Logger().Info(fmt.Sprintf("Found %d files in stats!", mmm))
 
 	decSpent := sdk.NewDec(spacePurchased)
 	decUsed := sdk.NewDec(spaceUsed)
