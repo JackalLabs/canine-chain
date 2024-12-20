@@ -5,10 +5,13 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v4/types"
 	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
 	storageKeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -21,14 +24,16 @@ type Upgrade struct {
 	configurator module.Configurator
 	sk           *storageKeeper.Keeper
 	mk           *mintkeeper.Keeper
+	bk           bankkeeper.Keeper
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk *storageKeeper.Keeper, mk *mintkeeper.Keeper) *Upgrade {
+func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk *storageKeeper.Keeper, mk *mintkeeper.Keeper, bk bankkeeper.Keeper) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,
 		sk:           sk,
+		bk:           bk,
 		mk:           mk,
 	}
 }
@@ -46,7 +51,20 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		params.TokensPerBlock = 3_830_000
 		u.mk.SetParams(ctx, params)
 
-		err := upgrades.RecoverFiles(ctx, u.sk, UpgradeData, plan.Height, "v4.4.0")
+		polAccount, err := types.GetPOLAccount()
+		if err != nil {
+			return nil, err
+		}
+
+		bal := u.bk.GetBalance(ctx, polAccount, "ujkl")
+		allBal := sdk.NewCoins(bal)
+
+		err = u.bk.SendCoinsFromModuleToAccount(ctx, storagemoduletypes.ModuleName, polAccount, allBal)
+		if err != nil {
+			return nil, err
+		}
+
+		err = upgrades.RecoverFiles(ctx, u.sk, UpgradeData, plan.Height, "v4.4.0")
 		if err != nil {
 			return nil, err
 		}
