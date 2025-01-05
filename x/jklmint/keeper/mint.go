@@ -100,9 +100,9 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 	//}
 	// var bpy int64 = (365 * 24 * 60 * 60) / 6
 	//
-	//newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
+	// newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
 	//
-	//mintTokens := newMintForBlock
+	// mintTokens := newMintForBlock
 	denom := k.GetParams(ctx).MintDenom
 	if denom == "" { // error handling mostly built for tests
 		denom = "ujkl"
