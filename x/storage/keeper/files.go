@@ -196,3 +196,19 @@ func (k Keeper) GetAllFileByOwner(ctx sdk.Context) (list []types.UnifiedFile) {
 
 	return
 }
+
+// GetAllFilesWithOwner returns all Files from a specific owner
+func (k Keeper) GetAllFilesWithOwner(ctx sdk.Context, owner string) (list []types.UnifiedFile) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesOwnerPrefix(owner))
+	iterator := sdk.KVStorePrefixIterator(store, nil)
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.UnifiedFile
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}

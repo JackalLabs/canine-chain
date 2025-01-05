@@ -2,6 +2,7 @@ package v440
 
 import (
 	_ "embed"
+
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -41,7 +42,6 @@ func (u *Upgrade) Name() string {
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-
 		params := u.mk.GetParams(ctx)
 		params.TokensPerBlock = 3_830_000
 		u.mk.SetParams(ctx, params)

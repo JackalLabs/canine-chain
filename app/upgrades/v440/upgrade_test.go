@@ -26,5 +26,4 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 	})
 
 	suite.Require().Equal(25000, i)
-
 }
