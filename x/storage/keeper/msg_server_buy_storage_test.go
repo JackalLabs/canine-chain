@@ -7,6 +7,8 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
+var buystoragemerkle = []byte("lessstoragemerkle")
+
 func (suite *KeeperTestSuite) TestBuyStorage() {
 	suite.SetupSuite()
 	msgSrvr, k, ctx := setupMsgServer(suite)
@@ -55,6 +57,11 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+				k.SetFile(suite.ctx, types.UnifiedFile{
+					Merkle:   buystoragemerkle,
+					FileSize: 5_000_000_000,
+					Owner:    testAccount,
+				})
 			},
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
@@ -71,10 +78,15 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			preRun: func() {
 				// Set user current SpaceUsed to 5GB
 				initialPayInfo := types.StoragePaymentInfo{
-					SpaceUsed: 5000000000,
+					SpaceUsed: 5_000_000_000,
 					Address:   testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+				k.SetFile(suite.ctx, types.UnifiedFile{
+					Merkle:   buystoragemerkle,
+					FileSize: 5_000_000_000,
+					Owner:    testAccount,
+				})
 			},
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
@@ -97,6 +109,11 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+				k.SetFile(suite.ctx, types.UnifiedFile{
+					Merkle:   buystoragemerkle,
+					FileSize: 5_000_000_000,
+					Owner:    testAccount,
+				})
 			},
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
@@ -230,6 +247,7 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 			}
 
 			k.RemoveStoragePaymentInfo(suite.ctx, testAccount)
+			k.RemoveFile(suite.ctx, buystoragemerkle, testAccount, 0)
 		})
 	}
 	suite.reset()

@@ -144,6 +144,17 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 					Address:        testAccount,
 				}
 				k.SetStoragePaymentInfo(suite.ctx, initialPayInfo)
+				k.SetFile(suite.ctx, types.UnifiedFile{
+					FileSize:      10000000000,
+					Expires:       0,
+					Start:         0,
+					Owner:         testAccount,
+					MaxProofs:     3,
+					ProofType:     0,
+					Merkle:        []byte("yomamatestmerkle"),
+					Note:          "{}",
+					ProofInterval: 7200,
+				})
 			},
 			msg: types.MsgBuyStorage{
 				Creator:      testAccount,
