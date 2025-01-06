@@ -100,7 +100,7 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 	//}
 	// var bpy int64 = (365 * 24 * 60 * 60) / 6
 	//
-	//newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
+	// newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
 	//
 	//mintTokens := newMintForBlock
 	denom := k.GetParams(ctx).MintDenom
