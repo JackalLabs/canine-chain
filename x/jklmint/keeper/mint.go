@@ -95,10 +95,10 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 
 	mintedNum := params.TokensPerBlock
 	// minted, found := k.GetMintedBlock(ctx, ctx.BlockHeight()-1)
-	//if found {
+	// if found {
 	//	mintedNum = minted.Minted
 	//}
-	//var bpy int64 = (365 * 24 * 60 * 60) / 6
+	// var bpy int64 = (365 * 24 * 60 * 60) / 6
 	//
 	//newMintForBlock := utils.GetMintForBlock(mintedNum, bpy, params.MintDecrease)
 	//

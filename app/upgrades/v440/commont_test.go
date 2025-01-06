@@ -2,8 +2,9 @@ package v440_test
 
 import (
 	"fmt"
-	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
 	"testing"
+
+	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -180,7 +181,7 @@ func (suite *UpgradeTestKeeper) SetupSuite() {
 
 func (suite *UpgradeTestKeeper) reset() {
 	storageKeeper, filetreeKeeper, _, _, encCfg, ctx := SetUpKeepers(suite.T())
-
+	_ = suite.mintKeeper
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, encCfg.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, filetreeKeeper)
 	queryClient := types.NewQueryClient(queryHelper)
