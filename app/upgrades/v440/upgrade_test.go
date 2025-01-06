@@ -2,7 +2,7 @@ package v440_test
 
 import (
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
-	v410 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v410"
+	v440 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v440"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
@@ -10,7 +10,29 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 	suite.SetupSuite()
 	setupMsgServer(suite)
 
-	err := upgrades.RecoverFiles(suite.ctx, suite.storageKeeper, v410.UpgradeData, 20000, "v4.1.0-test")
+	m := []byte("test_file")
+	o := "jkl123"
+	var s int64 = 1
+	suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+		Merkle:        m,
+		Owner:         o,
+		Start:         s,
+		Expires:       10000,
+		FileSize:      100,
+		ProofInterval: 3600,
+		ProofType:     0,
+		Proofs:        make([]string, 0),
+		MaxProofs:     3,
+		Note:          "{}",
+	})
+
+	v440.BumpInterval(suite.ctx, suite.storageKeeper)
+
+	f, found := suite.storageKeeper.GetFile(suite.ctx, m, o, s)
+	suite.Require().True(found)
+	suite.Require().Equal(int64(7200), f.ProofInterval)
+
+	err := upgrades.RecoverFiles(suite.ctx, suite.storageKeeper, v440.UpgradeData, 20000, "v4.4.0-test")
 	suite.Require().NoError(err)
 
 	i := 0
@@ -25,5 +47,5 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 		return false
 	})
 
-	suite.Require().Equal(25000, i)
+	suite.Require().Equal(25001, i)
 }
