@@ -1,0 +1,79 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Jackal Protocol - gRPC Gateway docs",
+    "description": "A REST interface for state queries.",
+    "version": "1.0.0"
+  },
+  "apis": [
+    {
+      "url": "https://raw.githubusercontent.com/cosmos/cosmos-sdk/v0.45.16/client/docs/swagger-ui/swagger.yaml",
+      "tags": {
+        "add": ["Cosmos"],
+        "remove": ["Query", "Service"]
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/canine_chain/storage/query.swagger.json",
+      "tags": {
+        "add": ["Jackal", "Storage"],
+        "remove": ["Query", "Service"]
+      },
+      "operationIds": {
+        "rename": {
+          "Params": "StorageParams",
+          "AllFiles": "AllUniversalFiles",
+          "File": "UniversalFile"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/canine_chain/filetree/query.swagger.json",
+      "tags": {
+        "add": ["Jackal", "FileTree"],
+        "remove": ["Query", "Service"]
+      },
+      "operationIds": {
+        "rename": {
+          "Params": "FileTreeParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/canine_chain/oracle/query.swagger.json",
+      "tags": {
+        "add": ["Jackal", "Oracle"],
+        "remove": ["Query", "Service"]
+      },
+      "operationIds": {
+        "rename": {
+          "Params": "OracleParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/canine_chain/rns/query.swagger.json",
+      "tags": {
+        "add": ["Jackal", "RNS"],
+        "remove": ["Query", "Service"]
+      },
+      "operationIds": {
+        "rename": {
+          "Params": "RnsParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/canine_chain/notifications/query.swagger.json",
+      "tags": {
+        "add": ["Jackal", "Notifications"],
+        "remove": ["Query", "Service"]
+      },
+      "operationIds": {
+        "rename": {
+          "Params": "NotificationsParams"
+        }
+      }
+    }
+  ]
+}
