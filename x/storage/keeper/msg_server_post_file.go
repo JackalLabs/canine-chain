@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
@@ -99,6 +100,14 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		spcToken := sdk.NewCoin(toPay.Denom, storageProviderCut.TruncateInt())
 		spcTokens := sdk.NewCoins(spcToken)
 
+		polCut := toPay.Amount.ToDec().Mul(pol)
+		polToken := sdk.NewCoin(toPay.Denom, polCut.TruncateInt())
+		polTokens := sdk.NewCoins(polToken)
+
+		refCut := toPay.Amount.ToDec().Mul(refDec) // 25% to referrals
+		refToken := sdk.NewCoin(toPay.Denom, refCut.TruncateInt())
+		refTokens := sdk.NewCoins(refToken)
+
 		end := ctx.BlockTime().AddDate(0, 0, int(days))
 		gauge := k.NewGauge(ctx, spcTokens, end) // creating new payment gauge
 		addr, err := sdk.AccAddressFromBech32(msg.Creator)
@@ -111,6 +120,11 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 			return nil, sdkerrors.Wrapf(err, "cannot get gauge account")
 		}
 
+		polAcc, err := allTypes.GetPOLAccount()
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot get pol account")
+		}
+
 		err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(toPay)) // taking money from user
 		if err != nil {
 			return nil, sdkerrors.Wrapf(err, "cannot send tokens from %s", msg.Creator)
@@ -119,6 +133,16 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, acc, spcTokens)
 		if err != nil {
 			return nil, sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+		}
+
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, polAcc, polTokens)
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot send tokens to token holder account")
+		}
+
+		err = k.AddCollectedFees(ctx, refTokens)
+		if err != nil {
+			return nil, sdkerrors.Wrapf(err, "cannot send tokens to stakers")
 		}
 
 		return res, nil
