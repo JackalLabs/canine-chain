@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/jackalLabs/canine-chain/v4/docs"
+	"github.com/jackalLabs/canine-chain/v4/docs/openapiconsole"
+
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	ibc "github.com/cosmos/ibc-go/v4/modules/core"
@@ -145,8 +148,6 @@ import (
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
-
-	"github.com/jackalLabs/canine-chain/v4/docs"
 )
 
 const appName = "JackalApp"
@@ -1112,12 +1113,12 @@ func (app *JackalApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.API
 
 	// register swagger API from root so that other applications can override easily
 	if apiConfig.Swagger {
-		RegisterSwaggerAPI(apiSvr.Router)
+		// RegisterSwaggerAPI(apiSvr.Router)
+		apiSvr.Router.Handle("/swagger-ui/swagger.yaml", http.FileServer(http.FS(docs.Docs)))
+		apiSvr.Router.HandleFunc("/", openapiconsole.Handler(appName, "/swagger-ui/swagger.yaml"))
 	}
 
 	// register app's  routes.
-	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
-	// apiSvr.Router.HandleFunc("/", openapiconsole.Handler(appName, "/static/openapi.yml"))
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
