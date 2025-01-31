@@ -15,6 +15,7 @@ func RegisterCustomPlugins(
 	filetree *filetreekeeper.Keeper,
 	storage *storagekeeper.Keeper,
 ) []wasmkeeper.Option {
+	// TODO: add notification
 	messengerDecoratorOpt := wasmkeeper.WithMessageHandlerDecorator(
 		CustomMessageDecorator(filetree, storage),
 	)
