@@ -54,7 +54,7 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 			return err
 		}
 
-		var kv map[string]string
+		var kv map[string]any
 		err := json.Unmarshal([]byte(file.Note), &kv)
 		if err != nil {
 			return nil
@@ -65,7 +65,12 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 			return nil
 		}
 
-		if r != req.Value {
+		s, ok := r.(string)
+		if !ok {
+			return nil
+		}
+
+		if s != req.Value {
 			return nil
 		}
 
