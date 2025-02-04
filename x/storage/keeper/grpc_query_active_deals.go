@@ -46,42 +46,63 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 	files := make([]types.UnifiedFile, 0)
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	reverse := false
+	var limit uint64 = 100
+	if req.Pagination != nil { // HERE IS THE FIX
+		reverse = req.Pagination.Reverse
+		limit = req.Pagination.Limit
+	}
 
-	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
+	var i uint64
+	var total uint64
+	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, value []byte) bool {
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(value, &file); err != nil {
-			return nil
+			return false
 		}
 
 		var kv map[string]any
 		err := json.Unmarshal([]byte(file.Note), &kv)
 		if err != nil {
-			return nil
+			return false
 		}
 
 		r, exists := kv[req.Key]
 		if !exists {
-			return nil
+			return false
 		}
 
 		s, ok := r.(string)
 		if !ok {
-			return nil
+			return false
 		}
 
 		if s != req.Value {
-			return nil
+			return false
 		}
 
+		if len(file.Proofs) < int(file.MaxProofs) {
+			total++
+			if i >= limit {
+				return false
+			}
+			files = append(files, file)
+		} else {
+			return false
+		}
+
+		i++
+
 		files = append(files, file)
-		return nil
+		return false
 	})
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+
+	qpr := query.PageResponse{
+		NextKey: nil,
+		Total:   total,
 	}
 
-	return &types.QueryFilesFromNoteResponse{Files: files, Pagination: pageRes}, nil
+	return &types.QueryFilesFromNoteResponse{Files: files, Pagination: &qpr}, nil
 }
 
 func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMerkle) (*types.QueryAllFilesByMerkleResponse, error) {
