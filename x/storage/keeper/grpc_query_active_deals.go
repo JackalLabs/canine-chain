@@ -43,7 +43,7 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var files []types.UnifiedFile
+	files := make([]types.UnifiedFile, 0)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
