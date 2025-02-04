@@ -51,7 +51,7 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
 		var file types.UnifiedFile
 		if err := k.cdc.Unmarshal(value, &file); err != nil {
-			return err
+			return nil
 		}
 
 		var kv map[string]any
