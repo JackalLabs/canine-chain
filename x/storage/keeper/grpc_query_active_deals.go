@@ -55,12 +55,7 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 
 	var i uint64
 	var total uint64
-	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, value []byte) bool {
-		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(value, &file); err != nil {
-			return false
-		}
-
+	k.IterateAndParseFilesByMerkle(ctx, reverse, func(_ []byte, file types.UnifiedFile) bool {
 		var kv map[string]any
 		err := json.Unmarshal([]byte(file.Note), &kv)
 		if err != nil {
@@ -81,13 +76,8 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 			return false
 		}
 
-		if len(file.Proofs) < int(file.MaxProofs) {
-			total++
-			if i >= limit {
-				return false
-			}
-			files = append(files, file)
-		} else {
+		total++
+		if i >= limit {
 			return false
 		}
 
