@@ -11,6 +11,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
 
+	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
@@ -65,6 +66,10 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.RequestReportForm != nil {
 			return m.requestReportForm(ctx, contractAddr, contractMsg.RequestReportForm)
 		}
+		// Filetree msgs start here
+		if contractMsg.PostFileTree != nil {
+			return m.postFileTree(ctx, contractAddr, contractMsg.PostFileTree)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
@@ -97,6 +102,14 @@ func (m *CustomMessenger) requestReportForm(ctx sdk.Context, contractAddr sdk.Ac
 	err := PerformRequestReportForm(m.storage, ctx, contractAddr, requestReportForm)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform request report form")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) postFileTree(ctx sdk.Context, contractAddr sdk.AccAddress, postFileTree *filetreetypes.MsgPostFile) ([]sdk.Event, [][]byte, error) {
+	err := PerformPostFileTree(m.filetree, ctx, contractAddr, postFileTree)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform post file tree")
 	}
 	return nil, nil, nil
 }
