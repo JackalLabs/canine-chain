@@ -75,3 +75,25 @@ func PerformBuyStorage(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sd
 
 	return nil
 }
+
+func PerformRequestReportForm(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, requestReportForm *storagetypes.MsgRequestReportForm) error {
+	if requestReportForm == nil {
+		return wasmvmtypes.InvalidRequest{Err: "request report form null error"}
+	}
+
+	if requestReportForm.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := requestReportForm.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := storagekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.RequestReportForm(sdk.WrapSDKContext(ctx), requestReportForm)
+	if err != nil {
+		return sdkerrors.Wrap(err, "request report form error from message")
+	}
+
+	return nil
+}

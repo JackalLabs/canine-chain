@@ -62,6 +62,9 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.BuyStorage != nil {
 			return m.buyStorage(ctx, contractAddr, contractMsg.BuyStorage)
 		}
+		if contractMsg.RequestReportForm != nil {
+			return m.requestReportForm(ctx, contractAddr, contractMsg.RequestReportForm)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
@@ -86,6 +89,14 @@ func (m *CustomMessenger) buyStorage(ctx sdk.Context, contractAddr sdk.AccAddres
 	err := PerformBuyStorage(m.storage, ctx, contractAddr, buyStorage)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform buy storage")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) requestReportForm(ctx sdk.Context, contractAddr sdk.AccAddress, requestReportForm *storagetypes.MsgRequestReportForm) ([]sdk.Event, [][]byte, error) {
+	err := PerformRequestReportForm(m.storage, ctx, contractAddr, requestReportForm)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform request report form")
 	}
 	return nil, nil, nil
 }
