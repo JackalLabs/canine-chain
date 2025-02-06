@@ -47,6 +47,10 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	params := k.GetParams(ctx)
 
+	if msg.ForAddress == "" { // accept empty for addresses
+		msg.ForAddress = msg.Creator
+	}
+
 	forAddress, err := k.rnsKeeper.Resolve(ctx, msg.ForAddress) // converting for address into an actual bech32 using RNS
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot parse RNS or address %s", msg.ForAddress)
