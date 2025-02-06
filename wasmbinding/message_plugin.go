@@ -70,6 +70,12 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.PostFileTree != nil {
 			return m.postFileTree(ctx, contractAddr, contractMsg.PostFileTree)
 		}
+		if contractMsg.AddViewers != nil {
+			return m.addViewers(ctx, contractAddr, contractMsg.AddViewers)
+		}
+		if contractMsg.PostKey != nil {
+			return m.postKey(ctx, contractAddr, contractMsg.PostKey)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
@@ -106,10 +112,27 @@ func (m *CustomMessenger) requestReportForm(ctx sdk.Context, contractAddr sdk.Ac
 	return nil, nil, nil
 }
 
+// Filetree starts here
 func (m *CustomMessenger) postFileTree(ctx sdk.Context, contractAddr sdk.AccAddress, postFileTree *filetreetypes.MsgPostFile) ([]sdk.Event, [][]byte, error) {
 	err := PerformPostFileTree(m.filetree, ctx, contractAddr, postFileTree)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform post file tree")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) addViewers(ctx sdk.Context, contractAddr sdk.AccAddress, addViewers *filetreetypes.MsgAddViewers) ([]sdk.Event, [][]byte, error) {
+	err := PerformAddViewers(m.filetree, ctx, contractAddr, addViewers)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform add viewers")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, postKey *filetreetypes.MsgPostKey) ([]sdk.Event, [][]byte, error) {
+	err := PerformPostKey(m.filetree, ctx, contractAddr, postKey)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform post key")
 	}
 	return nil, nil, nil
 }

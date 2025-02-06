@@ -31,3 +31,47 @@ func PerformPostFileTree(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr
 
 	return nil
 }
+
+func PerformAddViewers(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, addViewers *filetreetypes.MsgAddViewers) error {
+	if addViewers == nil {
+		return wasmvmtypes.InvalidRequest{Err: "add viewers null error"}
+	}
+
+	if addViewers.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := addViewers.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.AddViewers(sdk.WrapSDKContext(ctx), addViewers)
+	if err != nil {
+		return sdkerrors.Wrap(err, "add viewers error from message")
+	}
+
+	return nil
+}
+
+func PerformPostKey(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postKey *filetreetypes.MsgPostKey) error {
+	if postKey == nil {
+		return wasmvmtypes.InvalidRequest{Err: "post key null error"}
+	}
+
+	if postKey.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := postKey.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.PostKey(sdk.WrapSDKContext(ctx), postKey)
+	if err != nil {
+		return sdkerrors.Wrap(err, "post key error from message")
+	}
+
+	return nil
+}

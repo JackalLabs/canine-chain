@@ -13,7 +13,9 @@ type JackalMsg struct {
 	RequestReportForm *storagetypes.MsgRequestReportForm `json:"request_report_form,omitempty"`
 
 	// FILETREE MODULE
-	PostFileTree *filetreetypes.MsgPostFile `json:"post_file_tree,omitempty"`
+	PostFileTree *filetreetypes.MsgPostFile   `json:"post_file_tree,omitempty"`
+	AddViewers   *filetreetypes.MsgAddViewers `json:"add_viewers,omitempty"`
+	PostKey      *filetreetypes.MsgPostKey    `json:"post_key,omitempty"`
 }
 
 /*
