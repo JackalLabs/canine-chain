@@ -75,3 +75,47 @@ func PerformPostKey(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.
 
 	return nil
 }
+
+func PerformDeleteFileTree(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, deleteFileTree *filetreetypes.MsgDeleteFile) error {
+	if deleteFileTree == nil {
+		return wasmvmtypes.InvalidRequest{Err: "delete file tree null error"}
+	}
+
+	if deleteFileTree.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := deleteFileTree.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.DeleteFile(sdk.WrapSDKContext(ctx), deleteFileTree)
+	if err != nil {
+		return sdkerrors.Wrap(err, "delete file tree error from message")
+	}
+
+	return nil
+}
+
+func PerformRemoveViewers(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, removeViewers *filetreetypes.MsgRemoveViewers) error {
+	if removeViewers == nil {
+		return wasmvmtypes.InvalidRequest{Err: "remove viewers null error"}
+	}
+
+	if removeViewers.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := removeViewers.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.RemoveViewers(sdk.WrapSDKContext(ctx), removeViewers)
+	if err != nil {
+		return sdkerrors.Wrap(err, "remove viewers error from message")
+	}
+
+	return nil
+}

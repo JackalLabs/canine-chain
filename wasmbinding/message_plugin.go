@@ -76,6 +76,12 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.PostKey != nil {
 			return m.postKey(ctx, contractAddr, contractMsg.PostKey)
 		}
+		if contractMsg.DeleteFileTree != nil {
+			return m.deleteFileTree(ctx, contractAddr, contractMsg.DeleteFileTree)
+		}
+		if contractMsg.RemoveViewers != nil {
+			return m.removeViewers(ctx, contractAddr, contractMsg.RemoveViewers)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
@@ -133,6 +139,22 @@ func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, 
 	err := PerformPostKey(m.filetree, ctx, contractAddr, postKey)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform post key")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) deleteFileTree(ctx sdk.Context, contractAddr sdk.AccAddress, deleteFileTree *filetreetypes.MsgDeleteFile) ([]sdk.Event, [][]byte, error) {
+	err := PerformDeleteFileTree(m.filetree, ctx, contractAddr, deleteFileTree)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform delete file tree")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) removeViewers(ctx sdk.Context, contractAddr sdk.AccAddress, removeViewers *filetreetypes.MsgRemoveViewers) ([]sdk.Event, [][]byte, error) {
+	err := PerformRemoveViewers(m.filetree, ctx, contractAddr, removeViewers)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform remove viewers")
 	}
 	return nil, nil, nil
 }
