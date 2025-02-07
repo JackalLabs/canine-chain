@@ -13,17 +13,17 @@ type JackalMsg struct {
 	RequestReportForm *storagetypes.MsgRequestReportForm `json:"request_report_form,omitempty"`
 
 	// FILETREE MODULE
-	PostFileTree   *filetreetypes.MsgPostFile      `json:"post_file_tree,omitempty"`
-	AddViewers     *filetreetypes.MsgAddViewers    `json:"add_viewers,omitempty"`
-	PostKey        *filetreetypes.MsgPostKey       `json:"post_key,omitempty"`
-	DeleteFileTree *filetreetypes.MsgDeleteFile    `json:"delete_file_tree,omitempty"`
-	RemoveViewers  *filetreetypes.MsgRemoveViewers `json:"remove_viewers,omitempty"`
+	PostFileTree      *filetreetypes.MsgPostFile          `json:"post_file_tree,omitempty"`
+	AddViewers        *filetreetypes.MsgAddViewers        `json:"add_viewers,omitempty"`
+	PostKey           *filetreetypes.MsgPostKey           `json:"post_key,omitempty"`
+	DeleteFileTree    *filetreetypes.MsgDeleteFile        `json:"delete_file_tree,omitempty"`
+	RemoveViewers     *filetreetypes.MsgRemoveViewers     `json:"remove_viewers,omitempty"`
+	ProvisionFileTree *filetreetypes.MsgProvisionFileTree `json:"provision_file_tree,omitempty"`
+	AddEditors        *filetreetypes.MsgAddEditors        `json:"add_editors,omitempty"`
 }
 
 /*
 
-  rpc DeleteFile(MsgDeleteFile) returns (MsgDeleteFileResponse);
-  rpc RemoveViewers(MsgRemoveViewers) returns (MsgRemoveViewersResponse);
   rpc ProvisionFileTree(MsgProvisionFileTree) returns (MsgProvisionFileTreeResponse);
 
   rpc AddEditors(MsgAddEditors) returns (MsgAddEditorsResponse);

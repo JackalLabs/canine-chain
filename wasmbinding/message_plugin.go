@@ -82,6 +82,12 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.RemoveViewers != nil {
 			return m.removeViewers(ctx, contractAddr, contractMsg.RemoveViewers)
 		}
+		if contractMsg.ProvisionFileTree != nil {
+			return m.provisionFileTree(ctx, contractAddr, contractMsg.ProvisionFileTree)
+		}
+		if contractMsg.AddEditors != nil {
+			return m.addEditors(ctx, contractAddr, contractMsg.AddEditors)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
@@ -155,6 +161,22 @@ func (m *CustomMessenger) removeViewers(ctx sdk.Context, contractAddr sdk.AccAdd
 	err := PerformRemoveViewers(m.filetree, ctx, contractAddr, removeViewers)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform remove viewers")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) provisionFileTree(ctx sdk.Context, contractAddr sdk.AccAddress, provisionFileTree *filetreetypes.MsgProvisionFileTree) ([]sdk.Event, [][]byte, error) {
+	err := PerformProvisionFileTree(m.filetree, ctx, contractAddr, provisionFileTree)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform provision filetree")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) addEditors(ctx sdk.Context, contractAddr sdk.AccAddress, addEditors *filetreetypes.MsgAddEditors) ([]sdk.Event, [][]byte, error) {
+	err := PerformAddEditors(m.filetree, ctx, contractAddr, addEditors)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform add editors")
 	}
 	return nil, nil, nil
 }
