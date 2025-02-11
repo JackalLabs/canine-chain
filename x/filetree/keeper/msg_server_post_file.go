@@ -12,6 +12,10 @@ import (
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	if msg.Account == "" {
+		msg.Account = msg.Creator
+	}
+
 	parentOwnerString := MakeOwnerAddress(msg.HashParent, msg.Account)
 
 	parentFile, found := k.GetFiles(ctx, msg.HashParent, parentOwnerString)
