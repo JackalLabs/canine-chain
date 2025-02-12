@@ -207,3 +207,47 @@ func PerformResetEditors(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr
 
 	return nil
 }
+
+func PerformResetViewers(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, resetViewers *filetreetypes.MsgResetViewers) error {
+	if resetViewers == nil {
+		return wasmvmtypes.InvalidRequest{Err: "reset viewers null error"}
+	}
+
+	if resetViewers.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := resetViewers.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.ResetViewers(sdk.WrapSDKContext(ctx), resetViewers)
+	if err != nil {
+		return sdkerrors.Wrap(err, "reset viewers error from message")
+	}
+
+	return nil
+}
+
+func PerformChangeOwner(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, changeOwner *filetreetypes.MsgChangeOwner) error {
+	if changeOwner == nil {
+		return wasmvmtypes.InvalidRequest{Err: "change owner null error"}
+	}
+
+	if changeOwner.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := changeOwner.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.ChangeOwner(sdk.WrapSDKContext(ctx), changeOwner)
+	if err != nil {
+		return sdkerrors.Wrap(err, "change owner error from message")
+	}
+
+	return nil
+}

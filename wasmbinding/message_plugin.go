@@ -94,6 +94,12 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.ResetEditors != nil {
 			return m.resetEditors(ctx, contractAddr, contractMsg.ResetEditors)
 		}
+		if contractMsg.ResetViewers != nil {
+			return m.resetViewers(ctx, contractAddr, contractMsg.ResetViewers)
+		}
+		if contractMsg.ChangeOwner != nil {
+			return m.changeOwner(ctx, contractAddr, contractMsg.ChangeOwner)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
@@ -199,6 +205,22 @@ func (m *CustomMessenger) resetEditors(ctx sdk.Context, contractAddr sdk.AccAddr
 	err := PerformResetEditors(m.filetree, ctx, contractAddr, resetEditors)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform reset editors")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) resetViewers(ctx sdk.Context, contractAddr sdk.AccAddress, resetViewers *filetreetypes.MsgResetViewers) ([]sdk.Event, [][]byte, error) {
+	err := PerformResetViewers(m.filetree, ctx, contractAddr, resetViewers)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform reset viewers")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) changeOwner(ctx sdk.Context, contractAddr sdk.AccAddress, changeOwner *filetreetypes.MsgChangeOwner) ([]sdk.Event, [][]byte, error) {
+	err := PerformChangeOwner(m.filetree, ctx, contractAddr, changeOwner)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform change owner")
 	}
 	return nil, nil, nil
 }

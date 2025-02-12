@@ -22,12 +22,12 @@ type JackalMsg struct {
 	AddEditors        *filetreetypes.MsgAddEditors        `json:"add_editors,omitempty"`
 	RemoveEditors     *filetreetypes.MsgRemoveEditors     `json:"remove_editors,omitempty"`
 	ResetEditors      *filetreetypes.MsgResetEditors      `json:"reset_editors,omitempty"`
+	ResetViewers      *filetreetypes.MsgResetViewers      `json:"reset_viewers,omitempty"`
+	ChangeOwner       *filetreetypes.MsgChangeOwner       `json:"change_owner,omitempty"`
 }
 
 /*
 
-  rpc RemoveEditors(MsgRemoveEditors) returns (MsgRemoveEditorsResponse);
-  rpc ResetEditors(MsgResetEditors) returns (MsgResetEditorsResponse);
   rpc ResetViewers(MsgResetViewers) returns (MsgResetViewersResponse);
   rpc ChangeOwner(MsgChangeOwner) returns (MsgChangeOwnerResponse);
 
