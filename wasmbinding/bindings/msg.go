@@ -20,13 +20,12 @@ type JackalMsg struct {
 	RemoveViewers     *filetreetypes.MsgRemoveViewers     `json:"remove_viewers,omitempty"`
 	ProvisionFileTree *filetreetypes.MsgProvisionFileTree `json:"provision_file_tree,omitempty"`
 	AddEditors        *filetreetypes.MsgAddEditors        `json:"add_editors,omitempty"`
+	RemoveEditors     *filetreetypes.MsgRemoveEditors     `json:"remove_editors,omitempty"`
+	ResetEditors      *filetreetypes.MsgResetEditors      `json:"reset_editors,omitempty"`
 }
 
 /*
 
-  rpc ProvisionFileTree(MsgProvisionFileTree) returns (MsgProvisionFileTreeResponse);
-
-  rpc AddEditors(MsgAddEditors) returns (MsgAddEditorsResponse);
   rpc RemoveEditors(MsgRemoveEditors) returns (MsgRemoveEditorsResponse);
   rpc ResetEditors(MsgResetEditors) returns (MsgResetEditorsResponse);
   rpc ResetViewers(MsgResetViewers) returns (MsgResetViewersResponse);

@@ -88,6 +88,12 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		if contractMsg.AddEditors != nil {
 			return m.addEditors(ctx, contractAddr, contractMsg.AddEditors)
 		}
+		if contractMsg.RemoveEditors != nil {
+			return m.removeEditors(ctx, contractAddr, contractMsg.RemoveEditors)
+		}
+		if contractMsg.ResetEditors != nil {
+			return m.resetEditors(ctx, contractAddr, contractMsg.ResetEditors)
+		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
@@ -177,6 +183,22 @@ func (m *CustomMessenger) addEditors(ctx sdk.Context, contractAddr sdk.AccAddres
 	err := PerformAddEditors(m.filetree, ctx, contractAddr, addEditors)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform add editors")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) removeEditors(ctx sdk.Context, contractAddr sdk.AccAddress, removeEditors *filetreetypes.MsgRemoveEditors) ([]sdk.Event, [][]byte, error) {
+	err := PerformRemoveEditors(m.filetree, ctx, contractAddr, removeEditors)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform remove editors")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) resetEditors(ctx sdk.Context, contractAddr sdk.AccAddress, resetEditors *filetreetypes.MsgResetEditors) ([]sdk.Event, [][]byte, error) {
+	err := PerformResetEditors(m.filetree, ctx, contractAddr, resetEditors)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform reset editors")
 	}
 	return nil, nil, nil
 }

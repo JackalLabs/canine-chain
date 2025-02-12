@@ -163,3 +163,47 @@ func PerformAddEditors(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr s
 
 	return nil
 }
+
+func PerformRemoveEditors(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, removeEditors *filetreetypes.MsgRemoveEditors) error {
+	if removeEditors == nil {
+		return wasmvmtypes.InvalidRequest{Err: "remove editors null error"}
+	}
+
+	if removeEditors.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := removeEditors.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.RemoveEditors(sdk.WrapSDKContext(ctx), removeEditors)
+	if err != nil {
+		return sdkerrors.Wrap(err, "remove editors error from message")
+	}
+
+	return nil
+}
+
+func PerformResetEditors(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, resetEditors *filetreetypes.MsgResetEditors) error {
+	if resetEditors == nil {
+		return wasmvmtypes.InvalidRequest{Err: "reset editors null error"}
+	}
+
+	if resetEditors.Creator != contractAddr.String() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "creator of bindings is not bindings contract address")
+	}
+
+	if err := resetEditors.ValidateBasic(); err != nil {
+		return err
+	}
+
+	msgServer := filetreekeeper.NewMsgServerImpl(*s)
+	_, err := msgServer.ResetEditors(sdk.WrapSDKContext(ctx), resetEditors)
+	if err != nil {
+		return sdkerrors.Wrap(err, "reset editors error from message")
+	}
+
+	return nil
+}
