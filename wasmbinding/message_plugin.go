@@ -10,27 +10,32 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-
 	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+
 	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+
+	notificationskeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
+	notificationstypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
-func CustomMessageDecorator(filetree *filetreekeeper.Keeper, storage *storagekeeper.Keeper) func(wasmkeeper.Messenger) wasmkeeper.Messenger {
+func CustomMessageDecorator(filetree *filetreekeeper.Keeper, storage *storagekeeper.Keeper, notifications *notificationskeeper.Keeper) func(wasmkeeper.Messenger) wasmkeeper.Messenger {
 	return func(old wasmkeeper.Messenger) wasmkeeper.Messenger {
 		return &CustomMessenger{
-			wrapped:  old,
-			filetree: filetree,
-			storage:  storage,
+			wrapped:       old,
+			filetree:      filetree,
+			storage:       storage,
+			notifications: notifications,
 		}
 	}
 }
 
 type CustomMessenger struct {
-	wrapped  wasmkeeper.Messenger
-	filetree *filetreekeeper.Keeper
-	storage  *storagekeeper.Keeper
+	wrapped       wasmkeeper.Messenger
+	filetree      *filetreekeeper.Keeper
+	storage       *storagekeeper.Keeper
+	notifications *notificationskeeper.Keeper
 }
 
 var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
@@ -99,6 +104,17 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 		}
 		if contractMsg.ChangeOwner != nil {
 			return m.changeOwner(ctx, contractAddr, contractMsg.ChangeOwner)
+		}
+
+		// Notifications msgs start here
+		if contractMsg.CreateNotification != nil {
+			return m.createNotification(ctx, contractAddr, contractMsg.CreateNotification)
+		}
+		if contractMsg.DeleteNotification != nil {
+			return m.deleteNotification(ctx, contractAddr, contractMsg.DeleteNotification)
+		}
+		if contractMsg.BlockSenders != nil {
+			return m.blockSenders(ctx, contractAddr, contractMsg.BlockSenders)
 		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
@@ -221,6 +237,30 @@ func (m *CustomMessenger) changeOwner(ctx sdk.Context, contractAddr sdk.AccAddre
 	err := PerformChangeOwner(m.filetree, ctx, contractAddr, changeOwner)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform change owner")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) createNotification(ctx sdk.Context, contractAddr sdk.AccAddress, createNotification *notificationstypes.MsgCreateNotification) ([]sdk.Event, [][]byte, error) {
+	err := PerformCreateNotification(m.notifications, ctx, contractAddr, createNotification)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform create notification")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) deleteNotification(ctx sdk.Context, contractAddr sdk.AccAddress, deleteNotification *notificationstypes.MsgDeleteNotification) ([]sdk.Event, [][]byte, error) {
+	err := PerformDeleteNotification(m.notifications, ctx, contractAddr, deleteNotification)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform delete notification")
+	}
+	return nil, nil, nil
+}
+
+func (m *CustomMessenger) blockSenders(ctx sdk.Context, contractAddr sdk.AccAddress, blockSenders *notificationstypes.MsgBlockSenders) ([]sdk.Event, [][]byte, error) {
+	err := PerformBlockSenders(m.notifications, ctx, contractAddr, blockSenders)
+	if err != nil {
+		return nil, nil, sdkerrors.Wrap(err, "perform block senders")
 	}
 	return nil, nil, nil
 }
