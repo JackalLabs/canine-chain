@@ -200,8 +200,8 @@ func (k Keeper) GetAllActiveProviders(ctx sdk.Context) (list []types.ActiveProvi
 		var val types.Providers
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 
-		l, _ := k.GetAllProofsForProver(ctx, val.Address)
-		if len(l) >= 1 {
+		_, err := k.GetOneProofForProver(ctx, val.Address)
+		if err == nil {
 			list = append(list, types.ActiveProviders{Address: val.Address})
 		}
 	}
