@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
@@ -114,4 +116,23 @@ func (k Keeper) GetAllProofsForProver(ctx sdk.Context, prover string) ([]types.F
 	}
 
 	return proofs, nil
+}
+
+// GetOneProofForProver returns one Proof for the given prover
+func (k Keeper) GetOneProofForProver(ctx sdk.Context, prover string) (types.FileProof, error) {
+	store := ctx.KVStore(k.storeKey)
+	proofStore := prefix.NewStore(store, types.ProofPrefix(prover))
+	iterator := sdk.KVStorePrefixIterator(proofStore, nil)
+
+	defer iterator.Close()
+
+	var proof types.FileProof
+	if iterator.Valid() {
+		if err := k.cdc.Unmarshal(iterator.Value(), &proof); err != nil {
+			return proof, err
+		}
+		return proof, nil
+	}
+
+	return proof, fmt.Errorf("no proofs found for prover")
 }
