@@ -125,13 +125,13 @@ func (k Keeper) GetOneProofForProver(ctx sdk.Context, prover string) (types.File
 
 	defer iterator.Close()
 
-	for ; iterator.Valid(); iterator.Next() {
-		var proof types.FileProof
+	var proof types.FileProof
+	if iterator.Valid() {
 		if err := k.cdc.Unmarshal(iterator.Value(), &proof); err != nil {
 			return proof, err
 		}
 		return proof, nil
 	}
 
-	return types.FileProof{}, fmt.Errorf("no proofs found for prover")
+	return proof, fmt.Errorf("no proofs found for prover")
 }
