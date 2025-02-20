@@ -8,16 +8,12 @@ import (
 	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 )
 
-// WARNING: we're using wasmd from confio and not our fork atm
-// wasmd sends custom CosmWasm messages WITHOUT ensuring that the broadcaster is in fact the 'sender' arg of the msg.
-
 func RegisterCustomPlugins(
-	// We can add in more keepers kere if needed
 	filetree *filetreekeeper.Keeper,
 	storage *storagekeeper.Keeper,
 	notifications *notificationskeeper.Keeper,
 ) []wasmkeeper.Option {
-	// TODO: add notification
+
 	messengerDecoratorOpt := wasmkeeper.WithMessageHandlerDecorator(
 		CustomMessageDecorator(filetree, storage, notifications),
 	)

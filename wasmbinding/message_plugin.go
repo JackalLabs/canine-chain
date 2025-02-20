@@ -41,17 +41,10 @@ type CustomMessenger struct {
 var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 
 // DispatchMsg executes on the contractMsg.
-// NOTE: did we ever use the 'contractIBCPortID' before?
-// If we can give each bindings contract--owned by a user--an IBC port ID, perhaps we can use that for authenticating the sender?
 
-// NOTE: I think the CosmWasm bindings contract can call this multiple times in a single contract.execute()
-// This would be great because we wouldn't need to change the chain code too much
 func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
-	// If the factory contract calls one of its 'child' bindings contracts, the 'sender' field will automatically be filled in with the factory contract's address
 
 	if msg.Custom != nil {
-		// only handle the happy path where this is really posting files
-		// leave everything else for the wrapped version
 
 		var contractMsg bindings.JackalMsg
 
@@ -241,6 +234,7 @@ func (m *CustomMessenger) changeOwner(ctx sdk.Context, contractAddr sdk.AccAddre
 	return nil, nil, nil
 }
 
+// Notifications starts here
 func (m *CustomMessenger) createNotification(ctx sdk.Context, contractAddr sdk.AccAddress, createNotification *notificationstypes.MsgCreateNotification) ([]sdk.Event, [][]byte, error) {
 	err := PerformCreateNotification(m.notifications, ctx, contractAddr, createNotification)
 	if err != nil {
