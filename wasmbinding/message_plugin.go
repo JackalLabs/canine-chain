@@ -43,7 +43,6 @@ var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 // DispatchMsg executes on the contractMsg.
 
 func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
-
 	if msg.Custom != nil {
 
 		var contractMsg bindings.JackalMsg
