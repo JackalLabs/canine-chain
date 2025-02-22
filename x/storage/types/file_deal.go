@@ -76,9 +76,7 @@ func (f *UnifiedFile) RemoveProverWithKey(ctx sdk.Context, k ProofLoader, proofK
 	}
 
 	for i, proof := range f.Proofs {
-		ctx.Logger().Info(fmt.Sprintf("should we remove proof: %s == %s ?", proof, proofKey))
 		if proof == proofKey {
-			ctx.Logger().Info(fmt.Sprintf("removing proofs: %s == %s ?", proof, proofKey))
 
 			front := f.Proofs[:i]
 			back := f.Proofs[i+1:]

@@ -39,7 +39,6 @@ func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file
 
 	if !file.IsYoung(currentHeight) { // if the file is old, and we can't find the proof, remove the prover
 		if !found {
-			ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
 			file.RemoveProverWithKey(ctx, k, proofKey)
 			return
 		}
@@ -48,7 +47,6 @@ func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file
 	proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
 
 	if !proven && !file.IsYoung(currentHeight) { // if file wasn't proven, and is old, we burn it.
-		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
 		file.RemoveProverWithKey(ctx, k, proofKey)
 		k.burnContract(ctx, providerAddress)
 		return
