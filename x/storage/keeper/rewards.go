@@ -164,12 +164,15 @@ func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker
 	}
 }
 
-func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) {
+func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) bool {
 	if len(file.Proofs) == 0 { // remove file if it
 		if !file.IsYoung(ctx.BlockHeight()) { // give first window grace
 			k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
+			return true
 		}
 	}
+
+	return false
 }
 
 // ManageRewards loops through every file on the network and manages it in some way.
@@ -185,10 +188,12 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		s := file.FileSize * int64(len(file.Proofs))
 		totalSize += s
 
-		k.removeFileIfDeserved(ctx, &file) // delete file if it meets the conditions to be deleted
+		removed := k.removeFileIfDeserved(ctx, &file) // delete file if it meets the conditions to be deleted
 
-		for _, proof := range file.Proofs { // manage all proofs in proof list
-			k.manageProof(ctx, sizeTracker, &file, proof)
+		if !removed { // skipping proofs if the file is straight up gone
+			for _, proof := range file.Proofs { // manage all proofs in proof list
+				k.manageProof(ctx, sizeTracker, &file, proof)
+			}
 		}
 
 		return false
