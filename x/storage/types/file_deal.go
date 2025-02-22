@@ -76,14 +76,11 @@ func (f *UnifiedFile) RemoveProverWithKey(ctx sdk.Context, k ProofLoader, proofK
 	}
 
 	for i, proof := range f.Proofs {
-		ctx.Logger().Info(fmt.Sprintf("should we remove proof: %s == %s ?", proof, proofKey))
 		if proof == proofKey {
-			ctx.Logger().Info(fmt.Sprintf("removing proofs: %s == %s ?", proof, proofKey))
-
 			front := f.Proofs[:i]
 			back := f.Proofs[i+1:]
 
-			// nolint:all
+			//nolint:all
 			f.Proofs = append(front, back...)
 
 			k.RemoveProofWithBuiltKey(ctx, []byte(proofKey))
