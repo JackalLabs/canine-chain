@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package canine_chain.storage;
+
+option go_package = "github.com/jackalLabs/canine-chain/x/storage/types";
+
+message ProviderScore {
+  // toal size of files successfully proven
+  int64 total_size = 1;
+}

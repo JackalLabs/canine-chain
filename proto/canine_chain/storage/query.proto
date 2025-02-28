@@ -200,6 +200,12 @@ service Query {
     option (google.api.http).get =
         "/jackal/canine-chain/storage/gauges";
   }
+
+    // Queries total size of files proven by provider for current reward period
+    rpc ProviderScore(QueryProviderScore) returns (QueryProviderScoreResponse) {
+        option (google.api.http).get =
+            "/jackal/canine-chain/storage/provider_score/{provider}";
+    }
 }
 
 message QueryParams {}
@@ -465,4 +471,12 @@ message QueryAvailableSpace {}
 
 message QueryAvailableSpaceResponse {
   uint64 size = 1;
+}
+
+message QueryProviderScore {
+    string address = 1;
+}
+
+message QueryProviderScoreResponse {
+    int64 total_size = 1;
 }
