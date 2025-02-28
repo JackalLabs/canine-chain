@@ -17,20 +17,9 @@ func (k Keeper) setFilePrimary(ctx sdk.Context, file types.UnifiedFile) {
 	), b)
 }
 
-func (k Keeper) setFileSecondary(ctx sdk.Context, file types.UnifiedFile) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FileSecondaryKeyPrefix))
-	b := k.cdc.MustMarshal(&file)
-	store.Set(types.FilesSecondaryKey(
-		file.Merkle,
-		file.Owner,
-		file.Start,
-	), b)
-}
-
 // SetFile set a specific File in the store from its index
 func (k Keeper) SetFile(ctx sdk.Context, file types.UnifiedFile) {
 	k.setFilePrimary(ctx, file)
-	k.setFileSecondary(ctx, file)
 }
 
 // GetFile returns a File from its index
@@ -67,20 +56,6 @@ func (k Keeper) removeFilePrimary(
 	))
 }
 
-func (k Keeper) removeFileSecondary(
-	ctx sdk.Context,
-	merkle []byte,
-	owner string,
-	start int64,
-) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FileSecondaryKeyPrefix))
-	store.Delete(types.FilesSecondaryKey(
-		merkle,
-		owner,
-		start,
-	))
-}
-
 // RemoveFile removes a File from the store
 func (k Keeper) RemoveFile(
 	ctx sdk.Context,
@@ -98,7 +73,6 @@ func (k Keeper) RemoveFile(
 	}
 
 	k.removeFilePrimary(ctx, merkle, owner, start)
-	k.removeFileSecondary(ctx, merkle, owner, start)
 }
 
 // GetAllFileByMerkle returns all File
@@ -168,38 +142,6 @@ func (k Keeper) IterateAndParseFilesByMerkle(ctx sdk.Context, reverse bool, fn f
 // GetAllFilesWithMerkle returns all Files that start with a specific merkle
 func (k Keeper) GetAllFilesWithMerkle(ctx sdk.Context, merkle []byte) (list []types.UnifiedFile) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(merkle))
-	iterator := sdk.KVStorePrefixIterator(store, nil)
-
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.UnifiedFile
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
-	}
-
-	return
-}
-
-// GetAllFileByOwner returns all File
-func (k Keeper) GetAllFileByOwner(ctx sdk.Context) (list []types.UnifiedFile) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FileSecondaryKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.UnifiedFile
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
-	}
-
-	return
-}
-
-// GetAllFilesWithOwner returns all Files from a specific owner
-func (k Keeper) GetAllFilesWithOwner(ctx sdk.Context, owner string) (list []types.UnifiedFile) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesOwnerPrefix(owner))
 	iterator := sdk.KVStorePrefixIterator(store, nil)
 
 	defer iterator.Close()

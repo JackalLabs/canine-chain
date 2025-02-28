@@ -6,21 +6,6 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k Keeper) FixStoragePaymentInfo(ctx sdk.Context, info types.StoragePaymentInfo) types.StoragePaymentInfo {
-	address := info.Address
-
-	filesByOwner := k.GetAllFilesWithOwner(ctx, address)
-
-	var size int64
-	for _, file := range filesByOwner {
-		size += file.FileSize
-	}
-
-	info.SpaceUsed = size
-
-	return info
-}
-
 // SetStoragePaymentInfo set a specific payBlocks in the store from its x
 func (k Keeper) SetStoragePaymentInfo(ctx sdk.Context, payInfo types.StoragePaymentInfo) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
@@ -45,8 +30,8 @@ func (k Keeper) GetStoragePaymentInfo(
 	}
 
 	k.cdc.MustUnmarshal(b, &val)
-
-	return k.FixStoragePaymentInfo(ctx, val), true
+	// k.FixStoragePaymentInfo(ctx, val)
+	return val, true
 }
 
 // RemoveStoragePaymentInfo removes a StoragePaymentInfo  from the store
@@ -70,7 +55,8 @@ func (k Keeper) GetAllStoragePaymentInfo(ctx sdk.Context) (list []types.StorageP
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.StoragePaymentInfo
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, k.FixStoragePaymentInfo(ctx, val))
+		// val = k.FixStoragePaymentInfo(ctx, val)
+		list = append(list, val)
 	}
 
 	return

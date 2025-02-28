@@ -43,6 +43,34 @@ func (u *Upgrade) Name() string {
 	return "v450"
 }
 
+func (u *Upgrade) fixPayment(ctx sdk.Context) { // fixing payment mismatch from burned files
+	usedCounter := make(map[string]int64)
+
+	u.sk.IterateAndParseFilesByMerkle(ctx, false, func(_ []byte, val types.UnifiedFile) bool {
+		owner := val.Owner
+		size := val.FileSize
+
+		if val.Expires > 0 {
+			return false
+		}
+
+		usedCounter[owner] += size
+
+		return false
+	})
+
+	for owner, size := range usedCounter {
+		payInfo, found := u.sk.GetStoragePaymentInfo(ctx, owner)
+		if !found {
+			continue
+		}
+
+		payInfo.SpaceUsed = size
+
+		u.sk.SetStoragePaymentInfo(ctx, payInfo)
+	}
+}
+
 // Handler implements upgrades.Upgrade
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
@@ -64,6 +92,8 @@ func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 		if err != nil {
 			return nil, err
 		}
+
+		u.fixPayment(ctx)
 
 		return fromVM, nil
 	}

@@ -8,9 +8,8 @@ import (
 var _ binary.ByteOrder
 
 const (
-	FileSecondaryKeyPrefix = "FilesByOwner/value/"
-	FilePrimaryKeyPrefix   = "FilesByMerkle/value/"
-	ProofKeyPrefix         = "FileProof/value/"
+	FilePrimaryKeyPrefix = "FilesByMerkle/value/"
+	ProofKeyPrefix       = "FileProof/value/"
 
 	LegacyActiveDealsKeyPrefix = "ActiveDeals/value/" // OLD! DO NOT USE!
 
@@ -30,22 +29,6 @@ func FilesMerklePrefix(
 	merkle []byte,
 ) []byte {
 	return []byte(fmt.Sprintf("%s%x", FilePrimaryKeyPrefix, merkle))
-}
-
-// FilesOwnerPrefix returns the prefix for a owner
-func FilesOwnerPrefix(
-	owner string,
-) []byte {
-	return []byte(fmt.Sprintf("%s%s", FileSecondaryKeyPrefix, owner))
-}
-
-// FilesSecondaryKey returns the store key to retrieve a File from the index fields ordered by owner
-func FilesSecondaryKey(
-	merkle []byte,
-	owner string,
-	start int64,
-) []byte {
-	return []byte(fmt.Sprintf("%s/%x/%d/", owner, merkle, start))
 }
 
 // ProofKey returns the store key to retrieve a proof from the index fields ordered by owner
