@@ -28,7 +28,7 @@ func (k Keeper) AllStoragePaymentInfo(c context.Context, req *types.QueryAllStor
 			return err
 		}
 
-		storagePaymentInfo = k.FixStoragePaymentInfo(ctx, storagePaymentInfo)
+		// storagePaymentInfo = k.FixStoragePaymentInfo(ctx, storagePaymentInfo)
 
 		storagePaymentInfos = append(storagePaymentInfos, storagePaymentInfo)
 		return nil
