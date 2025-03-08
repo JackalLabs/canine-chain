@@ -2,10 +2,12 @@ package keeper
 
 import (
 	"fmt"
+	"iter"
 	"slices"
 	"strconv"
 	"strings"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -177,27 +179,31 @@ func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) {
 
 // ManageRewards loops through every file on the network and manages it in some way.
 func (k Keeper) ManageRewards(ctx sdk.Context) {
-	var totalSize int64
-	s := make(map[string]int64)
-	sizeTracker := &s
+	totalSize, sizeTracker := k.GetAllProviderScores(ctx)
+	k.rewardAllProviders(ctx, totalSize, &sizeTracker)
+}
 
-	k.IterateFilesByMerkle(ctx, false, func(_ []byte, val []byte) bool {
-		var file types.UnifiedFile
-		k.cdc.MustUnmarshal(val, &file)
+func (k Keeper) GetAllProviderScores(ctx sdk.Context) (totalSize int64, scoreBoard map[string]int64) {
 
-		s := file.FileSize * int64(len(file.Proofs))
-		totalSize += s
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ScoreKeyPrefix))
 
-		k.removeFileIfDeserved(ctx, &file) // delete file if it meets the conditions to be deleted
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	defer iterator.Close()
 
-		for _, proof := range file.Proofs { // manage all proofs in proof list
-			k.manageProof(ctx, sizeTracker, &file, proof)
+	for ; iterator.Valid(); iterator.Next() {
+		provider := types.AddressFromScoreKey(iterator.Key())
+		if provider == "" {
+			continue
 		}
 
-		return false
-	})
+		var score types.ProviderScore
+		k.cdc.MustUnmarshal(iterator.Value(), &score)
 
-	k.rewardAllProviders(ctx, totalSize, sizeTracker)
+		scoreBoard[provider] = score.TotalSize
+		totalSize += score.TotalSize
+	}
+
+	return totalSize, scoreBoard
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
@@ -209,4 +215,38 @@ func (k Keeper) RunRewardBlock(ctx sdk.Context) {
 	}
 
 	k.ManageRewards(ctx)
+}
+
+func (k Keeper) GetProviderScore(ctx sdk.Context, provider string) (val types.ProviderScore, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ScoreKeyPrefix))
+
+	b := store.Get(types.ScoreKey(provider))
+
+	if b == nil {
+		return val, false
+	}
+
+	k.cdc.MustUnmarshal(b, &val)
+
+	return val, true
+}
+
+func (k Keeper) SetProviderScore(ctx sdk.Context, provider string, score types.ProviderScore) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ScoreKeyPrefix))
+
+	b := k.cdc.MustMarshal(&score)
+	store.Set(types.ScoreKey(provider), b)
+}
+
+func (k Keeper) AddProviderScore(ctx sdk.Context, provider string, amount int64) error {
+	val, found := k.GetProviderScore(ctx, provider)
+	if !found {
+		k.SetProviderScore(ctx, provider, types.ProviderScore{TotalSize: amount})
+		return nil
+	}
+
+	val.TotalSize += amount
+
+	k.SetProviderScore(ctx, provider, val)
+	return nil
 }

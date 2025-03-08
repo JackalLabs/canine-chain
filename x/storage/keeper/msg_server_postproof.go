@@ -63,6 +63,7 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 	}
 
 	k.SetProof(ctx, *proof)
+	k.AddProviderScore(ctx, proof.Prover, file.FileSize)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
