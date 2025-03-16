@@ -150,7 +150,7 @@ func validateStipend(v interface{}) error {
 	return nil
 }
 
-// validateInt validates the param is an int64
+// validateInt64 validates the param is an int64
 func validateInt64(v interface{}) error {
 	i, ok := v.(int64)
 	if !ok {
