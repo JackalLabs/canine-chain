@@ -52,7 +52,7 @@ ifneq ($(GOMOD_GO_VERSION),)
       $(info The wanted Golang version is already active.)
     endif
   else
-    $(info Found $(GOMOD_GO_VERSION) in PATH.)
+    $(info Found $(GOMOD_GO_VERSION) at: $(shell which $(GOMOD_GO_VERSION)))
   endif
   GO_CMD := $(GOMOD_GO_VERSION)
 else
@@ -125,7 +125,6 @@ endif
 lower_WITH_PEBBLEDB := $(shell echo $(WITH_PEBBLEDB) | tr A-Z a-z)
 ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
   build_tags += pebbledb
-  VERSION := $(VERSION)-pebbledb
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=pebbledb -X github.com/tendermint/tm-db.ForceSync=1
   $(info Applying PebbleDB support. PebbleDB uses its own go.mod (go-4pebbledb.mod) file with two extra replacement lines:)
   $(info    // PebbleDB replacements for isolated Pebble builds)
