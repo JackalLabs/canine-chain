@@ -76,26 +76,39 @@ else
 endif
 
 ########################################
-###    Build Tags Configuration      ###
+###   Build Tags Configuration       ###
 ########################################
-build_tags = netgo
-
-# If building with PebbleDB and TENDERMINT_BUILD_OPTIONS or BUILD_TAGS are not set,
-# default them to "pebbledb" (required for the Tendermint packages).
+# Set default values for build parameters if building with PebbleDB.
+# TENDERMINT_BUILD_OPTIONS is used by Tendermint packages (do not include it in BUILD_TAGS).
 ifeq ($(strip $(TENDERMINT_BUILD_OPTIONS)),)
   ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
     TENDERMINT_BUILD_OPTIONS := pebbledb
   endif
 endif
+
+# If BUILD_TAGS is not provided and WITH_PEBBLEDB is enabled, default BUILD_TAGS to "pebbledb".
 ifeq ($(strip $(BUILD_TAGS)),)
   ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
     BUILD_TAGS := pebbledb
   endif
 endif
 
-# Append any extra build tags passed via TENDERMINT_BUILD_OPTIONS and BUILD_TAGS.
-build_tags += $(strip $(TENDERMINT_BUILD_OPTIONS)) $(strip $(BUILD_TAGS))
+# Start with base build tags.
+build_tags = netgo
 
+# Append any additional BUILD_TAGS (TENDERMINT_BUILD_OPTIONS remains separate).
+build_tags += $(strip $(BUILD_TAGS))
+
+# Convert the build_tags into a comma-separated list.
+build_tags := $(strip $(build_tags))
+whitespace :=
+empty = $(whitespace) $(whitespace)
+comma := ,
+build_tags_comma_sep := $(subst $(empty),$(comma),$(build_tags))
+
+########################################
+###       Ledger Support Logic       ###
+########################################
 # Convert LEDGER_ENABLED to lowercase so that any case of "true" or "yes" works.
 lower_LEDGER_ENABLED := $(shell echo $(LEDGER_ENABLED) | tr A-Z a-z)
 ifneq ($(filter $(lower_LEDGER_ENABLED),true yes),)
@@ -121,10 +134,16 @@ ifneq ($(filter $(lower_LEDGER_ENABLED),true yes),)
   endif
 endif
 
+########################################
+###      CLEVELDB Opt-In Logic       ###
+########################################
 # Check WITH_CLEVELDB flag (case-insensitive; "true" is preferred).
 lower_WITH_CLEVELDB := $(shell echo $(WITH_CLEVELDB) | tr A-Z a-z)
 ifneq ($(filter $(lower_WITH_CLEVELDB),true yes),)
+  # Append the gcc build tag for CLEVELDB support.
   build_tags += gcc
+  # Add linker flag for CLEVELDB support.
+  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
 endif
 
 ########################################
@@ -138,21 +157,13 @@ endif
 #       github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854
 #       github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7
 ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
-  build_tags += pebbledb
+  # Add the necessary ldflags for PebbleDB support.
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=pebbledb -X github.com/tendermint/tm-db.ForceSync=1
   $(info Applying PebbleDB support. PebbleDB uses its own go.mod (go-4pebbledb.mod) file with two extra replacement lines:)
   $(info    // PebbleDB replacements for isolated Pebble builds)
   $(info    github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854)
   $(info    github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7)
 endif
-
-# Append any additional BUILD_TAGS passed externally.
-build_tags += $(strip $(BUILD_TAGS))
-build_tags := $(strip $(build_tags))
-whitespace :=
-empty = $(whitespace) $(whitespace)
-comma := ,
-build_tags_comma_sep := $(subst $(empty),$(comma),$(build_tags))
 
 ########################################
 ###   Linker Flags Configuration     ###
@@ -163,9 +174,6 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=canine \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X github.com/jackalLabs/canine-chain/app.Bech32Prefix=jkl \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
-ifneq ($(filter $(lower_WITH_CLEVELDB),true yes),)
-  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
-endif
 ifeq ($(LINK_STATICALLY),true)
 	ldflags += -linkmode=external -extldflags "-Wl,-z,muldefs -static"
 endif
