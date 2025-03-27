@@ -80,6 +80,22 @@ endif
 ########################################
 build_tags = netgo
 
+# If building with PebbleDB and TENDERMINT_BUILD_OPTIONS or BUILD_TAGS are not set,
+# default them to "pebbledb" (required for the Tendermint packages).
+ifeq ($(strip $(TENDERMINT_BUILD_OPTIONS)),)
+  ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
+    TENDERMINT_BUILD_OPTIONS := pebbledb
+  endif
+endif
+ifeq ($(strip $(BUILD_TAGS)),)
+  ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
+    BUILD_TAGS := pebbledb
+  endif
+endif
+
+# Append any extra build tags passed via TENDERMINT_BUILD_OPTIONS and BUILD_TAGS.
+build_tags += $(strip $(TENDERMINT_BUILD_OPTIONS)) $(strip $(BUILD_TAGS))
+
 # Convert LEDGER_ENABLED to lowercase so that any case of "true" or "yes" works.
 lower_LEDGER_ENABLED := $(shell echo $(LEDGER_ENABLED) | tr A-Z a-z)
 ifneq ($(filter $(lower_LEDGER_ENABLED),true yes),)
@@ -116,13 +132,11 @@ endif
 ########################################
 # If WITH_PEBBLEDB is set to "true" or "yes" (case-insensitive) then we:
 #  - Enable the 'pebbledb' build tag.
-#  - Append a "-pebbledb" suffix to VERSION.
 #  - Add the necessary ldflags for Pebble.
 #  - Note: PebbleDB uses its own go.mod (go-4pebbledb.mod) file with two extra replacement lines:
 #       // PebbleDB replacements for isolated Pebble builds
 #       github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854
 #       github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7
-lower_WITH_PEBBLEDB := $(shell echo $(WITH_PEBBLEDB) | tr A-Z a-z)
 ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
   build_tags += pebbledb
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=pebbledb -X github.com/tendermint/tm-db.ForceSync=1
@@ -132,7 +146,8 @@ ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
   $(info    github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7)
 endif
 
-build_tags += $(BUILD_TAGS)
+# Append any additional BUILD_TAGS passed externally.
+build_tags += $(strip $(BUILD_TAGS))
 build_tags := $(strip $(build_tags))
 whitespace :=
 empty = $(whitespace) $(whitespace)
@@ -148,7 +163,6 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=canine \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X github.com/jackalLabs/canine-chain/app.Bech32Prefix=jkl \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
-
 ifneq ($(filter $(lower_WITH_CLEVELDB),true yes),)
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
 endif
@@ -272,24 +286,20 @@ proto-all: proto-format proto-lint proto-gen
 
 proto-gen:
 	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGen)$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen.sh; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGen)$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) sh ./scripts/protocgen.sh; fi
 
 # This generates the SDK's custom wrapper for google.protobuf.Any.
 proto-gen-any:
 	@echo "Generating Protobuf Any"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGenAny)$$"; then docker start -a $(containerProtoGenAny); else docker run --name $(containerProtoGenAny) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen-any.sh; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGenAny)$$"; then docker start -a $(containerProtoGenAny); else docker run --name $(containerProtoGenAny) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) sh ./scripts/protocgen-any.sh; fi
 
 proto-swagger-gen:
 	@echo "Generating Protobuf Swagger"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGenSwagger)$$"; then docker start -a $(containerProtoGenSwagger); else docker run --name $(containerProtoGenSwagger) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protoc-swagger-gen.sh; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGenSwagger)$$"; then docker start -a $(containerProtoGenSwagger); else docker run --name $(containerProtoGenSwagger) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) sh ./scripts/protoc-swagger-gen.sh; fi
 
 proto-format:
 	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoFmt)$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoFmt)$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
 
 proto-lint:
 	@$(DOCKER_BUF) lint --error-format=json
