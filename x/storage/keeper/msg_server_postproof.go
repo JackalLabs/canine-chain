@@ -86,9 +86,9 @@ func (k msgServer) PostProofFor(goCtx context.Context, msg *types.MsgPostProofFo
 
 	f, found := k.GetFile(ctx, msg.Merkle, msg.Owner, msg.Start)
 	if !found {
-		s := fmt.Sprintf("contract not found: %x/%s/%d", msg.Merkle, msg.Owner, msg.Start)
-		ctx.Logger().Debug(s)
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: s}, nil
+		err := sdkerrors.Wrapf(types.ErrDealNotFound, "contract not found: %x/%s/%d", msg.Merkle, msg.Owner, msg.Start)
+		ctx.Logger().Debug(err.Error())
+		return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
 
 	file := &f
@@ -131,9 +131,9 @@ func (k msgServer) PostProofFor(goCtx context.Context, msg *types.MsgPostProofFo
 	}
 
 	if msg.ToProve != proof.ChunkToProve {
-		e := fmt.Errorf("wrong chunk to prove for %x. Was %d should be %d", file.Merkle, msg.ToProve, proof.ChunkToProve)
-		ctx.Logger().Info(e.Error())
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
+		err := sdkerrors.Wrapf(types.ErrBadProofInput, "wrong chunk to prove for %x. Was %d should be %d", file.Merkle, msg.ToProve, proof.ChunkToProve)
+		ctx.Logger().Info(err.Error())
+		return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
 
 	chunkSize := k.GetParams(ctx).ChunkSize
