@@ -8,11 +8,15 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgPostProof = "post_proof"
-const TypeMsgPostProofFor = "post_proof_for"
+const (
+	TypeMsgPostProof    = "post_proof"
+	TypeMsgPostProofFor = "post_proof_for"
+)
 
-var _ sdk.Msg = &MsgPostProof{}
-var _ sdk.Msg = &MsgPostProofFor{}
+var (
+	_ sdk.Msg = &MsgPostProof{}
+	_ sdk.Msg = &MsgPostProofFor{}
+)
 
 func NewMsgPostProof(creator string, merkle []byte, owner string, start int64, item []byte, hashList []byte, toProve int64) *MsgPostProof {
 	return &MsgPostProof{
