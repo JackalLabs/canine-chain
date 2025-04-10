@@ -19,7 +19,7 @@
 * Install build essentials (GNU Make)
 
 ### Installing
-> if you want to use pebble follow this: https://github.com/JackalLabs/canine-chain/pull/512
+> if you want to use pebble follow this: https://github.com/JackalLabs/canine-chain/pull/511
 
 To install `canined` on your Linux machine:
 
