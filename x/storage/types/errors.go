@@ -18,4 +18,5 @@ var (
 	ErrCannotVerifyProof   = sdkerrors.Register(ModuleName, 1118, "cannot verify Proof")
 	ErrNoCid               = sdkerrors.Register(ModuleName, 1119, "cid does not exist")
 	ErrProviderExists      = sdkerrors.Register(ModuleName, 1120, "provider already exists")
+	ErrBadProofInput       = sdkerrors.Register(ModuleName, 1121, "bad proof input")
 )
