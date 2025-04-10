@@ -1,14 +1,28 @@
 #!/usr/bin/make -f
 
+########################################
+###         Package & Version        ###
+########################################
 PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
 VERSION := $(shell echo $(shell git describe --tags) | sed 's/^v//')
 COMMIT := $(shell git log -1 --format='%H')
+# LEDGER_ENABLED, WITH_CLEVELDB and WITH_PEBBLEDB are provided externally.
 LEDGER_ENABLED ?= true
-SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
+# To use CLEVELDB instead of the default, set WITH_CLEVELDB to true (or yes).
+# Example: WITH_CLEVELDB=true make build
+WITH_CLEVELDB ?= false
+# To use PebbleDB instead of the default, set WITH_PEBBLEDB to true (or yes).
+# When using PebbleDB, the alternate module files (go-4pebbledb.mod and go-4pebbledb.sum)
+# will be used.
+# Example: WITH_PEBBLEDB=true make build
+WITH_PEBBLEDB ?= false
+SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed 's/ /\@/g')
 BINDIR ?= $(GOPATH)/bin
 SIMAPP = ./app
 
-# for dockerized protobuf tools
+########################################
+###      Dockerized Protobuf Tools   ###
+########################################
 DOCKER := $(shell which docker)
 BUF_IMAGE=bufbuild/buf #@sha256:3cb1f8a4b48bd5ad8f09168f10f607ddc318af202f5c057d52a45216793d85e5 #v1.4.0
 DOCKER_BUF := $(DOCKER) run --platform="linux/amd64" --rm -v $(CURDIR):/workspace --workdir /workspace $(BUF_IMAGE)
@@ -16,10 +30,66 @@ HTTPS_GIT := https://github.com/jackalLabs/canine-chain.git
 
 export GO111MODULE = on
 
-# process build tags
+########################################
+###        Go Version Handling       ###
+########################################
+# This section extracts the desired Go version from the "toolchain" line in go.mod
+# (e.g. a line "toolchain go1.23.1"). It displays both the current Go version and
+# the expected version. If the desired version is not available in the PATH, it
+# installs it via golang.org/dl.
+CURRENT_GO_VERSION := $(shell go version)
+$(info Current Golang Version: $(CURRENT_GO_VERSION))
 
+GOMOD_GO_VERSION := $(shell grep '^toolchain' go.mod | awk '{print $$2}')
+ifneq ($(GOMOD_GO_VERSION),)
+  $(info Wanted Golang Version as specified in go.mod: $(GOMOD_GO_VERSION))
+  ifeq ("$(shell which $(GOMOD_GO_VERSION) 2>/dev/null)","")
+    ifeq ("$(shell go version | grep $(GOMOD_GO_VERSION))","")
+      $(info The wanted Golang version was not found. Installing $(GOMOD_GO_VERSION) via golang.org/dl...)
+      $(shell go install golang.org/dl/$(GOMOD_GO_VERSION)@latest)
+      $(shell $(GOMOD_GO_VERSION) download)
+    else
+      $(info The wanted Golang version is already active.)
+    endif
+  else
+    $(info Found $(GOMOD_GO_VERSION) at: $(shell which $(GOMOD_GO_VERSION)))
+  endif
+  GO_CMD := $(GOMOD_GO_VERSION)
+else
+  $(info No toolchain version specified in go.mod. Using default 'go' command.)
+  GO_CMD := go
+endif
+
+########################################
+###  Alternate Module File Handling  ###
+########################################
+# When building with PebbleDB enabled, we want to use alternate module files.
+# If WITH_PEBBLEDB is set to "true" or "yes" (case-insensitive), then use
+# go-4pebbledb.mod and go-4pebbledb.sum; otherwise, default to go.mod and go.sum.
+lower_WITH_PEBBLEDB := $(shell echo $(WITH_PEBBLEDB) | tr A-Z a-z)
+ifneq ($(filter $(lower_WITH_PEBBLEDB),true yes),)
+  MODFILE := go-4pebbledb.mod
+  SUMFILE := go-4pebbledb.sum
+else
+  MODFILE := go.mod
+  SUMFILE := go.sum
+endif
+
+########################################
+###   Build Tags Configuration       ###
+########################################
+# Start with the base build tag.
 build_tags = netgo
-ifeq ($(LEDGER_ENABLED),true)
+
+# Append any additional BUILD_TAGS (TENDERMINT_BUILD_OPTIONS remains separate).
+build_tags += $(strip $(BUILD_TAGS))
+
+########################################
+###       Ledger Support Logic       ###
+########################################
+# Convert LEDGER_ENABLED to lowercase so that any case of "true" or "yes" works.
+lower_LEDGER_ENABLED := $(shell echo $(LEDGER_ENABLED) | tr A-Z a-z)
+ifneq ($(filter $(lower_LEDGER_ENABLED),true yes),)
   ifeq ($(OS),Windows_NT)
     GCCEXE = $(shell where gcc.exe 2> NUL)
     ifeq ($(GCCEXE),)
@@ -28,11 +98,11 @@ ifeq ($(LEDGER_ENABLED),true)
       build_tags += ledger
     endif
   else
-    UNAME_S = $(shell uname -s)
+    UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),OpenBSD)
       $(warning OpenBSD detected, disabling ledger support (https://github.com/cosmos/cosmos-sdk/issues/1988))
     else
-      GCC = $(shell command -v gcc 2> /dev/null)
+      GCC := $(shell command -v gcc 2> /dev/null)
       ifeq ($(GCC),)
         $(error gcc not installed for ledger support, please install or set LEDGER_ENABLED=false)
       else
@@ -42,80 +112,104 @@ ifeq ($(LEDGER_ENABLED),true)
   endif
 endif
 
-ifeq ($(WITH_CLEVELDB),yes)
+########################################
+###      CLEVELDB Opt-In Logic       ###
+########################################
+# Check WITH_CLEVELDB flag (case-insensitive; "true" is preferred).
+lower_WITH_CLEVELDB := $(shell echo $(WITH_CLEVELDB) | tr A-Z a-z)
+ifneq ($(filter $(lower_WITH_CLEVELDB),true yes),)
+  # Append the gcc build tag for CLEVELDB support.
   build_tags += gcc
+  # Add linker flag for CLEVELDB support.
+  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
 endif
-build_tags += $(BUILD_TAGS)
-build_tags := $(strip $(build_tags))
 
+########################################
+###      PebbleDB Opt-In Logic       ###
+########################################
+# If WITH_PEBBLEDB is set to "true" or "yes" (case-insensitive) then we:
+#  - Enable the 'pebbledb' build tag.
+#  - Add the necessary ldflags for PebbleDB support.
+#  - Note: PebbleDB uses its own go.mod (go-4pebbledb.mod) file with two extra replacement lines:
+#       // PebbleDB replacements for isolated Pebble builds
+#       github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854
+#       github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7
+ifeq ($(filter $(lower_WITH_PEBBLEDB),true yes),true)
+  TENDERMINT_BUILD_OPTIONS += pebbledb
+  export TENDERMINT_BUILD_OPTIONS
+  build_tags += pebbledb
+  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=pebbledb -X github.com/tendermint/tm-db.ForceSync=1
+  $(info Applying PebbleDB support. PebbleDB uses its own go.mod (go-4pebbledb.mod) file with two extra replacement lines:)
+  $(info    // PebbleDB replacements for isolated Pebble builds)
+  $(info    github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854)
+  $(info    github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7)
+endif
+
+########################################
+### Convert Build Tags for Go Build  ###
+########################################
+# Convert build_tags into a comma-separated list.
+build_tags := $(strip $(build_tags))
 whitespace :=
 empty = $(whitespace) $(whitespace)
 comma := ,
 build_tags_comma_sep := $(subst $(empty),$(comma),$(build_tags))
 
-# process linker flags
-
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=canine \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=canined \
-		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
-		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		  -X github.com/jackalLabs/canine-chain/app.Bech32Prefix=jkl \
-		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
-
-ifeq ($(WITH_CLEVELDB),yes)
-  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
-endif
+########################################
+###   Linker Flags Configuration     ###
+########################################
+ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=canine \
+		   -X github.com/cosmos/cosmos-sdk/version.AppName=canined \
+		   -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
+		   -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
+		   -X github.com/jackalLabs/canine-chain/app.Bech32Prefix=jkl \
+		   -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
 ifeq ($(LINK_STATICALLY),true)
 	ldflags += -linkmode=external -extldflags "-Wl,-z,muldefs -static"
 endif
 ldflags += $(LDFLAGS)
 ldflags := $(strip $(ldflags))
-
 BUILD_FLAGS := -tags "$(build_tags_comma_sep)" -ldflags '$(ldflags)' -trimpath
 
-# The below include contains the tools and runsim targets.
-# include contrib/devtools/Makefile
-
+########################################
+###         Build Targets            ###
+########################################
 all: install lint test
-	
 
-
-build: go.sum
+# Use the appropriate module file (MODFILE/SUMFILE) for dependency checks and builds.
+build: $(SUMFILE)
 ifeq ($(OS),Windows_NT)
 	exit 1
 else
-	go build -mod=readonly $(BUILD_FLAGS) -o build/canined ./cmd/canined
+	$(GO_CMD) build -mod=readonly -modfile=$(MODFILE) $(BUILD_FLAGS) -o build/canined ./cmd/canined
 endif
 
-build_cli:
-	go build -o build/canined -mod=readonly -tags "$(GO_TAGS) build/canined" -ldflags '$(LD_FLAGS)' ./cmd/canined
-	
-
+build_cli: build
 
 build-contract-tests-hooks:
 ifeq ($(OS),Windows_NT)
-	go build -mod=readonly $(BUILD_FLAGS) -o build/contract_tests.exe ./cmd/contract_tests
+	$(GO_CMD) build -mod=readonly -modfile=$(MODFILE) $(BUILD_FLAGS) -o build/contract_tests.exe ./cmd/contract_tests
 else
-	go build -mod=readonly $(BUILD_FLAGS) -o build/contract_tests ./cmd/contract_tests
+	$(GO_CMD) build -mod=readonly -modfile=$(MODFILE) $(BUILD_FLAGS) -o build/contract_tests ./cmd/contract_tests
 endif
 
-install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/canined
+install: $(SUMFILE)
+	$(GO_CMD) install -mod=readonly -modfile=$(MODFILE) $(BUILD_FLAGS) ./cmd/canined
 
 ########################################
-### Tools & dependencies
-
-go-mod-cache: go.sum
+###       Tools & Dependencies       ###
+########################################
+go-mod-cache: $(SUMFILE)
 	@echo "--> Download go modules to local cache"
-	@go mod download
+	@$(GO_CMD) mod download -modfile=$(MODFILE)
 
-go.sum: go.mod
+$(SUMFILE): $(MODFILE)
 	@echo "--> Ensure dependencies have not been modified"
-	@go mod verify
+	@$(GO_CMD) mod verify -modfile=$(MODFILE)
 
 draw-deps:
-	@# requires brew install graphviz or apt-get install graphviz
-	go get github.com/RobotsAndPencils/goviz
+	@# Requires graphviz (brew install graphviz or apt-get install graphviz)
+	$(GO_CMD) get github.com/RobotsAndPencils/goviz
 	@goviz -i ./cmd/canined -d 2 | dot -Tpng -o dependency-graph.png
 
 clean:
@@ -125,27 +219,26 @@ distclean: clean
 	rm -rf vendor/
 
 ########################################
-### Testing
-
+###            Testing               ###
+########################################
 local: install
 	./scripts/test-node.sh $(address)
-
 
 test: test-unit
 test-all: test-race test-cover
 test-sim: test-sim-import-export test-sim-full-app
 
 test-unit:
-	@VERSION=$(VERSION) go test -short -mod=readonly -tags='ledger test_ledger_mock' ./...
+	@VERSION=$(VERSION) $(GO_CMD) test -short -mod=readonly -modfile=$(MODFILE) -tags='ledger test_ledger_mock' ./...
 
 test-race:
-	@VERSION=$(VERSION) go test -mod=readonly -race -tags='ledger test_ledger_mock' ./...
+	@VERSION=$(VERSION) $(GO_CMD) test -mod=readonly -modfile=$(MODFILE) -race -tags='ledger test_ledger_mock' ./...
 
 test-cover:
-	@go test -mod=readonly -timeout 30m -race -coverprofile=coverage.txt -covermode=atomic -tags='ledger test_ledger_mock' ./...
+	@$(GO_CMD) test -mod=readonly -modfile=$(MODFILE) -timeout 30m -race -coverprofile=coverage.txt -covermode=atomic -tags='ledger test_ledger_mock' ./...
 
 benchmark:
-	@go test -mod=readonly -bench=. ./...
+	@$(GO_CMD) test -mod=readonly -modfile=$(MODFILE) -bench=. ./...
 
 test-sim-import-export: runsim
 	@echo "Running application import/export simulation. This may take several minutes..."
@@ -156,16 +249,16 @@ test-sim-full-app: runsim
 	@runsim -Jobs=4 -SimAppPkg=$(SIMAPP) -ExitOnFail 50 10 TestFullAppSimulation
 
 test-sim-bench:
-	@VERSION=$(VERSION) go test -benchmem -run ^BenchmarkFullAppSimulation -bench ^BenchmarkFullAppSimulation -cpuprofile cpu.out github.com/jackalLabs/canine-chain/app
+	@VERSION=$(VERSION) $(GO_CMD) test -mod=readonly -modfile=$(MODFILE) -benchmem -run ^BenchmarkFullAppSimulation -bench ^BenchmarkFullAppSimulation -cpuprofile cpu.out github.com/jackalLabs/canine-chain/app
 
 runsim:
-	go install github.com/cosmos/tools/cmd/runsim@latest
-###############################################################################
-###                                Linting                                  ###
-###############################################################################
+	$(GO_CMD) install github.com/cosmos/tools/cmd/runsim@latest
 
+########################################
+###             Linting              ###
+########################################
 format-tools:
-	go install mvdan.cc/gofumpt@v0.6.0
+	$(GO_CMD) install mvdan.cc/gofumpt@v0.6.0
 	gofumpt -l -w .
 
 lint: format-tools
@@ -176,40 +269,35 @@ format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs misspell -w
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs goimports -w -local github.com/jackalLabs/canine-chain
 
-
-###############################################################################
-###                                Protobuf                                 ###
-###############################################################################
+########################################
+###         Protobuf Tools           ###
+########################################
 # thanks juno ;)
-protoVer=v0.7
-protoImageName=tendermintdev/sdk-proto-gen:$(protoVer)
-containerProtoGen=jackal-proto-gen-$(protoVer)
-containerProtoGenAny=jackal-proto-gen-any-$(protoVer)
-containerProtoGenSwagger=jackal-proto-gen-swagger-$(protoVer)
-containerProtoFmt=jackal-proto-fmt-$(protoVer)
+protoVer = v0.7
+protoImageName = tendermintdev/sdk-proto-gen:$(protoVer)
+containerProtoGen = jackal-proto-gen-$(protoVer)
+containerProtoGenAny = jackal-proto-gen-any-$(protoVer)
+containerProtoGenSwagger = jackal-proto-gen-swagger-$(protoVer)
+containerProtoFmt = jackal-proto-fmt-$(protoVer)
 
 proto-all: proto-format proto-lint proto-gen
 
 proto-gen:
 	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen.sh; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGen)$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) sh ./scripts/protocgen.sh; fi
 
-# This generates the SDK's custom wrapper for google.protobuf.Any. It should only be run manually when needed
+# This generates the SDK's custom wrapper for google.protobuf.Any.
 proto-gen-any:
 	@echo "Generating Protobuf Any"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGenAny}$$"; then docker start -a $(containerProtoGenAny); else docker run --name $(containerProtoGenAny) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen-any.sh; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGenAny)$$"; then docker start -a $(containerProtoGenAny); else docker run --name $(containerProtoGenAny) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) sh ./scripts/protocgen-any.sh; fi
 
 proto-swagger-gen:
 	@echo "Generating Protobuf Swagger"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGenSwagger}$$"; then docker start -a $(containerProtoGenSwagger); else docker run --name $(containerProtoGenSwagger) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protoc-swagger-gen.sh; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoGenSwagger)$$"; then docker start -a $(containerProtoGenSwagger); else docker run --name $(containerProtoGenSwagger) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) sh ./scripts/protoc-swagger-gen.sh; fi
 
 proto-format:
 	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^$(containerProtoFmt)$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
 
 proto-lint:
 	@$(DOCKER_BUF) lint --error-format=json
@@ -217,9 +305,9 @@ proto-lint:
 proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
 
-.PHONY: proto-all proto-gen proto-gen-any proto-swagger-gen proto-format proto-lint proto-check-breaking proto-update-deps docs
+# Note: The following targets are declared in .PHONY but have no corresponding rules:
+#       install-debug, test-build, proto-update-deps
+# They are placeholders for future enhancements.
 
-.PHONY: all install install-debug \
-	go-mod-cache draw-deps clean build format \
-	test test-all test-build test-cover test-unit test-race \
-	test-sim-import-export local \
+.PHONY: proto-all proto-gen proto-gen-any proto-swagger-gen proto-format proto-lint proto-check-breaking proto-update-deps docs
+.PHONY: all install install-debug go-mod-cache draw-deps clean build format test test-all test-build test-cover test-unit test-race test-sim-import-export local

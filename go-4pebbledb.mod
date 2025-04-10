@@ -51,7 +51,12 @@ require (
 	github.com/golang/mock v1.6.0
 )
 
-require github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
+require (
+	github.com/dgraph-io/badger/v3 v3.2103.2 // indirect
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/google/flatbuffers v1.12.1 // indirect
+	go.opencensus.io v0.23.0 // indirect
+)
 
 require (
 	cosmossdk.io/api v0.2.6 // indirect
@@ -163,6 +168,7 @@ require (
 replace (
 	// use cosmos keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
+	github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7
 
 	// dragonberry ics23 patch
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
@@ -180,6 +186,9 @@ replace (
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
 	github.com/tendermint/tendermint => github.com/cometbft/cometbft v0.34.27
+
+	// PebbleDB replacements for isolated Pebble builds
+	github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854
 
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
