@@ -5,13 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
-
 	"github.com/cosmos/cosmos-sdk/telemetry"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
@@ -20,7 +17,11 @@ const (
 	gb        int64 = 1_000_000_000
 )
 
-func validateBuy(days int64, bytesIn int64, denomIn string) (duration time.Duration, bytes int64, gbs int64, denom string, err error) {
+func validateBuy(
+	days int64,
+	bytesIn int64,
+	denomIn string,
+) (duration time.Duration, bytes int64, gbs int64, denom string, err error) {
 	duration = time.Duration(days) * time.Hour * 24
 	if duration < timeMonth {
 		err = fmt.Errorf("duration can't be less than 1 month")
@@ -43,7 +44,10 @@ func validateBuy(days int64, bytesIn int64, denomIn string) (duration time.Durat
 	return
 }
 
-func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (*types.MsgBuyStorageResponse, error) {
+func (k msgServer) BuyStorage(
+	goCtx context.Context,
+	msg *types.MsgBuyStorage,
+) (*types.MsgBuyStorageResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	params := k.GetParams(ctx)
 
@@ -51,7 +55,10 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 		msg.ForAddress = msg.Creator
 	}
 
-	forAddress, err := k.rnsKeeper.Resolve(ctx, msg.ForAddress) // converting for address into an actual bech32 using RNS
+	forAddress, err := k.rnsKeeper.Resolve(
+		ctx,
+		msg.ForAddress,
+	) // converting for address into an actual bech32 using RNS
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot parse RNS or address %s", msg.ForAddress)
 	}
@@ -99,7 +106,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	referred := false
 	refAcc, err := k.rnsKeeper.Resolve(ctx, msg.Referral)
 	if err == nil {
-		if !(refAcc.String() == msg.Creator) {
+		if refAcc.String() != msg.Creator {
 			referred = true
 		}
 	}
@@ -137,7 +144,12 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot parse creator address %s", msg.Creator)
 	}
-	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, add, types.ModuleName, sdk.NewCoins(toPay)) // taking money from user
+	err = k.bankKeeper.SendCoinsFromAccountToModule(
+		ctx,
+		add,
+		types.ModuleName,
+		sdk.NewCoins(toPay),
+	) // taking money from user
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "cannot send tokens from %s", msg.Creator)
 	}
@@ -145,8 +157,17 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	k.SetStoragePaymentInfo(ctx, spi)
 
 	refDec := sdk.NewDec(params.ReferralCommission).QuoInt64(100)
-	fmt.Printf("RATIOS!\nref: %d\npol: %d\ndiscount: %d\n", refDec.MulInt64(100).TruncateInt64(), pol.MulInt64(100).TruncateInt64(), discount.MulInt64(100).TruncateInt64())
-	spr := sdk.NewDec(1).Sub(refDec).Sub(pol).Sub(discount) // whatever is left from pol and referrals
+	fmt.Printf(
+		"RATIOS!\nref: %d\npol: %d\ndiscount: %d\n",
+		refDec.MulInt64(100).TruncateInt64(),
+		pol.MulInt64(100).TruncateInt64(),
+		discount.MulInt64(100).TruncateInt64(),
+	)
+	spr := sdk.NewDec(1).
+		Sub(refDec).
+		Sub(pol).
+		Sub(discount)
+		// whatever is left from pol and referrals
 
 	fmt.Printf("storageprovider ratio: %d\n", spr.MulInt64(100).TruncateInt().Int64())
 
@@ -230,7 +251,8 @@ func (k Keeper) UpgradeStorage(
 	denom string,
 ) (sdk.Coin, error) {
 	proratedDuration := payInfo.End.Sub(ctx.BlockTime())
-	proratedDurationInHour := sdk.NewDec(proratedDuration.Milliseconds()).Quo(sdk.NewDec(60 * 60 * 1000))
+	proratedDurationInHour := sdk.NewDec(proratedDuration.Milliseconds()).
+		Quo(sdk.NewDec(60 * 60 * 1000))
 
 	currentBytes := payInfo.SpaceAvailable
 	currentGbs := currentBytes / gb
@@ -238,11 +260,17 @@ func (k Keeper) UpgradeStorage(
 	oldCost := k.GetStorageCost(ctx, currentGbs, proratedDurationInHour.TruncateInt64())
 
 	if duration.Truncate(timeMonth) <= 0 {
-		return sdk.Coin{}, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "duration can't be less than 1 month")
+		return sdk.Coin{}, sdkerrors.Wrap(
+			sdkerrors.ErrInvalidRequest,
+			"duration can't be less than 1 month",
+		)
 	}
 
 	if bytes < payInfo.SpaceUsed {
-		return sdk.Coin{}, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "cannot downgrade below current usage")
+		return sdk.Coin{}, sdkerrors.Wrap(
+			sdkerrors.ErrInvalidRequest,
+			"cannot downgrade below current usage",
+		)
 	}
 
 	newCost := storageCost
@@ -250,7 +278,10 @@ func (k Keeper) UpgradeStorage(
 	price := newCost.Sub(oldCost)
 
 	if price.LTE(sdk.ZeroInt()) {
-		return sdk.Coin{}, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "cannot downgrade until current plan expires")
+		return sdk.Coin{}, sdkerrors.Wrap(
+			sdkerrors.ErrInvalidRequest,
+			"cannot downgrade until current plan expires",
+		)
 	}
 
 	priceTokens := sdk.NewCoin(denom, price)

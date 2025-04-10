@@ -24,7 +24,11 @@ func SimulateMsgBid(
 			Creator: simAccount.Address.String(),
 		}
 		if len(accs) < 2 {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Not enough accounts to perform a buy"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"Not enough accounts to perform a buy",
+			), nil, nil
 		}
 
 		// finding a random bid
@@ -36,7 +40,11 @@ func SimulateMsgBid(
 		bidDomain := forSale[r.Intn(len(forSale))]
 		// ensuring the buyer is not the owner of the address
 		if bidDomain.Owner == simAccount.Address.String() {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find domain to bid"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to find domain to bid",
+			), nil, nil
 		}
 
 		// making the bid
@@ -60,12 +68,25 @@ func SimulateMsgBid(
 
 			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unabled to fund account",
+				), nil, err
 			}
 
-			err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, sdk.NewCoins(c))
+			err = bk.SendCoinsFromModuleToAccount(
+				ctx,
+				types.ModuleName,
+				simAccount.Address,
+				sdk.NewCoins(c),
+			)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unabled to fund account",
+				), nil, err
 			}
 		}
 
@@ -79,7 +100,11 @@ func SimulateMsgBid(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 

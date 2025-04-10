@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"google.golang.org/grpc/codes"
@@ -36,7 +35,10 @@ func (k Keeper) ListFileLocations(ctx sdk.Context, merkle []byte) []string {
 	return providers
 }
 
-func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*types.QueryFindFileResponse, error) {
+func (k Keeper) FindFile(
+	goCtx context.Context,
+	req *types.QueryFindFile,
+) (*types.QueryFindFileResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -56,6 +58,7 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))
 
 	iterator := store.Iterator(nil, nil)
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

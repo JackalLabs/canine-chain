@@ -3,17 +3,19 @@ package keeper
 import (
 	"context"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllNotificationsByAddress(c context.Context, req *types.QueryAllNotificationsByAddress) (*types.QueryAllNotificationsByAddressResponse, error) {
+func (k Keeper) AllNotificationsByAddress(
+	c context.Context,
+	req *types.QueryAllNotificationsByAddress,
+) (*types.QueryAllNotificationsByAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -33,7 +35,10 @@ func (k Keeper) AllNotificationsByAddress(c context.Context, req *types.QueryAll
 			NextKey: nil,
 			Total:   0,
 		}
-		return &types.QueryAllNotificationsByAddressResponse{Notifications: make([]types.Notification, 0), Pagination: &pres}, nil
+		return &types.QueryAllNotificationsByAddressResponse{
+			Notifications: make([]types.Notification, 0),
+			Pagination:    &pres,
+		}, nil
 	}
 
 	notifications = notifications[offset:]
@@ -45,10 +50,16 @@ func (k Keeper) AllNotificationsByAddress(c context.Context, req *types.QueryAll
 		NextKey: nil,
 		Total:   uint64(len(notifications)),
 	}
-	return &types.QueryAllNotificationsByAddressResponse{Notifications: notifications, Pagination: &pres}, nil
+	return &types.QueryAllNotificationsByAddressResponse{
+		Notifications: notifications,
+		Pagination:    &pres,
+	}, nil
 }
 
-func (k Keeper) AllNotifications(c context.Context, req *types.QueryAllNotifications) (*types.QueryAllNotificationsResponse, error) {
+func (k Keeper) AllNotifications(
+	c context.Context,
+	req *types.QueryAllNotifications,
+) (*types.QueryAllNotificationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -61,23 +72,33 @@ func (k Keeper) AllNotifications(c context.Context, req *types.QueryAllNotificat
 
 	notificationsStore := prefix.NewStore(store, types.KeyPrefix(keyPrefix))
 
-	pageRes, err := query.Paginate(notificationsStore, req.Pagination, func(_ []byte, value []byte) error {
-		var notification types.Notification
-		if err := k.cdc.Unmarshal(value, &notification); err != nil {
-			return err
-		}
+	pageRes, err := query.Paginate(
+		notificationsStore,
+		req.Pagination,
+		func(_ []byte, value []byte) error {
+			var notification types.Notification
+			if err := k.cdc.Unmarshal(value, &notification); err != nil {
+				return err
+			}
 
-		notifications = append(notifications, notification)
-		return nil
-	})
+			notifications = append(notifications, notification)
+			return nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllNotificationsResponse{Notifications: notifications, Pagination: pageRes}, nil
+	return &types.QueryAllNotificationsResponse{
+		Notifications: notifications,
+		Pagination:    pageRes,
+	}, nil
 }
 
-func (k Keeper) Notification(c context.Context, req *types.QueryNotification) (*types.QueryNotificationResponse, error) {
+func (k Keeper) Notification(
+	c context.Context,
+	req *types.QueryNotification,
+) (*types.QueryNotificationResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

@@ -49,7 +49,13 @@ func (suite *KeeperTestSuite) TestGetReportForm() {
 
 	suite.storageKeeper.SetReportForm(suite.ctx, report)
 
-	foundReport, found := suite.storageKeeper.GetReportForm(suite.ctx, "prover", []byte("merkle"), "owner", 0)
+	foundReport, found := suite.storageKeeper.GetReportForm(
+		suite.ctx,
+		"prover",
+		[]byte("merkle"),
+		"owner",
+		0,
+	)
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundReport.Merkle, report.Merkle)
 	suite.Require().Equal(foundReport.Attestations, report.Attestations)
@@ -137,10 +143,22 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	proofs := suite.storageKeeper.GetAllProofs(suite.ctx)
 	suite.Require().Equal(len(addresses), len(proofs))
 
-	_, err = suite.storageKeeper.RequestReport(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
+	_, err = suite.storageKeeper.RequestReport(
+		suite.ctx,
+		addresses[10],
+		file.Merkle,
+		file.Owner,
+		file.Start,
+	)
 	suite.NoError(err)
 
-	form, found := suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
+	form, found := suite.storageKeeper.GetReportForm(
+		suite.ctx,
+		addresses[10],
+		file.Merkle,
+		file.Owner,
+		file.Start,
+	)
 	suite.Equal(true, found)
 
 	for _, attestation := range form.Attestations {
@@ -150,11 +168,24 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 	allReportForm := suite.storageKeeper.GetAllReport(suite.ctx)
 	suite.Require().Equal(1, len(allReportForm))
 
-	_, found = suite.storageKeeper.GetProof(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
+	_, found = suite.storageKeeper.GetProof(
+		suite.ctx,
+		addresses[10],
+		file.Merkle,
+		file.Owner,
+		file.Start,
+	)
 	suite.Equal(true, found)
 
 	for i, attestation := range form.Attestations {
-		err := suite.storageKeeper.DoReport(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start, attestation.Provider)
+		err := suite.storageKeeper.DoReport(
+			suite.ctx,
+			addresses[10],
+			file.Merkle,
+			file.Owner,
+			file.Start,
+			attestation.Provider,
+		)
 		if i >= int(params.AttestMinToPass) {
 			suite.Require().Error(err)
 		} else {
@@ -162,6 +193,12 @@ func (suite *KeeperTestSuite) TestMakeReport() {
 		}
 	}
 
-	_, found = suite.storageKeeper.GetReportForm(suite.ctx, addresses[10], file.Merkle, file.Owner, file.Start)
+	_, found = suite.storageKeeper.GetReportForm(
+		suite.ctx,
+		addresses[10],
+		file.Merkle,
+		file.Owner,
+		file.Start,
+	)
 	suite.Equal(false, found)
 }

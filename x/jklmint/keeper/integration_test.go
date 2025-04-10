@@ -3,17 +3,14 @@ package keeper_test
 import (
 	"encoding/json"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
-	dbm "github.com/tendermint/tm-db"
-
 	jklapp "github.com/jackalLabs/canine-chain/v4/app"
+	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	abci "github.com/tendermint/tendermint/abci/types"
+	"github.com/tendermint/tendermint/libs/log"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	dbm "github.com/tendermint/tm-db"
 )
 
 // returns context and an app with updated mint keeper
@@ -22,7 +19,7 @@ import (
 func createTestApp(isCheckTx bool) (*jklapp.JackalApp, sdk.Context) {
 	app := setup(isCheckTx)
 
-	ctx := app.BaseApp.NewContext(isCheckTx, tmproto.Header{})
+	ctx := app.NewContext(isCheckTx, tmproto.Header{})
 
 	app.MintKeeper.SetParams(ctx, types.DefaultParams())
 

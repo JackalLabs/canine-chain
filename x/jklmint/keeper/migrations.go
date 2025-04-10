@@ -5,7 +5,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/jklmint/exported"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/legacy/v4"
+	v4 "github.com/jackalLabs/canine-chain/v4/x/jklmint/legacy/v4"
 )
 
 // Migrator is a struct for handling in-place store migrations.

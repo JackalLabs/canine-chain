@@ -12,7 +12,7 @@ import (
 
 func (k Keeper) NewGauge(ctx sdk.Context, coins sdk.Coins, end time.Time) types.PaymentGauge {
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("%d--%d--%s", ctx.BlockHeight(), end.UnixMicro(), coins.String())))
+	_, _ = fmt.Fprintf(h, "%d--%d--%s", ctx.BlockHeight(), end.UnixMicro(), coins.String())
 	id := h.Sum(nil)
 
 	pg := types.PaymentGauge{
@@ -36,6 +36,7 @@ func (k Keeper) IterateGauges(ctx sdk.Context, fn func(pg types.PaymentGauge)) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PaymentGaugeKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -71,6 +72,7 @@ func (k Keeper) GetAllPaymentGauges(ctx sdk.Context) (list []types.PaymentGauge)
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PaymentGaugeKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

@@ -9,7 +9,13 @@ const TypeMsgRegisterName = "register_name"
 
 var _ sdk.Msg = &MsgRegisterName{}
 
-func NewMsgRegisterName(creator string, name string, years int64, data string, primary bool) *MsgRegisterName {
+func NewMsgRegisterName(
+	creator string,
+	name string,
+	years int64,
+	data string,
+	primary bool,
+) *MsgRegisterName {
 	return &MsgRegisterName{
 		Creator:    creator,
 		Name:       name,

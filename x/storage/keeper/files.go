@@ -80,6 +80,7 @@ func (k Keeper) GetAllFileByMerkle(ctx sdk.Context) (list []types.UnifiedFile) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -92,7 +93,11 @@ func (k Keeper) GetAllFileByMerkle(ctx sdk.Context) (list []types.UnifiedFile) {
 }
 
 // IterateFilesByMerkle iterates through every file
-func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key []byte, val []byte) bool) {
+func (k Keeper) IterateFilesByMerkle(
+	ctx sdk.Context,
+	reverse bool,
+	fn func(key []byte, val []byte) bool,
+) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
 
 	var iterator storetypes.Iterator
@@ -102,6 +107,7 @@ func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key 
 		iterator = sdk.KVStorePrefixIterator(store, []byte{})
 	}
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -113,7 +119,11 @@ func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key 
 }
 
 // IterateAndParseFilesByMerkle iterates through every file and parses them for you
-func (k Keeper) IterateAndParseFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key []byte, val types.UnifiedFile) bool) {
+func (k Keeper) IterateAndParseFilesByMerkle(
+	ctx sdk.Context,
+	reverse bool,
+	fn func(key []byte, val types.UnifiedFile) bool,
+) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
 
 	var iterator storetypes.Iterator
@@ -123,6 +133,7 @@ func (k Keeper) IterateAndParseFilesByMerkle(ctx sdk.Context, reverse bool, fn f
 		iterator = sdk.KVStorePrefixIterator(store, []byte{})
 	}
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -144,6 +155,7 @@ func (k Keeper) GetAllFilesWithMerkle(ctx sdk.Context, merkle []byte) (list []ty
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(merkle))
 	iterator := sdk.KVStorePrefixIterator(store, nil)
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

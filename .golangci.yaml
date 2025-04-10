@@ -11,25 +11,23 @@ linters:
     - errcheck
     - goconst
     - gocritic
-    - gofumpt
-    - gosec
-    - gosimple
     - govet
     - ineffassign
     - misspell
     - nakedret
     - staticcheck
-    - stylecheck
-    - typecheck
     - unconvert
     - unused
     - unparam
 
-linters-settings:
-  gosec:
-    excludes:
-      - G404
-      - G115
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+    - golines
+    - gofmt
+    - gci
 
+version: 2
 issues:
   max-issues-per-linter: 0

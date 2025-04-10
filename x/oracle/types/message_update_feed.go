@@ -48,7 +48,11 @@ func (msg *MsgUpdateFeed) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	if prefix != apptypes.Bech32Prefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"invalid creator prefix (%s)",
+			fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix),
+		)
 	}
 
 	return nil

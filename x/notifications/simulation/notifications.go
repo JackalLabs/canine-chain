@@ -60,7 +60,11 @@ func SimulateMsgDeleteNotifications(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		notifications := k.GetAllNotifications(ctx)
 		if len(notifications) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteNotification, "unable to find notifications"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgDeleteNotification,
+				"unable to find notifications",
+			), nil, nil
 		}
 
 		noti := notifications[r.Intn(len(notifications))]

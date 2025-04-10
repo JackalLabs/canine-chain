@@ -91,7 +91,14 @@ func (suite *KeeperTestSuite) TestReport() {
 			suite.storageKeeper.SetReportForm(suite.ctx, attestForm)
 			suite.storageKeeper.SetReportForm(suite.ctx, noActiveDealAttestForm)
 
-			err = suite.storageKeeper.DoReport(suite.ctx, addresses[4], tc.merkle, tc.owner, tc.start, tc.creator)
+			err = suite.storageKeeper.DoReport(
+				suite.ctx,
+				addresses[4],
+				tc.merkle,
+				tc.owner,
+				tc.start,
+				tc.creator,
+			)
 
 			if tc.expErr {
 				suite.Error(err)
@@ -184,7 +191,13 @@ func (suite *KeeperTestSuite) TestRequestReportForm() {
 
 			suite.storageKeeper.SetReportForm(suite.ctx, attestForm)
 
-			_, err = suite.storageKeeper.RequestReport(suite.ctx, addresses[10], tc.merkle, tc.owner, tc.start)
+			_, err = suite.storageKeeper.RequestReport(
+				suite.ctx,
+				addresses[10],
+				tc.merkle,
+				tc.owner,
+				tc.start,
+			)
 
 			if tc.expErr {
 				suite.Error(err)

@@ -32,7 +32,13 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 	suite.Require().True(found)
 	suite.Require().Equal(int64(7200), f.ProofInterval)
 
-	err := upgrades.RecoverFiles(suite.ctx, suite.storageKeeper, v440.UpgradeData, 20000, "v4.5.0-test")
+	err := upgrades.RecoverFiles(
+		suite.ctx,
+		suite.storageKeeper,
+		v440.UpgradeData,
+		20000,
+		"v4.5.0-test",
+	)
 	suite.Require().NoError(err)
 
 	i := 0
@@ -42,7 +48,8 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 		err := f.Unmarshal(val)
 		suite.Require().NoError(err)
 
-		suite.T().Logf("%x, %s (%d -> %d) | %d || %s", f.Merkle, f.Owner, f.Start, f.Expires, f.FileSize, f.Note)
+		suite.T().
+			Logf("%x, %s (%d -> %d) | %d || %s", f.Merkle, f.Owner, f.Start, f.Expires, f.FileSize, f.Note)
 
 		return false
 	})

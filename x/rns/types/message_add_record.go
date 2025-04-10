@@ -9,7 +9,13 @@ const TypeMsgAddRecord = "add_record"
 
 var _ sdk.Msg = &MsgAddRecord{}
 
-func NewMsgAddRecord(creator string, name string, record string, value string, data string) *MsgAddRecord {
+func NewMsgAddRecord(
+	creator string,
+	name string,
+	record string,
+	value string,
+	data string,
+) *MsgAddRecord {
 	return &MsgAddRecord{
 		Creator: creator,
 		Name:    name,

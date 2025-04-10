@@ -3,14 +3,16 @@ package keeper
 import (
 	"context"
 
-	types2 "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	types2 "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) AddProviderClaimer(goCtx context.Context, msg *types.MsgAddClaimer) (*types.MsgAddClaimerResponse, error) {
+func (k msgServer) AddProviderClaimer(
+	goCtx context.Context,
+	msg *types.MsgAddClaimer,
+) (*types.MsgAddClaimerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)
@@ -50,7 +52,10 @@ func (k msgServer) AddProviderClaimer(goCtx context.Context, msg *types.MsgAddCl
 	return &types.MsgAddClaimerResponse{}, nil
 }
 
-func (k msgServer) RemoveProviderClaimer(goCtx context.Context, msg *types.MsgRemoveClaimer) (*types.MsgRemoveClaimerResponse, error) {
+func (k msgServer) RemoveProviderClaimer(
+	goCtx context.Context,
+	msg *types.MsgRemoveClaimer,
+) (*types.MsgRemoveClaimerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)

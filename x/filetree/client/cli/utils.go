@@ -51,7 +51,7 @@ func MakeOwnerAddress(merklePath string, user string) string {
 
 	// h1 is so named as to differentiate it from h above--else compiler complains
 	h1 := sha256.New()
-	h1.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+	_, _ = fmt.Fprintf(h1, "o%s%s", merklePath, accountHash)
 	hash1 := h1.Sum(nil)
 	ownerAddress := fmt.Sprintf("%x", hash1)
 
@@ -88,7 +88,10 @@ func getCallerAddress(ctx client.Context) *string {
 	return &fromAddress
 }
 
-func JSONMarshalViewersAndEditors(viewers map[string]string, editors map[string]string) ([]byte, []byte, error) {
+func JSONMarshalViewersAndEditors(
+	viewers map[string]string,
+	editors map[string]string,
+) ([]byte, []byte, error) {
 	jsonViewers, err := json.Marshal(viewers)
 	if err != nil {
 		return nil, nil, err

@@ -4,13 +4,15 @@ import (
 	"context"
 	"strings"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
-func (k msgServer) Delist(goCtx context.Context, msg *types.MsgDelist) (*types.MsgDelistResponse, error) {
+func (k msgServer) Delist(
+	goCtx context.Context,
+	msg *types.MsgDelist,
+) (*types.MsgDelistResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	mname := strings.ToLower(msg.Name)
 

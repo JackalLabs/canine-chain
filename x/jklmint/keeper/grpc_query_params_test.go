@@ -22,7 +22,7 @@ type MintTestSuite struct {
 
 func (suite *MintTestSuite) SetupTest() {
 	app := setup(false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+	ctx := app.NewContext(false, tmproto.Header{})
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, app.MintKeeper)

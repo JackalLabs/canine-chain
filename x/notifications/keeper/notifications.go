@@ -79,6 +79,7 @@ func (k Keeper) RemoveNotification(
 func (k Keeper) GetAllNotifications(ctx sdk.Context) (list []types.Notification) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -91,9 +92,13 @@ func (k Keeper) GetAllNotifications(ctx sdk.Context) (list []types.Notification)
 }
 
 // GetAllNotificationsByAddress returns all notifications that belong to a given address
-func (k Keeper) GetAllNotificationsByAddress(ctx sdk.Context, address string) (list []types.Notification) {
+func (k Keeper) GetAllNotificationsByAddress(
+	ctx sdk.Context,
+	address string,
+) (list []types.Notification) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NotificationsKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte(fmt.Sprintf("%s/", address)))
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

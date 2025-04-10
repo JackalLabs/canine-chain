@@ -56,7 +56,10 @@ func CmdAddViewers() *cobra.Command {
 				}
 
 				queryClient := types.NewQueryClient(clientCtx)
-				res, err := queryClient.PubKey(cmd.Context(), &types.QueryPubKey{Address: key.String()})
+				res, err := queryClient.PubKey(
+					cmd.Context(),
+					&types.QueryPubKey{Address: key.String()},
+				)
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}

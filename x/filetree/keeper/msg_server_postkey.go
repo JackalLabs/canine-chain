@@ -7,7 +7,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) PostKey(goCtx context.Context, msg *types.MsgPostKey) (*types.MsgPostKeyResponse, error) {
+func (k msgServer) PostKey(
+	goCtx context.Context,
+	msg *types.MsgPostKey,
+) (*types.MsgPostKeyResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	pubKey := types.Pubkey{

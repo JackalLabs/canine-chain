@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -31,8 +32,6 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-
-	"github.com/CosmWasm/wasmd/x/wasm"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in
@@ -54,16 +53,36 @@ var DefaultConsensusParams = &abci.ConsensusParams{
 	},
 }
 
-func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*JackalApp, GenesisState) {
+func setup(
+	t testing.TB,
+	withGenesis bool,
+	invCheckPeriod uint,
+	opts ...wasm.Option,
+) (*JackalApp, GenesisState) {
 	nodeHome := t.TempDir()
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
 	snapshotDB, err := sdk.NewLevelDB("metadata", snapshotDir)
 	require.NoError(t, err)
 	snapshotStore, err := snapshots.NewStore(snapshotDB, snapshotDir)
 	require.NoError(t, err)
-	baseAppOpts := []func(*bam.BaseApp){bam.SetSnapshotStore(snapshotStore), bam.SetSnapshotKeepRecent(2)}
+	baseAppOpts := []func(*bam.BaseApp){
+		bam.SetSnapshotStore(snapshotStore),
+		bam.SetSnapshotKeepRecent(2),
+	}
 	db := dbm.NewMemDB()
-	app := NewJackalApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, nodeHome, invCheckPeriod, MakeEncodingConfig(), wasm.EnableAllProposals, EmptyBaseAppOptions{}, opts, baseAppOpts...)
+	app := NewJackalApp(
+		log.NewNopLogger(),
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		nodeHome,
+		invCheckPeriod,
+		MakeEncodingConfig(),
+		wasm.EnableAllProposals,
+		EmptyBaseAppOptions{},
+		opts,
+		baseAppOpts...)
 	if withGenesis {
 		return app, NewDefaultGenesisState()
 	}
@@ -74,7 +93,13 @@ func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Opt
 // that also act as delegators. For simplicity, each validator is bonded with a delegation
 // of one consensus engine unit (10^6) in the default token of the JackalApp from first genesis
 // account. A Nop logger is set in JackalApp.
-func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, opts []wasm.Option, balances ...banktypes.Balance) *JackalApp {
+func SetupWithGenesisValSet(
+	t *testing.T,
+	valSet *tmtypes.ValidatorSet,
+	genAccs []authtypes.GenesisAccount,
+	opts []wasm.Option,
+	balances ...banktypes.Balance,
+) *JackalApp {
 	app, genesisState := setup(t, true, 5, opts...)
 	// set genesis accounts
 	authGenesis := authtypes.NewGenesisState(authtypes.DefaultParams(), genAccs)
@@ -91,25 +116,36 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 		pkAny, err := codectypes.NewAnyWithValue(pk)
 		require.NoError(t, err)
 		validator := stakingtypes.Validator{
-			OperatorAddress:   sdk.ValAddress(val.Address).String(),
-			ConsensusPubkey:   pkAny,
-			Jailed:            false,
-			Status:            stakingtypes.Bonded,
-			Tokens:            bondAmt,
-			DelegatorShares:   sdk.OneDec(),
-			Description:       stakingtypes.Description{},
-			UnbondingHeight:   int64(0),
-			UnbondingTime:     time.Unix(0, 0).UTC(),
-			Commission:        stakingtypes.NewCommission(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec()),
+			OperatorAddress: sdk.ValAddress(val.Address).String(),
+			ConsensusPubkey: pkAny,
+			Jailed:          false,
+			Status:          stakingtypes.Bonded,
+			Tokens:          bondAmt,
+			DelegatorShares: sdk.OneDec(),
+			Description:     stakingtypes.Description{},
+			UnbondingHeight: int64(0),
+			UnbondingTime:   time.Unix(0, 0).UTC(),
+			Commission: stakingtypes.NewCommission(
+				sdk.ZeroDec(),
+				sdk.ZeroDec(),
+				sdk.ZeroDec(),
+			),
 			MinSelfDelegation: sdk.ZeroInt(),
 		}
 		validators = append(validators, validator)
-		delegations = append(delegations, stakingtypes.NewDelegation(genAccs[0].GetAddress(), val.Address.Bytes(), sdk.OneDec()))
+		delegations = append(
+			delegations,
+			stakingtypes.NewDelegation(genAccs[0].GetAddress(), val.Address.Bytes(), sdk.OneDec()),
+		)
 
 	}
 
 	// set validators and delegations
-	stakingGenesis := stakingtypes.NewGenesisState(stakingtypes.DefaultParams(), validators, delegations)
+	stakingGenesis := stakingtypes.NewGenesisState(
+		stakingtypes.DefaultParams(),
+		validators,
+		delegations,
+	)
 	genesisState[stakingtypes.ModuleName] = app.appCodec.MustMarshalJSON(stakingGenesis)
 
 	totalSupply := sdk.NewCoins()
@@ -125,7 +161,12 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 	})
 
 	// update total supply
-	bankGenesis := banktypes.NewGenesisState(banktypes.DefaultGenesisState().Params, balances, totalSupply, []banktypes.Metadata{})
+	bankGenesis := banktypes.NewGenesisState(
+		banktypes.DefaultGenesisState().Params,
+		balances,
+		totalSupply,
+		[]banktypes.Metadata{},
+	)
 	genesisState[banktypes.ModuleName] = app.appCodec.MustMarshalJSON(bankGenesis)
 
 	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
@@ -200,7 +241,12 @@ func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 }
 
 // AddTestAddrsFromPubKeys adds the addresses into the JackalApp providing only the public keys.
-func AddTestAddrsFromPubKeys(app *JackalApp, ctx sdk.Context, pubKeys []cryptotypes.PubKey, accAmt sdk.Int) {
+func AddTestAddrsFromPubKeys(
+	app *JackalApp,
+	ctx sdk.Context,
+	pubKeys []cryptotypes.PubKey,
+	accAmt sdk.Int,
+) {
 	initCoins := sdk.NewCoins(sdk.NewCoin(app.stakingKeeper.BondDenom(ctx), accAmt))
 
 	for _, pk := range pubKeys {
@@ -216,11 +262,22 @@ func AddTestAddrs(app *JackalApp, ctx sdk.Context, accNum int, accAmt sdk.Int) [
 
 // AddTestAddrs constructs and returns accNum amount of accounts with an
 // initial balance of accAmt in random order
-func AddTestAddrsIncremental(app *JackalApp, ctx sdk.Context, accNum int, accAmt sdk.Int) []sdk.AccAddress {
+func AddTestAddrsIncremental(
+	app *JackalApp,
+	ctx sdk.Context,
+	accNum int,
+	accAmt sdk.Int,
+) []sdk.AccAddress {
 	return addTestAddrs(app, ctx, accNum, accAmt, createIncrementalAccounts)
 }
 
-func addTestAddrs(app *JackalApp, ctx sdk.Context, accNum int, accAmt sdk.Int, strategy GenerateAccountStrategy) []sdk.AccAddress {
+func addTestAddrs(
+	app *JackalApp,
+	ctx sdk.Context,
+	accNum int,
+	accAmt sdk.Int,
+	strategy GenerateAccountStrategy,
+) []sdk.AccAddress {
 	testAddrs := strategy(accNum)
 
 	initCoins := sdk.NewCoins(sdk.NewCoin(app.stakingKeeper.BondDenom(ctx), accAmt))
@@ -279,7 +336,7 @@ func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
 
 // CheckBalance checks the balance of an account.
 func CheckBalance(t *testing.T, app *JackalApp, addr sdk.AccAddress, balances sdk.Coins) {
-	ctxCheck := app.BaseApp.NewContext(true, tmproto.Header{})
+	ctxCheck := app.NewContext(true, tmproto.Header{})
 	require.True(t, balances.IsEqual(app.BankKeeper.GetAllBalances(ctxCheck, addr)))
 }
 
@@ -290,8 +347,15 @@ const DefaultGas = 1200000
 // the parameter 'expPass' against the result. A corresponding result is
 // returned.
 func SignCheckDeliver(
-	t *testing.T, txCfg client.TxConfig, app *bam.BaseApp, header tmproto.Header, msgs []sdk.Msg,
-	chainID string, accNums, accSeqs []uint64, expSimPass, expPass bool, priv ...cryptotypes.PrivKey,
+	t *testing.T,
+	txCfg client.TxConfig,
+	app *bam.BaseApp,
+	header tmproto.Header,
+	msgs []sdk.Msg,
+	chainID string,
+	accNums, accSeqs []uint64,
+	expSimPass, expPass bool,
+	priv ...cryptotypes.PrivKey,
 ) (sdk.GasInfo, *sdk.Result, error) {
 	tx, err := helpers.GenTx(
 		txCfg,
@@ -339,8 +403,15 @@ func SignCheckDeliver(
 // SignAndDeliver signs and delivers a transaction. No simulation occurs as the
 // ibc testing package causes checkState and deliverState to diverge in block time.
 func SignAndDeliver(
-	t *testing.T, txCfg client.TxConfig, app *bam.BaseApp, header tmproto.Header, msgs []sdk.Msg,
-	chainID string, accNums, accSeqs []uint64, expSimPass, expPass bool, priv ...cryptotypes.PrivKey,
+	t *testing.T,
+	txCfg client.TxConfig,
+	app *bam.BaseApp,
+	header tmproto.Header,
+	msgs []sdk.Msg,
+	chainID string,
+	accNums, accSeqs []uint64,
+	expSimPass, expPass bool,
+	priv ...cryptotypes.PrivKey,
 ) (sdk.GasInfo, *sdk.Result, error) {
 	_ = expSimPass
 	tx, err := helpers.GenTx(
@@ -376,7 +447,14 @@ func SignAndDeliver(
 // GenSequenceOfTxs generates a set of signed transactions of messages, such
 // that they differ only by having the sequence numbers incremented between
 // every transaction.
-func GenSequenceOfTxs(txGen client.TxConfig, msgs []sdk.Msg, accNums []uint64, initSeqNums []uint64, numToGenerate int, priv ...cryptotypes.PrivKey) ([]sdk.Tx, error) {
+func GenSequenceOfTxs(
+	txGen client.TxConfig,
+	msgs []sdk.Msg,
+	accNums []uint64,
+	initSeqNums []uint64,
+	numToGenerate int,
+	priv ...cryptotypes.PrivKey,
+) ([]sdk.Tx, error) {
 	txs := make([]sdk.Tx, numToGenerate)
 	var err error
 	for i := 0; i < numToGenerate; i++ {
@@ -413,8 +491,12 @@ func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 	// start at 10 to avoid changing 1 to 01, 2 to 02, etc
 	for i := 100; i < (numPubKeys + 100); i++ {
 		numString := strconv.Itoa(i)
-		buffer.WriteString("0B485CFC0EECC619440448436F8FC9DF40566F2369E72400281454CB552AF") // base pubkey string
-		buffer.WriteString(numString)                                                       // adding on final two digits to make pubkeys unique
+		buffer.WriteString(
+			"0B485CFC0EECC619440448436F8FC9DF40566F2369E72400281454CB552AF",
+		) // base pubkey string
+		buffer.WriteString(
+			numString,
+		) // adding on final two digits to make pubkeys unique
 		publicKeys = append(publicKeys, NewPubKeyFromHex(buffer.String()))
 		buffer.Reset()
 	}
@@ -449,7 +531,12 @@ func (ao EmptyBaseAppOptions) Get(o string) interface{} {
 //
 // Instead of using the mint module account, which has the
 // permission of minting, create a "faucet" account. (@fdymylja)
-func FundAccount(bankKeeper bankkeeper.Keeper, ctx sdk.Context, addr sdk.AccAddress, amounts sdk.Coins) error {
+func FundAccount(
+	bankKeeper bankkeeper.Keeper,
+	ctx sdk.Context,
+	addr sdk.AccAddress,
+	amounts sdk.Coins,
+) error {
 	if err := bankKeeper.MintCoins(ctx, minttypes.ModuleName, amounts); err != nil {
 		return err
 	}
@@ -463,7 +550,12 @@ func FundAccount(bankKeeper bankkeeper.Keeper, ctx sdk.Context, addr sdk.AccAddr
 //
 // Instead of using the mint module account, which has the
 // permission of minting, create a "faucet" account. (@fdymylja)
-func FundModuleAccount(bankKeeper bankkeeper.Keeper, ctx sdk.Context, recipientMod string, amounts sdk.Coins) error {
+func FundModuleAccount(
+	bankKeeper bankkeeper.Keeper,
+	ctx sdk.Context,
+	recipientMod string,
+	amounts sdk.Coins,
+) error {
 	if err := bankKeeper.MintCoins(ctx, minttypes.ModuleName, amounts); err != nil {
 		return err
 	}

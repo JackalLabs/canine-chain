@@ -7,11 +7,9 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/btcutil/bech32"
-
-	types2 "github.com/jackalLabs/canine-chain/v4/x/storage/types"
-
 	v4 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v4"
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	types2 "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 func (suite *UpgradeTestKeeper) TestUpgrade() {
@@ -23,7 +21,7 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 	for i := 0; i < 10; i++ {
 		n := rand.Int63()
 		s := sha256.New()
-		s.Write([]byte(fmt.Sprintf("%d", n)))
+		_, _ = fmt.Fprintf(s, "%d", n)
 		d := s.Sum(nil)
 		conv, err := bech32.ConvertBits(d, 8, 5, true)
 		suite.Require().NoError(err)

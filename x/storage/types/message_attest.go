@@ -18,7 +18,12 @@ var (
 	_ sdk.Msg = &MsgAttest{}
 )
 
-func NewMsgRequestAttestationForm(creator string, merkle []byte, owner string, start int64) *MsgRequestAttestationForm {
+func NewMsgRequestAttestationForm(
+	creator string,
+	merkle []byte,
+	owner string,
+	start int64,
+) *MsgRequestAttestationForm {
 	return &MsgRequestAttestationForm{
 		Creator: creator,
 		Merkle:  merkle,
@@ -54,13 +59,23 @@ func (msg *MsgRequestAttestationForm) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	if prefix != AddressPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"invalid creator prefix (%s)",
+			fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix),
+		)
 	}
 
 	return nil
 }
 
-func NewMsgAttest(creator string, prover string, merkle []byte, owner string, start int64) *MsgAttest {
+func NewMsgAttest(
+	creator string,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
+) *MsgAttest {
 	return &MsgAttest{
 		Creator: creator,
 		Prover:  prover,
@@ -97,7 +112,11 @@ func (msg *MsgAttest) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	if prefix != AddressPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"invalid creator prefix (%s)",
+			fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix),
+		)
 	}
 
 	return nil

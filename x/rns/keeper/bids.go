@@ -57,6 +57,7 @@ func (k Keeper) GetAllBids(ctx sdk.Context) (list []types.Bids) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BidsKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

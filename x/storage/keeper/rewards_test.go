@@ -53,7 +53,12 @@ func (suite *KeeperTestSuite) TestReward() {
 	gaugeAccount, err := types.GetGaugeAccount(gauge)
 	suite.NoError(err)
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, jklminttypes.ModuleName, gaugeAccount, coins)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		suite.ctx,
+		jklminttypes.ModuleName,
+		gaugeAccount,
+		coins,
+	)
 	suite.NoError(err)
 
 	bal := suite.bankKeeper.GetBalance(suite.ctx, gaugeAccount, "ujkl")
@@ -92,11 +97,19 @@ func (suite *KeeperTestSuite) TestReward() {
 		ChunkToProve: 0,
 	})
 
-	_, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+	_, found := suite.storageKeeper.GetProof(
+		suite.ctx,
+		providerOne,
+		dealOne.Merkle,
+		dealOne.Owner,
+		dealOne.Start,
+	)
 	suite.Require().True(found)
 
 	newTime := s.AddDate(0, 3, 0)
-	ctx := suite.ctx.WithBlockHeight(blocks).WithHeaderHash([]byte{10, 15, 16, 20}).WithBlockTime(newTime)
+	ctx := suite.ctx.WithBlockHeight(blocks).
+		WithHeaderHash([]byte{10, 15, 16, 20}).
+		WithBlockTime(newTime)
 
 	suite.Require().Equal(blocks, ctx.BlockHeight())
 	suite.Require().Equal(ctx.BlockHeight()%blocks, int64(0))
@@ -129,7 +142,9 @@ func (suite *KeeperTestSuite) TestLongTermReward() {
 		timePerBlock := int64(i)
 
 		totalBlockTime := totalBlocks * timePerBlock
-		t := s.Add(time.Second * time.Duration(totalBlockTime) / 2) // simulate buying only half the simulation time
+		t := s.Add(
+			time.Second * time.Duration(totalBlockTime) / 2,
+		) // simulate buying only half the simulation time
 		suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
 			Start:          s,
 			End:            t,
@@ -144,7 +159,12 @@ func (suite *KeeperTestSuite) TestLongTermReward() {
 		gaugeAccount, err := types.GetGaugeAccount(gauge)
 		suite.NoError(err)
 
-		err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, jklminttypes.ModuleName, gaugeAccount, coins)
+		err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+			suite.ctx,
+			jklminttypes.ModuleName,
+			gaugeAccount,
+			coins,
+		)
 		suite.NoError(err)
 
 		totalSpend := int64(6000000)
@@ -179,13 +199,23 @@ func (suite *KeeperTestSuite) TestLongTermReward() {
 		blockTime := suite.ctx.BlockTime()
 		for i := int64(1); i < totalBlocks; i++ {
 			suite.T().Logf("Block: %d", i)
-			p, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+			p, found := suite.storageKeeper.GetProof(
+				suite.ctx,
+				providerOne,
+				dealOne.Merkle,
+				dealOne.Owner,
+				dealOne.Start,
+			)
 			suite.Require().True(found)
 			p.LastProven = i
 			suite.storageKeeper.SetProof(suite.ctx, p)
 
-			blockTime = blockTime.Add(time.Second * time.Duration(timePerBlock)) // step forward 6 seconds
-			suite.ctx = suite.ctx.WithBlockHeight(i).WithHeaderHash(rand.Bytes(20)).WithBlockTime(blockTime)
+			blockTime = blockTime.Add(
+				time.Second * time.Duration(timePerBlock),
+			) // step forward 6 seconds
+			suite.ctx = suite.ctx.WithBlockHeight(i).
+				WithHeaderHash(rand.Bytes(20)).
+				WithBlockTime(blockTime)
 
 			testDiff := gauge.End.Sub(s)
 			realDiff := time.Second * time.Duration(timePerBlock) // step forward 6 seconds
@@ -226,7 +256,9 @@ func (suite *KeeperTestSuite) TestLongTermRewardWithWindows() {
 		timePerBlock := int64(6)
 
 		totalBlockTime := totalBlocks * timePerBlock
-		t := s.Add(time.Second * time.Duration(totalBlockTime) / 2) // simulate buying only half the simulation time
+		t := s.Add(
+			time.Second * time.Duration(totalBlockTime) / 2,
+		) // simulate buying only half the simulation time
 		suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{
 			Start:          s,
 			End:            t,
@@ -241,7 +273,12 @@ func (suite *KeeperTestSuite) TestLongTermRewardWithWindows() {
 		gaugeAccount, err := types.GetGaugeAccount(gauge)
 		suite.NoError(err)
 
-		err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, jklminttypes.ModuleName, gaugeAccount, coins)
+		err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+			suite.ctx,
+			jklminttypes.ModuleName,
+			gaugeAccount,
+			coins,
+		)
 		suite.NoError(err)
 
 		totalSpend := int64(6000000)
@@ -276,13 +313,23 @@ func (suite *KeeperTestSuite) TestLongTermRewardWithWindows() {
 		blockTime := suite.ctx.BlockTime()
 		for i := int64(1); i < totalBlocks; i++ {
 			suite.T().Logf("Block: %d", i)
-			p, found := suite.storageKeeper.GetProof(suite.ctx, providerOne, dealOne.Merkle, dealOne.Owner, dealOne.Start)
+			p, found := suite.storageKeeper.GetProof(
+				suite.ctx,
+				providerOne,
+				dealOne.Merkle,
+				dealOne.Owner,
+				dealOne.Start,
+			)
 			suite.Require().True(found)
 			p.LastProven = i
 			suite.storageKeeper.SetProof(suite.ctx, p)
 
-			blockTime = blockTime.Add(time.Second * time.Duration(timePerBlock)) // step forward 6 seconds
-			suite.ctx = suite.ctx.WithBlockHeight(i).WithHeaderHash(rand.Bytes(20)).WithBlockTime(blockTime)
+			blockTime = blockTime.Add(
+				time.Second * time.Duration(timePerBlock),
+			) // step forward 6 seconds
+			suite.ctx = suite.ctx.WithBlockHeight(i).
+				WithHeaderHash(rand.Bytes(20)).
+				WithBlockTime(blockTime)
 
 			if suite.ctx.BlockHeight()%j > 0 {
 				continue

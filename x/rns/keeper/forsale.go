@@ -65,6 +65,7 @@ func (k Keeper) GetAllForsale(ctx sdk.Context) (list []types.Forsale) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ForsaleKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

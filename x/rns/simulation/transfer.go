@@ -21,7 +21,11 @@ func SimulateMsgTransfer(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// checking if enough accounts exist
 		if len(accs) < 2 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Need more than 2 accounts to transfer names"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgList,
+				"Need more than 2 accounts to transfer names",
+			), nil, nil
 		}
 
 		// choosing a random account WITH registered domains
@@ -31,7 +35,11 @@ func SimulateMsgTransfer(
 		// checking if any names are registered
 		exists := k.CheckExistence(ctx)
 		if !exists {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No domains registered yet"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgList,
+				"No domains registered yet",
+			), nil, nil
 		}
 		for {
 			// finding all registered domain names
@@ -42,7 +50,11 @@ func SimulateMsgTransfer(
 			// requesting the domain names
 			regNames, err := k.ListOwnedNames(wctx, nReq)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Couldn't request names"), nil, nil
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					types.TypeMsgList,
+					"Couldn't request names",
+				), nil, nil
 			}
 			names = regNames.GetNames()
 			if names != nil {
@@ -67,7 +79,11 @@ func SimulateMsgTransfer(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Expired domain"), nil, nil
 		}
 		if tName.Locked > ctx.BlockHeight() {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Can't transfer a free name"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"Can't transfer a free name",
+			), nil, nil
 		}
 
 		// generating the fees
@@ -81,7 +97,11 @@ func SimulateMsgTransfer(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 

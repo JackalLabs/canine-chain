@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
@@ -79,7 +78,10 @@ func (k Keeper) AcceptOneBid(ctx sdk.Context, sender string, name string, bidder
 	return nil
 }
 
-func (k msgServer) AcceptBid(goCtx context.Context, msg *types.MsgAcceptBid) (*types.MsgAcceptBidResponse, error) {
+func (k msgServer) AcceptBid(
+	goCtx context.Context,
+	msg *types.MsgAcceptBid,
+) (*types.MsgAcceptBidResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.AcceptOneBid(ctx, msg.Creator, msg.Name, msg.From)

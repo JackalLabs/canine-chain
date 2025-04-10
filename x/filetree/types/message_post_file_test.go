@@ -3,9 +3,8 @@ package types
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -47,7 +46,14 @@ func TestMsgPostFile_ValidateBasic(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			msg := NewMsgPostFile(
-				tt.Creator, tt.Account, tt.HashParent, tt.HashChild, tt.Contents, tt.Viewers, tt.Editors, tt.TrackingNumber,
+				tt.Creator,
+				tt.Account,
+				tt.HashParent,
+				tt.HashChild,
+				tt.Contents,
+				tt.Viewers,
+				tt.Editors,
+				tt.TrackingNumber,
 			)
 
 			err := msg.ValidateBasic()

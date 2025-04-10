@@ -24,6 +24,10 @@ func SimulateMsgCancelBid(
 
 		// TODO: Handling the CancelBid simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "CancelBid simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"CancelBid simulation not implemented",
+		), nil, nil
 	}
 }

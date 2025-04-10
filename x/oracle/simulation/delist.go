@@ -24,6 +24,10 @@ func SimulateMsgDelist(
 
 		// TODO: Handling the Delist simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Delist simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"Delist simulation not implemented",
+		), nil, nil
 	}
 }

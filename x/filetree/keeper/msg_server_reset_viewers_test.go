@@ -40,7 +40,12 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
 	// set home folder for alice
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), strings.Split(alice, ","), "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(
+		alice,
+		strings.Split(alice, ","),
+		strings.Split(alice, ","),
+		"s/home/",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
@@ -50,7 +55,12 @@ func (suite *KeeperTestSuite) TestMsgResetViewers() {
 	viewerIDs = append(viewerIDs, bob, charlie)
 
 	// put pepe in home
-	pepejpg, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), viewerIDs, "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(
+		alice,
+		strings.Split(alice, ","),
+		viewerIDs,
+		"s/home/pepe.jpg",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 

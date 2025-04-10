@@ -59,7 +59,13 @@ func TestIsValidName(t *testing.T) {
 		t.Run(n, func(t *testing.T) {
 			result := IsValidName(tt.name)
 			if result != tt.expReturn {
-				t.Errorf("test %s IsValidName(\"%s\") want %t got %t", n, tt.name, tt.expReturn, result)
+				t.Errorf(
+					"test %s IsValidName(\"%s\") want %t got %t",
+					n,
+					tt.name,
+					tt.expReturn,
+					result,
+				)
 			}
 		})
 	}

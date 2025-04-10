@@ -64,6 +64,7 @@ func (k Keeper) GetAllReport(ctx sdk.Context) (list []types.ReportForm) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ReportKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

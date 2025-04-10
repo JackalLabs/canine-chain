@@ -5,7 +5,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )

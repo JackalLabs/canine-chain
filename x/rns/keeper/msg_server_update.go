@@ -7,7 +7,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
@@ -53,7 +52,10 @@ func (k Keeper) UpdateName(ctx sdk.Context, sender string, nm string, data strin
 	return nil
 }
 
-func (k msgServer) Update(goCtx context.Context, msg *types.MsgUpdate) (*types.MsgUpdateResponse, error) {
+func (k msgServer) Update(
+	goCtx context.Context,
+	msg *types.MsgUpdate,
+) (*types.MsgUpdateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Try getting a name from the store
 

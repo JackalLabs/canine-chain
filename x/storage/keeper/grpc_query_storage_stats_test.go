@@ -27,9 +27,16 @@ func (suite *KeeperTestSuite) TestStorageStats() {
 
 		depoAccount := testAddresses[1]
 
-		coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+		coins := sdk.NewCoins(
+			sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+		) // Send some coins to their account
 		testAcc, _ := sdk.AccAddressFromBech32(testAccount)
-		err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+		err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+			suite.ctx,
+			types.ModuleName,
+			testAcc,
+			coins,
+		)
 		suite.Require().NoError(err)
 
 		suite.storageKeeper.SetParams(suite.ctx, types.Params{
@@ -55,14 +62,17 @@ func (suite *KeeperTestSuite) TestStorageStats() {
 			Coins:          nil,
 		})
 
-		suite.storageKeeper.SetStoragePaymentInfo(suite.ctx, types.StoragePaymentInfo{ // dead account plan (counts for unique but not active)
-			Start:          time.Date(2023, 10, 10, 0, 0, 0, 0, time.UTC),
-			End:            time.Date(2023, 12, 10, 0, 0, 0, 0, time.UTC),
-			SpaceAvailable: 5_000_000_000,
-			SpaceUsed:      0,
-			Address:        deadAccount,
-			Coins:          nil,
-		})
+		suite.storageKeeper.SetStoragePaymentInfo(
+			suite.ctx,
+			types.StoragePaymentInfo{ // dead account plan (counts for unique but not active)
+				Start:          time.Date(2023, 10, 10, 0, 0, 0, 0, time.UTC),
+				End:            time.Date(2023, 12, 10, 0, 0, 0, 0, time.UTC),
+				SpaceAvailable: 5_000_000_000,
+				SpaceUsed:      0,
+				Address:        deadAccount,
+				Coins:          nil,
+			},
+		)
 
 		merkle := []byte("merkle")
 

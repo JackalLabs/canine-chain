@@ -21,13 +21,24 @@ func SimulateMsgSetProviderTotalSpace(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		providers := k.GetAllProviders(ctx)
 		if len(providers) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSetProviderIP, "unable to find provider"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgSetProviderIP,
+				"unable to find provider",
+			), nil, nil
 		}
 
 		provider := providers[rand.Intn(len(providers))]
-		simAccount, found := simtypes.FindAccount(accs, sdk.MustAccAddressFromBech32(provider.Creator))
+		simAccount, found := simtypes.FindAccount(
+			accs,
+			sdk.MustAccAddressFromBech32(provider.Creator),
+		)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSetProviderIP, "unable to find provider"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgSetProviderIP,
+				"unable to find provider",
+			), nil, nil
 		}
 
 		msg := &types.MsgSetProviderTotalSpace{
@@ -38,7 +49,11 @@ func SimulateMsgSetProviderTotalSpace(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSetProviderTotalSpace, "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgSetProviderTotalSpace,
+				"unable to generate fees",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

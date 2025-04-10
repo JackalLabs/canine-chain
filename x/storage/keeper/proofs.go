@@ -87,6 +87,7 @@ func (k Keeper) GetAllProofs(ctx sdk.Context) (list []types.FileProof) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProofKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -105,6 +106,7 @@ func (k Keeper) GetAllProofsForProver(ctx sdk.Context, prover string) ([]types.F
 	iterator := sdk.KVStorePrefixIterator(proofStore, nil)
 	var proofs []types.FileProof
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -124,6 +126,7 @@ func (k Keeper) GetOneProofForProver(ctx sdk.Context, prover string) (types.File
 	proofStore := prefix.NewStore(store, types.ProofPrefix(prover))
 	iterator := sdk.KVStorePrefixIterator(proofStore, nil)
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	var proof types.FileProof

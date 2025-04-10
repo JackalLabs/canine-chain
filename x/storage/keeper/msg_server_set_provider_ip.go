@@ -7,7 +7,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) SetProviderIP(goCtx context.Context, msg *types.MsgSetProviderIP) (*types.MsgSetProviderIPResponse, error) {
+func (k msgServer) SetProviderIP(
+	goCtx context.Context,
+	msg *types.MsgSetProviderIP,
+) (*types.MsgSetProviderIPResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)

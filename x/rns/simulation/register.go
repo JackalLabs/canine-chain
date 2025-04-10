@@ -31,14 +31,22 @@ func SimulateMsgRegister(
 
 		if found {
 			if ctx.BlockHeight() < whois.Expires {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "name already registered"), nil, nil
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"name already registered",
+				), nil, nil
 			}
 		}
 
 		// calculating the necessary costs to rent the domain
 		domainCost, err := keeper.GetCostOfName(name, tld)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Could not grab the cost of name"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"Could not grab the cost of name",
+			), nil, err
 		}
 
 		price := sdk.NewInt(domainCost * int64(numYears))
@@ -55,12 +63,25 @@ func SimulateMsgRegister(
 
 			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unabled to fund account",
+				), nil, err
 			}
 
-			err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, sdk.NewCoins(c))
+			err = bk.SendCoinsFromModuleToAccount(
+				ctx,
+				types.ModuleName,
+				simAccount.Address,
+				sdk.NewCoins(c),
+			)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unabled to fund account",
+				), nil, err
 			}
 		}
 
@@ -73,7 +94,11 @@ func SimulateMsgRegister(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 		// filling the appropriate message fields

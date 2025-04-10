@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"log"
 
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
 // ExportAppStateAndValidators exports the state of the application for a genesis
@@ -40,7 +39,7 @@ func (app *JackalApp) ExportAppStateAndValidators(
 		AppState:        appState,
 		Validators:      validators,
 		Height:          height,
-		ConsensusParams: app.BaseApp.GetConsensusParams(ctx),
+		ConsensusParams: app.GetConsensusParams(ctx),
 	}, err
 }
 
@@ -49,12 +48,9 @@ func (app *JackalApp) ExportAppStateAndValidators(
 //
 //	in favour of export at a block height
 func (app *JackalApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
-	applyAllowedAddrs := false
+	applyAllowedAddrs := len(jailAllowedAddrs) > 0
 
 	// check if there is a allowed address list
-	if len(jailAllowedAddrs) > 0 {
-		applyAllowedAddrs = true
-	}
 
 	allowedAddrsMap := make(map[string]bool)
 
@@ -72,10 +68,16 @@ func (app *JackalApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs
 	/* Handle fee distribution state. */
 
 	// withdraw all validator commission
-	app.stakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
-		_, _ = app.distrKeeper.WithdrawValidatorCommission(ctx, val.GetOperator()) //nolint:errcheck
-		return false
-	})
+	app.stakingKeeper.IterateValidators(
+		ctx,
+		func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
+			_, _ = app.distrKeeper.WithdrawValidatorCommission(
+				ctx,
+				val.GetOperator(),
+			) //nolint:errcheck
+			return false
+		},
+	)
 
 	// withdraw all delegator rewards
 	dels := app.stakingKeeper.GetAllDelegations(ctx)
@@ -103,16 +105,19 @@ func (app *JackalApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs
 	ctx = ctx.WithBlockHeight(0)
 
 	// reinitialize all validators
-	app.stakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
-		// donate any unwithdrawn outstanding reward fraction tokens to the community pool
-		scraps := app.distrKeeper.GetValidatorOutstandingRewardsCoins(ctx, val.GetOperator())
-		feePool := app.distrKeeper.GetFeePool(ctx)
-		feePool.CommunityPool = feePool.CommunityPool.Add(scraps...)
-		app.distrKeeper.SetFeePool(ctx, feePool)
+	app.stakingKeeper.IterateValidators(
+		ctx,
+		func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
+			// donate any unwithdrawn outstanding reward fraction tokens to the community pool
+			scraps := app.distrKeeper.GetValidatorOutstandingRewardsCoins(ctx, val.GetOperator())
+			feePool := app.distrKeeper.GetFeePool(ctx)
+			feePool.CommunityPool = feePool.CommunityPool.Add(scraps...)
+			app.distrKeeper.SetFeePool(ctx, feePool)
 
-		app.distrKeeper.Hooks().AfterValidatorCreated(ctx, val.GetOperator())
-		return false
-	})
+			app.distrKeeper.Hooks().AfterValidatorCreated(ctx, val.GetOperator())
+			return false
+		},
+	)
 
 	// reinitialize all delegations
 	for _, del := range dels {
@@ -134,22 +139,28 @@ func (app *JackalApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs
 	/* Handle staking state. */
 
 	// iterate through redelegations, reset creation height
-	app.stakingKeeper.IterateRedelegations(ctx, func(_ int64, red stakingtypes.Redelegation) (stop bool) {
-		for i := range red.Entries {
-			red.Entries[i].CreationHeight = 0
-		}
-		app.stakingKeeper.SetRedelegation(ctx, red)
-		return false
-	})
+	app.stakingKeeper.IterateRedelegations(
+		ctx,
+		func(_ int64, red stakingtypes.Redelegation) (stop bool) {
+			for i := range red.Entries {
+				red.Entries[i].CreationHeight = 0
+			}
+			app.stakingKeeper.SetRedelegation(ctx, red)
+			return false
+		},
+	)
 
 	// iterate through unbonding delegations, reset creation height
-	app.stakingKeeper.IterateUnbondingDelegations(ctx, func(_ int64, ubd stakingtypes.UnbondingDelegation) (stop bool) {
-		for i := range ubd.Entries {
-			ubd.Entries[i].CreationHeight = 0
-		}
-		app.stakingKeeper.SetUnbondingDelegation(ctx, ubd)
-		return false
-	})
+	app.stakingKeeper.IterateUnbondingDelegations(
+		ctx,
+		func(_ int64, ubd stakingtypes.UnbondingDelegation) (stop bool) {
+			for i := range ubd.Entries {
+				ubd.Entries[i].CreationHeight = 0
+			}
+			app.stakingKeeper.SetUnbondingDelegation(ctx, ubd)
+			return false
+		},
+	)
 
 	// Iterate through validators by power descending, reset bond heights, and
 	// update bond intra-tx counters.
@@ -173,9 +184,11 @@ func (app *JackalApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs
 		counter++
 	}
 
-	iter.Close()
-
-	_, err := app.stakingKeeper.ApplyAndReturnValidatorSetUpdates(ctx)
+	err := iter.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = app.stakingKeeper.ApplyAndReturnValidatorSetUpdates(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}

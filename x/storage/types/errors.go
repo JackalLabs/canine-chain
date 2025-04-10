@@ -8,9 +8,17 @@ import (
 
 // x/storage module sentinel errors
 var (
-	ErrDivideByZero        = sdkerrors.Register(ModuleName, 1110, "cannot divide by zero")
-	ErrProviderNotFound    = sdkerrors.Register(ModuleName, 1111, "provider not found please init your provider")
-	ErrNotValidTotalSpace  = sdkerrors.Register(ModuleName, 1112, "not valid total space please enter total number of bytes to provide")
+	ErrDivideByZero     = sdkerrors.Register(ModuleName, 1110, "cannot divide by zero")
+	ErrProviderNotFound = sdkerrors.Register(
+		ModuleName,
+		1111,
+		"provider not found please init your provider",
+	)
+	ErrNotValidTotalSpace = sdkerrors.Register(
+		ModuleName,
+		1112,
+		"not valid total space please enter total number of bytes to provide",
+	)
 	ErrDealNotFound        = sdkerrors.Register(ModuleName, 1114, "cannot find active deal")
 	ErrFormNotFound        = sdkerrors.Register(ModuleName, 1115, "cannot find attestation form")
 	ErrAttestInvalid       = sdkerrors.Register(ModuleName, 1116, "cannot attest to form")

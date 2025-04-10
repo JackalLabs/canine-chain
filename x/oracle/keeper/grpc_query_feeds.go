@@ -4,9 +4,8 @@ import (
 	"context"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
-	"github.com/cosmos/cosmos-sdk/types/query"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -28,7 +27,10 @@ func (k Keeper) Feed(c context.Context, req *types.QueryFeed) (*types.QueryFeedR
 	return &types.QueryFeedResponse{Feed: feed}, nil
 }
 
-func (k Keeper) AllFeeds(c context.Context, req *types.QueryAllFeeds) (*types.QueryAllFeedsResponse, error) {
+func (k Keeper) AllFeeds(
+	c context.Context,
+	req *types.QueryAllFeeds,
+) (*types.QueryAllFeedsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

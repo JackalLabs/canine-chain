@@ -32,7 +32,12 @@ func (suite *KeeperTestSuite) TestMsgAcceptBid() {
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, address, coins)
 	suite.Require().NoError(err)
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameAddress, coins)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		suite.ctx,
+		types.ModuleName,
+		nameAddress,
+		coins,
+	)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, nameAddress.String(), TestName, "{}", 2, true)

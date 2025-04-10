@@ -3,14 +3,13 @@ package testutil
 import (
 	"testing"
 
+	"github.com/cosmos/cosmos-sdk/store"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-
-	"github.com/cosmos/cosmos-sdk/store"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // DefaultContext creates a sdk.Context with a fresh MemDB that can be used in tests.
@@ -34,7 +33,11 @@ type TestContext struct {
 	CMS store.CommitMultiStore
 }
 
-func DefaultContextWithDB(t *testing.T, tkey storetypes.StoreKey, key ...storetypes.StoreKey) TestContext {
+func DefaultContextWithDB(
+	t *testing.T,
+	tkey storetypes.StoreKey,
+	key ...storetypes.StoreKey,
+) TestContext {
 	db := dbm.NewMemDB()
 	cms := store.NewCommitMultiStore(db)
 	for _, storeKey := range key {

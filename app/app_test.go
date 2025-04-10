@@ -5,16 +5,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/log"
-	db "github.com/tendermint/tm-db"
-
-	abci "github.com/tendermint/tendermint/abci/types"
-
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	abci "github.com/tendermint/tendermint/abci/types"
+	"github.com/tendermint/tendermint/libs/log"
+	db "github.com/tendermint/tm-db"
 )
 
 var emptyWasmOpts []wasm.Option
@@ -32,7 +30,19 @@ func TestWasmdExport(t *testing.T) {
 	setBech32ForTest()
 
 	db := db.NewMemDB()
-	gapp := NewJackalApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, map[int64]bool{}, DefaultNodeHome, 0, MakeEncodingConfig(), wasm.EnableAllProposals, EmptyBaseAppOptions{}, emptyWasmOpts)
+	gapp := NewJackalApp(
+		log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		DefaultNodeHome,
+		0,
+		MakeEncodingConfig(),
+		wasm.EnableAllProposals,
+		EmptyBaseAppOptions{},
+		emptyWasmOpts,
+	)
 
 	genesisState := NewDefaultGenesisState()
 	stateBytes, err := json.MarshalIndent(genesisState, "", "  ")
@@ -48,7 +58,19 @@ func TestWasmdExport(t *testing.T) {
 	gapp.Commit()
 
 	// Making a new app object with the db, so that initchain hasn't been called
-	newGapp := NewJackalApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, map[int64]bool{}, DefaultNodeHome, 0, MakeEncodingConfig(), wasm.EnableAllProposals, EmptyBaseAppOptions{}, emptyWasmOpts)
+	newGapp := NewJackalApp(
+		log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		DefaultNodeHome,
+		0,
+		MakeEncodingConfig(),
+		wasm.EnableAllProposals,
+		EmptyBaseAppOptions{},
+		emptyWasmOpts,
+	)
 	_, err = newGapp.ExportAppStateAndValidators(false, []string{})
 	require.NoError(t, err, "ExportAppStateAndValidators should not have an error")
 }
@@ -58,7 +80,19 @@ func TestBlockedAddrs(t *testing.T) {
 	setBech32ForTest()
 
 	db := db.NewMemDB()
-	gapp := NewJackalApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, map[int64]bool{}, DefaultNodeHome, 0, MakeEncodingConfig(), wasm.EnableAllProposals, EmptyBaseAppOptions{}, emptyWasmOpts)
+	gapp := NewJackalApp(
+		log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		DefaultNodeHome,
+		0,
+		MakeEncodingConfig(),
+		wasm.EnableAllProposals,
+		EmptyBaseAppOptions{},
+		emptyWasmOpts,
+	)
 
 	for acc := range maccPerms {
 		t.Run(acc, func(t *testing.T) {
@@ -71,7 +105,12 @@ func TestBlockedAddrs(t *testing.T) {
 
 func TestGetMaccPerms(t *testing.T) {
 	dup := GetMaccPerms()
-	require.Equal(t, maccPerms, dup, "duplicated module account permissions differed from actual module account permissions")
+	require.Equal(
+		t,
+		maccPerms,
+		dup,
+		"duplicated module account permissions differed from actual module account permissions",
+	)
 }
 
 func TestGetEnabledProposals(t *testing.T) {
@@ -91,7 +130,10 @@ func TestGetEnabledProposals(t *testing.T) {
 		"some enabled": {
 			proposalsEnabled: "okay",
 			specificEnabled:  "StoreCode,InstantiateContract",
-			expected:         []wasm.ProposalType{wasm.ProposalTypeStoreCode, wasm.ProposalTypeInstantiateContract},
+			expected: []wasm.ProposalType{
+				wasm.ProposalTypeStoreCode,
+				wasm.ProposalTypeInstantiateContract,
+			},
 		},
 	}
 

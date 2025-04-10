@@ -17,7 +17,11 @@ import (
 )
 
 // copied from the provider code, we should probably make this an import for the providers
-func GenerateMerkleProof(tree merkletree.MerkleTree, index int, item []byte) (bool, *merkletree.Proof, error) {
+func GenerateMerkleProof(
+	tree merkletree.MerkleTree,
+	index int,
+	item []byte,
+) (bool, *merkletree.Proof, error) {
 	h := sha256.New()
 	_, err := io.WriteString(h, fmt.Sprintf("%d%x", index, item))
 	if err != nil {
@@ -29,7 +33,13 @@ func GenerateMerkleProof(tree merkletree.MerkleTree, index int, item []byte) (bo
 		panic(err)
 	}
 
-	valid, err := merkletree.VerifyProofUsing(h.Sum(nil), false, proof, [][]byte{tree.Root()}, sha3.New512())
+	valid, err := merkletree.VerifyProofUsing(
+		h.Sum(nil),
+		false,
+		proof,
+		[][]byte{tree.Root()},
+		sha3.New512(),
+	)
 	if err != nil {
 		panic(err)
 	}

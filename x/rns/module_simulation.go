@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-
 	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	rnssimulation "github.com/jackalLabs/canine-chain/v4/x/rns/simulation"
 )
@@ -23,7 +22,7 @@ var (
 	_ = baseapp.Paramspace
 )
 
-//nolint:gosec // these aren't hard-coded credentials
+// these aren't hard-coded credentials
 const (
 	opWeightMsgRegister = "op_weight_msg_register"
 	// TODO: Determine the simulation weight value
@@ -85,7 +84,9 @@ func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the rns module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+func (am AppModule) WeightedOperations(
+	simState module.SimulationState,
+) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
 	var weightMsgRegister int

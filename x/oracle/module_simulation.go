@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-
 	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	oraclesimulation "github.com/jackalLabs/canine-chain/v4/x/oracle/simulation"
 	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
@@ -52,7 +51,9 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+func (am AppModule) WeightedOperations(
+	simState module.SimulationState,
+) []simtypes.WeightedOperation {
 	_ = simState
 	operations := make([]simtypes.WeightedOperation, 0)
 

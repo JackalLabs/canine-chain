@@ -101,7 +101,9 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+func (am AppModule) WeightedOperations(
+	simState module.SimulationState,
+) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
 	var weightMsgPostFile int
@@ -116,7 +118,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgAddViewers int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_post_file", &weightMsgAddViewers, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_post_file",
+		&weightMsgAddViewers,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgAddViewers = defaultWeightMsgAddViewers
 		},
@@ -138,7 +144,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgDeleteFile int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_delete_file", &weightMsgDeleteFile, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_delete_file",
+		&weightMsgDeleteFile,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgDeleteFile = defaultWeightMsgDeleteFile
 		},
@@ -149,7 +159,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgRemoveViewers int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_remove_viewers", &weightMsgRemoveViewers, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_remove_viewers",
+		&weightMsgRemoveViewers,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgRemoveViewers = defaultWeightMsgRemoveViewers
 		},
@@ -160,7 +174,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgMakeFolder int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_make_root", &weightMsgMakeFolder, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_make_root",
+		&weightMsgMakeFolder,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgMakeFolder = defaultWeightMsgMakeRoot
 		},
@@ -171,7 +189,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgAddEditors int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_add_editors", &weightMsgAddEditors, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_add_editors",
+		&weightMsgAddEditors,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgAddEditors = defaultWeightMsgAddEditors
 		},
@@ -182,7 +204,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgRemoveEditors int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_remove_editors", &weightMsgRemoveEditors, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_remove_editors",
+		&weightMsgRemoveEditors,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgRemoveEditors = defaultWeightMsgRemoveEditors
 		},
@@ -193,7 +219,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgResetEditors int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_reset_editors", &weightMsgResetEditors, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_reset_editors",
+		&weightMsgResetEditors,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgResetEditors = defaultWeightMsgResetEditors
 		},
@@ -204,7 +234,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgResetViewers int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_reset_viewers", &weightMsgResetViewers, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_reset_viewers",
+		&weightMsgResetViewers,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgResetViewers = defaultWeightMsgResetViewers
 		},
@@ -215,7 +249,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgChangeOwner int
-	simState.AppParams.GetOrGenerate(simState.Cdc, "op_weight_msg_change_owner", &weightMsgChangeOwner, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		"op_weight_msg_change_owner",
+		&weightMsgChangeOwner,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgChangeOwner = defaultWeightMsgChangeOwner
 		},

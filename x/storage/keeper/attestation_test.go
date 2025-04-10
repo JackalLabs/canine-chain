@@ -52,7 +52,13 @@ func (suite *KeeperTestSuite) TestGetAttestationForm() {
 
 	suite.storageKeeper.SetAttestationForm(suite.ctx, attestation)
 
-	foundAttestation, found := suite.storageKeeper.GetAttestationForm(suite.ctx, "prover", []byte{}, "owner", 0)
+	foundAttestation, found := suite.storageKeeper.GetAttestationForm(
+		suite.ctx,
+		"prover",
+		[]byte{},
+		"owner",
+		0,
+	)
 	suite.Require().Equal(found, true)
 	suite.Require().Equal(foundAttestation.Prover, attestation.Prover)
 	suite.Require().Equal(foundAttestation.Attestations, attestation.Attestations)
@@ -139,10 +145,22 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 
 	file.AddProver(suite.ctx, suite.storageKeeper, addresses[10])
 
-	_, err = suite.storageKeeper.RequestAttestation(suite.ctx, []byte("merkle"), "owner", 0, addresses[10])
+	_, err = suite.storageKeeper.RequestAttestation(
+		suite.ctx,
+		[]byte("merkle"),
+		"owner",
+		0,
+		addresses[10],
+	)
 	suite.NoError(err)
 
-	form, found := suite.storageKeeper.GetAttestationForm(suite.ctx, addresses[10], []byte("merkle"), "owner", 0)
+	form, found := suite.storageKeeper.GetAttestationForm(
+		suite.ctx,
+		addresses[10],
+		[]byte("merkle"),
+		"owner",
+		0,
+	)
 	suite.Equal(true, found)
 
 	for _, attestation := range form.Attestations {
@@ -158,7 +176,14 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 	suite.Equal(int64(0), d.LastProven)
 
 	for i, attestation := range form.Attestations {
-		err := suite.storageKeeper.Attest(suite.ctx, addresses[10], []byte("merkle"), "owner", 0, attestation.Provider)
+		err := suite.storageKeeper.Attest(
+			suite.ctx,
+			addresses[10],
+			[]byte("merkle"),
+			"owner",
+			0,
+			attestation.Provider,
+		)
 		if i >= int(params.AttestMinToPass) {
 			suite.Require().Error(err)
 		} else {
@@ -166,7 +191,13 @@ func (suite *KeeperTestSuite) TestMakeAttestation() {
 		}
 	}
 
-	_, found = suite.storageKeeper.GetAttestationForm(suite.ctx, addresses[10], []byte("merkle"), "owner", 0)
+	_, found = suite.storageKeeper.GetAttestationForm(
+		suite.ctx,
+		addresses[10],
+		[]byte("merkle"),
+		"owner",
+		0,
+	)
 	suite.Equal(false, found)
 
 	d, found = suite.storageKeeper.GetProof(suite.ctx, addresses[10], []byte("merkle"), "owner", 0)

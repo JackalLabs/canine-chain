@@ -6,18 +6,16 @@ import (
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	jklapp "github.com/jackalLabs/canine-chain/v4/app"
 	"github.com/jackalLabs/canine-chain/v4/testutil"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	abci "github.com/tendermint/tendermint/abci/types"
+	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-
-	abci "github.com/tendermint/tendermint/abci/types"
-
-	"github.com/cosmos/cosmos-sdk/simapp"
-	"github.com/tendermint/tendermint/libs/log"
 )
 
 func genApp(withGenesis bool, invCheckPeriod uint) (*jklapp.JackalApp, jklapp.GenesisState) {
@@ -68,7 +66,7 @@ func setup(isCheckTx bool) *jklapp.JackalApp {
 
 func (suite *KeeperTestSuite) SetupTest() {
 	app := setup(false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+	ctx := app.NewContext(false, tmproto.Header{})
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, app.StorageKeeper)
@@ -88,7 +86,9 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 	testAccount := testAddresses[0]
 	depoAccount := testAddresses[1]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
@@ -134,10 +134,13 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 
 	suite.Require().Equal(1, len(res.Files))
 
-	mres, err := suite.queryClient.AllFilesByMerkle(context.Background(), &types.QueryAllFilesByMerkle{
-		Pagination: &pg,
-		Merkle:     merkle,
-	})
+	mres, err := suite.queryClient.AllFilesByMerkle(
+		context.Background(),
+		&types.QueryAllFilesByMerkle{
+			Pagination: &pg,
+			Merkle:     merkle,
+		},
+	)
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(mres.Files))
 
@@ -153,7 +156,9 @@ func (suite *KeeperTestSuite) TestOpenFiles() {
 	testAccount := testAddresses[0]
 	depoAccount := testAddresses[1]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
@@ -203,6 +208,7 @@ func (suite *KeeperTestSuite) TestOpenFiles() {
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(200, len(res.Files))
+
 	suite.Require().Equal(count, int(res.Pagination.Total))
 
 	suite.reset()
@@ -217,7 +223,9 @@ func (suite *KeeperTestSuite) TestFileNotes() {
 	testAccount := testAddresses[0]
 	depoAccount := testAddresses[1]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
@@ -292,10 +300,13 @@ func (suite *KeeperTestSuite) TestFileNotes() {
 
 	suite.Require().Equal(2, len(res.Files))
 
-	mres, err := suite.queryClient.AllFilesByMerkle(context.Background(), &types.QueryAllFilesByMerkle{
-		Pagination: &pg,
-		Merkle:     merkle,
-	})
+	mres, err := suite.queryClient.AllFilesByMerkle(
+		context.Background(),
+		&types.QueryAllFilesByMerkle{
+			Pagination: &pg,
+			Merkle:     merkle,
+		},
+	)
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(mres.Files))
 
@@ -336,7 +347,9 @@ func (suite *KeeperTestSuite) TestProofsByAddress() {
 	depoAccount := testAddresses[1]
 	providerAccount := testAddresses[2]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
@@ -417,10 +430,13 @@ func (suite *KeeperTestSuite) TestProofsByAddress() {
 
 	suite.Require().Equal(1, len(AllProofsRes.Proofs))
 
-	ProofByAddressRes, err := suite.queryClient.ProofsByAddress(context.Background(), &types.QueryProofsByAddress{
-		ProviderAddress: providerAccount,
-		Pagination:      &pg,
-	})
+	ProofByAddressRes, err := suite.queryClient.ProofsByAddress(
+		context.Background(),
+		&types.QueryProofsByAddress{
+			ProviderAddress: providerAccount,
+			Pagination:      &pg,
+		},
+	)
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(ProofByAddressRes.Proofs))
 
@@ -428,7 +444,10 @@ func (suite *KeeperTestSuite) TestProofsByAddress() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(l))
 
-	ActiveProviderRes, err := suite.queryClient.ActiveProviders(context.Background(), &types.QueryActiveProviders{})
+	ActiveProviderRes, err := suite.queryClient.ActiveProviders(
+		context.Background(),
+		&types.QueryActiveProviders{},
+	)
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(1, len(ActiveProviderRes.Providers))

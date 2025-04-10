@@ -11,7 +11,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllPubKeys(c context.Context, req *types.QueryAllPubKeys) (*types.QueryAllPubKeysResponse, error) {
+func (k Keeper) AllPubKeys(
+	c context.Context,
+	req *types.QueryAllPubKeys,
+) (*types.QueryAllPubKeysResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -38,7 +41,10 @@ func (k Keeper) AllPubKeys(c context.Context, req *types.QueryAllPubKeys) (*type
 	return &types.QueryAllPubKeysResponse{PubKey: pubkeys, Pagination: pageRes}, nil
 }
 
-func (k Keeper) PubKey(c context.Context, req *types.QueryPubKey) (*types.QueryPubKeyResponse, error) {
+func (k Keeper) PubKey(
+	c context.Context,
+	req *types.QueryPubKey,
+) (*types.QueryPubKeyResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

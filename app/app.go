@@ -1,6 +1,7 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
 	"io"
 	"net/http"
@@ -8,16 +9,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jackalLabs/canine-chain/v4/docs"
-	"github.com/jackalLabs/canine-chain/v4/docs/openapiconsole"
-
-	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
-	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
-	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	"github.com/prometheus/client_golang/prometheus"
-
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
+	// unnamed import of statik for swagger UI support
+	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -87,18 +85,43 @@ import (
 	icahostkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/types"
 	icatypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/types"
+	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
+	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
 	ibcfeetypes "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/types"
 	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v4/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v4/modules/core"
 	ibcclient "github.com/cosmos/ibc-go/v4/modules/core/02-client"
 	ibcclientclient "github.com/cosmos/ibc-go/v4/modules/core/02-client/client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
 	ibcporttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
-
 	"github.com/gorilla/mux"
+	wasmappparams "github.com/jackalLabs/canine-chain/v4/app/params"
+	"github.com/jackalLabs/canine-chain/v4/docs"
+	"github.com/jackalLabs/canine-chain/v4/docs/openapiconsole"
+	owasm "github.com/jackalLabs/canine-chain/v4/wasmbinding"
+	filetreemodule "github.com/jackalLabs/canine-chain/v4/x/filetree"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	mint "github.com/jackalLabs/canine-chain/v4/x/jklmint"
+	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
+	minttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	notificationsmodule "github.com/jackalLabs/canine-chain/v4/x/notifications"
+	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	oraclemodule "github.com/jackalLabs/canine-chain/v4/x/oracle"
+	oraclemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	rnsmodule "github.com/jackalLabs/canine-chain/v4/x/rns"
+	rnsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	storagemodule "github.com/jackalLabs/canine-chain/v4/x/storage"
+	storagemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -107,47 +130,6 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-
-	"github.com/CosmWasm/wasmd/x/wasm"
-	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
-	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmappparams "github.com/jackalLabs/canine-chain/v4/app/params"
-	owasm "github.com/jackalLabs/canine-chain/v4/wasmbinding"
-
-	mint "github.com/jackalLabs/canine-chain/v4/x/jklmint"
-	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
-	minttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
-
-	rnsmodule "github.com/jackalLabs/canine-chain/v4/x/rns"
-	rnsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
-
-	oraclemodule "github.com/jackalLabs/canine-chain/v4/x/oracle"
-	oraclemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
-
-	storagemodule "github.com/jackalLabs/canine-chain/v4/x/storage"
-	storagemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
-
-	filetreemodule "github.com/jackalLabs/canine-chain/v4/x/filetree"
-	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-
-	notificationsmodule "github.com/jackalLabs/canine-chain/v4/x/notifications"
-	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
-
-	/*
-
-		dsigmodule "github.com/jackalLabs/canine-chain/x/dsig"
-		dsigmodulekeeper "github.com/jackalLabs/canine-chain/x/dsig/keeper"
-		dsigmoduletypes "github.com/jackalLabs/canine-chain/x/dsig/types"
-
-	*/
-
-	// unnamed import of statik for swagger UI support
-	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
 
 const appName = "JackalApp"
@@ -361,7 +343,12 @@ func NewJackalApp(
 	appCodec, legacyAmino := encodingConfig.Marshaler, encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 
-	bApp := baseapp.NewBaseApp(appName, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
+	bApp := baseapp.NewBaseApp(
+		appName,
+		logger,
+		db,
+		encodingConfig.TxConfig.TxDecoder(),
+		baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
 
@@ -409,7 +396,10 @@ func NewJackalApp(
 	)
 
 	// set the BaseApp's parameter store
-	bApp.SetParamStore(app.paramsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramskeeper.ConsensusParamsKeyTable()))
+	bApp.SetParamStore(
+		app.paramsKeeper.Subspace(baseapp.Paramspace).
+			WithKeyTable(paramskeeper.ConsensusParamsKeyTable()),
+	)
 
 	// add capability keeper and ScopeToModule for ibc module
 	app.capabilityKeeper = capabilitykeeper.NewKeeper(
@@ -419,7 +409,9 @@ func NewJackalApp(
 	)
 	scopedIBCKeeper := app.capabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	scopedTransferKeeper := app.capabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
-	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
+	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(
+		icacontrollertypes.SubModuleName,
+	)
 	scopedICAHostKeeper := app.capabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	scopedWasmKeeper := app.capabilityKeeper.ScopeToModule(wasm.ModuleName)
 	app.capabilityKeeper.Seal()
@@ -442,7 +434,7 @@ func NewJackalApp(
 	app.authzKeeper = authzkeeper.NewKeeper(
 		keys[authzkeeper.StoreKey],
 		appCodec,
-		app.BaseApp.MsgServiceRouter(),
+		app.MsgServiceRouter(),
 	)
 	app.feeGrantKeeper = feegrantkeeper.NewKeeper(
 		appCodec,
@@ -468,7 +460,13 @@ func NewJackalApp(
 		authtypes.FeeCollectorName,
 		storagemoduletypes.ModuleName,
 	)
-	mintModule := mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(minttypes.ModuleName))
+	mintModule := mint.NewAppModule(
+		appCodec,
+		app.MintKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.getSubspace(minttypes.ModuleName),
+	)
 
 	app.distrKeeper = distrkeeper.NewKeeper(
 		appCodec,
@@ -547,9 +545,14 @@ func NewJackalApp(
 	transferModule := transfer.NewAppModule(app.transferKeeper)
 
 	app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
-		appCodec, keys[icacontrollertypes.StoreKey], app.getSubspace(icacontrollertypes.SubModuleName),
+		appCodec,
+		keys[icacontrollertypes.StoreKey],
+		app.getSubspace(icacontrollertypes.SubModuleName),
 		app.ibcKeeper.ChannelKeeper, // may be replaced with middleware such as ics29 fee
-		app.ibcKeeper.ChannelKeeper, &app.ibcKeeper.PortKeeper, scopedICAControllerKeeper, app.MsgServiceRouter(),
+		app.ibcKeeper.ChannelKeeper,
+		&app.ibcKeeper.PortKeeper,
+		scopedICAControllerKeeper,
+		app.MsgServiceRouter(),
 	)
 
 	app.ICAHostKeeper = icahostkeeper.NewKeeper(
@@ -577,7 +580,13 @@ func NewJackalApp(
 	// if we want to allow any custom callbacks
 	supportedFeatures := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2"
 
-	wasmOpts = append(owasm.RegisterCustomPlugins(&app.FileTreeKeeper, &app.StorageKeeper, &app.NotificationsKeeper), wasmOpts...)
+	wasmOpts = append(
+		owasm.RegisterCustomPlugins(
+			&app.FileTreeKeeper,
+			&app.StorageKeeper,
+			&app.NotificationsKeeper,
+		),
+		wasmOpts...)
 	app.wasmKeeper = wasm.NewKeeper(
 		appCodec,
 		keys[wasm.StoreKey],
@@ -615,7 +624,18 @@ func NewJackalApp(
 
 		app.BankKeeper,
 	)
-	oracleModule := oraclemodule.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper)
+	oracleModule := oraclemodule.NewAppModule(
+		appCodec,
+		app.OracleKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
+	)
+
+	storageDBPath := filepath.Join(homePath, "storage.db")
+	storageDB, err := sql.Open("sqlite3", storageDBPath)
+	if err != nil {
+		panic(fmt.Sprintf("Error reading storage database at '%s' : %s", storageDBPath, err))
+	}
 
 	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
 		appCodec,
@@ -626,8 +646,15 @@ func NewJackalApp(
 		app.OracleKeeper,
 		app.RnsKeeper,
 		authtypes.FeeCollectorName,
+		storageDB,
 	)
-	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(storagemoduletypes.ModuleName))
+	storageModule := storagemodule.NewAppModule(
+		appCodec,
+		app.StorageKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.getSubspace(storagemoduletypes.ModuleName),
+	)
 
 	/*
 
@@ -650,7 +677,12 @@ func NewJackalApp(
 		keys[filetreemoduletypes.MemStoreKey],
 		app.getSubspace(filetreemoduletypes.ModuleName),
 	)
-	filetreeModule := filetreemodule.NewAppModule(appCodec, app.FileTreeKeeper, app.AccountKeeper, app.BankKeeper)
+	filetreeModule := filetreemodule.NewAppModule(
+		appCodec,
+		app.FileTreeKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
+	)
 
 	app.NotificationsKeeper = *notificationsmodulekeeper.NewKeeper(
 		appCodec,
@@ -659,7 +691,12 @@ func NewJackalApp(
 		app.getSubspace(notificationsmoduletypes.ModuleName),
 		app.RnsKeeper,
 	)
-	notificationsModule := notificationsmodule.NewAppModule(appCodec, app.NotificationsKeeper, app.AccountKeeper, app.BankKeeper)
+	notificationsModule := notificationsmodule.NewAppModule(
+		appCodec,
+		app.NotificationsKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
+	)
 
 	// NOTE: renamed porttypes to ibcporttypes will
 	// create merge conflicts with ibc-hooks branch. Need to resolve
@@ -669,7 +706,10 @@ func NewJackalApp(
 
 	// The gov proposal types can be individually enabled
 	if len(enabledProposals) != 0 {
-		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(app.wasmKeeper, enabledProposals))
+		govRouter.AddRoute(
+			wasm.RouterKey,
+			wasm.NewWasmProposalHandler(app.wasmKeeper, enabledProposals),
+		)
 	}
 
 	var transferStack ibcporttypes.IBCModule
@@ -690,7 +730,8 @@ func NewJackalApp(
 
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack).
 		AddRoute(wasm.ModuleName, wasmStack).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule). // ibc router can route to the ica host, but the ica host needs to know filetree's routes
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
+		// ibc router can route to the ica host, but the ica host needs to know filetree's routes
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack)
 
 	app.ibcKeeper.SetRouter(ibcRouter)
@@ -716,7 +757,7 @@ func NewJackalApp(
 		genutil.NewAppModule(
 			app.AccountKeeper,
 			app.stakingKeeper,
-			app.BaseApp.DeliverTx,
+			app.DeliverTx,
 			encodingConfig.TxConfig,
 		),
 		auth.NewAppModule(appCodec, app.AccountKeeper, nil),
@@ -725,18 +766,51 @@ func NewJackalApp(
 		capability.NewAppModule(appCodec, *app.capabilityKeeper),
 		gov.NewAppModule(appCodec, app.govKeeper, app.AccountKeeper, app.BankKeeper),
 		mintModule,
-		slashing.NewAppModule(appCodec, app.slashingKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
-		distr.NewAppModule(appCodec, app.distrKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
+		slashing.NewAppModule(
+			appCodec,
+			app.slashingKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.stakingKeeper,
+		),
+		distr.NewAppModule(
+			appCodec,
+			app.distrKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.stakingKeeper,
+		),
 		staking.NewAppModule(appCodec, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
 		upgrade.NewAppModule(app.upgradeKeeper),
-		wasm.NewAppModule(appCodec, &app.wasmKeeper, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
+		wasm.NewAppModule(
+			appCodec,
+			&app.wasmKeeper,
+			app.stakingKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+		),
 		evidence.NewAppModule(app.evidenceKeeper),
-		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.feeGrantKeeper, app.InterfaceRegistry),
-		authzmodule.NewAppModule(appCodec, app.authzKeeper, app.AccountKeeper, app.BankKeeper, app.InterfaceRegistry),
+		feegrantmodule.NewAppModule(
+			appCodec,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.feeGrantKeeper,
+			app.InterfaceRegistry,
+		),
+		authzmodule.NewAppModule(
+			appCodec,
+			app.authzKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.InterfaceRegistry,
+		),
 		ibc.NewAppModule(app.ibcKeeper),
 		params.NewAppModule(app.paramsKeeper),
 		transferModule,
-		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
+		crisis.NewAppModule(
+			&app.crisisKeeper,
+			skipGenesisInvariants,
+		), // always be last to make sure that it checks for all invariants and not only part of them
 		rnsModule,
 		storageModule,
 		filetreeModule,
@@ -939,7 +1013,11 @@ func NewJackalApp(
 	app.mm.RegisterInvariants(&app.crisisKeeper)
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
 
-	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
+	app.configurator = module.NewConfigurator(
+		app.appCodec,
+		app.MsgServiceRouter(),
+		app.GRPCQueryRouter(),
+	)
 	app.mm.RegisterServices(app.configurator)
 
 	app.registerTestnetUpgradeHandlers()
@@ -953,16 +1031,46 @@ func NewJackalApp(
 		auth.NewAppModule(appCodec, app.AccountKeeper, authsims.RandomGenesisAccounts),
 		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper),
 		capability.NewAppModule(appCodec, *app.capabilityKeeper),
-		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.feeGrantKeeper, app.InterfaceRegistry),
-		authzmodule.NewAppModule(appCodec, app.authzKeeper, app.AccountKeeper, app.BankKeeper, app.InterfaceRegistry),
+		feegrantmodule.NewAppModule(
+			appCodec,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.feeGrantKeeper,
+			app.InterfaceRegistry,
+		),
+		authzmodule.NewAppModule(
+			appCodec,
+			app.authzKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.InterfaceRegistry,
+		),
 		gov.NewAppModule(appCodec, app.govKeeper, app.AccountKeeper, app.BankKeeper),
 		mintModule,
 		staking.NewAppModule(appCodec, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
-		distr.NewAppModule(appCodec, app.distrKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
-		slashing.NewAppModule(appCodec, app.slashingKeeper, app.AccountKeeper, app.BankKeeper, app.stakingKeeper),
+		distr.NewAppModule(
+			appCodec,
+			app.distrKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.stakingKeeper,
+		),
+		slashing.NewAppModule(
+			appCodec,
+			app.slashingKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.stakingKeeper,
+		),
 		params.NewAppModule(app.paramsKeeper),
 		evidence.NewAppModule(app.evidenceKeeper),
-		wasm.NewAppModule(appCodec, &app.wasmKeeper, app.stakingKeeper, app.AccountKeeper, app.BankKeeper),
+		wasm.NewAppModule(
+			appCodec,
+			&app.wasmKeeper,
+			app.stakingKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+		),
 		ibc.NewAppModule(app.ibcKeeper),
 		transferModule,
 		rnsModule,
@@ -1023,7 +1131,7 @@ func NewJackalApp(
 		if err := app.LoadLatestVersion(); err != nil {
 			tmos.Exit(fmt.Sprintf("failed to load latest version: %s", err))
 		}
-		ctx := app.BaseApp.NewUncachedContext(true, tmproto.Header{})
+		ctx := app.NewUncachedContext(true, tmproto.Header{})
 
 		// Initialize pinned codes in wasmvm as they are not persisted there
 		if err := app.wasmKeeper.InitializePinnedCodes(ctx); err != nil {
@@ -1038,7 +1146,10 @@ func NewJackalApp(
 func (app *JackalApp) Name() string { return app.BaseApp.Name() }
 
 // BeginBlocker : application updates every begin block
-func (app *JackalApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *JackalApp) BeginBlocker(
+	ctx sdk.Context,
+	req abci.RequestBeginBlock,
+) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
@@ -1048,7 +1159,10 @@ func (app *JackalApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci
 }
 
 // InitChainer application update at chain initialization
-func (app *JackalApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *JackalApp) InitChainer(
+	ctx sdk.Context,
+	req abci.RequestInitChain,
+) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -1123,12 +1237,12 @@ func (app *JackalApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.API
 
 // RegisterTxService implements the Application.RegisterTxService method.
 func (app *JackalApp) RegisterTxService(clientCtx client.Context) {
-	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.InterfaceRegistry)
+	authtx.RegisterTxService(app.GRPCQueryRouter(), clientCtx, app.Simulate, app.InterfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
 func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
-	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
+	tmservice.RegisterTendermintService(app.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
 }
 
 func (app *JackalApp) AppCodec() codec.Codec {
@@ -1156,7 +1270,11 @@ func GetMaccPerms() map[string][]string {
 }
 
 // initParamsKeeper init params keeper and its subspaces
-func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey sdk.StoreKey) paramskeeper.Keeper {
+func initParamsKeeper(
+	appCodec codec.BinaryCodec,
+	legacyAmino *codec.LegacyAmino,
+	key, tkey sdk.StoreKey,
+) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
 
 	paramsKeeper.Subspace(authtypes.ModuleName)

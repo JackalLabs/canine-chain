@@ -24,6 +24,10 @@ func SimulateMsgRegister(
 
 		// TODO: Handling the Register simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Register simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"Register simulation not implemented",
+		), nil, nil
 	}
 }

@@ -22,7 +22,7 @@ var (
 	_ = baseapp.Paramspace
 )
 
-//nolint:gosec // these aren't hard-coded credentials
+// these aren't hard-coded credentials
 const (
 	opWeightMsgCreateNotifications = "op_weight_msg_notifications"
 	// TODO: Determine the simulation weight value
@@ -64,33 +64,55 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+func (am AppModule) WeightedOperations(
+	simState module.SimulationState,
+) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
 	var weightMsgCreateNotifications int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateNotifications, &weightMsgCreateNotifications, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		opWeightMsgCreateNotifications,
+		&weightMsgCreateNotifications,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgCreateNotifications = defaultWeightMsgCreateNotifications
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCreateNotifications,
-		notificationssimulation.SimulateMsgCreateNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
+		notificationssimulation.SimulateMsgCreateNotifications(
+			am.accountKeeper,
+			am.bankKeeper,
+			am.keeper,
+		),
 	))
 
 	var weightMsgDeleteNotifications int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteNotifications, &weightMsgDeleteNotifications, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		opWeightMsgDeleteNotifications,
+		&weightMsgDeleteNotifications,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgDeleteNotifications = defaultWeightMsgDeleteNotifications
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgDeleteNotifications,
-		notificationssimulation.SimulateMsgDeleteNotifications(am.accountKeeper, am.bankKeeper, am.keeper),
+		notificationssimulation.SimulateMsgDeleteNotifications(
+			am.accountKeeper,
+			am.bankKeeper,
+			am.keeper,
+		),
 	))
 
 	var weightMsgBlockSenders int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgBlockSenders, &weightMsgBlockSenders, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		opWeightMsgBlockSenders,
+		&weightMsgBlockSenders,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgBlockSenders = defaultWeightMsgBlockSenders
 		},

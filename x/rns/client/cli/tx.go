@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/spf13/cobra"
 )
 
 //nolint:unused

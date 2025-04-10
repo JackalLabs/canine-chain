@@ -8,7 +8,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) SetProviderTotalSpace(goCtx context.Context, msg *types.MsgSetProviderTotalSpace) (*types.MsgSetProviderTotalSpaceResponse, error) {
+func (k msgServer) SetProviderTotalSpace(
+	goCtx context.Context,
+	msg *types.MsgSetProviderTotalSpace,
+) (*types.MsgSetProviderTotalSpaceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)

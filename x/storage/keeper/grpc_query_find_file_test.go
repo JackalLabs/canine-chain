@@ -20,7 +20,9 @@ func (suite *KeeperTestSuite) TestFindFile() {
 	providerAccount := testAddresses[2]
 	dummyProvider := testAddresses[3]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
@@ -108,14 +110,20 @@ func (suite *KeeperTestSuite) TestFindFile() {
 
 	suite.Require().Equal(2, len(res.Files))
 
-	mres, err := suite.queryClient.AllFilesByMerkle(context.Background(), &types.QueryAllFilesByMerkle{
-		Pagination: &pg,
-		Merkle:     merkle,
-	})
+	mres, err := suite.queryClient.AllFilesByMerkle(
+		context.Background(),
+		&types.QueryAllFilesByMerkle{
+			Pagination: &pg,
+			Merkle:     merkle,
+		},
+	)
 	suite.Require().NoError(err)
 	suite.Require().Equal(1, len(mres.Files))
 
-	ffres, err := suite.queryClient.FindFile(context.Background(), &types.QueryFindFile{Merkle: merkle})
+	ffres, err := suite.queryClient.FindFile(
+		context.Background(),
+		&types.QueryFindFile{Merkle: merkle},
+	)
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(1, len(ffres.ProviderIps))

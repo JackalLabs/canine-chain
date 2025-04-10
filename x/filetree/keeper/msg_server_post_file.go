@@ -3,13 +3,15 @@ package keeper
 import (
 	"context"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
+func (k msgServer) PostFile(
+	goCtx context.Context,
+	msg *types.MsgPostFile,
+) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	parentOwnerString := MakeOwnerAddress(msg.HashParent, msg.Account)

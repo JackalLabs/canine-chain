@@ -45,7 +45,12 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 	bobPepeViewerAddress := keeper.MakeViewerAddress(pepejpg.TrackingNumber, bob)
 
 	// Create a good file
-	bunnyjpg, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/bunny.jpg")
+	bunnyjpg, err := types.CreateFolderOrFile(
+		alice,
+		aliceEditorID,
+		aliceViewerID,
+		"s/home/bunny.jpg",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *bunnyjpg)
 	bunnyMerklePath := types.MerklePath("s/home/bunny.jpg")
@@ -105,7 +110,12 @@ func (suite *KeeperTestSuite) TestJSONMarshalling() {
 	}
 }
 
-func CreateBadFile(creator string, editorIDs []string, viewerIDs []string, readablePath string) (*types.Files, error) {
+func CreateBadFile(
+	creator string,
+	editorIDs []string,
+	viewerIDs []string,
+	readablePath string,
+) (*types.Files, error) {
 	merklePath := types.MerklePath(readablePath)
 	trackingNumber := uuid.NewString()
 

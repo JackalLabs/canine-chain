@@ -42,27 +42,47 @@ func SimulateMsgAcceptBid(
 		// getting a random domain name that is on sale
 		allNames := k.GetAllForsale(ctx)
 		if len(allNames) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "No domain names listed"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAcceptBid,
+				"No domain names listed",
+			), nil, nil
 		}
 		rName := allNames[r.Intn(len(allNames))]
 
 		n, tld, err := keeper.GetNameAndTLD(rName.Name)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unable to get name and tld"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAcceptBid,
+				"unable to get name and tld",
+			), nil, err
 		}
 
 		name, found := k.GetNames(ctx, n, tld)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unable to get name and tld"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAcceptBid,
+				"unable to get name and tld",
+			), nil, err
 		}
 		if rName.Owner != name.Value {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "bid is no longer valid"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAcceptBid,
+				"bid is no longer valid",
+			), nil, nil
 		}
 
 		// scanning bids
 		bids := GetBidsFor(k, ctx, rName.Name)
 		if len(bids) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "unalbe to find bids"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAcceptBid,
+				"unalbe to find bids",
+			), nil, nil
 		}
 		bid := bids[r.Intn(len(bids))]
 
@@ -71,9 +91,15 @@ func SimulateMsgAcceptBid(
 		simAccount, found := simtypes.FindAccount(accs, acc)
 
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAcceptBid, "owner account not found"),
+			return simtypes.NoOpMsg(
+					types.ModuleName,
+					types.TypeMsgAcceptBid,
+					"owner account not found",
+				),
 				nil,
-				fmt.Errorf("rns registered with non-existing account")
+				fmt.Errorf(
+					"rns registered with non-existing account",
+				)
 		}
 
 		// packaging the request
@@ -86,7 +112,11 @@ func SimulateMsgAcceptBid(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to generate fees",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

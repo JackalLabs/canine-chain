@@ -15,7 +15,12 @@ func (f *UnifiedFile) ContainsProver(prover string) bool {
 	return false
 }
 
-func (f *UnifiedFile) ProvenProviderLastBlock(ctx sdk.Context, k ProofLoader, height int64, prover string) bool {
+func (f *UnifiedFile) ProvenProviderLastBlock(
+	ctx sdk.Context,
+	k ProofLoader,
+	height int64,
+	prover string,
+) bool {
 	proof, err := f.GetProver(ctx, k, prover)
 	if err != nil {
 		return false

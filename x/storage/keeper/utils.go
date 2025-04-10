@@ -64,7 +64,12 @@ func (k Keeper) GetStorageCostKbs(ctx sdk.Context, kbs int64, hours int64) sdk.I
 
 // GetStorageCostKbs calculates storage cost in ujkl
 // Uses kilobytes and months to calculate how much user has to pay
-func (k Keeper) GetStorageCostKbsWithPrice(ctx sdk.Context, kbs int64, hours int64, pricePerTBMonth int64) sdk.Int {
+func (k Keeper) GetStorageCostKbsWithPrice(
+	ctx sdk.Context,
+	kbs int64,
+	hours int64,
+	pricePerTBMonth int64,
+) sdk.Int {
 	pricePerTBPerMonth := sdk.NewDec(pricePerTBMonth)
 	quantifiedPricePerTBPerMonth := pricePerTBPerMonth.QuoInt64(3)
 	pricePerGbPerMonth := quantifiedPricePerTBPerMonth.QuoInt64(1000)
@@ -91,16 +96,22 @@ func (k Keeper) GetStorageCostKbsWithPrice(ctx sdk.Context, kbs int64, hours int
 // Uses gigabytes and months to calculate how much user has to pay
 func (k Keeper) GetStorageCost(ctx sdk.Context, gbs int64, hours int64) sdk.Int {
 	basePricePerTBPerMonth := sdk.NewDec(k.GetParams(ctx).PricePerTbPerMonth)
-	basePricePerTBPerMonthYearly := basePricePerTBPerMonth.Mul(sdk.MustNewDecFromStr("12.5").QuoInt64(15)) // we only really care about the ratio in case the price changes
+	basePricePerTBPerMonthYearly := basePricePerTBPerMonth.Mul(
+		sdk.MustNewDecFromStr("12.5").QuoInt64(15),
+	) // we only really care about the ratio in case the price changes
 
 	var finalPricePerTbPerMonth sdk.Dec
 
 	if hours < 365*24 { // calculating monthly
 		switch {
 		case gbs >= 20_000:
-			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.MustNewDecFromStr("12.5").QuoInt64(15)) // we only really care about the ratio in case the price changes
+			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(
+				sdk.MustNewDecFromStr("12.5").QuoInt64(15),
+			) // we only really care about the ratio in case the price changes
 		case gbs >= 5_000:
-			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(sdk.NewDec(14).QuoInt64(15)) // we only really care about the ratio in case the price changes
+			finalPricePerTbPerMonth = basePricePerTBPerMonth.Mul(
+				sdk.NewDec(14).QuoInt64(15),
+			) // we only really care about the ratio in case the price changes
 		default:
 			finalPricePerTbPerMonth = basePricePerTBPerMonth
 		}

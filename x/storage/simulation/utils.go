@@ -80,7 +80,13 @@ func GetMerkleProof() (item, jProof string) {
 		panic(err)
 	}
 
-	validProof, err := merkle.VerifyProofUsing(hashedItem, false, proof, [][]byte{hex}, sha3.New512())
+	validProof, err := merkle.VerifyProofUsing(
+		hashedItem,
+		false,
+		proof,
+		[][]byte{hex},
+		sha3.New512(),
+	)
 	if err != nil {
 		panic(err)
 	}

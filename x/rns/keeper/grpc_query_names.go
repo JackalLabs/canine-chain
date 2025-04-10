@@ -11,7 +11,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllNames(c context.Context, req *types.QueryAllNames) (*types.QueryAllNamesResponse, error) {
+func (k Keeper) AllNames(
+	c context.Context,
+	req *types.QueryAllNames,
+) (*types.QueryAllNamesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -71,7 +74,10 @@ func (k Keeper) Name(c context.Context, req *types.QueryName) (*types.QueryNameR
 	return &types.QueryNameResponse{Name: val}, nil
 }
 
-func (k Keeper) PrimaryName(c context.Context, req *types.QueryPrimaryName) (*types.QueryPrimaryNameResponse, error) {
+func (k Keeper) PrimaryName(
+	c context.Context,
+	req *types.QueryPrimaryName,
+) (*types.QueryPrimaryNameResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

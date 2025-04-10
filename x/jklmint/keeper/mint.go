@@ -28,7 +28,12 @@ func (k Keeper) send(ctx sdk.Context, denom string, amount int64, receiver strin
 	return nil
 }
 
-func (k Keeper) mintStaker(ctx sdk.Context, mintTokens int64, denom string, params types.Params) error {
+func (k Keeper) mintStaker(
+	ctx sdk.Context,
+	mintTokens int64,
+	denom string,
+	params types.Params,
+) error {
 	stakerRatio := sdk.NewDec(params.StakerRatio).QuoInt64(100)
 
 	stakerCoinValue := stakerRatio.MulInt64(mintTokens).TruncateInt64()
@@ -59,7 +64,12 @@ func GetAccount(name string) (sdk.AccAddress, error) {
 	return adr, nil
 }
 
-func (k Keeper) mintDevGrants(ctx sdk.Context, mintTokens int64, denom string, params types.Params) error {
+func (k Keeper) mintDevGrants(
+	ctx sdk.Context,
+	mintTokens int64,
+	denom string,
+	params types.Params,
+) error {
 	devGrantRatio := sdk.NewDec(params.DevGrantsRatio).QuoInt64(100)
 
 	devGrantTokenAmount := devGrantRatio.MulInt64(mintTokens).TruncateInt64()
@@ -77,7 +87,12 @@ func (k Keeper) mintDevGrants(ctx sdk.Context, mintTokens int64, denom string, p
 	return nil
 }
 
-func (k Keeper) mintStorageProviderStipend(ctx sdk.Context, mintTokens int64, denom string, params types.Params) error {
+func (k Keeper) mintStorageProviderStipend(
+	ctx sdk.Context,
+	mintTokens int64,
+	denom string,
+	params types.Params,
+) error {
 	provRatio := sdk.NewDec(params.StorageProviderRatio).QuoInt64(100)
 
 	provTokens := provRatio.MulInt64(mintTokens).TruncateInt64()
@@ -113,7 +128,8 @@ func (k Keeper) BlockMint(ctx sdk.Context) {
 
 	err := k.MintCoins(ctx, coins)
 	if err != nil {
-		ctx.Logger().Error(sdkerrors.Wrapf(err, "could not mint tokens at block %d", ctx.BlockHeight()).Error())
+		ctx.Logger().
+			Error(sdkerrors.Wrapf(err, "could not mint tokens at block %d", ctx.BlockHeight()).Error())
 		return
 	}
 

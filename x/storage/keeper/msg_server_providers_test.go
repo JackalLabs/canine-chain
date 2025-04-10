@@ -20,7 +20,12 @@ func (suite *KeeperTestSuite) TestMsgInitProvider() {
 	userAdr, err := sdk.AccAddressFromBech32(user)
 	suite.Require().NoError(err)
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, userAdr, sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10000000000)))
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		suite.ctx,
+		types.ModuleName,
+		userAdr,
+		sdk.NewCoins(sdk.NewInt64Coin("ujkl", 10000000000)),
+	)
 	suite.Require().NoError(err)
 
 	cases := []struct {

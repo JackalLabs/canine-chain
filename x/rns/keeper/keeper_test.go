@@ -1,10 +1,9 @@
 package keeper_test
 
 import (
+	gocontext "context"
 	"fmt"
 	"testing"
-
-	gocontext "context"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"

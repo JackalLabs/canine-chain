@@ -1,10 +1,9 @@
 package keeper_test
 
 import (
-	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 )
 
 func (suite *KeeperTestSuite) TestCreateFeed() {
@@ -52,7 +51,12 @@ func (suite *KeeperTestSuite) TestCreateFeed() {
 			coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(1000000000000)))
 			err := suite.bankKeeper.MintCoins(suite.ctx, minttypes.ModuleName, coins)
 			suite.NoError(err)
-			err = suite.bankKeeper.SendCoinsFromModuleToModule(suite.ctx, minttypes.ModuleName, types.ModuleName, coins)
+			err = suite.bankKeeper.SendCoinsFromModuleToModule(
+				suite.ctx,
+				minttypes.ModuleName,
+				types.ModuleName,
+				coins,
+			)
 			suite.NoError(err)
 
 			coin := sdk.NewInt64Coin("ujkl", 100000000)

@@ -9,7 +9,12 @@ const TypeMsgRemoveEditors = "remove_editors"
 
 var _ sdk.Msg = &MsgRemoveEditors{}
 
-func NewMsgRemoveEditors(creator string, editorIDs string, address string, fileowner string) *MsgRemoveEditors {
+func NewMsgRemoveEditors(
+	creator string,
+	editorIDs string,
+	address string,
+	fileowner string,
+) *MsgRemoveEditors {
 	return &MsgRemoveEditors{
 		Creator:   creator,
 		EditorIds: editorIDs,

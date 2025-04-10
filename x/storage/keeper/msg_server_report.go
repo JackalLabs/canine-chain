@@ -3,14 +3,20 @@ package keeper
 import (
 	"context"
 
-	types2 "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	types2 "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k Keeper) DoReport(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {
+func (k Keeper) DoReport(
+	ctx sdk.Context,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
+	creator string,
+) error {
 	form, found := k.GetReportForm(ctx, prover, merkle, owner, start)
 	if !found {
 		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this report")
@@ -54,10 +60,13 @@ func (k Keeper) DoReport(ctx sdk.Context, prover string, merkle []byte, owner st
 	return nil
 }
 
-func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.MsgReportResponse, error) {
+func (k msgServer) Report(
+	goCtx context.Context,
+	msg *types.MsgReport,
+) (*types.MsgReportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.Keeper.DoReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
+	err := k.DoReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
@@ -79,10 +88,19 @@ func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.M
 	return &types.MsgReportResponse{}, nil
 }
 
-func (k Keeper) RequestReport(ctx sdk.Context, prover string, merkle []byte, owner string, start int64) ([]string, error) {
+func (k Keeper) RequestReport(
+	ctx sdk.Context,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
+) ([]string, error) {
 	deal, found := k.GetFile(ctx, merkle, owner, start)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal for report form")
+		return nil, sdkerrors.Wrapf(
+			types.ErrDealNotFound,
+			"cannot find active deal for report form",
+		)
 	}
 
 	_, found = k.GetReportForm(ctx, prover, merkle, owner, start)
@@ -135,7 +153,10 @@ func (k Keeper) RequestReport(ctx sdk.Context, prover string, merkle []byte, own
 	return providerAddresses, nil
 }
 
-func (k msgServer) RequestReportForm(goCtx context.Context, msg *types.MsgRequestReportForm) (*types.MsgRequestReportFormResponse, error) {
+func (k msgServer) RequestReportForm(
+	goCtx context.Context,
+	msg *types.MsgRequestReportForm,
+) (*types.MsgRequestReportFormResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	providerAddresses, err := k.RequestReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start)

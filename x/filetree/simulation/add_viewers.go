@@ -5,13 +5,12 @@ import (
 	"math/rand"
 	"strings"
 
-	eciesgo "github.com/ecies/go/v2"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	eciesgo "github.com/ecies/go/v2"
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
@@ -34,14 +33,27 @@ func SimulateMsgAddViewers(
 		// root folder
 		rootFolder, err := types.CreateRootFolder(address)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddViewers, "unable to create root folder"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAddViewers,
+				"unable to create root folder",
+			), nil, err
 		}
 		k.SetFiles(ctx, *rootFolder)
 
 		// home folder
-		homeFolder, err := types.CreateFolderOrFile(address, strings.Split(address, ","), strings.Split(address, ","), "s/home/")
+		homeFolder, err := types.CreateFolderOrFile(
+			address,
+			strings.Split(address, ","),
+			strings.Split(address, ","),
+			"s/home/",
+		)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddViewers, "unable to create home folder"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAddViewers,
+				"unable to create home folder",
+			), nil, err
 		}
 		k.SetFiles(ctx, *homeFolder)
 
@@ -66,7 +78,11 @@ func SimulateMsgAddViewers(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddViewers, "failed to generate fee"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAddViewers,
+				"failed to generate fee",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

@@ -63,7 +63,10 @@ func (k Keeper) TransferName(ctx sdk.Context, creator string, receiever string, 
 	return nil
 }
 
-func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*types.MsgTransferResponse, error) {
+func (k msgServer) Transfer(
+	goCtx context.Context,
+	msg *types.MsgTransfer,
+) (*types.MsgTransferResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.TransferName(ctx, msg.Creator, msg.Receiver, msg.Name)

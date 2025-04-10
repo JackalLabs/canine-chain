@@ -32,14 +32,27 @@ func SimulateMsgChangeOwner(
 			2. choose another account to transfer ownership to
 			3. transfer ownership
 		*/
-		homeFolder, err := types.CreateFolderOrFile(address, strings.Split(address, ","), strings.Split(address, ","), "s/home/")
+		homeFolder, err := types.CreateFolderOrFile(
+			address,
+			strings.Split(address, ","),
+			strings.Split(address, ","),
+			"s/home/",
+		)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to create home folder"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgChangeOwner,
+				"unable to create home folder",
+			), nil, err
 		}
 
 		_, found := k.GetFiles(ctx, homeFolder.Address, homeFolder.Owner)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to find s/home/"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgChangeOwner,
+				"unable to find s/home/",
+			), nil, nil
 		}
 
 		shareFilePath := "s/home/share" + simAccount.Address.String()
@@ -50,14 +63,22 @@ func SimulateMsgChangeOwner(
 			shareFilePath,
 		)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "unable to create share file"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgChangeOwner,
+				"unable to create share file",
+			), nil, err
 		}
 		k.SetFiles(ctx, *shareFile)
 
 		bobOwnerAddr := types.MakeOwnerAddress(shareFile.Address, bobHash)
 		_, found = k.GetFiles(ctx, shareFile.Address, bobOwnerAddr)
 		if found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "file already shared"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgChangeOwner,
+				"file already shared",
+			), nil, nil
 		}
 
 		msg := &types.MsgChangeOwner{
@@ -70,7 +91,11 @@ func SimulateMsgChangeOwner(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgChangeOwner, "failed to generate fee"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgChangeOwner,
+				"failed to generate fee",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

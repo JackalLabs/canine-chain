@@ -7,7 +7,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 )
 
-func (k Keeper) Params(c context.Context, _ *types.QueryParams) (*types.QueryParamsResponse, error) {
+func (k Keeper) Params(
+	c context.Context,
+	_ *types.QueryParams,
+) (*types.QueryParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	params := k.GetParams(ctx)
 

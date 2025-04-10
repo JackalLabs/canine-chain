@@ -13,7 +13,11 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createStoragePaymentInfo(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.StoragePaymentInfo {
+func createStoragePaymentInfo(
+	keeper *keeper.Keeper,
+	ctx sdk.Context,
+	n int,
+) []types.StoragePaymentInfo {
 	items := make([]types.StoragePaymentInfo, n)
 	for i := range items {
 		items[i].Address = strconv.Itoa(i)
@@ -68,7 +72,11 @@ func (suite *KeeperTestSuite) TestIterateGauges() {
 	for i := 0; i < 50; i++ {
 		ls := make([][]byte, i)
 		for m := 0; m < i; m++ {
-			ls[m] = k.NewGauge(ctx, sdk.NewCoins(sdk.NewInt64Coin("ujkl", rand.Int63())), time.Now().Add(time.Hour*20)).Id
+			ls[m] = k.NewGauge(
+				ctx,
+				sdk.NewCoins(sdk.NewInt64Coin("ujkl", rand.Int63())),
+				time.Now().Add(time.Hour*20),
+			).Id
 		}
 
 		is := 0

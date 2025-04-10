@@ -9,17 +9,13 @@ import (
 	"testing"
 	"time"
 
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
-
-	"github.com/cosmos/cosmos-sdk/store"
-	"github.com/cosmos/cosmos-sdk/store/prefix"
-
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/store"
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -38,14 +34,15 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	minttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-
-	"github.com/CosmWasm/wasmd/x/wasm"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 )
 
 // Get flags every time the simulator is run
@@ -60,7 +57,9 @@ type StoreKeysPrefixes struct {
 }
 
 // SetupSimulation wraps simapp.SetupSimulation in order to create any export directory if they do not exist yet
-func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string, log.Logger, bool, error) {
+func SetupSimulation(
+	dirPrefix, dbName string,
+) (simtypes.Config, dbm.DB, string, log.Logger, bool, error) {
 	setBech32ForTest()
 
 	simapp.FlagEnabledValue = true
@@ -90,7 +89,11 @@ func SetupSimulation(dirPrefix, dbName string) (simtypes.Config, dbm.DB, string,
 
 // GetSimulationLog unmarshals the KVPair's Value to the corresponding type based on the
 // each's module store key and the prefix bytes of the KVPair's key.
-func GetSimulationLog(storeName string, sdr sdk.StoreDecoderRegistry, kvAs, kvBs []kv.Pair) (log string) {
+func GetSimulationLog(
+	storeName string,
+	sdr sdk.StoreDecoderRegistry,
+	kvAs, kvBs []kv.Pair,
+) (log string) {
 	for i := 0; i < len(kvAs); i++ {
 		if len(kvAs[i].Value) == 0 && len(kvBs[i].Value) == 0 {
 			// skip if the value doesn't have any bytes
@@ -125,12 +128,25 @@ func TestAppImportExport(t *testing.T) {
 	require.NoError(t, err, "simulation setup failed")
 
 	defer func() {
-		db.Close()
+		require.NoError(t, db.Close())
 		require.NoError(t, os.RemoveAll(dir))
 	}()
 
 	encConf := MakeEncodingConfig()
-	app := NewJackalApp(logger, db, nil, true, map[int64]bool{}, dir, simapp.FlagPeriodValue, encConf, wasm.EnableAllProposals, EmptyBaseAppOptions{}, nil, fauxMerkleModeOpt)
+	app := NewJackalApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		dir,
+		simapp.FlagPeriodValue,
+		encConf,
+		wasm.EnableAllProposals,
+		EmptyBaseAppOptions{},
+		nil,
+		fauxMerkleModeOpt,
+	)
 	require.Equal(t, appName, app.Name())
 
 	// Run randomized simulation
@@ -162,7 +178,10 @@ func TestAppImportExport(t *testing.T) {
 
 	t.Log("importing genesis...")
 
-	simConfig, newDB, newDir, simLogger, simFlag, err := SetupSimulation("leveldb-app-sim-2", "Simulation-2")
+	simConfig, newDB, newDir, simLogger, simFlag, err := SetupSimulation(
+		"leveldb-app-sim-2",
+		"Simulation-2",
+	)
 	require.NoError(t, err, "simulation setup failed")
 
 	_ = simConfig
@@ -170,10 +189,23 @@ func TestAppImportExport(t *testing.T) {
 	_ = simFlag
 
 	defer func() {
-		newDB.Close()
+		require.NoError(t, newDB.Close())
 		require.NoError(t, os.RemoveAll(newDir))
 	}()
-	newApp := NewJackalApp(logger, newDB, nil, true, map[int64]bool{}, newDir, simapp.FlagPeriodValue, encConf, wasm.EnableAllProposals, EmptyBaseAppOptions{}, nil, fauxMerkleModeOpt)
+	newApp := NewJackalApp(
+		logger,
+		newDB,
+		nil,
+		true,
+		map[int64]bool{},
+		newDir,
+		simapp.FlagPeriodValue,
+		encConf,
+		wasm.EnableAllProposals,
+		EmptyBaseAppOptions{},
+		nil,
+		fauxMerkleModeOpt,
+	)
 	require.Equal(t, appName, newApp.Name())
 
 	var genesisState GenesisState
@@ -199,7 +231,11 @@ func TestAppImportExport(t *testing.T) {
 		{app.keys[slashingtypes.StoreKey], newApp.keys[slashingtypes.StoreKey], [][]byte{}},
 		{app.keys[minttypes.StoreKey], newApp.keys[minttypes.StoreKey], [][]byte{}},
 		{app.keys[distrtypes.StoreKey], newApp.keys[distrtypes.StoreKey], [][]byte{}},
-		{app.keys[banktypes.StoreKey], newApp.keys[banktypes.StoreKey], [][]byte{banktypes.BalancesPrefix}},
+		{
+			app.keys[banktypes.StoreKey],
+			newApp.keys[banktypes.StoreKey],
+			[][]byte{banktypes.BalancesPrefix},
+		},
 		{app.keys[paramstypes.StoreKey], newApp.keys[paramstypes.StoreKey], [][]byte{}},
 		{app.keys[govtypes.StoreKey], newApp.keys[govtypes.StoreKey], [][]byte{}},
 		{app.keys[evidencetypes.StoreKey], newApp.keys[evidencetypes.StoreKey], [][]byte{}},
@@ -210,8 +246,16 @@ func TestAppImportExport(t *testing.T) {
 		{app.keys[feegrant.StoreKey], newApp.keys[feegrant.StoreKey], [][]byte{}},
 		{app.keys[wasm.StoreKey], newApp.keys[wasm.StoreKey], [][]byte{}},
 		{app.keys[oraclemoduletypes.StoreKey], newApp.keys[oraclemoduletypes.StoreKey], [][]byte{}},
-		{app.keys[storagemoduletypes.StoreKey], newApp.keys[storagemoduletypes.StoreKey], [][]byte{}},
-		{app.keys[filetreemoduletypes.StoreKey], newApp.keys[filetreemoduletypes.StoreKey], [][]byte{}},
+		{
+			app.keys[storagemoduletypes.StoreKey],
+			newApp.keys[storagemoduletypes.StoreKey],
+			[][]byte{},
+		},
+		{
+			app.keys[filetreemoduletypes.StoreKey],
+			newApp.keys[filetreemoduletypes.StoreKey],
+			[][]byte{},
+		},
 		{app.keys[rnsmoduletypes.StoreKey], newApp.keys[rnsmoduletypes.StoreKey], [][]byte{}},
 	}
 
@@ -226,26 +270,33 @@ func TestAppImportExport(t *testing.T) {
 			for ; iter.Valid(); iter.Next() {
 				prefixStore.Delete(iter.Key())
 			}
-			iter.Close()
+			err = iter.Close()
+			require.New(t).NoError(err)
 		}
 	}
-	prefixes := [][]byte{wasmtypes.ContractCodeHistoryElementPrefix, wasmtypes.ContractByCodeIDAndCreatedSecondaryIndexPrefix}
+	prefixes := [][]byte{
+		wasmtypes.ContractCodeHistoryElementPrefix,
+		wasmtypes.ContractByCodeIDAndCreatedSecondaryIndexPrefix,
+	}
 	dropContractHistory(ctxA.KVStore(app.keys[wasm.StoreKey]), prefixes...)
 	dropContractHistory(ctxB.KVStore(newApp.keys[wasm.StoreKey]), prefixes...)
 
 	normalizeContractInfo := func(ctx sdk.Context, app *JackalApp) {
 		var index uint64
-		app.wasmKeeper.IterateContractInfo(ctx, func(address sdk.AccAddress, info wasmtypes.ContractInfo) bool {
-			created := &wasmtypes.AbsoluteTxPosition{
-				BlockHeight: uint64(0),
-				TxIndex:     index,
-			}
-			info.Created = created
-			store := ctx.KVStore(app.keys[wasm.StoreKey])
-			store.Set(wasmtypes.GetContractAddressKey(address), app.appCodec.MustMarshal(&info))
-			index++
-			return false
-		})
+		app.wasmKeeper.IterateContractInfo(
+			ctx,
+			func(address sdk.AccAddress, info wasmtypes.ContractInfo) bool {
+				created := &wasmtypes.AbsoluteTxPosition{
+					BlockHeight: uint64(0),
+					TxIndex:     index,
+				}
+				info.Created = created
+				store := ctx.KVStore(app.keys[wasm.StoreKey])
+				store.Set(wasmtypes.GetContractAddressKey(address), app.appCodec.MustMarshal(&info))
+				index++
+				return false
+			},
+		)
 	}
 	normalizeContractInfo(ctxA, app)
 	normalizeContractInfo(ctxB, newApp)
@@ -257,8 +308,23 @@ func TestAppImportExport(t *testing.T) {
 		failedKVAs, failedKVBs := sdk.DiffKVStores(storeA, storeB, skp.Prefixes)
 		require.Equal(t, len(failedKVAs), len(failedKVBs), "unequal sets of key-values to compare")
 
-		t.Logf("compared %d different key/value pairs between %s and %s\n", len(failedKVAs), skp.A, skp.B)
-		require.Len(t, failedKVAs, 0, GetSimulationLog(skp.A.Name(), app.SimulationManager().StoreDecoders, failedKVAs, failedKVBs))
+		t.Logf(
+			"compared %d different key/value pairs between %s and %s\n",
+			len(failedKVAs),
+			skp.A,
+			skp.B,
+		)
+		require.Len(
+			t,
+			failedKVAs,
+			0,
+			GetSimulationLog(
+				skp.A.Name(),
+				app.SimulationManager().StoreDecoders,
+				failedKVAs,
+				failedKVBs,
+			),
+		)
 	}
 }
 
@@ -274,12 +340,24 @@ func TestFullAppSimulation(t *testing.T) {
 	require.NoError(t, err, "simulation setup failed")
 
 	defer func() {
-		db.Close()
+		require.NoError(t, db.Close())
 		require.NoError(t, os.RemoveAll(dir))
 	}()
 	encConf := MakeEncodingConfig()
-	app := NewJackalApp(logger, db, nil, true, map[int64]bool{}, t.TempDir(), simapp.FlagPeriodValue,
-		encConf, wasm.EnableAllProposals, simapp.EmptyAppOptions{}, nil, fauxMerkleModeOpt)
+	app := NewJackalApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		t.TempDir(),
+		simapp.FlagPeriodValue,
+		encConf,
+		wasm.EnableAllProposals,
+		simapp.EmptyAppOptions{},
+		nil,
+		fauxMerkleModeOpt,
+	)
 	require.Equal(t, "JackalApp", app.Name())
 
 	// run randomized simulation
@@ -311,12 +389,25 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 	require.NoError(b, err, "simulation setup failed")
 
 	defer func() {
-		db.Close()
+		err = db.Close()
+		require.NoError(b, err)
 		require.NoError(b, os.RemoveAll(dir))
 	}()
 	encConf := MakeEncodingConfig()
-	app := NewJackalApp(logger, db, nil, true, map[int64]bool{}, b.TempDir(), simapp.FlagPeriodValue,
-		encConf, wasm.EnableAllProposals, simapp.EmptyAppOptions{}, nil, fauxMerkleModeOpt)
+	app := NewJackalApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		b.TempDir(),
+		simapp.FlagPeriodValue,
+		encConf,
+		wasm.EnableAllProposals,
+		simapp.EmptyAppOptions{},
+		nil,
+		fauxMerkleModeOpt,
+	)
 	require.Equal(b, "JackalApp", app.Name())
 
 	// run randomized simulation

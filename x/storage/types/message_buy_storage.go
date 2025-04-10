@@ -12,7 +12,13 @@ const TypeMsgBuyStorage = "buy_storage"
 
 var _ sdk.Msg = &MsgBuyStorage{}
 
-func NewMsgBuyStorage(creator string, forAddress string, duration int64, bytes int64, paymentDenom string) *MsgBuyStorage {
+func NewMsgBuyStorage(
+	creator string,
+	forAddress string,
+	duration int64,
+	bytes int64,
+	paymentDenom string,
+) *MsgBuyStorage {
 	return &MsgBuyStorage{
 		Creator:      creator,
 		ForAddress:   forAddress,
@@ -49,7 +55,11 @@ func (msg *MsgBuyStorage) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	if prefix != AddressPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"invalid creator prefix (%s)",
+			fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix),
+		)
 	}
 
 	prefix, _, err = bech32.DecodeAndConvert(msg.ForAddress)
@@ -57,11 +67,19 @@ func (msg *MsgBuyStorage) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	if prefix != AddressPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"invalid creator prefix (%s)",
+			fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix),
+		)
 	}
 
 	if msg.DurationDays <= 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "duration cannot be less than 1 (%d)", msg.DurationDays)
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"duration cannot be less than 1 (%d)",
+			msg.DurationDays,
+		)
 	}
 
 	return nil

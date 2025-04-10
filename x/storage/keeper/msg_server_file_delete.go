@@ -8,10 +8,13 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) DeleteFile(goCtx context.Context, msg *types.MsgDeleteFile) (*types.MsgDeleteFileResponse, error) {
+func (k msgServer) DeleteFile(
+	goCtx context.Context,
+	msg *types.MsgDeleteFile,
+) (*types.MsgDeleteFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	k.Keeper.RemoveFile(ctx, msg.Merkle, msg.Creator, msg.Start)
+	k.RemoveFile(ctx, msg.Merkle, msg.Creator, msg.Start)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(

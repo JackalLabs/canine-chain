@@ -12,7 +12,10 @@ import (
 )
 
 // To remove
-func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) AllFiles(
+	c context.Context,
+	req *types.QueryAllFiles,
+) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

@@ -17,7 +17,9 @@ func AddToMerkle(path string, append string) string {
 	return total
 }
 
-func MerklePath(path string) string { // ex: hello/world/path -> ["hello", "world", "path"] -> 3867baa2724c672442e4ba21b6fa532a6380d06a2f8779f11d626bd840d1cdee
+func MerklePath(
+	path string,
+) string { // ex: hello/world/path -> ["hello", "world", "path"] -> 3867baa2724c672442e4ba21b6fa532a6380d06a2f8779f11d626bd840d1cdee
 
 	// If the end of the path has a slash, .e.g. "home/movies/", the .Split function would create a []String with length 3, i.e. the last element is " "
 	// Cutting off the trailing '/' made everything compatible

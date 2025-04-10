@@ -23,7 +23,13 @@ func MakePrivateKey(fromName string) (*eciesgo.PrivateKey, error) {
 
 	algo := hd.Secp256k1
 
-	_, _, err := ctx.Keyring.NewMnemonic(fromName, keyring.English, sdkTypes.FullFundraiserPath, keyring.DefaultBIP39Passphrase, algo)
+	_, _, err := ctx.Keyring.NewMnemonic(
+		fromName,
+		keyring.English,
+		sdkTypes.FullFundraiserPath,
+		keyring.DefaultBIP39Passphrase,
+		algo,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +91,12 @@ func CreateRootFolder(creator string) (*Files, error) {
 	return &rootFolder, nil
 }
 
-func CreateFolderOrFile(creator string, editorIDs []string, viewerIDs []string, readablePath string) (*Files, error) {
+func CreateFolderOrFile(
+	creator string,
+	editorIDs []string,
+	viewerIDs []string,
+	readablePath string,
+) (*Files, error) {
 	merklePath := MerklePath(readablePath)
 	trackingNumber := uuid.NewString()
 
@@ -119,7 +130,7 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	// make sure that user was already hex(hashed) before it was passed into
 	// this function
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, user)))
+	_, _ = fmt.Fprintf(h, "o%s%s", merklePath, user)
 	hash := h.Sum(nil)
 	ownerAddress := fmt.Sprintf("%x", hash)
 
@@ -155,11 +166,14 @@ func MakeEditorAccessMap(trackingNumber string, editorIDs []string, aesKey strin
 
 	for _, v := range editorIDs {
 		h := sha256.New()
-		h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
+		_, _ = fmt.Fprintf(h, "e%s%s", trackingNumber, v)
 		hash := h.Sum(nil)
 		addressString := fmt.Sprintf("%x", hash)
 
-		editors[addressString] = fmt.Sprintf("%x", aesKey) // need helper function to generate a placeholder key
+		editors[addressString] = fmt.Sprintf(
+			"%x",
+			aesKey,
+		) // need helper function to generate a placeholder key
 
 	}
 
@@ -176,11 +190,14 @@ func MakeViewerAccessMap(trackingNumber string, viewerIDs []string, aesKey strin
 
 	for _, v := range viewerIDs {
 		h := sha256.New()
-		h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
+		_, _ = fmt.Fprintf(h, "v%s%s", trackingNumber, v)
 		hash := h.Sum(nil)
 		addressString := fmt.Sprintf("%x", hash)
 
-		viewers[addressString] = fmt.Sprintf("%x", aesKey) // need helper function to generate a placeholder key
+		viewers[addressString] = fmt.Sprintf(
+			"%x",
+			aesKey,
+		) // need helper function to generate a placeholder key
 
 	}
 
@@ -192,7 +209,12 @@ func MakeViewerAccessMap(trackingNumber string, viewerIDs []string, aesKey strin
 	return jsonViewers, nil
 }
 
-func CreateMsgPostFile(creator string, readablePath string, jsonEditAccess []byte, trackingNumber string) (*MsgPostFile, error) {
+func CreateMsgPostFile(
+	creator string,
+	readablePath string,
+	jsonEditAccess []byte,
+	trackingNumber string,
+) (*MsgPostFile, error) {
 	accountHash := HashThenHex(creator)
 
 	parentHash, childHash := MerkleHelper(readablePath)

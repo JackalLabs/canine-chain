@@ -28,7 +28,11 @@ func SimulateMsgAddRecord(
 		// checking if any names are registered
 		exists := k.CheckExistence(ctx)
 		if !exists {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddRecord, "No domains registered yet"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgAddRecord,
+				"No domains registered yet",
+			), nil, nil
 		}
 		for {
 			// finding all registered domain names
@@ -39,7 +43,11 @@ func SimulateMsgAddRecord(
 			// requesting the domain names
 			regNames, err := k.ListOwnedNames(wctx, nReq)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddRecord, "Couldn't request names"), nil, nil
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					types.TypeMsgAddRecord,
+					"Couldn't request names",
+				), nil, nil
 			}
 			names = regNames.GetNames()
 			if names != nil {
@@ -64,7 +72,11 @@ func SimulateMsgAddRecord(
 		for _, sd := range name.Subdomains {
 			if sd.Name == subdomain {
 				// can add a randomizer, but very unlikely a randomly generated subdomain name is already on-chain
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Subdomain is already registered"), nil, nil
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"Subdomain is already registered",
+				), nil, nil
 			}
 		}
 
@@ -75,7 +87,11 @@ func SimulateMsgAddRecord(
 
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to generate fees",
+			), nil, err
 		}
 
 		// building the message

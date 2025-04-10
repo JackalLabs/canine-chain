@@ -49,6 +49,8 @@ require (
 	github.com/golang/mock v1.6.0
 )
 
+require github.com/mattn/go-sqlite3 v1.14.27 // indirect
+
 require (
 	cosmossdk.io/api v0.2.6 // indirect
 	cosmossdk.io/core v0.5.1 // indirect

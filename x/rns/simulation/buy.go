@@ -34,7 +34,11 @@ func SimulateMsgBuy(
 
 		n, tld, err := keeper.GetNameAndTLD(bName.Name)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to get name and tld"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to get name and tld",
+			), nil, err
 		}
 		name, found := k.GetNames(ctx, n, tld)
 		if !found {
@@ -45,7 +49,11 @@ func SimulateMsgBuy(
 
 		// ensuring the sim accounts isn't the owner
 		if name.Value == simAccount.Address.String() {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to choose buyer"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to choose buyer",
+			), nil, nil
 		}
 
 		// ensuring the simAccount can buy the domain
@@ -66,12 +74,25 @@ func SimulateMsgBuy(
 
 			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unabled to fund account",
+				), nil, err
 			}
 
-			err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, sdk.NewCoins(c))
+			err = bk.SendCoinsFromModuleToAccount(
+				ctx,
+				types.ModuleName,
+				simAccount.Address,
+				sdk.NewCoins(c),
+			)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unabled to fund account",
+				), nil, err
 			}
 		}
 
@@ -84,7 +105,11 @@ func SimulateMsgBuy(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 

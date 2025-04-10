@@ -6,19 +6,25 @@ import (
 	"encoding/json"
 	"fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	allTypes "github.com/jackalLabs/canine-chain/v4/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
+func (k msgServer) PostFile(
+	goCtx context.Context,
+	msg *types.MsgPostFile,
+) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	params := k.GetParams(ctx)
 
 	if !json.Valid([]byte(msg.Note)) {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrJSONUnmarshal, "note is not valid json `%s`", msg.Note)
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrJSONUnmarshal,
+			"note is not valid json `%s`",
+			msg.Note,
+		)
 	}
 
 	window := k.GetParams(ctx).ProofWindow
@@ -125,7 +131,12 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 			return nil, sdkerrors.Wrapf(err, "cannot get pol account")
 		}
 
-		err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(toPay)) // taking money from user
+		err = k.bankKeeper.SendCoinsFromAccountToModule(
+			ctx,
+			addr,
+			types.ModuleName,
+			sdk.NewCoins(toPay),
+		) // taking money from user
 		if err != nil {
 			return nil, sdkerrors.Wrapf(err, "cannot send tokens from %s", msg.Creator)
 		}
@@ -160,7 +171,12 @@ func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*typ
 
 	paymentInfo.SpaceUsed += totalSize
 	if paymentInfo.SpaceUsed > paymentInfo.SpaceAvailable {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "storage account does not have enough space available %d > %d", paymentInfo.SpaceUsed, paymentInfo.SpaceAvailable)
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"storage account does not have enough space available %d > %d",
+			paymentInfo.SpaceUsed,
+			paymentInfo.SpaceAvailable,
+		)
 	}
 
 	k.SetStoragePaymentInfo(ctx, paymentInfo)

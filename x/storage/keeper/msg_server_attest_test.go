@@ -91,7 +91,14 @@ func (suite *KeeperTestSuite) TestAttest() {
 			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
 			suite.storageKeeper.SetAttestationForm(suite.ctx, noActiveDealAttestForm)
 
-			err = suite.storageKeeper.Attest(suite.ctx, addresses[4], tc.merkle, tc.owner, tc.start, tc.creator)
+			err = suite.storageKeeper.Attest(
+				suite.ctx,
+				addresses[4],
+				tc.merkle,
+				tc.owner,
+				tc.start,
+				tc.creator,
+			)
 
 			if tc.expErr {
 				suite.Error(err)
@@ -184,7 +191,13 @@ func (suite *KeeperTestSuite) TestRequestAttestation() {
 
 			suite.storageKeeper.SetAttestationForm(suite.ctx, attestForm)
 
-			_, err = suite.storageKeeper.RequestAttestation(suite.ctx, tc.merkle, tc.owner, tc.start, tc.creator)
+			_, err = suite.storageKeeper.RequestAttestation(
+				suite.ctx,
+				tc.merkle,
+				tc.owner,
+				tc.start,
+				tc.creator,
+			)
 
 			if tc.expErr {
 				suite.Error(err)

@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
@@ -21,7 +20,7 @@ func HasViewingAccess(file types.Files, user string) (bool, error) {
 	}
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
+	_, _ = fmt.Fprintf(h, "v%s%s", trackingNumber, user)
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
@@ -43,7 +42,7 @@ func HasEditAccess(file types.Files, user string) (bool, error) {
 	}
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, user)))
+	_, _ = fmt.Fprintf(h, "e%s%s", trackingNumber, user)
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
@@ -63,7 +62,7 @@ func IsOwner(file types.Files, user string) bool {
 
 	// h1 is so named as to differentiate it from h above--else compiler complains
 	h1 := sha256.New()
-	h1.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+	_, _ = fmt.Fprintf(h1, "o%s%s", merklePath, accountHash)
 	hash1 := h1.Sum(nil)
 	ownerAddress := fmt.Sprintf("%x", hash1)
 
@@ -72,7 +71,7 @@ func IsOwner(file types.Files, user string) bool {
 
 func MakeViewerAddress(trackingNumber string, user string) string {
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
+	_, _ = fmt.Fprintf(h, "v%s%s", trackingNumber, user)
 	hash := h.Sum(nil)
 	addressString := fmt.Sprintf("%x", hash)
 
@@ -81,7 +80,7 @@ func MakeViewerAddress(trackingNumber string, user string) string {
 
 func MakeEditorAddress(trackingNumber string, user string) string {
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, user)))
+	_, _ = fmt.Fprintf(h, "e%s%s", trackingNumber, user)
 	hash := h.Sum(nil)
 	addressString := fmt.Sprintf("%x", hash)
 
@@ -93,7 +92,7 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	// make sure that user was already hex(hashed) before it was passed into
 	// this function
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, user)))
+	_, _ = fmt.Fprintf(h, "o%s%s", merklePath, user)
 	hash := h.Sum(nil)
 	ownerAddress := fmt.Sprintf("%x", hash)
 

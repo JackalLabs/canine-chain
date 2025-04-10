@@ -39,7 +39,12 @@ func (suite *KeeperTestSuite) TestMsgDeleteFile() {
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
 	// put hasbullah in home
-	hasbullahjpg, err := types.CreateFolderOrFile(alice, aliceEditorID, aliceViewerID, "s/home/hasbullah.jpg")
+	hasbullahjpg, err := types.CreateFolderOrFile(
+		alice,
+		aliceEditorID,
+		aliceViewerID,
+		"s/home/hasbullah.jpg",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *hasbullahjpg)
 

@@ -4,14 +4,16 @@ import (
 	"context"
 	"fmt"
 
-	types2 "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	types2 "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvider) (*types.MsgInitProviderResponse, error) {
+func (k msgServer) InitProvider(
+	goCtx context.Context,
+	msg *types.MsgInitProvider,
+) (*types.MsgInitProviderResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	_, found := k.GetProviders(ctx, msg.Creator)
@@ -29,7 +31,12 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 		return nil, err
 	}
 
-	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, account, types.CollateralCollectorName, coins) // TODO: change naming convention
+	err = k.bankKeeper.SendCoinsFromAccountToModule(
+		ctx,
+		account,
+		types.CollateralCollectorName,
+		coins,
+	)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "%s does not have %s", account, coin.String())
 	}
@@ -62,7 +69,10 @@ func (k msgServer) InitProvider(goCtx context.Context, msg *types.MsgInitProvide
 	return &types.MsgInitProviderResponse{}, nil
 }
 
-func (k msgServer) ShutdownProvider(goCtx context.Context, msg *types.MsgShutdownProvider) (*types.MsgShutdownProviderResponse, error) {
+func (k msgServer) ShutdownProvider(
+	goCtx context.Context,
+	msg *types.MsgShutdownProvider,
+) (*types.MsgShutdownProviderResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	_, found := k.GetProviders(ctx, msg.Creator)
@@ -80,7 +90,12 @@ func (k msgServer) ShutdownProvider(goCtx context.Context, msg *types.MsgShutdow
 			return nil, err
 		}
 
-		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.CollateralCollectorName, account, coins)
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(
+			ctx,
+			types.CollateralCollectorName,
+			account,
+			coins,
+		)
 		if err != nil {
 			return nil, err
 		}

@@ -23,13 +23,21 @@ func SimulateMsgMakeRoot(
 
 		msg, err := types.CreateMsgMakeRoot(simAccount.Address.String())
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate msg"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to generate msg",
+			), nil, err
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to generate fees",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

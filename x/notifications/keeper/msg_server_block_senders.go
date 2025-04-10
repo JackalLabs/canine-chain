@@ -8,7 +8,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 )
 
-func (k msgServer) BlockSenders(goCtx context.Context, msg *types.MsgBlockSenders) (*types.MsgBlockSendersResponse, error) {
+func (k msgServer) BlockSenders(
+	goCtx context.Context,
+	msg *types.MsgBlockSenders,
+) (*types.MsgBlockSendersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	for _, toBlock := range msg.ToBlock {

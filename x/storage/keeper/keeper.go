@@ -1,14 +1,14 @@
 package keeper
 
 import (
+	"database/sql"
 	"fmt"
-
-	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/tendermint/tendermint/libs/log"
 )
 
 type (
@@ -22,6 +22,7 @@ type (
 		rnsKeeper     types.RnsKeeper
 
 		feeCollectorName string
+		storageDB        *sql.DB
 	}
 )
 
@@ -34,6 +35,7 @@ func NewKeeper(
 	oracleKeeper types.OracleKeeper,
 	rnsKeeper types.RnsKeeper,
 	feeCollectorName string,
+	storageDB *sql.DB,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -49,6 +51,7 @@ func NewKeeper(
 		oracleKeeper:     oracleKeeper,
 		rnsKeeper:        rnsKeeper,
 		feeCollectorName: feeCollectorName,
+		storageDB:        storageDB,
 	}
 }
 

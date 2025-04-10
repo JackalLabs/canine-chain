@@ -9,7 +9,6 @@ import (
 	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
 	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-
 	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
@@ -23,7 +22,11 @@ type Upgrade struct {
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk storagekeeper.Keeper) *Upgrade {
+func NewUpgrade(
+	mm *module.Manager,
+	configurator module.Configurator,
+	sk storagekeeper.Keeper,
+) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,

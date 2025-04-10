@@ -3,15 +3,14 @@ package v450
 import (
 	_ "embed"
 
-	types2 "github.com/jackalLabs/canine-chain/v4/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
-
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
+	types2 "github.com/jackalLabs/canine-chain/v4/types"
 	storageKeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -28,7 +27,13 @@ type Upgrade struct {
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, sk *storageKeeper.Keeper, bk types.BankKeeper, ak types.AccountKeeper) *Upgrade {
+func NewUpgrade(
+	mm *module.Manager,
+	configurator module.Configurator,
+	sk *storageKeeper.Keeper,
+	bk types.BankKeeper,
+	ak types.AccountKeeper,
+) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,

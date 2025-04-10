@@ -3,11 +3,10 @@ package cli
 import (
 	"strconv"
 
-	types2 "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	types2 "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	"github.com/spf13/cobra"
 )

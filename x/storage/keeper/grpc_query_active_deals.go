@@ -12,7 +12,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) AllFiles(
+	c context.Context,
+	req *types.QueryAllFiles,
+) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -38,7 +41,10 @@ func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.Qu
 	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
 }
 
-func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) (*types.QueryFilesFromNoteResponse, error) {
+func (k Keeper) FilesFromNote(
+	c context.Context,
+	req *types.QueryFilesFromNote,
+) (*types.QueryFilesFromNoteResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -84,7 +90,10 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 	return &types.QueryFilesFromNoteResponse{Files: files, Pagination: pageRes}, nil
 }
 
-func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMerkle) (*types.QueryAllFilesByMerkleResponse, error) {
+func (k Keeper) AllFilesByMerkle(
+	c context.Context,
+	req *types.QueryAllFilesByMerkle,
+) (*types.QueryAllFilesByMerkleResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -113,7 +122,10 @@ func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMe
 // OpenFiles returns a paginated list of files with space that providers have yet to fill
 //
 // TODO: Create unit-test cases for this
-func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.QueryAllFilesResponse, error) {
+func (k Keeper) OpenFiles(
+	c context.Context,
+	req *types.QueryOpenFiles,
+) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -202,7 +214,10 @@ func (k Keeper) Proof(c context.Context, req *types.QueryProof) (*types.QueryPro
 	return &types.QueryProofResponse{Proof: val}, nil
 }
 
-func (k Keeper) AllProofs(c context.Context, req *types.QueryAllProofs) (*types.QueryAllProofsResponse, error) {
+func (k Keeper) AllProofs(
+	c context.Context,
+	req *types.QueryAllProofs,
+) (*types.QueryAllProofsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -229,7 +244,10 @@ func (k Keeper) AllProofs(c context.Context, req *types.QueryAllProofs) (*types.
 	return &types.QueryAllProofsResponse{Proofs: proofs, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ProofsByAddress(c context.Context, req *types.QueryProofsByAddress) (*types.QueryProofsByAddressResponse, error) {
+func (k Keeper) ProofsByAddress(
+	c context.Context,
+	req *types.QueryProofsByAddress,
+) (*types.QueryProofsByAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

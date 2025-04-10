@@ -7,7 +7,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) DeleteFile(goCtx context.Context, msg *types.MsgDeleteFile) (*types.MsgDeleteFileResponse, error) {
+func (k msgServer) DeleteFile(
+	goCtx context.Context,
+	msg *types.MsgDeleteFile,
+) (*types.MsgDeleteFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	ownerAddress := MakeOwnerAddress(msg.HashPath, msg.Account)

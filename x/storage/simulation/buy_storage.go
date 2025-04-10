@@ -28,7 +28,11 @@ func SimulateMsgBuyStorage(
 
 		_, found := k.GetStoragePaymentInfo(ctx, simAccount.Address.String())
 		if found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "user already paid for storage, skipping"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgBuyStorage,
+				"user already paid for storage, skipping",
+			), nil, nil
 		}
 
 		size := simtypes.RandIntBetween(r, 1_000_000_000, 10_000_000_000)
@@ -52,12 +56,25 @@ func SimulateMsgBuyStorage(
 
 			err := bk.MintCoins(ctx, types.ModuleName, sdk.NewCoins(c))
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					types.TypeMsgBuyStorage,
+					"unabled to fund account",
+				), nil, err
 			}
 
-			err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, simAccount.Address, sdk.NewCoins(c))
+			err = bk.SendCoinsFromModuleToAccount(
+				ctx,
+				types.ModuleName,
+				simAccount.Address,
+				sdk.NewCoins(c),
+			)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unabled to fund account"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					types.TypeMsgBuyStorage,
+					"unabled to fund account",
+				), nil, err
 			}
 		}
 
@@ -70,7 +87,11 @@ func SimulateMsgBuyStorage(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBuyStorage, "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					types.TypeMsgBuyStorage,
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 

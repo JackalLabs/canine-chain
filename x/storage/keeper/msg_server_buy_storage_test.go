@@ -19,7 +19,9 @@ func (suite *KeeperTestSuite) TestBuyStorage() {
 	testAccount := testAddresses[0]
 	depoAccount := testAddresses[1]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
@@ -263,7 +265,9 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 	testAccount := testAddresses[0]
 	depoAccount := testAddresses[1]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)
@@ -301,7 +305,9 @@ func (suite *KeeperTestSuite) TestBuyStorageReferralValues() {
 	gaugeAccount, err := types.GetGaugeAccount(gauge)
 	suite.Require().NoError(err)
 
-	cost := float64(suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64()) * 0.9
+	cost := float64(
+		suite.storageKeeper.GetStorageCost(suite.ctx, bytes/1_000_000_000, days*24).Int64(),
+	) * 0.9
 
 	bal := suite.bankKeeper.GetBalance(suite.ctx, gaugeAccount, "ujkl")
 	suite.Require().Equal(int64(cost*0.35), bal.Amount.Int64())

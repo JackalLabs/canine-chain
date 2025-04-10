@@ -9,7 +9,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
-func (k msgServer) AddRecord(goCtx context.Context, msg *types.MsgAddRecord) (*types.MsgAddRecordResponse, error) {
+func (k msgServer) AddRecord(
+	goCtx context.Context,
+	msg *types.MsgAddRecord,
+) (*types.MsgAddRecordResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	mname := strings.ToLower(msg.Name)

@@ -8,7 +8,10 @@ import (
 
 // SetStoragePaymentInfo set a specific payBlocks in the store from its x
 func (k Keeper) SetStoragePaymentInfo(ctx sdk.Context, payInfo types.StoragePaymentInfo) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
+	store := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.KeyPrefix(types.StoragePaymentInfoKeyPrefix),
+	)
 	b := k.cdc.MustMarshal(&payInfo)
 	store.Set(types.StoragePaymentInfoKey(
 		payInfo.Address,
@@ -20,7 +23,10 @@ func (k Keeper) GetStoragePaymentInfo(
 	ctx sdk.Context,
 	address string,
 ) (val types.StoragePaymentInfo, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
+	store := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.KeyPrefix(types.StoragePaymentInfoKeyPrefix),
+	)
 
 	b := store.Get(types.StoragePaymentInfoKey(
 		address,
@@ -39,7 +45,10 @@ func (k Keeper) RemoveStoragePaymentInfo(
 	ctx sdk.Context,
 	address string,
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
+	store := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.KeyPrefix(types.StoragePaymentInfoKeyPrefix),
+	)
 	store.Delete(types.StoragePaymentInfoKey(
 		address,
 	))
@@ -47,9 +56,13 @@ func (k Keeper) RemoveStoragePaymentInfo(
 
 // GetAllStoragePaymentInfo returns all payBlocks
 func (k Keeper) GetAllStoragePaymentInfo(ctx sdk.Context) (list []types.StoragePaymentInfo) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StoragePaymentInfoKeyPrefix))
+	store := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.KeyPrefix(types.StoragePaymentInfoKeyPrefix),
+	)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

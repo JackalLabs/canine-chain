@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
-
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
@@ -46,7 +45,7 @@ func FuzzMakeEditorAddress(f *testing.F) {
 		out := keeper.MakeEditorAddress(track, user)
 
 		eh := sha256.New()
-		eh.Write([]byte(fmt.Sprintf("e%s%s", track, user)))
+		_, _ = fmt.Fprintf(eh, "e%s%s", track, user)
 		expHash := fmt.Sprintf("%x", eh.Sum(nil))
 
 		if out != expHash {
@@ -87,7 +86,7 @@ func FuzzMakeOwnerAddress(f *testing.F) {
 		out := keeper.MakeOwnerAddress(track, user)
 
 		eh := sha256.New()
-		eh.Write([]byte(fmt.Sprintf("o%s%s", track, user)))
+		_, _ = fmt.Fprintf(eh, "o%s%s", track, user)
 		expHash := fmt.Sprintf("%x", eh.Sum(nil))
 
 		if out != expHash {
@@ -128,7 +127,7 @@ func FuzzMakeViewerAddress(f *testing.F) {
 		out := keeper.MakeViewerAddress(track, user)
 
 		eh := sha256.New()
-		eh.Write([]byte(fmt.Sprintf("v%s%s", track, user)))
+		_, _ = fmt.Fprintf(eh, "v%s%s", track, user)
 		expHash := fmt.Sprintf("%x", eh.Sum(nil))
 
 		if out != expHash {
@@ -167,7 +166,7 @@ func (suite *KeeperTestSuite) TestMakeViewerAddress() {
 
 		suite.Run(fmt.Sprintf("trackingNum: %s, user: %s", tc.trackingNum, tc.user), func() {
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("v%s%s", tc.trackingNum, tc.user)))
+			_, _ = fmt.Fprintf(h, "v%s%s", tc.trackingNum, tc.user)
 			hash := h.Sum(nil)
 
 			out := keeper.MakeViewerAddress(tc.trackingNum, tc.user)
@@ -216,7 +215,7 @@ func (suite *KeeperTestSuite) TestIsOwner() {
 
 				// h1 is so named as to differentiate it from h above--else compiler complains
 				h1 := sha256.New()
-				h1.Write([]byte(fmt.Sprintf("o%s%s", tc.addr, accountHash)))
+				_, _ = fmt.Fprintf(h1, "o%s%s", tc.addr, accountHash)
 				hash1 := h1.Sum(nil)
 				tc.owner = fmt.Sprintf("%x", hash1)
 			}
@@ -280,7 +279,7 @@ func FuzzHasEditAccess(f *testing.F) {
 			}
 
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("e%s%s", track, user)))
+			_, _ = fmt.Fprintf(h, "e%s%s", track, user)
 			hash := h.Sum(nil)
 
 			jeacc := make(map[string]string)
@@ -337,7 +336,7 @@ func (suite *KeeperTestSuite) TestHasEditAccess() {
 			if tc.editAccess == "" {
 				// Construct new editor
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", tc.trackingNum, tc.user)))
+				_, _ = fmt.Fprintf(h, "e%s%s", tc.trackingNum, tc.user)
 				hash := h.Sum(nil)
 
 				jeacc := make(map[string]string)
@@ -405,7 +404,7 @@ func (suite *KeeperTestSuite) TestHasViewingAccess() {
 			if tc.viewingAccess == "" {
 				// Construct new editor
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%s%s", tc.trackingNum, tc.user)))
+				_, _ = fmt.Fprintf(h, "v%s%s", tc.trackingNum, tc.user)
 				hash := h.Sum(nil)
 
 				jvacc := make(map[string]string)

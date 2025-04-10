@@ -9,7 +9,12 @@ const TypeMsgChangeOwner = "change_owner"
 
 var _ sdk.Msg = &MsgChangeOwner{}
 
-func NewMsgChangeOwner(creator string, address string, fileOwner string, newOwner string) *MsgChangeOwner {
+func NewMsgChangeOwner(
+	creator string,
+	address string,
+	fileOwner string,
+	newOwner string,
+) *MsgChangeOwner {
 	return &MsgChangeOwner{
 		Creator:   creator,
 		Address:   address,

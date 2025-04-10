@@ -31,14 +31,27 @@ func SimulateMsgRemoveViewers(
 		// root folder
 		rootFolder, err := types.CreateRootFolder(address)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRemoveViewers, "unable to create root folder"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgRemoveViewers,
+				"unable to create root folder",
+			), nil, err
 		}
 		k.SetFiles(ctx, *rootFolder)
 
 		// home folder
-		homeFolder, err := types.CreateFolderOrFile(address, strings.Split(address, ","), strings.Split(address, ","), "s/home/")
+		homeFolder, err := types.CreateFolderOrFile(
+			address,
+			strings.Split(address, ","),
+			strings.Split(address, ","),
+			"s/home/",
+		)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRemoveViewers, "unable to create home folder"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgRemoveViewers,
+				"unable to create home folder",
+			), nil, err
 		}
 		k.SetFiles(ctx, *homeFolder)
 
@@ -55,7 +68,11 @@ func SimulateMsgRemoveViewers(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRemoveViewers, "failed to generate fee"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgRemoveViewers,
+				"failed to generate fee",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

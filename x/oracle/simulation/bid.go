@@ -24,6 +24,10 @@ func SimulateMsgBid(
 
 		// TODO: Handling the Bid simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Bid simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"Bid simulation not implemented",
+		), nil, nil
 	}
 }

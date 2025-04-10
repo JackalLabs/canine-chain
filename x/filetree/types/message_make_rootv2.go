@@ -9,7 +9,12 @@ const TypeMsgProvisionFileTree = "provision_file_tree"
 
 var _ sdk.Msg = &MsgProvisionFileTree{}
 
-func NewMsgProvisionFileTree(creator string, editors string, viewers string, trackingNumber string) *MsgProvisionFileTree {
+func NewMsgProvisionFileTree(
+	creator string,
+	editors string,
+	viewers string,
+	trackingNumber string,
+) *MsgProvisionFileTree {
 	return &MsgProvisionFileTree{
 		Creator:        creator,
 		Editors:        editors,

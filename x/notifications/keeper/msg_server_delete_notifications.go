@@ -8,7 +8,10 @@ import (
 )
 
 // DeleteNotification deletes a given message
-func (k msgServer) DeleteNotification(goCtx context.Context, msg *types.MsgDeleteNotification) (*types.MsgDeleteNotificationResponse, error) {
+func (k msgServer) DeleteNotification(
+	goCtx context.Context,
+	msg *types.MsgDeleteNotification,
+) (*types.MsgDeleteNotificationResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	k.RemoveNotification(ctx, msg.Creator, msg.From, msg.Time)

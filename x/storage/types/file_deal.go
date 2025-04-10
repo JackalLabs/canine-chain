@@ -29,7 +29,13 @@ func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item []byte) bo
 		return false
 	}
 
-	verified, err := merkletree.VerifyProofUsing(hashName, false, &proof, [][]byte{f.Merkle}, sha3.New512())
+	verified, err := merkletree.VerifyProofUsing(
+		hashName,
+		false,
+		&proof,
+		[][]byte{f.Merkle},
+		sha3.New512(),
+	)
 	if err != nil {
 		return false
 	}
@@ -105,14 +111,27 @@ func (f *UnifiedFile) GetProver(ctx sdk.Context, k ProofLoader, prover string) (
 		}
 	}
 	if proof == nil {
-		return nil, sdkerror.Wrapf(sdkerror.ErrKeyNotFound, "cannot find proof with prover %s on file %x/%s/%d | %s", prover, f.Merkle, f.Owner, f.Start, strings.Join(f.Proofs, ", "))
+		return nil, sdkerror.Wrapf(
+			sdkerror.ErrKeyNotFound,
+			"cannot find proof with prover %s on file %x/%s/%d | %s",
+			prover,
+			f.Merkle,
+			f.Owner,
+			f.Start,
+			strings.Join(f.Proofs, ", "),
+		)
 	}
 
 	return proof, nil
 }
 
 // ResetChunk picks a new chunk to prove for a file
-func (f *UnifiedFile) ResetChunk(ctx sdk.Context, k ProofLoader, prover string, chunkSize int64) error {
+func (f *UnifiedFile) ResetChunk(
+	ctx sdk.Context,
+	k ProofLoader,
+	prover string,
+	chunkSize int64,
+) error {
 	proof, err := f.GetProver(ctx, k, prover)
 	if err != nil {
 		return err
@@ -146,7 +165,11 @@ func (f *UnifiedFile) ResetChunk(ctx sdk.Context, k ProofLoader, prover string, 
 }
 
 // ResetChunkWithProof picks a new chunk to prove for a file
-func (f *UnifiedFile) ResetChunkWithProof(ctx sdk.Context, proof *FileProof, chunkSize int64) error {
+func (f *UnifiedFile) ResetChunkWithProof(
+	ctx sdk.Context,
+	proof *FileProof,
+	chunkSize int64,
+) error {
 	pieces := f.FileSize / chunkSize
 	d := f.FileSize % chunkSize
 	if d == 0 { // handle edge case where there is exactly full chunks with no extra bits
@@ -185,7 +208,13 @@ func (f *UnifiedFile) SetProven(ctx sdk.Context, proof *FileProof, chunkSize int
 }
 
 // Prove checks the validity of a proof and updates the proof window & picks a new chunk to verify
-func (f *UnifiedFile) Prove(ctx sdk.Context, proof *FileProof, proofData []byte, item []byte, chunkSize int64) error {
+func (f *UnifiedFile) Prove(
+	ctx sdk.Context,
+	proof *FileProof,
+	proofData []byte,
+	item []byte,
+	chunkSize int64,
+) error {
 	valid := f.VerifyProof(proofData, proof.ChunkToProve, item)
 
 	if !valid {

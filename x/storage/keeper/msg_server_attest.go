@@ -3,14 +3,20 @@ package keeper
 import (
 	"context"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tendermint/tendermint/libs/rand"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/tendermint/tendermint/libs/rand"
 )
 
-func (k Keeper) Attest(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {
+func (k Keeper) Attest(
+	ctx sdk.Context,
+	prover string,
+	merkle []byte,
+	owner string,
+	start int64,
+	creator string,
+) error {
 	form, found := k.GetAttestationForm(ctx, prover, merkle, owner, start)
 	if !found {
 		return sdkerrors.Wrapf(types.ErrAttestInvalid, "cannot find this attestation")
@@ -69,7 +75,10 @@ func (k Keeper) Attest(ctx sdk.Context, prover string, merkle []byte, owner stri
 	return nil
 }
 
-func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.MsgAttestResponse, error) {
+func (k msgServer) Attest(
+	goCtx context.Context,
+	msg *types.MsgAttest,
+) (*types.MsgAttestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.Keeper.Attest(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
@@ -87,10 +96,19 @@ func (k msgServer) Attest(goCtx context.Context, msg *types.MsgAttest) (*types.M
 	return &types.MsgAttestResponse{}, nil
 }
 
-func (k Keeper) RequestAttestation(ctx sdk.Context, merkle []byte, owner string, start int64, creator string) ([]string, error) {
+func (k Keeper) RequestAttestation(
+	ctx sdk.Context,
+	merkle []byte,
+	owner string,
+	start int64,
+	creator string,
+) ([]string, error) {
 	deal, found := k.GetFile(ctx, merkle, owner, start)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrDealNotFound, "cannot find active deal for attestation form")
+		return nil, sdkerrors.Wrapf(
+			types.ErrDealNotFound,
+			"cannot find active deal for attestation form",
+		)
 	}
 
 	_, err := deal.GetProver(ctx, k, creator)
@@ -152,7 +170,10 @@ func (k Keeper) RequestAttestation(ctx sdk.Context, merkle []byte, owner string,
 	return providerAddresses, nil
 }
 
-func (k msgServer) RequestAttestationForm(goCtx context.Context, msg *types.MsgRequestAttestationForm) (*types.MsgRequestAttestationFormResponse, error) {
+func (k msgServer) RequestAttestationForm(
+	goCtx context.Context,
+	msg *types.MsgRequestAttestationForm,
+) (*types.MsgRequestAttestationFormResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	creator := msg.Creator
 

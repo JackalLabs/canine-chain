@@ -10,7 +10,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) NetworkSize(c context.Context, req *types.QueryNetworkSize) (*types.QueryNetworkSizeResponse, error) {
+func (k Keeper) NetworkSize(
+	c context.Context,
+	req *types.QueryNetworkSize,
+) (*types.QueryNetworkSizeResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -28,7 +31,10 @@ func (k Keeper) NetworkSize(c context.Context, req *types.QueryNetworkSize) (*ty
 	return &types.QueryNetworkSizeResponse{Size_: s}, nil
 }
 
-func (k Keeper) AvailableSpace(c context.Context, req *types.QueryAvailableSpace) (*types.QueryAvailableSpaceResponse, error) {
+func (k Keeper) AvailableSpace(
+	c context.Context,
+	req *types.QueryAvailableSpace,
+) (*types.QueryAvailableSpaceResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -55,7 +61,10 @@ func (k Keeper) AvailableSpace(c context.Context, req *types.QueryAvailableSpace
 	return &types.QueryAvailableSpaceResponse{Size_: s}, nil
 }
 
-func (k Keeper) StorageStats(c context.Context, req *types.QueryStorageStats) (*types.QueryStorageStatsResponse, error) {
+func (k Keeper) StorageStats(
+	c context.Context,
+	req *types.QueryStorageStats,
+) (*types.QueryStorageStatsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

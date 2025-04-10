@@ -24,6 +24,10 @@ func SimulateMsgBuy(
 
 		// TODO: Handling the Buy simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Buy simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"Buy simulation not implemented",
+		), nil, nil
 	}
 }

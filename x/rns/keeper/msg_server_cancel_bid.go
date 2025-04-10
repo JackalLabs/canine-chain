@@ -47,7 +47,10 @@ func (k Keeper) CancelOneBid(ctx sdk.Context, sender string, name string) error 
 	return nil
 }
 
-func (k msgServer) CancelBid(goCtx context.Context, msg *types.MsgCancelBid) (*types.MsgCancelBidResponse, error) {
+func (k msgServer) CancelBid(
+	goCtx context.Context,
+	msg *types.MsgCancelBid,
+) (*types.MsgCancelBidResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.CancelOneBid(ctx, msg.Creator, msg.Name)

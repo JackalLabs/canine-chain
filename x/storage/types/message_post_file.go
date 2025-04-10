@@ -12,7 +12,15 @@ const TypeMsgPostFile = "post_file"
 
 var _ sdk.Msg = &MsgPostFile{}
 
-func NewMsgPostFile(creator string, merkle []byte, fileSize int64, proofInterval int64, proofType int64, maxProofs int64, note string) *MsgPostFile {
+func NewMsgPostFile(
+	creator string,
+	merkle []byte,
+	fileSize int64,
+	proofInterval int64,
+	proofType int64,
+	maxProofs int64,
+	note string,
+) *MsgPostFile {
 	return &MsgPostFile{
 		Creator:       creator,
 		Merkle:        merkle,
@@ -51,7 +59,11 @@ func (msg *MsgPostFile) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	if prefix != AddressPrefix {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator prefix (%s)", fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix))
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			"invalid creator prefix (%s)",
+			fmt.Errorf("%s is not a valid prefix here. Expected `jkl`", prefix),
+		)
 	}
 
 	return nil

@@ -11,7 +11,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllInits(c context.Context, req *types.QueryAllInits) (*types.QueryAllInitsResponse, error) {
+func (k Keeper) AllInits(
+	c context.Context,
+	req *types.QueryAllInits,
+) (*types.QueryAllInitsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

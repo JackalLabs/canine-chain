@@ -3,24 +3,25 @@ package wasmbinding
 import (
 	"encoding/json"
 
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/wasmbinding/bindings"
 	filetreekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
 	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-
-	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
-
 	notificationskeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
 	notificationstypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
+	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages
-func CustomMessageDecorator(filetree *filetreekeeper.Keeper, storage *storagekeeper.Keeper, notifications *notificationskeeper.Keeper) func(wasmkeeper.Messenger) wasmkeeper.Messenger {
+func CustomMessageDecorator(
+	filetree *filetreekeeper.Keeper,
+	storage *storagekeeper.Keeper,
+	notifications *notificationskeeper.Keeper,
+) func(wasmkeeper.Messenger) wasmkeeper.Messenger {
 	return func(old wasmkeeper.Messenger) wasmkeeper.Messenger {
 		return &CustomMessenger{
 			wrapped:       old,
@@ -42,13 +43,21 @@ var _ wasmkeeper.Messenger = (*CustomMessenger)(nil)
 
 // DispatchMsg executes on the contractMsg.
 
-func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddress, contractIBCPortID string, msg wasmvmtypes.CosmosMsg) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) DispatchMsg(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	contractIBCPortID string,
+	msg wasmvmtypes.CosmosMsg,
+) ([]sdk.Event, [][]byte, error) {
 	if msg.Custom != nil {
 
 		var contractMsg bindings.JackalMsg
 
 		if err := json.Unmarshal(msg.Custom, &contractMsg); err != nil {
-			return nil, nil, sdkerrors.Wrap(err, "Failed to unmarshal CosmosMsg enum variant 'Custom' into jackal msg")
+			return nil, nil, sdkerrors.Wrap(
+				err,
+				"Failed to unmarshal CosmosMsg enum variant 'Custom' into jackal msg",
+			)
 		}
 
 		if contractMsg.PostFile != nil {
@@ -112,7 +121,11 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
 }
 
-func (m *CustomMessenger) postFile(ctx sdk.Context, contractAddr sdk.AccAddress, postFile *storagetypes.MsgPostFile) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) postFile(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	postFile *storagetypes.MsgPostFile,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformPostFile(m.storage, ctx, contractAddr, postFile)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform post file")
@@ -120,7 +133,11 @@ func (m *CustomMessenger) postFile(ctx sdk.Context, contractAddr sdk.AccAddress,
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) deleteFile(ctx sdk.Context, contractAddr sdk.AccAddress, deleteFile *storagetypes.MsgDeleteFile) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) deleteFile(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	deleteFile *storagetypes.MsgDeleteFile,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformDeleteFile(m.storage, ctx, contractAddr, deleteFile)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform delete file")
@@ -128,7 +145,11 @@ func (m *CustomMessenger) deleteFile(ctx sdk.Context, contractAddr sdk.AccAddres
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) buyStorage(ctx sdk.Context, contractAddr sdk.AccAddress, buyStorage *storagetypes.MsgBuyStorage) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) buyStorage(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	buyStorage *storagetypes.MsgBuyStorage,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformBuyStorage(m.storage, ctx, contractAddr, buyStorage)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform buy storage")
@@ -136,7 +157,11 @@ func (m *CustomMessenger) buyStorage(ctx sdk.Context, contractAddr sdk.AccAddres
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) requestReportForm(ctx sdk.Context, contractAddr sdk.AccAddress, requestReportForm *storagetypes.MsgRequestReportForm) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) requestReportForm(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	requestReportForm *storagetypes.MsgRequestReportForm,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformRequestReportForm(m.storage, ctx, contractAddr, requestReportForm)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform request report form")
@@ -145,7 +170,11 @@ func (m *CustomMessenger) requestReportForm(ctx sdk.Context, contractAddr sdk.Ac
 }
 
 // Filetree starts here
-func (m *CustomMessenger) postFileTree(ctx sdk.Context, contractAddr sdk.AccAddress, postFileTree *filetreetypes.MsgPostFile) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) postFileTree(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	postFileTree *filetreetypes.MsgPostFile,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformPostFileTree(m.filetree, ctx, contractAddr, postFileTree)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform post file tree")
@@ -153,7 +182,11 @@ func (m *CustomMessenger) postFileTree(ctx sdk.Context, contractAddr sdk.AccAddr
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) addViewers(ctx sdk.Context, contractAddr sdk.AccAddress, addViewers *filetreetypes.MsgAddViewers) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) addViewers(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	addViewers *filetreetypes.MsgAddViewers,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformAddViewers(m.filetree, ctx, contractAddr, addViewers)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform add viewers")
@@ -161,7 +194,11 @@ func (m *CustomMessenger) addViewers(ctx sdk.Context, contractAddr sdk.AccAddres
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, postKey *filetreetypes.MsgPostKey) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) postKey(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	postKey *filetreetypes.MsgPostKey,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformPostKey(m.filetree, ctx, contractAddr, postKey)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform post key")
@@ -169,7 +206,11 @@ func (m *CustomMessenger) postKey(ctx sdk.Context, contractAddr sdk.AccAddress, 
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) deleteFileTree(ctx sdk.Context, contractAddr sdk.AccAddress, deleteFileTree *filetreetypes.MsgDeleteFile) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) deleteFileTree(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	deleteFileTree *filetreetypes.MsgDeleteFile,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformDeleteFileTree(m.filetree, ctx, contractAddr, deleteFileTree)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform delete file tree")
@@ -177,7 +218,11 @@ func (m *CustomMessenger) deleteFileTree(ctx sdk.Context, contractAddr sdk.AccAd
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) removeViewers(ctx sdk.Context, contractAddr sdk.AccAddress, removeViewers *filetreetypes.MsgRemoveViewers) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) removeViewers(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	removeViewers *filetreetypes.MsgRemoveViewers,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformRemoveViewers(m.filetree, ctx, contractAddr, removeViewers)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform remove viewers")
@@ -185,7 +230,11 @@ func (m *CustomMessenger) removeViewers(ctx sdk.Context, contractAddr sdk.AccAdd
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) provisionFileTree(ctx sdk.Context, contractAddr sdk.AccAddress, provisionFileTree *filetreetypes.MsgProvisionFileTree) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) provisionFileTree(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	provisionFileTree *filetreetypes.MsgProvisionFileTree,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformProvisionFileTree(m.filetree, ctx, contractAddr, provisionFileTree)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform provision filetree")
@@ -193,7 +242,11 @@ func (m *CustomMessenger) provisionFileTree(ctx sdk.Context, contractAddr sdk.Ac
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) addEditors(ctx sdk.Context, contractAddr sdk.AccAddress, addEditors *filetreetypes.MsgAddEditors) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) addEditors(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	addEditors *filetreetypes.MsgAddEditors,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformAddEditors(m.filetree, ctx, contractAddr, addEditors)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform add editors")
@@ -201,7 +254,11 @@ func (m *CustomMessenger) addEditors(ctx sdk.Context, contractAddr sdk.AccAddres
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) removeEditors(ctx sdk.Context, contractAddr sdk.AccAddress, removeEditors *filetreetypes.MsgRemoveEditors) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) removeEditors(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	removeEditors *filetreetypes.MsgRemoveEditors,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformRemoveEditors(m.filetree, ctx, contractAddr, removeEditors)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform remove editors")
@@ -209,7 +266,11 @@ func (m *CustomMessenger) removeEditors(ctx sdk.Context, contractAddr sdk.AccAdd
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) resetEditors(ctx sdk.Context, contractAddr sdk.AccAddress, resetEditors *filetreetypes.MsgResetEditors) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) resetEditors(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	resetEditors *filetreetypes.MsgResetEditors,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformResetEditors(m.filetree, ctx, contractAddr, resetEditors)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform reset editors")
@@ -217,7 +278,11 @@ func (m *CustomMessenger) resetEditors(ctx sdk.Context, contractAddr sdk.AccAddr
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) resetViewers(ctx sdk.Context, contractAddr sdk.AccAddress, resetViewers *filetreetypes.MsgResetViewers) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) resetViewers(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	resetViewers *filetreetypes.MsgResetViewers,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformResetViewers(m.filetree, ctx, contractAddr, resetViewers)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform reset viewers")
@@ -225,7 +290,11 @@ func (m *CustomMessenger) resetViewers(ctx sdk.Context, contractAddr sdk.AccAddr
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) changeOwner(ctx sdk.Context, contractAddr sdk.AccAddress, changeOwner *filetreetypes.MsgChangeOwner) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) changeOwner(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	changeOwner *filetreetypes.MsgChangeOwner,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformChangeOwner(m.filetree, ctx, contractAddr, changeOwner)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform change owner")
@@ -234,7 +303,11 @@ func (m *CustomMessenger) changeOwner(ctx sdk.Context, contractAddr sdk.AccAddre
 }
 
 // Notifications starts here
-func (m *CustomMessenger) createNotification(ctx sdk.Context, contractAddr sdk.AccAddress, createNotification *notificationstypes.MsgCreateNotification) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) createNotification(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	createNotification *notificationstypes.MsgCreateNotification,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformCreateNotification(m.notifications, ctx, contractAddr, createNotification)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform create notification")
@@ -242,7 +315,11 @@ func (m *CustomMessenger) createNotification(ctx sdk.Context, contractAddr sdk.A
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) deleteNotification(ctx sdk.Context, contractAddr sdk.AccAddress, deleteNotification *notificationstypes.MsgDeleteNotification) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) deleteNotification(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	deleteNotification *notificationstypes.MsgDeleteNotification,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformDeleteNotification(m.notifications, ctx, contractAddr, deleteNotification)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform delete notification")
@@ -250,7 +327,11 @@ func (m *CustomMessenger) deleteNotification(ctx sdk.Context, contractAddr sdk.A
 	return nil, nil, nil
 }
 
-func (m *CustomMessenger) blockSenders(ctx sdk.Context, contractAddr sdk.AccAddress, blockSenders *notificationstypes.MsgBlockSenders) ([]sdk.Event, [][]byte, error) {
+func (m *CustomMessenger) blockSenders(
+	ctx sdk.Context,
+	contractAddr sdk.AccAddress,
+	blockSenders *notificationstypes.MsgBlockSenders,
+) ([]sdk.Event, [][]byte, error) {
 	err := PerformBlockSenders(m.notifications, ctx, contractAddr, blockSenders)
 	if err != nil {
 		return nil, nil, sdkerrors.Wrap(err, "perform block senders")

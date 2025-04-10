@@ -28,19 +28,31 @@ func SimulateMsgAddProviderClaimer(
 
 		provider, found := k.GetProviders(ctx, simAccount.Address.String())
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find provider"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to find provider",
+			), nil, nil
 		}
 
 		for _, addr := range provider.AuthClaimers {
 			if msg.ClaimAddress == addr {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find suitable claimer"), nil, nil
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to find suitable claimer",
+				), nil, nil
 			}
 		}
 
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to generate fees",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{
@@ -74,11 +86,19 @@ func SimulateMsgRemoveProviderClaimer(
 
 		provider, found := k.GetProviders(ctx, simAccount.Address.String())
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find provider"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to find provider",
+			), nil, nil
 		}
 
 		if len(provider.AuthClaimers) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to find claimer"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to find claimer",
+			), nil, nil
 		}
 		claimer := provider.AuthClaimers[r.Intn(len(provider.AuthClaimers))]
 		msg.ClaimAddress = claimer
@@ -86,7 +106,11 @@ func SimulateMsgRemoveProviderClaimer(
 		spendable := bk.SpendableCoins(ctx, simAccount.Address)
 		fees, err := simtypes.RandomFees(r, ctx, spendable)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"unable to generate fees",
+			), nil, err
 		}
 
 		txCtx := simulation.OperationInput{

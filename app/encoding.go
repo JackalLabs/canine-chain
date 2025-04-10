@@ -2,7 +2,6 @@ package app
 
 import (
 	"github.com/cosmos/cosmos-sdk/std"
-
 	"github.com/jackalLabs/canine-chain/v4/app/params"
 )
 

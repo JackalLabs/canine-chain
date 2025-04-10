@@ -7,7 +7,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) SetProviderKeybase(goCtx context.Context, msg *types.MsgSetProviderKeybase) (*types.MsgSetProviderKeybaseResponse, error) {
+func (k msgServer) SetProviderKeybase(
+	goCtx context.Context,
+	msg *types.MsgSetProviderKeybase,
+) (*types.MsgSetProviderKeybaseResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	provider, found := k.GetProviders(ctx, msg.Creator)

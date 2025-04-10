@@ -9,7 +9,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) RemoveEditors(goCtx context.Context, msg *types.MsgRemoveEditors) (*types.MsgRemoveEditorsResponse, error) {
+func (k msgServer) RemoveEditors(
+	goCtx context.Context,
+	msg *types.MsgRemoveEditors,
+) (*types.MsgRemoveEditorsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	file, found := k.GetFiles(ctx, msg.Address, msg.FileOwner)

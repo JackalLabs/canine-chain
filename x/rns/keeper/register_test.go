@@ -59,7 +59,14 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	_, err = suite.queryClient.Name(suite.ctx.Context(), &nameReq)
 	suite.Require().NoError(err)
 
-	err = suite.rnsKeeper.RegisterRNSName(suite.ctx, address.String(), capname, "{}", 2, true) // adding time to registration
+	err = suite.rnsKeeper.RegisterRNSName(
+		suite.ctx,
+		address.String(),
+		capname,
+		"{}",
+		2,
+		true,
+	) // adding time to registration
 	suite.Require().NoError(err)
 
 	afterbal = suite.bankKeeper.GetAllBalances(suite.ctx, address)
@@ -72,7 +79,14 @@ func (suite *KeeperTestSuite) TestMsgRegisterName() {
 	suite.Require().NoError(err)
 
 	for i := 0; i < 100; i++ {
-		err = suite.rnsKeeper.RegisterRNSName(suite.ctx, address.String(), fmt.Sprintf("mrpumpkinman%d.jkl", i), "{}", 1, false) // adding time to registration
+		err = suite.rnsKeeper.RegisterRNSName(
+			suite.ctx,
+			address.String(),
+			fmt.Sprintf("mrpumpkinman%d.jkl", i),
+			"{}",
+			1,
+			false,
+		) // adding time to registration
 		suite.Require().NoError(err)
 	}
 
@@ -106,16 +120,26 @@ func (suite *KeeperTestSuite) TestMsgRegisterExpiredName() {
 	address2, err := sdk.AccAddressFromBech32(testAddresses[2])
 	suite.Require().NoError(err)
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, address, sdk.Coins{sdk.Coin{
-		Denom:  "ujkl",
-		Amount: sdk.NewInt(9_999_999_999),
-	}})
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		ctx,
+		types.ModuleName,
+		address,
+		sdk.Coins{sdk.Coin{
+			Denom:  "ujkl",
+			Amount: sdk.NewInt(9_999_999_999),
+		}},
+	)
 	suite.Require().NoError(err)
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, address2, sdk.Coins{sdk.Coin{
-		Denom:  "ujkl",
-		Amount: sdk.NewInt(9_999_999_999),
-	}})
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		ctx,
+		types.ModuleName,
+		address2,
+		sdk.Coins{sdk.Coin{
+			Denom:  "ujkl",
+			Amount: sdk.NewInt(9_999_999_999),
+		}},
+	)
 	suite.Require().NoError(err)
 
 	err = suite.rnsKeeper.RegisterRNSName(ctx, address.String(), name, "{}", 1, true)

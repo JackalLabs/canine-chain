@@ -10,7 +10,9 @@ import (
 func (suite *KeeperTestSuite) TestFiles() {
 	suite.SetupSuite()
 
-	merkle, err := base64.StdEncoding.DecodeString("d9RSWckxX0kFeMt7Ip0GSbhM+eJApeUgicZyL9qBoNiGiMtvibI8XjqXsyTdJC8cVftC8z1BJRrxAtRKe8GVEg==")
+	merkle, err := base64.StdEncoding.DecodeString(
+		"d9RSWckxX0kFeMt7Ip0GSbhM+eJApeUgicZyL9qBoNiGiMtvibI8XjqXsyTdJC8cVftC8z1BJRrxAtRKe8GVEg==",
+	)
 	suite.Require().NoError(err)
 
 	providers := suite.storageKeeper.GetActiveProviders(suite.ctx, "")

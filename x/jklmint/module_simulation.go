@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-
 	jklmintsimulation "github.com/jackalLabs/canine-chain/v4/x/jklmint/simulation"
 	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 )
@@ -44,9 +43,13 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 	jklmintParams := types.DefaultParams()
 	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMintDenom), func(_ *rand.Rand) string {
-			return string(types.Amino.MustMarshalJSON(jklmintParams.MintDenom))
-		}),
+		simulation.NewSimParamChange(
+			types.ModuleName,
+			string(types.KeyMintDenom),
+			func(_ *rand.Rand) string {
+				return string(types.Amino.MustMarshalJSON(jklmintParams.MintDenom))
+			},
+		),
 	}
 }
 
@@ -54,7 +57,9 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+func (am AppModule) WeightedOperations(
+	simState module.SimulationState,
+) []simtypes.WeightedOperation {
 	_ = simState
 	operations := make([]simtypes.WeightedOperation, 0)
 

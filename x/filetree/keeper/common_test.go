@@ -3,20 +3,16 @@ package keeper_test
 import (
 	"testing"
 
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	tmtime "github.com/tendermint/tendermint/types/time"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
-
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
-
-	moduletestutil "github.com/jackalLabs/canine-chain/v4/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
 	canineglobaltestutil "github.com/jackalLabs/canine-chain/v4/testutil"
+	moduletestutil "github.com/jackalLabs/canine-chain/v4/types/module/testutil" // when importing from sdk,'go mod tidy' keeps trying to import from v0.46.
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
 	types "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tmtime "github.com/tendermint/tendermint/types/time"
 )
 
 // SetupFiletreeKeeper creates a filetreeKeeper as well as all its dependencies.
@@ -27,7 +23,11 @@ func SetupFiletreeKeeper(t *testing.T) (
 ) {
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
-	testCtx := canineglobaltestutil.DefaultContextWithDB(t, sdk.NewTransientStoreKey("transient_test"), key)
+	testCtx := canineglobaltestutil.DefaultContextWithDB(
+		t,
+		sdk.NewTransientStoreKey("transient_test"),
+		key,
+	)
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 
 	encCfg := moduletestutil.MakeTestEncodingConfig()

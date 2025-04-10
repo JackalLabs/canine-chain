@@ -11,7 +11,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllAttestations(c context.Context, req *types.QueryAllAttestations) (*types.QueryAllAttestationsResponse, error) {
+func (k Keeper) AllAttestations(
+	c context.Context,
+	req *types.QueryAllAttestations,
+) (*types.QueryAllAttestationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,15 +25,19 @@ func (k Keeper) AllAttestations(c context.Context, req *types.QueryAllAttestatio
 	store := ctx.KVStore(k.storeKey)
 	attestationStore := prefix.NewStore(store, types.KeyPrefix(types.AttestationKeyPrefix))
 
-	pageRes, err := query.Paginate(attestationStore, req.Pagination, func(_ []byte, value []byte) error {
-		var providers types.AttestationForm
-		if err := k.cdc.Unmarshal(value, &providers); err != nil {
-			return err
-		}
+	pageRes, err := query.Paginate(
+		attestationStore,
+		req.Pagination,
+		func(_ []byte, value []byte) error {
+			var providers types.AttestationForm
+			if err := k.cdc.Unmarshal(value, &providers); err != nil {
+				return err
+			}
 
-		attestations = append(attestations, providers)
-		return nil
-	})
+			attestations = append(attestations, providers)
+			return nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -38,7 +45,10 @@ func (k Keeper) AllAttestations(c context.Context, req *types.QueryAllAttestatio
 	return &types.QueryAllAttestationsResponse{Attestations: attestations, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Attestation(c context.Context, req *types.QueryAttestation) (*types.QueryAttestationResponse, error) {
+func (k Keeper) Attestation(
+	c context.Context,
+	req *types.QueryAttestation,
+) (*types.QueryAttestationResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

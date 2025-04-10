@@ -53,7 +53,10 @@ func CmdRemoveViewers() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newViewerID := keeper.MakeViewerAddress(file.File.TrackingNumber, v) // This used to just be argAddress
+				newViewerID := keeper.MakeViewerAddress(
+					file.File.TrackingNumber,
+					v,
+				) // This used to just be argAddress
 				viewerIDs = append(viewerIDs, newViewerID)
 
 			}

@@ -83,7 +83,8 @@ func (suite *KeeperTestSuite) TestInitProviders() {
 
 	coin := suite.bankKeeper.GetBalance(suite.ctx, userAcc, "ujkl")
 
-	suite.Require().Equal(deposit.Amount.SubRaw(k.GetParams(suite.ctx).CollateralPrice).Int64(), coin.Amount.Int64())
+	suite.Require().
+		Equal(deposit.Amount.SubRaw(k.GetParams(suite.ctx).CollateralPrice).Int64(), coin.Amount.Int64())
 
 	shutdownMsg := types.MsgShutdownProvider{
 		Creator: user,

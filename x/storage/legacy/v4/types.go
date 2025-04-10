@@ -10,16 +10,16 @@ import (
 )
 
 type LegacyParams struct {
-	DepositAccount string `protobuf:"bytes,1,opt,name=deposit_account,json=depositAccount,proto3" json:"deposit_account,omitempty"`
-	ProofWindow    int64  `protobuf:"varint,2,opt,name=proof_window,json=proofWindow,proto3" json:"proof_window,omitempty"`
+	DepositAccount string `protobuf:"bytes,1,opt,name=deposit_account,json=depositAccount,proto3"                     json:"deposit_account,omitempty"`
+	ProofWindow    int64  `protobuf:"varint,2,opt,name=proof_window,json=proofWindow,proto3"                          json:"proof_window,omitempty"`
 	// Chunk size of a file is divided into
 	// The value cannot be smaller than 1 to avoid zero division
-	ChunkSize    int64  `protobuf:"varint,3,opt,name=chunk_size,json=chunkSize,proto3" json:"chunk_size,omitempty"`
-	MissesToBurn int64  `protobuf:"varint,4,opt,name=misses_to_burn,json=missesToBurn,proto3" json:"misses_to_burn,omitempty"`
-	PriceFeed    string `protobuf:"bytes,5,opt,name=price_feed,json=priceFeed,proto3" json:"price_feed,omitempty"`
+	ChunkSize    int64  `protobuf:"varint,3,opt,name=chunk_size,json=chunkSize,proto3"                              json:"chunk_size,omitempty"`
+	MissesToBurn int64  `protobuf:"varint,4,opt,name=misses_to_burn,json=missesToBurn,proto3"                       json:"misses_to_burn,omitempty"`
+	PriceFeed    string `protobuf:"bytes,5,opt,name=price_feed,json=priceFeed,proto3"                               json:"price_feed,omitempty"`
 	// Life span of a contract in blocks
 	MaxContractAgeInBlocks int64 `protobuf:"varint,6,opt,name=max_contract_age_in_blocks,json=maxContractAgeInBlocks,proto3" json:"max_contract_age_in_blocks,omitempty"`
-	PricePerTbPerMonth     int64 `protobuf:"varint,7,opt,name=price_per_tb_per_month,json=pricePerTbPerMonth,proto3" json:"price_per_tb_per_month,omitempty"`
+	PricePerTbPerMonth     int64 `protobuf:"varint,7,opt,name=price_per_tb_per_month,json=pricePerTbPerMonth,proto3"         json:"price_per_tb_per_month,omitempty"`
 }
 
 // ParamSetPairs get the params.ParamSet

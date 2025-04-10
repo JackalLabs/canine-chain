@@ -5,12 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/input"
 	txns "github.com/cosmos/cosmos-sdk/client/tx"
-
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/pflag"
 )
 
@@ -40,7 +38,11 @@ func prepareFactory(clientCtx client.Context, txf txns.Factory) (txns.Factory, e
 	return txf, nil
 }
 
-func SendTx(clientCtx client.Context, flagSet *pflag.FlagSet, msgs ...sdk.Msg) (*sdk.TxResponse, error) {
+func SendTx(
+	clientCtx client.Context,
+	flagSet *pflag.FlagSet,
+	msgs ...sdk.Msg,
+) (*sdk.TxResponse, error) {
 	txf := txns.NewFactoryCLI(clientCtx, flagSet)
 	txf, err := prepareFactory(clientCtx, txf)
 	if err != nil {
@@ -75,7 +77,11 @@ func SendTx(clientCtx client.Context, flagSet *pflag.FlagSet, msgs ...sdk.Msg) (
 		_, _ = fmt.Fprintf(os.Stderr, "%s\n\n", out)
 
 		buf := bufio.NewReader(os.Stdin)
-		ok, err := input.GetConfirmation("confirm transaction before signing and broadcasting", buf, os.Stderr)
+		ok, err := input.GetConfirmation(
+			"confirm transaction before signing and broadcasting",
+			buf,
+			os.Stderr,
+		)
 
 		if err != nil || !ok {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "cancelled transaction")

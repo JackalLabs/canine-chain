@@ -7,7 +7,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner) (*types.MsgChangeOwnerResponse, error) {
+func (k msgServer) ChangeOwner(
+	goCtx context.Context,
+	msg *types.MsgChangeOwner,
+) (*types.MsgChangeOwnerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	currentOwner := MakeOwnerAddress(msg.Address, msg.FileOwner)

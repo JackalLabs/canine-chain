@@ -40,12 +40,30 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(bouncybulldog.NewUpgrade(app.mm, app.configurator, app.OracleKeeper))
 	app.registerUpgrade(v3.NewUpgrade(app.mm, app.configurator, app.StorageKeeper))
-	app.registerUpgrade(v4.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper, &app.FileTreeKeeper, app.BankKeeper))
+	app.registerUpgrade(
+		v4.NewUpgrade(
+			app.mm,
+			app.configurator,
+			&app.StorageKeeper,
+			&app.FileTreeKeeper,
+			app.BankKeeper,
+		),
+	)
 	app.registerUpgrade(v410.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper))
 	app.registerUpgrade(v420.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(v430.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper))
-	app.registerUpgrade(v440.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper, &app.MintKeeper))
-	app.registerUpgrade(v450.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper, app.BankKeeper, app.AccountKeeper))
+	app.registerUpgrade(
+		v440.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper, &app.MintKeeper),
+	)
+	app.registerUpgrade(
+		v450.NewUpgrade(
+			app.mm,
+			app.configurator,
+			&app.StorageKeeper,
+			app.BankKeeper,
+			app.AccountKeeper,
+		),
+	)
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
@@ -59,6 +77,8 @@ func (app *JackalApp) registerUpgrade(upgrade upgrades.Upgrade) {
 
 	if upgradeInfo.Name == upgrade.Name() && !app.upgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
 		// Configure store loader that checks if version == upgradeHeight and applies store upgrades
-		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, upgrade.StoreUpgrades()))
+		app.SetStoreLoader(
+			upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, upgrade.StoreUpgrades()),
+		)
 	}
 }

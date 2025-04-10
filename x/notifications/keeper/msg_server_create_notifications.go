@@ -9,12 +9,19 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
 )
 
-func (k msgServer) CreateNotification(goCtx context.Context, msg *types.MsgCreateNotification) (*types.MsgCreateNotificationResponse, error) {
+func (k msgServer) CreateNotification(
+	goCtx context.Context,
+	msg *types.MsgCreateNotification,
+) (*types.MsgCreateNotificationResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	validContents := json.Valid([]byte(msg.Contents))
 	if !validContents {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrJSONUnmarshal, "contents are not valid `%s`", msg.Contents)
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrJSONUnmarshal,
+			"contents are not valid `%s`",
+			msg.Contents,
+		)
 	}
 
 	sender := msg.Creator
@@ -26,7 +33,10 @@ func (k msgServer) CreateNotification(goCtx context.Context, msg *types.MsgCreat
 	}
 
 	if k.IsBlocked(ctx, address.String(), sender) {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "you are blocked from sending this user notifications")
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"you are blocked from sending this user notifications",
+		)
 	}
 
 	noti := types.Notification{

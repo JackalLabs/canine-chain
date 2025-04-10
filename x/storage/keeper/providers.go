@@ -151,6 +151,7 @@ func (k Keeper) GetAllProviders(ctx sdk.Context) (list []types.Providers) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -164,7 +165,10 @@ func (k Keeper) GetAllProviders(ctx sdk.Context) (list []types.Providers) {
 
 // SetActiveProviders set a specific providers in the store from its index
 func (k Keeper) SetActiveProviders(ctx sdk.Context, providers types.ActiveProviders) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveProvidersKeyPrefix))
+	store := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.KeyPrefix(types.ActiveProvidersKeyPrefix),
+	)
 	b := k.cdc.MustMarshal(&providers)
 	store.Set(types.ActiveProvidersKey(
 		providers.Address,
@@ -175,9 +179,13 @@ func (k Keeper) SetActiveProviders(ctx sdk.Context, providers types.ActiveProvid
 func (k Keeper) RemoveAllActiveProviders(
 	ctx sdk.Context,
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveProvidersKeyPrefix))
+	store := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.KeyPrefix(types.ActiveProvidersKeyPrefix),
+	)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -194,6 +202,7 @@ func (k Keeper) GetAllActiveProviders(ctx sdk.Context) (list []types.ActiveProvi
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProvidersKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

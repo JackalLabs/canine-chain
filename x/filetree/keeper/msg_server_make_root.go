@@ -9,7 +9,13 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k Keeper) MakeRootFolder(ctx sdk.Context, creator string, viewers string, editors string, trackingNumber string) {
+func (k Keeper) MakeRootFolder(
+	ctx sdk.Context,
+	creator string,
+	viewers string,
+	editors string,
+	trackingNumber string,
+) {
 	merklePath := types.MerklePath("s")
 
 	h1 := sha256.New() // making full address
@@ -32,7 +38,10 @@ func (k Keeper) MakeRootFolder(ctx sdk.Context, creator string, viewers string, 
 	k.SetFiles(ctx, file)
 }
 
-func (k msgServer) ProvisionFileTree(goCtx context.Context, msg *types.MsgProvisionFileTree) (*types.MsgProvisionFileTreeResponse, error) {
+func (k msgServer) ProvisionFileTree(
+	goCtx context.Context,
+	msg *types.MsgProvisionFileTree,
+) (*types.MsgProvisionFileTreeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	k.MakeRootFolder(ctx, msg.Creator, msg.Viewers, msg.Editors, msg.TrackingNumber)

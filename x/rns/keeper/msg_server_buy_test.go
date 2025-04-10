@@ -24,7 +24,12 @@ func (suite *KeeperTestSuite) TestBuyMsg() {
 	suite.Require().NoError(err)
 
 	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(10000000000)))
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		suite.ctx,
+		types.ModuleName,
+		nameOwner,
+		coins,
+	)
 	suite.Require().NoError(err)
 
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, buyer, coins)

@@ -6,16 +6,21 @@ import (
 	"strconv"
 	"strings"
 
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	storageKeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
 const AccountName = "STORAGE_ESCROW"
 
-func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, merkles string, planHeight int64, name string) error {
+func RecoverFiles(
+	ctx sdk.Context,
+	keeper *storageKeeper.Keeper,
+	merkles string,
+	planHeight int64,
+	name string,
+) error {
 	account, err := allTypes.GetAccount(AccountName) // creating account to hold the files
 	if err != nil {
 		return err
@@ -68,7 +73,11 @@ func RecoverFiles(ctx sdk.Context, keeper *storageKeeper.Keeper, merkles string,
 			ProofType:     0,
 			Proofs:        make([]string, 0),
 			MaxProofs:     3,
-			Note:          fmt.Sprintf("{\"memo\":\"Recovered during %s\", \"fid\":\"%s\"}", name, fid),
+			Note: fmt.Sprintf(
+				"{\"memo\":\"Recovered during %s\", \"fid\":\"%s\"}",
+				name,
+				fid,
+			),
 		}
 
 		keeper.SetFile(ctx, f)

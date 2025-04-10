@@ -34,11 +34,19 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 	parentHash, childHash := types.MerkleHelper("s/home/")
 
 	aliceHomeTrackingNumber := uuid.NewString()
-	aliceEditorAccess, err := types.MakeEditorAccessMap(aliceHomeTrackingNumber, strings.Split(alice, ","), "place holder key")
+	aliceEditorAccess, err := types.MakeEditorAccessMap(
+		aliceHomeTrackingNumber,
+		strings.Split(alice, ","),
+		"place holder key",
+	)
 	suite.Require().NoError(err)
 
 	bobHomeTrackingNumber := uuid.NewString()
-	bobEditorAccess, err := types.MakeEditorAccessMap(bobHomeTrackingNumber, strings.Split(bob, ","), "place holder key")
+	bobEditorAccess, err := types.MakeEditorAccessMap(
+		bobHomeTrackingNumber,
+		strings.Split(bob, ","),
+		"place holder key",
+	)
 	suite.Require().NoError(err)
 
 	// hash alice account address
@@ -92,10 +100,19 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice makes pepe.jpg inside of her home folder
 			preRun: func() *types.MsgPostFile {
 				pepeTrackingNumber := uuid.NewString()
-				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice, ","), "place holder key")
+				pepeEditorAccess, err := types.MakeEditorAccessMap(
+					pepeTrackingNumber,
+					strings.Split(alice, ","),
+					"place holder key",
+				)
 				suite.Require().NoError(err)
 
-				msg, err := types.CreateMsgPostFile(alice, "s/home/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
+				msg, err := types.CreateMsgPostFile(
+					alice,
+					"s/home/pepe.jpg",
+					pepeEditorAccess,
+					pepeTrackingNumber,
+				)
 				suite.Require().NoError(err)
 				return msg
 			},
@@ -105,10 +122,19 @@ func (suite *KeeperTestSuite) TestMsgPostFile() {
 		{ // alice can't put pepe.jpg inside of s/videos/ because this folder doesn't exist
 			preRun: func() *types.MsgPostFile {
 				pepeTrackingNumber := uuid.NewString()
-				pepeEditorAccess, err := types.MakeEditorAccessMap(pepeTrackingNumber, strings.Split(alice, ","), "place holder key")
+				pepeEditorAccess, err := types.MakeEditorAccessMap(
+					pepeTrackingNumber,
+					strings.Split(alice, ","),
+					"place holder key",
+				)
 				suite.Require().NoError(err)
 
-				msg, err := types.CreateMsgPostFile(alice, "s/videos/pepe.jpg", pepeEditorAccess, pepeTrackingNumber)
+				msg, err := types.CreateMsgPostFile(
+					alice,
+					"s/videos/pepe.jpg",
+					pepeEditorAccess,
+					pepeTrackingNumber,
+				)
 				suite.Require().NoError(err)
 				return msg
 			},

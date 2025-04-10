@@ -10,7 +10,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/testutil"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
-
 	"github.com/wealdtech/go-merkletree/v2"
 	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
@@ -125,7 +124,12 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	testProvider, err := sdk.AccAddressFromBech32(testAddresses[2])
 	suite.Require().NoError(err)
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testProvider, sdk.NewCoins(sdk.NewInt64Coin("ujkl", 100000000)))
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		suite.ctx,
+		types.ModuleName,
+		testProvider,
+		sdk.NewCoins(sdk.NewInt64Coin("ujkl", 100000000)),
+	)
 	suite.Require().NoError(err)
 
 	suite.storageKeeper.SetParams(suite.ctx, types.Params{
@@ -150,7 +154,12 @@ func (suite *KeeperTestSuite) TestPostProof() {
 	})
 	suite.Require().NoError(err)
 
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, user, sdk.NewCoins(sdk.NewInt64Coin("ujkl", 100000000)))
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		suite.ctx,
+		types.ModuleName,
+		user,
+		sdk.NewCoins(sdk.NewInt64Coin("ujkl", 100000000)),
+	)
 	suite.Require().NoError(err)
 
 	_, err = msgSrvr.BuyStorage(context, &types.MsgBuyStorage{
@@ -255,8 +264,12 @@ func (suite *KeeperTestSuite) TestPostProof() {
 				Owner:    user.String(),
 				Start:    0,
 			},
-			expErr:    true,
-			expErrMsg: fmt.Sprintf("cannot verify %x against %x: cannot verify Proof", item2, merkleroot),
+			expErr: true,
+			expErrMsg: fmt.Sprintf(
+				"cannot verify %x against %x: cannot verify Proof",
+				item2,
+				merkleroot,
+			),
 		},
 		{
 			testName: "nonexisting contract",
@@ -269,8 +282,13 @@ func (suite *KeeperTestSuite) TestPostProof() {
 				Start:    0,
 			},
 
-			expErr:    true,
-			expErrMsg: fmt.Sprintf("contract not found: %x/%s/%d", []byte("does_not_exist"), user.String(), 0),
+			expErr: true,
+			expErrMsg: fmt.Sprintf(
+				"contract not found: %x/%s/%d",
+				[]byte("does_not_exist"),
+				user.String(),
+				0,
+			),
 		},
 	}
 

@@ -6,7 +6,7 @@ import (
 )
 
 func CreateLogger() (log.Logger, *os.File) {
-	f, _ := os.OpenFile("logs.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0o666)
+	f, _ := os.OpenFile("logs.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	log.SetOutput(f)
 

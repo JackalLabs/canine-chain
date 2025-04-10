@@ -1,14 +1,11 @@
 package v121
 
 import (
-	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
-)
-
-import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}

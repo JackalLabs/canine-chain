@@ -9,7 +9,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) FileUploadCheck(c context.Context, req *types.QueryFileUploadCheck) (*types.QueryFileUploadCheckResponse, error) {
+func (k Keeper) FileUploadCheck(
+	c context.Context,
+	req *types.QueryFileUploadCheck,
+) (*types.QueryFileUploadCheckResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -26,5 +29,7 @@ func (k Keeper) FileUploadCheck(c context.Context, req *types.QueryFileUploadChe
 		return nil, status.Error(codes.InvalidArgument, "bytes cannot be negative")
 	}
 
-	return &types.QueryFileUploadCheckResponse{Valid: (spi.SpaceAvailable - spi.SpaceUsed) < req.Bytes}, nil
+	return &types.QueryFileUploadCheckResponse{
+		Valid: (spi.SpaceAvailable - spi.SpaceUsed) < req.Bytes,
+	}, nil
 }

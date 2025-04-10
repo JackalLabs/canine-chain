@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	sdkClient "github.com/cosmos/cosmos-sdk/client"
-
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
@@ -40,7 +39,13 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	ctx.FromName = "bob"
 	algo := hd.Secp256k1
 
-	_, _, err = ctx.Keyring.NewMnemonic(ctx.FromName, keyring.English, sdkTypes.FullFundraiserPath, keyring.DefaultBIP39Passphrase, algo)
+	_, _, err = ctx.Keyring.NewMnemonic(
+		ctx.FromName,
+		keyring.English,
+		sdkTypes.FullFundraiserPath,
+		keyring.DefaultBIP39Passphrase,
+		algo,
+	)
 	suite.Require().NoError(err)
 
 	signed, _, err := ctx.Keyring.Sign(ctx.FromName, []byte("jackal_init"))
@@ -95,7 +100,10 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 	pkey, err := eciesgo.NewPublicKeyFromHex(res.PubKey.Key)
 	suite.Require().NoError(err)
 
-	encryptedPepeAESKeyAndIV, err := eciesgo.Encrypt(pkey, []byte(pepeAESKeyAndIV)) // convert to hex
+	encryptedPepeAESKeyAndIV, err := eciesgo.Encrypt(
+		pkey,
+		[]byte(pepeAESKeyAndIV),
+	) // convert to hex
 	suite.Require().NoError(err)
 
 	cases := []struct {

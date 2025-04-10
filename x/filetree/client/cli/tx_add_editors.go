@@ -57,7 +57,10 @@ func CmdAddEditors() *cobra.Command {
 				}
 
 				queryClient := types.NewQueryClient(clientCtx)
-				res, err := queryClient.PubKey(cmd.Context(), &types.QueryPubKey{Address: key.String()})
+				res, err := queryClient.PubKey(
+					cmd.Context(),
+					&types.QueryPubKey{Address: key.String()},
+				)
 				if err != nil {
 					return types.ErrPubKeyNotFound
 				}
@@ -92,7 +95,7 @@ func CmdAddEditors() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				logger.Println("hex message is", hexMessage)
+				logger.Println("hex message is", string(hexMessage))
 
 				// May need to use "clientCtx.from?"
 				ownerPrivateKey, err := MakePrivateKey(clientCtx)
@@ -106,7 +109,12 @@ func CmdAddEditors() *cobra.Command {
 					logger.Println("error is", err)
 					return err
 				}
-				logFile.Close()
+				err = logFile.Close()
+				if err != nil {
+					fmt.Printf("%v\n", hexMessage)
+					logger.Println("error is", err)
+					return err
+				}
 				// encrypt using editor's public key
 				encrypted, err := eciesgo.Encrypt(pkey, decrypt)
 				if err != nil {

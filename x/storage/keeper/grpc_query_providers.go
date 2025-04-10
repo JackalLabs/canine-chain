@@ -11,7 +11,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) AllProviders(c context.Context, req *types.QueryAllProviders) (*types.QueryAllProvidersResponse, error) {
+func (k Keeper) AllProviders(
+	c context.Context,
+	req *types.QueryAllProviders,
+) (*types.QueryAllProvidersResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -22,15 +25,19 @@ func (k Keeper) AllProviders(c context.Context, req *types.QueryAllProviders) (*
 	store := ctx.KVStore(k.storeKey)
 	providersStore := prefix.NewStore(store, types.KeyPrefix(types.ProvidersKeyPrefix))
 
-	pageRes, err := query.Paginate(providersStore, req.Pagination, func(_ []byte, value []byte) error {
-		var providers types.Providers
-		if err := k.cdc.Unmarshal(value, &providers); err != nil {
-			return err
-		}
+	pageRes, err := query.Paginate(
+		providersStore,
+		req.Pagination,
+		func(_ []byte, value []byte) error {
+			var providers types.Providers
+			if err := k.cdc.Unmarshal(value, &providers); err != nil {
+				return err
+			}
 
-		providerss = append(providerss, providers)
-		return nil
-	})
+			providerss = append(providerss, providers)
+			return nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -38,7 +45,10 @@ func (k Keeper) AllProviders(c context.Context, req *types.QueryAllProviders) (*
 	return &types.QueryAllProvidersResponse{Providers: providerss, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Provider(c context.Context, req *types.QueryProvider) (*types.QueryProviderResponse, error) {
+func (k Keeper) Provider(
+	c context.Context,
+	req *types.QueryProvider,
+) (*types.QueryProviderResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -55,7 +65,10 @@ func (k Keeper) Provider(c context.Context, req *types.QueryProvider) (*types.Qu
 	return &types.QueryProviderResponse{Provider: val}, nil
 }
 
-func (k Keeper) ActiveProviders(c context.Context, req *types.QueryActiveProviders) (*types.QueryActiveProvidersResponse, error) {
+func (k Keeper) ActiveProviders(
+	c context.Context,
+	req *types.QueryActiveProviders,
+) (*types.QueryActiveProvidersResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

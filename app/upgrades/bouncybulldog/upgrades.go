@@ -2,6 +2,9 @@ package bouncybulldog
 
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
 	"github.com/jackalLabs/canine-chain/v4/types"
 	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
@@ -10,10 +13,6 @@ import (
 	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
 	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/module"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}
@@ -26,7 +25,11 @@ type Upgrade struct {
 }
 
 // NewUpgrade returns a new Upgrade instance
-func NewUpgrade(mm *module.Manager, configurator module.Configurator, ok oraclekeeper.Keeper) *Upgrade {
+func NewUpgrade(
+	mm *module.Manager,
+	configurator module.Configurator,
+	ok oraclekeeper.Keeper,
+) *Upgrade {
 	return &Upgrade{
 		mm:           mm,
 		configurator: configurator,

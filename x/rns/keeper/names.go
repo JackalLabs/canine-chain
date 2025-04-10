@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
@@ -113,6 +112,7 @@ func (k Keeper) GetAllNames(ctx sdk.Context) (list []types.Names) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -130,6 +130,7 @@ func (k Keeper) CheckExistence(ctx sdk.Context) bool {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.NamesKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
+	//nolint:errcheck
 	defer iterator.Close()
 
 	// looping to see if at least 1 element exists
@@ -140,10 +141,8 @@ func (k Keeper) CheckExistence(ctx sdk.Context) bool {
 		}
 		i++
 	}
-	exist := false
-	if i > 0 {
-		exist = true
-	}
+	exist := i > 0
+
 	return exist
 }
 

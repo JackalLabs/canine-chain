@@ -6,9 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
@@ -30,14 +29,21 @@ func (k Keeper) burnContract(ctx sdk.Context, providerAddress string) {
 
 // manageProof checks the status of a given proof, if the file is too young, we skip it. If it's old enough and the
 // prover has either failed to prove it or the proof simply never existed we remove it.
-func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
+func (k Keeper) manageProof(
+	ctx sdk.Context,
+	sizeTracker *map[string]int64,
+	file *types.UnifiedFile,
+	proofKey string,
+) {
 	pks := strings.Split(proofKey, "/")
 	providerAddress := pks[0]
 
 	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
 	currentHeight := ctx.BlockHeight()
 
-	if !file.IsYoung(currentHeight) { // if the file is old, and we can't find the proof, remove the prover
+	if !file.IsYoung(
+		currentHeight,
+	) { // if the file is old, and we can't find the proof, remove the prover
 		if !found {
 			ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
 			file.RemoveProverWithKey(ctx, k, proofKey)
@@ -48,7 +54,8 @@ func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file
 	proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
 
 	if !proven && !file.IsYoung(currentHeight) { // if file wasn't proven, and is old, we burn it.
-		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
+		ctx.Logger().
+			Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
 		file.RemoveProverWithKey(ctx, k, proofKey)
 		k.burnContract(ctx, providerAddress)
 		return
@@ -63,12 +70,17 @@ func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 	coinsToDistribute := make(sdk.Coins, 0)
 
 	k.IterateGauges(ctx, func(pg types.PaymentGauge) { // check every gauge
-		if pg.End.Before(currentTime) { // if the end date is before the current block time, we remove the gauge
+		if pg.End.Before(
+			currentTime,
+		) { // if the end date is before the current block time, we remove the gauge
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
 
-		if pg.End.Before(pg.Start) || pg.End.Equal(pg.Start) { // if somehow the gauge ends before or at the same time as it starts, we remove it as well
+		if pg.End.Before(pg.Start) ||
+			pg.End.Equal(
+				pg.Start,
+			) { // if somehow the gauge ends before or at the same time as it starts, we remove it as well
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
@@ -112,9 +124,15 @@ func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 
 			c := sdk.NewInt64Coin(coin.Denom, amt64)
 			coinsToDistribute = coinsToDistribute.Add(c)
-			err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, gaugeWallet, types.ModuleName, sdk.NewCoins(c))
+			err := k.bankKeeper.SendCoinsFromAccountToModule(
+				ctx,
+				gaugeWallet,
+				types.ModuleName,
+				sdk.NewCoins(c),
+			)
 			if err != nil {
-				ctx.Logger().Error(sdkerrors.Wrapf(err, "cannot send tokens from gauge to storage account").Error())
+				ctx.Logger().
+					Error(sdkerrors.Wrapf(err, "cannot send tokens from gauge to storage account").Error())
 				continue
 			}
 		}
@@ -135,7 +153,11 @@ func providerList(sizeTracker *map[string]int64) []string {
 	return provers
 }
 
-func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
+func (k Keeper) rewardAllProviders(
+	ctx sdk.Context,
+	totalSize int64,
+	sizeTracker *map[string]int64,
+) {
 	coins := k.pullTokensFromGauges(ctx)
 	networkValue := sdk.NewDec(totalSize)
 
@@ -149,7 +171,8 @@ func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker
 		_ = s
 		pAddress, err := sdk.AccAddressFromBech32(prover)
 		if err != nil {
-			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
+			ctx.Logger().
+				Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
 			continue
 		}
 
@@ -157,9 +180,15 @@ func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker
 			tokensValueOwed := networkPercentage.Mul(coin.Amount.ToDec()).TruncateInt()
 			c := sdk.NewCoin(coin.Denom, tokensValueOwed)
 
-			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, pAddress, sdk.NewCoins(c))
+			err = k.bankKeeper.SendCoinsFromModuleToAccount(
+				ctx,
+				types.ModuleName,
+				pAddress,
+				sdk.NewCoins(c),
+			)
 			if err != nil {
-				ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), prover).Error())
+				ctx.Logger().
+					Error(sdkerrors.Wrapf(err, "failed to send %s to %s", coins.String(), prover).Error())
 				continue
 			}
 		}
@@ -201,7 +230,9 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
-	DayBlocks := k.GetParams(ctx).CheckWindow // checks more often than proofs take to catch them more frequently
+	DayBlocks := k.GetParams(
+		ctx,
+	).CheckWindow // checks more often than proofs take to catch them more frequently
 
 	if ctx.BlockHeight()%DayBlocks > 0 { // runs once each window (usually a full days worth of blocks)
 		ctx.Logger().Debug("skipping reward handling for this block")

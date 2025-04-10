@@ -39,12 +39,15 @@ func CmdMakeRootV2() *cobra.Command {
 			// We include the creator of this root as an editor so that they can add children--folders or files
 
 			h := sha256.New()
-			h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, clientCtx.GetFromAddress().String())))
+			_, _ = fmt.Fprintf(h, "e%s%s", trackingNumber, clientCtx.GetFromAddress().String())
 			hash := h.Sum(nil)
 
 			addressString := fmt.Sprintf("%x", hash)
 
-			editors[addressString] = fmt.Sprintf("%x", "Placeholder key") // Determine if we need a place holder key
+			editors[addressString] = fmt.Sprintf(
+				"%x",
+				"Placeholder key",
+			) // Determine if we need a place holder key
 
 			jsonEditors, err := json.Marshal(editors)
 			if err != nil {

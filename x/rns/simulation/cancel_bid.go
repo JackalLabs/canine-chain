@@ -24,23 +24,39 @@ func SimulateMsgCancelBid(
 		wctx := sdk.WrapSDKContext(ctx)
 		allBidsResp, err := k.AllBids(wctx, nreq)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "Unable to collect bids"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgCancelBid,
+				"Unable to collect bids",
+			), nil, err
 		}
 		allBids := allBidsResp.GetBids()
 		if len(allBids) < 1 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "No bids to collect"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgCancelBid,
+				"No bids to collect",
+			), nil, nil
 		}
 		randomBidI := simtypes.RandIntBetween(r, 0, len(allBids))
 		rBid := allBids[randomBidI]
 
 		bidAddress, err := sdk.AccAddressFromBech32(rBid.Bidder)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "Unable to convert username"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgCancelBid,
+				"Unable to convert username",
+			), nil, err
 		}
 
 		simAccount, ok := simtypes.FindAccount(accs, bidAddress)
 		if !ok {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCancelBid, "Unable to find bidder"), nil, err
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgCancelBid,
+				"Unable to find bidder",
+			), nil, err
 		}
 
 		// populating the message
@@ -60,7 +76,11 @@ func SimulateMsgCancelBid(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 

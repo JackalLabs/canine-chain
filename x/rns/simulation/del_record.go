@@ -28,7 +28,11 @@ func SimulateMsgDelRecord(
 		// checking if any names are registered
 		exists := k.CheckExistence(ctx)
 		if !exists {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "No domains registered yet"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgDelRecord,
+				"No domains registered yet",
+			), nil, nil
 		}
 		// scanning all names
 		for _, n := range k.GetAllNames(ctx) {
@@ -38,7 +42,11 @@ func SimulateMsgDelRecord(
 			}
 		}
 		if nameWithSub == "" {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "No registered names have subdomains"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgDelRecord,
+				"No registered names have subdomains",
+			), nil, nil
 		}
 
 		// finding the owner
@@ -48,7 +56,11 @@ func SimulateMsgDelRecord(
 			}
 		}
 		if simAccount.Address.String() == "" {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDelRecord, "Could not find owner"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgDelRecord,
+				"Could not find owner",
+			), nil, nil
 		}
 
 		// initializing the message
@@ -67,7 +79,11 @@ func SimulateMsgDelRecord(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 

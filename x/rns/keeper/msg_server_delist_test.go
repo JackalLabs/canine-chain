@@ -21,7 +21,12 @@ func (suite *KeeperTestSuite) TestDelistMsg() {
 
 	coin := sdk.NewCoin("ujkl", sdk.NewInt(10000000000)) // Send some coins to their account
 	coins := sdk.NewCoins(coin)
-	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, nameOwner, coins)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(
+		suite.ctx,
+		types.ModuleName,
+		nameOwner,
+		coins,
+	)
 	suite.Require().NoError(err)
 
 	// Init rns account and register rns

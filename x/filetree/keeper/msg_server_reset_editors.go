@@ -8,7 +8,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) ResetEditors(goCtx context.Context, msg *types.MsgResetEditors) (*types.MsgResetEditorsResponse, error) {
+func (k msgServer) ResetEditors(
+	goCtx context.Context,
+	msg *types.MsgResetEditors,
+) (*types.MsgResetEditorsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	file, found := k.GetFiles(ctx, msg.Address, msg.FileOwner)

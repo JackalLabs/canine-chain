@@ -10,7 +10,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) FreeSpace(goCtx context.Context, req *types.QueryFreeSpace) (*types.QueryFreeSpaceResponse, error) {
+func (k Keeper) FreeSpace(
+	goCtx context.Context,
+	req *types.QueryFreeSpace,
+) (*types.QueryFreeSpaceResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -36,7 +39,10 @@ func (k Keeper) FreeSpace(goCtx context.Context, req *types.QueryFreeSpace) (*ty
 	}, nil
 }
 
-func (k Keeper) StoreCount(goCtx context.Context, req *types.QueryStoreCount) (*types.QueryStoreCountResponse, error) {
+func (k Keeper) StoreCount(
+	goCtx context.Context,
+	req *types.QueryStoreCount,
+) (*types.QueryStoreCountResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

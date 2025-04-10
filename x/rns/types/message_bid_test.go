@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	//	"github.com/jackalLabs/canine-chain/testutil/sample"
 	"github.com/stretchr/testify/require"

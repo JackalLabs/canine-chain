@@ -9,7 +9,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
 )
 
-func (k msgServer) RemoveViewers(goCtx context.Context, msg *types.MsgRemoveViewers) (*types.MsgRemoveViewersResponse, error) {
+func (k msgServer) RemoveViewers(
+	goCtx context.Context,
+	msg *types.MsgRemoveViewers,
+) (*types.MsgRemoveViewersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	file, found := k.GetFiles(ctx, msg.Address, msg.FileOwner)

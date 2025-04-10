@@ -8,7 +8,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
 )
 
-func (k msgServer) CreateFeed(goCtx context.Context, msg *types.MsgCreateFeed) (*types.MsgCreateFeedResponse, error) {
+func (k msgServer) CreateFeed(
+	goCtx context.Context,
+	msg *types.MsgCreateFeed,
+) (*types.MsgCreateFeedResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	_, found := k.GetFeed(ctx, msg.Name)
 	if found {
@@ -50,7 +53,10 @@ func (k msgServer) CreateFeed(goCtx context.Context, msg *types.MsgCreateFeed) (
 	return &types.MsgCreateFeedResponse{}, nil
 }
 
-func (k msgServer) UpdateFeed(goCtx context.Context, msg *types.MsgUpdateFeed) (*types.MsgUpdateFeedResponse, error) {
+func (k msgServer) UpdateFeed(
+	goCtx context.Context,
+	msg *types.MsgUpdateFeed,
+) (*types.MsgUpdateFeedResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	feed, found := k.GetFeed(ctx, msg.Name)
 	if !found {

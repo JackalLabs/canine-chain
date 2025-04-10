@@ -220,7 +220,14 @@ func (suite *KeeperTestSuite) TestMsgTrasnfer() {
 			preRun: func() *types.MsgTransfer {
 				freeName := "freeBi.jkl"
 				blockHeight := suite.ctx.BlockHeight()
-				err := suite.rnsKeeper.RegisterRNSName(suite.ctx, owner.String(), freeName, "{}", 2, true)
+				err := suite.rnsKeeper.RegisterRNSName(
+					suite.ctx,
+					owner.String(),
+					freeName,
+					"{}",
+					2,
+					true,
+				)
 				suite.Require().NoError(err)
 				name, _ := suite.rnsKeeper.GetNames(suite.ctx, "freeBi", "jkl")
 				name.Locked = blockHeight + 1

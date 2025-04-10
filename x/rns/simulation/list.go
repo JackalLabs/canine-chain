@@ -26,7 +26,11 @@ func SimulateMsgList(
 		// checking if any names are registered
 		exists := k.CheckExistence(ctx)
 		if !exists {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "No domains registered yet"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				types.TypeMsgList,
+				"No domains registered yet",
+			), nil, nil
 		}
 		for {
 			// finding all registered domain names
@@ -37,7 +41,11 @@ func SimulateMsgList(
 			// requesting the domain names
 			regNames, err := k.ListOwnedNames(wctx, nReq)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgList, "Couldn't request names"), nil, nil
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					types.TypeMsgList,
+					"Couldn't request names",
+				), nil, nil
 			}
 			names = regNames.GetNames()
 			if names != nil {
@@ -61,7 +69,11 @@ func SimulateMsgList(
 		}
 
 		if len(unListed) < 1 {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "All owned domains are listed"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"All owned domains are listed",
+			), nil, nil
 		}
 		nameI := simtypes.RandIntBetween(r, 0, len(unListed))
 		tName := unListed[nameI]
@@ -71,7 +83,11 @@ func SimulateMsgList(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Expired domain"), nil, nil
 		}
 		if tName.Locked > ctx.BlockHeight() {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Can't list a free name"), nil, nil
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				"Can't list a free name",
+			), nil, nil
 		}
 
 		// generating the fees
@@ -85,7 +101,11 @@ func SimulateMsgList(
 			var err error
 			fees, err = simtypes.RandomFees(r, ctx, coins)
 			if err != nil {
-				return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate fees"), nil, err
+				return simtypes.NoOpMsg(
+					types.ModuleName,
+					msg.Type(),
+					"unable to generate fees",
+				), nil, err
 			}
 		}
 

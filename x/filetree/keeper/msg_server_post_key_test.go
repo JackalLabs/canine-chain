@@ -17,7 +17,9 @@ func (suite *KeeperTestSuite) TestMsgPostKey() {
 
 	alice := testAddresses[0]
 
-	privateKey, err := types.MakePrivateKey("alice") // clientCtx.FromName in the CLI will be alice's keyring ID (alice), not the full account address
+	privateKey, err := types.MakePrivateKey(
+		"alice",
+	) // clientCtx.FromName in the CLI will be alice's keyring ID (alice), not the full account address
 	suite.Require().NoError(err)
 
 	pubKey := privateKey.PublicKey.Bytes(false)

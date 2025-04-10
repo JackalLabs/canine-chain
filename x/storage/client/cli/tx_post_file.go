@@ -14,17 +14,15 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/cosmos/cosmos-sdk/client/flags"
-
-	"github.com/cosmos/cosmos-sdk/client/input"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/utils"
-	"github.com/spf13/pflag"
-
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/input"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v4/x/storage/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 var _ = strconv.Itoa(0)
@@ -61,7 +59,11 @@ func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error
 
 // GenerateOrBroadcastTx is some dumb wrapper I had to make cause the sdk assumes I don't want to programmatically handle the
 // response but instead print it out like a doofus
-func GenerateOrBroadcastTx(clientCtx client.Context, flags *pflag.FlagSet, msgs ...sdk.Msg) (*sdk.TxResponse, error) {
+func GenerateOrBroadcastTx(
+	clientCtx client.Context,
+	flags *pflag.FlagSet,
+	msgs ...sdk.Msg,
+) (*sdk.TxResponse, error) {
 	txf := tx.NewFactoryCLI(clientCtx, flags)
 
 	for _, msg := range msgs {
@@ -103,7 +105,11 @@ func GenerateOrBroadcastTx(clientCtx client.Context, flags *pflag.FlagSet, msgs 
 		_, _ = fmt.Fprintf(os.Stderr, "%s\n\n", out)
 
 		buf := bufio.NewReader(os.Stdin)
-		ok, err := input.GetConfirmation("confirm transaction before signing and broadcasting", buf, os.Stderr)
+		ok, err := input.GetConfirmation(
+			"confirm transaction before signing and broadcasting",
+			buf,
+			os.Stderr,
+		)
 
 		if err != nil || !ok {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "cancelled transaction")
@@ -138,6 +144,7 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 
 	var b bytes.Buffer
 	writer := multipart.NewWriter(&b)
+	//nolint:errcheck
 	defer writer.Close()
 
 	err = writer.WriteField("sender", address)
@@ -164,7 +171,11 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 	if err != nil {
 		return err
 	}
-	writer.Close()
+
+	err = writer.Close()
+	if err != nil {
+		return err
+	}
 
 	req, _ := http.NewRequest("POST", u.String(), &b)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
@@ -174,6 +185,7 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 		return err
 	}
 
+	//nolint:errcheck
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
@@ -314,12 +326,16 @@ func CmdPostRandomFile() *cobra.Command {
 				panic(err)
 			}
 
-			url := fmt.Sprintf("https://baconipsum.com/api/?type=meat-and-filler&paras=%d&format=text", count)
+			url := fmt.Sprintf(
+				"https://baconipsum.com/api/?type=meat-and-filler&paras=%d&format=text",
+				count,
+			)
 			hcli := http.DefaultClient
 			resp, err := hcli.Get(url)
 			if err != nil {
 				panic(err)
 			}
+			//nolint:errcheck
 			defer resp.Body.Close()
 
 			if resp.StatusCode != http.StatusOK {

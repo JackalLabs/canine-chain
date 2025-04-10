@@ -24,6 +24,10 @@ func SimulateMsgTransfer(
 
 		// TODO: Handling the Transfer simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Transfer simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"Transfer simulation not implemented",
+		), nil, nil
 	}
 }

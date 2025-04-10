@@ -53,7 +53,10 @@ func CmdRemoveEditors() *cobra.Command {
 					return types.ErrFileNotFound
 				}
 
-				newEditorID := keeper.MakeEditorAddress(file.File.TrackingNumber, v) // This used to just be argAddress
+				newEditorID := keeper.MakeEditorAddress(
+					file.File.TrackingNumber,
+					v,
+				) // This used to just be argAddress
 				editorIDs = append(editorIDs, newEditorID)
 
 			}

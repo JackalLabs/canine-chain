@@ -7,7 +7,11 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func MigrateStore(ctx sdk.Context, legacySubspace exported.Subspace, paramsSubspace *paramstypes.Subspace) error {
+func MigrateStore(
+	ctx sdk.Context,
+	legacySubspace exported.Subspace,
+	paramsSubspace *paramstypes.Subspace,
+) error {
 	var currParams LegacyParams
 	legacySubspace.GetParamSet(ctx, &currParams)
 

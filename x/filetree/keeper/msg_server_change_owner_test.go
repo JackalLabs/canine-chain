@@ -25,12 +25,22 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceRootFolder)
 
 	// set home folder for alice
-	aliceHomeFolder, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), strings.Split(alice, ","), "s/home/")
+	aliceHomeFolder, err := types.CreateFolderOrFile(
+		alice,
+		strings.Split(alice, ","),
+		strings.Split(alice, ","),
+		"s/home/",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *aliceHomeFolder)
 
 	// put pepe in home of alice
-	pepejpg, err := types.CreateFolderOrFile(alice, strings.Split(alice, ","), strings.Split(alice, ","), "s/home/pepe.jpg")
+	pepejpg, err := types.CreateFolderOrFile(
+		alice,
+		strings.Split(alice, ","),
+		strings.Split(alice, ","),
+		"s/home/pepe.jpg",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *pepejpg)
 
@@ -58,12 +68,22 @@ func (suite *KeeperTestSuite) TestMsgChangeOwners() {
 	suite.filetreeKeeper.SetFiles(suite.ctx, *charlieRootFolder)
 
 	// set home folder for charlie
-	charlieHomeFolder, err := types.CreateFolderOrFile(charlie, strings.Split(charlie, ","), strings.Split(charlie, ","), "s/home/")
+	charlieHomeFolder, err := types.CreateFolderOrFile(
+		charlie,
+		strings.Split(charlie, ","),
+		strings.Split(charlie, ","),
+		"s/home/",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *charlieHomeFolder)
 
 	// put pepe in home of charlie
-	charliePepejpg, err := types.CreateFolderOrFile(charlie, strings.Split(charlie, ","), strings.Split(charlie, ","), "s/home/pepe.jpg")
+	charliePepejpg, err := types.CreateFolderOrFile(
+		charlie,
+		strings.Split(charlie, ","),
+		strings.Split(charlie, ","),
+		"s/home/pepe.jpg",
+	)
 	suite.Require().NoError(err)
 	suite.filetreeKeeper.SetFiles(suite.ctx, *charliePepejpg)
 

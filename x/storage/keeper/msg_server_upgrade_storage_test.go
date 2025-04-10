@@ -16,7 +16,9 @@ func (suite *KeeperTestSuite) TestUpgradeStorage() {
 
 	testAccount := testAddresses[0]
 
-	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000))) // Send some coins to their account
+	coins := sdk.NewCoins(
+		sdk.NewCoin("ujkl", sdk.NewInt(100000000000)),
+	) // Send some coins to their account
 	testAcc, _ := sdk.AccAddressFromBech32(testAccount)
 	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
 	suite.Require().NoError(err)

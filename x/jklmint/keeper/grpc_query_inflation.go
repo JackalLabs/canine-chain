@@ -7,7 +7,10 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
 )
 
-func (k Keeper) Inflation(c context.Context, _ *types.QueryInflation) (*types.QueryInflationResponse, error) {
+func (k Keeper) Inflation(
+	c context.Context,
+	_ *types.QueryInflation,
+) (*types.QueryInflationResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
 	inflation, err := k.GetInflation(ctx)

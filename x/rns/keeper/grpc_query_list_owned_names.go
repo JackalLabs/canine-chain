@@ -3,9 +3,8 @@ package keeper
 import (
 	"context"
 
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-
 	"github.com/cosmos/cosmos-sdk/store/prefix"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
@@ -13,7 +12,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedNames) (*types.QueryListOwnedNamesResponse, error) {
+func (k Keeper) ListOwnedNames(
+	goCtx context.Context,
+	req *types.QueryListOwnedNames,
+) (*types.QueryListOwnedNamesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -38,6 +40,7 @@ func (k Keeper) ListOwnedNames(goCtx context.Context, req *types.QueryListOwnedN
 		iterator = sdk.KVStorePrefixIterator(namesStore, []byte{})
 	}
 
+	//nolint:errcheck
 	defer iterator.Close()
 	var i uint64
 

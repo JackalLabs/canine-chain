@@ -5,15 +5,20 @@ import (
 	"fmt"
 	"strings"
 
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
+	allTypes "github.com/jackalLabs/canine-chain/v4/types"
 	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
 )
 
-func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data string, years int64, primary bool) error {
+func (k Keeper) RegisterRNSName(
+	ctx sdk.Context,
+	sender string,
+	nm string,
+	data string,
+	years int64,
+	primary bool,
+) error {
 	nm = strings.ToLower(nm)
 	nm = strings.ReplaceAll(nm, " ", "")
 	name, tld, err := GetNameAndTLD(nm)
@@ -97,7 +102,10 @@ func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventRegister,
-			sdk.NewAttribute(types.AttributeName, fmt.Sprintf("%s.%s", newWhois.Name, newWhois.Tld)),
+			sdk.NewAttribute(
+				types.AttributeName,
+				fmt.Sprintf("%s.%s", newWhois.Name, newWhois.Tld),
+			),
 			sdk.NewAttribute(types.AttributeOwner, sender),
 		),
 	)
@@ -105,7 +113,10 @@ func (k Keeper) RegisterRNSName(ctx sdk.Context, sender string, nm string, data 
 	return nil
 }
 
-func (k msgServer) MakePrimary(goCtx context.Context, msg *types.MsgMakePrimary) (*types.MsgMakePrimaryResponse, error) {
+func (k msgServer) MakePrimary(
+	goCtx context.Context,
+	msg *types.MsgMakePrimary,
+) (*types.MsgMakePrimaryResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	nm := strings.ToLower(msg.Name)
@@ -120,7 +131,10 @@ func (k msgServer) MakePrimary(goCtx context.Context, msg *types.MsgMakePrimary)
 }
 
 // Register is Deprecated! Use RegisterName instead.
-func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*types.MsgRegisterResponse, error) {
+func (k msgServer) Register(
+	goCtx context.Context,
+	msg *types.MsgRegister,
+) (*types.MsgRegisterResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Try getting a name from the store
 
@@ -129,7 +143,10 @@ func (k msgServer) Register(goCtx context.Context, msg *types.MsgRegister) (*typ
 	return &types.MsgRegisterResponse{}, err
 }
 
-func (k msgServer) RegisterName(goCtx context.Context, msg *types.MsgRegisterName) (*types.MsgRegisterNameResponse, error) {
+func (k msgServer) RegisterName(
+	goCtx context.Context,
+	msg *types.MsgRegisterName,
+) (*types.MsgRegisterNameResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	err := k.RegisterRNSName(ctx, msg.Creator, msg.Name, msg.Data, msg.Years, msg.SetPrimary)
