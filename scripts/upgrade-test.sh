@@ -22,7 +22,7 @@ git checkout $NEW_VERSION
 go install -mod=readonly ./cmd/canined
 
 # start old node
-screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
+screen -L -Logfile upgrade-node.log  -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
 sleep 30
 
