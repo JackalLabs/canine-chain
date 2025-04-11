@@ -19,10 +19,10 @@ git checkout $OLD_VERSION
 go build -mod=readonly -o build/canined ./cmd/canined
 mv build/canined ./../_build/old/canined
 git checkout $NEW_VERSION
-make install
+go install -mod=readonly ./cmd/canined
 
 # start old node
-screen -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
+screen -L -Logfile upgrade-node.log  -dmS node1 bash scripts/run-upgrade-node.sh ./../_build/old/canined $DENOM
 
 sleep 30
 
