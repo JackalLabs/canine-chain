@@ -18,6 +18,7 @@ import (
 	v430 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v430"
 	v440 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v440"
 	v450 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v450"
+	v460 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v460"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v4alpha1"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v4alpha3"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v4alpha5"
@@ -46,6 +47,7 @@ func (app *JackalApp) registerMainnetUpgradeHandlers() {
 	app.registerUpgrade(v430.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper))
 	app.registerUpgrade(v440.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper, &app.MintKeeper))
 	app.registerUpgrade(v450.NewUpgrade(app.mm, app.configurator, &app.StorageKeeper, app.BankKeeper, app.AccountKeeper))
+	app.registerUpgrade(v460.NewUpgrade(app.mm, app.configurator))
 }
 
 // registerUpgrade registers the given upgrade to be supported by the app
