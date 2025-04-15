@@ -1,12 +1,15 @@
 package keeper_test
 
 import (
+	"database/sql"
 	"fmt"
-	"testing"
-
 	oracletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
+	"path"
+	"testing"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 
@@ -71,8 +74,13 @@ func setupStorageKeeper(t *testing.T) (
 		"StorageParams",
 	)
 
+	n := path.Join(t.TempDir(), "filebase.db")
+	t.Log("temp filebase name: ", n)
+	d, err := sql.Open("sqlite3", n)
+	require.New(t).NoError(err)
+
 	// storage keeper initializations
-	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName)
+	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName, d)
 	storageKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.

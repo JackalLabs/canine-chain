@@ -2,37 +2,57 @@ package keeper
 
 import (
 	"context"
-	"encoding/json"
-
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strconv"
+	"strings"
 )
 
-func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
+func getPage(pg *query.PageRequest) (uint64, uint64) {
+	// Determine pagination parameters
+	var limit uint64 = 100
+	var offset uint64 = 0
+	if pg != nil {
+		limit = pg.Limit
+		if pg.Offset > 0 {
+			offset = pg.Offset
+		} else if pg.Key != nil {
+			parts := strings.Split(string(pg.Key), ":")
+			if len(parts) == 2 {
+				parsedOffset, err := strconv.ParseUint(parts[0], 10, 64)
+				if err == nil {
+					offset = parsedOffset
+				}
+			}
+		}
+	}
+
+	return limit, offset
+}
+
+func (k Keeper) AllFiles(ctx context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
+	limit, offset := getPage(req.Pagination)
 
-	var files []types.UnifiedFile
-	ctx := sdk.UnwrapSDKContext(c)
+	files, total := k.GetAllFileByMerklePg(offset, limit)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	// Pagination response
+	nextOffset := offset + uint64(len(files))
+	nextKey := []byte(fmt.Sprintf("%d:%d", nextOffset, limit))
+	if nextOffset >= uint64(total) {
+		nextKey = nil
+	}
 
-	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
-		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(value, &file); err != nil {
-			return err
-		}
-
-		files = append(files, file)
-		return nil
-	})
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+	pageRes := &query.PageResponse{
+		NextKey: nextKey,
+		Total:   uint64(total),
 	}
 
 	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
@@ -43,42 +63,20 @@ func (k Keeper) FilesFromNote(c context.Context, req *types.QueryFilesFromNote) 
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var files []types.UnifiedFile
-	ctx := sdk.UnwrapSDKContext(c)
+	limit, offset := getPage(req.Pagination)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	files, total := k.GetAllFileByMerklePgWithJSONFilter(offset, limit, req.Key, req.Value)
 
-	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
-		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(value, &file); err != nil {
-			return err
-		}
+	// Pagination response
+	nextOffset := offset + uint64(len(files))
+	nextKey := []byte(fmt.Sprintf("%d:%d", nextOffset, limit))
+	if nextOffset >= uint64(total) {
+		nextKey = nil
+	}
 
-		var kv map[string]any
-		err := json.Unmarshal([]byte(file.Note), &kv)
-		if err != nil {
-			return nil
-		}
-
-		r, exists := kv[req.Key]
-		if !exists {
-			return nil
-		}
-
-		s, ok := r.(string)
-		if !ok {
-			return nil
-		}
-
-		if s != req.Value {
-			return nil
-		}
-
-		files = append(files, file)
-		return nil
-	})
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+	pageRes := &query.PageResponse{
+		NextKey: nextKey,
+		Total:   uint64(total),
 	}
 
 	return &types.QueryFilesFromNoteResponse{Files: files, Pagination: pageRes}, nil
@@ -89,22 +87,20 @@ func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMe
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var files []types.UnifiedFile
-	ctx := sdk.UnwrapSDKContext(c)
+	limit, offset := getPage(req.Pagination)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(req.Merkle))
+	files, total := k.GetAllFilesWithMerklePg(req.Merkle, limit, offset)
 
-	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
-		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(value, &file); err != nil {
-			return err
-		}
+	// Pagination response
+	nextOffset := offset + uint64(len(files))
+	nextKey := []byte(fmt.Sprintf("%d:%d", nextOffset, limit))
+	if nextOffset >= uint64(total) {
+		nextKey = nil
+	}
 
-		files = append(files, file)
-		return nil
-	})
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+	pageRes := &query.PageResponse{
+		NextKey: nextKey,
+		Total:   uint64(total),
 	}
 
 	return &types.QueryAllFilesByMerkleResponse{Files: files, Pagination: pageRes}, nil

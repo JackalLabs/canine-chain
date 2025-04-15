@@ -1,112 +1,503 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	"encoding/base64"
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k Keeper) setFilePrimary(ctx sdk.Context, file types.UnifiedFile) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-	b := k.cdc.MustMarshal(&file)
-	store.Set(types.FilesPrimaryKey(
-		file.Merkle,
-		file.Owner,
-		file.Start,
-	), b)
+// SetFile sets a specific File in the SQLite database
+func (k Keeper) SetFile(ctx sdk.Context, file types.UnifiedFile) error {
+	// Start a transaction
+	tx, err := k.filebase.Begin()
+	if err != nil {
+
+		_ = tx.Rollback()
+		return err
+	}
+
+	// Insert into unified_files table
+	_, err = tx.Exec(`
+		REPLACE INTO unified_files 
+		(merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+	`, file.Merkle, file.Owner, file.Start, file.Expires, file.FileSize, file.ProofInterval,
+		file.ProofType, file.MaxProofs, file.Note)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+
+	// Delete existing proofs for this file
+	_, err = tx.Exec(`
+		DELETE FROM proofs 
+		WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+	`, file.Merkle, file.Owner, file.Start)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+
+	// Insert new proofs
+	for _, proof := range file.Proofs {
+		_, err = tx.Exec(`
+			INSERT INTO proofs (file_merkle, file_owner, file_start, proof)
+			VALUES (?, ?, ?, ?)
+		`, file.Merkle, file.Owner, file.Start, proof)
+		if err != nil {
+			_ = tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit()
 }
 
-// SetFile set a specific File in the store from its index
-func (k Keeper) SetFile(ctx sdk.Context, file types.UnifiedFile) {
-	k.setFilePrimary(ctx, file)
-}
-
-// GetFile returns a File from its index
+// GetFile returns a File from its primary key
 func (k Keeper) GetFile(
 	ctx sdk.Context,
 	merkle []byte,
 	owner string,
 	start int64,
 ) (val types.UnifiedFile, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	// Query file data
+	row := k.filebase.QueryRow(`
+		SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+		FROM unified_files
+		WHERE merkle = ? AND owner = ? AND start = ?
+	`, merkle, owner, start)
 
-	b := store.Get(types.FilesPrimaryKey(
-		merkle, owner, start,
-	))
-	if b == nil {
+	// Initialize file struct
+	var file types.UnifiedFile
+	err := row.Scan(
+		&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+		&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+	)
+	if err != nil {
 		return val, false
 	}
 
-	k.cdc.MustUnmarshal(b, &val)
-	return val, true
+	// Query associated proofs
+	rows, err := k.filebase.Query(`
+		SELECT proof FROM proofs
+		WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+	`, merkle, owner, start)
+	if err != nil {
+		return val, false
+	}
+	defer rows.Close()
+
+	// Collect proofs
+	var proofs []string
+	for rows.Next() {
+		var proof string
+		if err := rows.Scan(&proof); err != nil {
+			return val, false
+		}
+		proofs = append(proofs, proof)
+	}
+	file.Proofs = proofs
+
+	return file, true
 }
 
-func (k Keeper) removeFilePrimary(
-	ctx sdk.Context,
-	merkle []byte,
-	owner string,
-	start int64,
-) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-	store.Delete(types.FilesPrimaryKey(
-		merkle,
-		owner,
-		start,
-	))
-}
-
-// RemoveFile removes a File from the store
+// RemoveFile removes a File from the database
 func (k Keeper) RemoveFile(
 	ctx sdk.Context,
 	merkle []byte,
 	owner string,
 	start int64,
-) {
-	file, found := k.GetFile(ctx, merkle, owner, start)
-	if !found {
-		return
+) error {
+	// Start a transaction
+	tx, err := k.filebase.Begin()
+	if err != nil {
+		_ = tx.Rollback()
+		return err
 	}
 
-	for _, proof := range file.Proofs { // deleting all the associated proofs too
-		k.RemoveProofWithBuiltKey(ctx, []byte(proof))
+	// Delete the file
+	_, err = tx.Exec(`
+		DELETE FROM unified_files 
+		WHERE merkle = ? AND owner = ? AND start = ?
+	`, merkle, owner, start)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
 	}
 
-	k.removeFilePrimary(ctx, merkle, owner, start)
+	return tx.Commit()
+
 }
 
-// GetAllFileByMerkle returns all File
-func (k Keeper) GetAllFileByMerkle(ctx sdk.Context) (list []types.UnifiedFile) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.UnifiedFile
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
+func (k Keeper) GetAllFileByMerklePgWithJSONFilter(offset, limit uint64, jsonKey string, jsonValue string) (list []types.UnifiedFile, total int64) {
+	if offset == 0 && limit == 0 {
+		limit = 100
 	}
 
-	return
+	// Get total count with JSON filter
+	countQuery := `
+        SELECT COUNT(*) FROM unified_files
+        WHERE json_extract(note, ?) = ?
+    `
+	err := k.filebase.QueryRow(countQuery, "$."+jsonKey, jsonValue).Scan(&total)
+	if err != nil {
+		return nil, 0
+	}
+
+	// Query with pagination and JSON filter
+	rows, err := k.filebase.Query(`
+        SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+        FROM unified_files
+        WHERE json_extract(note, ?) = ?
+        ORDER BY merkle, owner, start
+        LIMIT ? OFFSET ?
+    `, "$."+jsonKey, jsonValue, limit, offset)
+	if err != nil {
+		return nil, total
+	}
+	defer rows.Close()
+
+	files := make(map[string]types.UnifiedFile)
+	var fileKeys []string
+	for rows.Next() {
+		var file types.UnifiedFile
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
+		}
+
+		key := fmt.Sprintf("%s:%s:%d", base64.StdEncoding.EncodeToString(file.Merkle), file.Owner, file.Start)
+		files[key] = file
+		fileKeys = append(fileKeys, key)
+	}
+
+	if len(fileKeys) == 0 {
+		return nil, total
+	}
+
+	// Get proofs for these files
+	for _, key := range fileKeys {
+		file := files[key]
+		proofRows, err := k.filebase.Query(`
+            SELECT proof FROM proofs
+            WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+        `, file.Merkle, file.Owner, file.Start)
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+
+		file.Proofs = proofs
+		files[key] = file
+	}
+
+	// Convert map to ordered list
+	for _, key := range fileKeys {
+		list = append(list, files[key])
+	}
+
+	return list, total
+}
+
+func (k Keeper) GetAllFileByMerklePg(offset, limit uint64) (list []types.UnifiedFile, total int64) {
+	if offset == 0 && limit == 0 {
+		limit = 100
+	}
+
+	// Get total count
+	err := k.filebase.QueryRow("SELECT COUNT(*) FROM unified_files").Scan(&total)
+	if err != nil {
+		return nil, 0
+	}
+
+	// Query with pagination
+	rows, err := k.filebase.Query(`
+        SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+        FROM unified_files
+        ORDER BY merkle, owner, start
+        LIMIT ? OFFSET ?
+    `, limit, offset)
+	if err != nil {
+		return nil, total
+	}
+	defer rows.Close()
+
+	files := make(map[string]types.UnifiedFile)
+	var fileKeys []string
+	for rows.Next() {
+		var file types.UnifiedFile
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
+		}
+
+		key := fmt.Sprintf("%s:%s:%d", base64.StdEncoding.EncodeToString(file.Merkle), file.Owner, file.Start)
+		files[key] = file
+		fileKeys = append(fileKeys, key)
+	}
+
+	if len(fileKeys) == 0 {
+		return nil, total
+	}
+
+	// Get proofs for these files
+	for _, key := range fileKeys {
+		file := files[key]
+		proofRows, err := k.filebase.Query(`
+            SELECT proof FROM proofs
+            WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+        `, file.Merkle, file.Owner, file.Start)
+
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+
+		file.Proofs = proofs
+		files[key] = file
+	}
+
+	// Convert map to ordered list
+	for _, key := range fileKeys {
+		list = append(list, files[key])
+	}
+
+	return list, total
+}
+
+func (k Keeper) GetAllFilesWithMerklePg(merkle []byte, offset, limit uint64) (list []types.UnifiedFile, total int64) {
+	if offset == 0 && limit == 0 {
+		limit = 100
+	}
+
+	// Get total count
+	err := k.filebase.QueryRow("SELECT COUNT(*) FROM unified_files WHERE merkle = ?", merkle).Scan(&total)
+	if err != nil {
+		return nil, 0
+	}
+
+	// Query with pagination
+	rows, err := k.filebase.Query(`
+        SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+        FROM unified_files WHERE merkle = ?
+        ORDER BY merkle, owner, start
+        LIMIT ? OFFSET ?
+    `, merkle, limit, offset)
+	if err != nil {
+		return nil, total
+	}
+	defer rows.Close()
+
+	files := make(map[string]types.UnifiedFile)
+	var fileKeys []string
+	for rows.Next() {
+		var file types.UnifiedFile
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
+		}
+
+		key := fmt.Sprintf("%s:%s:%d", base64.StdEncoding.EncodeToString(file.Merkle), file.Owner, file.Start)
+		files[key] = file
+		fileKeys = append(fileKeys, key)
+	}
+
+	if len(fileKeys) == 0 {
+		return nil, total
+	}
+
+	// Get proofs for these files
+	for _, key := range fileKeys {
+		file := files[key]
+		proofRows, err := k.filebase.Query(`
+            SELECT proof FROM proofs
+            WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+        `, file.Merkle, file.Owner, file.Start)
+
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+
+		file.Proofs = proofs
+		files[key] = file
+	}
+
+	// Convert map to ordered list
+	for _, key := range fileKeys {
+		list = append(list, files[key])
+	}
+
+	return list, total
+}
+
+func (k Keeper) GetAllFileByMerkle() (list []types.UnifiedFile) {
+
+	// Query with pagination
+	rows, err := k.filebase.Query(`
+        SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+        FROM unified_files
+        ORDER BY merkle, owner, start
+    `)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+
+	files := make(map[string]types.UnifiedFile)
+	var fileKeys []string
+	for rows.Next() {
+		var file types.UnifiedFile
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
+		}
+
+		key := fmt.Sprintf("%s:%s:%d", base64.StdEncoding.EncodeToString(file.Merkle), file.Owner, file.Start)
+		files[key] = file
+		fileKeys = append(fileKeys, key)
+	}
+
+	if len(fileKeys) == 0 {
+		return nil
+	}
+
+	// Get proofs for these files
+	for _, key := range fileKeys {
+		file := files[key]
+		proofRows, err := k.filebase.Query(`
+            SELECT proof FROM proofs
+            WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+        `, file.Merkle, file.Owner, file.Start)
+
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+
+		file.Proofs = proofs
+		files[key] = file
+	}
+
+	// Convert map to ordered list
+	for _, key := range fileKeys {
+		list = append(list, files[key])
+	}
+
+	return list
 }
 
 // IterateFilesByMerkle iterates through every file
 func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key []byte, val []byte) bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-
-	var iterator storetypes.Iterator
+	// Create query with appropriate ordering
+	query := `
+		SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+		FROM unified_files
+		ORDER BY merkle, owner, start
+	`
 	if reverse {
-		iterator = sdk.KVStoreReversePrefixIterator(store, []byte{})
-	} else {
-		iterator = sdk.KVStorePrefixIterator(store, []byte{})
+		query = `
+			SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+			FROM unified_files
+			ORDER BY merkle DESC, owner DESC, start DESC
+		`
 	}
 
-	defer iterator.Close()
+	rows, err := k.filebase.Query(query)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
 
-	for ; iterator.Valid(); iterator.Next() {
-		b := fn(iterator.Key(), iterator.Value())
-		if b {
+	// Process each file
+	for rows.Next() {
+		var file types.UnifiedFile
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
+		}
+
+		// Get proofs for this file
+		proofRows, err := k.filebase.Query(`
+			SELECT proof FROM proofs
+			WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+		`, file.Merkle, file.Owner, file.Start)
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+		file.Proofs = proofs
+
+		// Marshal file
+		b := k.cdc.MustMarshal(&file)
+
+		// Create key (similar to the original KeyPrefix format)
+		key := types.FilesPrimaryKey(file.Merkle, file.Owner, file.Start)
+
+		// Call the callback function
+		shouldStop := fn(key, b)
+		if shouldStop {
 			return
 		}
 	}
@@ -114,26 +505,63 @@ func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key 
 
 // IterateAndParseFilesByMerkle iterates through every file and parses them for you
 func (k Keeper) IterateAndParseFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key []byte, val types.UnifiedFile) bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
-
-	var iterator storetypes.Iterator
+	// Create query with appropriate ordering
+	query := `
+		SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+		FROM unified_files
+		ORDER BY merkle, owner, start
+	`
 	if reverse {
-		iterator = sdk.KVStoreReversePrefixIterator(store, []byte{})
-	} else {
-		iterator = sdk.KVStorePrefixIterator(store, []byte{})
+		query = `
+			SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+			FROM unified_files
+			ORDER BY merkle DESC, owner DESC, start DESC
+		`
 	}
 
-	defer iterator.Close()
+	rows, err := k.filebase.Query(query)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
 
-	for ; iterator.Valid(); iterator.Next() {
-		val := iterator.Value()
+	// Process each file
+	for rows.Next() {
 		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(val, &file); err != nil {
-			return
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
 		}
 
-		b := fn(iterator.Key(), file)
-		if b {
+		// Get proofs for this file
+		proofRows, err := k.filebase.Query(`
+			SELECT proof FROM proofs
+			WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+		`, file.Merkle, file.Owner, file.Start)
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+		file.Proofs = proofs
+
+		// Create key (similar to the original KeyPrefix format)
+		key := types.FilesPrimaryKey(file.Merkle, file.Owner, file.Start)
+
+		// Call the callback function
+		shouldStop := fn(key, file)
+		if shouldStop {
 			return
 		}
 	}
@@ -141,16 +569,48 @@ func (k Keeper) IterateAndParseFilesByMerkle(ctx sdk.Context, reverse bool, fn f
 
 // GetAllFilesWithMerkle returns all Files that start with a specific merkle
 func (k Keeper) GetAllFilesWithMerkle(ctx sdk.Context, merkle []byte) (list []types.UnifiedFile) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.FilesMerklePrefix(merkle))
-	iterator := sdk.KVStorePrefixIterator(store, nil)
+	rows, err := k.filebase.Query(`
+		SELECT merkle, owner, start, expires, file_size, proof_interval, proof_type, max_proofs, note
+		FROM unified_files
+		WHERE merkle = ?
+	`, merkle)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
 
-	defer iterator.Close()
+	for rows.Next() {
+		var file types.UnifiedFile
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
+		}
 
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.UnifiedFile
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
+		// Get proofs for this file
+		proofRows, err := k.filebase.Query(`
+			SELECT proof FROM proofs
+			WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+		`, file.Merkle, file.Owner, file.Start)
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+		file.Proofs = proofs
+
+		list = append(list, file)
 	}
 
-	return
+	return list
 }

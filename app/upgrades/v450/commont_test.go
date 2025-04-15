@@ -1,10 +1,13 @@
 package v450_test
 
 import (
+	"database/sql"
 	"fmt"
-	"testing"
-
 	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/require"
+	"path"
+	"testing"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -78,8 +81,13 @@ func SetupStorageKeeper(t *testing.T) (
 		"StorageParams",
 	)
 
+	n := path.Join(t.TempDir(), "filebase.db")
+	t.Log("temp filebase name: ", n)
+	d, err := sql.Open("sqlite3", n)
+	require.New(t).NoError(err)
+
 	// storage keeper initializations
-	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName)
+	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName, d)
 	storageKeeper.SetParams(ctx, storagemoduletypes.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.
@@ -146,8 +154,13 @@ func SetUpKeepers(t *testing.T) (
 		"FiletreeParams",
 	)
 
+	n := path.Join(t.TempDir(), "filebase.db")
+	t.Log("temp filebase name: ", n)
+	d, err := sql.Open("sqlite3", n)
+	require.New(t).NoError(err)
+
 	// storage keeper initializations
-	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, skey, storParamsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName)
+	storageKeeper := storagekeeper.NewKeeper(encCfg.Codec, skey, storParamsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName, d)
 	storageKeeper.SetParams(ctx, storagemoduletypes.DefaultParams())
 
 	filetreeKeeper := keeper.NewKeeper(encCfg.Codec, fkey, memStoreKey, filParamsSubspace)

@@ -1,7 +1,9 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
+	_ "github.com/mattn/go-sqlite3"
 	"io"
 	"net/http"
 	"os"
@@ -617,6 +619,9 @@ func NewJackalApp(
 	)
 	oracleModule := oraclemodule.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper)
 
+	filebaseDir := filepath.Join(homePath, "filebase.db")
+	fibase, err := sql.Open("sqlite3", filebaseDir)
+
 	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
 		appCodec,
 		keys[storagemoduletypes.StoreKey],
@@ -626,6 +631,7 @@ func NewJackalApp(
 		app.OracleKeeper,
 		app.RnsKeeper,
 		authtypes.FeeCollectorName,
+		fibase,
 	)
 	storageModule := storagemodule.NewAppModule(appCodec, app.StorageKeeper, app.AccountKeeper, app.BankKeeper, app.getSubspace(storagemoduletypes.ModuleName))
 
