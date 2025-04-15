@@ -12,7 +12,7 @@ type ProofLoader interface {
 		ctx sdk.Context,
 		key []byte,
 	)
-	SetFile(ctx sdk.Context, File UnifiedFile)
+	SetFile(ctx sdk.Context, File UnifiedFile) error
 }
 
 func (p *FileProof) Save(ctx sdk.Context, k ProofLoader) {
