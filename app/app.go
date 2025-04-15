@@ -621,6 +621,9 @@ func NewJackalApp(
 
 	filebaseDir := filepath.Join(homePath, "filebase.db")
 	fibase, err := sql.Open("sqlite3", filebaseDir)
+	if err != nil {
+		panic(fmt.Sprintf("error while reading filebase: %s", err))
+	}
 
 	app.StorageKeeper = *storagemodulekeeper.NewKeeper(
 		appCodec,
