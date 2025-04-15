@@ -436,6 +436,16 @@ func (k Keeper) GetAllFileByMerkle() (list []types.UnifiedFile) {
 	return list
 }
 
+func (k Keeper) GetTotalFileSize() (totalSize int64, err error) {
+	// Query sum of file_size from all files
+	err = k.filebase.QueryRow(`
+        SELECT COALESCE(SUM(file_size), 0) 
+        FROM unified_files
+    `).Scan(&totalSize)
+
+	return totalSize, err
+}
+
 // IterateFilesByMerkle iterates through every file
 func (k Keeper) IterateFilesByMerkle(ctx sdk.Context, reverse bool, fn func(key []byte, val []byte) bool) {
 	// Create query with appropriate ordering

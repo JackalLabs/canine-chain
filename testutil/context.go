@@ -48,3 +48,18 @@ func DefaultContextWithDB(t *testing.T, tkey storetypes.StoreKey, key ...storety
 
 	return TestContext{ctx, db, cms}
 }
+
+func DefaultContextWithDBBench(t *testing.B, tkey storetypes.StoreKey, key ...storetypes.StoreKey) TestContext {
+	db := dbm.NewMemDB()
+	cms := store.NewCommitMultiStore(db)
+	for _, storeKey := range key {
+		cms.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, db)
+	}
+	cms.MountStoreWithDB(tkey, storetypes.StoreTypeTransient, db)
+	err := cms.LoadLatestVersion()
+	assert.NoError(t, err)
+
+	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())
+
+	return TestContext{ctx, db, cms}
+}
