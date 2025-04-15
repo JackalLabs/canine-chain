@@ -436,6 +436,103 @@ func (k Keeper) GetAllFileByMerkle() (list []types.UnifiedFile) {
 	return list
 }
 
+func (k Keeper) GetOpenFiles(offset, limit int) (list []types.UnifiedFile, total int64) {
+	if limit == 0 {
+		limit = 100
+	}
+
+	// Count total eligible files
+	countQuery := `
+        SELECT COUNT(*) FROM (
+            SELECT f.merkle, f.owner, f.start, f.max_proofs, COUNT(p.proof) as proof_count
+            FROM unified_files f
+            LEFT JOIN proofs p ON f.merkle = p.file_merkle AND f.owner = p.file_owner AND f.start = p.file_start
+            GROUP BY f.merkle, f.owner, f.start
+            HAVING COUNT(p.proof) < f.max_proofs
+        )
+    `
+	err := k.filebase.QueryRow(countQuery).Scan(&total)
+	if err != nil {
+		return nil, 0
+	}
+
+	// Get files with fewer proofs than max_proofs
+	mainQuery := `
+        SELECT f.merkle, f.owner, f.start, f.expires, f.file_size, 
+               f.proof_interval, f.proof_type, f.max_proofs, f.note
+        FROM unified_files f
+        LEFT JOIN (
+            SELECT file_merkle, file_owner, file_start, COUNT(proof) as proof_count
+            FROM proofs
+            GROUP BY file_merkle, file_owner, file_start
+        ) pc ON f.merkle = pc.file_merkle AND f.owner = pc.file_owner AND f.start = pc.file_start
+        WHERE COALESCE(pc.proof_count, 0) < f.max_proofs
+        ORDER BY f.merkle, f.owner, f.start
+        LIMIT ? OFFSET ?
+    `
+
+	rows, err := k.filebase.Query(mainQuery, limit, offset)
+	if err != nil {
+		return nil, total
+	}
+	defer rows.Close()
+
+	files := make(map[string]types.UnifiedFile)
+	var fileKeys []string
+
+	for rows.Next() {
+		var file types.UnifiedFile
+		err := rows.Scan(
+			&file.Merkle, &file.Owner, &file.Start, &file.Expires, &file.FileSize,
+			&file.ProofInterval, &file.ProofType, &file.MaxProofs, &file.Note,
+		)
+		if err != nil {
+			continue
+		}
+
+		key := fmt.Sprintf("%s:%s:%d", base64.StdEncoding.EncodeToString(file.Merkle), file.Owner, file.Start)
+		files[key] = file
+		fileKeys = append(fileKeys, key)
+	}
+
+	if len(fileKeys) == 0 {
+		return nil, total
+	}
+
+	// Get proofs for the filtered files
+	for _, key := range fileKeys {
+		file := files[key]
+		proofRows, err := k.filebase.Query(`
+            SELECT proof FROM proofs
+            WHERE file_merkle = ? AND file_owner = ? AND file_start = ?
+        `, file.Merkle, file.Owner, file.Start)
+
+		if err != nil {
+			continue
+		}
+
+		var proofs []string
+		for proofRows.Next() {
+			var proof string
+			if err := proofRows.Scan(&proof); err != nil {
+				continue
+			}
+			proofs = append(proofs, proof)
+		}
+		proofRows.Close()
+
+		file.Proofs = proofs
+		files[key] = file
+	}
+
+	// Maintain order
+	for _, key := range fileKeys {
+		list = append(list, files[key])
+	}
+
+	return list, total
+}
+
 func (k Keeper) GetTotalFileSize() (totalSize int64, err error) {
 	// Query sum of file_size from all files
 	err = k.filebase.QueryRow(`

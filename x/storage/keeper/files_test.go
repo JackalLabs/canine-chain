@@ -132,6 +132,44 @@ func benchNewVOld(count int, b *testing.B, new bool) {
 		}
 	})
 
+	b.Run(fmt.Sprintf("%s_open_files_count_%d", name, count), func(b *testing.B) {
+		var limit = 1000
+		if limit > count {
+			limit = count
+		}
+		if new {
+			files, _ := storageKeeper.GetOpenFiles(0, limit)
+			r.Equal(limit, len(files))
+		} else {
+			var files []types.UnifiedFile
+			var total int64
+
+			var i int
+			storageKeeper.IterateFilesByMerkleOld(ctx, false, func(_ []byte, val []byte) bool {
+				var file types.UnifiedFile
+				if err := encCfg.Codec.Unmarshal(val, &file); err != nil {
+					return false
+				}
+
+				if len(file.Proofs) < int(file.MaxProofs) {
+					total++
+					if i >= limit {
+						return false
+					}
+					files = append(files, file)
+				} else {
+					return false
+				}
+
+				i++
+
+				return false
+			})
+			r.Equal(limit, len(files))
+
+		}
+	})
+
 }
 
 func BenchmarkFileBaseAgainstKV(b *testing.B) {
