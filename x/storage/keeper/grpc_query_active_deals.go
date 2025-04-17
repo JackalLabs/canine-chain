@@ -143,7 +143,60 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 		if len(file.Proofs) < int(file.MaxProofs) {
 			total++
 			if i >= limit {
-				return false
+				return true
+			}
+			files = append(files, file)
+		} else {
+			return false
+		}
+
+		i++
+
+		return false
+	})
+
+	qpr := query.PageResponse{
+		NextKey: nil,
+		Total:   total,
+	}
+
+	return &types.QueryAllFilesResponse{Files: files, Pagination: &qpr}, nil
+}
+
+// EndangeredFiles returns a paginated list of files with only 1x redundancy
+//
+// TODO: Create unit-test cases for this
+func (k Keeper) EndangeredFiles(c context.Context, req *types.QueryOpenFiles) (*types.QueryAllFilesResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	var files []types.UnifiedFile
+	ctx := sdk.UnwrapSDKContext(c)
+
+	reverse := false
+	var limit uint64 = 100
+	if req.Pagination != nil { // HERE IS THE FIX
+		reverse = req.Pagination.Reverse
+		limit = req.Pagination.Limit
+	}
+
+	var i uint64
+	var total uint64
+	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, val []byte) bool {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(val, &file); err != nil {
+			return false
+		}
+
+		if file.ContainsProver(req.ProviderAddress) {
+			return false
+		}
+
+		if len(file.Proofs) == 1 {
+			total++
+			if i >= limit {
+				return true
 			}
 			files = append(files, file)
 		} else {
