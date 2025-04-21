@@ -43,10 +43,6 @@ func (k Keeper) FindFile(goCtx context.Context, req *types.QueryFindFile) (*type
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid request")
-	}
-
 	if req.Merkle == nil {
 		return nil, status.Error(codes.InvalidArgument, "no merkle hash provider")
 	}
