@@ -1,6 +1,14 @@
 #!/usr/bin/make -f
 
 ########################################
+###         Sanity Checks            ###
+########################################
+# Quick sanity check: ensure `go` is on PATH
+ifeq ($(shell which go 2>/dev/null),)
+  $(error "go: command not found in PATH. Please install Go and ensure 'go version' works before running this Makefile.")
+endif
+
+########################################
 ###         Package & Version        ###
 ########################################
 PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
@@ -37,24 +45,24 @@ export GO111MODULE = on
 # (e.g. a line "toolchain go1.23.1"). It displays both the current Go version and
 # the expected version. If the desired version is not available in the PATH, it
 # installs it via golang.org/dl.
-CURRENT_GO_VERSION := $(shell go version)
+CURRENT_GO_VERSION := $(shell go version | awk '{print $$3}')
 $(info Current Golang Version: $(CURRENT_GO_VERSION))
 
 GOMOD_GO_VERSION := $(shell grep '^toolchain' go.mod | awk '{print $$2}')
 ifneq ($(GOMOD_GO_VERSION),)
   $(info Wanted Golang Version as specified in go.mod: $(GOMOD_GO_VERSION))
-  ifeq ("$(shell which $(GOMOD_GO_VERSION) 2>/dev/null)","")
-    ifeq ("$(shell go version | grep $(GOMOD_GO_VERSION))","")
-      $(info The wanted Golang version was not found. Installing $(GOMOD_GO_VERSION) via golang.org/dl...)
-      $(shell go install golang.org/dl/$(GOMOD_GO_VERSION)@latest)
-      $(shell $(GOMOD_GO_VERSION) download)
-    else
-      $(info The wanted Golang version is already active.)
-    endif
+  ifeq ($(CURRENT_GO_VERSION),$(GOMOD_GO_VERSION))
+    $(info Using system 'go' (matches desired version).)
+    GO_CMD := go
+  else ifneq ($(shell which $(GOMOD_GO_VERSION) 2>/dev/null),)
+    $(info Found versioned binary '$(GOMOD_GO_VERSION)' in PATH.)
+    GO_CMD := $(GOMOD_GO_VERSION)
   else
-    $(info Found $(GOMOD_GO_VERSION) at: $(shell which $(GOMOD_GO_VERSION)))
+    $(info Desired Go not found; installing '$(GOMOD_GO_VERSION)' via golang.org/dl...)
+    $(shell go install golang.org/dl/$(GOMOD_GO_VERSION)@latest)
+    $(shell $(GOMOD_GO_VERSION) download)
+    GO_CMD := $(GOMOD_GO_VERSION)
   endif
-  GO_CMD := $(GOMOD_GO_VERSION)
 else
   $(info No toolchain version specified in go.mod. Using default 'go' command.)
   GO_CMD := go
@@ -159,11 +167,11 @@ build_tags_comma_sep := $(subst $(empty),$(comma),$(build_tags))
 ###   Linker Flags Configuration     ###
 ########################################
 ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=canine \
-		   -X github.com/cosmos/cosmos-sdk/version.AppName=canined \
-		   -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
-		   -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		   -X github.com/jackalLabs/canine-chain/app.Bech32Prefix=jkl \
-		   -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
+	-X github.com/cosmos/cosmos-sdk/version.AppName=canined \
+	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
+	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
+	-X github.com/jackalLabs/canine-chain/app.Bech32Prefix=jkl \
+	-X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
 ifeq ($(LINK_STATICALLY),true)
 	ldflags += -linkmode=external -extldflags "-Wl,-z,muldefs -static"
 endif
