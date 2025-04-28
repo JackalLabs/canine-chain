@@ -143,7 +143,7 @@ func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.
 		if len(file.Proofs) < int(file.MaxProofs) {
 			total++
 			if i >= limit {
-				return true
+				return false
 			}
 			files = append(files, file)
 		} else {
