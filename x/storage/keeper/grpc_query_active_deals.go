@@ -196,7 +196,7 @@ func (k Keeper) EndangeredFiles(c context.Context, req *types.QueryOpenFiles) (*
 		if len(file.Proofs) == 1 {
 			total++
 			if i >= limit {
-				return true
+				return false
 			}
 			files = append(files, file)
 		} else {
