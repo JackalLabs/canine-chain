@@ -134,7 +134,7 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 		return err
 	}
 
-	u = u.JoinPath("upload")
+	u = u.JoinPath("v2/upload")
 
 	var b bytes.Buffer
 	writer := multipart.NewWriter(&b)
@@ -144,6 +144,8 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 	if err != nil {
 		return err
 	}
+
+	fmt.Println(hex.EncodeToString(merkle))
 
 	err = writer.WriteField("merkle", hex.EncodeToString(merkle))
 	if err != nil {
@@ -176,7 +178,7 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 
 	defer res.Body.Close()
 
-	if res.StatusCode != 200 {
+	if res.StatusCode != 202 {
 
 		var errRes ErrorResponse
 
@@ -187,6 +189,13 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 
 		return fmt.Errorf("upload failed with code %d | %s", res.StatusCode, errRes.Error)
 	}
+
+	bb, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(bb))
 
 	return nil
 }
@@ -212,6 +221,10 @@ func postFile(fileData []byte, cmd *cobra.Command) {
 
 	address := clientCtx.GetFromAddress().String()
 
+	expires, err := cmd.Flags().GetInt64("expires")
+	if err != nil {
+		panic(err)
+	}
 	msg := types.NewMsgPostFile(
 		address,
 		root,
@@ -219,8 +232,10 @@ func postFile(fileData []byte, cmd *cobra.Command) {
 		40,
 		0,
 		3,
-		"Uploaded with canined",
+		`{"note":"Uploaded with canined"}`,
 	)
+
+	msg.Expires = expires
 	if err := msg.ValidateBasic(); err != nil {
 		panic(err)
 	}
@@ -254,24 +269,45 @@ func postFile(fileData []byte, cmd *cobra.Command) {
 		panic("no message data")
 	}
 
-	err = postRes.Unmarshal(txMsgData.Data[0].Data)
-	if err != nil {
-		panic(err)
+	ips := []string{
+		"https://mprov01.jackallabs.io",
+		"https://mprov02.jackallabs.io",
+		"https://jklstorage1.squirrellogic.com",
+		"https://jklstorage2.squirrellogic.com",
+		"https://jklstorage3.squirrellogic.com",
 	}
-
-	ips := postRes.ProviderIps
-	fmt.Println(ips)
 
 	fmt.Println(res.Code)
 	fmt.Println(res.RawLog)
 	fmt.Println(res.TxHash)
+
+	startString := "0"
+	events := res.Events
+	for _, event := range events {
+		if event.Type != "post_file" {
+			continue
+		}
+
+		atrs := event.Attributes
+		for _, atr := range atrs {
+			if string(atr.Key) == "start" {
+				startString = string(atr.Value)
+				fmt.Println("found start string")
+				fmt.Println(startString)
+			}
+		}
+	}
+	start, err := strconv.ParseInt(startString, 10, 64)
+	if err != nil {
+		panic(err)
+	}
 
 	ipCount := len(ips)
 	randomCount := 3 - ipCount
 	for i := 0; i < ipCount; i++ {
 		ip := ips[i]
 		uploadBuffer := bytes.NewBuffer(buf.Bytes())
-		err := uploadFile(ip, uploadBuffer, root, postRes.StartBlock, address)
+		err := uploadFile(ip, uploadBuffer, root, start, address)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -357,6 +393,7 @@ func CmdPostFile() *cobra.Command {
 			return nil
 		},
 	}
+	cmd.Flags().Int64("expires", 0, "sets the expires field")
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
