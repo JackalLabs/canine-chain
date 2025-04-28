@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"maps"
 	"slices"
 	"strconv"
 	"strings"
@@ -18,7 +19,7 @@ func (k Keeper) burnContract(ctx sdk.Context, providerAddress string) {
 		return
 	}
 
-	burned, err := strconv.ParseInt(prov.BurnedContracts, 10, 64)
+	burned, err := strconv.Atoi(prov.BurnedContracts)
 	if err != nil {
 		ctx.Logger().Error("cannot parse providers burn count")
 		return
@@ -31,24 +32,21 @@ func (k Keeper) burnContract(ctx sdk.Context, providerAddress string) {
 // manageProof checks the status of a given proof, if the file is too young, we skip it. If it's old enough and the
 // prover has either failed to prove it or the proof simply never existed we remove it.
 func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
-	pks := strings.Split(proofKey, "/")
-	providerAddress := pks[0]
-
+	providerAddress := strings.Split(proofKey, "/")[0]
 	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
 	currentHeight := ctx.BlockHeight()
 
-	if !file.IsYoung(currentHeight) { // if the file is old, and we can't find the proof, remove the prover
-		if !found {
-			ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
-			file.RemoveProverWithKey(ctx, k, proofKey)
-			return
-		}
+	if !file.IsYoung(currentHeight) && !found { // if the file is old, and we can't find the proof, remove the prover
+		ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
+		file.RemoveProverWithKey(ctx, k, proofKey)
+		return
 	}
 
 	proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
 
 	if !proven && !file.IsYoung(currentHeight) { // if file wasn't proven, and is old, we burn it.
 		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
+		ctx.Logger().Info(fmt.Sprintf("no recent proofs: %s", proofKey))
 		file.RemoveProverWithKey(ctx, k, proofKey)
 		k.burnContract(ctx, providerAddress)
 		return
@@ -59,16 +57,10 @@ func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file
 
 func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 	currentTime := ctx.BlockTime()
-
 	coinsToDistribute := make(sdk.Coins, 0)
 
 	k.IterateGauges(ctx, func(pg types.PaymentGauge) { // check every gauge
-		if pg.End.Before(currentTime) { // if the end date is before the current block time, we remove the gauge
-			k.RemoveGauge(ctx, pg.Id)
-			return
-		}
-
-		if pg.End.Before(pg.Start) || pg.End.Equal(pg.Start) { // if somehow the gauge ends before or at the same time as it starts, we remove it as well
+		if pg.End.Before(currentTime) || pg.End.Before(pg.Start) || pg.End.Equal(pg.Start) { // if the gauge is expired or has an invalid end time, we remove it
 			k.RemoveGauge(ctx, pg.Id)
 			return
 		}
@@ -94,8 +86,6 @@ func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 		timeLeftDec := sdk.NewDec(timeLeft.Microseconds())
 
 		timeRatio := sdk.NewDec(1).Sub(timeLeftDec.Quo(totalTimeDec))
-		s := timeRatio.String()
-		_ = s
 
 		for _, coin := range allGaugeCoins {
 			coinAmountDec := sdk.NewDecFromInt(coin.Amount)
@@ -124,13 +114,7 @@ func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 }
 
 func providerList(sizeTracker *map[string]int64) []string {
-	provers := make([]string, len(*sizeTracker))
-
-	i := 0
-	for k := range *sizeTracker {
-		provers[i] = k
-		i++
-	}
+	provers := slices.Collect(maps.Keys(*sizeTracker))
 	slices.Sort(provers)
 	return provers
 }
@@ -145,8 +129,6 @@ func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker
 		providerValue := sdk.NewDec(worth)
 
 		networkPercentage := providerValue.Quo(networkValue)
-		s := networkPercentage.String()
-		_ = s
 		pAddress, err := sdk.AccAddressFromBech32(prover)
 		if err != nil {
 			ctx.Logger().Error(sdkerrors.Wrapf(err, "failed to convert prover address %s to bech32", prover).Error())
@@ -168,10 +150,8 @@ func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker
 }
 
 func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) {
-	if len(file.Proofs) == 0 { // remove file if it
-		if !file.IsYoung(ctx.BlockHeight()) { // give first window grace
-			k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
-		}
+	if len(file.Proofs) == 0 && !file.IsYoung(ctx.BlockHeight()) { // remove file if not proven outside of grace period
+		k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
 	}
 }
 
@@ -185,9 +165,7 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		var file types.UnifiedFile
 		k.cdc.MustUnmarshal(val, &file)
 
-		s := file.FileSize * int64(len(file.Proofs))
-		totalSize += s
-
+		totalSize += file.FileSize * int64(len(file.Proofs))
 		k.removeFileIfDeserved(ctx, &file) // delete file if it meets the conditions to be deleted
 
 		for _, proof := range file.Proofs { // manage all proofs in proof list
