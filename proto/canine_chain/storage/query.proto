@@ -42,6 +42,13 @@ service Query {
         "/jackal/canine-chain/storage/open_files/{provider_address}";
   }
 
+  // Queries a list of files with only 1x redundancy by provider_address.
+  rpc EndangeredFiles(QueryOpenFiles)
+      returns (QueryAllFilesResponse) {
+    option (google.api.http).get =
+        "/jackal/canine-chain/storage/endangered_files/{provider_address}";
+  }
+
 
 
   // Queries a list of File items matching the merkle.

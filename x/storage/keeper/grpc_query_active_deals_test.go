@@ -180,7 +180,7 @@ func (suite *KeeperTestSuite) TestOpenFiles() {
 		suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
 			Merkle:        merkle,
 			Owner:         testAccount,
-			Start:         0,
+			Start:         int64(i),
 			Expires:       0,
 			FileSize:      1024,
 			ProofInterval: 400,
@@ -192,10 +192,19 @@ func (suite *KeeperTestSuite) TestOpenFiles() {
 	}
 
 	pg := query.PageRequest{
-		Offset:  0,
-		Reverse: false,
-		Limit:   200,
+		Offset:     0,
+		Reverse:    false,
+		Limit:      200,
+		CountTotal: true,
 	}
+
+	allRes, err := suite.queryClient.AllFiles(context.Background(), &types.QueryAllFiles{
+		Pagination: &pg,
+	})
+	suite.Require().NoError(err)
+
+	suite.Require().Equal(200, len(allRes.Files))
+	suite.Require().Equal(count, int(allRes.Pagination.Total))
 
 	res, err := suite.queryClient.OpenFiles(context.Background(), &types.QueryOpenFiles{
 		Pagination: &pg,
