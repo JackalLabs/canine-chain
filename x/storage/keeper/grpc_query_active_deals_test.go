@@ -109,7 +109,7 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 
 	merkle := []byte("merkle")
 
-	suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+	err = suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         testAccount,
 		Start:         0,
@@ -121,6 +121,7 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 		MaxProofs:     3,
 		Note:          "test",
 	})
+	suite.Require().NoError(err)
 
 	pg := query.PageRequest{
 		Offset:  0,
@@ -131,6 +132,8 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 		Pagination: &pg,
 	})
 	suite.Require().NoError(err)
+
+	suite.Require().Equal(uint64(1), res.Pagination.Total)
 
 	suite.Require().Equal(1, len(res.Files))
 
@@ -177,7 +180,7 @@ func (suite *KeeperTestSuite) TestOpenFiles() {
 	for i := 0; i < count; i++ {
 		merkle := []byte(fmt.Sprintf("%dmerkle%d", i, i))
 
-		suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+		err = suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
 			Merkle:        merkle,
 			Owner:         testAccount,
 			Start:         int64(i),
@@ -189,6 +192,7 @@ func (suite *KeeperTestSuite) TestOpenFiles() {
 			MaxProofs:     3,
 			Note:          "{}",
 		})
+		suite.Require().NoError(err)
 	}
 
 	pg := query.PageRequest{
@@ -254,7 +258,7 @@ func (suite *KeeperTestSuite) TestFileNotes() {
 	b, err := json.Marshal(m)
 	suite.Require().NoError(err)
 
-	suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+	err = suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         testAccount,
 		Start:         0,
@@ -266,6 +270,7 @@ func (suite *KeeperTestSuite) TestFileNotes() {
 		MaxProofs:     3,
 		Note:          string(b),
 	})
+	suite.Require().NoError(err)
 
 	bk := "terribleKey"
 	bv := sdk.NewDec(46)
@@ -276,7 +281,7 @@ func (suite *KeeperTestSuite) TestFileNotes() {
 
 	bmerkle := []byte("badmerkle")
 
-	suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+	err = suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
 		Merkle:        bmerkle,
 		Owner:         testAccount,
 		Start:         0,
@@ -288,6 +293,7 @@ func (suite *KeeperTestSuite) TestFileNotes() {
 		MaxProofs:     3,
 		Note:          string(bb),
 	})
+	suite.Require().NoError(err)
 
 	pg := query.PageRequest{
 		Offset:  0,
@@ -386,7 +392,8 @@ func (suite *KeeperTestSuite) TestProofsByAddress() {
 		Note:          string(b),
 	}
 
-	suite.storageKeeper.SetFile(suite.ctx, file)
+	err = suite.storageKeeper.SetFile(suite.ctx, file)
+	suite.Require().NoError(err)
 
 	pg := query.PageRequest{
 		Offset:  0,

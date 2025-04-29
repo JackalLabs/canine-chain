@@ -56,7 +56,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
 
-	genesis.FileList = k.GetAllFileByMerkle(ctx)
+	genesis.FileList = k.GetAllFileByMerkle()
 	genesis.ProvidersList = k.GetAllProviders(ctx)
 	genesis.PaymentInfoList = k.GetAllStoragePaymentInfo(ctx)
 	genesis.CollateralList = k.GetAllCollateral(ctx)

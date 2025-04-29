@@ -1,12 +1,15 @@
 package keeper_test
 
 import (
+	"database/sql"
 	"fmt"
-	"testing"
-
 	oracletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
+	"path"
+	"testing"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 
@@ -25,6 +28,67 @@ import (
 	storagetestutil "github.com/jackalLabs/canine-chain/v4/x/storage/testutil"
 	types "github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
+
+// setupStorageKeeper creates a storageKeeper as well as all its dependencies.
+func setupStorageKeeperBench(t *testing.B) (
+	*keeper.Keeper,
+	*storagetestutil.MockBankKeeper,
+	*storagetestutil.MockAccountKeeper,
+	moduletestutil.TestEncodingConfig,
+	sdk.Context,
+) {
+	key := sdk.NewKVStoreKey(types.StoreKey)
+	// memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+	tkey := sdk.NewTransientStoreKey("transient_test")
+	testCtx := canineglobaltestutil.DefaultContextWithDBBench(t, tkey, key)
+	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
+
+	encCfg := moduletestutil.MakeTestEncodingConfig()
+	types.RegisterInterfaces(encCfg.InterfaceRegistry)
+	banktypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+	authtypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+
+	// Create MsgServiceRouter, but don't populate it before creating the storage keeper.
+	msr := baseapp.NewMsgServiceRouter()
+
+	// gomock initializations
+	ctrl := gomock.NewController(t)
+	bankKeeper := storagetestutil.NewMockBankKeeper(ctrl)
+	accountKeeper := storagetestutil.NewMockAccountKeeper(ctrl)
+	oracleKeeper := storagetestutil.NewMockOracleKeeper(ctrl)
+	rnsKeeper := storagetestutil.NewMockRNSKeeper(ctrl)
+
+	trackMockBalances(bankKeeper)
+	accountKeeper.EXPECT().GetModuleAddress(types.ModuleName).Return(modAccount).AnyTimes()
+
+	oracleKeeper.EXPECT().GetFeed(gomock.Any(), gomock.Any()).Return(oracletypes.Feed{
+		Data:  `{"price":"0.24","24h_change":"0"}`,
+		Name:  "jklprice",
+		Owner: "cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8",
+	}, true).AnyTimes()
+
+	paramsSubspace := typesparams.NewSubspace(encCfg.Codec,
+		types.Amino,
+		key,
+		tkey,
+		"StorageParams",
+	)
+
+	n := path.Join(t.TempDir(), "filebase.db")
+	d, err := sql.Open("sqlite3", n)
+	require.New(t).NoError(err)
+
+	// storage keeper initializations
+	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName, d)
+	storageKeeper.SetParams(ctx, types.DefaultParams())
+
+	// Register all handlers for the MegServiceRouter.
+	msr.SetInterfaceRegistry(encCfg.InterfaceRegistry)
+	types.RegisterMsgServer(msr, keeper.NewMsgServerImpl(*storageKeeper))
+	banktypes.RegisterMsgServer(msr, nil) // Nil is fine here as long as we never execute the proposal's Msgs.
+
+	return storageKeeper, bankKeeper, accountKeeper, encCfg, ctx
+}
 
 // setupStorageKeeper creates a storageKeeper as well as all its dependencies.
 func setupStorageKeeper(t *testing.T) (
@@ -71,8 +135,12 @@ func setupStorageKeeper(t *testing.T) (
 		"StorageParams",
 	)
 
+	n := path.Join(t.TempDir(), "filebase.db")
+	d, err := sql.Open("sqlite3", n)
+	require.New(t).NoError(err)
+
 	// storage keeper initializations
-	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName)
+	storageKeeper := keeper.NewKeeper(encCfg.Codec, key, paramsSubspace, bankKeeper, accountKeeper, oracleKeeper, rnsKeeper, authtypes.FeeCollectorName, d)
 	storageKeeper.SetParams(ctx, types.DefaultParams())
 
 	// Register all handlers for the MegServiceRouter.

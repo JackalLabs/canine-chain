@@ -104,7 +104,7 @@ func (suite *UpgradeTestKeeper) TestStorageUpgrade() {
 
 	v4.UpdateFiles(suite.ctx, suite.storageKeeper)
 
-	f := suite.storageKeeper.GetAllFileByMerkle(suite.ctx)
+	f := suite.storageKeeper.GetAllFileByMerkle()
 
 	suite.Require().Equal(1, len(f))
 }
