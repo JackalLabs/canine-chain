@@ -216,7 +216,7 @@ func postFileToChain(ctx client.Context, flags *pflag.FlagSet, merkle []byte, fi
 		0,
 		maxProofs,
 		`{"note":"Uploaded with canined"}`)
-	msg.Expires = int64(expires)
+	msg.Expires = expires
 	if err := msg.ValidateBasic(); err != nil {
 		return 0, err
 	}

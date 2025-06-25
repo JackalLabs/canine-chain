@@ -25,7 +25,7 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(CmdCancelContract())
 	cmd.AddCommand(CmdBuyStorage())
-	cmd.AddCommand(CmdPostFile(), CmdPostRandomFile())
+	cmd.AddCommand(CmdPostFile())
 
 	return cmd
 }
