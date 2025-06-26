@@ -335,20 +335,22 @@ func getProvidersToUpload(ctx client.Context, dest string, count int64) (ips []s
 	r := rand.NewRand()
 	r.Seed(info.Response.LastBlockHeight)
 
+	fill := min((int(count) - len(ips)), len(res.Providers))
+
 	// randomly pick active providers
-	for range int(count) - len(ips) {
+	for range fill {
 		i := r.Int() % len(res.Providers)
 		pick := res.Providers[i]
 		res.Providers = append(res.Providers[:i], res.Providers[i+1:]...)
 
-		pres, err := query.Provider(
+		prov, err := query.Provider(
 			context.Background(),
 			&types.QueryProvider{Address: pick.Address})
 		if err != nil {
 			return nil, err
 		}
 
-		ips = append(ips, pres.Provider.Ip)
+		ips = append(ips, prov.Provider.Ip)
 	}
 
 	return ips, nil
