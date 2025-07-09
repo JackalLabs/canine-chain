@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -19,7 +20,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/input"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/utils"
 	"github.com/spf13/pflag"
 	"github.com/tendermint/tendermint/libs/rand"
 
@@ -27,6 +27,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/spf13/cobra"
+
+	"github.com/wealdtech/go-merkletree/v2"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 var _ = strconv.Itoa(0)
@@ -203,8 +206,37 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 }
 
 func createMerkleRoot(file io.Reader, chunkSize int64) ([]byte, error) {
-	root, _, _, _, err := utils.BuildTree(file, chunkSize)
-	return root, err
+	size := 0
+
+	data := make([][]byte, 0)
+
+	index := 0
+
+	for {
+		b := make([]byte, chunkSize)
+		read, _ := file.Read(b)
+
+		if read == 0 {
+			break
+		}
+
+		b = b[:read]
+
+		size += read
+
+		hexedData := hex.EncodeToString(b)
+
+		hash := sha256.New()
+		hash.Write(fmt.Appendf([]byte{}, "%d%s", index, hexedData)) // appending the index and the data
+		hashName := hash.Sum(nil)
+
+		data = append(data, hashName)
+
+		index++
+	}
+
+	tree, err := merkletree.NewUsing(data, sha3.New512(), false)
+	return tree.Root(), err
 }
 
 func postFileToChain(ctx client.Context, flags *pflag.FlagSet, merkle []byte, fileSize, maxProofs, expires int64) (startat int64, err error) {
