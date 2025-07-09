@@ -140,11 +140,7 @@ func (k Keeper) CheckExistence(ctx sdk.Context) bool {
 		}
 		i++
 	}
-	exist := false
-	if i > 0 {
-		exist = true
-	}
-	return exist
+	return i > 0
 }
 
 func (k Keeper) Resolve(ctx sdk.Context, name string) (sdk.AccAddress, error) {

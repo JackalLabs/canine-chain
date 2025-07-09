@@ -21,7 +21,7 @@ func HasViewingAccess(file types.Files, user string) (bool, error) {
 	}
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, user)))
+	fmt.Fprintf(h, "v%s%s", trackingNumber, user)
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
@@ -43,7 +43,7 @@ func HasEditAccess(file types.Files, user string) (bool, error) {
 	}
 
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, user)))
+	fmt.Fprintf(h, "e%s%s", trackingNumber, user)
 	hash := h.Sum(nil)
 
 	addressString := fmt.Sprintf("%x", hash)
