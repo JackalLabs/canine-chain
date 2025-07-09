@@ -1,35 +1,47 @@
+version: "2"
 run:
-  # timeout for analysis, e.g. 30s, 5m, default is 1m
-  timeout: 10m
   tests: true
-
 linters:
-  disable-all: true
+  default: none
   enable:
     - bodyclose
     - dogsled
     - errcheck
     - goconst
     - gocritic
-    - gofumpt
     - gosec
-    - gosimple
     - govet
     - ineffassign
     - misspell
     - nakedret
     - staticcheck
-    - stylecheck
-    - typecheck
     - unconvert
-    - unused
     - unparam
-
-linters-settings:
-  gosec:
-    excludes:
-      - G404
-      - G115
-
+    - unused
+  settings:
+    gosec:
+      excludes:
+        - G404
+        - G115
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
   max-issues-per-linter: 0
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
