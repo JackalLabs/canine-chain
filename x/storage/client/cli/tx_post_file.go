@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -18,13 +20,16 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/input"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/utils"
 	"github.com/spf13/pflag"
+	"github.com/tendermint/tendermint/libs/rand"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 	"github.com/spf13/cobra"
+
+	"github.com/wealdtech/go-merkletree/v2"
+	"github.com/wealdtech/go-merkletree/v2/sha3"
 )
 
 var _ = strconv.Itoa(0)
@@ -200,200 +205,236 @@ func uploadFile(ip string, r io.Reader, merkle []byte, start int64, address stri
 	return nil
 }
 
-func postFile(fileData []byte, cmd *cobra.Command) {
-	buf := bytes.NewBuffer(fileData)
-	treeBuffer := bytes.NewBuffer(buf.Bytes())
-	clientCtx, err := client.GetClientTxContext(cmd)
-	if err != nil {
-		panic(err)
-	}
-	cl := types.NewQueryClient(clientCtx)
+func createMerkleRoot(file io.Reader, chunkSize int64) ([]byte, error) {
+	size := 0
 
-	params, err := cl.Params(context.Background(), &types.QueryParams{})
-	if err != nil {
-		panic(err)
+	data := make([][]byte, 0)
+
+	index := 0
+
+	for {
+		b := make([]byte, chunkSize)
+		read, _ := file.Read(b)
+
+		if read == 0 {
+			break
+		}
+
+		b = b[:read]
+
+		size += read
+
+		hexedData := hex.EncodeToString(b)
+
+		hash := sha256.New()
+		hash.Write(fmt.Appendf([]byte{}, "%d%s", index, hexedData)) // appending the index and the data
+		hashName := hash.Sum(nil)
+
+		data = append(data, hashName)
+
+		index++
 	}
 
-	root, _, _, size, err := utils.BuildTree(treeBuffer, params.Params.ChunkSize)
-	if err != nil {
-		panic(err)
-	}
+	tree, err := merkletree.NewUsing(data, sha3.New512(), false)
+	return tree.Root(), err
+}
 
-	address := clientCtx.GetFromAddress().String()
-
-	expires, err := cmd.Flags().GetInt64("expires")
-	if err != nil {
-		panic(err)
-	}
+func postFileToChain(ctx client.Context, flags *pflag.FlagSet, merkle []byte, fileSize, maxProofs, expires int64) (startat int64, err error) {
 	msg := types.NewMsgPostFile(
-		address,
-		root,
-		int64(size),
+		ctx.GetFromAddress().String(),
+		merkle,
+		fileSize,
 		40,
 		0,
-		3,
-		`{"note":"Uploaded with canined"}`,
-	)
-
+		maxProofs,
+		`{"note":"Uploaded with canined"}`)
 	msg.Expires = expires
 	if err := msg.ValidateBasic(); err != nil {
-		panic(err)
+		return 0, err
 	}
 
-	res, err := GenerateOrBroadcastTx(clientCtx, cmd.Flags(), msg)
+	res, err := GenerateOrBroadcastTx(ctx, flags, msg)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
-
 	if res != nil {
 		fmt.Println(res.RawLog)
 	}
 	if res.Code != 0 {
-		panic("tx failed!")
+		return 0, errors.New("tx failed")
 	}
 
-	var postRes types.MsgPostFileResponse
-	data, err := hex.DecodeString(res.Data)
+	startatStr := ""
+find:
+	for _, event := range res.Events {
+		if event.Type != "post_file" {
+			continue
+		}
+
+		for _, attr := range event.Attributes {
+			if string(attr.Key) == "start" {
+				startatStr = string(attr.Value)
+				break find
+			}
+		}
+	}
+
+	if startatStr == "" {
+		panic(errors.New("start block event attribute not found in tx response"))
+	}
+
+	startat, err = strconv.ParseInt(startatStr, 10, 64)
 	if err != nil {
 		panic(err)
 	}
 
-	var txMsgData sdk.TxMsgData
-	err = clientCtx.Codec.Unmarshal(data, &txMsgData)
+	return startat, nil
+}
+
+func handlePost(ctx client.Context, flags *pflag.FlagSet, filename string, ips []string, expires, maxProofs int64) error {
+	query := types.NewQueryClient(ctx)
+	params, err := query.Params(context.Background(), &types.QueryParams{})
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	fmt.Println(txMsgData)
-	if len(txMsgData.Data) == 0 {
-		panic("no message data")
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		return err
 	}
 
-	ips := []string{
+	root, err := createMerkleRoot(file, params.Params.ChunkSize)
+	if err != nil {
+		return errors.Join(errors.New("failed to create merkle root of file"), err)
+	}
+
+	startat, err := postFileToChain(ctx, flags, root, stat.Size(), maxProofs, expires)
+	if err != nil {
+		return err
+	}
+
+	for _, ip := range ips {
+		_, err = file.Seek(0, io.SeekStart)
+		if err != nil {
+			panic(err)
+		}
+		err = uploadFile(ip, file, root, startat, ctx.GetFromAddress().String())
+		if err != nil {
+			fmt.Printf("failed to upload file to provider: %v", err)
+		}
+	}
+
+	return err
+}
+
+func getProvidersToUpload(ctx client.Context, dest string, count int64) (ips []string, err error) {
+	query := types.NewQueryClient(ctx)
+	if dest != "" {
+		ips = append(ips, dest)
+	}
+	ips = append(ips, []string{
 		"https://mprov01.jackallabs.io",
 		"https://mprov02.jackallabs.io",
 		"https://jklstorage1.squirrellogic.com",
 		"https://jklstorage2.squirrellogic.com",
 		"https://jklstorage3.squirrellogic.com",
+	}...)
+
+	if len(ips) > int(count) {
+		return ips[:count], nil
 	}
 
-	fmt.Println(res.Code)
-	fmt.Println(res.RawLog)
-	fmt.Println(res.TxHash)
-
-	startString := "0"
-	events := res.Events
-	for _, event := range events {
-		if event.Type != "post_file" {
-			continue
-		}
-
-		atrs := event.Attributes
-		for _, atr := range atrs {
-			if string(atr.Key) == "start" {
-				startString = string(atr.Value)
-				fmt.Println("found start string")
-				fmt.Println(startString)
-			}
-		}
-	}
-	start, err := strconv.ParseInt(startString, 10, 64)
+	res, err := query.ActiveProviders(
+		context.Background(),
+		&types.QueryActiveProviders{})
 	if err != nil {
-		panic(err)
+		return nil, errors.Join(errors.New("failed to find providers"), err)
+	}
+	if len(res.Providers) == 0 {
+		return nil, errors.New("there are no active providers on chain")
 	}
 
-	ipCount := len(ips)
-	randomCount := 3 - ipCount
-	for i := 0; i < ipCount; i++ {
-		ip := ips[i]
-		uploadBuffer := bytes.NewBuffer(buf.Bytes())
-		err := uploadFile(ip, uploadBuffer, root, start, address)
+	info, err := ctx.Client.ABCIInfo(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	r := rand.NewRand()
+	r.Seed(info.Response.LastBlockHeight)
+
+	fill := min((int(count) - len(ips)), len(res.Providers))
+
+	// randomly pick active providers
+	for range fill {
+		i := r.Int() % len(res.Providers)
+		pick := res.Providers[i]
+		res.Providers = append(res.Providers[:i], res.Providers[i+1:]...)
+
+		prov, err := query.Provider(
+			context.Background(),
+			&types.QueryProvider{Address: pick.Address})
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
-	}
-	pageReq, err := client.ReadPageRequest(cmd.Flags())
-	if err != nil {
-		panic(err)
-	}
-	provReq := types.QueryAllProviders{
-		Pagination: pageReq,
+
+		ips = append(ips, prov.Provider.Ip)
 	}
 
-	provRes, err := cl.AllProviders(context.Background(), &provReq)
-	if err != nil {
-		panic(err)
-	}
-
-	providers := provRes.Providers
-	for i, provider := range providers {
-		if i > randomCount {
-			break
-		}
-		uploadBuffer := bytes.NewBuffer(buf.Bytes())
-		err := uploadFile(provider.Ip, uploadBuffer, root, postRes.StartBlock, address)
-		if err != nil {
-			fmt.Println(err)
-		}
-	}
-}
-
-func CmdPostRandomFile() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "post-random [p-count]",
-		Short: "Post random file to chain",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			countArg := args[0]
-			count, err := strconv.ParseInt(countArg, 10, 64)
-			if err != nil {
-				panic(err)
-			}
-
-			url := fmt.Sprintf("https://baconipsum.com/api/?type=meat-and-filler&paras=%d&format=text", count)
-			hcli := http.DefaultClient
-			resp, err := hcli.Get(url)
-			if err != nil {
-				panic(err)
-			}
-			defer resp.Body.Close()
-
-			if resp.StatusCode != http.StatusOK {
-				return nil
-			}
-			bodyBytes, err := io.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-
-			postFile(bodyBytes, cmd)
-
-			return nil
-		},
-	}
-	flags.AddTxFlagsToCmd(cmd)
-	return cmd
+	return ips, nil
 }
 
 func CmdPostFile() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "post [file-path]",
+		Use:   "post [file-path] [expire-block]",
 		Short: "Post file to chain",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			filePath := args[0]
+			expireBlock, err := strconv.ParseInt(args[1], 10, 64)
+			if err != nil {
+				return errors.Join(errors.New("invalid expire block"), err)
+			}
 
-			file, err := os.ReadFile(filePath)
+			ctx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			postFile(file, cmd)
+			info, err := ctx.Client.ABCIInfo(context.Background())
+			if err != nil {
+				return err
+			}
+			if expireBlock < info.Response.LastBlockHeight {
+				return errors.New("expire block is earlier than current block height")
+			}
 
-			return nil
+			var dest string
+			if cmd.Flags().Changed("dest") {
+				dest, err = cmd.Flags().GetString("dest")
+				if err != nil {
+					panic(err)
+				}
+			}
+			count, err := cmd.Flags().GetInt64("max_proofs")
+			if err != nil {
+				panic(err)
+			}
+
+			ips, err := getProvidersToUpload(ctx, dest, count)
+			if err != nil {
+				return err
+			}
+
+			return handlePost(ctx, cmd.Flags(), filePath, ips, expireBlock, count)
 		},
 	}
-	cmd.Flags().Int64("expires", 0, "sets the expires field")
+	cmd.Flags().String("dest", "", "upload file to a specific ip address")
+	cmd.Flags().Int64("max_proofs", 3, "max proofs")
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
