@@ -20,10 +20,10 @@ func (suite *UpgradeTestKeeper) TestUpgrade() {
 
 	fidMerkleMap := make(map[string][]byte)
 
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		n := rand.Int63()
 		s := sha256.New()
-		s.Write([]byte(fmt.Sprintf("%d", n)))
+		fmt.Fprintf(s, "%d", n)
 		d := s.Sum(nil)
 		conv, err := bech32.ConvertBits(d, 8, 5, true)
 		suite.Require().NoError(err)

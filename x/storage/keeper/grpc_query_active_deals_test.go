@@ -68,7 +68,7 @@ func setup(isCheckTx bool) *jklapp.JackalApp {
 
 func (suite *KeeperTestSuite) SetupTest() {
 	app := setup(false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+	ctx := app.NewContext(false, tmproto.Header{})
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry)
 	types.RegisterQueryServer(queryHelper, app.StorageKeeper)

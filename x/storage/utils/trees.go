@@ -36,7 +36,7 @@ func BuildTree(buf io.Reader, chunkSize int64) ([]byte, []byte, [][]byte, int, e
 		hexedData := hex.EncodeToString(b)
 
 		hash := sha256.New()
-		hash.Write([]byte(fmt.Sprintf("%d%s", index, hexedData))) // appending the index and the data
+		fmt.Fprintf(hash, "%d%s", index, hexedData) // appending the index and the data
 		hashName := hash.Sum(nil)
 
 		data = append(data, hashName)

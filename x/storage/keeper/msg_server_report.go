@@ -57,7 +57,7 @@ func (k Keeper) DoReport(ctx sdk.Context, prover string, merkle []byte, owner st
 func (k msgServer) Report(goCtx context.Context, msg *types.MsgReport) (*types.MsgReportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.Keeper.DoReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
+	err := k.DoReport(ctx, msg.Prover, msg.Merkle, msg.Owner, msg.Start, msg.Creator)
 	if err != nil {
 		return nil, err
 	}

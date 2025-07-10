@@ -12,7 +12,7 @@ import (
 
 func (k Keeper) NewGauge(ctx sdk.Context, coins sdk.Coins, end time.Time) types.PaymentGauge {
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("%d--%d--%s", ctx.BlockHeight(), end.UnixMicro(), coins.String())))
+	fmt.Fprintf(h, "%d--%d--%s", ctx.BlockHeight(), end.UnixMicro(), coins.String())
 	id := h.Sum(nil)
 
 	pg := types.PaymentGauge{
