@@ -1123,12 +1123,12 @@ func (app *JackalApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.API
 
 // RegisterTxService implements the Application.RegisterTxService method.
 func (app *JackalApp) RegisterTxService(clientCtx client.Context) {
-	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.InterfaceRegistry)
+	authtx.RegisterTxService(app.GRPCQueryRouter(), clientCtx, app.Simulate, app.InterfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
 func (app *JackalApp) RegisterTendermintService(clientCtx client.Context) {
-	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
+	tmservice.RegisterTendermintService(app.GRPCQueryRouter(), clientCtx, app.InterfaceRegistry)
 }
 
 func (app *JackalApp) AppCodec() codec.Codec {
