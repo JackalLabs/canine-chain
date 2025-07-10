@@ -22,7 +22,7 @@ import (
 func createTestApp(isCheckTx bool) (*jklapp.JackalApp, sdk.Context) {
 	app := setup(isCheckTx)
 
-	ctx := app.BaseApp.NewContext(isCheckTx, tmproto.Header{})
+	ctx := app.NewContext(isCheckTx, tmproto.Header{})
 
 	app.MintKeeper.SetParams(ctx, types.DefaultParams())
 

@@ -64,7 +64,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
+				fmt.Fprintf(h, "v%s%s", trackingNumber, v)
 				hash := h.Sum(nil)
 				addressString := fmt.Sprintf("%x", hash)
 
@@ -82,7 +82,7 @@ func CmdPostFile() *cobra.Command {
 				}
 
 				h := sha256.New()
-				h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
+				fmt.Fprintf(h, "e%s%s", trackingNumber, v)
 				hash := h.Sum(nil)
 				addressString := fmt.Sprintf("%x", hash)
 

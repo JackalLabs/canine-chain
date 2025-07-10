@@ -103,7 +103,7 @@ func CmdShowFileFromPath() *cobra.Command {
 
 			// make the full OwnerAddress
 			H := sha256.New()
-			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash)))
+			fmt.Fprintf(H, "o%s%s", merklePath, accountHash)
 			Hash := H.Sum(nil)
 			ownerAddress := fmt.Sprintf("%x", Hash)
 
