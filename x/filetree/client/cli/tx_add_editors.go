@@ -92,7 +92,7 @@ func CmdAddEditors() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				logger.Println("hex message is", hexMessage)
+				logger.Println("hex message is", string(hexMessage))
 
 				// May need to use "clientCtx.from?"
 				ownerPrivateKey, err := MakePrivateKey(clientCtx)

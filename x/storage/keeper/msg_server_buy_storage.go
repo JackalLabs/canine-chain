@@ -99,9 +99,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	referred := false
 	refAcc, err := k.rnsKeeper.Resolve(ctx, msg.Referral)
 	if err == nil {
-		if !(refAcc.String() == msg.Creator) {
-			referred = true
-		}
+		referred = refAcc.String() != msg.Creator
 	}
 
 	pol := sdk.NewDec(params.PolRatio).QuoInt64(100)

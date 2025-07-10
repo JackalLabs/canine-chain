@@ -119,7 +119,7 @@ func MakeOwnerAddress(merklePath string, user string) string {
 	// make sure that user was already hex(hashed) before it was passed into
 	// this function
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("o%s%s", merklePath, user)))
+	fmt.Fprintf(h, "o%s%s", merklePath, user)
 	hash := h.Sum(nil)
 	ownerAddress := fmt.Sprintf("%x", hash)
 
@@ -155,7 +155,7 @@ func MakeEditorAccessMap(trackingNumber string, editorIDs []string, aesKey strin
 
 	for _, v := range editorIDs {
 		h := sha256.New()
-		h.Write([]byte(fmt.Sprintf("e%s%s", trackingNumber, v)))
+		fmt.Fprintf(h, "e%s%s", trackingNumber, v)
 		hash := h.Sum(nil)
 		addressString := fmt.Sprintf("%x", hash)
 
@@ -176,7 +176,7 @@ func MakeViewerAccessMap(trackingNumber string, viewerIDs []string, aesKey strin
 
 	for _, v := range viewerIDs {
 		h := sha256.New()
-		h.Write([]byte(fmt.Sprintf("v%s%s", trackingNumber, v)))
+		fmt.Fprintf(h, "v%s%s", trackingNumber, v)
 		hash := h.Sum(nil)
 		addressString := fmt.Sprintf("%x", hash)
 

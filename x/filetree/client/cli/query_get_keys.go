@@ -44,7 +44,7 @@ func CmdGetKeys() *cobra.Command {
 			accountHash := fmt.Sprintf("%x", hash)
 
 			H := sha256.New()
-			H.Write([]byte(fmt.Sprintf("o%s%s", merklePath, accountHash))) // May not need this in future
+			fmt.Fprintf(H, "o%s%s", merklePath, accountHash) // May not need this in future
 			Hash := H.Sum(nil)
 			ownerString := fmt.Sprintf("%x", Hash) // Make the owner string to find the file
 
