@@ -40,7 +40,7 @@ func (k Keeper) RemoveFeed(
 	))
 }
 
-// GetAllFeed returns all Feed
+// GetAllFeeds returns all Feed
 func (k Keeper) GetAllFeeds(ctx sdk.Context) (list []types.Feed) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FeedKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})

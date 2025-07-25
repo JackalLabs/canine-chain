@@ -268,7 +268,7 @@ type MockRNSKeeperMockRecorder struct {
 	mock *MockRNSKeeper
 }
 
-// NewMockOracleKeeper creates a new mock instance.
+// NewMockRNSKeeper creates a new mock instance.
 func NewMockRNSKeeper(ctrl *gomock.Controller) *MockRNSKeeper {
 	mock := &MockRNSKeeper{ctrl: ctrl}
 	mock.recorder = &MockRNSKeeperMockRecorder{mock}

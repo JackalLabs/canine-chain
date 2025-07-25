@@ -16,7 +16,7 @@ func (k Keeper) SetLegacyActiveDeals(ctx sdk.Context, activeDeals types.LegacyAc
 	), b)
 }
 
-// GetActiveDeals returns a activeDeals from its index
+// GetLegacyActiveDeals returns a activeDeals from its index
 func (k Keeper) GetLegacyActiveDeals(
 	ctx sdk.Context,
 	cid string,
@@ -34,7 +34,7 @@ func (k Keeper) GetLegacyActiveDeals(
 	return val, true
 }
 
-// RemoveActiveDeals removes a activeDeals from the store
+// RemoveLegacyActiveDeals removes a activeDeals from the store
 func (k Keeper) RemoveLegacyActiveDeals(
 	ctx sdk.Context,
 	cid string,
