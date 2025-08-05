@@ -112,7 +112,7 @@ The `buy` command buys a name that is listed for sale.
 canined tx rns buy [name]
 ```
 #### bid
-The `bid` command places a bid for a name. The price of the bid is locked up in escrow until either the bid is cancelled or is accepted. The owner can accept this bid and the name will be transfered.
+The `bid` command places a bid for a name. The price of the bid is locked up in escrow until either the bid is cancelled or is accepted. The owner can accept this bid and the name will be transferred.
 ```sh
 canined tx rns bid [name] [price]
 ```
