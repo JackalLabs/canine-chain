@@ -122,7 +122,7 @@ Create an absolute root folder for a storage account.
 |rootHashPath  | String  | MerklePath("s")<br />
 |contents  | String  | FID<br />
 |editors  | String  | string(json encoded map) with: <br />let c = concatenate( "e", trackingNumber, Bech32 address )<br />map_key: hex[ hash("c") ]<br />map_value: ECIES.encrypt( aesIV + aesKey )<br /> Note that map_key and map_value must be strings or else unmarshalling in the keeper will fail. <br />
-|viewers  | String  | Pass in "NONE." Do not pass in an emptry string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. <br />
+|viewers  | String  | Pass in "NONE." Do not pass in an empty string else message validation will fail. Root folder has no viewers. Unknown at this time if this field will be needed in the future so we leave it in for now. <br />
 |trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors map
 
 #### Response
