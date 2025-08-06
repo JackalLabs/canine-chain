@@ -49,7 +49,7 @@ func BumpInterval(ctx sdk.Context, sk *storageKeeper.Keeper) {
 	storageParams.ProofWindow = newWindow
 	sk.SetParams(ctx, storageParams)
 
-	files := sk.GetAllFileByMerkle(ctx)
+	files := sk.GetAllFileByMerkle()
 	for _, file := range files {
 		if file.ProofInterval == oldProofWindow { // updating default files to the new window
 			file.ProofInterval = newWindow

@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/tendermint/tendermint/libs/log"
@@ -13,15 +14,16 @@ import (
 
 type (
 	Keeper struct {
-		cdc           codec.BinaryCodec
-		storeKey      sdk.StoreKey
-		paramStore    paramtypes.Subspace
-		bankKeeper    types.BankKeeper
-		accountKeeper types.AccountKeeper
-		oracleKeeper  types.OracleKeeper
-		rnsKeeper     types.RnsKeeper
-
+		cdc              codec.BinaryCodec
+		storeKey         sdk.StoreKey
+		paramStore       paramtypes.Subspace
+		bankKeeper       types.BankKeeper
+		accountKeeper    types.AccountKeeper
+		oracleKeeper     types.OracleKeeper
+		rnsKeeper        types.RnsKeeper
 		feeCollectorName string
+
+		filebase *sql.DB
 	}
 )
 
@@ -34,10 +36,16 @@ func NewKeeper(
 	oracleKeeper types.OracleKeeper,
 	rnsKeeper types.RnsKeeper,
 	feeCollectorName string,
+	filebase *sql.DB,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
+	}
+
+	err := CreateTablesIfNotExist(filebase)
+	if err != nil {
+		panic(err)
 	}
 
 	return &Keeper{
@@ -49,6 +57,7 @@ func NewKeeper(
 		oracleKeeper:     oracleKeeper,
 		rnsKeeper:        rnsKeeper,
 		feeCollectorName: feeCollectorName,
+		filebase:         filebase,
 	}
 }
 
