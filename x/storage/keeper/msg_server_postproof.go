@@ -29,14 +29,14 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 		var err error
 		proof, err = file.GetProver(ctx, k, prover)
 		if err != nil {
-			return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
+			return &types.MsgPostProofResponse{Success: false, ErrorMessage: fmt.Sprintf("this is not your file | %s", err.Error())}, nil
 		}
 	} else {
 		if file.ContainsProver(prover) {
 			var err error
 			proof, err = file.GetProver(ctx, k, prover)
 			if err != nil {
-				return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
+				return &types.MsgPostProofResponse{Success: false, ErrorMessage: fmt.Sprintf("you were supposed to have a proof but don't | %s", err.Error())}, nil
 			}
 		} else {
 			proof = file.AddProver(ctx, k, prover)
