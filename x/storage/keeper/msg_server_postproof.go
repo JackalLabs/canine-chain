@@ -64,6 +64,16 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 
 	k.SetProof(ctx, *proof)
 
+	tracker, found := k.GetRewardTracker(ctx, prover) // increase the file trackers size
+	if !found {
+		tracker = types.RewardTracker{
+			Provider: prover,
+			Size_:    0,
+		}
+	}
+	tracker.Size_ += file.FileSize
+	k.SetRewardTracker(ctx, tracker)
+
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			sdk.EventTypeMessage,

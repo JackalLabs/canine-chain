@@ -42,6 +42,7 @@ func GetQueryCmd(_ string) *cobra.Command {
 		CmdShowProviders(),
 		CmdListProviders(),
 		CmdShowActiveDeals(),
+		CmdListActiveDealsByMerkle(),
 		CmdListActiveDeals(),
 		CmdQueryParams(),
 		CmdShowProof(),

@@ -12,8 +12,14 @@ const (
 	ProofKeyPrefix       = "FileProof/value/"
 
 	LegacyActiveDealsKeyPrefix = "ActiveDeals/value/" // OLD! DO NOT USE!
-
+	RewardTrackerKeyPrefix     = "Rewards/value/"
 )
+
+func RewardTrackerPrimaryKey(
+	provider string,
+) []byte {
+	return []byte(provider)
+}
 
 // FilesPrimaryKey returns the store key to retrieve a File from the index fields ordered by merkle
 func FilesPrimaryKey(

@@ -19,4 +19,6 @@ message GenesisState {
   repeated ReportForm report_forms = 7 [ (gogoproto.nullable) = false ];
   repeated AttestationForm attest_forms = 8 [ (gogoproto.nullable) = false ];
   repeated PaymentGauge payment_gauges = 9 [ (gogoproto.nullable) = false ];
+  repeated RewardTracker reward_trackers = 10 [ (gogoproto.nullable) = false ];
+
 }

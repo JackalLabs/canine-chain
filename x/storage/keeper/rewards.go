@@ -1,59 +1,10 @@
 package keeper
 
 import (
-	"fmt"
-	"maps"
-	"slices"
-	"strconv"
-	"strings"
-
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
-
-func (k Keeper) burnContract(ctx sdk.Context, providerAddress string) {
-	prov, found := k.GetProviders(ctx, providerAddress)
-	if !found {
-		return
-	}
-
-	burned, err := strconv.Atoi(prov.BurnedContracts)
-	if err != nil {
-		ctx.Logger().Error("cannot parse providers burn count")
-		return
-	}
-
-	prov.BurnedContracts = fmt.Sprintf("%d", burned+1)
-	k.SetProviders(ctx, prov)
-}
-
-// manageProof checks the status of a given proof, if the file is too young, we skip it. If it's old enough and the
-// prover has either failed to prove it or the proof simply never existed we remove it.
-func (k Keeper) manageProof(ctx sdk.Context, sizeTracker *map[string]int64, file *types.UnifiedFile, proofKey string) {
-	providerAddress := strings.Split(proofKey, "/")[0]
-	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
-	currentHeight := ctx.BlockHeight()
-
-	if !file.IsYoung(currentHeight) && !found { // if the file is old, and we can't find the proof, remove the prover
-		ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
-		file.RemoveProverWithKey(ctx, k, proofKey)
-		return
-	}
-
-	proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
-
-	if !proven && !file.IsYoung(currentHeight) { // if file wasn't proven, and is old, we burn it.
-		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
-		ctx.Logger().Info(fmt.Sprintf("no recent proofs: %s", proofKey))
-		file.RemoveProverWithKey(ctx, k, proofKey)
-		k.burnContract(ctx, providerAddress)
-		return
-	}
-
-	(*sizeTracker)[proof.Prover] += file.FileSize // only give rewards to providers who have held onto the file for a full window
-}
 
 func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 	currentTime := ctx.BlockTime()
@@ -113,19 +64,13 @@ func (k Keeper) pullTokensFromGauges(ctx sdk.Context) sdk.Coins {
 	return coinsToDistribute
 }
 
-func providerList(sizeTracker *map[string]int64) []string {
-	provers := slices.Collect(maps.Keys(*sizeTracker))
-	slices.Sort(provers)
-	return provers
-}
-
-func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker *map[string]int64) {
+func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, trackers []types.RewardTracker) {
 	coins := k.pullTokensFromGauges(ctx)
 	networkValue := sdk.NewDec(totalSize)
 
-	provers := providerList(sizeTracker)
-	for _, prover := range provers { // loop through a sorted list of providers
-		worth := (*sizeTracker)[prover]
+	for _, tracker := range trackers { // loop through a sorted list of providers
+		worth := tracker.Size_
+		prover := tracker.Provider
 		providerValue := sdk.NewDec(worth)
 
 		networkPercentage := providerValue.Quo(networkValue)
@@ -149,33 +94,15 @@ func (k Keeper) rewardAllProviders(ctx sdk.Context, totalSize int64, sizeTracker
 	}
 }
 
-func (k Keeper) removeFileIfDeserved(ctx sdk.Context, file *types.UnifiedFile) {
-	if len(file.Proofs) == 0 && !file.IsYoung(ctx.BlockHeight()) { // remove file if not proven outside of grace period
-		k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
-	}
-}
-
-// ManageRewards loops through every file on the network and manages it in some way.
+// ManageRewards pays out providers based on their proofs
 func (k Keeper) ManageRewards(ctx sdk.Context) {
 	var totalSize int64
-	s := make(map[string]int64)
-	sizeTracker := &s
+	trackers := k.GetAllRewardTrackers(ctx)
+	for _, tracker := range trackers {
+		totalSize += tracker.Size_
+	}
 
-	k.IterateFilesByMerkle(ctx, false, func(_ []byte, val []byte) bool {
-		var file types.UnifiedFile
-		k.cdc.MustUnmarshal(val, &file)
-
-		totalSize += file.FileSize * int64(len(file.Proofs))
-		k.removeFileIfDeserved(ctx, &file) // delete file if it meets the conditions to be deleted
-
-		for _, proof := range file.Proofs { // manage all proofs in proof list
-			k.manageProof(ctx, sizeTracker, &file, proof)
-		}
-
-		return false
-	})
-
-	k.rewardAllProviders(ctx, totalSize, sizeTracker)
+	k.rewardAllProviders(ctx, totalSize, trackers)
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
