@@ -66,11 +66,14 @@ func (k Keeper) RunProofChecks(ctx sdk.Context) {
 func (k Keeper) manageProof(ctx sdk.Context, file *types.UnifiedFile, proofKey string) {
 	providerAddress := strings.Split(proofKey, "/")[0]
 	proof, found := k.GetProofWithBuiltKey(ctx, []byte(proofKey))
+
 	currentHeight := ctx.BlockHeight()
 
-	if !file.IsYoung(currentHeight) && !found { // if the file is old, and we can't find the proof, remove the prover
-		ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
-		file.RemoveProverWithKey(ctx, k, proofKey)
+	if !found {
+		if !file.IsYoung(currentHeight) { // if the file is old, and we can't find the proof, remove the prover
+			ctx.Logger().Info(fmt.Sprintf("cannot find proof: %s", proofKey))
+			file.RemoveProverWithKey(ctx, k, proofKey)
+		}
 		return
 	}
 
