@@ -103,6 +103,11 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 	}
 
 	k.rewardAllProviders(ctx, totalSize, trackers)
+
+	for _, tracker := range trackers {
+		tracker.Size_ = 0
+		k.SetRewardTracker(ctx, tracker) // reset tracker
+	}
 }
 
 func (k Keeper) RunRewardBlock(ctx sdk.Context) {
