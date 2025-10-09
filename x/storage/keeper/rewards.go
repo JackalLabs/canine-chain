@@ -102,6 +102,10 @@ func (k Keeper) ManageRewards(ctx sdk.Context) {
 		totalSize += tracker.Size_
 	}
 
+	if totalSize == 0 { // if there are no proofs to check, skip it all
+		return
+	}
+
 	k.rewardAllProviders(ctx, totalSize, trackers)
 
 	for _, tracker := range trackers {

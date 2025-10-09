@@ -12,6 +12,7 @@ import (
 // ManageProofs loops through every file on the network and manages it in some way.
 func (k Keeper) ManageProofs(ctx sdk.Context) {
 	expiredOwners := make(map[string]bool)
+	ownerSize := make(map[string]int64)
 
 	plans := k.GetAllStoragePaymentInfo(ctx)
 	for _, plan := range plans {
@@ -25,11 +26,12 @@ func (k Keeper) ManageProofs(ctx sdk.Context) {
 		if file.Expires == 0 { // for plans
 			if expiredOwners[file.Owner] {
 				k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start) // remove if plan is expired
+				return false
 			}
-		} else { // for plain files
-			if file.Expires <= ctx.BlockHeight() { // kill the file if it's too old
-				k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
-			}
+			ownerSize[file.Owner] += file.FileSize
+		} else if file.Expires <= ctx.BlockHeight() { // kill the file if it's too old
+			k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start) // for plain files
+			return false
 		}
 
 		for _, proof := range file.Proofs { // run it through the proof remover
@@ -38,6 +40,14 @@ func (k Keeper) ManageProofs(ctx sdk.Context) {
 
 		return false
 	})
+
+	for _, plan := range plans { // fix all plan sizes
+		size := ownerSize[plan.Address]
+		if size > 0 {
+			plan.SpaceUsed = size
+			k.SetStoragePaymentInfo(ctx, plan)
+		}
+	}
 }
 
 func (k Keeper) RunProofChecks(ctx sdk.Context) {
