@@ -400,7 +400,7 @@ func getProvidersToUpload(ctx client.Context, dest string, count int64) (ips []s
 	if dest != "" {
 		ips = append(ips, dest)
 	}
-	//ips = append(ips, []string{
+	// ips = append(ips, []string{
 	//	"https://mprov01.jackallabs.io",
 	//	"https://mprov02.jackallabs.io",
 	//	"https://jklstorage1.squirrellogic.com",
