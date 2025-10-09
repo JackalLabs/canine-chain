@@ -15,11 +15,10 @@ func (k Keeper) ManageProofs(ctx sdk.Context) {
 
 	plans := k.GetAllStoragePaymentInfo(ctx)
 	for _, plan := range plans {
-		expired := plan.End.After(ctx.BlockTime())
+		expired := plan.End.Before(ctx.BlockTime())
 		if expired {
 			expiredOwners[plan.Address] = true
 		}
-
 	}
 
 	k.IterateAndParseFilesByMerkle(ctx, false, func(key []byte, file types.UnifiedFile) bool {
@@ -28,7 +27,7 @@ func (k Keeper) ManageProofs(ctx sdk.Context) {
 				k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start) // remove if plan is expired
 			}
 		} else { // for plain files
-			if file.Expires >= ctx.BlockHeight() { // kill the file if it's too old
+			if file.Expires <= ctx.BlockHeight() { // kill the file if it's too old
 				k.RemoveFile(ctx, file.Merkle, file.Owner, file.Start)
 			}
 		}
