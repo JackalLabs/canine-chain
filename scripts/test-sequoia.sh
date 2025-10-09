@@ -39,7 +39,7 @@ canined collect-gentxs --home=$JKL_HOME
 sed -i.bak -e "s/stake/ujkl/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/ujklr/staker/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/cosmos1arsaayyj5tash86mwqudmcs2fd5jt5zgp07gl8/jkl1arsaayyj5tash86mwqudmcs2fd5jt5zgc3sexc/" $JKL_HOME/config/genesis.json
-sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"400\"/" $JKL_HOME/config/genesis.json
+#sed -i.bak -e "s/\"proof_window\": \"50\"/\"proof_window\": \"400\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"check_window\": \"100\"/\"check_window\": \"100\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/\"chunk_size\": \"1024\"/\"chunk_size\": \"1024\"/" $JKL_HOME/config/genesis.json
 sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025ujkl\"/" $JKL_HOME/config/app.toml
@@ -60,6 +60,7 @@ yq -i '.chain_config.grpc_addr="localhost:9090"' $PROV_HOME/config.yaml
 yq -i '.domain="http://localhost:3334"' $PROV_HOME/config.yaml
 yq -i '.data_directory="'$PROV_HOME'/data"' $PROV_HOME/config.yaml
 yq -i '.api_config.port=3334' $PROV_HOME/config.yaml
+yq -i 'del(.block_store_config.key)' $PROV_HOME/config.yaml
 
 rm $PROV_HOME/provider_wallet.json
 echo "{\"seed_phrase\":\"forward service profit benefit punch catch fan chief jealous steel harvest column spell rude warm home melody hat broccoli pulse say garlic you firm\",\"derivation_path\":\"m/44'/118'/0'/0/0\"}" > $PROV_HOME/provider_wallet.json
