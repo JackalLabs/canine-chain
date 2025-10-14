@@ -181,7 +181,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	refTokens := sdk.NewCoins(refToken)
 
 	if referred {
-		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, refAcc, polTokens)
+		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, refAcc, refTokens)
 		if err != nil {
 			return nil, sdkerrors.Wrapf(err, "cannot send tokens to referral account")
 		}
