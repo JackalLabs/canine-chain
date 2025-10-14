@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
@@ -36,6 +37,22 @@ var _ = strconv.Itoa(0)
 
 type ErrorResponse struct {
 	Error string `json:"error"`
+}
+
+// getBaconIpsum fetches lorem ipsum text from bacon ipsum API
+func getBaconIpsum() (string, error) {
+	resp, err := http.Get("https://baconipsum.com/api/?type=all-meat&paras=10&format=text")
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(string(body)), nil
 }
 
 func prepareFactory(clientCtx client.Context, txf tx.Factory) (tx.Factory, error) {
@@ -333,17 +350,66 @@ func handlePost(ctx client.Context, flags *pflag.FlagSet, filename string, ips [
 	return err
 }
 
+func handleManyPosts(ctx client.Context, flags *pflag.FlagSet, ips []string, expires, maxProofs int64) error {
+	query := types.NewQueryClient(ctx)
+	params, err := query.Params(context.Background(), &types.QueryParams{})
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < 1000; i++ {
+		baconText, err := getBaconIpsum()
+		if err != nil {
+			return err
+		}
+
+		baconReader := strings.NewReader(baconText)
+
+		root, err := createMerkleRoot(baconReader, params.Params.ChunkSize)
+		if err != nil {
+			return errors.Join(errors.New("failed to create merkle root of file"), err)
+		}
+
+		startat, err := postFileToChain(ctx, flags, root, int64(len(baconText)), maxProofs, expires)
+		if err != nil {
+			return err
+		}
+
+		go func() {
+			for _, ip := range ips {
+				_, err = baconReader.Seek(0, io.SeekStart)
+				if err != nil {
+					panic(err)
+				}
+				err = uploadFile(ip, baconReader, root, startat, ctx.GetFromAddress().String())
+				if err != nil {
+					fmt.Printf("failed to upload file to provider: %v", err)
+				}
+			}
+			if err != nil {
+				fmt.Printf("failed to upload file to provider: %v", err)
+			}
+		}()
+	}
+
+	return nil
+}
+
 func getProvidersToUpload(ctx client.Context, dest string, count int64) (ips []string, err error) {
 	query := types.NewQueryClient(ctx)
 	if dest != "" {
 		ips = append(ips, dest)
 	}
+	// ips = append(ips, []string{
+	//	"https://mprov01.jackallabs.io",
+	//	"https://mprov02.jackallabs.io",
+	//	"https://jklstorage1.squirrellogic.com",
+	//	"https://jklstorage2.squirrellogic.com",
+	//	"https://jklstorage3.squirrellogic.com",
+	// }...)
+
 	ips = append(ips, []string{
-		"https://mprov01.jackallabs.io",
-		"https://mprov02.jackallabs.io",
-		"https://jklstorage1.squirrellogic.com",
-		"https://jklstorage2.squirrellogic.com",
-		"https://jklstorage3.squirrellogic.com",
+		"http://localhost:3334",
 	}...)
 
 	if len(ips) > int(count) {
@@ -355,9 +421,6 @@ func getProvidersToUpload(ctx client.Context, dest string, count int64) (ips []s
 		&types.QueryActiveProviders{})
 	if err != nil {
 		return nil, errors.Join(errors.New("failed to find providers"), err)
-	}
-	if len(res.Providers) == 0 {
-		return nil, errors.New("there are no active providers on chain")
 	}
 
 	info, err := ctx.Client.ABCIInfo(context.Background())
@@ -431,6 +494,56 @@ func CmdPostFile() *cobra.Command {
 			}
 
 			return handlePost(ctx, cmd.Flags(), filePath, ips, expireBlock, count)
+		},
+	}
+	cmd.Flags().String("dest", "", "upload file to a specific ip address")
+	cmd.Flags().Int64("max_proofs", 3, "max proofs")
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdPostManyFiles() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "post-many [expire-block]",
+		Short: "Post many files to chain",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			expireBlock, err := strconv.ParseInt(args[0], 10, 64)
+			if err != nil {
+				return errors.Join(errors.New("invalid expire block"), err)
+			}
+
+			ctx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			info, err := ctx.Client.ABCIInfo(context.Background())
+			if err != nil {
+				return err
+			}
+			if expireBlock < info.Response.LastBlockHeight {
+				return errors.New("expire block is earlier than current block height")
+			}
+
+			var dest string
+			if cmd.Flags().Changed("dest") {
+				dest, err = cmd.Flags().GetString("dest")
+				if err != nil {
+					panic(err)
+				}
+			}
+			count, err := cmd.Flags().GetInt64("max_proofs")
+			if err != nil {
+				panic(err)
+			}
+
+			ips, err := getProvidersToUpload(ctx, dest, count)
+			if err != nil {
+				return err
+			}
+
+			return handleManyPosts(ctx, cmd.Flags(), ips, expireBlock, count)
 		},
 	}
 	cmd.Flags().String("dest", "", "upload file to a specific ip address")

@@ -80,8 +80,7 @@ func (k Keeper) manageProof(ctx sdk.Context, file *types.UnifiedFile, proofKey s
 	proven := file.ProvenLastBlock(currentHeight, proof.LastProven)
 
 	if !proven && !file.IsYoung(currentHeight) { // if file wasn't proven, and is old, we burn it.
-		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d", currentHeight))
-		ctx.Logger().Info(fmt.Sprintf("no recent proofs: %s", proofKey))
+		ctx.Logger().Info(fmt.Sprintf("proof has not been proven within the last window at %d | %s", currentHeight, proofKey))
 		file.RemoveProverWithKey(ctx, k, proofKey)
 		k.burnContract(ctx, providerAddress)
 		return
