@@ -43,7 +43,7 @@ func (k Keeper) ManageProofs(ctx sdk.Context) {
 
 	for _, plan := range plans { // fix all plan sizes
 		size := ownerSize[plan.Address]
-		if size > 0 {
+		if size != plan.SpaceUsed {
 			plan.SpaceUsed = size
 			k.SetStoragePaymentInfo(ctx, plan)
 		}
