@@ -57,5 +57,5 @@ func (k Keeper) GetAllCollateral(ctx sdk.Context) (list []types.Collateral) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

@@ -121,7 +121,7 @@ func (k Keeper) GetAllNames(ctx sdk.Context) (list []types.Names) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
 
 // CheckExistence quickly checks if there are any domains registered

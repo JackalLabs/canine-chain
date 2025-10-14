@@ -87,7 +87,7 @@ func (k Keeper) GetAllNotifications(ctx sdk.Context) (list []types.Notification)
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
 
 // GetAllNotificationsByAddress returns all notifications that belong to a given address
@@ -102,5 +102,5 @@ func (k Keeper) GetAllNotificationsByAddress(ctx sdk.Context, address string) (l
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

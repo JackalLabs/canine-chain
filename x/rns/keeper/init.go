@@ -57,5 +57,5 @@ func (k Keeper) GetAllInit(ctx sdk.Context) (list []types.Init) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

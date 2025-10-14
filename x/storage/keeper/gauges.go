@@ -79,5 +79,5 @@ func (k Keeper) GetAllPaymentGauges(ctx sdk.Context) (list []types.PaymentGauge)
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

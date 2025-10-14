@@ -72,5 +72,5 @@ func (k Keeper) GetAllReport(ctx sdk.Context) (list []types.ReportForm) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

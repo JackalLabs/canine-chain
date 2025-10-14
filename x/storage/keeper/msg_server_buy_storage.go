@@ -24,23 +24,23 @@ func validateBuy(days int64, bytesIn int64, denomIn string) (duration time.Durat
 	duration = time.Duration(days) * time.Hour * 24
 	if duration < timeMonth {
 		err = fmt.Errorf("duration can't be less than 1 month")
-		return
+		return duration, bytes, gbs, denom, err
 	}
 
 	bytes = bytesIn
 	gbs = bytes / gb
 	if gbs <= 0 {
 		err = fmt.Errorf("cannot buy less than a gb")
-		return
+		return duration, bytes, gbs, denom, err
 	}
 
 	denom = denomIn
 	if denomIn != "ujkl" {
 		err = sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "cannot pay with anything other than ujkl")
-		return
+		return duration, bytes, gbs, denom, err
 	}
 
-	return
+	return duration, bytes, gbs, denom, err
 }
 
 func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (*types.MsgBuyStorageResponse, error) {

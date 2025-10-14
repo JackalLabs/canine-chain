@@ -65,5 +65,5 @@ func (k Keeper) GetAllPubkey(ctx sdk.Context) (list []types.Pubkey) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

@@ -57,5 +57,5 @@ func (k Keeper) GetAllWhois(ctx sdk.Context) (list []types.Whois) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

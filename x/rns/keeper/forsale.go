@@ -73,5 +73,5 @@ func (k Keeper) GetAllForsale(ctx sdk.Context) (list []types.Forsale) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

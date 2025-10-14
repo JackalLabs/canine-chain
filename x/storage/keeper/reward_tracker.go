@@ -43,5 +43,5 @@ func (k Keeper) GetAllRewardTrackers(ctx sdk.Context) (list []types.RewardTracke
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
