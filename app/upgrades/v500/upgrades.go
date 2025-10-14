@@ -8,7 +8,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/ethereum/go-ethereum/log"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
 )
 
@@ -37,7 +36,7 @@ func (u *Upgrade) Name() string {
 
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		log.Info("Updating the Jackal Protocol to v5...")
+		ctx.Logger().Info("Updating the Jackal Protocol to v5...")
 		fmt.Println(logo)
 
 		return fromVM, nil
