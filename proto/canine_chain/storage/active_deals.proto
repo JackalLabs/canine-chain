@@ -39,3 +39,8 @@ message FileProof {
   int64 last_proven = 5;
   int64 chunk_to_prove = 6;
 }
+
+message RewardTracker {
+  string provider = 1;
+  int64 size = 2;
+}

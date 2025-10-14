@@ -266,7 +266,7 @@ runsim:
 ###             Linting              ###
 ########################################
 format-tools:
-	$(GO_CMD) install mvdan.cc/gofumpt@v0.6.0
+	$(GO_CMD) install mvdan.cc/gofumpt@latest
 	gofumpt -l -w .
 
 lint: format-tools

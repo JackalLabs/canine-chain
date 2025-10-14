@@ -73,7 +73,7 @@ func (k Keeper) GetAllAttestation(ctx sdk.Context) (list []types.AttestationForm
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
 
 // RemoveAllAttestation removes all attestations

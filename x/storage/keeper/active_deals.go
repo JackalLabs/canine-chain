@@ -58,5 +58,5 @@ func (k Keeper) GetAllLegacyActiveDeals(ctx sdk.Context) (list []types.LegacyAct
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

@@ -159,7 +159,7 @@ func (k Keeper) GetAllProviders(ctx sdk.Context) (list []types.Providers) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
 
 // SetActiveProviders set a specific providers in the store from its index

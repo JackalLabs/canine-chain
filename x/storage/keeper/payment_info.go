@@ -59,5 +59,5 @@ func (k Keeper) GetAllStoragePaymentInfo(ctx sdk.Context) (list []types.StorageP
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

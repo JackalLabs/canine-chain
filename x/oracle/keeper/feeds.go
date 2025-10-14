@@ -53,5 +53,5 @@ func (k Keeper) GetAllFeeds(ctx sdk.Context) (list []types.Feed) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

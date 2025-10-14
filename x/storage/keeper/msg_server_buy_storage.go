@@ -24,23 +24,23 @@ func validateBuy(days int64, bytesIn int64, denomIn string) (duration time.Durat
 	duration = time.Duration(days) * time.Hour * 24
 	if duration < timeMonth {
 		err = fmt.Errorf("duration can't be less than 1 month")
-		return
+		return duration, bytes, gbs, denom, err
 	}
 
 	bytes = bytesIn
 	gbs = bytes / gb
 	if gbs <= 0 {
 		err = fmt.Errorf("cannot buy less than a gb")
-		return
+		return duration, bytes, gbs, denom, err
 	}
 
 	denom = denomIn
 	if denomIn != "ujkl" {
 		err = sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "cannot pay with anything other than ujkl")
-		return
+		return duration, bytes, gbs, denom, err
 	}
 
-	return
+	return duration, bytes, gbs, denom, err
 }
 
 func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (*types.MsgBuyStorageResponse, error) {
@@ -104,7 +104,6 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 
 	pol := sdk.NewDec(params.PolRatio).QuoInt64(100)
 	discount := sdk.NewDec(0)
-	fmt.Printf("POL: %d / %f\n", params.PolRatio, pol.MustFloat64())
 	if referred {
 
 		p := toPay.Amount.ToDec()
@@ -143,10 +142,7 @@ func (k msgServer) BuyStorage(goCtx context.Context, msg *types.MsgBuyStorage) (
 	k.SetStoragePaymentInfo(ctx, spi)
 
 	refDec := sdk.NewDec(params.ReferralCommission).QuoInt64(100)
-	fmt.Printf("RATIOS!\nref: %d\npol: %d\ndiscount: %d\n", refDec.MulInt64(100).TruncateInt64(), pol.MulInt64(100).TruncateInt64(), discount.MulInt64(100).TruncateInt64())
 	spr := sdk.NewDec(1).Sub(refDec).Sub(pol).Sub(discount) // whatever is left from pol and referrals
-
-	fmt.Printf("storageprovider ratio: %d\n", spr.MulInt64(100).TruncateInt().Int64())
 
 	storageProviderCut := toPay.Amount.ToDec().Mul(spr)
 	spcToken := sdk.NewCoin(toPay.Denom, storageProviderCut.TruncateInt())

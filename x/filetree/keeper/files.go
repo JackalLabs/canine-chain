@@ -79,5 +79,5 @@ func (k Keeper) GetAllFiles(ctx sdk.Context) (list []types.Files) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

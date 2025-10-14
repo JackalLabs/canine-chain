@@ -43,7 +43,7 @@ func GenerateDirectory(address sdk.AccAddress) (paths []string, err error) {
 		paths = append(paths, paths[i-1]+"/"+dir[i])
 	}
 
-	return
+	return paths, err
 }
 
 // Returns seven predefined paths

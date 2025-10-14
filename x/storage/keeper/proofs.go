@@ -95,7 +95,7 @@ func (k Keeper) GetAllProofs(ctx sdk.Context) (list []types.FileProof) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
 
 // GetAllProofsForProver returns all Proofs for the given prover

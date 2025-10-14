@@ -88,7 +88,7 @@ func (k Keeper) GetAllFileByMerkle(ctx sdk.Context) (list []types.UnifiedFile) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
 
 // IterateFilesByMerkle iterates through every file
@@ -152,5 +152,5 @@ func (k Keeper) GetAllFilesWithMerkle(ctx sdk.Context, merkle []byte) (list []ty
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
