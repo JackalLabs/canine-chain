@@ -65,5 +65,5 @@ func (k Keeper) GetAllBids(ctx sdk.Context) (list []types.Bids) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

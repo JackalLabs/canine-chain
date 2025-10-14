@@ -406,7 +406,7 @@ func getProvidersToUpload(ctx client.Context, dest string, count int64) (ips []s
 	//	"https://jklstorage1.squirrellogic.com",
 	//	"https://jklstorage2.squirrellogic.com",
 	//	"https://jklstorage3.squirrellogic.com",
-	//}...)
+	// }...)
 
 	ips = append(ips, []string{
 		"http://localhost:3334",

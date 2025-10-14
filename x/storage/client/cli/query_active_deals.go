@@ -78,6 +78,46 @@ func CmdListActiveDeals() *cobra.Command {
 	return cmd
 }
 
+func CmdListActiveDealsByMerkle() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "file-with-merkle [merkle]",
+		Short: "list all files with a specific merkle hash",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			argMerkle := args[0]
+			merkle, err := hex.DecodeString(argMerkle)
+			if err != nil {
+				panic(err)
+			}
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryAllFilesByMerkle{
+				Pagination: pageReq,
+				Merkle:     merkle,
+			}
+
+			res, err := queryClient.AllFilesByMerkle(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 func CmdShowActiveDeals() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "file [merkle] [owner] [start]",
