@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -9,65 +10,13 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
 )
 
-func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*types.MsgPostProofResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	f, found := k.GetFile(ctx, msg.Merkle, msg.Owner, msg.Start)
-	if !found {
-		s := fmt.Sprintf("contract not found: %x/%s/%d", msg.Merkle, msg.Owner, msg.Start)
-		ctx.Logger().Debug(s)
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: s}, nil
-	}
-
-	file := &f
-
-	prover := msg.Creator
-
-	var proof *types.FileProof
-
-	if len(file.Proofs) == int(file.MaxProofs) {
-		var err error
-		proof, err = file.GetProver(ctx, k, prover)
-		if err != nil {
-			return &types.MsgPostProofResponse{Success: false, ErrorMessage: fmt.Sprintf("this is not your file | %s", err.Error())}, nil
-		}
-	} else {
-		if file.ContainsProver(prover) {
-			var err error
-			proof, err = file.GetProver(ctx, k, prover)
-			if err != nil {
-				return &types.MsgPostProofResponse{Success: false, ErrorMessage: fmt.Sprintf("you were supposed to have a proof but don't | %s", err.Error())}, nil
-			}
-		} else {
-			proof = file.AddProver(ctx, k, prover)
-		}
-	}
-
-	if msg.ToProve != proof.ChunkToProve {
-		e := fmt.Errorf("wrong chunk to prove for %x. Was %d should be %d", file.Merkle, msg.ToProve, proof.ChunkToProve)
-		ctx.Logger().Info(e.Error())
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
-	}
-
-	chunkSize := k.GetParams(ctx).ChunkSize
-
-	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
-		ctx.Logger().Info("file was already proven")
-	}
-
-	err := file.Prove(ctx, proof, msg.HashList, msg.Item, chunkSize)
-	if err != nil {
-		e := sdkerrors.Wrapf(err, "cannot verify %x against %x", msg.Item, file.Merkle)
-		ctx.Logger().Info(e.Error())
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
-	}
-
+func (k Keeper) UpdateProof(ctx sdk.Context, proof *types.FileProof, file *types.UnifiedFile) {
 	k.SetProof(ctx, *proof)
 
-	tracker, found := k.GetRewardTracker(ctx, prover) // increase the file trackers size
+	tracker, found := k.GetRewardTracker(ctx, proof.Prover) // increase the file trackers size
 	if !found {
 		tracker = types.RewardTracker{
-			Provider: prover,
+			Provider: proof.Prover,
 			Size_:    0,
 		}
 	}
@@ -84,24 +33,91 @@ func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*t
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeJackalMessage,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
+			sdk.NewAttribute(types.AttributeKeySigner, proof.Prover),
 		),
 	)
+}
 
-	return &types.MsgPostProofResponse{Success: true, ErrorMessage: ""}, nil
+func (k Keeper) postProof(ctx sdk.Context,
+	prover string,
+	item []byte,
+	hashList []byte,
+	merkle []byte,
+	owner string,
+	start int64,
+	toProve int64,
+) error {
+	f, found := k.GetFile(ctx, merkle, owner, start)
+	if !found {
+		s := fmt.Sprintf("contract not found: %x/%s/%d", merkle, owner, start)
+		ctx.Logger().Debug(s)
+		return errors.New(s)
+	}
+	file := &f
+
+	var proof *types.FileProof
+
+	if len(file.Proofs) == int(file.MaxProofs) {
+		var err error
+		proof, err = file.GetProver(ctx, k, prover)
+		if err != nil {
+			return sdkerrors.Wrap(err, "this is not your file")
+		}
+	} else {
+		if file.ContainsProver(prover) {
+			var err error
+			proof, err = file.GetProver(ctx, k, prover)
+			if err != nil {
+				return sdkerrors.Wrap(err, "you were supposed to have a proof but don't")
+			}
+		} else {
+			proof = file.AddProver(ctx, k, prover)
+		}
+	}
+
+	if toProve != proof.ChunkToProve {
+		e := fmt.Errorf("wrong chunk to prove for %x. Was %d should be %d", file.Merkle, toProve, proof.ChunkToProve)
+		ctx.Logger().Info(e.Error())
+		return e
+	}
+
+	chunkSize := k.GetParams(ctx).ChunkSize
+
+	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
+		ctx.Logger().Info("file was already proven")
+	}
+
+	err := file.Prove(ctx, proof, hashList, item, chunkSize)
+	if err != nil {
+		e := sdkerrors.Wrapf(err, "cannot verify %x against %x", item, file.Merkle)
+		ctx.Logger().Info(e.Error())
+		return e
+	}
+
+	k.UpdateProof(ctx, proof, file)
+
+	return nil
+}
+
+func (k msgServer) PostProof(goCtx context.Context, msg *types.MsgPostProof) (*types.MsgPostProofResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.postProof(ctx, msg.Creator, msg.Item, msg.HashList, msg.Merkle, msg.Owner, msg.Start, msg.ToProve)
+	if err != nil {
+		return &types.MsgPostProofResponse{
+			Success:      false,
+			ErrorMessage: err.Error(),
+		}, nil
+	}
+
+	return &types.MsgPostProofResponse{
+		Success:      true,
+		ErrorMessage: "",
+	}, nil
 }
 
 func (k msgServer) PostProofFor(goCtx context.Context, msg *types.MsgPostProofFor) (*types.MsgPostProofResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	f, found := k.GetFile(ctx, msg.Merkle, msg.Owner, msg.Start)
-	if !found {
-		err := sdkerrors.Wrapf(types.ErrDealNotFound, "contract not found: %x/%s/%d", msg.Merkle, msg.Owner, msg.Start)
-		ctx.Logger().Debug(err.Error())
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
-	}
-
-	file := &f
 
 	provider, found := k.GetProviders(ctx, msg.Provider)
 	if !found {
@@ -118,62 +134,10 @@ func (k msgServer) PostProofFor(goCtx context.Context, msg *types.MsgPostProofFo
 		return nil, types.ErrProviderNotFound
 	}
 
-	prover := msg.Provider
-
-	var proof *types.FileProof
-
-	if len(file.Proofs) == int(file.MaxProofs) {
-		var err error
-		proof, err = file.GetProver(ctx, k, prover)
-		if err != nil {
-			return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
-		}
-	} else {
-		if file.ContainsProver(prover) {
-			var err error
-			proof, err = file.GetProver(ctx, k, prover)
-			if err != nil {
-				return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
-			}
-		} else {
-			proof = file.AddProver(ctx, k, prover)
-		}
-	}
-
-	if msg.ToProve != proof.ChunkToProve {
-		err := sdkerrors.Wrapf(types.ErrBadProofInput, "wrong chunk to prove for %x. Was %d should be %d", file.Merkle, msg.ToProve, proof.ChunkToProve)
-		ctx.Logger().Info(err.Error())
+	err := k.postProof(ctx, msg.Provider, msg.Item, msg.HashList, msg.Merkle, msg.Owner, msg.Start, msg.ToProve)
+	if err != nil {
 		return &types.MsgPostProofResponse{Success: false, ErrorMessage: err.Error()}, nil
 	}
-
-	chunkSize := k.GetParams(ctx).ChunkSize
-
-	if file.ProvenThisBlock(ctx.BlockHeight(), proof.LastProven) {
-		ctx.Logger().Info("file was already proven")
-	}
-
-	err := file.Prove(ctx, proof, msg.HashList, msg.Item, chunkSize)
-	if err != nil {
-		e := sdkerrors.Wrapf(err, "cannot verify %x against %x", msg.Item, file.Merkle)
-		ctx.Logger().Info(e.Error())
-		return &types.MsgPostProofResponse{Success: false, ErrorMessage: e.Error()}, nil
-	}
-
-	k.SetProof(ctx, *proof)
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-		),
-	)
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			types.EventTypeJackalMessage,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Creator),
-		),
-	)
 
 	return &types.MsgPostProofResponse{Success: true, ErrorMessage: ""}, nil
 }
