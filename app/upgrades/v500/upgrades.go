@@ -1,12 +1,19 @@
 package v500
 
 import (
+	_ "embed"
+	"fmt"
+
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/ethereum/go-ethereum/log"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
 )
+
+//go:embed logo.txt
+var logo string
 
 var _ upgrades.Upgrade = &Upgrade{}
 
@@ -30,6 +37,9 @@ func (u *Upgrade) Name() string {
 
 func (u *Upgrade) Handler() upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+		log.Info("Updating the Jackal Protocol to v5...")
+		fmt.Println(logo)
+
 		return fromVM, nil
 	}
 }

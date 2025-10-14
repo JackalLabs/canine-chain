@@ -51,7 +51,10 @@ require (
 	github.com/golang/mock v1.6.0
 )
 
-require github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
+require (
+	github.com/go-stack/stack v1.8.1 // indirect
+	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
+)
 
 require (
 	cosmossdk.io/api v0.2.6 // indirect
@@ -90,7 +93,7 @@ require (
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac // indirect
-	github.com/ethereum/go-ethereum v1.11.5 // indirect
+	github.com/ethereum/go-ethereum v1.11.5
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/getsentry/sentry-go v0.18.0 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
