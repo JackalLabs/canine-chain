@@ -62,7 +62,7 @@ func SimulateMsgTransfer(
 		nameI := simtypes.RandIntBetween(r, 0, len(names))
 		tName := names[nameI]
 
-		// checking if the name is transferrable
+		// checking if the name is transferable
 		if ctx.BlockHeight() > tName.Expires {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Expired domain"), nil, nil
 		}
