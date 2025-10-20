@@ -10,6 +10,7 @@ import (
 )
 
 func TestManageProofs(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
@@ -93,6 +94,7 @@ func TestManageProofs(t *testing.T) {
 }
 
 func TestManageProofsWithExpiredPlan(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -164,6 +166,7 @@ func TestManageProofsWithExpiredPlan(t *testing.T) {
 }
 
 func TestManageProofsWithExpiredFile(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -227,6 +230,7 @@ func TestManageProofsWithExpiredFile(t *testing.T) {
 }
 
 func TestRunProofChecks(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
@@ -257,6 +261,7 @@ func TestRunProofChecks(t *testing.T) {
 }
 
 func TestManageProof_ValidProofStays(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -337,6 +342,7 @@ func TestManageProof_ValidProofStays(t *testing.T) {
 }
 
 func TestManageProof_NoProofStays(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -408,6 +414,7 @@ func TestManageProof_NoProofStays(t *testing.T) {
 }
 
 func TestManageProof_InvalidProofRemoved(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -488,6 +495,7 @@ func TestManageProof_InvalidProofRemoved(t *testing.T) {
 }
 
 func TestManageProof_YoungFileSkipped(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -560,6 +568,7 @@ func TestManageProof_YoungFileSkipped(t *testing.T) {
 }
 
 func TestBurnContract(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -636,6 +645,7 @@ func TestBurnContract(t *testing.T) {
 }
 
 func TestBurnContract_ProviderNotFound(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 1)
@@ -687,6 +697,7 @@ func TestBurnContract_ProviderNotFound(t *testing.T) {
 }
 
 func TestManageProof_StepThroughBlockHeights(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -849,6 +860,7 @@ func TestManageProof_StepThroughBlockHeights(t *testing.T) {
 }
 
 func TestRunProofChecks_Scheduling(t *testing.T) {
+	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
 
 	testAddresses, err := testutil.CreateTestAddresses("cosmos", 2)
@@ -949,13 +961,14 @@ func TestRunProofChecks_Scheduling(t *testing.T) {
 		modulo := height % storageKeeper.GetParams(ctx).ProofWindow
 		t.Logf("Height %d: Modulo=%d, Should run=%t, Proof removed=%t", height, modulo, shouldRun, proofRemoved)
 
-		if shouldRun && !proofRemoved {
+		switch {
+		case shouldRun && !proofRemoved:
 			t.Logf("  ⚠ RunProofChecks should have removed proof but didn't")
-		} else if !shouldRun && proofRemoved {
+		case !shouldRun && proofRemoved:
 			t.Logf("  ⚠ RunProofChecks removed proof when it shouldn't have run")
-		} else if shouldRun && proofRemoved {
+		case shouldRun && proofRemoved:
 			t.Logf("  ✓ RunProofChecks correctly removed proof")
-		} else {
+		default:
 			t.Logf("  ✓ RunProofChecks correctly skipped (proof still exists)")
 		}
 
