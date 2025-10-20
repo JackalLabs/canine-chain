@@ -9,6 +9,23 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// defaultParams returns the default test parameters with the specified deposit account
+func defaultParams(deposit string) types.Params {
+	return types.Params{
+		DepositAccount:         deposit,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     15,
+		CollateralPrice:        2,
+		CheckWindow:            11,
+		ReferralCommission:     25,
+		PolRatio:               40,
+	}
+}
+
 func TestManageProofs(t *testing.T) {
 	//nolint:dogsled
 	storageKeeper, _, _, _, ctx := setupStorageKeeper(t)
@@ -21,19 +38,7 @@ func TestManageProofs(t *testing.T) {
 	provider2 := testAddresses[2]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create providers
 	provider1Data := types.Providers{
@@ -104,19 +109,7 @@ func TestManageProofsWithExpiredPlan(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -176,19 +169,7 @@ func TestManageProofsWithExpiredFile(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -237,19 +218,7 @@ func TestRunProofChecks(t *testing.T) {
 	require.NoError(t, err)
 
 	// Set up parameters with proof window
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Test when block height is not divisible by proof window
 	ctx = ctx.WithBlockHeight(25) // Not divisible by 50
@@ -271,19 +240,7 @@ func TestManageProof_ValidProofStays(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -352,19 +309,7 @@ func TestManageProof_NoProofStays(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -424,19 +369,7 @@ func TestManageProof_InvalidProofRemoved(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -505,19 +438,7 @@ func TestManageProof_YoungFileSkipped(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -578,19 +499,7 @@ func TestBurnContract(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider with initial burned contracts count
 	providerData := types.Providers{
@@ -707,19 +616,7 @@ func TestManageProof_StepThroughBlockHeights(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -870,19 +767,7 @@ func TestRunProofChecks_Scheduling(t *testing.T) {
 	provider := testAddresses[1]
 
 	// Set up parameters with proof window
-	storageKeeper.SetParams(ctx, types.Params{
-		DepositAccount:         testAddresses[0],
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     15,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
+	storageKeeper.SetParams(ctx, defaultParams(testAddresses[0]))
 
 	// Create provider
 	providerData := types.Providers{
@@ -961,14 +846,20 @@ func TestRunProofChecks_Scheduling(t *testing.T) {
 		modulo := height % storageKeeper.GetParams(ctx).ProofWindow
 		t.Logf("Height %d: Modulo=%d, Should run=%t, Proof removed=%t", height, modulo, shouldRun, proofRemoved)
 
-		switch {
-		case shouldRun && !proofRemoved:
-			t.Logf("  ⚠ RunProofChecks should have removed proof but didn't")
-		case !shouldRun && proofRemoved:
-			t.Logf("  ⚠ RunProofChecks removed proof when it shouldn't have run")
-		case shouldRun && proofRemoved:
+		// Assert correct behavior: if shouldRun is true, proofRemoved must be true
+		if shouldRun && !proofRemoved {
+			t.Errorf("Height %d: RunProofChecks should have removed proof but didn't (shouldRun=%t, proofRemoved=%t)", height, shouldRun, proofRemoved)
+		}
+
+		// Assert correct behavior: if shouldRun is false, proofRemoved must be false
+		if !shouldRun && proofRemoved {
+			t.Errorf("Height %d: RunProofChecks removed proof when it shouldn't have run (shouldRun=%t, proofRemoved=%t)", height, shouldRun, proofRemoved)
+		}
+
+		// Log success cases for context
+		if shouldRun && proofRemoved {
 			t.Logf("  ✓ RunProofChecks correctly removed proof")
-		default:
+		} else if !shouldRun && !proofRemoved {
 			t.Logf("  ✓ RunProofChecks correctly skipped (proof still exists)")
 		}
 
