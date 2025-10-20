@@ -146,7 +146,7 @@ Let it be that alice wants to create a home folder
 |editors  | String  | same as above but with c = concatenate( "e", trackingNumber, Bech32 address )<br />
 |trackingNumber  | String  | UUID. This trackingNumber is one and the same as what is used in editors AND viewers map<br />
 
-alice can add other users to her viewers and editors map aswell. 
+alice can add other users to her viewers and editors map as well. 
 #### Response
 
 let fullMerklePath = MerklePath("s/home")

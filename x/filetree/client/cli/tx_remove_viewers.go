@@ -58,7 +58,7 @@ func CmdRemoveViewers() *cobra.Command {
 
 			}
 
-			// viewerIDs supposed to be JSON marshalled aswell?
+			// viewerIDs supposed to be JSON marshalled as well?
 			msg := types.NewMsgRemoveViewers(
 				clientCtx.GetFromAddress().String(),
 				strings.Join(viewerIDs, ","),

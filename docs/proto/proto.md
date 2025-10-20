@@ -691,7 +691,7 @@ Query provides defines the gRPC querier service
 | AllContractState | [QueryAllContractStateRequest](#cosmwasm.wasm.v1beta1.QueryAllContractStateRequest) | [QueryAllContractStateResponse](#cosmwasm.wasm.v1beta1.QueryAllContractStateResponse) | AllContractState gets all raw store data for a single contract |
 | RawContractState | [QueryRawContractStateRequest](#cosmwasm.wasm.v1beta1.QueryRawContractStateRequest) | [QueryRawContractStateResponse](#cosmwasm.wasm.v1beta1.QueryRawContractStateResponse) | RawContractState gets single key from the raw store data of a contract |
 | SmartContractState | [QuerySmartContractStateRequest](#cosmwasm.wasm.v1beta1.QuerySmartContractStateRequest) | [QuerySmartContractStateResponse](#cosmwasm.wasm.v1beta1.QuerySmartContractStateResponse) | SmartContractState get smart query result from the contract |
-| Code | [QueryCodeRequest](#cosmwasm.wasm.v1beta1.QueryCodeRequest) | [QueryCodeResponse](#cosmwasm.wasm.v1beta1.QueryCodeResponse) | Code gets the binary code and metadata for a singe wasm code |
+| Code | [QueryCodeRequest](#cosmwasm.wasm.v1beta1.QueryCodeRequest) | [QueryCodeResponse](#cosmwasm.wasm.v1beta1.QueryCodeResponse) | Code gets the binary code and metadata for a single wasm code |
 | Codes | [QueryCodesRequest](#cosmwasm.wasm.v1beta1.QueryCodesRequest) | [QueryCodesResponse](#cosmwasm.wasm.v1beta1.QueryCodesResponse) | Codes gets the metadata for all stored wasm codes |
 
  
