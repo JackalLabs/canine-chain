@@ -59,7 +59,7 @@ func TestManageProofs(t *testing.T) {
 	storageKeeper.SetProviders(ctx, provider2Data)
 
 	// Create a test file
-	merkle := []byte("test-merkle")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -122,7 +122,7 @@ func TestManageProofsWithExpiredPlan(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-expired")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -182,7 +182,7 @@ func TestManageProofsWithExpiredFile(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file with expiration
-	merkle := []byte("test-merkle-expired-file")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -253,7 +253,7 @@ func TestManageProof_ValidProofStays(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-valid")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -322,7 +322,7 @@ func TestManageProof_NoProofStays(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-no-proof")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -382,7 +382,7 @@ func TestManageProof_InvalidProofRemoved(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-invalid")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -451,7 +451,7 @@ func TestManageProof_YoungFileSkipped(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-young")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -512,7 +512,7 @@ func TestBurnContract(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-burn")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -565,7 +565,7 @@ func TestBurnContract_ProviderNotFound(t *testing.T) {
 	// Don't create the provider, so it won't be found
 
 	// Create a test file with the non-existent provider
-	merkle := []byte("test-merkle-no-provider")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         provider,
@@ -629,7 +629,7 @@ func TestManageProof_StepThroughBlockHeights(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-step-through")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
@@ -743,7 +743,8 @@ func TestManageProof_StepThroughBlockHeights(t *testing.T) {
 		t.Logf("✓ Proof correctly removed at height %d (file was young until %d)",
 			proofRemovedAt, youngUntil)
 	} else {
-		t.Logf("⚠ Proof was never removed during test")
+		t.Fatalf("Proof was never removed during test - this indicates a regression. Tested heights: %d to %d, file start: %d, file young until: %d, proof window: %d, proof key: %s",
+			startHeight, endHeight, file.Start, youngUntil, storageKeeper.GetParams(ctx).ProofWindow, proofKey)
 	}
 
 	// The file should still exist (since payment plan is not expired)
@@ -780,7 +781,7 @@ func TestRunProofChecks_Scheduling(t *testing.T) {
 	storageKeeper.SetProviders(ctx, providerData)
 
 	// Create a test file
-	merkle := []byte("test-merkle-scheduling")
+	merkle := []byte(t.Name() + "-merkle")
 	file := types.UnifiedFile{
 		Merkle:        merkle,
 		Owner:         owner,
