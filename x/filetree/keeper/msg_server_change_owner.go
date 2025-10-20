@@ -26,7 +26,7 @@ func (k msgServer) ChangeOwner(goCtx context.Context, msg *types.MsgChangeOwner)
 	newOwner := MakeOwnerAddress(msg.Address, msg.NewOwner)
 
 	// If the new owner already has a file set with this path,do not change
-	// ownership--else their file will be overwridden
+	// ownership--else their file will be overwritten
 	_, fnd := k.GetFiles(ctx, msg.Address, newOwner)
 	if fnd {
 		return nil, types.ErrAlreadyExists
