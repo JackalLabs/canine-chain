@@ -728,7 +728,7 @@ func TestManageProof_StepThroughBlockHeights(t *testing.T) {
 	// The proof should be removed when:
 	// 1. File is not young (height > file.Start + file.ProofInterval)
 	// 2. Proof is not valid (not proven within the last window)
-	// 3. RunProofChecks runs (height % proofWindow == 0)
+	// 3. ManageProofs runs (called at every height in this test)
 	youngUntil := file.Start + file.ProofInterval
 
 	if proofRemovedAt != -1 {
