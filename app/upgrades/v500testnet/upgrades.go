@@ -1,8 +1,6 @@
 package v500testnet
 
 import (
-	_ "embed"
-
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
