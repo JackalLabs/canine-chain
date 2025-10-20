@@ -96,6 +96,19 @@ func TestManageProofs(t *testing.T) {
 	require.True(t, found)
 	require.Equal(t, file.Merkle, retrievedFile.Merkle)
 	require.Equal(t, file.Owner, retrievedFile.Owner)
+
+	// Verify the file's Proofs slice contains both providers
+	require.Contains(t, retrievedFile.Proofs, file.MakeProofKey(provider1))
+	require.Contains(t, retrievedFile.Proofs, file.MakeProofKey(provider2))
+
+	// Verify both providers' BurnedContracts remain "0"
+	provider1Data, f := storageKeeper.GetProviders(ctx, provider1)
+	require.True(t, f)
+	require.Equal(t, "0", provider1Data.BurnedContracts)
+
+	provider2Data, fi := storageKeeper.GetProviders(ctx, provider2)
+	require.True(t, fi)
+	require.Equal(t, "0", provider2Data.BurnedContracts)
 }
 
 func TestManageProofsWithExpiredPlan(t *testing.T) {
@@ -356,6 +369,11 @@ func TestManageProof_NoProofStays(t *testing.T) {
 	retrievedFile, found := storageKeeper.GetFile(ctx, merkle, owner, file.Start)
 	require.True(t, found)
 	require.False(t, retrievedFile.ContainsProver(provider))
+
+	// Verify the provider was not penalized in this "no proof" scenario
+	updatedProvider, ok := storageKeeper.GetProviders(ctx, provider)
+	require.True(t, ok)
+	require.Equal(t, "0", updatedProvider.BurnedContracts)
 }
 
 func TestManageProof_InvalidProofRemoved(t *testing.T) {
@@ -598,7 +616,9 @@ func TestBurnContract_ProviderNotFound(t *testing.T) {
 	ctx = ctx.WithBlockHeight(file.Start + (file.ProofInterval * 3))
 
 	// Run manageProof directly - should not panic even if provider is not found
-	storageKeeper.ManageProofs(ctx)
+	require.NotPanics(t, func() {
+		storageKeeper.ManageProofs(ctx)
+	})
 
 	// Verify the proof was still removed
 	_, found = storageKeeper.GetProofWithBuiltKey(ctx, []byte(proofKey))
@@ -749,12 +769,8 @@ func TestManageProof_StepThroughBlockHeights(t *testing.T) {
 
 	// The file should still exist (since payment plan is not expired)
 	finalFile, fileExists := storageKeeper.GetFile(ctx, merkle, owner, file.Start)
-	if fileExists {
-		t.Logf("✓ File still exists (as expected, since payment plan is not expired)")
-		require.Empty(t, finalFile.Proofs, "File should have no proofs after removal")
-	} else {
-		t.Logf("⚠ File was removed unexpectedly")
-	}
+	require.True(t, fileExists, "File was removed unexpectedly")
+	require.Empty(t, finalFile.Proofs, "File should have no proofs after removal")
 }
 
 func TestRunProofChecks_Scheduling(t *testing.T) {
