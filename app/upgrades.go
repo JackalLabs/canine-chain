@@ -23,6 +23,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v4alpha3"
 	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v4alpha5"
 	v500 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v500"
+	"github.com/jackalLabs/canine-chain/v4/app/upgrades/v500testnet"
 )
 
 func (app *JackalApp) registerTestnetUpgradeHandlers() {
@@ -37,6 +38,7 @@ func (app *JackalApp) registerTestnetUpgradeHandlers() {
 	app.registerUpgrade(v4alpha5.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(v410beta.NewUpgrade(app.mm, app.configurator))
 	app.registerUpgrade(v410testnet.NewUpgrade(app.mm, app.configurator))
+	app.registerUpgrade(v500testnet.NewUpgrade(app.mm, app.configurator))
 }
 
 func (app *JackalApp) registerMainnetUpgradeHandlers() {
