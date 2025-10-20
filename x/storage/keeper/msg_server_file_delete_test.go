@@ -16,21 +16,6 @@ func (suite *KeeperTestSuite) TestDeleteFile() {
 	otherUser := testAddresses[1]
 	depoAccount := testAddresses[2]
 
-	// Set up parameters
-	suite.storageKeeper.SetParams(suite.ctx, types.Params{
-		DepositAccount:         depoAccount,
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     8,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
-
 	// Create test file data
 	merkle := []byte("test-merkle-hash")
 	start := int64(100)
@@ -62,15 +47,6 @@ func (suite *KeeperTestSuite) TestDeleteFile() {
 		Proofs:        []string{},
 		MaxProofs:     3,
 		Note:          "non-deletable file",
-	}
-
-	// Create payment info for the file owner
-	paymentInfo := types.StoragePaymentInfo{
-		Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
-		End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
-		SpaceAvailable: 100_000_000_000,
-		SpaceUsed:      fileSize, // Start with some space used
-		Address:        fileOwner,
 	}
 
 	cases := []struct {
@@ -154,13 +130,36 @@ func (suite *KeeperTestSuite) TestDeleteFile() {
 			suite.reset()
 			msgSrvr, k, ctx = setupMsgServer(suite)
 
+			// Reapply module params after reset
+			suite.storageKeeper.SetParams(suite.ctx, types.Params{
+				DepositAccount:         depoAccount,
+				ProofWindow:            50,
+				ChunkSize:              1024,
+				PriceFeed:              "jklprice",
+				MissesToBurn:           3,
+				MaxContractAgeInBlocks: 100,
+				PricePerTbPerMonth:     8,
+				CollateralPrice:        2,
+				CheckWindow:            11,
+				ReferralCommission:     25,
+				PolRatio:               40,
+			})
+
 			// Set up the file if needed
 			if tc.setupFile && tc.file != nil {
 				k.SetFile(suite.ctx, *tc.file)
 			}
 
-			// Set up payment info if needed
+			// Create fresh payment info for this test case
+			var paymentInfo types.StoragePaymentInfo
 			if tc.setupPayment {
+				paymentInfo = types.StoragePaymentInfo{
+					Start:          suite.ctx.BlockTime().AddDate(0, 0, -60),
+					End:            suite.ctx.BlockTime().AddDate(0, 0, 30),
+					SpaceAvailable: 100_000_000_000,
+					SpaceUsed:      fileSize, // Start with some space used
+					Address:        tc.msg.Creator,
+				}
 				k.SetStoragePaymentInfo(suite.ctx, paymentInfo)
 			}
 
@@ -197,21 +196,6 @@ func (suite *KeeperTestSuite) TestDeleteFileSpaceUsageEdgeCases() {
 
 	fileOwner := testAddresses[0]
 	depoAccount := testAddresses[1]
-
-	// Set up parameters
-	suite.storageKeeper.SetParams(suite.ctx, types.Params{
-		DepositAccount:         depoAccount,
-		ProofWindow:            50,
-		ChunkSize:              1024,
-		PriceFeed:              "jklprice",
-		MissesToBurn:           3,
-		MaxContractAgeInBlocks: 100,
-		PricePerTbPerMonth:     8,
-		CollateralPrice:        2,
-		CheckWindow:            11,
-		ReferralCommission:     25,
-		PolRatio:               40,
-	})
 
 	merkle := []byte("test-merkle-hash")
 	start := int64(100)
@@ -259,6 +243,21 @@ func (suite *KeeperTestSuite) TestDeleteFileSpaceUsageEdgeCases() {
 			// Reset the keeper state for each test
 			suite.reset()
 			msgSrvr, k, ctx = setupMsgServer(suite)
+
+			// Reapply module params after reset
+			suite.storageKeeper.SetParams(suite.ctx, types.Params{
+				DepositAccount:         depoAccount,
+				ProofWindow:            50,
+				ChunkSize:              1024,
+				PriceFeed:              "jklprice",
+				MissesToBurn:           3,
+				MaxContractAgeInBlocks: 100,
+				PricePerTbPerMonth:     8,
+				CollateralPrice:        2,
+				CheckWindow:            11,
+				ReferralCommission:     25,
+				PolRatio:               40,
+			})
 
 			// Set up the file
 			k.SetFile(suite.ctx, deletableFile)
