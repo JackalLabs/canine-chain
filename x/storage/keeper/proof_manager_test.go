@@ -302,6 +302,17 @@ func TestManageProof_ValidProofStays(t *testing.T) {
 	proof.LastProven = lastWindowStart + 10 // Recently proven within the last window
 	storageKeeper.SetProof(ctx, proof)
 
+	// Create non-expired StoragePaymentInfo for the file owner to prevent accidental removal
+	paymentInfo := types.StoragePaymentInfo{
+		Address:        owner,
+		Start:          ctx.BlockTime().Add(-24 * time.Hour), // Started 24 hours ago
+		End:            ctx.BlockTime().Add(24 * time.Hour),  // Expires 24 hours from now
+		SpaceAvailable: 10000,                                // Sufficient space
+		SpaceUsed:      file.FileSize,                        // Current usage
+		Coins:          nil,                                  // No coins needed for test
+	}
+	storageKeeper.SetStoragePaymentInfo(ctx, paymentInfo)
+
 	// Run manageProof directly
 	storageKeeper.ManageProofs(ctx)
 
@@ -752,8 +763,8 @@ func TestManageProof_StepThroughBlockHeights(t *testing.T) {
 	youngUntil := file.Start + file.ProofInterval
 
 	if proofRemovedAt != -1 {
-		require.GreaterOrEqual(t, proofRemovedAt, youngUntil,
-			"Proof should only be removed after file is no longer young")
+		require.Greater(t, proofRemovedAt, youngUntil,
+			"Proof should only be removed strictly after file is no longer young")
 
 		// Verify the proof was actually invalid when removed
 		wasValid := file.ProvenLastBlock(proofRemovedAt, proof.LastProven)
