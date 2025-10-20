@@ -46,5 +46,5 @@ func (f *UnifiedFile) ProvenThisBlock(height int64, lastProven int64) bool {
 }
 
 func (f *UnifiedFile) IsYoung(height int64) bool {
-	return f.Start+(f.ProofInterval*2) >= height
+	return f.Start+f.ProofInterval >= height
 }
