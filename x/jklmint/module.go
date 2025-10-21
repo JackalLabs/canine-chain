@@ -16,10 +16,10 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/client/cli"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/exported"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/client/cli"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/exported"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/types"
 )
 
 var (

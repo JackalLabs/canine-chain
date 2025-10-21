@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v5/x/notifications/types"
 )
 
 var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())

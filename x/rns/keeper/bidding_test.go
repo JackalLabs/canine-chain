@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/testutil"
-	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v5/testutil"
+	"github.com/jackalLabs/canine-chain/v5/x/rns/types"
 )
 
 const TestName = "test.jkl"

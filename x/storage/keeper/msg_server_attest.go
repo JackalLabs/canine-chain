@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/tendermint/libs/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 func (k Keeper) Attest(ctx sdk.Context, prover string, merkle []byte, owner string, start int64, creator string) error {

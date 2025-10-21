@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	storagekeeper "github.com/jackalLabs/canine-chain/v5/x/storage/keeper"
+	storagetypes "github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 func PerformPostFile(s *storagekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postFile *storagetypes.MsgPostFile) error {

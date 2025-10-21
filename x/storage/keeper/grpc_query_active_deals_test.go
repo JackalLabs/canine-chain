@@ -8,9 +8,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	jklapp "github.com/jackalLabs/canine-chain/v4/app"
-	"github.com/jackalLabs/canine-chain/v4/testutil"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	jklapp "github.com/jackalLabs/canine-chain/v5/app"
+	"github.com/jackalLabs/canine-chain/v5/testutil"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
+	allTypes "github.com/jackalLabs/canine-chain/v5/types"
 
 	"github.com/spf13/cobra"
 )

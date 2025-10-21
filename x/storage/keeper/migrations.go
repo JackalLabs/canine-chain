@@ -4,11 +4,10 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/exported"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/legacy/paramUpgrade"
-	v2 "github.com/jackalLabs/canine-chain/v4/x/storage/legacy/v2"
-	v4 "github.com/jackalLabs/canine-chain/v4/x/storage/legacy/v4"
-	v5 "github.com/jackalLabs/canine-chain/v4/x/storage/legacy/v5"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/exported"
+	v2 "github.com/jackalLabs/canine-chain/v5/x/storage/legacy/v2"
+	v4 "github.com/jackalLabs/canine-chain/v5/x/storage/legacy/v4"
+	v5 "github.com/jackalLabs/canine-chain/v5/x/storage/legacy/v5"
 )
 
 // Migrator is a struct for handling in-place store migrations.

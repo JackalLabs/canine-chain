@@ -5,11 +5,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
-	"github.com/jackalLabs/canine-chain/v4/types"
-	notificationkeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
-	notificationtypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
-	rnstypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v5/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v5/types"
+	notificationkeeper "github.com/jackalLabs/canine-chain/v5/x/notifications/keeper"
+	notificationtypes "github.com/jackalLabs/canine-chain/v5/x/notifications/types"
+	rnstypes "github.com/jackalLabs/canine-chain/v5/x/rns/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}

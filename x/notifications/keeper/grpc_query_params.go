@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v5/x/notifications/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

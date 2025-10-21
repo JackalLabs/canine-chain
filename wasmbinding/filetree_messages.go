@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	filetreekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	filetreekeeper "github.com/jackalLabs/canine-chain/v5/x/filetree/keeper"
+	filetreetypes "github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 )
 
 func PerformPostFileTree(s *filetreekeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, postFileTree *filetreetypes.MsgPostFile) error {

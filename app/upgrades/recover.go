@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
+	allTypes "github.com/jackalLabs/canine-chain/v5/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	storageKeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	storageKeeper "github.com/jackalLabs/canine-chain/v5/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 const AccountName = "STORAGE_ESCROW"

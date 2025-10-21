@@ -4,8 +4,8 @@ import (
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v5/x/oracle/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/oracle/types"
 )
 
 // Prevent strconv unused error

@@ -5,10 +5,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
-	"github.com/jackalLabs/canine-chain/v4/types"
-	oraclekeeper "github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	"github.com/jackalLabs/canine-chain/v5/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v5/types"
+	oraclekeeper "github.com/jackalLabs/canine-chain/v5/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v5/x/oracle/types"
 )
 
 var _ upgrades.Upgrade = &Upgrade{}

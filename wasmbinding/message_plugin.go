@@ -8,15 +8,15 @@ import (
 
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/v4/wasmbinding/bindings"
-	filetreekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v5/wasmbinding/bindings"
+	filetreekeeper "github.com/jackalLabs/canine-chain/v5/x/filetree/keeper"
+	filetreetypes "github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 
-	storagekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	storagekeeper "github.com/jackalLabs/canine-chain/v5/x/storage/keeper"
+	storagetypes "github.com/jackalLabs/canine-chain/v5/x/storage/types"
 
-	notificationskeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
-	notificationstypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	notificationskeeper "github.com/jackalLabs/canine-chain/v5/x/notifications/keeper"
+	notificationstypes "github.com/jackalLabs/canine-chain/v5/x/notifications/types"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages

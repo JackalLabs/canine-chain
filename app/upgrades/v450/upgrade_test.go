@@ -1,9 +1,9 @@
 package v450_test
 
 import (
-	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
-	v440 "github.com/jackalLabs/canine-chain/v4/app/upgrades/v440"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/app/upgrades"
+	v440 "github.com/jackalLabs/canine-chain/v5/app/upgrades/v440"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 func (suite *UpgradeTestKeeper) TestUpgrade() {

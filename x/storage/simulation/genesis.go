@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types/module"
 	sdksim "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 func RandomizedGenState(simState *module.SimulationState) {

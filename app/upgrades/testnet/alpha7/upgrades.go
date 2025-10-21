@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/jackalLabs/canine-chain/v4/types"
+	"github.com/jackalLabs/canine-chain/v5/types"
 )
 
 func CreateUpgradeHandler(

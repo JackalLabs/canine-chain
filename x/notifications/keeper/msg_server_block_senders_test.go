@@ -1,8 +1,8 @@
 package keeper_test
 
 import (
-	"github.com/jackalLabs/canine-chain/v4/testutil"
-	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v5/testutil"
+	"github.com/jackalLabs/canine-chain/v5/x/notifications/types"
 )
 
 func (suite *KeeperTestSuite) TestMsgBlockSenders() {

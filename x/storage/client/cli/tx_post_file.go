@@ -26,7 +26,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 	"github.com/spf13/cobra"
 
 	"github.com/wealdtech/go-merkletree/v2"

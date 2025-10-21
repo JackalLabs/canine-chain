@@ -1,9 +1,9 @@
 package bindings
 
 import (
-	filetreetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-	notificationstypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
-	storagetypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	filetreetypes "github.com/jackalLabs/canine-chain/v5/x/filetree/types"
+	notificationstypes "github.com/jackalLabs/canine-chain/v5/x/notifications/types"
+	storagetypes "github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 type JackalMsg struct {

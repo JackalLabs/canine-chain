@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	notificationskeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
-	notificationstypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	notificationskeeper "github.com/jackalLabs/canine-chain/v5/x/notifications/keeper"
+	notificationstypes "github.com/jackalLabs/canine-chain/v5/x/notifications/types"
 )
 
 func PerformCreateNotification(s *notificationskeeper.Keeper, ctx sdk.Context, contractAddr sdk.AccAddress, createNotification *notificationstypes.MsgCreateNotification) error {

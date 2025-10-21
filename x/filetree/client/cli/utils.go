@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	eciesgo "github.com/ecies/go/v2"
-	filetypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	filetypes "github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 

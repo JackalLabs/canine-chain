@@ -8,7 +8,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v5/x/rns/types"
 )
 
 func (k Keeper) AcceptOneBid(ctx sdk.Context, sender string, name string, bidder string) error {

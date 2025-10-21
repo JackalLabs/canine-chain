@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v5/x/rns/types"
 )
 
 func (k Keeper) SetPrimaryName(ctx sdk.Context, owner, name, tld string) {

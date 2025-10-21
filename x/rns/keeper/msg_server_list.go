@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v5/x/rns/types"
 )
 
 func (k msgServer) List(goCtx context.Context, msg *types.MsgList) (*types.MsgListResponse, error) {

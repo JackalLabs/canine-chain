@@ -10,10 +10,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	oracle "github.com/jackalLabs/canine-chain/v4/x/oracle"
-	"github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
-	oracletestutil "github.com/jackalLabs/canine-chain/v4/x/oracle/testutil"
-	"github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	oracle "github.com/jackalLabs/canine-chain/v5/x/oracle"
+	"github.com/jackalLabs/canine-chain/v5/x/oracle/keeper"
+	oracletestutil "github.com/jackalLabs/canine-chain/v5/x/oracle/testutil"
+	"github.com/jackalLabs/canine-chain/v5/x/oracle/types"
 	"github.com/stretchr/testify/suite"
 )
 

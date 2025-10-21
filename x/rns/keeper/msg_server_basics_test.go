@@ -2,9 +2,9 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/testutil"
-	types2 "github.com/jackalLabs/canine-chain/v4/types"
-	"github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v5/testutil"
+	types2 "github.com/jackalLabs/canine-chain/v5/types"
+	"github.com/jackalLabs/canine-chain/v5/x/rns/types"
 )
 
 // testing msg server files for: init, register, and transfer

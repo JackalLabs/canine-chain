@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v5/x/filetree/types"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v5/x/oracle/types"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v5/x/rns/types"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v5/x/storage/types"
 
 	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -38,7 +38,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
-	minttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	minttypes "github.com/jackalLabs/canine-chain/v5/x/jklmint/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"

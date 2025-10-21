@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jackalLabs/canine-chain/v4/docs"
-	"github.com/jackalLabs/canine-chain/v4/docs/openapiconsole"
+	"github.com/jackalLabs/canine-chain/v5/docs"
+	"github.com/jackalLabs/canine-chain/v5/docs/openapiconsole"
 
 	ibcfee "github.com/cosmos/ibc-go/v4/modules/apps/29-fee"
 	ibcfeekeeper "github.com/cosmos/ibc-go/v4/modules/apps/29-fee/keeper"
@@ -111,32 +111,32 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmclient "github.com/CosmWasm/wasmd/x/wasm/client"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmappparams "github.com/jackalLabs/canine-chain/v4/app/params"
-	owasm "github.com/jackalLabs/canine-chain/v4/wasmbinding"
+	wasmappparams "github.com/jackalLabs/canine-chain/v5/app/params"
+	owasm "github.com/jackalLabs/canine-chain/v5/wasmbinding"
 
-	mint "github.com/jackalLabs/canine-chain/v4/x/jklmint"
-	mintkeeper "github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
-	minttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	mint "github.com/jackalLabs/canine-chain/v5/x/jklmint"
+	mintkeeper "github.com/jackalLabs/canine-chain/v5/x/jklmint/keeper"
+	minttypes "github.com/jackalLabs/canine-chain/v5/x/jklmint/types"
 
-	rnsmodule "github.com/jackalLabs/canine-chain/v4/x/rns"
-	rnsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/rns/keeper"
-	rnsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	rnsmodule "github.com/jackalLabs/canine-chain/v5/x/rns"
+	rnsmodulekeeper "github.com/jackalLabs/canine-chain/v5/x/rns/keeper"
+	rnsmoduletypes "github.com/jackalLabs/canine-chain/v5/x/rns/types"
 
-	oraclemodule "github.com/jackalLabs/canine-chain/v4/x/oracle"
-	oraclemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/oracle/keeper"
-	oraclemoduletypes "github.com/jackalLabs/canine-chain/v4/x/oracle/types"
+	oraclemodule "github.com/jackalLabs/canine-chain/v5/x/oracle"
+	oraclemodulekeeper "github.com/jackalLabs/canine-chain/v5/x/oracle/keeper"
+	oraclemoduletypes "github.com/jackalLabs/canine-chain/v5/x/oracle/types"
 
-	storagemodule "github.com/jackalLabs/canine-chain/v4/x/storage"
-	storagemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-	storagemoduletypes "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	storagemodule "github.com/jackalLabs/canine-chain/v5/x/storage"
+	storagemodulekeeper "github.com/jackalLabs/canine-chain/v5/x/storage/keeper"
+	storagemoduletypes "github.com/jackalLabs/canine-chain/v5/x/storage/types"
 
-	filetreemodule "github.com/jackalLabs/canine-chain/v4/x/filetree"
-	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-	filetreemoduletypes "github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	filetreemodule "github.com/jackalLabs/canine-chain/v5/x/filetree"
+	filetreemodulekeeper "github.com/jackalLabs/canine-chain/v5/x/filetree/keeper"
+	filetreemoduletypes "github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 
-	notificationsmodule "github.com/jackalLabs/canine-chain/v4/x/notifications"
-	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
-	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	notificationsmodule "github.com/jackalLabs/canine-chain/v5/x/notifications"
+	notificationsmodulekeeper "github.com/jackalLabs/canine-chain/v5/x/notifications/keeper"
+	notificationsmoduletypes "github.com/jackalLabs/canine-chain/v5/x/notifications/types"
 
 	/*
 

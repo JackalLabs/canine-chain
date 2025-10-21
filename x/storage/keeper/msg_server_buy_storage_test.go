@@ -2,9 +2,9 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
-	allTypes "github.com/jackalLabs/canine-chain/v4/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v5/testutil"
+	allTypes "github.com/jackalLabs/canine-chain/v5/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 var buystoragemerkle = []byte("lessstoragemerkle")

@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"encoding/base64"
 
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 // testing files.go file
