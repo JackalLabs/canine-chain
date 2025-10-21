@@ -5,6 +5,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/jackalLabs/canine-chain/v5/x/storage/exported"
+	paramupgrade "github.com/jackalLabs/canine-chain/v5/x/storage/legacy/paramUpgrade"
 	v2 "github.com/jackalLabs/canine-chain/v5/x/storage/legacy/v2"
 	v4 "github.com/jackalLabs/canine-chain/v5/x/storage/legacy/v4"
 	v5 "github.com/jackalLabs/canine-chain/v5/x/storage/legacy/v5"
