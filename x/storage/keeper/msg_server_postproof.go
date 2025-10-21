@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 func (k Keeper) UpdateProof(ctx sdk.Context, proof *types.FileProof, file *types.UnifiedFile) {

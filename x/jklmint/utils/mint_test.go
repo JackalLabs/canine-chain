@@ -3,7 +3,7 @@ package utils_test
 import (
 	"testing"
 
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/utils"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/utils"
 	"github.com/stretchr/testify/require"
 )
 

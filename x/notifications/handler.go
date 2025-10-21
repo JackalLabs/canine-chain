@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/jackalLabs/canine-chain/v4/x/notifications/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/notifications/types"
+	"github.com/jackalLabs/canine-chain/v5/x/notifications/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/notifications/types"
 )
 
 func NewHandler(k keeper.Keeper) sdk.Handler {

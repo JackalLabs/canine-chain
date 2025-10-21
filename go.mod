@@ -1,4 +1,4 @@
-module github.com/jackalLabs/canine-chain/v4
+module github.com/jackalLabs/canine-chain/v5
 
 go 1.23
 

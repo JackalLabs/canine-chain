@@ -11,8 +11,8 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	eciesgo "github.com/ecies/go/v2"
-	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v5/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 )
 
 func SimulateMsgAddEditors(

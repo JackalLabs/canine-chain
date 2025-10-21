@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/exported"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/exported"
 	"github.com/spf13/cobra"
 
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -17,9 +17,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/client/cli"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/client/cli"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 var (

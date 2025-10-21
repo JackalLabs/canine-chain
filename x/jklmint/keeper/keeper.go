@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/types"
 )
 
 type (

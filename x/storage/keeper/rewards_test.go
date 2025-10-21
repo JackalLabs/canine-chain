@@ -4,9 +4,9 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
-	jklminttypes "github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v5/testutil"
+	jklminttypes "github.com/jackalLabs/canine-chain/v5/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 	"github.com/tendermint/tendermint/libs/rand"
 )
 

@@ -2,7 +2,7 @@ package v121
 
 import (
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/jackalLabs/canine-chain/v4/app/upgrades"
+	"github.com/jackalLabs/canine-chain/v5/app/upgrades"
 )
 
 import (

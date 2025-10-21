@@ -9,8 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	filetreesimulation "github.com/jackalLabs/canine-chain/v4/x/filetree/simulation"
-	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	filetreesimulation "github.com/jackalLabs/canine-chain/v5/x/filetree/simulation"
+	"github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 )
 
 // avoid unused import issue

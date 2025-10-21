@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/x/params/types"
-	types2 "github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	types2 "github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 type LegacyParams struct {

@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	"github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 

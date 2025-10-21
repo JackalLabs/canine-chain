@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/testutil"
-	types "github.com/jackalLabs/canine-chain/v4/x/rns/types"
+	"github.com/jackalLabs/canine-chain/v5/testutil"
+	types "github.com/jackalLabs/canine-chain/v5/x/rns/types"
 )
 
 func (suite *KeeperTestSuite) TestDelistMsg() {

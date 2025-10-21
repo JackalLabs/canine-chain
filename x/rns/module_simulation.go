@@ -11,7 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	//	"github.com/jackalLabs/canine-chain/testutil/sample"
-	rnssimulation "github.com/jackalLabs/canine-chain/v4/x/rns/simulation"
+	rnssimulation "github.com/jackalLabs/canine-chain/v5/x/rns/simulation"
 )
 
 // avoid unused import issue

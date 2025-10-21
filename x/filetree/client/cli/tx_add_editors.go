@@ -13,9 +13,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	eciesgo "github.com/ecies/go/v2"
-	testUtil "github.com/jackalLabs/canine-chain/v4/testutil"
-	"github.com/jackalLabs/canine-chain/v4/x/filetree/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/filetree/types"
+	testUtil "github.com/jackalLabs/canine-chain/v5/testutil"
+	"github.com/jackalLabs/canine-chain/v5/x/filetree/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/filetree/types"
 	"github.com/spf13/cobra"
 )
 

@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 type msgServer struct {

@@ -1,8 +1,8 @@
 package keeper_test
 
 import (
-	testutil "github.com/jackalLabs/canine-chain/v4/testutil"
-	"github.com/jackalLabs/canine-chain/v4/x/storage/types"
+	testutil "github.com/jackalLabs/canine-chain/v5/testutil"
+	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
 func (suite *KeeperTestSuite) TestDeleteFile() {

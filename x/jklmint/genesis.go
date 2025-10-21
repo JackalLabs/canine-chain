@@ -2,8 +2,8 @@ package jklmint
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/keeper"
-	"github.com/jackalLabs/canine-chain/v4/x/jklmint/types"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/keeper"
+	"github.com/jackalLabs/canine-chain/v5/x/jklmint/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis
