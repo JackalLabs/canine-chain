@@ -80,9 +80,9 @@ func TestFileProof(t *testing.T) {
 
 	var chunk int64
 
-	validProof := f.VerifyProof(proofData, chunk, i)
+	validProof := f.VerifyProof(proofData, chunk, i, 0)
 	require.Equal(t, true, validProof)
 
-	validProof = f.VerifyProof(proofData, chunk+1, i)
+	validProof = f.VerifyProof(proofData, chunk+1, i, 0)
 	require.Equal(t, false, validProof)
 }

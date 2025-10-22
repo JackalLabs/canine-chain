@@ -7,6 +7,9 @@ import (
 	"io"
 	"strings"
 
+	treeblake3 "github.com/wealdtech/go-merkletree/v2/blake3"
+	"github.com/zeebo/blake3"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerror "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/tendermint/libs/rand"
@@ -15,8 +18,12 @@ import (
 )
 
 // VerifyProof checks whether a proof is valid against a file
-func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item []byte) bool {
+func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item []byte, proofType int64) bool {
 	h := sha256.New()
+	if proofType == 3 {
+		h = blake3.New()
+	}
+
 	_, err := io.WriteString(h, fmt.Sprintf("%d%x", chunk, item))
 	if err != nil {
 		return false
@@ -29,7 +36,12 @@ func (f *UnifiedFile) VerifyProof(proofData []byte, chunk int64, item []byte) bo
 		return false
 	}
 
-	verified, err := merkletree.VerifyProofUsing(hashName, false, &proof, [][]byte{f.Merkle}, sha3.New512())
+	var treeHash merkletree.HashType = sha3.New512()
+	if proofType == 3 {
+		treeHash = treeblake3.New256()
+	}
+
+	verified, err := merkletree.VerifyProofUsing(hashName, false, &proof, [][]byte{f.Merkle}, treeHash)
 	if err != nil {
 		return false
 	}
@@ -185,8 +197,8 @@ func (f *UnifiedFile) SetProven(ctx sdk.Context, proof *FileProof, chunkSize int
 }
 
 // Prove checks the validity of a proof and updates the proof window & picks a new chunk to verify
-func (f *UnifiedFile) Prove(ctx sdk.Context, proof *FileProof, proofData []byte, item []byte, chunkSize int64) error {
-	valid := f.VerifyProof(proofData, proof.ChunkToProve, item)
+func (f *UnifiedFile) Prove(ctx sdk.Context, proof *FileProof, proofData []byte, item []byte, chunkSize int64, proofType int64) error {
+	valid := f.VerifyProof(proofData, proof.ChunkToProve, item, proofType)
 
 	if !valid {
 		return ErrCannotVerifyProof

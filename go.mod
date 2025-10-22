@@ -49,9 +49,14 @@ require (
 require (
 	github.com/cosmos/interchain-accounts v0.2.6
 	github.com/golang/mock v1.6.0
+	github.com/zeebo/blake3 v0.2.4
 )
 
-require github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
+require (
+	github.com/iden3/go-iden3-crypto v0.0.16 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.12 // indirect
+	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
+)
 
 require (
 	cosmossdk.io/api v0.2.6 // indirect
@@ -149,11 +154,11 @@ require (
 	github.com/wealdtech/go-merkletree/v2 v2.5.1-0.20231106114422-6769f4468d71
 	github.com/zondax/ledger-go v0.14.3 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
-	golang.org/x/crypto v0.15.0 // indirect
-	golang.org/x/net v0.18.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
-	golang.org/x/term v0.14.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/crypto v0.23.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/term v0.20.0 // indirect
+	golang.org/x/text v0.15.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -180,6 +185,7 @@ replace (
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
 	github.com/tendermint/tendermint => github.com/cometbft/cometbft v0.34.27
+	github.com/wealdtech/go-merkletree/v2 => github.com/TheMarstonConnell/go-merkletree/v2 v2.0.0-20250829184252-ad65f46fbd22
 
 	// use grpc compatible with cosmos-flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
