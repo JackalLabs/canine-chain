@@ -87,7 +87,7 @@ func (k Keeper) postProof(ctx sdk.Context,
 		ctx.Logger().Info("file was already proven")
 	}
 
-	err := file.Prove(ctx, proof, hashList, item, chunkSize)
+	err := file.Prove(ctx, proof, hashList, item, chunkSize, f.ProofType)
 	if err != nil {
 		e := sdkerrors.Wrapf(err, "cannot verify %x against %x", item, file.Merkle)
 		ctx.Logger().Info(e.Error())
