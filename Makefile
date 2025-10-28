@@ -135,22 +135,48 @@ endif
 ########################################
 ###      PebbleDB Opt-In Logic       ###
 ########################################
-# If WITH_PEBBLEDB is set to "true" or "yes" (case-insensitive) then we:
-#  - Enable the 'pebbledb' build tag.
-#  - Add the necessary ldflags for PebbleDB support.
-#  - Note: PebbleDB uses its own go.mod (go-4pebbledb.mod) file with two extra replacement lines:
-#       // PebbleDB replacements for isolated Pebble builds
-#       github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854
-#       github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7
+# Updated: October 28, 2025
+# PebbleDB builds use a dynamically-generated go-4pebbledb.mod file (not tracked in git).
+# This file is created by copying go.mod and adding two PebbleDB-specific database replacements.
+# 
+# The replacement versions below are pinned to specific commits for reproducible builds.
+# These should be updated when:
+#  - Jackal releases a new major version (v6.0.0+)
+#  - effofxprime releases updated PebbleDB support for new Cosmos SDK versions
+#  - Breaking changes require newer PebbleDB database implementations
+#
+# Current versions (as of v5.0.0):
+#  - tm-db-4pebbledb:       v0.6.8-0.20240206021653-7664d28b4854
+#  - cometbft-db-4pebbledb: v0.0.0-20240124141910-d74f5dec49a7
+#
+# NOTE: If future Cosmos SDK versions (0.46+ or 0.47+) include native PebbleDB support,
+# these replacements may no longer be needed and could cause build failures. In that case,
+# remove this entire section and build with standard go.mod.
+#
+# If WITH_PEBBLEDB is set to "true" or "yes" (case-insensitive):
+#  - Dynamically generate go-4pebbledb.mod from go.mod
+#  - Add PebbleDB-specific database replacements with pinned versions
+#  - Enable 'pebbledb' build tag and ldflags
 ifeq ($(filter $(lower_WITH_PEBBLEDB),true yes),true)
   TENDERMINT_BUILD_OPTIONS += pebbledb
   export TENDERMINT_BUILD_OPTIONS
   build_tags += pebbledb
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=pebbledb -X github.com/tendermint/tm-db.ForceSync=1
-  $(info Applying PebbleDB support. PebbleDB uses its own go.mod (go-4pebbledb.mod) file with two extra replacement lines:)
-  $(info    // PebbleDB replacements for isolated Pebble builds)
-  $(info    github.com/tendermint/tm-db => github.com/effofxprime/tm-db-4pebbledb v0.6.8-0.20240206021653-7664d28b4854)
-  $(info    github.com/cometbft/cometbft-db => github.com/effofxprime/cometbft-db-4pebbledb v0.0.0-20240124141910-d74f5dec49a7)
+  
+  $(info Generating go-4pebbledb.mod from go.mod with PebbleDB replacements...)
+  SYNC_RESULT := $(shell cp go.mod go-4pebbledb.mod && \
+    $(GO_CMD) mod edit -modfile=go-4pebbledb.mod \
+      -replace=github.com/tendermint/tm-db=github.com/effofxprime/tm-db-4pebbledb@v0.6.8-0.20240206021653-7664d28b4854 && \
+    $(GO_CMD) mod edit -modfile=go-4pebbledb.mod \
+      -replace=github.com/cometbft/cometbft-db=github.com/effofxprime/cometbft-db-4pebbledb@v0.0.0-20240124141910-d74f5dec49a7 && \
+    $(GO_CMD) mod tidy -modfile=go-4pebbledb.mod 2>&1)
+  
+  # Check if sync failed (errors from go mod edit or go mod tidy)
+  ifneq ($(findstring error,$(SYNC_RESULT)),)
+    $(error PebbleDB mod file generation failed: $(SYNC_RESULT))
+  endif
+  
+  $(info ✓ go-4pebbledb.mod generated successfully)
 endif
 
 ########################################
