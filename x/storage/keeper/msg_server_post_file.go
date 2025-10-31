@@ -15,6 +15,22 @@ import (
 
 func (k msgServer) PostFile(goCtx context.Context, msg *types.MsgPostFile) (*types.MsgPostFileResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	if msg.Merkle == nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "merkle cannot be null")
+	}
+
+	if msg.Expires < 0 {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "expires cannot be less than 0")
+	}
+
+	if msg.FileSize < 0 {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "size cannot be less than 0")
+	}
+
+	if msg.MaxProofs < 1 {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "max proofs cannot be less than 1")
+	}
+
 	params := k.GetParams(ctx)
 
 	if !json.Valid([]byte(msg.Note)) {
