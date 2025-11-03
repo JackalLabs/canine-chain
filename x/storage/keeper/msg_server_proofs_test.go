@@ -256,7 +256,7 @@ func (suite *KeeperTestSuite) TestPostProof() {
 				Start:    0,
 			},
 			expErr:    true,
-			expErrMsg: fmt.Sprintf("cannot verify %x against %x: cannot verify Proof", item2, merkleroot),
+			expErrMsg: fmt.Sprintf("cannot verify %x: cannot verify Proof", merkleroot),
 		},
 		{
 			testName: "nonexisting contract",
