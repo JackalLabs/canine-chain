@@ -19,10 +19,10 @@ const maxDepth = 5
 // Randomly generate a file directory using account address and returns paths of files
 // ie. for path: s/home/document/meow.md
 // returns {"s","s/home", "s/home/document", "s/home/document/meow.md"}
-func GenerateDirectory(address sdk.AccAddress) (paths []string, err error) {
+func GenerateDirectory(address sdk.AccAddress) ([]string, error) {
 	// Generate seed with account address
 	h := sha256.New()
-	_, err = io.WriteString(h, address.String())
+	_, err := io.WriteString(h, address.String())
 	if err != nil {
 		return nil, err
 	}
@@ -38,6 +38,7 @@ func GenerateDirectory(address sdk.AccAddress) (paths []string, err error) {
 	dir = append([]string{"s", "home"}, dir...)
 	dir = append(dir, fileNames[r.Intn(len(fileNames))])
 
+	paths := make([]string, 1)
 	paths[0] = dir[0]
 	for i := 1; i < len(dir); i++ {
 		paths = append(paths, paths[i-1]+"/"+dir[i])
