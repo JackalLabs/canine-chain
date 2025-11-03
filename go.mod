@@ -173,7 +173,7 @@ replace (
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
 	// using jackal labs free post proof ante handler - better way to do this in the future.
-	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20251009194332-1ebafb7f4fa8
+	github.com/cosmos/cosmos-sdk => github.com/JackalLabs/cosmos-sdk-new v0.45.17-0.20241017203511-c9e1d384026b
 
 	//github.com/cosmos/cosmos-sdk => ../cosmos-sdk
 
