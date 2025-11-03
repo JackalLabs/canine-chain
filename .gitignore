@@ -55,3 +55,7 @@ contract_tests/*
 app.test
 
 screenlog.0
+
+# PebbleDB build artifacts (dynamically generated, do not commit)
+go-4pebbledb.mod
+go-4pebbledb.sum
