@@ -142,7 +142,7 @@ func (suite *KeeperTestSuite) TestMsgAddViewers() {
 				)
 			},
 			expErr:    true,
-			expErrMsg: "Unathorized. Only the owner can add a viewer.",
+			expErrMsg: "Unauthorized. Only the owner can add a viewer.",
 			name:      "bob can't share what he doesn't own",
 		},
 	}
