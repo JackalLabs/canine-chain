@@ -83,7 +83,7 @@ func (suite *KeeperTestSuite) TestMsgAddEditors() {
 			},
 			expErr:    true,
 			name:      "bob cannot add himself as editor",
-			expErrMsg: "Unathorized. Only the owner can add an editor.",
+			expErrMsg: "Unauthorized. Only the owner can add an editor.",
 		},
 	}
 
