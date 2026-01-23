@@ -184,8 +184,7 @@ replace (
 	// use cosmos-flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-	//github.com/tendermint/tendermint => github.com/cometbft/cometbft v0.34.27
-	github.com/tendermint/tendermint => ../cometbft-sec-tachyon
+	github.com/tendermint/tendermint => github.com/TheMarstonConnell/cometbft v0.34.27-tachy
 	github.com/wealdtech/go-merkletree/v2 => github.com/TheMarstonConnell/go-merkletree/v2 v2.0.0-20250829184252-ad65f46fbd22
 
 	// use grpc compatible with cosmos-flavored protobufs

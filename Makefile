@@ -230,6 +230,11 @@ endif
 install: $(SUMFILE)
 	$(GO_CMD) install -mod=readonly -modfile=$(MODFILE) $(BUILD_FLAGS) ./cmd/canined
 
+# Build for Linux using Docker (supports CGO/ledger)
+# Usage: make build-linux or make build-linux ARCH=arm64
+build-linux:
+	@./build-linux.sh $(ARCH)
+
 ########################################
 ###       Tools & Dependencies       ###
 ########################################
@@ -344,4 +349,4 @@ proto-check-breaking:
 # They are placeholders for future enhancements.
 
 .PHONY: proto-all proto-gen proto-gen-any proto-swagger-gen proto-format proto-lint proto-check-breaking proto-update-deps docs
-.PHONY: all install install-debug go-mod-cache draw-deps clean build format test test-all test-build test-cover test-unit test-race test-sim-import-export local
+.PHONY: all install install-debug go-mod-cache draw-deps clean build build-linux format test test-all test-build test-cover test-unit test-race test-sim-import-export local

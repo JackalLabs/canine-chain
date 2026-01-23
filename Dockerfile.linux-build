@@ -1,0 +1,83 @@
+# Dockerfile for cross-compiling canined for Linux with CGO/ledger support
+# Runs natively on ARM Mac, cross-compiles to x86_64
+FROM golang:1.23.1-bookworm
+
+# Build arguments
+ARG GOARCH=amd64
+ARG GOOS=linux
+ARG LEDGER_ENABLED=true
+
+# Install native and cross-compilation build dependencies
+RUN dpkg --add-architecture amd64 && \
+    apt-get update && \
+    apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    git \
+    ca-certificates \
+    && if [ "$GOARCH" = "amd64" ]; then \
+        # Install x86_64 cross-compiler and libraries
+        apt-get install -y \
+            gcc-x86-64-linux-gnu \
+            g++-x86-64-linux-gnu \
+            libusb-1.0-0-dev:amd64; \
+    else \
+        apt-get install -y libusb-1.0-0-dev; \
+    fi && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy both repositories (canine-chain and cometbft dependency)
+COPY canine-chain /workspace/canine-chain
+COPY cometbft-sec-tachyon /workspace/cometbft-sec-tachyon
+
+# Set working directory to canine-chain
+WORKDIR /workspace/canine-chain
+
+# Download dependencies first to locate libwasmvm.so
+RUN go mod download
+
+# Find and copy libwasmvm.so to a standard location
+# Select the correct architecture based on GOARCH
+RUN if [ "$GOARCH" = "amd64" ]; then \
+        WASMVM_ARCH="x86_64"; \
+    elif [ "$GOARCH" = "arm64" ]; then \
+        WASMVM_ARCH="aarch64"; \
+    else \
+        WASMVM_ARCH="x86_64"; \
+    fi && \
+    WASMVM_SO=$(find /go/pkg/mod/github.com/'!cosm!wasm'/wasmvm* -name "libwasmvm.$WASMVM_ARCH.so" 2>/dev/null | head -n1) && \
+    if [ -n "$WASMVM_SO" ]; then \
+        cp "$WASMVM_SO" /usr/lib/libwasmvm.so && \
+        echo "Found and installed libwasmvm.so from: $WASMVM_SO (arch: $WASMVM_ARCH)"; \
+    else \
+        echo "Warning: libwasmvm.$WASMVM_ARCH.so not found in module cache"; \
+    fi
+
+# Set up environment for cross-compilation
+ENV CGO_ENABLED=1
+ENV GOOS=linux
+
+# Set CC based on target architecture
+RUN if [ "$GOARCH" = "amd64" ]; then \
+        echo "export CC=x86_64-linux-gnu-gcc" >> /etc/environment; \
+        echo "export CXX=x86_64-linux-gnu-g++" >> /etc/environment; \
+    fi
+
+# Build the binary with CGO enabled
+RUN if [ "$GOARCH" = "amd64" ]; then \
+        CC=x86_64-linux-gnu-gcc CXX=x86_64-linux-gnu-g++ GOARCH=amd64 make build; \
+    else \
+        GOARCH="$GOARCH" make build; \
+    fi
+
+# Copy libwasmvm.so to build directory for easy extraction
+RUN if [ -f /usr/lib/libwasmvm.so ]; then \
+        cp /usr/lib/libwasmvm.so /workspace/canine-chain/build/; \
+    fi
+
+# The binary will be at /workspace/canine-chain/build/canined
+# The shared library will be at /workspace/canine-chain/build/libwasmvm.so
