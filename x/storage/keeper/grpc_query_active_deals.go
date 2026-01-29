@@ -120,28 +120,57 @@ func (k Keeper) AllFilesByOwner(c context.Context, req *types.QueryAllFilesByOwn
 		return nil, status.Error(codes.InvalidArgument, "owner address is required")
 	}
 
+	if _, err := sdk.AccAddressFromBech32(req.Owner); err != nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid owner address format")
+	}
+
 	var files []types.UnifiedFile
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.FilePrimaryKeyPrefix))
+	// Use manual iteration to correctly handle pagination with filtering
+	reverse := false
+	var limit uint64 = 100
+	var offset uint64 = 0
+	if req.Pagination != nil {
+		reverse = req.Pagination.Reverse
+		if req.Pagination.Limit > 0 {
+			limit = req.Pagination.Limit
+		}
+		offset = req.Pagination.Offset
+	}
 
-	pageRes, err := query.Paginate(store, req.Pagination, func(_ []byte, value []byte) error {
+	var skipped uint64
+	var collected uint64
+	var total uint64
+	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, val []byte) bool {
 		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(value, &file); err != nil {
-			return err
+		if err := k.cdc.Unmarshal(val, &file); err != nil {
+			return false
 		}
 
 		// Filter by owner address
 		if file.Owner == req.Owner {
-			files = append(files, file)
+			total++
+			// Handle offset
+			if skipped < offset {
+				skipped++
+				return false
+			}
+			// Collect up to limit
+			if collected < limit {
+				files = append(files, file)
+				collected++
+			}
 		}
-		return nil
+		return false
 	})
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+
+	qpr := query.PageResponse{
+		NextKey: nil,
+		Total:   total,
 	}
 
-	return &types.QueryAllFilesByOwnerResponse{Files: files, Pagination: pageRes}, nil
+	return &types.QueryAllFilesByOwnerResponse{Files: files, Pagination: &qpr}, nil
 }
 
 // OpenFiles returns a paginated list of files with space that providers have yet to fill
