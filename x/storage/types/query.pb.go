@@ -3117,6 +3117,8 @@ type QueryClient interface {
 	EndangeredFiles(ctx context.Context, in *QueryOpenFiles, opts ...grpc.CallOption) (*QueryAllFilesResponse, error)
 	// Queries a list of File items matching the merkle.
 	AllFilesByMerkle(ctx context.Context, in *QueryAllFilesByMerkle, opts ...grpc.CallOption) (*QueryAllFilesByMerkleResponse, error)
+	// Queries a list of File items owned by a specific address.
+	AllFilesByOwner(ctx context.Context, in *QueryAllFilesByOwner, opts ...grpc.CallOption) (*QueryAllFilesByOwnerResponse, error)
 	// Queries a Proof by provider_address, merkle, owner, and start.
 	Proof(ctx context.Context, in *QueryProof, opts ...grpc.CallOption) (*QueryProofResponse, error)
 	// Queries a list of Proof items.
@@ -3230,6 +3232,15 @@ func (c *queryClient) EndangeredFiles(ctx context.Context, in *QueryOpenFiles, o
 func (c *queryClient) AllFilesByMerkle(ctx context.Context, in *QueryAllFilesByMerkle, opts ...grpc.CallOption) (*QueryAllFilesByMerkleResponse, error) {
 	out := new(QueryAllFilesByMerkleResponse)
 	err := c.cc.Invoke(ctx, "/canine_chain.storage.Query/AllFilesByMerkle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) AllFilesByOwner(ctx context.Context, in *QueryAllFilesByOwner, opts ...grpc.CallOption) (*QueryAllFilesByOwnerResponse, error) {
+	out := new(QueryAllFilesByOwnerResponse)
+	err := c.cc.Invoke(ctx, "/canine_chain.storage.Query/AllFilesByOwner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3458,6 +3469,8 @@ type QueryServer interface {
 	EndangeredFiles(context.Context, *QueryOpenFiles) (*QueryAllFilesResponse, error)
 	// Queries a list of File items matching the merkle.
 	AllFilesByMerkle(context.Context, *QueryAllFilesByMerkle) (*QueryAllFilesByMerkleResponse, error)
+	// Queries a list of File items owned by a specific address.
+	AllFilesByOwner(context.Context, *QueryAllFilesByOwner) (*QueryAllFilesByOwnerResponse, error)
 	// Queries a Proof by provider_address, merkle, owner, and start.
 	Proof(context.Context, *QueryProof) (*QueryProofResponse, error)
 	// Queries a list of Proof items.
@@ -3530,6 +3543,9 @@ func (*UnimplementedQueryServer) EndangeredFiles(ctx context.Context, req *Query
 }
 func (*UnimplementedQueryServer) AllFilesByMerkle(ctx context.Context, req *QueryAllFilesByMerkle) (*QueryAllFilesByMerkleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllFilesByMerkle not implemented")
+}
+func (*UnimplementedQueryServer) AllFilesByOwner(ctx context.Context, req *QueryAllFilesByOwner) (*QueryAllFilesByOwnerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllFilesByOwner not implemented")
 }
 func (*UnimplementedQueryServer) Proof(ctx context.Context, req *QueryProof) (*QueryProofResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Proof not implemented")
@@ -3727,6 +3743,24 @@ func _Query_AllFilesByMerkle_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).AllFilesByMerkle(ctx, req.(*QueryAllFilesByMerkle))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_AllFilesByOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllFilesByOwner)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).AllFilesByOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/canine_chain.storage.Query/AllFilesByOwner",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).AllFilesByOwner(ctx, req.(*QueryAllFilesByOwner))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4176,6 +4210,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AllFilesByMerkle",
 			Handler:    _Query_AllFilesByMerkle_Handler,
+		},
+		{
+			MethodName: "AllFilesByOwner",
+			Handler:    _Query_AllFilesByOwner_Handler,
 		},
 		{
 			MethodName: "Proof",
