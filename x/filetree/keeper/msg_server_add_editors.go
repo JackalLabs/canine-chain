@@ -32,6 +32,10 @@ func (k msgServer) AddEditors(goCtx context.Context, msg *types.MsgAddEditors) (
 	ids := strings.Split(msg.EditorIds, ",")
 	keys := strings.Split(msg.EditorKeys, ",")
 
+	if len(ids) != len(keys) {
+		return nil, types.ErrIdsKeysLenMismatch
+	}
+
 	for i, v := range ids {
 		jeacc[v] = keys[i]
 	}

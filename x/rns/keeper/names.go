@@ -41,9 +41,12 @@ func (k Keeper) GetPrimaryName(
 
 	n := string(b)
 
-	nameString := strings.Split(n, ".")
+	dot := strings.LastIndex(n, ".")
+	if dot <= 0 || dot == len(n)-1 {
+		return val, false
+	}
 
-	return k.GetNames(ctx, nameString[0], nameString[1])
+	return k.GetNames(ctx, n[:dot], n[dot+1:])
 }
 
 // SetNames set a specific names in the store from its index

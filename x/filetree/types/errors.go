@@ -23,4 +23,5 @@ var (
 	ErrCannotAllowEdit    = sdkerrors.Register(ModuleName, 1114, "Unathorized. Only the owner can add an editor.")
 	ErrCannotAllowView    = sdkerrors.Register(ModuleName, 1115, "Unathorized. Only the owner can add a viewer.")
 	ErrMissingAESKey      = sdkerrors.Register(ModuleName, 1116, "AES IV and key required")
+	ErrIdsKeysLenMismatch = sdkerrors.Register(ModuleName, 1117, "ids and keys must have the same number of comma-separated entries")
 )

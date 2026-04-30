@@ -32,6 +32,10 @@ func (k msgServer) AddViewers(goCtx context.Context, msg *types.MsgAddViewers) (
 	ids := strings.Split(msg.ViewerIds, ",")
 	keys := strings.Split(msg.ViewerKeys, ",")
 
+	if len(ids) != len(keys) {
+		return nil, types.ErrIdsKeysLenMismatch
+	}
+
 	for i, v := range ids {
 		jvacc[v] = keys[i]
 	}

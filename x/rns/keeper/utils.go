@@ -26,11 +26,10 @@ func GetTLD(name string) (string, error) {
 }
 
 func GetSubdomain(name string) (string, string, bool) {
-	if !strings.Contains(name, ".") {
+	s := strings.SplitN(name, ".", 2)
+	if len(s) < 2 {
 		return "", name, false
 	}
-
-	s := strings.Split(name, ".")
 
 	return s[0], s[1], true
 }
