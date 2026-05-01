@@ -144,6 +144,159 @@ func (suite *KeeperTestSuite) TestAllFiles() {
 	suite.reset()
 }
 
+func (suite *KeeperTestSuite) TestAllFilesByOwner() {
+	suite.SetupSuite()
+
+	testAddresses, err := testutil.CreateTestAddresses("cosmos", 3)
+	suite.Require().NoError(err)
+
+	owner1 := testAddresses[0]
+	owner2 := testAddresses[1]
+	depoAccount := testAddresses[2]
+
+	coins := sdk.NewCoins(sdk.NewCoin("ujkl", sdk.NewInt(100000000000)))
+	testAcc, _ := sdk.AccAddressFromBech32(owner1)
+	err = suite.bankKeeper.SendCoinsFromModuleToAccount(suite.ctx, types.ModuleName, testAcc, coins)
+	suite.Require().NoError(err)
+
+	suite.storageKeeper.SetParams(suite.ctx, types.Params{
+		DepositAccount:         depoAccount,
+		ProofWindow:            50,
+		ChunkSize:              1024,
+		PriceFeed:              "jklprice",
+		MissesToBurn:           3,
+		MaxContractAgeInBlocks: 100,
+		PricePerTbPerMonth:     8,
+		CollateralPrice:        2,
+		CheckWindow:            11,
+		ReferralCommission:     25,
+		PolRatio:               40,
+	})
+
+	// Create 5 files for owner1
+	for i := 0; i < 5; i++ {
+		merkle := []byte(fmt.Sprintf("merkle_owner1_%d", i))
+		suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+			Merkle:        merkle,
+			Owner:         owner1,
+			Start:         int64(i),
+			Expires:       0,
+			FileSize:      1024,
+			ProofInterval: 400,
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          "{}",
+		})
+	}
+
+	// Create 3 files for owner2
+	for i := 0; i < 3; i++ {
+		merkle := []byte(fmt.Sprintf("merkle_owner2_%d", i))
+		suite.storageKeeper.SetFile(suite.ctx, types.UnifiedFile{
+			Merkle:        merkle,
+			Owner:         owner2,
+			Start:         int64(i),
+			Expires:       0,
+			FileSize:      2048,
+			ProofInterval: 400,
+			ProofType:     0,
+			Proofs:        make([]string, 0),
+			MaxProofs:     3,
+			Note:          "{}",
+		})
+	}
+
+	// Test: Query files for owner1 - should return 5 files
+	pg := query.PageRequest{
+		Offset:  0,
+		Reverse: false,
+		Limit:   100,
+	}
+
+	res, err := suite.queryClient.AllFilesByOwner(context.Background(), &types.QueryAllFilesByOwner{
+		Pagination: &pg,
+		Owner:      owner1,
+	})
+	suite.Require().NoError(err)
+	suite.Require().Equal(5, len(res.Files))
+	suite.Require().Equal(uint64(5), res.Pagination.Total)
+
+	// Verify all returned files belong to owner1
+	for _, file := range res.Files {
+		suite.Require().Equal(owner1, file.Owner)
+	}
+
+	// Test: Query files for owner2 - should return 3 files
+	res, err = suite.queryClient.AllFilesByOwner(context.Background(), &types.QueryAllFilesByOwner{
+		Pagination: &pg,
+		Owner:      owner2,
+	})
+	suite.Require().NoError(err)
+	suite.Require().Equal(3, len(res.Files))
+	suite.Require().Equal(uint64(3), res.Pagination.Total)
+
+	// Verify all returned files belong to owner2
+	for _, file := range res.Files {
+		suite.Require().Equal(owner2, file.Owner)
+	}
+
+	// Test: Pagination with limit
+	pgLimit := query.PageRequest{
+		Offset: 0,
+		Limit:  2,
+	}
+	res, err = suite.queryClient.AllFilesByOwner(context.Background(), &types.QueryAllFilesByOwner{
+		Pagination: &pgLimit,
+		Owner:      owner1,
+	})
+	suite.Require().NoError(err)
+	suite.Require().Equal(2, len(res.Files))
+	suite.Require().Equal(uint64(5), res.Pagination.Total) // Total should still be 5
+
+	// Test: Pagination with offset
+	pgOffset := query.PageRequest{
+		Offset: 3,
+		Limit:  100,
+	}
+	res, err = suite.queryClient.AllFilesByOwner(context.Background(), &types.QueryAllFilesByOwner{
+		Pagination: &pgOffset,
+		Owner:      owner1,
+	})
+	suite.Require().NoError(err)
+	suite.Require().Equal(2, len(res.Files)) // 5 total - 3 offset = 2 remaining
+	suite.Require().Equal(uint64(5), res.Pagination.Total)
+
+	// Test: Empty owner should return error
+	_, err = suite.queryClient.AllFilesByOwner(context.Background(), &types.QueryAllFilesByOwner{
+		Pagination: &pg,
+		Owner:      "",
+	})
+	suite.Require().Error(err)
+	suite.Require().Contains(err.Error(), "owner address is required")
+
+	// Test: Invalid owner address format should return error
+	_, err = suite.queryClient.AllFilesByOwner(context.Background(), &types.QueryAllFilesByOwner{
+		Pagination: &pg,
+		Owner:      "invalid-address",
+	})
+	suite.Require().Error(err)
+	suite.Require().Contains(err.Error(), "invalid owner address format")
+
+	// Test: Non-existent owner should return empty list
+	// Use a known valid bech32 address that won't match any files we created
+	nonExistentOwner := "cosmos1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqnrql8a"
+	res, err = suite.queryClient.AllFilesByOwner(context.Background(), &types.QueryAllFilesByOwner{
+		Pagination: &pg,
+		Owner:      nonExistentOwner,
+	})
+	suite.Require().NoError(err)
+	suite.Require().Equal(0, len(res.Files))
+	suite.Require().Equal(uint64(0), res.Pagination.Total)
+
+	suite.reset()
+}
+
 func (suite *KeeperTestSuite) TestOpenFiles() {
 	suite.SetupSuite()
 

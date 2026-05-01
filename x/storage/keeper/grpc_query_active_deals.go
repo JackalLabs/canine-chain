@@ -12,6 +12,58 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// paginationParams holds extracted pagination parameters
+type paginationParams struct {
+	reverse bool
+	limit   uint64
+	offset  uint64
+}
+
+// extractPaginationParams extracts pagination parameters with defaults
+func extractPaginationParams(pagination *query.PageRequest) paginationParams {
+	p := paginationParams{
+		reverse: false,
+		limit:   100,
+		offset:  0,
+	}
+	if pagination != nil {
+		p.reverse = pagination.Reverse
+		if pagination.Limit > 0 {
+			p.limit = pagination.Limit
+		}
+		p.offset = pagination.Offset
+	}
+	return p
+}
+
+// filterFilesWithPagination iterates over files and returns those matching the filter with pagination
+func (k Keeper) filterFilesWithPagination(ctx sdk.Context, params paginationParams, filter func(*types.UnifiedFile) bool) ([]types.UnifiedFile, *query.PageResponse) {
+	var files []types.UnifiedFile
+	var skipped, collected, total uint64
+
+	k.IterateFilesByMerkle(ctx, params.reverse, func(_ []byte, val []byte) bool {
+		var file types.UnifiedFile
+		if err := k.cdc.Unmarshal(val, &file); err != nil {
+			return false
+		}
+
+		if filter(&file) {
+			total++
+			if skipped < params.offset {
+				skipped++
+				return false
+			}
+			if collected < params.limit {
+				files = append(files, file)
+				collected++
+			}
+		}
+		return false
+	})
+
+	return files, &query.PageResponse{Total: total}
+}
+
 func (k Keeper) AllFiles(c context.Context, req *types.QueryAllFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
@@ -110,110 +162,60 @@ func (k Keeper) AllFilesByMerkle(c context.Context, req *types.QueryAllFilesByMe
 	return &types.QueryAllFilesByMerkleResponse{Files: files, Pagination: pageRes}, nil
 }
 
+// AllFilesByOwner returns a paginated list of files owned by a specific address
+func (k Keeper) AllFilesByOwner(c context.Context, req *types.QueryAllFilesByOwner) (*types.QueryAllFilesByOwnerResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	if req.Owner == "" {
+		return nil, status.Error(codes.InvalidArgument, "owner address is required")
+	}
+
+	if _, err := sdk.AccAddressFromBech32(req.Owner); err != nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid owner address format")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	params := extractPaginationParams(req.Pagination)
+
+	files, pageRes := k.filterFilesWithPagination(ctx, params, func(file *types.UnifiedFile) bool {
+		return file.Owner == req.Owner
+	})
+
+	return &types.QueryAllFilesByOwnerResponse{Files: files, Pagination: pageRes}, nil
+}
+
 // OpenFiles returns a paginated list of files with space that providers have yet to fill
-//
-// TODO: Create unit-test cases for this
 func (k Keeper) OpenFiles(c context.Context, req *types.QueryOpenFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var files []types.UnifiedFile
 	ctx := sdk.UnwrapSDKContext(c)
+	params := extractPaginationParams(req.Pagination)
 
-	reverse := false
-	var limit uint64 = 100
-	if req.Pagination != nil { // HERE IS THE FIX
-		reverse = req.Pagination.Reverse
-		limit = req.Pagination.Limit
-	}
-
-	var i uint64
-	var total uint64
-	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, val []byte) bool {
-		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(val, &file); err != nil {
-			return false
-		}
-
-		if file.ContainsProver(req.ProviderAddress) {
-			return false
-		}
-
-		if len(file.Proofs) < int(file.MaxProofs) {
-			total++
-			if i >= limit {
-				return false
-			}
-			files = append(files, file)
-		} else {
-			return false
-		}
-
-		i++
-
-		return false
+	files, pageRes := k.filterFilesWithPagination(ctx, params, func(file *types.UnifiedFile) bool {
+		return !file.ContainsProver(req.ProviderAddress) && len(file.Proofs) < int(file.MaxProofs)
 	})
 
-	qpr := query.PageResponse{
-		NextKey: nil,
-		Total:   total,
-	}
-
-	return &types.QueryAllFilesResponse{Files: files, Pagination: &qpr}, nil
+	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
 }
 
 // EndangeredFiles returns a paginated list of files with only 1x redundancy
-//
-// TODO: Create unit-test cases for this
 func (k Keeper) EndangeredFiles(c context.Context, req *types.QueryOpenFiles) (*types.QueryAllFilesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var files []types.UnifiedFile
 	ctx := sdk.UnwrapSDKContext(c)
+	params := extractPaginationParams(req.Pagination)
 
-	reverse := false
-	var limit uint64 = 100
-	if req.Pagination != nil { // HERE IS THE FIX
-		reverse = req.Pagination.Reverse
-		limit = req.Pagination.Limit
-	}
-
-	var i uint64
-	var total uint64
-	k.IterateFilesByMerkle(ctx, reverse, func(_ []byte, val []byte) bool {
-		var file types.UnifiedFile
-		if err := k.cdc.Unmarshal(val, &file); err != nil {
-			return false
-		}
-
-		if file.ContainsProver(req.ProviderAddress) {
-			return false
-		}
-
-		if len(file.Proofs) == 1 {
-			total++
-			if i >= limit {
-				return false
-			}
-			files = append(files, file)
-		} else {
-			return false
-		}
-
-		i++
-
-		return false
+	files, pageRes := k.filterFilesWithPagination(ctx, params, func(file *types.UnifiedFile) bool {
+		return !file.ContainsProver(req.ProviderAddress) && len(file.Proofs) == 1
 	})
 
-	qpr := query.PageResponse{
-		NextKey: nil,
-		Total:   total,
-	}
-
-	return &types.QueryAllFilesResponse{Files: files, Pagination: &qpr}, nil
+	return &types.QueryAllFilesResponse{Files: files, Pagination: pageRes}, nil
 }
 
 func (k Keeper) File(c context.Context, req *types.QueryFile) (*types.QueryFileResponse, error) {
