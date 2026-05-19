@@ -7,7 +7,7 @@ import (
 	"github.com/jackalLabs/canine-chain/v5/x/storage/types"
 )
 
-// SetActiveDeals set a specific activeDeals in the store from its index
+// SetLegacyActiveDeals set a specific activeDeals in the store from its index
 func (k Keeper) SetLegacyActiveDeals(ctx sdk.Context, activeDeals types.LegacyActiveDeals) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LegacyActiveDealsKeyPrefix))
 	b := k.cdc.MustMarshal(&activeDeals)
@@ -45,7 +45,7 @@ func (k Keeper) RemoveLegacyActiveDeals(
 	))
 }
 
-// GetAllActiveDeals returns all activeDeals
+// GetAllLegacyActiveDeals returns all activeDeals
 func (k Keeper) GetAllLegacyActiveDeals(ctx sdk.Context) (list []types.LegacyActiveDeals) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LegacyActiveDealsKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
